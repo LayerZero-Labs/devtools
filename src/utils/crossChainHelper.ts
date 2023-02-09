@@ -30,13 +30,18 @@ export interface Transaction {
 	diff?: { [key: string]: { newValue: any; oldValue: any } };
 }
 
-const getDeploymentManager = (hre, networkName): any => {
+export interface NetworkTransactions {
+	network: string;
+	transactions: Transaction[];
+}
+
+const getDeploymentManager = (hre: any, networkName: string): any => {
 	const network: any = {
 		name: networkName,
 		config: hre.config.networks[networkName],
 		provider: createProvider(networkName, hre.config.networks[networkName], hre.config.paths, hre.artifacts),
 		saveDeployments: true,
-	}
+	};
 	const newHre = Object.assign(Object.create(Object.getPrototypeOf(hre)), hre);
 	newHre.network = network;
 	const deploymentsManager = new DeploymentsManager(newHre, network);
@@ -45,7 +50,7 @@ const getDeploymentManager = (hre, networkName): any => {
 	newHre.getUnnamedAccounts = deploymentsManager.getUnnamedAccounts.bind(deploymentsManager);
 	newHre.getChainId = () => deploymentsManager.getChainId();
 	return deploymentsManager;
-}
+};
 
 export const deployContract = async (hre: any, network: string, tags: string[]) => {
 	const deploymentsManager = getDeploymentManager(hre, network);
@@ -66,10 +71,10 @@ export const getProvider = (network: string) => {
 	return providerByNetwork[network];
 }
 
-export const getWallet = (index) => ethers.Wallet.fromMnemonic(process.env.MNEMONIC || "", `m/44'/60'/0'/0/${index}`)
+export const getWallet = (index: number) => ethers.Wallet.fromMnemonic(process.env.MNEMONIC || "", `m/44'/60'/0'/0/${index}`)
 
-const connectedWallets = {};
-export const getConnectedWallet = (network, walletIndex) => {
+const connectedWallets: { [key: string]: any } = {};
+export const getConnectedWallet = (network: string, walletIndex: number) => {
 	const key = `${network}-${walletIndex}`;
 	if (!connectedWallets[key]) {
 		const provider = getProvider(network);
@@ -83,7 +88,7 @@ const deploymentAddresses: { [key: string]: string } = {};
 export const getDeploymentAddress = (network: string, contractName: string) => {
 	const key = `${network}-${contractName}`;
 	if (!deploymentAddresses[key]) {
-		deploymentAddresses[key] = getDeploymentAddresses(network)[contractName];
+		deploymentAddresses[key] =  getDeploymentAddresses(network)[contractName];
 	}
 	if (!deploymentAddresses[key]) {
 		throw Error(`contract ${key} not found for network: ${network}`);
@@ -118,17 +123,17 @@ export const getContractAt = async (hre: any, network: string, contractName: str
 	return contracts[key];
 }
 
-export const getWalletContract = async (hre, network, contractName, walletIndex) => {
+export const getWalletContract = async (hre: any, network: string, contractName: string, walletIndex: number) => {
 	const contract = await getContract(hre, network, contractName);
 	const wallet = getConnectedWallet(network, walletIndex);
 	return contract.connect(wallet);
 }
 
-export const getWalletContractAt = async (hre, network, contractName, abi: any, contractAddress: string, walletIndex = 0) => {
+export const getWalletContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string, walletIndex = 0) => {
 	const contract = await getContractAt(hre, network, contractName, abi, contractAddress);
 	const wallet = getConnectedWallet(network, walletIndex);
 	return contract.connect(wallet);
-}
+};
 
 const contractFactories: { [name: string]: ethers.ContractFactory } = {};
 const getContractFactory = async (hre: any, contractName: string) => {
@@ -179,7 +184,7 @@ export const executeGnosisTransactions = async (hre: any, network: string, trans
 	})
 }
 
-export const getDeploymentAddresses = async (network: string) =>{
+export const getDeploymentAddresses = (network: string): any => {
 	const PROJECT_ROOT = path.resolve(__dirname, "..");
 	const DEPLOYMENT_PATH = path.resolve(PROJECT_ROOT, "deployments");
 
@@ -188,15 +193,15 @@ export const getDeploymentAddresses = async (network: string) =>{
 		folderName = "localhost";
 	}
 
-	const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter(f => f === folderName)[0];
+	const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter((f:string) => f === folderName)[0];
 	if (networkFolderName === undefined) {
 		throw new Error("missing deployment files for endpoint " + folderName);
 	}
 
-	let rtnAddresses = {};
+	let rtnAddresses: { [key: string]: any } = {};
 	const networkFolderPath = path.resolve(DEPLOYMENT_PATH, folderName);
-	const files = fs.readdirSync(networkFolderPath).filter((f) => f.includes(".json"));
-	files.forEach((file) => {
+	const files = fs.readdirSync(networkFolderPath).filter((f: string) => f.includes(".json"));
+	files.forEach((file: string) => {
 		const filepath = path.resolve(networkFolderPath, file);
 		const data = JSON.parse(fs.readFileSync(filepath));
 		const contractName = file.split(".")[0];

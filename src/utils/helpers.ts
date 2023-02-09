@@ -12,20 +12,20 @@ export const promptToProceed = async (msg: string, noPrompt: boolean = false) =>
 	}
 }
 
-export const arrayToCsv = (columns, data) => 
-	columns.join(",").concat("\n").concat(data.map((row) =>	row
+export const arrayToCsv = (columns: string[], data: any) => 
+	columns.join(",").concat("\n").concat(data.map((row: any) => row
 		.map(String) // convert every value to String
-		.map((v) => (v === "undefined" ? "" : v))
-		.map((v) => v.replace(/"/g, '""')) // escape double colons
-		.map((v) => `"${v}"`) // quote it
+		.map((v: any) => (v === "undefined" ? "" : v))
+		.map((v: any) => v.replace(/"/g, '""')) // escape double colons
+		.map((v: any) => `"${v}"`) // quote it
 		.join(",") // comma-separated
 	)
 	.join("\r\n") // rows starting on new lines
 );
 
-export const writeToCsv = async (fileName, columns, transactionByNetwork) => {
+export const writeToCsv = async (fileName: string, columns: string[], transactionByNetwork: any[]) => {
 	const data = transactionByNetwork.reduce((acc, { network, transactions }) => {
-		transactions.forEach((tx) => {
+		transactions.forEach((tx: any) => {
 			acc.push([
 				network,
 				...columns.map((key) => {

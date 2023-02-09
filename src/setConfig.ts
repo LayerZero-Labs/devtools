@@ -1,4 +1,4 @@
-import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction } from "./utils/crossChainHelper";
+import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, NetworkTransactions } from "./utils/crossChainHelper";
 import { promptToProceed, writeToCsv } from "./utils/helpers";
 import { utils, constants } from "ethers";
 
@@ -50,7 +50,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	const localNetworks = networks;
 	const remoteNetworks = networks;
 
-	const transactionByNetwork: any = (
+	const transactionByNetwork: any[] = (
 		await Promise.all(
 			localNetworks.map(async (localNetwork) => {
 				const transactions: Transaction[] = [];
@@ -110,16 +110,19 @@ module.exports = async (taskArgs: any, hre: any) => {
 				};
 			})
 		)
-	).filter((x) => x);
+	).filter(x => x);
 
 	let totalTransactionsNeedingChange: number = 0;
+	
+
+
 	const columns = ["needChange", "chainId", "remoteChainId", "contractAddress", "methodName", "args", "diff"];
 
-	transactionByNetwork.forEach(({ network, transaction }) => {
+	transactionByNetwork.forEach(({ network, transactions }) => {
 		console.log(`================================================`);
 		console.log(`${network} transactions`);
 		console.log(`================================================`);
-		const transactionsNeedingChange = transactions.filter((tx) => tx.needChange);
+		const transactionsNeedingChange = transactions.filter((tx: Transaction) => tx.needChange);
 		totalTransactionsNeedingChange += transactionsNeedingChange.length;
 
 		if (!transactionsNeedingChange.length) {
@@ -153,7 +156,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	if (taskArgs.gnosis) {
 		 await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
-				const transactionToCommit = transactions.filter((transaction) => transaction.needChange);
+				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
 
 				print[network] = print[network] || { requests: "1/1" };
 				print[network].current = `executeGnosisTransactions: ${transactionToCommit}`;
@@ -174,7 +177,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	else {
 		await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
-				const transactionToCommit = transactions.filter((transaction) => transaction.needChange);
+				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
 				const contract = await getWalletContractAt(hre, network, "UserApplication", uaAbi, UA_ADDRESSES[network]);
 
 				let successTx = 0;

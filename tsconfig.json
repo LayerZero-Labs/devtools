@@ -1,17 +1,24 @@
 
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "allowJs": true,
-    "module": "commonjs",
+    "target": "es2020",
+    "composite": false,
     "declaration": true,
     "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": false,
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "outDir": "./dist",
-    "strict": true,
-    "rootDirs": ["./src"],
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    "rootDirs": ["./src"]
   },
   "exclude": ["dist", "node_modules"],
   "include": ["./src"]
