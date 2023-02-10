@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": false,
-    "sourceMap": true,
+    "sourceMap": true,   
     "outDir": "./dist",
     "rootDirs": ["./src"]
   },

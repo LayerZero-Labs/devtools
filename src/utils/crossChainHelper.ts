@@ -9,7 +9,6 @@ import * as dotenv from "dotenv";
 const path = require("path");
 const fs = require("fs");
 
-const GNOSIS_CONFIG = require("../constants/gnosisConfig.json");
 dotenv.config({ path: __dirname + "/.env" });
 
 export interface ExecutableTransaction {
@@ -157,10 +156,10 @@ export const executeTransaction = async (hre: any, network: string, transaction:
 	).wait()
 }
 
-export const executeGnosisTransactions = async (hre: any, network: string, transactions: Transaction[]) => {
+export const executeGnosisTransactions = async (hre: any, network: string, gnosisConfig: any, transactions: Transaction[]) => {
 	const signer = await getConnectedWallet(network, 0);
 	//invariant(GNOSIS_CONFIG[network], `Gnosis for ${network} not supported.`)
-	const { safeAddress, url } = GNOSIS_CONFIG[network];
+	const { safeAddress, url } = gnosisConfig[network];
 	console.log(`safeAddress[${safeAddress}] url[${url}]`);
 
 	const safeService = new SafeServiceClient(url);

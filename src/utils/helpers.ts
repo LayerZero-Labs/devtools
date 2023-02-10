@@ -1,6 +1,6 @@
 import { cli } from "cli-ux";
 import fs from "fs";
-import path from "path";
+import chalk from "chalk";
 
 export const promptToProceed = async (msg: string, noPrompt: boolean = false) => {
 	if (!noPrompt) {
@@ -47,3 +47,5 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
 	fs.writeFileSync(fileName, arrayToCsv(["network"].concat(columns), data));
 	console.log(`Full configuration written to: ${fileName}`);
 };
+
+export const logError = (message:string) => console.log(chalk.red(`ERROR: ${message}`))

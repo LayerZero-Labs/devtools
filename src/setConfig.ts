@@ -1,14 +1,8 @@
+import { GNOSIS_CONFIG_FILENAME, UA_DEPLOYMENT_FILENAME, UA_CONFIG_FILENAME, configExist, getConfig } from "./utils/fileConfigHelper";
 import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, NetworkTransactions } from "./utils/crossChainHelper";
-import { promptToProceed, writeToCsv } from "./utils/helpers";
+import { promptToProceed, writeToCsv, logError } from "./utils/helpers";
 import { utils, constants } from "ethers";
-
-const fs = require("fs").promises;
 const { LZ_ADDRESS, CHAIN_ID } = require("@layerzerolabs/lz-sdk");
-const ENVIRONMENTS = require("../constants/environments.json");
-const MAINNET_CONFIG = require("../constants/uaMainnetConfig.json");
-const TESTNET_CONFIG = require("../constants/uaTestnetConfig.json");
-const UA_ADDRESSES = require("../constants/uaAddresses.json");
-const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json");
 
 const VERSION = 2;
 
@@ -22,7 +16,7 @@ const CONFIG_TYPE_ORACLE = 6;
 
 const endpointAbi = [
 	"function uaConfigLookup(address) view returns (tuple(uint16, uint16, address, address))", 
-	"function getConfig(uint16 _version, uint16 _chainId, address _userApplication, uint _configType) external view returns (bytes memory)"
+	"function getConfig(uint16,uint16, address _userApplication, uint _configType) external view returns (bytes memory)"
 ]
 
 const uaAbi = [
@@ -32,36 +26,37 @@ const uaAbi = [
 ]
 
 module.exports = async (taskArgs: any, hre: any) => {
-	// const environment = taskArgs.e
-	// let networks
-	let config = TESTNET_CONFIG;
-	// if (environment === "mainnet") {
-	//     networks = ENVIRONMENTS[environment]
-	//     config = MAINNET_CONFIG
-	// } else if (environment === "testnet") {
-	//     networks = ENVIRONMENTS[environment]
-	//     config = TESTNET_CONFIG
-	// } else {
-	//     console.log("Invalid environment")
-	// 	return
-	// }
+	if (!configExist(UA_CONFIG_FILENAME)) {
+		logError(`User application config file "${UA_CONFIG_FILENAME}" is not found`);
+		return;
+	}
 
-	const networks = ["goerli", "optimism-goerli", "bsc-testnet", "fuji", "arbitrum-goerli"];
-	const localNetworks = networks;
-	const remoteNetworks = networks;
+	if (taskArgs.contractName === undefined && !configExist(UA_DEPLOYMENT_FILENAME)) {
+		logError(`Contract name isn't provided and application deployment config file "${UA_DEPLOYMENT_FILENAME}" is not found`);
+		return;
+	}
+
+	if (taskArgs.gnosis && !configExist(GNOSIS_CONFIG_FILENAME)) {
+		logError(`Gnosis config file "${GNOSIS_CONFIG_FILENAME}" is not found`);
+		return;
+	}
+
+	const uaDeployments = getConfig(UA_DEPLOYMENT_FILENAME);
+	const config = getConfig(UA_CONFIG_FILENAME);
+	const networks = taskArgs.networks;
 
 	const transactionByNetwork: any[] = (
 		await Promise.all(
-			localNetworks.map(async (localNetwork) => {
+			networks.map(async (network: string) => {
 				const transactions: Transaction[] = [];
-				const uaAddress = UA_ADDRESSES[localNetwork];
+				const uaDeployment= uaDeployments[network];
 
-				if (uaAddress === undefined) return;
+				if (uaDeployment === undefined) return;
 
-				const endpoint = await getContractAt(hre, localNetwork, "Endpoint", endpointAbi, LZ_ENDPOINTS[localNetwork]);
-				const ua = await getContractAt(hre, localNetwork, "UserApplication", uaAbi, uaAddress);
-				const chainId = CHAIN_ID[localNetwork];
-				const localNetworkConfig = config[localNetwork];
+				const endpoint = await getContractAt(hre, network, "Endpoint", endpointAbi, LZ_ADDRESS[network]);
+				const ua = await getContractAt(hre, network, "UserApplication", uaAbi, uaDeployment.address);
+				const chainId = CHAIN_ID[network];
+				const localNetworkConfig = config[network];
 
 				if (localNetworkConfig === undefined) return;
 				const uaConfig = await endpoint.uaConfigLookup(ua.address);
@@ -74,10 +69,12 @@ module.exports = async (taskArgs: any, hre: any) => {
 					transactions.push(...(await setReceiveVersion(chainId, ua, uaConfig[1], localNetworkConfig.receiveVersion)));
 				}
 
+				const remoteConfigs = localNetworkConfig.remoteConfigs;
+
 				await Promise.all(
-					remoteNetworks.map(async (remoteNetwork) => {
-						if (localNetwork === remoteNetwork || UA_ADDRESSES[remoteNetwork] === undefined) return;
-						const remoteChainId = CHAIN_ID[remoteNetwork];
+					remoteConfigs.map(async (config: any) => {
+						if (config.remoteChain === network) return;
+						const remoteChainId = CHAIN_ID[network];
 
 						if (localNetworkConfig.inboundProofLibraryVersion !== undefined) {
 							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION, "uint16", localNetworkConfig.inboundProofLibraryVersion)));
@@ -105,17 +102,14 @@ module.exports = async (taskArgs: any, hre: any) => {
 					})
 				);
 				return {
-					network: localNetwork,
+					network: network,
 					transactions,
 				};
 			})
 		)
-	).filter(x => x);
+	).filter((x) => x);
 
 	let totalTransactionsNeedingChange: number = 0;
-	
-
-
 	const columns = ["needChange", "chainId", "remoteChainId", "contractAddress", "methodName", "args", "diff"];
 
 	transactionByNetwork.forEach(({ network, transactions }) => {
@@ -154,6 +148,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	};
 
 	if (taskArgs.gnosis) {
+		const gnosisConfig = getConfig(GNOSIS_CONFIG_FILENAME);
 		 await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
@@ -161,7 +156,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 				print[network] = print[network] || { requests: "1/1" };
 				print[network].current = `executeGnosisTransactions: ${transactionToCommit}`;
 				try {
-					await executeGnosisTransactions(hre, network, transactionToCommit);
+					await executeGnosisTransactions(hre, network, gnosisConfig, transactionToCommit);
 					print[network].requests = "1/1";
 					printResult();
 				} catch (err: any) {
@@ -178,7 +173,10 @@ module.exports = async (taskArgs: any, hre: any) => {
 		await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
-				const contract = await getWalletContractAt(hre, network, "UserApplication", uaAbi, UA_ADDRESSES[network]);
+				const uaDeployment = uaDeployments[network];
+
+				const endpoint = await getContractAt(hre, network, "Endpoint", endpointAbi, LZ_ADDRESS[network]);
+				const contract = await getWalletContractAt(hre, network, "UserApplication", uaAbi, uaDeployment.address);
 
 				let successTx = 0;
 				print[network] = print[network] || { requests: `${successTx}/${transactionToCommit.length}` };
@@ -210,7 +208,6 @@ const setSendVersion = async (chainId: string, ua: any, currentSendVersion: any,
 	const needChange = currentSendVersion !== newSendVersion;
 	const contractAddress = ua.address;
 	const methodName = "setSendVersion";
-	//const remoteChainId = undefined
 	const args = [newSendVersion];
 	const calldata = ua.interface.encodeFunctionData(methodName, args);
 	const diff = needChange ? { oldValue: currentSendVersion, newValue: newSendVersion } : undefined;
@@ -222,7 +219,6 @@ const setReceiveVersion = async (chainId: string, ua: any, currentReceiveVersion
 	const needChange = currentReceiveVersion !== newReceiveVersion;
 	const contractAddress = ua.address;
 	const methodName = "setReceiveVersion";
-	//const remoteChainId = undefined
 	const args = [newReceiveVersion];
 	const calldata = ua.interface.encodeFunctionData(methodName, args);
 	const diff = needChange ? { oldValue: currentReceiveVersion, newValue: newReceiveVersion } : undefined;
