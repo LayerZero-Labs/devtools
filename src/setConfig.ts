@@ -30,7 +30,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	const gnosisConfigPath = taskArgs.gnosisConfig;
 	const sendToGnosis = gnosisConfigPath && configExist(gnosisConfigPath);
 
-	if (!uaConfigPath || !configExist(uaConfigPath)) {
+	if (!configExist(uaConfigPath)) {
 		logError(`User application config file is not found`);
 		return;
 	}
@@ -40,15 +40,15 @@ module.exports = async (taskArgs: any, hre: any) => {
 		return;
 	}
 
-	const uaAddresses = getConfig(uaAddressesConfigPath);
+	const uaAddresses = uaAddressesConfigPath ? getConfig(uaAddressesConfigPath) : undefined;
 	const config = getConfig(uaConfigPath);
-	const networks = taskArgs.networks;
+	const networks = taskArgs.networks.split(",");
 
 	const transactionByNetwork: any[] = (
 		await Promise.all(
 			networks.map(async (network: string) => {
 				const transactions: Transaction[] = [];
-
+				
 				const endpoint = await getContractAt(hre, network, "Endpoint", endpointAbi, LZ_ADDRESS[network]);
 				let ua: any;
 				if (contractName) {

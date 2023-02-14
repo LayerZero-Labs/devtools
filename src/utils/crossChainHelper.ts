@@ -5,11 +5,8 @@ import { DeploymentsManager } from "hardhat-deploy/dist/src/DeploymentsManager";
 import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
-import * as dotenv from "dotenv";
 const path = require("path");
 const fs = require("fs");
-
-dotenv.config({ path: __dirname + "/.env" });
 
 export interface ExecutableTransaction {
 	contractName: string;
@@ -62,9 +59,9 @@ export const deployContract = async (hre: any, network: string, tags: string[]) 
 }
 
 const providerByNetwork: { [name: string]: ethers.providers.JsonRpcProvider } = {};
-export const getProvider = (network: string) => {
+export const getProvider = (hre: any, network: string) => {
 	if (!providerByNetwork[network]) {
-		const networkUrl = getRpc(network);
+		const networkUrl = hre.config.networks[network].url;
 		providerByNetwork[network] = new ethers.providers.JsonRpcProvider(networkUrl);
 	}
 	return providerByNetwork[network];
@@ -73,15 +70,15 @@ export const getProvider = (network: string) => {
 export const getWallet = (index: number) => ethers.Wallet.fromMnemonic(process.env.MNEMONIC || "", `m/44'/60'/0'/0/${index}`)
 
 const connectedWallets: { [key: string]: any } = {};
-export const getConnectedWallet = (network: string, walletIndex: number) => {
+export const getConnectedWallet = (hre: any, network: string, walletIndex: number) => {
 	const key = `${network}-${walletIndex}`;
 	if (!connectedWallets[key]) {
-		const provider = getProvider(network);
+		const provider = getProvider(hre, network);
 		const wallet = getWallet(walletIndex);
 		connectedWallets[key] = wallet.connect(provider);
 	}
 	return connectedWallets[key];
-}
+};
 
 const deploymentAddresses: { [key: string]: string } = {};
 export const getDeploymentAddress = (network: string, contractName: string) => {
@@ -104,7 +101,7 @@ export const getContract = async (hre: any, network: string, contractName: strin
 	const key = `${network}-${contractName}`;
 	if (!contracts[key]) {
 		const contractAddress = getDeploymentAddress(network, contractName);
-		const provider = getProvider(network);
+		const provider = getProvider(hre, network);
 		const contractFactory = await getContractFactory(hre, contractName);
 		const contract = contractFactory.attach(contractAddress);
 		contracts[key] = contract.connect(provider);
@@ -115,11 +112,11 @@ export const getContract = async (hre: any, network: string, contractName: strin
 export const getContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string) => {
 	const key = `${network}-${contractName}`;
 	if (!contracts[key]) {
-		const deployedContractAddress = getDeploymentAddress(network, contractName);
+		const deployedContractAddress = getDeploymentAddresses(network)[contractName];
 		const contract = deployedContractAddress 
 			? (await getContractFactory(hre, contractName)).attach(deployedContractAddress) 
 			: await hre.ethers.getContractAt(abi, contractAddress);
-		const provider = getProvider(network);
+		const provider = getProvider(hre, network);
 		contracts[key] = contract.connect(provider);
 	}
 	return contracts[key];
@@ -127,13 +124,13 @@ export const getContractAt = async (hre: any, network: string, contractName: str
 
 export const getWalletContract = async (hre: any, network: string, contractName: string, walletIndex: number = 0) => {
 	const contract = await getContract(hre, network, contractName);
-	const wallet = getConnectedWallet(network, walletIndex);
+	const wallet = getConnectedWallet(hre, network, walletIndex);
 	return contract.connect(wallet);
 }
 
 export const getWalletContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string, walletIndex = 0) => {
 	const contract = await getContractAt(hre, network, contractName, abi, contractAddress);
-	const wallet = getConnectedWallet(network, walletIndex);
+	const wallet = getConnectedWallet(hre, network, walletIndex);
 	return contract.connect(wallet);
 };
 
@@ -147,7 +144,7 @@ const getContractFactory = async (hre: any, contractName: string) => {
 
 export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, contract?: any): Promise<ContractReceipt> => {
 	const walletContract = contract ? contract : await getWalletContract(hre, network, transaction.contractName, 0);
-	const gasPrice = await getProvider(network).getGasPrice();
+	const gasPrice = await getProvider(hre, network).getGasPrice();
 	const finalGasPrice = gasPrice.mul(10).div(8);
 
 	return await (
@@ -160,7 +157,7 @@ export const executeTransaction = async (hre: any, network: string, transaction:
 }
 
 export const executeGnosisTransactions = async (hre: any, network: string, gnosisConfig: any, transactions: Transaction[]) => {
-	const signer = await getConnectedWallet(network, 0);
+	const signer = await getConnectedWallet(hre, network, 0);
 	//invariant(GNOSIS_CONFIG[network], `Gnosis for ${network} not supported.`)
 	const { safeAddress, url } = gnosisConfig[network];
 	console.log(`safeAddress[${safeAddress}] url[${url}]`);
@@ -187,8 +184,7 @@ export const executeGnosisTransactions = async (hre: any, network: string, gnosi
 }
 
 export const getDeploymentAddresses = (network: string): any => {
-	const PROJECT_ROOT = path.resolve(__dirname, "..");
-	const DEPLOYMENT_PATH = path.resolve(PROJECT_ROOT, "deployments");
+	const DEPLOYMENT_PATH = path.resolve("./deployments");
 
 	let folderName = network;
 	if (network === "hardhat") {
@@ -211,12 +207,4 @@ export const getDeploymentAddresses = (network: string): any => {
 	});
 
 	return rtnAddresses;
-}
-
-export const getRpc = (network: string) => {
-	try {
-		return require("../hardhat.config").default.networks[network].url;
-	} catch (e) {
-		throw `getRpc failed to get RPC URL for >> ${network} << -- do you REALLY have this network configured properly in hardhat.config.ts??`;
-	}
 }
