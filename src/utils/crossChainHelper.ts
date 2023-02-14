@@ -115,14 +115,17 @@ export const getContract = async (hre: any, network: string, contractName: strin
 export const getContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string) => {
 	const key = `${network}-${contractName}`;
 	if (!contracts[key]) {
+		const deployedContractAddress = getDeploymentAddress(network, contractName);
+		const contract = deployedContractAddress 
+			? (await getContractFactory(hre, contractName)).attach(deployedContractAddress) 
+			: await hre.ethers.getContractAt(abi, contractAddress);
 		const provider = getProvider(network);
-		const contract = await hre.ethers.getContractAt(abi, contractAddress);
 		contracts[key] = contract.connect(provider);
 	}
 	return contracts[key];
 }
 
-export const getWalletContract = async (hre: any, network: string, contractName: string, walletIndex: number) => {
+export const getWalletContract = async (hre: any, network: string, contractName: string, walletIndex: number = 0) => {
 	const contract = await getContract(hre, network, contractName);
 	const wallet = getConnectedWallet(network, walletIndex);
 	return contract.connect(wallet);

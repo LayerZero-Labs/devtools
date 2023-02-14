@@ -1,6 +1,7 @@
 import { cli } from "cli-ux";
 import fs from "fs";
 import chalk from "chalk";
+import { Transaction } from "./crossChainHelper";
 
 export const promptToProceed = async (msg: string, noPrompt: boolean = false) => {
 	if (!noPrompt) {
@@ -21,7 +22,7 @@ export const arrayToCsv = (columns: string[], data: any) =>
 		.join(",") // comma-separated
 	)
 	.join("\r\n") // rows starting on new lines
-);
+)
 
 export const writeToCsv = async (fileName: string, columns: string[], transactionByNetwork: any[]) => {
 	const data = transactionByNetwork.reduce((acc, { network, transactions }) => {
@@ -46,6 +47,28 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
 	}, []);
 	fs.writeFileSync(fileName, arrayToCsv(["network"].concat(columns), data));
 	console.log(`Full configuration written to: ${fileName}`);
-};
+}
 
-export const logError = (message:string) => console.log(chalk.red(`ERROR: ${message}`))
+export const printTransactions = (columns: string[], transactionByNetwork: any[]) => {
+	let totalTransactionsNeedingChange: number = 0;
+
+	transactionByNetwork.forEach(({ network, transactions }) => {
+		console.log(`================================================`);
+		console.log(`${network} transactions`);
+		console.log(`================================================`);
+		const transactionsNeedingChange = transactions.filter((tx: Transaction) => tx.needChange);
+		totalTransactionsNeedingChange += transactionsNeedingChange.length;
+
+		if (!transactionsNeedingChange.length) {
+			console.log("No change needed\n");
+		} else {
+			console.table(transactionsNeedingChange, columns);
+		}
+	})
+
+	return totalTransactionsNeedingChange > 0;
+}
+
+
+export const logError = (message: string) => console.log(chalk.red(`ERROR: ${message}`))
+export const logWarning = (message: string) => console.log(chalk.yellow(`WARNING: ${message}`));

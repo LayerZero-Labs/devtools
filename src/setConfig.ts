@@ -1,10 +1,8 @@
-import { GNOSIS_CONFIG_FILENAME, UA_DEPLOYMENT_FILENAME, UA_CONFIG_FILENAME, configExist, getConfig } from "./utils/fileConfigHelper";
-import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, NetworkTransactions } from "./utils/crossChainHelper";
-import { promptToProceed, writeToCsv, logError } from "./utils/helpers";
+import { configExist, getConfig } from "./utils/fileConfigHelper";
+import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, NetworkTransactions, getContract, getWalletContract } from "./utils/crossChainHelper";
+import { promptToProceed, writeToCsv, logError, logWarning, printTransactions } from "./utils/helpers";
 import { utils, constants } from "ethers";
 const { LZ_ADDRESS, CHAIN_ID } = require("@layerzerolabs/lz-sdk");
-
-const VERSION = 2;
 
 // Application config types from UltraLightNodeV2 contract
 const CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION = 1;
@@ -26,78 +24,94 @@ const uaAbi = [
 ]
 
 module.exports = async (taskArgs: any, hre: any) => {
-	if (!configExist(UA_CONFIG_FILENAME)) {
-		logError(`User application config file "${UA_CONFIG_FILENAME}" is not found`);
+	const uaConfigPath = taskArgs.uaConfig;
+	const contractName = taskArgs.contractName;
+	const uaAddressesConfigPath = taskArgs.uaAddressesConfig;
+	const gnosisConfigPath = taskArgs.gnosisConfig;
+	const sendToGnosis = gnosisConfigPath && configExist(gnosisConfigPath);
+
+	if (!uaConfigPath || !configExist(uaConfigPath)) {
+		logError(`User application config file is not found`);
 		return;
 	}
 
-	if (taskArgs.contractName === undefined && !configExist(UA_DEPLOYMENT_FILENAME)) {
-		logError(`Contract name isn't provided and application deployment config file "${UA_DEPLOYMENT_FILENAME}" is not found`);
+	if (!contractName && (!uaAddressesConfigPath || !configExist(uaAddressesConfigPath))) {
+		logError(`Contract name isn't provided and a config file with contract addresses is not found`);
 		return;
 	}
 
-	if (taskArgs.gnosis && !configExist(GNOSIS_CONFIG_FILENAME)) {
-		logError(`Gnosis config file "${GNOSIS_CONFIG_FILENAME}" is not found`);
-		return;
-	}
-
-	const uaDeployments = getConfig(UA_DEPLOYMENT_FILENAME);
-	const config = getConfig(UA_CONFIG_FILENAME);
+	const uaAddresses = getConfig(uaAddressesConfigPath);
+	const config = getConfig(uaConfigPath);
 	const networks = taskArgs.networks;
 
 	const transactionByNetwork: any[] = (
 		await Promise.all(
 			networks.map(async (network: string) => {
 				const transactions: Transaction[] = [];
-				const uaDeployment= uaDeployments[network];
-
-				if (uaDeployment === undefined) return;
 
 				const endpoint = await getContractAt(hre, network, "Endpoint", endpointAbi, LZ_ADDRESS[network]);
-				const ua = await getContractAt(hre, network, "UserApplication", uaAbi, uaDeployment.address);
+				let ua: any;
+				if (contractName) {
+					ua = await getContract(hre, network, contractName);
+				}
+				else {
+					const uaInfo = uaAddresses[network];
+					if (!uaInfo || (!uaInfo.address && !uaInfo.contractName)) {
+						logWarning(`Contract information isn't found for ${network}`)
+						return;
+					}
+					ua = await getContractAt(hre, network, uaInfo.contractName, uaAbi, uaInfo.address);
+				}
+				
 				const chainId = CHAIN_ID[network];
-				const localNetworkConfig = config[network];
+				const networkConfig = config[network];
 
-				if (localNetworkConfig === undefined) return;
+				if (networkConfig === undefined) return;
 				const uaConfig = await endpoint.uaConfigLookup(ua.address);
 
-				if (localNetworkConfig.sendVersion !== undefined) {
-					transactions.push(...(await setSendVersion(chainId, ua, uaConfig[0], localNetworkConfig.sendVersion)));
+				if (networkConfig.sendVersion) {
+					transactions.push(...(await setSendVersion(chainId, ua, uaConfig[0], networkConfig.sendVersion)));
 				}
 
-				if (localNetworkConfig.receiveVersion !== undefined) {
-					transactions.push(...(await setReceiveVersion(chainId, ua, uaConfig[1], localNetworkConfig.receiveVersion)));
+				if (networkConfig.receiveVersion) {
+					transactions.push(...(await setReceiveVersion(chainId, ua, uaConfig[1], networkConfig.receiveVersion)));
 				}
 
-				const remoteConfigs = localNetworkConfig.remoteConfigs;
+				const remoteConfigs = networkConfig.remoteConfigs;
+				const configVersion = networkConfig.sendVersion;
+
+				if (!configVersion) {
+					logWarning(`Send Library version isn't specified for ${network}`);
+					return;
+				}
 
 				await Promise.all(
-					remoteConfigs.map(async (config: any) => {
-						if (config.remoteChain === network) return;
-						const remoteChainId = CHAIN_ID[network];
+					remoteConfigs.map(async (remoteConfig: any) => {
+						if (remoteConfig.remoteChain === network) return;
+						const remoteChainId = CHAIN_ID[remoteConfig.remoteChain];
 
-						if (localNetworkConfig.inboundProofLibraryVersion !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION, "uint16", localNetworkConfig.inboundProofLibraryVersion)));
+						if (remoteConfig.inboundProofLibraryVersion) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION, "uint16", remoteConfig.inboundProofLibraryVersion)));
 						}
 
-						if (localNetworkConfig.inboundBlockConfirmations !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_INBOUND_BLOCK_CONFIRMATIONS, "uint64", localNetworkConfig.inboundBlockConfirmations)));
+						if (remoteConfig.inboundBlockConfirmations) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_INBOUND_BLOCK_CONFIRMATIONS, "uint64", remoteConfig.inboundBlockConfirmations)));
 						}
 
-						if (localNetworkConfig.relayer !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_RELAYER, "address", localNetworkConfig.relayer)));
+						if (remoteConfig.relayer) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_RELAYER, "address", remoteConfig.relayer)));
 						}
 
-						if (localNetworkConfig.outboundProofType !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_OUTBOUND_PROOF_TYPE, "uint16", localNetworkConfig.outboundProofType)));
+						if (remoteConfig.outboundProofType) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_OUTBOUND_PROOF_TYPE, "uint16", remoteConfig.outboundProofType)));
 						}
 
-						if (localNetworkConfig.outboundBlockConfirmations !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_OUTBOUND_BLOCK_CONFIRMATIONS, "uint64", localNetworkConfig.outboundBlockConfirmations)));
+						if (remoteConfig.outboundBlockConfirmations) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_OUTBOUND_BLOCK_CONFIRMATIONS, "uint64", remoteConfig.outboundBlockConfirmations)));
 						}
 
-						if (localNetworkConfig.oracle !== undefined) {
-							transactions.push(...(await setConfig(chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_ORACLE, "address", localNetworkConfig.oracle)));
+						if (remoteConfig.oracle) {
+							transactions.push(...(await setConfig(configVersion, chainId, remoteChainId, endpoint, ua, CONFIG_TYPE_ORACLE, "address", remoteConfig.oracle)));
 						}
 					})
 				);
@@ -109,30 +123,13 @@ module.exports = async (taskArgs: any, hre: any) => {
 		)
 	).filter((x) => x);
 
-	let totalTransactionsNeedingChange: number = 0;
 	const columns = ["needChange", "chainId", "remoteChainId", "contractAddress", "methodName", "args", "diff"];
-
-	transactionByNetwork.forEach(({ network, transactions }) => {
-		console.log(`================================================`);
-		console.log(`${network} transactions`);
-		console.log(`================================================`);
-		const transactionsNeedingChange = transactions.filter((tx: Transaction) => tx.needChange);
-		totalTransactionsNeedingChange += transactionsNeedingChange.length;
-
-		if (!transactionsNeedingChange.length) {
-			console.log("No change needed\n");
-		} else {
-			console.table(transactionsNeedingChange, columns);
-		}
-	});
-
+	const changeNeeded = printTransactions(columns, transactionByNetwork);
 	writeToCsv("./setConfigTxs.csv", columns, transactionByNetwork);
 
-	if (totalTransactionsNeedingChange === 0) return; 
+	if (!changeNeeded) return; 
 
-	await promptToProceed(taskArgs.gnosis 
-		? "Would you like to proceed with above instructions in Gnosis?" 
-		: "Would you like to proceed with above instruction?");
+	await promptToProceed(sendToGnosis ? "Would you like to proceed with above instructions in Gnosis?" : "Would you like to proceed with above instruction?");
 	
 	const errs: any[] = [];
 	const print: any = {};
@@ -147,8 +144,8 @@ module.exports = async (taskArgs: any, hre: any) => {
 		}
 	};
 
-	if (taskArgs.gnosis) {
-		const gnosisConfig = getConfig(GNOSIS_CONFIG_FILENAME);
+	if (sendToGnosis) {
+		const gnosisConfig = getConfig(gnosisConfigPath);
 		 await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
@@ -173,10 +170,9 @@ module.exports = async (taskArgs: any, hre: any) => {
 		await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
-				const uaDeployment = uaDeployments[network];
-
-				const endpoint = await getContractAt(hre, network, "Endpoint", endpointAbi, LZ_ADDRESS[network]);
-				const contract = await getWalletContractAt(hre, network, "UserApplication", uaAbi, uaDeployment.address);
+				const ua = contractName 
+					? await getWalletContract(hre, network, contractName) 
+					: await getWalletContractAt(hre, network, uaAddresses[network].contractName, uaAbi, uaAddresses[network].address);
 
 				let successTx = 0;
 				print[network] = print[network] || { requests: `${successTx}/${transactionToCommit.length}` };
@@ -184,7 +180,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 					print[network].current = `${transaction.methodName}(${transaction.args})`;
 					printResult();
 					try {
-						const tx = await executeTransaction(hre, network, transaction, contract);
+						const tx = await executeTransaction(hre, network, transaction, ua);
 						print[network].past = `${transaction.methodName}(${transaction.args}) (${tx.transactionHash})`;
 						successTx++;
 						print[network].requests = `${successTx}/${transactionToCommit.length}`;
@@ -202,7 +198,9 @@ module.exports = async (taskArgs: any, hre: any) => {
 			})
 		);
 	}
-};
+
+	console.log(errs.length ? errs : "Set UA config on all networks successfully");
+}
 
 const setSendVersion = async (chainId: string, ua: any, currentSendVersion: any, newSendVersion: any): Promise<Transaction[]> => {
 	const needChange = currentSendVersion !== newSendVersion;
@@ -226,13 +224,13 @@ const setReceiveVersion = async (chainId: string, ua: any, currentReceiveVersion
 	return [{ needChange, chainId, contractAddress, methodName, args, calldata, diff }];
 };
 
-const setConfig = async (chainId: string, remoteChainId: string, endpoint: any, ua: any, configType: number, configValueType: string, newValue: any): Promise<Transaction[]> => {
-	const currentConfig = await endpoint.getConfig(VERSION, remoteChainId, ua.address, configType);
+const setConfig = async (configVersion: any, chainId: string, remoteChainId: string, endpoint: any, ua: any, configType: number, configValueType: string, newValue: any): Promise<Transaction[]> => {
+	const currentConfig = await endpoint.getConfig(configVersion, remoteChainId, ua.address, configType);
 	const [oldValue] = utils.defaultAbiCoder.decode([configValueType], currentConfig) as any;
 	const newConfig = utils.defaultAbiCoder.encode([configValueType], [newValue]);
 	const contractAddress = ua.address;
 	const methodName = "setConfig";
-	const args = [VERSION, remoteChainId, configType, newConfig];
+	const args = [configVersion, remoteChainId, configType, newConfig];
 	const needChange = oldValue !== newValue;
 	const calldata = ua.interface.encodeFunctionData(methodName, args);
 	const diff = needChange ? { oldValue, newValue } : undefined;
