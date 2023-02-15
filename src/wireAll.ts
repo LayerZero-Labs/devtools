@@ -1,10 +1,9 @@
-import { Transaction, getEndpointId, executeGnosisTransactions, executeTransaction, getContractAt, getContract } from "./utils/crossChainHelper";
+import { Transaction, executeGnosisTransactions, executeTransaction, getContractAt, getContract } from "./utils/crossChainHelper";
 import {promptToProceed, logError} from "./utils/helpers"
 import {configExist, getConfig} from "./utils/fileConfigHelper";
 import {CHAIN_ID, CHAIN_STAGE, ChainKey, ChainStage} from "@layerzerolabs/lz-sdk"
 import {arrayToCsv} from "./utils/helpers";
 import {writeFile} from 'fs/promises'
-import {readFileSync} from 'fs'
 
 const LzAppAbi = [
     "function setTrustedRemote(uint16 _srcChainId, bytes calldata _path)",
@@ -141,7 +140,7 @@ module.exports = async function (taskArgs, hre) {
         }
     })
 
-    const columns = ["needChange", "chainId", "remoteChainId", "contractName", "methodName", "args", "diff", "calldata"]
+    const columns = ["needChange", "chainId", "remoteChainId", "contractName", "functionName", "args", "diff", "calldata"]
 
     const data = transactionBynetwork.reduce((acc, { network, transactions }) => {
         transactions.forEach((transaction) => {
@@ -210,16 +209,16 @@ module.exports = async function (taskArgs, hre) {
                 let successTx = 0
                 print[network] = print[network] || { requests: `${successTx}/${transactionToCommit.length}` }
                 for (let transaction of transactionToCommit) {
-                    print[network].current = `${transaction.contractName}.${transaction.methodName}`
+                    print[network].current = `${transaction.contractName}.${transaction.functionName}`
                     printResult()
                     try {
                         const tx = await executeTransaction(hre, network, transaction)
-                        print[network].past = `${transaction.contractName}.${transaction.methodName} (${tx.transactionHash})`
+                        print[network].past = `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`
                         successTx++
                         print[network].requests = `${successTx}/${transactionToCommit.length}`
                         printResult()
                     } catch (err: any) {
-                        console.log(`Failing calling ${transaction.contractName}.${transaction.methodName} for network ${network} with err ${err}`)
+                        console.log(`Failing calling ${transaction.contractName}.${transaction.functionName} for network ${network} with err ${err}`)
                         console.log(err)
                         errs.push({
                             network,
@@ -244,13 +243,13 @@ module.exports = async function (taskArgs, hre) {
 
 // encode the calldata into the 'calldata' the transaction requires to be sent
 // hre: the hardhat runtime environment, for access to hre.web3.utils.keccak256()
-// methodName: "setPause" or "setRemoteUln"  ie: the string name of the contract function
+// functionName: "setPause" or "setRemoteUln"  ie: the string name of the contract function
 // params: ['bool','uint256'] ie: a string array of the types of the function parameters
 // args: [ true, 1234 ] ie: the array of values that correspond to the types in params
 //
 // return: string like: "0xbedb86fb0000000000000000000000000000000000000000000000000000000000000001"
-export function generateCalldata(hre: any, methodName: string, params: string[], args: any) {
-    return `${hre.web3.utils.keccak256(`${methodName}(${params.join(",")})`).substring(0, 10)}${hre.web3.eth.abi
+export function generateCalldata(hre: any, functionName: string, params: string[], args: any) {
+    return `${hre.web3.utils.keccak256(`${functionName}(${params.join(",")})`).substring(0, 10)}${hre.web3.eth.abi
         .encodeParameters(params, args)
         .substring(2)}`
 }
@@ -266,18 +265,18 @@ async function setUseCustomAdapterParams(hre: any, localNetwork: string, localCo
     const needChange = cur !== useCustom
 
     // function setUseCustomAdapterParams(bool _useCustomAdapterParams)
-    const methodName = "setUseCustomAdapterParams"
+    const functionName = "setUseCustomAdapterParams"
     const params = ['bool']
     let args = [useCustom]
 
     const tx: any = {
-        needChange,
-        chainId: getEndpointId(localNetwork),
-        contractName: localContractNameOrAddress,
-        methodName: methodName,
-        args: args,
-        calldata: generateCalldata(hre, methodName, params, args),
-    }
+		needChange,
+		chainId: CHAIN_ID[localNetwork],
+		contractName: localContractNameOrAddress,
+		functionName: functionName,
+		args: args,
+		calldata: generateCalldata(hre, functionName, params, args),
+	}
     if (tx.needChange) {
         tx.diff = JSON.stringify({ useCustomAdapterParams: { oldValue: cur, newValue: useCustom } });
     }
@@ -295,18 +294,18 @@ async function setDefaultFeeBp(hre: any, localNetwork: string, localContractName
     const needChange = cur !== defaultFeeBp
 
     // function setDefaultFeeBp(uint16 _feeBp)
-    const methodName = "setDefaultFeeBp"
+    const functionName = "setDefaultFeeBp"
     const params = ['uint16']
     let args = [defaultFeeBp]
 
     const tx: any = {
-        needChange,
-        chainId: getEndpointId(localNetwork),
-        contractName: localContractNameOrAddress,
-        methodName: methodName,
-        args: args,
-        calldata: generateCalldata(hre, methodName, params, args),
-    }
+		needChange,
+		chainId: CHAIN_ID[localNetwork],
+		contractName: localContractNameOrAddress,
+		functionName: functionName,
+		args: args,
+		calldata: generateCalldata(hre, functionName, params, args),
+	}
     if (tx.needChange) {
         tx.diff = JSON.stringify({ defaultFeeBp: { oldValue: cur, newValue: defaultFeeBp } })
     }
@@ -326,18 +325,18 @@ async function setFeeBp(hre: any, localNetwork: string, localContractNameOrAddre
     const needChange = curFeeBp !== feeBpConfig.feeBp || curEnabled !== feeBpConfig.enabled
 
     // function setFeeBp(uint16 _dstChainId, bool _enabled, uint16 _feeBp)
-    const methodName = "setFeeBp"
+    const functionName = "setFeeBp"
     const params = ['uint16', 'bool', 'uint16']
     let args = [remoteChainId, feeBpConfig.enabled, feeBpConfig.feeBp]
 
     const tx: any = {
-        needChange,
-        chainId: getEndpointId(localNetwork),
-        contractName: localContractNameOrAddress,
-        methodName: methodName,
-        args: args,
-        calldata: generateCalldata(hre, methodName, params, args),
-    }
+		needChange,
+		chainId: CHAIN_ID[localNetwork],
+		contractName: localContractNameOrAddress,
+		functionName: functionName,
+		args: args,
+		calldata: generateCalldata(hre, functionName, params, args),
+	}
     if (tx.needChange) {
         tx.diff = JSON.stringify({ feeBp: { oldFeeBpValue: curFeeBp, newFeeBpValue: feeBpConfig.feeBp, oldEnabledFee: curEnabled, newEnabledFee:  feeBpConfig.enabled} })
     }
@@ -359,7 +358,7 @@ async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrA
         const needChange = cur !== minGas
 
         // function setMinDstGas(uint16 _dstChainId, uint16 _packetType, uint _minGas)
-        const methodName = "setMinDstGas"
+        const functionName = "setMinDstGas"
         const params = [
             'uint16',
             'uint16',
@@ -371,13 +370,13 @@ async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrA
             minGas
         ]
         const tx: any = {
-            needChange,
-            chainId: getEndpointId(localNetwork),
-            contractName: localContractNameOrAddress,
-            methodName,
-            args: args,
-            calldata: generateCalldata(hre, methodName, params, args),
-        }
+			needChange,
+			chainId: CHAIN_ID[localNetwork],
+			contractName: localContractNameOrAddress,
+			functionName,
+			args: args,
+			calldata: generateCalldata(hre, functionName, params, args),
+		}
         if (tx.needChange) {
             tx.diff = JSON.stringify({ oldValue: cur, newValue: minGas })
         }
@@ -403,23 +402,23 @@ async function setTrustedRemote(hre: any, localNetwork: string, localContractNam
 
     const remoteContractAddress = await remoteContract.address
     const desiredTrustedRemote = hre.ethers.utils.solidityPack(['bytes'], [remoteContractAddress + localContract.address.substring(2)])
-    const remoteChainId = getEndpointId(remoteNetwork)
+    const remoteChainId = CHAIN_ID[remoteNetwork]
     const cur = await localContract.trustedRemoteLookup(remoteChainId)
     const needChange = cur != desiredTrustedRemote
 
     // function setTrustedRemote(uint16 _srcChainId, bytes calldata _path)
-    const methodName = "setTrustedRemote"
+    const functionName = "setTrustedRemote"
     const params = ['uint16', 'bytes']
     let args = [remoteChainId, desiredTrustedRemote]
 
     const tx: any = {
-        needChange,
-        chainId: getEndpointId(localNetwork),
-        contractName: localContractNameOrAddress,
-        methodName: methodName,
-        args: args,
-        calldata: generateCalldata(hre, methodName, params, args),
-    }
+		needChange,
+		chainId: CHAIN_ID[localNetwork],
+		contractName: localContractNameOrAddress,
+		functionName: functionName,
+		args: args,
+		calldata: generateCalldata(hre, functionName, params, args),
+	}
     if (tx.needChange) {
         tx.diff = JSON.stringify({trustedRemote: {oldValue: cur, newValue: desiredTrustedRemote}})
     }
