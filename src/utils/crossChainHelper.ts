@@ -10,7 +10,7 @@ const fs = require("fs");
 
 export interface ExecutableTransaction {
 	contractName: string;
-	methodName: string;
+	functionName: string;
 	args: any[];
 	txArgs?: any;
 }
@@ -20,7 +20,7 @@ export interface Transaction {
 	chainId: string;
 	remoteChainId?: string;
 	contractAddress: string;
-	methodName: string;
+	functionName: string;
 	args: any[];
 	calldata?: string;
 	diff?: { [key: string]: { newValue: any; oldValue: any } };
@@ -112,7 +112,7 @@ export const getContract = async (hre: any, network: string, contractName: strin
 export const getContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string) => {
 	const key = `${network}-${contractName}`;
 	if (!contracts[key]) {
-		const deployedContractAddress = getDeploymentAddresses(network)[contractName];
+		const deployedContractAddress = getDeploymentAddresses(network, false)[contractName];
 		const contract = deployedContractAddress 
 			? (await getContractFactory(hre, contractName)).attach(deployedContractAddress) 
 			: await hre.ethers.getContractAt(abi, contractAddress);
@@ -148,7 +148,7 @@ export const executeTransaction = async (hre: any, network: string, transaction:
 	const finalGasPrice = gasPrice.mul(10).div(8);
 
 	return await (
-		await walletContract[transaction.methodName](...transaction.args, {
+		await walletContract[transaction.functionName](...transaction.args, {
 			gasPrice: finalGasPrice,
 			gasLimit: 8000000,
 			...transaction.txArgs,
@@ -158,7 +158,10 @@ export const executeTransaction = async (hre: any, network: string, transaction:
 
 export const executeGnosisTransactions = async (hre: any, network: string, gnosisConfig: any, transactions: Transaction[]) => {
 	const signer = await getConnectedWallet(hre, network, 0);
-	//invariant(GNOSIS_CONFIG[network], `Gnosis for ${network} not supported.`)
+	if (!gnosisConfig[network]) {
+		throw Error(`Gnosis for ${network} not found or not supported`);
+	}
+
 	const { safeAddress, url } = gnosisConfig[network];
 	console.log(`safeAddress[${safeAddress}] url[${url}]`);
 
@@ -180,31 +183,34 @@ export const executeGnosisTransactions = async (hre: any, network: string, gnosi
 		safeTransaction,
 		safeTxHash,
 		senderAddress: signer.address,
-	})
+	});
 }
 
-export const getDeploymentAddresses = (network: string): any => {
-	const DEPLOYMENT_PATH = path.resolve("./deployments");
+export const getDeploymentAddresses = (network: string, throwIfMissing: boolean = true): any => {
+	const DEPLOYMENT_PATH = path.resolve("deployments");
 
 	let folderName = network;
 	if (network === "hardhat") {
 		folderName = "localhost";
 	}
 
+	const deploymentAddresses: { [key: string]: any } = {};
 	const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter((f:string) => f === folderName)[0];
 	if (networkFolderName === undefined) {
-		throw new Error("missing deployment files for endpoint " + folderName);
+		if(throwIfMissing) {
+			throw new Error("missing deployment files for endpoint " + folderName);
+		}
+		return deploymentAddresses;		
 	}
 
-	let rtnAddresses: { [key: string]: any } = {};
 	const networkFolderPath = path.resolve(DEPLOYMENT_PATH, folderName);
 	const files = fs.readdirSync(networkFolderPath).filter((f: string) => f.includes(".json"));
 	files.forEach((file: string) => {
 		const filepath = path.resolve(networkFolderPath, file);
 		const data = JSON.parse(fs.readFileSync(filepath));
 		const contractName = file.split(".")[0];
-		rtnAddresses[contractName] = data.address;
+		deploymentAddresses[contractName] = data.address;
 	});
 
-	return rtnAddresses;
+	return deploymentAddresses;
 }

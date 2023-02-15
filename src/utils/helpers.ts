@@ -46,15 +46,15 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
 		return acc;
 	}, []);
 	fs.writeFileSync(fileName, arrayToCsv(["network"].concat(columns), data));
-	console.log(`Full configuration written to: ${fileName}`);
+	console.log(`Transactions are written to: ${chalk.green(fileName)}`);
 }
 
 export const printTransactions = (columns: string[], transactionByNetwork: any[]) => {
 	let totalTransactionsNeedingChange: number = 0;
 
 	transactionByNetwork.forEach(({ network, transactions }) => {
-		console.log(`================================================`);
-		console.log(`${network} transactions`);
+		console.log(`\n================================================`);
+		console.log(chalk.green(`${network.toUpperCase()} transactions`));
 		console.log(`================================================`);
 		const transactionsNeedingChange = transactions.filter((tx: Transaction) => tx.needChange);
 		totalTransactionsNeedingChange += transactionsNeedingChange.length;
@@ -70,5 +70,6 @@ export const printTransactions = (columns: string[], transactionByNetwork: any[]
 }
 
 
-export const logError = (message: string) => console.log(chalk.red(`ERROR: ${message}`))
+export const logError = (message: string, includeErrorText: boolean = true) => console.log(chalk.red(includeErrorText ? `ERROR: ${message}` : message));
 export const logWarning = (message: string) => console.log(chalk.yellow(`WARNING: ${message}`));
+export const logSuccess = (message: string) => console.log(chalk.green(`${message}`));
