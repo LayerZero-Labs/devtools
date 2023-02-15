@@ -7,4 +7,10 @@ task("setConfig", "sets send and receive messaging library versions and a custom
 	.addOptionalParam("uaAddressesConfig", "the path to a file with contract addresses and names. Should be specified if contract names are different on different chains or the deployment information is absent")
 	.addOptionalParam("gnosisConfig", "the path to a file with Gnosis config. If specified, the transactions will be sent to Gnosis");
 
-// npx hardhat setConfig --networks "goerli,bsc-testnet,mumbai,fuji" --ua-config "./constants/uaConfig.json" --contract-name "OFT"
+task("wireAll", "", require("./wireAll"))
+    .addParam("e", "the environment ie: mainnet, testnet or sandbox")
+    .addParam("localChains", "comma seperated list of networks to config on")
+    .addParam("remoteChains", "comma seperated list of networks to config on")
+    .addParam("noPrompt", "no prompt", false, types.boolean)
+    .addOptionalParam("configPath", "option config path")
+    .addOptionalParam("n", "send to gnosis", false, types.boolean)
