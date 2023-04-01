@@ -1,10 +1,11 @@
 import * as ethers from "ethers";
-import { ContractReceipt } from "ethers";
+import { Contract, ContractReceipt } from "ethers";
 import { createProvider } from "hardhat/internal/core/providers/construction";
 import { DeploymentsManager } from "hardhat-deploy/dist/src/DeploymentsManager";
 import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
+import { CHAIN_ID } from "@layerzerolabs/lz-sdk";
 const path = require("path");
 const fs = require("fs");
 
@@ -112,11 +113,18 @@ export const getContract = async (hre: any, network: string, contractName: strin
 export const getContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string) => {
 	const key = `${network}-${contractName}`;
 	if (!contracts[key]) {
-		const deployedContractAddress = getDeploymentAddresses(network, false)[contractName];
-		const contract = deployedContractAddress 
-			? (await getContractFactory(hre, contractName)).attach(deployedContractAddress) 
-			: await hre.ethers.getContractAt(abi, contractAddress);
 		const provider = getProvider(hre, network);
+		const deployedContractAddress = getDeploymentAddresses(network, false)[contractName];
+		let contract: any
+		if (deployedContractAddress) {
+			contract = await getContractFactory(hre, contractName);
+			contract.attach(deployedContractAddress);
+			contract.connect(provider);
+		}
+		else {
+			contract = new Contract(contractAddress, abi, provider);
+		}
+		
 		contracts[key] = contract.connect(provider);
 	}
 	return contracts[key];
@@ -187,14 +195,18 @@ export const executeGnosisTransactions = async (hre: any, network: string, gnosi
 }
 
 export const getDeploymentAddresses = (network: string, throwIfMissing: boolean = true): any => {
+	const deploymentAddresses: { [key: string]: any } = {};
 	const DEPLOYMENT_PATH = path.resolve("deployments");
+
+	if (!fs.existsSync(DEPLOYMENT_PATH)) {
+		return deploymentAddresses;
+	}
 
 	let folderName = network;
 	if (network === "hardhat") {
 		folderName = "localhost";
 	}
 
-	const deploymentAddresses: { [key: string]: any } = {};
 	const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter((f:string) => f === folderName)[0];
 	if (networkFolderName === undefined) {
 		if(throwIfMissing) {
@@ -214,3 +226,26 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
 
 	return deploymentAddresses;
 }
+
+export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: any, receiveLibrary: any, applicationAddress: string) => {
+	const remoteChainId = CHAIN_ID[remoteNetwork];
+
+	const sendConfig = await sendLibrary.appConfig(applicationAddress, remoteChainId);
+	let inboundProofLibraryVersion = sendConfig.inboundProofLibraryVersion;
+	let inboundBlockConfirmations = sendConfig.inboundBlockConfirmations.toNumber();
+
+	if (receiveLibrary) {
+		const receiveConfig = await receiveLibrary.appConfig(applicationAddress, remoteChainId);
+		inboundProofLibraryVersion = receiveConfig.inboundProofLibraryVersion;
+		inboundBlockConfirmations = receiveConfig.inboundBlockConfirmations.toNumber();
+	}
+	return {
+		remoteNetwork,
+		inboundProofLibraryVersion,
+		inboundBlockConfirmations,
+		relayer: sendConfig.relayer,
+		outboundProofType: sendConfig.outboundProofType,
+		outboundBlockConfirmations: sendConfig.outboundBlockConfirmations.toNumber(),
+		oracle: sendConfig.oracle,
+	};
+};
