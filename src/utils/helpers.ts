@@ -7,7 +7,6 @@ export const promptToProceed = async (msg: string, noPrompt: boolean = false) =>
 	if (!noPrompt) {
 		const proceed = await cli.prompt(`${msg} Y/N`);
 		if (!["y", "yes"].includes(proceed.toLowerCase())) {
-			console.log("Aborting...");
 			process.exit(0);
 		}
 	}
@@ -60,13 +59,11 @@ export const printTransactions = (columns: string[], transactionByNetwork: any[]
 		totalTransactionsNeedingChange += transactionsNeedingChange.length;
 
 		if (!transactionsNeedingChange.length) {
-			console.log("No change needed\n");
+			console.log("No changes needed\n");
 		} else {
 			console.table(transactionsNeedingChange, columns);
 		}
 	})
-
-	return totalTransactionsNeedingChange > 0;
 }
 
 

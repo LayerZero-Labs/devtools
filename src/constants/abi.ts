@@ -7,7 +7,8 @@ export const ENDPOINT_ABI = [
 ];
 
 export const MESSAGING_LIBRARY_ABI = [
-	"function appConfig(address, uint16) view returns (tuple(uint16 inboundProofLibraryVersion, uint64 inboundBlockConfirmations, address relayer, uint16 outboundProofType, uint64 outboundBlockConfirmations, address oracle))"
+	"function appConfig(address, uint16) view returns (tuple(uint16 inboundProofLibraryVersion, uint64 inboundBlockConfirmations, address relayer, uint16 outboundProofType, uint64 outboundBlockConfirmations, address oracle))",
+	"function defaultAppConfig(uint16) view returns (tuple(uint16 inboundProofLibraryVersion, uint64 inboundBlockConfirmations, address relayer, uint16 outboundProofType, uint64 outboundBlockConfirmations, address oracle))"
 ];
 
 

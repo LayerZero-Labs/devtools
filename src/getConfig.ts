@@ -23,15 +23,15 @@ module.exports = async (taskArgs: any, hre: any) => {
 	}	
 
 	const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, LZ_ADDRESS[network]);
-	const uaConfig = await endpoint.uaConfigLookup(contractAddress);
-	const sendVersion = uaConfig.sendVersion;
-	const receiveVersion = uaConfig.receiveVersion;	
-	const sendLibraryAddress = sendVersion === 0 ? await endpoint.defaultSendLibrary() : uaConfig.sendLibrary;
+	const appConfig = await endpoint.uaConfigLookup(contractAddress);
+	const sendVersion = appConfig.sendVersion;
+	const receiveVersion = appConfig.receiveVersion;	
+	const sendLibraryAddress = sendVersion === 0 ? await endpoint.defaultSendLibrary() : appConfig.sendLibrary;
 	const sendLibrary = await hre.ethers.getContractAt(MESSAGING_LIBRARY_ABI, sendLibraryAddress);	
 	let receiveLibrary: any;
 
 	if (sendVersion !== receiveVersion){
-		const receiveLibraryAddress = receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : uaConfig.receiveLibraryAddress;
+		const receiveLibraryAddress = receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : appConfig.receiveLibraryAddress;
 		receiveLibrary = await hre.ethers.getContractAt(MESSAGING_LIBRARY_ABI, receiveLibraryAddress);
 	}
 		
@@ -42,6 +42,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 		})
 	)
 
+	console.log("Network            ", network);
 	console.log("Application address", contractAddress);
 	console.log("Send version       ", sendVersion);
 	console.log("Receive version    ", receiveVersion);

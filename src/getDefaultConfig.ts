@@ -20,12 +20,12 @@ module.exports = async (taskArgs: any, hre: any) => {
 				network,
 				sendVersion,
 				receiveVersion,
-				inboundProofLibraryVersion: config[0],
-				inboundBlockConfirmations: config[1].toNumber(),
-				relayer: config[2],
-				outboundProofType: config[3],
-				outboundBlockConfirmations: config[4].toNumber(),
-				oracle: config[5]
+				inboundProofLibraryVersion: config.inboundProofLibraryVersion,
+				inboundBlockConfirmations: config.inboundBlockConfirmations.toNumber(),
+				relayer: config.relayer,
+				outboundProofType: config.outboundProofType,
+				outboundBlockConfirmations: config.outboundBlockConfirmations.toNumber(),
+				oracle: config.oracle,
 			};
 		})
 	)

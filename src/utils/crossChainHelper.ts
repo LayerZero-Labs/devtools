@@ -110,21 +110,11 @@ export const getContract = async (hre: any, network: string, contractName: strin
 	return contracts[key];
 }
 
-export const getContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string) => {
-	const key = `${network}-${contractName}`;
+export const getContractAt = async (hre: any, network: string, abi: any, contractAddress: string) => {
+	const key = `${network}-${contractAddress}`;
 	if (!contracts[key]) {
 		const provider = getProvider(hre, network);
-		const deployedContractAddress = getDeploymentAddresses(network, false)[contractName];
-		let contract: any
-		if (deployedContractAddress) {
-			contract = await getContractFactory(hre, contractName);
-			contract.attach(deployedContractAddress);
-			contract.connect(provider);
-		}
-		else {
-			contract = new Contract(contractAddress, abi, provider);
-		}
-		
+		const contract = new Contract(contractAddress, abi, provider);
 		contracts[key] = contract.connect(provider);
 	}
 	return contracts[key];
@@ -136,8 +126,8 @@ export const getWalletContract = async (hre: any, network: string, contractName:
 	return contract.connect(wallet);
 }
 
-export const getWalletContractAt = async (hre: any, network: string, contractName: string, abi: any, contractAddress: string, walletIndex = 0) => {
-	const contract = await getContractAt(hre, network, contractName, abi, contractAddress);
+export const getWalletContractAt = async (hre: any, network: string, abi: any, contractAddress: string, walletIndex = 0) => {
+	const contract = await getContractAt(hre, network, abi, contractAddress);
 	const wallet = getConnectedWallet(hre, network, walletIndex);
 	return contract.connect(wallet);
 };
