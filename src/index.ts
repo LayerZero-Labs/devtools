@@ -1,7 +1,6 @@
 import { task, types } from "hardhat/config";
 
 task("setConfig", "sets Send and Receive Messaging Library versions and a custom application config for contracts implementing ILayerZeroUserApplicationConfig interface", require("./setConfig"))
-	.addParam("networks", "comma separated list of networks where contracts are deployed")
 	.addParam("configPath", "the application config file path")
 	.addOptionalParam("name", "name of the deployed contracts. Should be specified if the same contract deployed on different chains and the deployment information is located in the deployments folder")
 	.addOptionalParam("address", "address of the deployed contracts. Should be specified if the contract address is the same on all chains")

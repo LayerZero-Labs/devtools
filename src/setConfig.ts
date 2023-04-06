@@ -26,7 +26,7 @@ module.exports = async (taskArgs: any, hre: any) => {
 	}
 
 	const config = getConfig(configPath);
-	const networks = taskArgs.networks.split(",");
+	const networks = Object.keys(config);
 
 	const transactionByNetwork: any[] = (
 		await Promise.all(
