@@ -7,28 +7,28 @@
 			{
 				"remoteChain": "bsc",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 20,
-				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
+				"inboundBlockConfirmations": 15,
+				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 20,
+				"outboundBlockConfirmations": 15,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "avalanche",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 12,
-				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
+				"inboundBlockConfirmations": 15,
+				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 12,
+				"outboundBlockConfirmations": 15,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "polygon",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 512,
-				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
+				"inboundBlockConfirmations": 15,
+				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 512,
+				"outboundBlockConfirmations": 15,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			}
 		]
@@ -41,28 +41,28 @@
 			{
 				"remoteChain": "ethereum",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 15,
-				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
+				"inboundBlockConfirmations": 20,
+				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 15,
+				"outboundBlockConfirmations": 20,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "avalanche",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 12,
-				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
+				"inboundBlockConfirmations": 20,
+				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 12,
+				"outboundBlockConfirmations": 20,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "polygon",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 512,
-				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
+				"inboundBlockConfirmations": 20,
+				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 512,
+				"outboundBlockConfirmations": 20,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			}
 		]
@@ -75,28 +75,28 @@
 			{
 				"remoteChain": "ethereum",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 15,
-				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
+				"inboundBlockConfirmations": 12,
+				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 15,
+				"outboundBlockConfirmations": 12,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "bsc",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 20,
-				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
+				"inboundBlockConfirmations": 12,
+				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 20,
+				"outboundBlockConfirmations": 12,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "polygon",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 512,
-				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
+				"inboundBlockConfirmations": 12,
+				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 512,
+				"outboundBlockConfirmations": 12,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			}
 		]
@@ -109,28 +109,28 @@
 			{
 				"remoteChain": "ethereum",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 15,
-				"relayer": "0x902F09715B6303d4173037652FA7377e5b98089E",
+				"inboundBlockConfirmations": 512,
+				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 15,
+				"outboundBlockConfirmations": 512,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "bsc",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 20,
-				"relayer": "0xA27A2cA24DD28Ce14Fb5f5844b59851F03DCf182",
+				"inboundBlockConfirmations": 512,
+				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 20,
+				"outboundBlockConfirmations": 512,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			},
 			{
 				"remoteChain": "avalanche",
 				"inboundProofLibraryVersion": 1,
-				"inboundBlockConfirmations": 12,
-				"relayer": "0xCD2E3622d483C7Dc855F72e5eafAdCD577ac78B4",
+				"inboundBlockConfirmations": 512,
+				"relayer": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f",
 				"outboundProofType": 1,
-				"outboundBlockConfirmations": 12,
+				"outboundBlockConfirmations": 512,
 				"oracle": "0x5a54fe5234E811466D5366846283323c954310B2"
 			}
 		]

@@ -38,8 +38,8 @@ module.exports = async (taskArgs: any, hre: any) => {
 				if (!networkConfig) return;
 
 				const endpoint = await getContractAt(hre, network, ENDPOINT_ABI, LZ_ADDRESS[network]);
-				const contractName = name ?? networkConfig.name;
-				const contractAddress = address ?? networkConfig.address;
+				const contractName =  networkConfig.name ?? name;
+				const contractAddress = networkConfig.address ?? address;
 
 				if (!contractName && !contractAddress) {
 					logWarning(`Contract information isn't found for ${network}`);
@@ -169,8 +169,8 @@ module.exports = async (taskArgs: any, hre: any) => {
 			transactionByNetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
 				const networkConfig = config[network];
-				const contractName = name ?? networkConfig.name;
-				const contractAddress = address ?? networkConfig.address;
+				const contractName = networkConfig.name ?? name;
+				const contractAddress = networkConfig.address ?? address;
 				const app = contractName ? await getWalletContract(hre, network, contractName) : await getWalletContractAt(hre, network, USER_APPLICATION_ABI, contractAddress);
 
 				let successTx = 0;
