@@ -33,8 +33,8 @@ module.exports = async function (taskArgs, hre) {
 	const signers = await hre.ethers.getSigners();
 	console.log(`CURRENT SIGNER: ${signers[0].address}`);
 
-	const localNetworks = taskArgs.localChains.split(",");
-	const remoteNetworks = taskArgs.remoteChains.split(",");
+	let localNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig)
+
 	const env = taskArgs.e;
 
 	let stage;
@@ -47,19 +47,15 @@ module.exports = async function (taskArgs, hre) {
 		return;
 	}
 
-	validateStageOfNetworks(stage, localNetworks, remoteNetworks);
-
-	// prompt for continuation
-	await promptToProceed(`do you want to wire these localNetworks: ${localNetworks} and remoteNetworks: ${remoteNetworks}?`, taskArgs.noPrompt);
-
 	console.log(`************************************************`);
 	console.log(`Computing diff`);
 	console.log(`************************************************`);
 
-	let transactionBynetwork = await Promise.all(
+	let transactionBynetwork: any = await Promise.all(
 		localNetworks.map(async (localNetwork) => {
-			// array of transactions to execute
-			const transactions: Transaction[] = [];
+            // array of transactions to execute
+            const transactions: Transaction[] = [];
+            const remoteNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig)
 
 			let localContractNameOrAddress = getContractNameOrAddress(localNetwork, WIRE_UP_CONFIG);
 			if (localContractNameOrAddress === undefined) {
@@ -112,7 +108,7 @@ module.exports = async function (taskArgs, hre) {
 			);
 			return {
 				network: localNetwork,
-				transactions,
+				transactions: transactions,
 			};
 		})
 	);

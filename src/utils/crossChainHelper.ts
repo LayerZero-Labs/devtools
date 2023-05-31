@@ -148,7 +148,7 @@ export const executeTransaction = async (hre: any, network: string, transaction:
 	return await (
 		await walletContract[transaction.functionName](...transaction.args, {
 			gasPrice: finalGasPrice,
-			gasLimit: 8000000,
+			gasLimit: 200000,
 			...transaction.txArgs,
 		})
 	).wait()

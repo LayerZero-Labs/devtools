@@ -16,8 +16,8 @@ task("getConfig", "outputs the application's Send and Receive Messaging Library 
 
 task("wireAll", "", require("./wireAll"))
 	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
-	.addParam("localChains", "comma separated list of networks to config on")
-	.addParam("remoteChains", "comma separated list of networks to config on")
-	.addParam("noPrompt", "no prompt", false, types.boolean)
+    .addParam("noPrompt", "no prompt", false, types.boolean)
+	.addOptionalParam("localChains", "comma separated list of networks to config on")
+	.addOptionalParam("remoteChains", "comma separated list of networks to config on")
 	.addOptionalParam("configPath", "option config path")
 	.addOptionalParam("n", "send to gnosis", false, types.boolean)
