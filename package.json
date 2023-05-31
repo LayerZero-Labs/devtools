@@ -1,7 +1,7 @@
 {
   "name": "@layerzerolabs/ua-utils",
   "version": "0.0.1",
-  "repository": "https://github.com/LayerZero-Labs/ua-tasks.git",
+  "repository": "https://github.com/LayerZero-Labs/ua-utils.git",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,24 +1,24 @@
-# ua-tasks
+# ua-utils
 
 A set of common tasks for contracts integrating LayerZero
 
 ## Installation
 
 ```sh
-$ npm install @layerzerolabs/ua-tasks
+$ npm install @layerzerolabs/ua-utils
 ```
 The plugin depends on [`@nomiclabs/hardhat-ethers`](https://www.npmjs.com/package/@nomiclabs/hardhat-ethers), so you need to import both plugins in your `hardhat.config.js`:
 
 ```js
 require("@nomiclabs/hardhat-ethers");
-require("@layerzerolabs/ua-tasks");
+require("@layerzerolabs/ua-utils");
 ```
 
 Or if you are using TypeScript, in your `hardhat.config.ts`:
 
 ```ts
 import "@nomiclabs/hardhat-ethers";
-import "@layerzerolabs/ua-tasks";
+import "@layerzerolabs/ua-utils";
 ```
 ## Tasks
 
