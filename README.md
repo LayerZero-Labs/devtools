@@ -20,6 +20,8 @@ Or if you are using TypeScript, in your `hardhat.config.ts`:
 import "@nomiclabs/hardhat-ethers";
 import "@layerzerolabs/ua-utils";
 ```
+
+Make sure that network names in your `hardhat.config.js` match the following [naming convention](https://github.com/LayerZero-Labs/sdk/blob/main/packages/lz-sdk/src/enums/ChainKey.ts).
 ## Tasks
 
 The package adds the following tasks:

@@ -21,9 +21,7 @@
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
-    "@types/mocha": "^10.0.1",
-    "chalk": "4.1.2",
-    "cli-ux": "^6.0.9",
+    "@types/mocha": "^10.0.1",  
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2",
     "hardhat": "^2.12.5",
@@ -34,6 +32,8 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@layerzerolabs/lz-sdk": "latest"
+    "@layerzerolabs/lz-sdk": "latest",
+    "chalk": "4.1.2",
+    "cli-ux": "^6.0.9"
   }
 }
