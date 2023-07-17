@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": "https://github.com/LayerZero-Labs/ua-utils.git",
   "license": "MIT",
   "main": "dist/index.js",
@@ -16,10 +16,6 @@
     "README.md"
   ],
   "devDependencies": {
-    "@gnosis.pm/safe-core-sdk": "^2.0.0",
-    "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
-    "@gnosis.pm/safe-ethers-lib": "^1.0.0",
-    "@gnosis.pm/safe-service-client": "1.1.1",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
     "@types/mocha": "^10.0.1",  
     "dotenv": "^16.0.3",
@@ -32,6 +28,10 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "@gnosis.pm/safe-core-sdk": "^2.0.0",
+    "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
+    "@gnosis.pm/safe-ethers-lib": "^1.0.0",
+    "@gnosis.pm/safe-service-client": "1.1.1",
     "@layerzerolabs/lz-sdk": "latest",
     "chalk": "4.1.2",
     "cli-ux": "^6.0.9"
