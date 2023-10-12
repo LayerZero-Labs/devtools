@@ -6,6 +6,7 @@ import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
 import { CHAIN_ID } from "@layerzerolabs/lz-sdk";
+import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions";
 const path = require("path");
 const fs = require("fs");
 
@@ -140,8 +141,15 @@ const getContractFactory = async (hre: any, contractName: string) => {
 	return contractFactories[contractName];
 }
 
-export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, contract?: any): Promise<ContractReceipt> => {
-	const walletContract = contract ? contract : await getWalletContract(hre, network, transaction.contractName, 0);
+export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, contract?: any, abi?: any): Promise<ContractReceipt> => {
+    let walletContract;
+    if (contract) {
+        walletContract = contract;
+    } else if(hre.ethers.utils.isAddress(transaction.contractName)) {
+        walletContract = await getWalletContractAt(hre, network, abi, transaction.contractName, 0);
+    } else {
+        walletContract = await getWalletContract(hre, network, transaction.contractName, 0);
+    }
 	const gasPrice = await getProvider(hre, network).getGasPrice();
 	const finalGasPrice = gasPrice.mul(10).div(8);
 
@@ -196,7 +204,6 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
 	if (network === "hardhat") {
 		folderName = "localhost";
 	}
-
 	const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter((f:string) => f === folderName)[0];
 	if (networkFolderName === undefined) {
 		if(throwIfMissing) {
@@ -239,3 +246,44 @@ export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: a
 		oracle: sendConfig.oracle,
 	};
 };
+
+export const getEvmContractAddress = (
+    contractName: string,
+    chainName: string,
+    environment: string,
+): string => {
+    const deploymentFolderName = getDeploymentFolderName(
+        chainName,
+        environment,
+    )
+    return require(`@layerzerolabs/lz-evm-sdk-v1/deployments/${deploymentFolderName}/${contractName}.json`).address
+}
+
+const getDeploymentFolderName = (chainName: string, environment: string): string => {
+    if (['localnet', 'sandbox'].includes(environment)) {
+        return chainName + '-sandbox-local'
+    }
+    // monorepo packages
+    return `${chainName.split("-")[0]}-${environment}`
+}
+
+
+export const getChainId = (chainName: string, environment: string): number => {
+    const chainIdEnum = getChainIdEnum(chainName, environment)
+    if(environment == "mainnet") {
+        return MainnetEndpointId[chainIdEnum]
+    } else if(environment == "testnet") {
+        return TestnetEndpointId[chainIdEnum]
+    }  else if(environment == "sandbox") {
+        return SandboxEndpointId[chainIdEnum]
+    } else {
+        throw new Error("cannot find chainId");
+    }
+}
+
+const getChainIdEnum = (chainName: string, environment: string,): string => {
+    return `${chainName.split("-")[0].toUpperCase()}_${environment.toUpperCase()}`
+}
+
+
+

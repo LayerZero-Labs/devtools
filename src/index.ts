@@ -21,3 +21,17 @@ task("wireAll", "", require("./wireAll"))
 	.addOptionalParam("remoteChains", "comma separated list of networks to config on")
 	.addOptionalParam("configPath", "option config path")
 	.addOptionalParam("n", "send to gnosis", false, types.boolean)
+// npx hardhat --network ethereum-testnet wireAll --e testnet --config-path "./constants/oftv2Config/wireUpConfig.json"
+
+task("checkConfig", "", require("./checkConfig"))
+	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
+	.addFlag("u", "show use custom adapter params")
+	.addFlag("t", "show trusted remote lookup")
+	.addFlag("m", "show min destination gas lookup")
+	.addParam("chains", "comma separated list of networks")
+    .addOptionalParam("contract", "name of contract")
+    .addOptionalParam("addresses", "addresses of contracts in same order as chains")
+    .addOptionalParam("proxyContract", "name of proxy contract")
+    .addOptionalParam("proxyChain", "name of proxy chain")
+// npx hardhat checkConfig --e testnet --u --t --m --contract ExampleOFTV2 --chains ethereum-testnet,scroll-testnet
+// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,scroll-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17"
