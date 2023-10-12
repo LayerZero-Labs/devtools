@@ -15,20 +15,20 @@ module.exports = async function (taskArgs, hre) {
     const remoteNetworks = localNetworks;
     const contractAddresses = taskArgs?.addresses?.split(",");
 
-	let checkConfigObj = {}
+	let checkWireAllConfigObj = {}
     await Promise.all(
         localNetworks.map(async (localNetwork, localIndex) => {
-            checkConfigObj[localNetwork] = {
+            checkWireAllConfigObj[localNetwork] = {
                 useCustomAdapterParams: {},
                 withdrawalFeeBps: {},
                 minDstGasLookup: {},
                 trustedRemoteLookup: {}
             }
 
-            checkConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = "";
-            checkConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = "";
-            checkConfigObj[localNetwork].minDstGasLookup[localNetwork] = "";
-            checkConfigObj[localNetwork].trustedRemoteLookup[localNetwork] = "";
+            checkWireAllConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = "";
+            checkWireAllConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = "";
+            checkWireAllConfigObj[localNetwork].minDstGasLookup[localNetwork] = "";
+            checkWireAllConfigObj[localNetwork].trustedRemoteLookup[localNetwork] = "";
 
             let localContractNameOrAddress;
             if(taskArgs?.proxyChain && taskArgs?.proxyContract && localNetwork == taskArgs?.proxyChain) {
@@ -44,8 +44,8 @@ module.exports = async function (taskArgs, hre) {
                 return;
             }
 
-            if(taskArgs.u) checkConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = await getUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress);
-            if(taskArgs.wfb) checkConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = await getWithdrawalFeeBps(hre, localNetwork, localContractNameOrAddress);
+            if(taskArgs.u) checkWireAllConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = await getUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress);
+            if(taskArgs.wfb) checkWireAllConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = await getWithdrawalFeeBps(hre, localNetwork, localContractNameOrAddress);
 
             await Promise.all(
                 remoteNetworks.map(async (remoteNetwork, remoteIndex) => {
@@ -64,9 +64,9 @@ module.exports = async function (taskArgs, hre) {
                         return;
                     }
 
-                    checkConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
-                    if(taskArgs.t) checkConfigObj[localNetwork].trustedRemoteLookup[remoteNetwork] = await getTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
-                    if(taskArgs.m) checkConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
+                    checkWireAllConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
+                    if(taskArgs.t) checkWireAllConfigObj[localNetwork].trustedRemoteLookup[remoteNetwork] = await getTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
+                    if(taskArgs.m) checkWireAllConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
                 })
             );
         })
@@ -74,25 +74,25 @@ module.exports = async function (taskArgs, hre) {
 
     if(taskArgs.u) {
         console.log("Use Custom Adapter Params Table");
-        let useCustomAdapterParamsTable = Object.keys(checkConfigObj).map((network) => ({ [network]: checkConfigObj[network].useCustomAdapterParams}))
+        let useCustomAdapterParamsTable = Object.keys(checkWireAllConfigObj).map((network) => ({ [network]: checkWireAllConfigObj[network].useCustomAdapterParams}))
         console.table(useCustomAdapterParamsTable.reduce(((r, c) => Object.assign(r, c)), {}));
     }
 
     if(taskArgs.wfb) {
         console.log("Withdrawal Fee Bps Lookup Table");
-        let minDstGasLookupTable = Object.keys(checkConfigObj).map((network) => ({ [network]: checkConfigObj[network].withdrawalFeeBps}))
+        let minDstGasLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({ [network]: checkWireAllConfigObj[network].withdrawalFeeBps}))
         console.table(minDstGasLookupTable.reduce(((r, c) => Object.assign(r, c)), {}));
     }
 
     if(taskArgs.t) {
         console.log("Trusted Remote Lookup Table");
-        let trustedRemoteLookupTable = Object.keys(checkConfigObj).map((network) => ({ [network]: checkConfigObj[network].trustedRemoteLookup}))
+        let trustedRemoteLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({ [network]: checkWireAllConfigObj[network].trustedRemoteLookup}))
         console.table(trustedRemoteLookupTable.reduce(((r, c) => Object.assign(r, c)), {}));
     }
 
     if(taskArgs.m) {
         console.log("Min Dst Gas Lookup Table");
-        let minDstGasLookupTable = Object.keys(checkConfigObj).map((network) => ({ [network]: checkConfigObj[network].minDstGasLookup}))
+        let minDstGasLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({ [network]: checkWireAllConfigObj[network].minDstGasLookup}))
         console.table(minDstGasLookupTable.reduce(((r, c) => Object.assign(r, c)), {}));
     }
 }

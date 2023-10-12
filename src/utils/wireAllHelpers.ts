@@ -196,14 +196,13 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
 
 	if (taskArgs.n) {
 		await promptToProceed("Would you like to Submit to gnosis?", taskArgs.noPrompt);
+        const gnosisConfig = getConfig(taskArgs.gnosisConfigPath);
 		await Promise.all(
 			transactionBynetwork.map(async ({ network, transactions }) => {
 				const transactionToCommit = transactions.filter((transaction) => transaction.needChange);
-
 				print[network] = print[network] || { requests: `1/1` };
 				print[network].current = `executeGnosisTransactions: ${transactionToCommit}`;
 				try {
-					const gnosisConfig = getConfig(taskArgs.gnosisConfigPath);
 					await executeGnosisTransactions(hre, network, gnosisConfig, transactionToCommit);
 					print[network].requests = `1/1`;
 					printResult();

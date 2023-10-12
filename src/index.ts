@@ -14,16 +14,7 @@ task("getConfig", "outputs the application's Send and Receive Messaging Library 
 	.addOptionalParam("name", "name of the deployed contract. Should be specified only if the deployment information is located in the deployments folder")
 	.addOptionalParam("address", "the contract address");
 
-task("wireAll", "", require("./wireAll"))
-	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
-    .addParam("noPrompt", "no prompt", false, types.boolean)
-	.addOptionalParam("localChains", "comma separated list of networks to config on")
-	.addOptionalParam("remoteChains", "comma separated list of networks to config on")
-	.addOptionalParam("configPath", "option config path")
-	.addOptionalParam("n", "send to gnosis", false, types.boolean)
-// npx hardhat --network ethereum-testnet wireAll --e testnet --config-path "./constants/oftv2Config/wireUpConfig.json"
-
-task("checkConfig", "", require("./checkConfig"))
+task("checkWireAllConfig", "", require("./checkWireAllConfig"))
 	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
 	.addFlag("u", "show use custom adapter params")
 	.addFlag("t", "show trusted remote lookup")
@@ -33,5 +24,14 @@ task("checkConfig", "", require("./checkConfig"))
     .addOptionalParam("addresses", "addresses of contracts in same order as chains")
     .addOptionalParam("proxyContract", "name of proxy contract")
     .addOptionalParam("proxyChain", "name of proxy chain")
-// npx hardhat checkConfig --e testnet --u --t --m --contract ExampleOFTV2 --chains ethereum-testnet,scroll-testnet
-// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,scroll-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17"
+// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet --contract ExampleOFTV2
+// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --contract OFTV2 --proxy-contract ProxyOFTV2 --proxy-chain optimism-testnet
+// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17,0x27631753FC88e7b45a46679B9Cd2e06378cB43dC"
+
+task("wireAll", "", require("./wireAll"))
+	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
+    .addOptionalParam("noPrompt", "no prompt", false, types.boolean)
+	.addOptionalParam("configPath", "Optional config path. Default: ./constants/wireUpConfig.json", "./constants/wireUpConfig.json", types.string)
+	.addOptionalParam("n", "send to gnosis", false, types.boolean)
+    .addOptionalParam("gnosisConfigPath", "Optional config path. Default: ./constants/gnosisConfig.json", "./constants/gnosisConfig.json", types.string)
+// npx hardhat --network ethereum-testnet wireAll --e testnet --config-path "./constants/oftv2Config/wireUpConfig.json"

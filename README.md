@@ -130,24 +130,123 @@ The package adds the following tasks:
     - `oracle` - the address of the Oracle contract.
 
     <br>
+   
+ - `checkWireAllConfig` returns the current wired up configurations of the specified contract.
 
-    Below is an example of the Gnosis configuration
+   Parameters:
+    - `e` - the environment ie: mainnet, testnet or sandbox.
+    - `u` - flag to show use custom adapter params.
+    - `t` - flag to show trusted remotes.
+    - `m` - flag to show min destination gas.
+    - `chains` - comma separated list of networks.
+    - `addresses` - comma separated list of contract addresses in same order as chains. An optional parameter, if no deployment folder is available and want to use contract addresses.
+    - `contract` - name of contract. An optional parameter. If all contract names are the same.
+    - `proxyContract` - name of proxy contract. An optional parameter. If one contract name is different.
+    - `proxyChain` - name of proxy chain. An optional parameter. If one chain has different contract name .
 
-    ```json
-    {
-         "ethereum": {
-             "safeAddress": "0xa36B7e7894aCfaa6c35A8A0EC630B71A6B8A6D22",
-             "url": "https://safe-transaction.mainnet.gnosis.io/"
+   Usage:
+
+    ```sh
+    npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet --contract ExampleOFTV2
+  
+    npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --contract OFTV2 --proxy-contract ProxyOFTV2 --proxy-chain optimism-testnet
+  
+    npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17,0x27631753FC88e7b45a46679B9Cd2e06378cB43dC"
+    ```   
+     <br>
+
+ - `wireAll` sets the wire all configuration of the specified contract.
+
+   Parameters:
+    - `e` - the environment ie: mainnet, testnet or sandbox.
+    - `noPrompt` - no prompt. An optional parameter defaults to false.
+    - `configPath` - config path. An optional parameter. Default: ./constants/wireUpConfig.json.
+    - `n` - send to gnosis. An optional parameter defaults to false.
+    - `gnosisConfigPath` - gnosis config path. An optional parameter. Default: ./constants/gnosisConfig.json.
+
+   Usage:
+
+    ```sh
+    npx hardhat --network ethereum-testnet wireAll --e testnet
+    ```   
+  
+     Below is an example of the wire all configuration
+
+     ```json
+     {
+         "proxyContractConfig": {
+             "chain": "avalanche",
+             "name": "ProxyOFT"
          },
-         "bsc": {
-             "safeAddress": "0x4755D44c1C196dC524848200B0556A09084D1dFD",
-             "url": "https://safe-transaction.bsc.gnosis.io/"
+         "contractConfig": {
+             "name": "OFT"
          },
-         "avalanche": {
-             "safeAddress": "0x4FF2C33FD9042a76eaC920C037383E51659417Ee",
-             "url": "https://safe-transaction.avalanche.gnosis.io/"
+         "chainConfig": {
+             "avalanche": {
+                 "defaultFeeBp": 2,      
+                 "useCustomAdapterParams": true,
+                 "remoteNetworkConfig": {
+                   "ethereum":    {
+                     "feeBpConfig": {
+                       "feeBp": 5,
+                       "enabled": true
+                     },
+                     "minDstGasConfig": [100000, 200000]
+                   },
+                   "polygon":    {
+                     "minDstGasConfig": [100000, 160000]
+                   }
+                 }           
+             }
          }
-    }
-    ```
-    For each chain you need to specify your Gnosis safe address and Gnosis Safe API url. You can find the list of supported chains and API urls in [Gnosis Safe documentation](https://docs.safe.global/learn/safe-core/safe-core-api/available-services).
+     }
+     ```
+     The `proxyContractConfig` is an optional setting, that defines the proxy chain and proxy contract name.
+   - `chain`: An optional string, defines the proxy chain.
+   - `name`: An optional string, defines the proxy contract name.
+   - `address`: A optional string, defines the contract address. Used when deployments folder are not available. Uses standard LzApp/Nonblocking/OFT/ONFT abi calls such as:
+       - `function setFeeBp(uint16, bool, uint16)`
+       - `function setDefaultFeeBp(uint16)`
+       - `function setMinDstGas(uint16, uint16, uint)`
+       - `function setUseCustomAdapterParams(bool)`
+       - `function setTrustedRemote(uint16, bytes)`
+
+
+   - The `contractConfig` is a conditionally required setting, that defines the contract name.
+       - `function setFeeBp(uint16, bool, uint16)`
+   - The `chainConfig`: is required and defines the chain settings (default fees, useCustomAdapterParams) and the remote chain configs (minDstGas config based of packetType, and custom feeBP per chain)
+       - `name`: A conditionally required string, defines the contract name. Used when contract names differ per chain.
+       - `address`: A conditionally required string, defines the contract address. Used when deployments folder are not available. Uses standard LzApp/Nonblocking/OFT/ONFT abi calls.
+       - `defaultFeeBp`: An optional number, defines the default fee bp for the chain. (Available in [OFTV2 w/ fee](https://github.com/LayerZero-Labs/solidity-examples/blob/ca7d4f1d482df5e17f8aaf1b34d0e4432020bc4e/contracts/token/oft/v2/fee/Fee.sol#L27).)
+       - `useCustomAdapterParams`: An optional bool that defaults to false. Uses default 200k destination gas on all cross chain messages. When false adapter parameters must be empty. When useCustomAdapterParams is true the minDstGasLookup must be set for each packet type and each chain. This requires whoever calls the send function to provide the adapter params with a destination gas >= amount set for that packet type and that destination chain.
+       - `remoteNetworkConfig` is a conditionally required setting, that defines the contract name.
+           - `minDstGasConfig`: is an optional array of numbers that defines the minDstGas required based off packetType. In the example above minDstGasConfig has a length of 2 with the indexes representing the packet type. So for example when the UA on Avalanche sends [packet type 0](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L17) to Ethereum the minDstGas will be 100000. When the UA on Avalanche sends [packet type 1](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L18) to Polygon the minDstGas will be 160000.
+           - The `feeBpConfig` is an optional setting that defines custom feeBP per chain. (Note: setting custom fee per chain with enabled = TRUE, will triumph over defaultFeeBp.)
+               - `feeBp`: is an optional number, defines custom feeBP per chain.
+               - `enabled`: is an optional bool,  defines if custom feeBP per chain is enabled
+
+         <br>
+     More info and examples can be found here in the [Wire Up Configuration](https://layerzero.gitbook.io/docs/evm-guides/layerzero-tooling/wire-up-configuration) documentation.
+     
+      <br>
+
+     Below is an example of the Gnosis configuration
+ 
+     ```json
+     {
+      "ethereum": {
+        "safeAddress": "0xa36B7e7894aCfaa6c35A8A0EC630B71A6B8A6D22",
+        "url": "https://safe-transaction.mainnet.gnosis.io/"
+      },
+      "bsc": {
+        "safeAddress": "0x4755D44c1C196dC524848200B0556A09084D1dFD",
+        "url": "https://safe-transaction.bsc.gnosis.io/"
+      },
+      "avalanche": {
+        "safeAddress": "0x4FF2C33FD9042a76eaC920C037383E51659417Ee",
+        "url": "https://safe-transaction.avalanche.gnosis.io/"
+      }
+     }
+     ```
+     For each chain you need to specify your Gnosis safe address and Gnosis Safe API url. You can find the list of supported chains and API urls in [Gnosis Safe documentation](https://docs.safe.global/learn/safe-core/safe-core-api/available-services).
 
