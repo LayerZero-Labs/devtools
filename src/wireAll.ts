@@ -53,7 +53,7 @@ module.exports = async function (taskArgs, hre) {
 
 			// check if useCustomAdapterParams needs to be set
 			const useCustomAdapterParams = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.useCustomAdapterParams;
-			if (useCustomAdapterParams) {
+			if (useCustomAdapterParams !== undefined) {
 				transactions.push(...(await setUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress, useCustomAdapterParams)));
 			}
 
@@ -79,12 +79,12 @@ module.exports = async function (taskArgs, hre) {
 					transactions.push(...(await setTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress)));
 
 					// setFeeBp
-					if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.feeBpConfig) {
+					if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.feeBpConfig !== undefined) {
 						transactions.push(...(await setFeeBp(hre, localNetwork, localContractNameOrAddress, WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].feeBpConfig, getChainId(remoteNetwork, env))));
 					}
 
 					// setMinDstGas
-					if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.minDstGasConfig) {
+					if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.minDstGasConfig !== undefined) {
 						transactions.push(...(await setMinDstGas(hre, localNetwork, localContractNameOrAddress, WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].minDstGasConfig, getChainId(remoteNetwork, env))));
 					}
 				})
