@@ -17,11 +17,11 @@ module.exports = async function (taskArgs, hre) {
 		return;
 	}
 
-	const WIRE_UP_CONFIG = getConfig(taskArgs.configPath);
-	const deployer = await hre.ethers.getSigner("deployer");
+    const deployer = (await hre.ethers.getNamedSigners()).deployer;
 	console.log(`CURRENT SIGNER: ${deployer.address}`);
 
-	let localNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig)
+    const WIRE_UP_CONFIG = getConfig(taskArgs.configPath);
+	const localNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig)
 
 	const env = taskArgs.e;
 
