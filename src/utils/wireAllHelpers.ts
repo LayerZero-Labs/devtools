@@ -24,7 +24,9 @@ export const LzAppAbi = [
 //
 // return: string like: "0xbedb86fb0000000000000000000000000000000000000000000000000000000000000001"
 export function generateCalldata(hre: any, functionName: string, params: string[], args: any) {
-	return `${hre.web3.utils.keccak256(`${functionName}(${params.join(",")})`).substring(0, 10)}${hre.web3.eth.abi.encodeParameters(params, args).substring(2)}`;
+    const functionSig = hre.ethers.utils.id(`${functionName}(${params.join(",")})`).substring(0, 10);
+    const encodedParameters = hre.ethers.utils.defaultAbiCoder.encode(params, args).substring(2);
+    return `${functionSig}${encodedParameters}`;
 }
 
 export async function setUseCustomAdapterParams(hre: any, localNetwork: string, localContractNameOrAddress: string, useCustom: boolean): Promise<Transaction[]> {
