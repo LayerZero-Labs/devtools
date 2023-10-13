@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-utils",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "repository": "https://github.com/LayerZero-Labs/ua-utils.git",
   "license": "MIT",
   "main": "dist/index.js",
@@ -33,7 +33,6 @@
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
     "@layerzerolabs/lz-sdk": "0.0.12",
-    "@layerzerolabs/lz-evm-sdk-v1": "latest",
     "@layerzerolabs/lz-definitions": "latest",
     "chalk": "4.1.2",
     "cli-ux": "^6.0.9"
