@@ -3,7 +3,7 @@ import { logError } from "./utils/helpers";
 const { LZ_ADDRESS } = require("@layerzerolabs/lz-sdk");
 const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } = require("./constants/abi"); 
 
-module.exports = async (taskArgs: any, hre: any) => {
+export default async (taskArgs: any, hre: any) => {
 	const network = hre.network.name;
 	const remoteNetworks = taskArgs.remoteNetworks.split(",");
 	const contractName = taskArgs.name;

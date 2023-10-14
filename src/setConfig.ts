@@ -13,7 +13,7 @@ const CONFIG_TYPE_OUTBOUND_PROOF_TYPE = 4;
 const CONFIG_TYPE_OUTBOUND_BLOCK_CONFIRMATIONS = 5;
 const CONFIG_TYPE_ORACLE = 6;
 
-module.exports = async (taskArgs: any, hre: any) => {
+export default  async (taskArgs: any, hre: any) => {
 	const configPath = taskArgs.configPath;
 	const name = taskArgs.name;
 	const address = taskArgs.address;

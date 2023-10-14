@@ -3,7 +3,7 @@ import { getProvider } from "./utils/crossChainHelper";
 const { LZ_ADDRESS, CHAIN_ID } = require("@layerzerolabs/lz-sdk");
 const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } = require("./constants/abi") 
 
-module.exports = async (taskArgs: any, hre: any) => {
+export default  async (taskArgs: any, hre: any) => {
 	const networks = taskArgs.networks.split(",");
 
 	const configByNetwork =  await Promise.all(

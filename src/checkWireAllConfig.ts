@@ -10,7 +10,7 @@ export const LzAppAbi = [
     "function withdrawalFeeBps() public view returns (uint16)",
 ];
 
-module.exports = async function (taskArgs, hre) {
+export default  async function (taskArgs, hre) {
     const localNetworks = taskArgs.chains.split(",");
     const remoteNetworks = localNetworks;
     const contractAddresses = taskArgs?.addresses?.split(",");

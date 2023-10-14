@@ -4,9 +4,11 @@ import { configExist, getConfig } from "./utils/fileConfigHelper";
 import { CHAIN_STAGE, ChainKey, ChainStage } from "@layerzerolabs/lz-sdk";
 import { arrayToCsv } from "./utils/helpers";
 import { writeFile } from "fs/promises";
+import { ethers } from "@nomiclabs/hardhat-ethers";
 import { LzAppAbi, generateCalldata, setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress, executeTransactions } from "./utils/wireAllHelpers";
+import { ActionType, HardhatRuntimeEnvironment } from "hardhat/types";
 
-module.exports = async function (taskArgs, hre) {
+const wireAll: ActionType<unknown> = async (taskArgs, hre) => {
 	if (!configExist(taskArgs.configPath)) {
 		logError(`Wire up config file is not found.`);
 		return;
@@ -17,8 +19,8 @@ module.exports = async function (taskArgs, hre) {
 		return;
 	}
 
-    const deployer = (await hre.ethers.getNamedSigners()).deployer;
-	console.log(`CURRENT SIGNER: ${deployer.address}`);
+    const deployer = (await hre.getNamedAccounts()).deployer;
+	console.log(`CURRENT SIGNER: ${deployer}`);
 
     const WIRE_UP_CONFIG = getConfig(taskArgs.configPath);
 	const localNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig)
@@ -206,4 +208,8 @@ function getNetworkForStage(stage: ChainStage) {
 		}
 	}
 	return networks;
+
+
 }
+
+export default wireAll
