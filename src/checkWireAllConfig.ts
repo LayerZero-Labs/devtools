@@ -1,14 +1,6 @@
-import { getContract, getContractAt, getChainId } from "./utils/crossChainHelper";
+import { getContract, getContractAt, getLayerZeroChainId } from "./utils/crossChainHelper";
 import { logError } from "./utils/helpers";
-
-export const LzAppAbi = [
-	"function useCustomAdapterParams() public view returns (bool) ",
-	"function trustedRemoteLookup(uint16) public view returns (bytes)",
-	"function minDstGasLookup(uint16, uint16) public view returns (uint)",
-	"function defaultFeeBp() public view returns (uint16)",
-	"function chainIdToFeeBps(uint16) public view returns (uint16, bool)",
-    "function withdrawalFeeBps() public view returns (uint16)",
-];
+import { LZ_APP_ABI } from "./constants/abi";
 
 export default  async function (taskArgs, hre) {
     const localNetworks = taskArgs.chains.split(",");
@@ -64,9 +56,8 @@ export default  async function (taskArgs, hre) {
                         return;
                     }
 
-                    checkWireAllConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
-                    if(taskArgs.t) checkWireAllConfigObj[localNetwork].trustedRemoteLookup[remoteNetwork] = await getTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
-                    if(taskArgs.m) checkWireAllConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, getChainId(remoteNetwork, taskArgs.e));
+                    if(taskArgs.t) checkWireAllConfigObj[localNetwork].trustedRemoteLookup[remoteNetwork] = await getTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress);
+                    if(taskArgs.m) checkWireAllConfigObj[localNetwork].minDstGasLookup[remoteNetwork] = await getMinDstGas(hre, localNetwork, localContractNameOrAddress, remoteNetwork);
                 })
             );
         })
@@ -100,7 +91,7 @@ export default  async function (taskArgs, hre) {
 async function getUseCustomAdapterParams(hre: any, localNetwork: string, localContractNameOrAddress: string): Promise<any> {
 	let localContract;
 	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
+		localContract = await getContractAt(hre, localNetwork, LZ_APP_ABI, localContractNameOrAddress);
 	} else {
 		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
 	}
@@ -110,7 +101,7 @@ async function getUseCustomAdapterParams(hre: any, localNetwork: string, localCo
 async function getWithdrawalFeeBps(hre: any, localNetwork: string, localContractNameOrAddress: string): Promise<any> {
 	let localContract;
 	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
+		localContract = await getContractAt(hre, localNetwork, LZ_APP_ABI, localContractNameOrAddress);
 	} else {
 		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
 	}
@@ -124,38 +115,43 @@ async function getWithdrawalFeeBps(hre: any, localNetwork: string, localContract
 }
 
 
-async function getMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, remoteChainId: number): Promise<string> {
+async function getMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, remoteNetwork: string,): Promise<string> {
 	let localContract;
 	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
+		localContract = await getContractAt(hre, localNetwork, LZ_APP_ABI, localContractNameOrAddress);
 	} else {
 		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
 	}
-    let packetTypes: string[] = [];
+    let packetTypes: any;
+    if(localNetwork === remoteNetwork) return "";
+    const remoteChainId = getLayerZeroChainId(remoteNetwork);
     let minGasPk_0 = await localContract.minDstGasLookup(remoteChainId, 0)
     let minGasPk_1 = await localContract.minDstGasLookup(remoteChainId, 1)
-    packetTypes.push(minGasPk_0.toNumber());
-    packetTypes.push(minGasPk_1.toNumber());
-    return packetTypes.toString();
+    packetTypes = {
+        "PT_0": minGasPk_0.toString(),
+        "PT_1": minGasPk_1.toString()
+    }
+    return packetTypes;
 }
 
-async function getTrustedRemote(hre: any, localNetwork: string, localContractNameOrAddress: string, remoteNetwork: string, remoteContractNameOrAddress: string, remoteChainId: number): Promise<any> {
+async function getTrustedRemote(hre: any, localNetwork: string, localContractNameOrAddress: string, remoteNetwork: string, remoteContractNameOrAddress: string): Promise<any> {
 	let localContract;
 	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
+		localContract = await getContractAt(hre, localNetwork, LZ_APP_ABI, localContractNameOrAddress);
 	} else {
 		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
 	}
 
     let remoteContract;
     if (hre.ethers.utils.isAddress(remoteContractNameOrAddress)) {
-        remoteContract = await getContractAt(hre, remoteNetwork, LzAppAbi, remoteContractNameOrAddress);
+        remoteContract = await getContractAt(hre, remoteNetwork, LZ_APP_ABI, remoteContractNameOrAddress);
     } else {
         remoteContract = await getContract(hre, remoteNetwork, remoteContractNameOrAddress);
     }
 
 	const remoteContractAddress = await remoteContract.address;
 	const desiredTrustedRemote = hre.ethers.utils.solidityPack(["bytes"], [remoteContractAddress + localContract.address.substring(2)]);
+	const remoteChainId = getLayerZeroChainId(remoteNetwork)
 	const currentTrustedRemote = await localContract.trustedRemoteLookup(remoteChainId);
-	return currentTrustedRemote != desiredTrustedRemote ? "🟥" : "🟩";
+	return currentTrustedRemote != desiredTrustedRemote ? (localNetwork === remoteNetwork ? "" : "🟥") : "🟩";
 }

@@ -1,6 +1,22 @@
-# ua-utils
+<p align="center">
+  <a href="https://layerzero.network">
+    <img alt="LayerZero" style="max-width: 500px" src="https://d3a2dpnnrypp5h.cloudfront.net/bridge-app/lz.png"/>
+  </a>
+</p>
 
-A set of common tasks for contracts integrating LayerZero
+<h1 align="center">@layerzerolabs/ua-utils</h1>
+
+<!-- The badges section -->
+<p align="center">
+  <!-- Shields.io NPM published package version -->
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-utils"/></a>
+  <!-- Shields.io NPM downloads -->
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-utils"/></a>
+  <!-- Snyk vulnerabilities -->
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="Snyk Vulnerabilities for repository" src="https://snyk.io/test/github/LayerZero-Labs/ua-utils/badge.svg"/></a>
+  <!-- Shields.io license badge -->
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-utils"/></a>
+</p>
 
 ## Installation
 
@@ -173,33 +189,39 @@ The package adds the following tasks:
      Below is an example of the wire all configuration
 
      ```json
-     {
-         "proxyContractConfig": {
-             "chain": "avalanche",
-             "name": "ProxyOFT"
-         },
-         "contractConfig": {
-             "name": "OFT"
-         },
-         "chainConfig": {
-             "avalanche": {
-                 "defaultFeeBp": 2,      
-                 "useCustomAdapterParams": true,
-                 "remoteNetworkConfig": {
-                   "ethereum":    {
-                     "feeBpConfig": {
-                       "feeBp": 5,
-                       "enabled": true
-                     },
-                     "minDstGasConfig": [100000, 200000]
-                   },
-                   "polygon":    {
-                     "minDstGasConfig": [100000, 160000]
-                   }
-                 }           
-             }
-         }
-     }
+    {
+        "proxyContractConfig": {
+            "chain": "avalanche",
+            "name": "ProxyOFT"
+        },
+        "contractConfig": {
+            "name": "OFT"
+        },
+        "chainConfig": {
+            "avalanche": {
+                "defaultFeeBp": 2,
+                "useCustomAdapterParams": true,
+                "remoteNetworkConfig": {
+                    "ethereum": {
+                        "feeBpConfig": {
+                            "feeBp": 5,
+                            "enabled": true
+                        },
+                        "minDstGasConfig": {
+                            "packetType_0": 100000,
+                            "packetType_1": 200000
+                        }
+                    },
+                    "polygon": {
+                        "minDstGasConfig": {
+                            "packetType_0": 100000,
+                            "packetType_1": 160000
+                        }
+                    }
+                }
+            }
+        }
+    }
      ```
      The `proxyContractConfig` is an optional setting, that defines the proxy chain and proxy contract name.
    - `chain`: An optional string, defines the proxy chain.
@@ -220,7 +242,7 @@ The package adds the following tasks:
        - `defaultFeeBp`: An optional number, defines the default fee bp for the chain. (Available in [OFTV2 w/ fee](https://github.com/LayerZero-Labs/solidity-examples/blob/ca7d4f1d482df5e17f8aaf1b34d0e4432020bc4e/contracts/token/oft/v2/fee/Fee.sol#L27).)
        - `useCustomAdapterParams`: An optional bool that defaults to false. Uses default 200k destination gas on all cross chain messages. When false adapter parameters must be empty. When useCustomAdapterParams is true the minDstGasLookup must be set for each packet type and each chain. This requires whoever calls the send function to provide the adapter params with a destination gas >= amount set for that packet type and that destination chain.
        - `remoteNetworkConfig` is a conditionally required setting, that defines the contract name.
-           - `minDstGasConfig`: is an optional array of numbers that defines the minDstGas required based off packetType. In the example above minDstGasConfig has a length of 2 with the indexes representing the packet type. So for example when the UA on Avalanche sends [packet type 0](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L17) to Ethereum the minDstGas will be 100000. When the UA on Avalanche sends [packet type 1](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L18) to Polygon the minDstGas will be 160000.
+           - `minDstGasConfig`: is an optional object that defines the minDstGas required based off packetType. So for example when the UA on Avalanche sends [packet type 0](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L17) to Ethereum the minDstGas will be 100000. When the UA on Avalanche sends [packet type 1](https://github.com/LayerZero-Labs/solidity-examples/blob/9134640fe5b618a047f365555e760c8736ebc162/contracts/token/oft/v2/OFTCoreV2.sol#L18) to Polygon the minDstGas will be 160000.
            - The `feeBpConfig` is an optional setting that defines custom feeBP per chain. (Note: setting custom fee per chain with enabled = TRUE, will triumph over defaultFeeBp.)
                - `feeBp`: is an optional number, defines custom feeBP per chain.
                - `enabled`: is an optional bool,  defines if custom feeBP per chain is enabled

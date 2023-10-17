@@ -1,7 +1,6 @@
-
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "esnext",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -16,10 +15,11 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "sourceMap": true,   
     "outDir": "./dist",
-    "rootDirs": ["./src"]
+    "types": ["node"],
+    "lib": ["ES2015"]
   },
   "exclude": ["dist", "node_modules"],
   "include": ["./src"]

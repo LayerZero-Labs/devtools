@@ -1,8 +1,6 @@
 import { utils } from "ethers";
-import { configExist, getConfig } from "./utils/fileConfigHelper";
-import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess } from "./utils/helpers";
-import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, getContract, getWalletContract, getApplicationConfig } from "./utils/crossChainHelper";
-const { LZ_ADDRESS, CHAIN_ID } = require("@layerzerolabs/lz-sdk");
+import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "./utils/helpers";
+import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, getContract, getWalletContract, getApplicationConfig, getEvmContractAddress, getLayerZeroChainId } from "./utils/crossChainHelper";
 const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } = require("./constants/abi");
 
 // Application config types from UltraLightNodeV2 contract
@@ -32,12 +30,12 @@ export default  async (taskArgs: any, hre: any) => {
 		await Promise.all(
 			networks.map(async (network: string) => {
 				const transactions: Transaction[] = [];
-				const chainId = CHAIN_ID[network];
+				const chainId = getLayerZeroChainId(network);
 				const networkConfig = config[network];
 
 				if (!networkConfig) return;
+				const endpoint = await getContractAt(hre, network, ENDPOINT_ABI, getEvmContractAddress("Endpoint", network));
 
-				const endpoint = await getContractAt(hre, network, ENDPOINT_ABI, LZ_ADDRESS[network]);
 				const contractName =  networkConfig.name ?? name;
 				const contractAddress = networkConfig.address ?? address;
 
@@ -75,7 +73,7 @@ export default  async (taskArgs: any, hre: any) => {
 							if (newConfig.remoteChain === network) return;
 
 							const oldConfig = await getApplicationConfig(newConfig.remoteChain, sendLibrary, receiveLibrary, app.address);
-							const remoteChainId = CHAIN_ID[newConfig.remoteChain];
+							const remoteChainId = getLayerZeroChainId(network);
 
 							if (newConfig.inboundProofLibraryVersion) {
 								transactions.push(...(await setConfig(newReceiveVersion, chainId, remoteChainId, app, CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION, "uint16", oldConfig.inboundProofLibraryVersion, newConfig.inboundProofLibraryVersion)));

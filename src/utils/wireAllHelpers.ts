@@ -1,41 +1,10 @@
-import { Transaction, executeGnosisTransactions, executeTransaction, getContractAt, getContract, getChainId } from "./crossChainHelper";
-import { promptToProceed, logError, arrayToCsv } from "./helpers";
-import { configExist, getConfig } from "./fileConfigHelper";
+import { Transaction, executeGnosisTransactions, executeTransaction, getContractAt, getContract, getLayerZeroChainId } from "./crossChainHelper";
+import { promptToProceed, logError, arrayToCsv, configExist, getConfig } from "./helpers";
 import { writeFile } from "fs/promises";
-
-export const LzAppAbi = [
-	"function setTrustedRemote(uint16 _srcChainId, bytes calldata _path)",
-	"function setUseCustomAdapterParams(bool _useCustomAdapterParams)",
-	"function setDefaultFeeBp(uint16 _feeBp)",
-	"function setFeeBp(uint16 _dstChainId, bool _enabled, uint16 _feeBp)",
-	"function setMinDstGas(uint16 _dstChainId, uint16 _packetType, uint _minGas)",
-	"function useCustomAdapterParams() public view returns (bool) ",
-	"function trustedRemoteLookup(uint16) public view returns (bytes)",
-	"function minDstGasLookup(uint16, uint16) public view returns (uint)",
-	"function defaultFeeBp() public view returns (uint16)",
-	"function chainIdToFeeBps(uint16) public view returns (uint16, bool)",
-];
-
-// encode the calldata into the 'calldata' the transaction requires to be sent
-// hre: the hardhat runtime environment, for access to hre.web3.utils.keccak256()
-// functionName: "setPause" or "setRemoteUln"  ie: the string name of the contract function
-// params: ['bool','uint256'] ie: a string array of the types of the function parameters
-// args: [ true, 1234 ] ie: the array of values that correspond to the types in params
-//
-// return: string like: "0xbedb86fb0000000000000000000000000000000000000000000000000000000000000001"
-export function generateCalldata(hre: any, functionName: string, params: string[], args: any) {
-    const functionSig = hre.ethers.utils.id(`${functionName}(${params.join(",")})`).substring(0, 10);
-    const encodedParameters = hre.ethers.utils.defaultAbiCoder.encode(params, args).substring(2);
-    return `${functionSig}${encodedParameters}`;
-}
+import { LZ_APP_ABI } from "../constants/abi";
 
 export async function setUseCustomAdapterParams(hre: any, localNetwork: string, localContractNameOrAddress: string, useCustom: boolean): Promise<Transaction[]> {
-	let localContract;
-	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
-	} else {
-		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
-	}
+	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
 	const cur = await localContract.useCustomAdapterParams();
 	const needChange = cur !== useCustom;
 
@@ -44,14 +13,13 @@ export async function setUseCustomAdapterParams(hre: any, localNetwork: string, 
 	const params = ["bool"];
 	let args = [useCustom];
 
-    const [chain, env] = localNetwork.split("-")
 	const tx: any = {
 		needChange,
-		chainId: getChainId(chain, env),
+		chainId: getLayerZeroChainId(localNetwork),
 		contractName: localContractNameOrAddress,
 		functionName: functionName,
 		args: args,
-		calldata: generateCalldata(hre, functionName, params, args),
+		calldata: localContract.interface.encodeFunctionData(functionName, args)
 	};
 	if (tx.needChange) {
 		tx.diff = JSON.stringify({ useCustomAdapterParams: { oldValue: cur, newValue: useCustom } });
@@ -59,18 +27,13 @@ export async function setUseCustomAdapterParams(hre: any, localNetwork: string, 
 	return [tx];
 }
 
-export async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, minDstGasConfig: [], remoteChainId: number): Promise<Transaction[]> {
+export async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, minDstGasConfig: any, remoteChainId: number): Promise<Transaction[]> {
 	const txns: Transaction[] = [];
-	for (let i = 0; i < minDstGasConfig.length; i++) {
-		const packetType = i;
-		const minGas = minDstGasConfig[packetType];
-		if(minGas === -1) continue;
-		let localContract;
-		if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-			localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
-		} else {
-			localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
-		}
+	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
+    const packetTypes = Object.keys(minDstGasConfig);
+    for(const packet of packetTypes) {
+		let packetType = parseInt(packet.at(-1));
+		const minGas = minDstGasConfig[packet];
 		const cur = (await localContract.minDstGasLookup(remoteChainId, packetType)).toNumber();
 		const needChange = cur !== minGas;
 
@@ -79,43 +42,30 @@ export async function setMinDstGas(hre: any, localNetwork: string, localContract
 		const params = ["uint16", "uint16", "uint256"];
 		let args = [remoteChainId, packetType, minGas];
 
-        const [chain, env] = localNetwork.split("-")
 		const tx: any = {
 			needChange,
-			chainId: getChainId(chain, env),
+			chainId: getLayerZeroChainId(localNetwork),
 			contractName: localContractNameOrAddress,
 			functionName,
 			args: args,
-			calldata: generateCalldata(hre, functionName, params, args),
+		    calldata: localContract.interface.encodeFunctionData(functionName, args)
 		};
 		if (tx.needChange) {
 			tx.diff = JSON.stringify({ oldValue: cur, newValue: minGas });
 		}
 		txns.push(tx);
-	}
+    }
 	return txns;
 }
 
 export async function setTrustedRemote(hre: any, localNetwork: string, localContractNameOrAddress: string, remoteNetwork: string, remoteContractNameOrAddress: string): Promise<Transaction[]> {
-	let localContract;
-	if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
-		localContract = await getContractAt(hre, localNetwork, LzAppAbi, localContractNameOrAddress);
-	} else {
-		localContract = await getContract(hre, localNetwork, localContractNameOrAddress);
-	}
-
-	let remoteContract;
-	if (hre.ethers.utils.isAddress(remoteContractNameOrAddress)) {
-		remoteContract = await getContractAt(hre, remoteNetwork, LzAppAbi, remoteContractNameOrAddress);
-	} else {
-		remoteContract = await getContract(hre, remoteNetwork, remoteContractNameOrAddress);
-	}
+	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
+	const remoteContract = await getContractInstance(hre, remoteNetwork, remoteContractNameOrAddress)
 
 	const remoteContractAddress = await remoteContract.address;
 	const desiredTrustedRemote = hre.ethers.utils.solidityPack(["bytes"], [remoteContractAddress + localContract.address.substring(2)]);
 
-    const [remoteChain, remoteEnv] = remoteNetwork.split("-")
-	const remoteChainId = getChainId(remoteChain, remoteEnv);
+	const remoteChainId = getLayerZeroChainId(remoteNetwork);
 	const cur = await localContract.trustedRemoteLookup(remoteChainId);
 	const needChange = cur != desiredTrustedRemote;
 
@@ -124,14 +74,13 @@ export async function setTrustedRemote(hre: any, localNetwork: string, localCont
 	const params = ["uint16", "bytes"];
 	let args = [remoteChainId, desiredTrustedRemote];
 
-    const [chain, env] = localNetwork.split("-")
 	const tx: any = {
 		needChange,
-		chainId: getChainId(chain, env),
+		chainId: getLayerZeroChainId(localNetwork),
 		contractName: localContractNameOrAddress,
 		functionName: functionName,
 		args: args,
-		calldata: generateCalldata(hre, functionName, params, args),
+        calldata: localContract.interface.encodeFunctionData(functionName, args)
 	};
 	if (tx.needChange) {
 		tx.diff = JSON.stringify({ trustedRemote: { oldValue: cur, newValue: desiredTrustedRemote } });
@@ -232,7 +181,8 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
 					print[network].current = `${transaction.contractName}.${transaction.functionName}`;
 					printResult();
 					try {
-						const tx = await executeTransaction(hre, network, transaction);
+					    const gasLimit = taskArgs.gasLimit;
+						const tx = await executeTransaction(hre, network, transaction, gasLimit);
 						print[network].past = `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`;
 						successTx++;
 						print[network].requests = `${successTx}/${transactionToCommit.length}`;

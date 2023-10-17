@@ -1,11 +1,10 @@
 import * as ethers from "ethers";
 import { Contract, ContractReceipt } from "ethers";
 import { createProvider } from "hardhat/internal/core/providers/construction";
-import { DeploymentsManager } from "hardhat-deploy/dist/src/DeploymentsManager";
 import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
-import { CHAIN_ID } from "@layerzerolabs/lz-sdk";
+import { LZ_APP_ABI } from "../constants/abi";
 import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions";
 const path = require("path");
 const fs = require("fs");
@@ -31,33 +30,6 @@ export interface Transaction {
 export interface NetworkTransactions {
 	network: string;
 	transactions: Transaction[];
-}
-
-const getDeploymentManager = (hre: any, networkName: string): any => {
-	const network: any = {
-		name: networkName,
-		config: hre.config.networks[networkName],
-		provider: createProvider(networkName, hre.config.networks[networkName], hre.config.paths, hre.artifacts),
-		saveDeployments: true,
-	};
-	const newHre = Object.assign(Object.create(Object.getPrototypeOf(hre)), hre);
-	newHre.network = network;
-	const deploymentsManager = new DeploymentsManager(newHre, network);
-	newHre.deployments = deploymentsManager.deploymentsExtension;
-	newHre.getNamedAccounts = deploymentsManager.getNamedAccounts.bind(deploymentsManager);
-	newHre.getUnnamedAccounts = deploymentsManager.getUnnamedAccounts.bind(deploymentsManager);
-	newHre.getChainId = () => deploymentsManager.getChainId();
-	return deploymentsManager;
-};
-
-export const deployContract = async (hre: any, network: string, tags: string[]) => {
-	const deploymentsManager = getDeploymentManager(hre, network);
-	await deploymentsManager.runDeploy(tags, {
-		log: false, //args.log,
-		resetMemory: false,
-		writeDeploymentsToFiles: true,
-		savePendingTx: false,
-	});
 }
 
 const providerByNetwork: { [name: string]: ethers.providers.JsonRpcProvider } = {};
@@ -141,7 +113,7 @@ const getContractFactory = async (hre: any, contractName: string) => {
 	return contractFactories[contractName];
 }
 
-export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, contract?: any, abi?: any): Promise<ContractReceipt> => {
+export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, gasLimit?: any, contract?: any, abi?: any): Promise<ContractReceipt> => {
     let walletContract;
     if (contract) {
         walletContract = contract;
@@ -225,7 +197,7 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
 }
 
 export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: any, receiveLibrary: any, applicationAddress: string) => {
-	const remoteChainId = CHAIN_ID[remoteNetwork];
+	const remoteChainId = getLayerZeroChainId(remoteNetwork);
 
 	const sendConfig = await sendLibrary.appConfig(applicationAddress, remoteChainId);
 	let inboundProofLibraryVersion = sendConfig.inboundProofLibraryVersion;
@@ -249,9 +221,9 @@ export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: a
 
 export const getEvmContractAddress = (
     contractName: string,
-    chainName: string,
-    environment: string,
+    network: string,
 ): string => {
+    const [chainName, environment] = network.split("-");
     const deploymentFolderName = getDeploymentFolderName(
         chainName,
         environment,
@@ -267,8 +239,9 @@ const getDeploymentFolderName = (chainName: string, environment: string): string
     return `${chainName.split("-")[0]}-${environment}`
 }
 
-
-export const getChainId = (chainName: string, environment: string): number => {
+// expecting "chain-environment" eg. "ethereum-mainnet", "ethereum-testnet", "ethereum-sandbox"
+export const getLayerZeroChainId = (network: string): number => {
+    const [chainName, environment] = network.split("-");
     const chainIdEnum = getChainIdEnum(chainName, environment)
     if(environment == "mainnet") {
         return MainnetEndpointId[chainIdEnum]
@@ -285,5 +258,12 @@ const getChainIdEnum = (chainName: string, environment: string,): string => {
     return `${chainName.split("-")[0].toUpperCase()}_${environment.toUpperCase()}`
 }
 
-
-
+export const getContractInstance = async (hre: any, network: string, contractNameOrAddress: string) => {
+    let contract;
+    if (hre.ethers.utils.isAddress(contractNameOrAddress)) {
+        contract = await getContractAt(hre, network, LZ_APP_ABI, contractNameOrAddress);
+    } else {
+        contract = await getContract(hre, network, contractNameOrAddress);
+    }
+    return contract;
+}

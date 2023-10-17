@@ -66,7 +66,8 @@ export const printTransactions = (columns: string[], transactionByNetwork: any[]
 	})
 }
 
-
 export const logError = (message: string, includeErrorText: boolean = true) => console.log(chalk.red(includeErrorText ? `ERROR: ${message}` : message));
 export const logWarning = (message: string) => console.log(chalk.yellow(`WARNING: ${message}`));
 export const logSuccess = (message: string) => console.log(chalk.green(`${message}`));
+export const configExist = (fileName: string) => fs.existsSync(fileName);
+export const getConfig = (fileName: string) => JSON.parse(fs.readFileSync(fileName, "utf-8"));

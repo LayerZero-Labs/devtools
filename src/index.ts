@@ -38,5 +38,6 @@ task("wireAll", "", wireAll)
     .addOptionalParam("noPrompt", "no prompt", false, types.boolean)
 	.addOptionalParam("configPath", "Optional config path. Default: ./constants/wireUpConfig.json", "./constants/wireUpConfig.json", types.string)
 	.addOptionalParam("n", "send to gnosis", false, types.boolean)
+	.addOptionalParam("gasLimit", "override execution gasLimit")
     .addOptionalParam("gnosisConfigPath", "Optional config path. Default: ./constants/gnosisConfig.json", "./constants/gnosisConfig.json", types.string)
 // npx hardhat --network ethereum-testnet wireAll --e testnet --config-path "./constants/oftv2Config/wireUpConfig.json"

@@ -1,7 +1,6 @@
-import { getDeploymentAddresses, getApplicationConfig } from "./utils/crossChainHelper";
+import { getDeploymentAddresses, getApplicationConfig, getEvmContractAddress } from "./utils/crossChainHelper";
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from  "./constants/abi";
 import { logError } from "./utils/helpers";
-const { LZ_ADDRESS } = require("@layerzerolabs/lz-sdk");
-const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } = require("./constants/abi"); 
 
 export default async (taskArgs: any, hre: any) => {
 	const network = hre.network.name;
@@ -22,7 +21,7 @@ export default async (taskArgs: any, hre: any) => {
 		}
 	}	
 
-	const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, LZ_ADDRESS[network]);
+	const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, getEvmContractAddress("Endpoint", network));
 	const appConfig = await endpoint.uaConfigLookup(contractAddress);
 	const sendVersion = appConfig.sendVersion;
 	const receiveVersion = appConfig.receiveVersion;	
