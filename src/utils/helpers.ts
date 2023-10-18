@@ -1,7 +1,7 @@
 import { cli } from "cli-ux";
 import fs from "fs";
 import chalk from "chalk";
-import { Transaction } from "./crossChainHelper";
+import { Transaction, NetworkTransactions } from "./crossChainHelper";
 
 export const promptToProceed = async (msg: string, noPrompt: boolean = false) => {
 	if (!noPrompt) {
@@ -48,7 +48,7 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
 	console.log(`Transactions are written to: ${chalk.green(fileName)}`);
 }
 
-export const printTransactions = (columns: string[], transactionByNetwork: any[]) => {
+export const printTransactions = (columns: string[], transactionByNetwork: NetworkTransactions[]) => {
 	let totalTransactionsNeedingChange: number = 0;
 
 	transactionByNetwork.forEach(({ network, transactions }) => {

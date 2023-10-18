@@ -2,14 +2,14 @@ import { getContract, getContractAt, getLayerZeroChainId } from "./utils/crossCh
 import { logError } from "./utils/helpers";
 import { LZ_APP_ABI } from "./constants/abi";
 
-export default  async function (taskArgs, hre) {
+export default async function (taskArgs: any, hre: any) {
     const localNetworks = taskArgs.chains.split(",");
     const remoteNetworks = localNetworks;
     const contractAddresses = taskArgs?.addresses?.split(",");
 
-	let checkWireAllConfigObj = {}
+	let checkWireAllConfigObj: { [key: string]: any } = {}
     await Promise.all(
-        localNetworks.map(async (localNetwork, localIndex) => {
+        localNetworks.map(async (localNetwork: string, localIndex: number) => {
             checkWireAllConfigObj[localNetwork] = {
                 useCustomAdapterParams: {},
                 withdrawalFeeBps: {},
@@ -22,7 +22,7 @@ export default  async function (taskArgs, hre) {
             checkWireAllConfigObj[localNetwork].minDstGasLookup[localNetwork] = "";
             checkWireAllConfigObj[localNetwork].trustedRemoteLookup[localNetwork] = "";
 
-            let localContractNameOrAddress;
+            let localContractNameOrAddress: any;
             if(taskArgs?.proxyChain && taskArgs?.proxyContract && localNetwork == taskArgs?.proxyChain) {
                 localContractNameOrAddress = taskArgs?.proxyContract
             } else if(taskArgs?.contract !== undefined) {
@@ -40,7 +40,7 @@ export default  async function (taskArgs, hre) {
             if(taskArgs.wfb) checkWireAllConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = await getWithdrawalFeeBps(hre, localNetwork, localContractNameOrAddress);
 
             await Promise.all(
-                remoteNetworks.map(async (remoteNetwork, remoteIndex) => {
+                remoteNetworks.map(async (remoteNetwork: string, remoteIndex: number) => {
 
                     let remoteContractNameOrAddress;
                     if(taskArgs?.proxyChain && taskArgs?.proxyContract && remoteNetwork == taskArgs?.proxyChain) {

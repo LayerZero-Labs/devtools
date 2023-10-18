@@ -7,7 +7,8 @@
   "types": "dist/index.d.ts",
   "module": "dist/index.mjs",
   "scripts": {
-    "build": "npx tsup"
+    "build": "npx tsup",
+    "prebuild": "tsc -noEmit"
   },
   "files": [
     "dist/",

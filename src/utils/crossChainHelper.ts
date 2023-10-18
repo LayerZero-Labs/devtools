@@ -1,13 +1,15 @@
 import * as ethers from "ethers";
 import { Contract, ContractReceipt } from "ethers";
-import { createProvider } from "hardhat/internal/core/providers/construction";
 import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
 import { LZ_APP_ABI } from "../constants/abi";
 import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions";
+import { promptToProceed, arrayToCsv, getConfig } from "./helpers";
 const path = require("path");
 const fs = require("fs");
+import { writeFile } from "fs/promises";
+
 
 export interface ExecutableTransaction {
 	contractName: string;
@@ -113,7 +115,7 @@ const getContractFactory = async (hre: any, contractName: string) => {
 	return contractFactories[contractName];
 }
 
-export const executeTransaction = async (hre: any, network: string, transaction: ExecutableTransaction, gasLimit?: any, contract?: any, abi?: any): Promise<ContractReceipt> => {
+export const executeTransaction = async (hre: any, network: string, transaction: any, gasLimit?: any, contract?: any, abi?: any): Promise<ContractReceipt> => {
     let walletContract;
     if (contract) {
         walletContract = contract;
@@ -124,15 +126,117 @@ export const executeTransaction = async (hre: any, network: string, transaction:
     }
 	const gasPrice = await getProvider(hre, network).getGasPrice();
 	const finalGasPrice = gasPrice.mul(10).div(8);
-
 	return await (
 		await walletContract[transaction.functionName](...transaction.args, {
 			gasPrice: finalGasPrice,
-			gasLimit: 200000,
+			gasLimit: gasLimit !== undefined ? gasLimit : 200000,
 			...transaction.txArgs,
 		})
 	).wait()
 }
+
+export async function executeTransactions(hre: any, taskArgs: any, transactionBynetwork: any[]) {
+	const columns = ["needChange", "chainId", "remoteChainId", "contractName", "functionName", "args", "diff", "calldata"];
+
+	const data = transactionBynetwork.reduce((acc, { network, transactions }) => {
+		transactions.forEach((transaction: any) => {
+			acc.push([
+				network,
+				...columns.map((key) => {
+					if (typeof transaction[key] === "object") {
+						return JSON.stringify(transaction[key]);
+					} else {
+						return transaction[key];
+					}
+				}),
+			]);
+		});
+		return acc;
+	}, [] as any);
+	await writeFile("./transactions.csv", arrayToCsv(["network"].concat(columns), data));
+
+	console.log("Full configuration is written at:");
+	console.log(`file:/${process.cwd()}/transactions.csv`);
+
+	const errs: any[] = [];
+	const print: any = {};
+	let previousPrintLine = 0;
+	const printResult = () => {
+		if (previousPrintLine) {
+			process.stdout.moveCursor(0, -previousPrintLine);
+		}
+		if (Object.keys(print)) {
+			previousPrintLine = Object.keys(print).length + 4;
+			console.table(Object.keys(print).map((network) => ({ network, ...print[network] })));
+		}
+	};
+
+	if (taskArgs.n) {
+		await promptToProceed("Would you like to Submit to gnosis?", taskArgs.noPrompt);
+        const gnosisConfig = getConfig(taskArgs.gnosisConfigPath);
+		await Promise.all(
+			transactionBynetwork.map(async ({ network, transactions }) => {
+				const transactionToCommit = transactions.filter((transaction: any) => transaction.needChange);
+				print[network] = print[network] || { requests: `1/1` };
+				print[network].current = `executeGnosisTransactions: ${transactionToCommit}`;
+				try {
+					await executeGnosisTransactions(hre, network, gnosisConfig, transactionToCommit);
+					print[network].requests = `1/1`;
+					printResult();
+				} catch (err: any) {
+					console.log(`Failing calling executeGnosisTransactions for network ${network} with err ${err}`);
+					errs.push({
+						network,
+						err,
+					});
+					print[network].current = err.message;
+					print[network].err = true;
+					printResult();
+				}
+			})
+		);
+	} else {
+		await promptToProceed("Would you like to run these transactions?", taskArgs.noPrompt);
+		await Promise.all(
+			transactionBynetwork.map(async ({ network, transactions }) => {
+				const transactionToCommit = transactions.filter((transaction: any) => transaction.needChange);
+
+				let successTx = 0;
+				print[network] = print[network] || { requests: `${successTx}/${transactionToCommit.length}` };
+				for (let transaction of transactionToCommit) {
+					print[network].current = `${transaction.contractName}.${transaction.functionName}`;
+					printResult();
+					try {
+					    const gasLimit = taskArgs.gasLimit;
+						const tx = await executeTransaction(hre, network, transaction, gasLimit);
+						print[network].past = `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`;
+						successTx++;
+						print[network].requests = `${successTx}/${transactionToCommit.length}`;
+						printResult();
+					} catch (err: any) {
+						console.log(`Failing calling ${transaction.contractName}.${transaction.functionName} for network ${network} with err ${err}`);
+						console.log(err);
+						errs.push({
+							network,
+							err,
+						});
+						print[network].current = err;
+						print[network].err = true;
+						printResult();
+						break;
+					}
+				}
+			})
+		);
+	}
+
+	if (!errs.length) {
+		console.log("Wired all networks successfully");
+	} else {
+		console.log(errs);
+	}
+}
+
 
 export const executeGnosisTransactions = async (hre: any, network: string, gnosisConfig: any, transactions: Transaction[]) => {
 	const signer = await getConnectedWallet(hre, network, 0);
@@ -198,7 +302,7 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
 
 export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: any, receiveLibrary: any, applicationAddress: string) => {
 	const remoteChainId = getLayerZeroChainId(remoteNetwork);
-
+    console.log({remoteChainId})
 	const sendConfig = await sendLibrary.appConfig(applicationAddress, remoteChainId);
 	let inboundProofLibraryVersion = sendConfig.inboundProofLibraryVersion;
 	let inboundBlockConfirmations = sendConfig.inboundBlockConfirmations.toNumber();
@@ -240,15 +344,15 @@ const getDeploymentFolderName = (chainName: string, environment: string): string
 }
 
 // expecting "chain-environment" eg. "ethereum-mainnet", "ethereum-testnet", "ethereum-sandbox"
-export const getLayerZeroChainId = (network: string): number => {
+export const getLayerZeroChainId = (network: string): string => {
     const [chainName, environment] = network.split("-");
     const chainIdEnum = getChainIdEnum(chainName, environment)
     if(environment == "mainnet") {
-        return MainnetEndpointId[chainIdEnum]
+        return MainnetEndpointId[chainIdEnum as any]
     } else if(environment == "testnet") {
-        return TestnetEndpointId[chainIdEnum]
+        return TestnetEndpointId[chainIdEnum as any]
     }  else if(environment == "sandbox") {
-        return SandboxEndpointId[chainIdEnum]
+        return SandboxEndpointId[chainIdEnum as any]
     } else {
         throw new Error("cannot find chainId");
     }

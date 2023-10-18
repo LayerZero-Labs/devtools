@@ -1,10 +1,8 @@
-import { Transaction, getContractInstance, getLayerZeroChainId } from "./utils/crossChainHelper";
-import { logError } from "./utils/helpers";
-import { getConfig } from "./utils/helpers";
-import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress, executeTransactions } from "./utils/wireAllHelpers";
-import { ActionType, HardhatRuntimeEnvironment } from "hardhat/types";
+import { Transaction, NetworkTransactions, getContractInstance, getLayerZeroChainId, executeTransactions } from "./utils/crossChainHelper";
+import { configExist, getConfig, logError, printTransactions } from "./utils/helpers";
+import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress } from "./utils/wireAllHelpers";
 
-const wireAll: ActionType<unknown> = async (taskArgs, hre) => {
+export default async function (taskArgs: any, hre: any) {
 	if (!configExist(taskArgs.configPath)) {
 		logError(`Wire up config file is not found.`);
 		return;
@@ -25,7 +23,7 @@ const wireAll: ActionType<unknown> = async (taskArgs, hre) => {
 	console.log(`Computing diff`);
 	console.log(`************************************************`);
 
-	let transactionByNetwork: any = await Promise.all(
+	let transactionByNetwork: NetworkTransactions[] = await Promise.all(
 		localNetworks.map(async (localNetwork) => {
             // array of transactions to execute
             const transactions: Transaction[] = [];
@@ -80,7 +78,7 @@ const wireAll: ActionType<unknown> = async (taskArgs, hre) => {
 				transactions: transactions,
 			};
 		})
-	);
+	) as NetworkTransactions[];
 
 	const noChanges = transactionByNetwork.reduce((acc, { transactions }) => {
 		acc += transactions.filter((transaction) => transaction.needChange).length;
@@ -120,7 +118,7 @@ async function setDefaultFeeBp(hre: any, localNetwork: string, localContractName
 	return [tx];
 }
 
-async function setFeeBp(hre: any, localNetwork: string, localContractNameOrAddress: string, feeBpConfig: any, remoteChainId: number): Promise<Transaction[]> {
+async function setFeeBp(hre: any, localNetwork: string, localContractNameOrAddress: string, feeBpConfig: any, remoteChainId: string): Promise<Transaction[]> {
 	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
 	const feeConfig = await localContract.chainIdToFeeBps(remoteChainId);
 	const curFeeBp = feeConfig[0];
@@ -146,5 +144,3 @@ async function setFeeBp(hre: any, localNetwork: string, localContractNameOrAddre
 	}
 	return [tx];
 }
-
-export default wireAll

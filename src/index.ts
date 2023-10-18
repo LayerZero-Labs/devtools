@@ -10,6 +10,7 @@ task("setConfig", "sets Send and Receive Messaging Library versions and a custom
 	.addOptionalParam("name", "name of the deployed contracts. Should be specified if the same contract deployed on different chains and the deployment information is located in the deployments folder")
 	.addOptionalParam("address", "address of the deployed contracts. Should be specified if the contract address is the same on all chains")
 	.addOptionalParam("gnosisConfigPath", "the path to a file with Gnosis config. If specified, the transactions will be sent to Gnosis")
+    .addOptionalParam("gasLimit", "override execution gasLimit")
 
 task("getDefaultConfig", "outputs the default Send and Receive Messaging Library versions and the default application config", getDefaultConfig)
 	.addParam("networks", "comma separated list of networks")

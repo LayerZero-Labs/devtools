@@ -1,7 +1,7 @@
-import { utils } from "ethers";
 import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "./utils/helpers";
 import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, getContract, getWalletContract, getApplicationConfig, getEvmContractAddress, getLayerZeroChainId } from "./utils/crossChainHelper";
-const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } = require("./constants/abi");
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from "./constants/abi";
+import { utils } from "ethers";
 
 // Application config types from UltraLightNodeV2 contract
 const CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION = 1;
@@ -73,7 +73,7 @@ export default  async (taskArgs: any, hre: any) => {
 							if (newConfig.remoteChain === network) return;
 
 							const oldConfig = await getApplicationConfig(newConfig.remoteChain, sendLibrary, receiveLibrary, app.address);
-							const remoteChainId = getLayerZeroChainId(network);
+							const remoteChainId = getLayerZeroChainId(newConfig.remoteChain);
 
 							if (newConfig.inboundProofLibraryVersion) {
 								transactions.push(...(await setConfig(newReceiveVersion, chainId, remoteChainId, app, CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION, "uint16", oldConfig.inboundProofLibraryVersion, newConfig.inboundProofLibraryVersion)));
@@ -107,7 +107,7 @@ export default  async (taskArgs: any, hre: any) => {
 				};
 			})
 		)
-	).filter((x) => x);
+	) as any[];
 
 	const totalTransactionsNeedingChange = transactionByNetwork.reduce((count, { transactions }) => {
 		count += transactions.filter((tx: Transaction) => tx.needChange).length;
@@ -165,7 +165,7 @@ export default  async (taskArgs: any, hre: any) => {
 	} else {
 		await Promise.all(
 			transactionByNetwork.map(async ({ network, transactions }) => {
-				const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange);
+				const transactionToCommit = transactions.filter((transaction: any) => transaction.needChange);
 				const networkConfig = config[network];
 				const contractName = networkConfig.name ?? name;
 				const contractAddress = networkConfig.address ?? address;
@@ -177,7 +177,8 @@ export default  async (taskArgs: any, hre: any) => {
 					print[network].current = `${transaction.functionName}(${transaction.args})`;
 					printResult();
 					try {
-						const tx = await executeTransaction(hre, network, transaction, app);
+                        const gasLimit = taskArgs.gasLimit;
+						const tx = await executeTransaction(hre, network, transaction, gasLimit, app);
 						print[network].past = `${transaction.functionName}(${transaction.args}) (${tx.transactionHash})`;
 						successTx++;
 						print[network].requests = `${successTx}/${transactionToCommit.length}`;

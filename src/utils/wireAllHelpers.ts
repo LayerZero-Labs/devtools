@@ -1,7 +1,4 @@
-import { Transaction, executeGnosisTransactions, executeTransaction, getContractAt, getContract, getLayerZeroChainId } from "./crossChainHelper";
-import { promptToProceed, logError, arrayToCsv, configExist, getConfig } from "./helpers";
-import { writeFile } from "fs/promises";
-import { LZ_APP_ABI } from "../constants/abi";
+import { Transaction, getLayerZeroChainId, getContractInstance } from "./crossChainHelper";
 
 export async function setUseCustomAdapterParams(hre: any, localNetwork: string, localContractNameOrAddress: string, useCustom: boolean): Promise<Transaction[]> {
 	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
@@ -27,12 +24,12 @@ export async function setUseCustomAdapterParams(hre: any, localNetwork: string, 
 	return [tx];
 }
 
-export async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, minDstGasConfig: any, remoteChainId: number): Promise<Transaction[]> {
+export async function setMinDstGas(hre: any, localNetwork: string, localContractNameOrAddress: string, minDstGasConfig: any, remoteChainId: string): Promise<Transaction[]> {
 	const txns: Transaction[] = [];
 	const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
     const packetTypes = Object.keys(minDstGasConfig);
     for(const packet of packetTypes) {
-		let packetType = parseInt(packet.at(-1));
+		let packetType = parseInt(packet.at(-1) as string);
 		const minGas = minDstGasConfig[packet];
 		const cur = (await localContract.minDstGasLookup(remoteChainId, packetType)).toNumber();
 		const needChange = cur !== minGas;
@@ -107,106 +104,4 @@ export function getContractNameOrAddress(chain: string, WIRE_UP_CONFIG: any) {
 		}
 	}
 	return contractNameOrAddress;
-}
-
-export async function executeTransactions(hre: any, taskArgs: any, transactionBynetwork: any) {
-	const columns = ["needChange", "chainId", "remoteChainId", "contractName", "functionName", "args", "diff", "calldata"];
-
-	const data = transactionBynetwork.reduce((acc, { network, transactions }) => {
-		transactions.forEach((transaction) => {
-			acc.push([
-				network,
-				...columns.map((key) => {
-					if (typeof transaction[key] === "object") {
-						return JSON.stringify(transaction[key]);
-					} else {
-						return transaction[key];
-					}
-				}),
-			]);
-		});
-		return acc;
-	}, []);
-	await writeFile("./transactions.csv", arrayToCsv(["network"].concat(columns), data));
-
-	console.log("Full configuration is written at:");
-	console.log(`file:/${process.cwd()}/transactions.csv`);
-
-	const errs: any[] = [];
-	const print: any = {};
-	let previousPrintLine = 0;
-	const printResult = () => {
-		if (previousPrintLine) {
-			process.stdout.moveCursor(0, -previousPrintLine);
-		}
-		if (Object.keys(print)) {
-			previousPrintLine = Object.keys(print).length + 4;
-			console.table(Object.keys(print).map((network) => ({ network, ...print[network] })));
-		}
-	};
-
-	if (taskArgs.n) {
-		await promptToProceed("Would you like to Submit to gnosis?", taskArgs.noPrompt);
-        const gnosisConfig = getConfig(taskArgs.gnosisConfigPath);
-		await Promise.all(
-			transactionBynetwork.map(async ({ network, transactions }) => {
-				const transactionToCommit = transactions.filter((transaction) => transaction.needChange);
-				print[network] = print[network] || { requests: `1/1` };
-				print[network].current = `executeGnosisTransactions: ${transactionToCommit}`;
-				try {
-					await executeGnosisTransactions(hre, network, gnosisConfig, transactionToCommit);
-					print[network].requests = `1/1`;
-					printResult();
-				} catch (err: any) {
-					console.log(`Failing calling executeGnosisTransactions for network ${network} with err ${err}`);
-					errs.push({
-						network,
-						err,
-					});
-					print[network].current = err.message;
-					print[network].err = true;
-					printResult();
-				}
-			})
-		);
-	} else {
-		await promptToProceed("Would you like to run these transactions?", taskArgs.noPrompt);
-		await Promise.all(
-			transactionBynetwork.map(async ({ network, transactions }) => {
-				const transactionToCommit = transactions.filter((transaction) => transaction.needChange);
-
-				let successTx = 0;
-				print[network] = print[network] || { requests: `${successTx}/${transactionToCommit.length}` };
-				for (let transaction of transactionToCommit) {
-					print[network].current = `${transaction.contractName}.${transaction.functionName}`;
-					printResult();
-					try {
-					    const gasLimit = taskArgs.gasLimit;
-						const tx = await executeTransaction(hre, network, transaction, gasLimit);
-						print[network].past = `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`;
-						successTx++;
-						print[network].requests = `${successTx}/${transactionToCommit.length}`;
-						printResult();
-					} catch (err: any) {
-						console.log(`Failing calling ${transaction.contractName}.${transaction.functionName} for network ${network} with err ${err}`);
-						console.log(err);
-						errs.push({
-							network,
-							err,
-						});
-						print[network].current = err;
-						print[network].err = true;
-						printResult();
-						break;
-					}
-				}
-			})
-		);
-	}
-
-	if (!errs.length) {
-		console.log("Wired all networks successfully");
-	} else {
-		console.log(errs);
-	}
 }
