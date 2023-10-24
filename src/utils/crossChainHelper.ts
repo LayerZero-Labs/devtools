@@ -4,6 +4,7 @@ import EthersAdapter from "@gnosis.pm/safe-ethers-lib";
 import SafeServiceClient from "@gnosis.pm/safe-service-client";
 import Safe from "@gnosis.pm/safe-core-sdk";
 import { LZ_APP_ABI } from "../constants/abi";
+import { LZ_ENDPOINTS } from "../constants/endpoints";
 import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions";
 import { promptToProceed, arrayToCsv, getConfig } from "./helpers";
 const path = require("path");
@@ -302,7 +303,6 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
 
 export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: any, receiveLibrary: any, applicationAddress: string) => {
 	const remoteChainId = getLayerZeroChainId(remoteNetwork);
-    console.log({remoteChainId})
 	const sendConfig = await sendLibrary.appConfig(applicationAddress, remoteChainId);
 	let inboundProofLibraryVersion = sendConfig.inboundProofLibraryVersion;
 	let inboundBlockConfirmations = sendConfig.inboundBlockConfirmations.toNumber();
@@ -323,25 +323,7 @@ export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: a
 	};
 };
 
-export const getEvmContractAddress = (
-    contractName: string,
-    network: string,
-): string => {
-    const [chainName, environment] = network.split("-");
-    const deploymentFolderName = getDeploymentFolderName(
-        chainName,
-        environment,
-    )
-    return require(`@layerzerolabs/lz-evm-sdk-v1/deployments/${deploymentFolderName}/${contractName}.json`).address
-}
-
-const getDeploymentFolderName = (chainName: string, environment: string): string => {
-    if (['localnet', 'sandbox'].includes(environment)) {
-        return chainName + '-sandbox-local'
-    }
-    // monorepo packages
-    return `${chainName.split("-")[0]}-${environment}`
-}
+export const getEndpointAddress = (network: string): string => { return LZ_ENDPOINTS[network] }
 
 // expecting "chain-environment" eg. "ethereum-mainnet", "ethereum-testnet", "ethereum-sandbox"
 export const getLayerZeroChainId = (network: string): string => {

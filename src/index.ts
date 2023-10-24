@@ -30,9 +30,6 @@ task("checkWireAllConfig", "", checkWireAllConfig)
     .addOptionalParam("addresses", "addresses of contracts in same order as chains")
     .addOptionalParam("proxyContract", "name of proxy contract")
     .addOptionalParam("proxyChain", "name of proxy chain")
-// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet --contract ExampleOFTV2
-// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --contract OFTV2 --proxy-contract ProxyOFTV2 --proxy-chain optimism-testnet
-// npx hardhat checkConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17,0x27631753FC88e7b45a46679B9Cd2e06378cB43dC"
 
 task("wireAll", "", wireAll)
 	.addParam("e", "the environment ie: mainnet, testnet or sandbox")
@@ -41,4 +38,3 @@ task("wireAll", "", wireAll)
 	.addOptionalParam("n", "send to gnosis", false, types.boolean)
 	.addOptionalParam("gasLimit", "override execution gasLimit")
     .addOptionalParam("gnosisConfigPath", "Optional config path. Default: ./constants/gnosisConfig.json", "./constants/gnosisConfig.json", types.string)
-// npx hardhat --network ethereum-testnet wireAll --e testnet --config-path "./constants/oftv2Config/wireUpConfig.json"

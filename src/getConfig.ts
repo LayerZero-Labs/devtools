@@ -1,4 +1,4 @@
-import { getDeploymentAddresses, getApplicationConfig, getEvmContractAddress } from "./utils/crossChainHelper";
+import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from "./utils/crossChainHelper";
 import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from  "./constants/abi";
 import { logError } from "./utils/helpers";
 
@@ -21,7 +21,7 @@ export default async (taskArgs: any, hre: any) => {
 		}
 	}	
 
-	const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, getEvmContractAddress("Endpoint", network));
+	const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, getEndpointAddress(network));
 	const appConfig = await endpoint.uaConfigLookup(contractAddress);
 	const sendVersion = appConfig.sendVersion;
 	const receiveVersion = appConfig.receiveVersion;	

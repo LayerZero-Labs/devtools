@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-utils",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "repository": "https://github.com/LayerZero-Labs/ua-utils.git",
   "license": "MIT",
   "main": "dist/index.js",
@@ -31,7 +31,6 @@
   "dependencies": {
     "@layerzerolabs/lz-definitions": "latest",
     "@layerzerolabs/lz-sdk": "0.0.12",
-    "@layerzerolabs/lz-evm-sdk-v1": "latest",
     "chalk": "4.1.2",
     "cli-ux": "^6.0.9"
   },

@@ -1,5 +1,5 @@
 import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "./utils/helpers";
-import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, getContract, getWalletContract, getApplicationConfig, getEvmContractAddress, getLayerZeroChainId } from "./utils/crossChainHelper";
+import { executeTransaction, executeGnosisTransactions, getContractAt, getWalletContractAt, Transaction, getContract, getWalletContract, getApplicationConfig, getEndpointAddress, getLayerZeroChainId } from "./utils/crossChainHelper";
 import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from "./constants/abi";
 import { utils } from "ethers";
 
@@ -34,7 +34,7 @@ export default  async (taskArgs: any, hre: any) => {
 				const networkConfig = config[network];
 
 				if (!networkConfig) return;
-				const endpoint = await getContractAt(hre, network, ENDPOINT_ABI, getEvmContractAddress("Endpoint", network));
+				const endpoint = await getContractAt(hre, network, ENDPOINT_ABI, getEndpointAddress(network));
 
 				const contractName =  networkConfig.name ?? name;
 				const contractAddress = networkConfig.address ?? address;

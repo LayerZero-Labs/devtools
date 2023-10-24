@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { getProvider, getLayerZeroChainId, getEvmContractAddress } from "./utils/crossChainHelper";
+import { getProvider, getLayerZeroChainId, getEndpointAddress } from "./utils/crossChainHelper";
 const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } = require("./constants/abi")
 
 export default  async (taskArgs: any, hre: any) => {
@@ -9,7 +9,7 @@ export default  async (taskArgs: any, hre: any) => {
 		networks.map(async (network: string) => {
 			const provider = getProvider(hre, network);
 			console.log()
-			const endpoint = new ethers.Contract(getEvmContractAddress("Endpoint", network), ENDPOINT_ABI, provider);
+			const endpoint = new ethers.Contract(getEndpointAddress(network), ENDPOINT_ABI, provider);
 			const sendVersion = await endpoint.defaultSendVersion();
 			const receiveVersion = await endpoint.defaultReceiveVersion();
 			const sendLibraryAddress = await endpoint.defaultSendLibrary();
