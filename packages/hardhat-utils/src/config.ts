@@ -1,21 +1,8 @@
 import "hardhat-deploy/dist/src/type-extensions"
 
 import { chainAndStageToNetwork, networkToStage, Chain, Stage } from "@layerzerolabs/lz-definitions"
-import { HardhatUserConfig, HttpNetworkAccountsUserConfig, NetworksConfig } from "hardhat/types"
+import { HardhatUserConfig, NetworksConfig } from "hardhat/types"
 import { join } from "path"
-
-export const getMnemonic = (networkName: string): string | undefined =>
-    process.env[`MNEMONIC_${networkName}`] ||
-    process.env[`MNEMONIC_${networkName.toUpperCase()}`] ||
-    process.env[`MNEMONIC_${networkName.toUpperCase().replace(/-/g, "_")}`] ||
-    process.env.MNEMONIC
-
-export const getAccounts = (networkName: string): HttpNetworkAccountsUserConfig => {
-    const mnemonic = getMnemonic(networkName)
-    if (mnemonic == null) return []
-
-    return { mnemonic }
-}
 
 /**
  * Adds external deployments directories for all configured networks.
