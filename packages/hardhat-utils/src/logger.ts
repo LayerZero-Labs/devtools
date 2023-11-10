@@ -38,8 +38,6 @@ export const setDefaultLogLevel = (level: string) => {
     DEFAULT_LOG_LEVEL = level
 }
 
-const getDefaultLogLevel = (): LogLevel => DEFAULT_LOG_LEVEL
-
 /**
  * Creates a general-purpose logger
  *
@@ -48,7 +46,7 @@ const getDefaultLogLevel = (): LogLevel => DEFAULT_LOG_LEVEL
  *
  * @returns `Logger`
  */
-export const createLogger = (level: string = getDefaultLogLevel(), logFormat = format.cli()) =>
+export const createLogger = (level: string = DEFAULT_LOG_LEVEL, logFormat = format.cli()) =>
     createWinstonLogger({
         level,
         format: logFormat,
@@ -67,7 +65,7 @@ export const createLogger = (level: string = getDefaultLogLevel(), logFormat = f
  *
  * @returns `Logger`
  */
-export const createNetworkLogger = (networkName: string, level: string = getDefaultLogLevel()) =>
+export const createNetworkLogger = (networkName: string, level: string = DEFAULT_LOG_LEVEL) =>
     createLogger(level, format.combine(prefix({ label: networkName }), format.cli()))
 
 /**
@@ -83,7 +81,7 @@ export const createNetworkLogger = (networkName: string, level: string = getDefa
  *
  * @returns `Logger`
  */
-export const createNetworkToNetworkLogger = (sourceNetworkName: string, destinationNetworkName: string, level: string = getDefaultLogLevel()) =>
+export const createNetworkToNetworkLogger = (sourceNetworkName: string, destinationNetworkName: string, level: string = DEFAULT_LOG_LEVEL) =>
     createLogger(level, format.combine(prefix({ label: `${sourceNetworkName} ➝ ${destinationNetworkName}` }), format.cli()))
 
 /**
