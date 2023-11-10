@@ -40,7 +40,8 @@
         "sinon": "^17.0.1",
         "ts-node": "^10.9.1",
         "tsup": "~7.2.0",
-        "typescript": "^5.2.2"
+        "typescript": "^5.2.2",
+        "winston": "^3.11.0"
     },
     "peerDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",
