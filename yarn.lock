@@ -925,6 +925,15 @@
   dependencies:
     tiny-invariant "^1.3.1"
 
+"@layerzerolabs/lz-evm-sdk-v1@~1.5.58":
+  version "1.5.59"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.59.tgz#f10587548cbba39f1ab69dde4f6c5263bc7310b7"
+  integrity sha512-m7WiaaslH9QitgSOiXygcGGnINTJgW4rpI7BBxS9jDkuBf7om3chuhJPysxS4TztWC8U/11HrfcpxHdfkkJP3g==
+  dependencies:
+    "@ethersproject/abi" "^5.7.0"
+    "@ethersproject/providers" "^5.7.2"
+    ethers "^5.7.2"
+
 "@layerzerolabs/lz-sdk@0.0.12":
   version "0.0.12"
   resolved "https://registry.npmjs.org/@layerzerolabs/lz-sdk/-/lz-sdk-0.0.12.tgz#b41b5b266d41f89c0a720de48581e0a8910180a8"
