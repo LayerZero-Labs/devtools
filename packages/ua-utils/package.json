@@ -8,6 +8,7 @@
     "module": "dist/index.mjs",
     "scripts": {
         "build": "npx tsup",
+        "clean": "rm -rf dist",
         "lint": "npx eslint '**/*.{js,ts,json}'",
         "prebuild": "tsc -noEmit"
     },
@@ -25,15 +26,15 @@
         "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
-        "@layerzerolabs/lz-definitions": "1.5.58",
+        "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-sdk": "0.0.12",
         "@nomiclabs/hardhat-ethers": "^2.2.3",
         "@types/mocha": "^10.0.1",
         "chalk": "4.1.2",
         "cli-ux": "^6.0.9",
         "dotenv": "^16.0.3",
-        "ethers": "^5.5.2",
-        "hardhat": "2.12.5",
+        "ethers": "^5.7.0",
+        "hardhat": "^2.9.9",
         "hardhat-deploy": "^0.11.22",
         "ts-node": "^10.9.1",
         "tsup": "^7.2.0",
@@ -44,11 +45,11 @@
         "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
-        "@layerzerolabs/lz-definitions": "latest",
+        "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-sdk": "0.0.12",
         "@nomiclabs/hardhat-ethers": "^2.2.3",
         "ethers": "^5.5.2",
-        "hardhat": "2.12.5",
+        "hardhat": "~2.12.5",
         "hardhat-deploy": "^0.11.22"
     }
 }

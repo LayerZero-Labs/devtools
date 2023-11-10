@@ -10,6 +10,9 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
     cancel-in-progress: true
 
+env:
+    NPM_TOKEN: ""
+
 jobs:
     build-and-test:
         runs-on: ubuntu-latest
