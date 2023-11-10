@@ -19,6 +19,8 @@ jobs:
               with:
                   node-version-file: ".nvmrc"
                   cache: "yarn"
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             # Install the dependencies without running the post-install scripts
             - name: Install Dependencies
