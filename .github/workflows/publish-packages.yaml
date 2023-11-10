@@ -31,6 +31,8 @@ jobs:
             # Run the post-install scripts
             - name: Build Dependencies
               run: yarn install --frozen-lockfile --offline
+              env:
+                  NPM_TOKEN: ""
 
             # Cache build artifacts from turbo
             #
