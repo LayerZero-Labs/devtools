@@ -9,6 +9,9 @@
 ## Development
 
 ```bash
+# or nvm install if nvm use fails
+nvm use
+
 yarn
 
 yarn build
