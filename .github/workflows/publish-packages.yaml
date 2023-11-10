@@ -1,0 +1,78 @@
+name: Publish packages
+
+on:
+    push:
+        branches:
+            - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+    publish:
+        name: Publish
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version-file: ".nvmrc"
+                  cache: "yarn"
+
+            # Install the dependencies without running the post-install scripts
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile --prefer-offline --ignore-scripts
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            # Run the post-install scripts
+            - name: Build Dependencies
+              run: yarn install --frozen-lockfile --offline
+
+            # Cache build artifacts from turbo
+            #
+            # This step will speed up workflow runs that don't touch the whole codebase
+            # (or the ones that don't touch the codebase at all)
+            - name: Cache turbo build setup
+              uses: actions/cache@v3
+              with:
+                  path: node_modules/.cache/turbo
+                  key: ${{ runner.os }}-turbo-${{ github.ref_name }}
+                  restore-keys: |
+                      ${{ runner.os }}-turbo-
+
+            - name: Lint
+              run: yarn lint
+
+            - name: Build
+              run: yarn build
+
+            - name: Test
+              run: yarn test
+
+            # This step uses the changesets CLI to bump the package versions and/or publish the unpublished packages
+            #
+            # How this works is:
+            #
+            # - If there are any changesets (markdown files in the .changeset directory),
+            #   changesets CLI will bump the package versions according to the bumps specified in the markdown files.
+            #
+            # - A PR is created containing these version bumps and with the changeset markdowns deleted
+            #
+            # - Once this PR is merged, this workflow kicks in again and this time checks
+            #   whether there is anything that needs to be published
+            - name: Publish packages / create version bump PRs
+              uses: changesets/action@v1
+              with:
+                  version: yarn changeset version
+                  publish: yarn changeset publish
+
+              env:
+                  # This is here because changesets/action will look for the .npmrc
+                  # in HOME folder and if it doesn't fine one there it will create one
+                  #
+                  # Since we want to make sure it uses our .npmrc we'll just point it
+                  # to our workspace root
+                  HOME: ${{ github.workspace }}
+                  GITHUB_TOKEN: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
