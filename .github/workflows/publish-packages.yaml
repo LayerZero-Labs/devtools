@@ -7,6 +7,9 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+env:
+    NPM_TOKEN: ""
+
 jobs:
     publish:
         name: Publish
@@ -19,8 +22,6 @@ jobs:
               with:
                   node-version-file: ".nvmrc"
                   cache: "yarn"
-              env:
-                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             # Install the dependencies without running the post-install scripts
             - name: Install Dependencies
@@ -31,8 +32,6 @@ jobs:
             # Run the post-install scripts
             - name: Build Dependencies
               run: yarn install --frozen-lockfile --offline
-              env:
-                  NPM_TOKEN: ""
 
             # Cache build artifacts from turbo
             #
