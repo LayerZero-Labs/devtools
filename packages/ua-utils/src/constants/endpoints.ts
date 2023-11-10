@@ -1,4 +1,4 @@
-export const LZ_ENDPOINTS: {[key: string]: string} = {
+export const LZ_ENDPOINTS: { [key: string]: string } = {
     "aavegotchi-testnet": "0xfeBE4c839EFA9f506C092a32fD0BB546B76A1d38",
     "arbitrum-mainnet": "0x3c2269811836af69497E5F486A85D7316753cf62",
     "arbitrum-testnet": "0x6aB5Ae6822647046626e83ee6dB8187151E1d5ab",
@@ -83,5 +83,5 @@ export const LZ_ENDPOINTS: {[key: string]: string} = {
     "zksync-mainnet": "0x9b896c0e23220469C7AE69cb4BbAE391eAa4C8da",
     "zksync-testnet": "0x093D2CF57f764f09C3c2Ac58a42A2601B8C79281",
     "zora-mainnet": "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
-    "zora-testnet": "0x83c73Da98cf733B03315aFa8758834b36a195b87"
+    "zora-testnet": "0x83c73Da98cf733B03315aFa8758834b36a195b87",
 }

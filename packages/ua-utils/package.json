@@ -1,0 +1,54 @@
+{
+    "name": "@layerzerolabs/ua-utils",
+    "description": "Utilities for working with LayerZero EVM contracts",
+    "version": "0.0.15",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "module": "dist/index.mjs",
+    "scripts": {
+        "build": "npx tsup",
+        "lint": "npx eslint '**/*.{js,ts,json}'",
+        "prebuild": "tsc -noEmit"
+    },
+    "files": [
+        "dist/",
+        "LICENSE"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+        "directory": "packages/ua-utils"
+    },
+    "devDependencies": {
+        "@gnosis.pm/safe-core-sdk": "^2.0.0",
+        "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
+        "@gnosis.pm/safe-ethers-lib": "^1.0.0",
+        "@gnosis.pm/safe-service-client": "1.1.1",
+        "@layerzerolabs/lz-definitions": "1.5.58",
+        "@layerzerolabs/lz-sdk": "0.0.12",
+        "@nomiclabs/hardhat-ethers": "^2.2.3",
+        "@types/mocha": "^10.0.1",
+        "chalk": "4.1.2",
+        "cli-ux": "^6.0.9",
+        "dotenv": "^16.0.3",
+        "ethers": "^5.5.2",
+        "hardhat": "2.12.5",
+        "hardhat-deploy": "^0.11.22",
+        "ts-node": "^10.9.1",
+        "tsup": "^7.2.0",
+        "typescript": "^5.2.2"
+    },
+    "peerDependencies": {
+        "@gnosis.pm/safe-core-sdk": "^2.0.0",
+        "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
+        "@gnosis.pm/safe-ethers-lib": "^1.0.0",
+        "@gnosis.pm/safe-service-client": "1.1.1",
+        "@layerzerolabs/lz-definitions": "latest",
+        "@layerzerolabs/lz-sdk": "0.0.12",
+        "@nomiclabs/hardhat-ethers": "^2.2.3",
+        "ethers": "^5.5.2",
+        "hardhat": "2.12.5",
+        "hardhat-deploy": "^0.11.22"
+    }
+}

@@ -1,0 +1,54 @@
+name: Vape Tests
+
+on:
+    push:
+        # We have package publishing workflow running on main so this one is redundant
+        branches-ignore:
+            - "main"
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version-file: ".nvmrc"
+                  cache: "yarn"
+
+            # Install the dependencies without running the post-install scripts
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile --prefer-offline --ignore-scripts
+              env:
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            # Run the post-install scripts
+            - name: Build Dependencies
+              run: yarn install --frozen-lockfile --offline
+
+            # Cache build artifacts from turbo
+            #
+            # This step will speed up workflow runs that don't touch the whole codebase
+            # (or the ones that don't touch the codebase at all)
+            - name: Cache turbo build setup
+              uses: actions/cache@v3
+              with:
+                  path: node_modules/.cache/turbo
+                  key: ${{ runner.os }}-turbo-${{ github.ref_name }}
+                  restore-keys: |
+                      ${{ runner.os }}-turbo-
+
+            - name: Lint
+              run: yarn lint
+
+            - name: Build
+              run: yarn build
+
+            - name: Test
+              run: yarn test
