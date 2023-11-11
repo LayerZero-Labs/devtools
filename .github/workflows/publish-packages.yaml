@@ -79,3 +79,4 @@ jobs:
                   # to our workspace root
                   HOME: ${{ github.workspace }}
                   GITHUB_TOKEN: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISHER }}
