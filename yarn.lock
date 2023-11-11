@@ -2396,6 +2396,11 @@ cli-progress@^3.10.0:
   dependencies:
     string-width "^4.2.3"
 
+cli-spinners@^2.7.0:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-2.9.1.tgz#9c0b9dad69a6d47cbb4333c14319b060ed395a35"
+  integrity sha512-jHgecW0pxkonBJdrKsqxgRX9AcG+u/5k0Q7WPDfi8AogLAdwxEkyYYNWwZ5GvVFoFx2uiY1eNcSK00fh+1+FyQ==
+
 cli-truncate@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/cli-truncate/-/cli-truncate-3.1.0.tgz"
@@ -4234,6 +4239,13 @@ ink-select-input@^5.0.0:
     arr-rotate "^1.0.0"
     figures "^5.0.0"
     lodash.isequal "^4.5.0"
+
+ink-spinner@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ink-spinner/-/ink-spinner-5.0.0.tgz#32ec318ef8ebb0ace8f595451f8e93280623429f"
+  integrity sha512-EYEasbEjkqLGyPOUc8hBJZNuC5GvXGMLu0w5gdTNskPc7Izc5vO3tdQEYnzvshucyGCBXc86ig0ujXPMWaQCdA==
+  dependencies:
+    cli-spinners "^2.7.0"
 
 ink@^4.1.0:
   version "4.4.1"

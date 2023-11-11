@@ -1,12 +1,12 @@
 import React from "react"
 import { render } from "ink"
 import { Command } from "commander"
-import { Logo } from "./components/branding.js"
+import { Placeholder } from "./components/placeholder.js"
 
 new Command("create-oapp")
     .description("Create LayerZero OApp with one command")
     .action(async () => {
-        const { waitUntilExit } = render(<Logo />)
+        const { waitUntilExit } = render(<Placeholder />)
 
         await waitUntilExit()
     })
