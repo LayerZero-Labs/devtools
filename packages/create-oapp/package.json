@@ -23,6 +23,7 @@
         "clean": "rm -rf dist",
         "dev": "npx tsup --watch",
         "lint": "npx eslint '**/*.{js,ts,json}'",
+        "prebuild": "tsc -noEmit",
         "start": "./cli.cjs"
     },
     "files": [
