@@ -1,15 +1,30 @@
 import { Text } from "ink"
 import Gradient from "ink-gradient"
-import React from "react"
+import { stdout } from "process"
+import React, { useEffect, useState } from "react"
 
-export const Logo: React.FC = () => (
-    <Gradient name="rainbow">
-        <Text>{logo}</Text>
-    </Gradient>
-)
+export const Logo: React.FC = () => {
+    const [columns, setColumns] = useState<number>(stdout.columns ?? 80)
+    const logo = columns >= 130 ? LOGO_LARGE : LOGO_SMALL
+
+    useEffect(() => {
+        const handleResize = () => setColumns(stdout.columns ?? 80)
+        stdout.on("resize", handleResize)
+
+        return () => {
+            stdout.off("resize", handleResize)
+        }
+    }, [])
+
+    return (
+        <Gradient name="rainbow" key={logo}>
+            <Text>{logo}</Text>
+        </Gradient>
+    )
+}
 
 // prettier-ignore
-const logo = `
+const LOGO_LARGE = `
      **********                                                                                                                  
    **************                                                                                                                
  ******************                                                                                                              
@@ -19,7 +34,7 @@ const logo = `
 *********  *********          ****                                                 ***********                                   
    ******  *********          ****        *************    ****  ******   *******       ****    ******    *** **   ******        
  ********  *********          ****      *********** ****  **** ********** *******      ****   **********  ****** **********      
-*********  ********           ****     ****    ****  ******** *********** ****        ****    *********** ****  ****    ****     
+*********  ********           ****     ****    ****  ******** ****   **** ****        ****   *****   **** ****  ****    ****     
 *********  ******             ****     ****    ****   ******* *********** ****      *****    ************ ***   ****    ****     
 *********  *********          ********* ***********   ******   ********** ****     *********************  ***    **********  ****
 *********  *********          *********  **********    ****     ********  ****     ***********  ********  ***      *******   ****
@@ -28,5 +43,28 @@ const logo = `
  ******************                                                                                                              
   ****************                                                                                                               
      **********                                                                                                                  
+
+`
+
+// prettier-ignore
+const LOGO_SMALL = `
+     **********     
+   **************   
+ ****************** 
+********************
+*********  *********
+*********  *********
+*********  *********
+   ******  *********
+ ********  *********
+*********  ******** 
+*********  ******   
+*********  *********
+*********  *********
+*********  *********
+********************
+ ****************** 
+  ****************  
+     **********     
 
 `
