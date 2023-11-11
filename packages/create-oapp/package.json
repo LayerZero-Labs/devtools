@@ -1,0 +1,46 @@
+{
+    "name": "create-oapp",
+    "version": "0.0.1",
+    "description": "Create LayerZero OApp with one command",
+    "type": "module",
+    "keywords": [
+        "LayerZero",
+        "OApp"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+        "directory": "packages/create-oapp"
+    },
+    "bin": {
+        "create-oapp": "./cli.cjs"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "scripts": {
+        "build": "npx tsup",
+        "clean": "rm -rf dist",
+        "dev": "npx tsup --watch",
+        "lint": "npx eslint '**/*.{js,ts,json}'",
+        "start": "./cli.cjs"
+    },
+    "files": [
+        "./cli.cjs",
+        "./dist"
+    ],
+    "devDependencies": {
+        "@sindresorhus/tsconfig": "^3.0.1",
+        "@types/react": "^18.0.32",
+        "commander": "^11.1.0",
+        "eslint-plugin-react": "^7.32.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "ink": "^4.1.0",
+        "ink-gradient": "^3.0.0",
+        "ink-select-input": "^5.0.0",
+        "react": "^18.2.0",
+        "react-devtools-core": "^4.28.5",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.2.2"
+    }
+}
