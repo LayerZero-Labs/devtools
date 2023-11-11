@@ -30,7 +30,7 @@
         "./dist"
     ],
     "devDependencies": {
-        "@sindresorhus/tsconfig": "^3.0.1",
+        "@sindresorhus/tsconfig": "^5.0.0",
         "@types/react": "^18.0.32",
         "commander": "^11.1.0",
         "eslint-plugin-react": "^7.32.2",
