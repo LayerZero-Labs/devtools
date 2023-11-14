@@ -2,6 +2,7 @@
     "name": "@layerzerolabs/hardhat-utils",
     "description": "Hardhat helpers for LayerZero EVM projects",
     "version": "0.0.1",
+    "license": "MIT",
     "private": true,
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
