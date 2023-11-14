@@ -2,7 +2,7 @@ import React from "react"
 import { render } from "ink"
 import { Command } from "commander"
 import { Placeholder } from "./components/placeholder.js"
-import { altScreen } from "./utilities/terminal.js"
+import { altScreen } from "@/utilities/terminal.js"
 
 new Command("create-lz-oapp")
     .description("Create LayerZero OApp with one command")
