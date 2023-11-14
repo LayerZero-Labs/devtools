@@ -1,5 +1,5 @@
 {
-    "name": "create-oapp",
+    "name": "create-lz-oapp",
     "version": "0.0.1",
     "description": "Create LayerZero OApp with one command",
     "type": "module",
@@ -13,10 +13,10 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/create-oapp"
+        "directory": "packages/create-lz-oapp"
     },
     "bin": {
-        "create-oapp": "./cli.cjs"
+        "create-lz-oapp": "./cli.cjs"
     },
     "engines": {
         "node": ">=18"
