@@ -12,8 +12,6 @@
   <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-utils"/></a>
   <!-- Shields.io NPM downloads -->
   <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-utils"/></a>
-  <!-- Snyk vulnerabilities -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="Snyk Vulnerabilities for repository" src="https://snyk.io/test/github/LayerZero-Labs/ua-utils/badge.svg"/></a>
   <!-- Shields.io license badge -->
   <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-utils"/></a>
 </p>
