@@ -1,49 +1,56 @@
-import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from "./utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from "./constants/abi"
-import { logError } from "./utils/helpers"
+import { ActionType, HardhatRuntimeEnvironment } from "hardhat/types"
+import { task, types } from "hardhat/config"
+import { ethers } from "ethers"
+import { createGetNetworkEnvironment } from "@layerzerolabs/hardhat-utils"
 
-export default async (taskArgs: any, hre: any) => {
-    const network = hre.network.name
-    const remoteNetworks = taskArgs.remoteNetworks.split(",")
-    const contractName = taskArgs.name
-    let contractAddress = taskArgs.address
+const action: ActionType<any> = async (taskArgs, hre) => {
+    // TODO add logging
+    // const logger = createLogger()
 
-    if (!contractName && !contractAddress) {
-        logError("Provide contract name or address")
+    const localNetwork = hre.network.name
+    const getEnvironment = createGetNetworkEnvironment(hre)
+    const localEnvironment = await getEnvironment(localNetwork)
+    const localEndpointV2 = await localEnvironment.getContract("EndpointV2", localEnvironment.provider)
+    const localEid = await localEndpointV2.eid()
+
+    let localContractAddress
+    if (taskArgs.name !== undefined) {
+        localContractAddress = (await localEnvironment.getContract(taskArgs.name, localEnvironment.provider)).address
+    } else if (taskArgs.address !== undefined) {
+        localContractAddress = taskArgs.address
+    } else {
+        // TODO log error
         return
     }
 
-    if (contractName && !contractAddress) {
-        contractAddress = getDeploymentAddresses(network, false)[contractName]
-        if (!contractAddress) {
-            logError(`Deployment information isn't found for ${contractName}`)
-            return
-        }
-    }
-
-    const endpoint = await hre.ethers.getContractAt(ENDPOINT_ABI, getEndpointAddress(network))
-    const appConfig = await endpoint.uaConfigLookup(contractAddress)
-    const sendVersion = appConfig.sendVersion
-    const receiveVersion = appConfig.receiveVersion
-    const sendLibraryAddress = sendVersion === 0 ? await endpoint.defaultSendLibrary() : appConfig.sendLibrary
-    const sendLibrary = await hre.ethers.getContractAt(MESSAGING_LIBRARY_ABI, sendLibraryAddress)
-    let receiveLibrary: any
-
-    if (sendVersion !== receiveVersion) {
-        const receiveLibraryAddress = receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : appConfig.receiveLibraryAddress
-        receiveLibrary = await hre.ethers.getContractAt(MESSAGING_LIBRARY_ABI, receiveLibraryAddress)
-    }
-
-    const remoteConfig: any[] = await Promise.all(
+    const ulnConfigDeployment = await hre.deployments.get("UlnConfig")
+    const remoteNetworks = taskArgs.remoteNetworks.split(",")
+    const configByNetwork = await Promise.all(
         remoteNetworks.map(async (remoteNetwork: string) => {
-            if (network === remoteNetwork) return
-            return await getApplicationConfig(remoteNetwork, sendLibrary, receiveLibrary, contractAddress)
+            const remoteEnvironment = await getEnvironment(remoteNetwork)
+            const remoteEndpointV2 = await remoteEnvironment.getContract("EndpointV2", remoteEnvironment.provider)
+            const remoteEid = await remoteEndpointV2.eid()
+
+            const localSendLibrary = await localEndpointV2.getSendLibrary(localContractAddress, remoteEid)
+            const localUlnConfig = await ethers.getContractAt(ulnConfigDeployment.abi, localSendLibrary)
+            const [ulnConfigStruct, outboundConfigStruct] = await localUlnConfig.getUlnAndOutboundConfig(localContractAddress, remoteEid)
+
+            return {
+                Network: localNetwork,
+                OAppaddress: localContractAddress,
+                ...ulnConfigStruct,
+                ...outboundConfigStruct,
+            }
         })
     )
-
-    console.log("Network            ", network)
-    console.log("Application address", contractAddress)
-    console.log("Send version       ", sendVersion)
-    console.log("Receive version    ", receiveVersion)
-    console.table(remoteConfig)
+    console.table(configByNetwork)
 }
+
+task("getConfig", "outputs the application's Send and Receive Messaging Library versions and the config for remote networks")
+    .addParam("remoteNetworks", "comma separated list of remote networks")
+    .addOptionalParam(
+        "name",
+        "name of the deployed contract. Should be specified only if the deployment information is located in the deployments folder"
+    )
+    .addOptionalParam("address", "the contract address")
+    .setAction(action)
