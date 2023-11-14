@@ -2,6 +2,7 @@
     "name": "create-lz-oapp",
     "version": "0.0.1",
     "description": "Create LayerZero OApp with one command",
+    "license": "MIT",
     "type": "module",
     "publishConfig": {
         "access": "public"
