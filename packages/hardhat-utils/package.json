@@ -2,6 +2,7 @@
     "name": "@layerzerolabs/hardhat-utils",
     "description": "Hardhat helpers for LayerZero EVM projects",
     "version": "0.0.1",
+    "license": "MIT",
     "private": true,
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -32,6 +33,7 @@
         "@ethersproject/providers": "^5.7.0",
         "@ethersproject/wallet": "^5.7.0",
         "@layerzerolabs/lz-definitions": "~1.5.58",
+        "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
         "@types/chai-as-promised": "^7.1.7",
         "chai": "^4.3.10",
         "chai-as-promised": "^7.1.1",
@@ -40,7 +42,8 @@
         "sinon": "^17.0.1",
         "ts-node": "^10.9.1",
         "tsup": "~7.2.0",
-        "typescript": "^5.2.2"
+        "typescript": "^5.2.2",
+        "winston": "^3.11.0"
     },
     "peerDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",

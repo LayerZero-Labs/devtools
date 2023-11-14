@@ -12,8 +12,6 @@
   <a href="https://www.npmjs.com/package/@layerzerolabs/hardhat-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/hardhat-utils"/></a>
   <!-- Shields.io NPM downloads -->
   <a href="https://www.npmjs.com/package/@layerzerolabs/hardhat-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/hardhat-utils"/></a>
-  <!-- Shields.io vulnerabilities -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/hardhat-utils"><img alt="Snyk Vulnerabilities for npm package version" src="https://img.shields.io/snyk/vulnerabilities/npm/@layerzerolabs/hardhat-utils"/></a>
   <!-- Shields.io license badge -->
   <a href="https://www.npmjs.com/package/@layerzerolabs/hardhat-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/hardhat-utils"/></a>
 </p>

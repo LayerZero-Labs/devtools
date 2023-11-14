@@ -1,126 +1,105 @@
 import "hardhat-deploy/dist/src/type-extensions"
 
-import { chainAndStageToNetwork, networkToStage, Chain, Stage } from "@layerzerolabs/lz-definitions"
-import { HardhatUserConfig, HttpNetworkAccountsUserConfig, NetworksConfig } from "hardhat/types"
-import { join } from "path"
-
-export const getMnemonic = (networkName: string): string | undefined =>
-    process.env[`MNEMONIC_${networkName}`] ||
-    process.env[`MNEMONIC_${networkName.toUpperCase()}`] ||
-    process.env[`MNEMONIC_${networkName.toUpperCase().replace(/-/g, "_")}`] ||
-    process.env.MNEMONIC
-
-export const getAccounts = (networkName: string): HttpNetworkAccountsUserConfig => {
-    const mnemonic = getMnemonic(networkName)
-    if (mnemonic == null) return []
-
-    return { mnemonic }
-}
+import { endpointIdToNetwork } from "@layerzerolabs/lz-definitions"
+import { HardhatUserConfig } from "hardhat/types"
+import { join, dirname } from "path"
+import { createNetworkLogger } from "./logger"
 
 /**
- * Adds external deployments directories for all configured networks.
+ * Helper utility that adds external deployment paths for all LayzerZero enabled networks.
+ * This will make LayerZero contracts available in your deploy scripts and tasks.
  *
- * This function takes the root `deploymentsDir` path to the deployments folder
- * and maps all configured networks to point to the network directories under this root path.
+ * ```
+ * // hardhat.config.ts
+ * import { EndpointId } from "@layerzerolabs/lz-definitions"
  *
- * ```typescript
- * const config = {
+ * const config: HardhatUserConfig = {
  *   networks: {
- *     "slipknot-testnet": {}
- *   }
- * }
- *
- * const configWithExternals = withExternalDeployments("./path/to/some/deployments/folder")(config);
- *
- * // The configWithExternals will now look like this:
- *
- * {
- *   external: {
- *     deployments: {
- *       "slipknot-testnet": ["./path/to/some/deployments/folder/slipknot-testnet"]
+ *     arbitrum: {
+ *       endpointId: EndpointId.ARBITRUM_MAINNET
+ *     },
+ *     fuji: {
+ *       endpointId: EndpointId.AVALANCHE_TESTNET
  *     }
- *   },
- *   networks: {
- *     "slipknot-testnet": {}
  *   }
  * }
+ *
+ * export default withLayerZeroDeployments("@layerzerolabs/lz-evm-sdk-v1")
  * ```
  *
- * @param deploymentsDir Path to the external deployments directory
+ * @param packageNames `string[]` List of @layerzerolabs package names that contain deployments directory
  *
- * @returns `HardhatUserConfig`
+ * @returns `<THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig` Hardhat config decorator
  */
-export const withExternalDeployments =
-    (deploymentsDir: string) =>
-    <THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig => ({
+export const withLayerZeroDeployments = (...packageNames: string[]) => {
+    // The first thing we do is we resolve the paths to LayerZero packages
+    const resolvedDeploymentsDirectories = packageNames
+        // The tricky bit here is the fact that if we resolve packages by their package name,
+        // we might be pointed to a file in some dist directory - node will just pick up the `main`
+        // entry in package.json and point us there
+        //
+        // So in order to get a stable path we choose package.json, pretty solid choice
+        .map((packageName) => join(packageName, "package.json"))
+        // We now resolve the path to package.json
+        .map((packageJsonPath) => require.resolve(packageJsonPath))
+        // Take its directory
+        .map(dirname)
+        // And navigate to the deployments folder
+        .map((resolvedPackagePath) => join(resolvedPackagePath, "deployments"))
+
+    // We return a function that will enrich hardhat config with the external deployments configuration
+    //
+    // This is a pretty standard way of enriching configuration files that leads to quite nice consumer code
+    return <THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig => ({
         ...config,
         external: {
             ...config.external,
+            // Now for the meat of the operation, we'll enrich the external.deployments object
             deployments: Object.fromEntries(
-                // Map the configured networks into entries for the external deployments object
-                Object.keys(config.networks ?? {}).map((networkName: string) => {
-                    return [
-                        // The external deployments object is keyed by network names
-                        networkName,
-                        // And its values are arrays of filesystem paths referring to individual network deployment directories
-                        Array.from(
-                            // Since we want the paths to be unique, we'll put everything we have into a Set, then convert back to array
-                            new Set(
-                                // These are the external deployments already configured
-                                config.external?.deployments?.[networkName] ?? []
-                            ).add(
-                                // And we're going to add a new one by concatenating the root deployments directory with the network name
-                                join(deploymentsDir, networkName)
-                            )
-                        ),
-                    ]
+                Object.entries(config.networks ?? {}).flatMap(([networkName, networkConfig]) => {
+                    const endpointId = networkConfig?.endpointId
+                    const networkLogger = createNetworkLogger(networkName)
+
+                    // Let's first check whether endpointId is defined on the network config
+                    if (endpointId == null) {
+                        networkLogger.debug("Endpoint ID not specified in hardhat config, skipping external deployment configuration")
+
+                        return []
+                    }
+
+                    try {
+                        // This operation is unsafe and can throw - let's make sure we don't explode with some unreadable error
+                        const layerZeroNetworkName = endpointIdToNetwork(endpointId)
+                        const layerZeroNetworkDeploymentsDirectories = resolvedDeploymentsDirectories.map((deploymentsDirectory) =>
+                            join(deploymentsDirectory, layerZeroNetworkName)
+                        )
+
+                        return [
+                            [
+                                // The external deployments object is keyed by local network names
+                                // which do not necessarily match the LayerZero ones
+                                networkName,
+                                // And its values are arrays of filesystem paths referring to individual network deployment directories
+                                Array.from(
+                                    // Since we want the paths to be unique, we'll put everything we have into a Set, then convert back to array
+                                    new Set([
+                                        // These are the external deployments already configured
+                                        ...(config.external?.deployments?.[networkName] ?? []),
+                                        // And these are the new ones
+                                        ...layerZeroNetworkDeploymentsDirectories,
+                                    ])
+                                ),
+                            ],
+                        ]
+                    } catch (error) {
+                        networkLogger.error(
+                            `Invalid endpoint ID specified in hardhat config (${endpointId}), skipping external deployment configuration`
+                        )
+
+                        return []
+                    }
                 })
             ),
         },
     })
-
-/**
- * Helper utility that takes in an array of Chain identifiers
- * and maps them to network names.
- *
- * If there are no chains defined, the defaults are supplied from the network config
- *
- * @param config `NetworksConfig`
- * @param stage `Stage`
- *
- * @returns `(chains: Chain[] | null | undefined) => string[]`
- */
-export const createGetDefinedNetworkNamesOnStage =
-    (config: NetworksConfig) =>
-    (stage: Stage, chains: Chain[] | null | undefined): string[] => {
-        const definedNetworks = Object.keys(config).sort()
-        const definedNetworksSet = new Set(definedNetworks)
-
-        return (
-            chains
-                // We map the chains (e.g. bsc, avalanche) to network names (e.g. bsc-testnet)
-                ?.map((chain: Chain) => chainAndStageToNetwork(chain, stage))
-                // Filter out networks that have not been defined in the config
-                // (since we just created them with the correct stage, we don't need to filter by stage)
-                .filter((networkName) => definedNetworksSet.has(networkName)) ??
-            // But if we nothing has been provided, we take all the networks from hardhat config
-            definedNetworks
-                // And filter out the networks for this stage (since we know all of thse have been defined)
-                .filter(isNetworkOnStage(stage))
-        )
-    }
-
-/**
- * Helper utility that safely calls networkToStage
- * to determine whether a network name is on stage
- *
- * @param stage `Stage`
- * @returns `true` if network is a valid network name and is on stage, `false` otherwise
- */
-const isNetworkOnStage = (stage: Stage) => (networkName: string) => {
-    try {
-        return networkToStage(networkName) === stage
-    } catch {
-        return false
-    }
 }
