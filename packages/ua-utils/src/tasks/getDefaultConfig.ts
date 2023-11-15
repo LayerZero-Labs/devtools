@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { getProvider, getLayerZeroChainId, getEndpointAddress } from "./utils/crossChainHelper"
+import { getProvider, getLayerZeroChainId, getEndpointAddress } from "../utils/crossChainHelper"
 const { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } = require("./constants/abi")
 
 export default async (taskArgs: any, hre: any) => {
