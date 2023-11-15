@@ -19,4 +19,5 @@ export default defineConfig({
     banner: {
         js: `import { createRequire as _createRequire } from 'node:module'; const require = _createRequire(import.meta.url);`,
     },
+    external: ["yoga-wasm-web"],
 })
