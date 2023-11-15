@@ -934,10 +934,12 @@
     "@ethersproject/providers" "^5.7.2"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-sdk@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-sdk/-/lz-sdk-0.0.12.tgz"
-  integrity sha512-ldf+H8SVUF9EtaQg9y7XzGDP95lH4T/UIYVglL2DrNBe5CBiWm5wkL/5SnGpTgbLHbw60eLaGxQH/wmO6txAiQ==
+"@layerzerolabs/lz-evm-sdk-v2@~1.5.58":
+  version "1.5.60"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.60.tgz#d4905887e8475971ace4e191fff879a2cf2da0d2"
+  integrity sha512-Bt60PTdw/rNdZxNGF0xnk1JiIxy5k2kQCzPEe/ebyz9ZEDpaFEkOnwZi2yKQgyHuxOUfwOmRo0NUFfReyk8ioA==
+  dependencies:
+    ethers "^5.7.2"
 
 "@manypkg/find-root@^1.1.0":
   version "1.1.0"
