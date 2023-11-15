@@ -8,5 +8,6 @@
             "@/*": ["./src/*"]
         }
     },
+    "files": ["./types/tiged.d.ts"],
     "include": ["src"]
 }

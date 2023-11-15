@@ -1,7 +1,13 @@
-import { Text } from "ink"
+import { Box, Text } from "ink"
 import Gradient from "ink-gradient"
 import { stdout } from "process"
 import React, { useEffect, useState } from "react"
+
+export const Header: React.FC = () => (
+    <Box justifyContent="center" marginBottom={5}>
+        <Logo />
+    </Box>
+)
 
 export const Logo: React.FC = () => {
     const [columns, setColumns] = useState<number>(stdout.columns ?? 80)

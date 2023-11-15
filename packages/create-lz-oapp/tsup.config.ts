@@ -5,6 +5,7 @@ export default defineConfig({
     outDir: "./dist",
     clean: true,
     dts: false,
+    minify: true,
     sourcemap: false,
     splitting: false,
     treeshake: true,
@@ -18,5 +19,4 @@ export default defineConfig({
     banner: {
         js: `import { createRequire as _createRequire } from 'node:module'; const require = _createRequire(import.meta.url);`,
     },
-    external: ["yoga-wasm-web"],
 })
