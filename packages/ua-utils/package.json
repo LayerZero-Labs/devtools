@@ -3,6 +3,7 @@
     "description": "Utilities for working with LayerZero EVM contracts",
     "version": "0.0.15",
     "license": "MIT",
+    "private": true,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "module": "dist/index.mjs",
