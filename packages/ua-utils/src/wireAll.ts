@@ -1,5 +1,6 @@
 import { Transaction, NetworkTransactions, getContractInstance, getLayerZeroChainId, executeTransactions } from "./utils/crossChainHelper"
 import { configExist, getConfig, logError, printTransactions } from "./utils/helpers"
+import { configExist, getConfig, logError, printTransactions } from "./utils/helpers"
 import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress } from "./utils/wireAllHelpers"
 
 export default async function (taskArgs: any, hre: any) {
@@ -19,6 +20,9 @@ export default async function (taskArgs: any, hre: any) {
     const WIRE_UP_CONFIG = getConfig(taskArgs.configPath)
     const localNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig)
 
+    const localNetwork = hre.network.name
+    const getEnvironment = createGetNetworkEnvironment(hre)
+
     console.log(`************************************************`)
     console.log(`Computing diff`)
     console.log(`************************************************`)
@@ -29,65 +33,32 @@ export default async function (taskArgs: any, hre: any) {
             const transactions: Transaction[] = []
             const remoteNetworks = Object.keys(WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig)
 
-            const localContractNameOrAddress = getContractNameOrAddress(localNetwork, WIRE_UP_CONFIG)
+            const localEnvironment = await getEnvironment(localNetwork)
+            const localContract = getOAppContract(localNetwork, localEnvironment, WIRE_UP_CONFIG)
             if (localContractNameOrAddress === undefined) {
                 logError(`Invalid wire up config for localContractNameOrAddress.`)
                 return
-            }
-
-            // check if useCustomAdapterParams needs to be set
-            const useCustomAdapterParams = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.useCustomAdapterParams
-            if (useCustomAdapterParams !== undefined) {
-                transactions.push(...(await setUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress, useCustomAdapterParams)))
-            }
-
-            // check if defaultFeeBp needs to be set
-            const defaultFeeBp = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.defaultFeeBp
-            if (defaultFeeBp !== undefined) {
-                transactions.push(...(await setDefaultFeeBp(hre, localNetwork, localContractNameOrAddress, defaultFeeBp)))
             }
 
             await Promise.all(
                 remoteNetworks.map(async (remoteNetwork) => {
                     // skip wiring itself
                     if (localNetwork === remoteNetwork) return
-                    const proxyChain = WIRE_UP_CONFIG?.proxyContractConfig?.chain
 
-                    const remoteContractNameOrAddress = getContractNameOrAddress(remoteNetwork, WIRE_UP_CONFIG)
+                    const remoteEnvironment = await getEnvironment(remoteNetwork)
+                    const remoteContract = getOAppContract(remoteNetwork, remoteEnvironment, WIRE_UP_CONFIG)
                     if (remoteContractNameOrAddress === undefined) {
                         logError(`Invalid wire up config for remoteContractNameOrAddress.`)
                         return
                     }
 
-                    // setTrustedRemote
-                    transactions.push(
-                        ...(await setTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress))
-                    )
+                    // setPeer
+                    transactions.push(...(await setPeer(localContract, remoteContract)))
 
-                    // setFeeBp
-                    if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.feeBpConfig !== undefined) {
-                        transactions.push(
-                            ...(await setFeeBp(
-                                hre,
-                                localNetwork,
-                                localContractNameOrAddress,
-                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].feeBpConfig,
-                                getLayerZeroChainId(remoteNetwork)
-                            ))
-                        )
-                    }
-
-                    // setMinDstGas
-                    if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.minDstGasConfig !== undefined) {
-                        transactions.push(
-                            ...(await setMinDstGas(
-                                hre,
-                                localNetwork,
-                                localContractNameOrAddress,
-                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].minDstGasConfig,
-                                getLayerZeroChainId(remoteNetwork)
-                            ))
-                        )
+                    // setEnforcedOptions
+                    const enforcedOptions = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].enforcedOptions
+                    if (enforcedOptions !== undefined) {
+                        transactions.push(...(await setEnforcedOptions(localContract, remoteContract, enforcedOptions)))
                     }
                 })
             )
@@ -112,66 +83,36 @@ export default async function (taskArgs: any, hre: any) {
     await executeTransactions(hre, taskArgs, transactionByNetwork)
 }
 
-async function setDefaultFeeBp(
-    hre: any,
-    localNetwork: string,
-    localContractNameOrAddress: string,
-    defaultFeeBp: number
-): Promise<Transaction[]> {
-    const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
-    const cur = await localContract.defaultFeeBp()
-    const needChange = cur !== defaultFeeBp
-
-    // function setDefaultFeeBp(uint16 _feeBp)
-    const functionName = "setDefaultFeeBp"
-    const params = ["uint16"]
-    const args = [defaultFeeBp]
-
-    const tx: any = {
-        needChange,
-        chainId: getLayerZeroChainId(localNetwork),
-        contractName: localContractNameOrAddress,
-        functionName: functionName,
-        args: args,
-        calldata: localContract.interface.encodeFunctionData(functionName, args),
-    }
-    if (tx.needChange) {
-        tx.diff = JSON.stringify({ defaultFeeBp: { oldValue: cur, newValue: defaultFeeBp } })
-    }
-    return [tx]
+const setPeer = async (localOApp: any, remoteOApp: any): Promise<Transaction[]> => {
+    const oldPeer = await localOApp.peers(await remoteOApp.endpoint.eid())
+    const newPeer = await remoteOApp.address
+    const needChange = oldPeer !== newPeer
+    const contractAddress = await localOApp.address
+    const functionName = localOApp.setPeer.selector
+    const args = [newPeer]
+    const calldata = localOApp.interface.encodeFunctionData(functionName, args)
+    const diff = needChange ? { oldValue: oldPeer, newValue: newPeer } : undefined
+    return [{ needChange, chainId, contractAddress, functionName, args, calldata, diff }]
 }
 
-async function setFeeBp(
-    hre: any,
-    localNetwork: string,
-    localContractNameOrAddress: string,
-    feeBpConfig: any,
-    remoteChainId: string
-): Promise<Transaction[]> {
-    const localContract = await getContractInstance(hre, localNetwork, localContractNameOrAddress)
-    const feeConfig = await localContract.chainIdToFeeBps(remoteChainId)
-    const curFeeBp = feeConfig[0]
-    const curEnabled = feeConfig[1]
-    const needChange = curFeeBp !== feeBpConfig.feeBp || curEnabled !== feeBpConfig.enabled
-
-    // function setFeeBp(uint16 _dstChainId, bool _enabled, uint16 _feeBp)
-    const functionName = "setFeeBp"
-    const params = ["uint16", "bool", "uint16"]
-    const args = [remoteChainId, feeBpConfig.enabled, feeBpConfig.feeBp]
-    const calldata = localContract.interface.encodeFunctionData(functionName, args)
-
-    const tx: any = {
-        needChange,
-        chainId: getLayerZeroChainId(localNetwork),
-        contractName: localContractNameOrAddress,
-        functionName: functionName,
-        args: args,
-        calldata: localContract.interface.encodeFunctionData(functionName, args),
+const setEnforcedOptions = async (localOApp: any, remoteOApp: any, enforcedOptions: any): Promise<Transaction[]> => {
+    const contractAddress = await localOApp.address
+    const endpointId = await localOApp.endpoint.eid()
+    const txns: Transaction[] = []
+    const packetTypes = Object.keys(enforcedOptions)
+    for (const packet of packetTypes) {
+        const packetType = parseInt(packet.at(-1) as string)
+        const minGas = enforcedOptions[packet]
+        const remoteChainId = await remoteOApp.endpoint.eid()
+        const encodedOptions = await localContract.enforcedOptions(remoteChainId, packetType)
+        const [version, curGas] = hre.ethers.utils.defaultAbiCoder.decode(["uint16", "uint256"], encodedOptions)
+        const needChange = curGas !== minGas
+        const functionName = localOApp.setEnforcedOptions.selector
+        const options = hre.ethers.utils.solidityPack(["uint16", "uint256"], [3, minGas])
+        const args = [remoteChainId, packetType, options]
+        const calldata = localOApp.interface.encodeFunctionData(functionName, args)
+        const diff = needChange ? { oldValue: cur, newValue: minGas } : undefined
+        txns.push({ needChange, endpointId, contractAddress, functionName, args, calldata, diff })
     }
-    if (tx.needChange) {
-        tx.diff = JSON.stringify({
-            feeBp: { oldFeeBpValue: curFeeBp, newFeeBpValue: feeBpConfig.feeBp, oldEnabledFee: curEnabled, newEnabledFee: feeBpConfig.enabled },
-        })
-    }
-    return [tx]
+    return txns
 }

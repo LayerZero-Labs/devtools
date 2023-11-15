@@ -23,6 +23,7 @@ const action: ActionType<any> = async (taskArgs, hre) => {
         return
     }
 
+    // TODO fix this: 'deployments' does not exist on type 'HardhatRuntimeEnvironment'.
     const ulnConfigDeployment = await hre.deployments.get("UlnConfig")
     const remoteNetworks = taskArgs.remoteNetworks.split(",")
     const configByNetwork = await Promise.all(
@@ -32,6 +33,7 @@ const action: ActionType<any> = async (taskArgs, hre) => {
             const remoteEid = await remoteEndpointV2.eid()
 
             const localSendLibrary = await localEndpointV2.getSendLibrary(localContractAddress, remoteEid)
+            // TODO fix this: 'getContractAt' does not exist on type 'typeof import("/Users/kz-layerzero/Documents/layerzero/git/lz-utils/node_modules/ethers/lib/ethers")'.
             const localUlnConfig = await ethers.getContractAt(ulnConfigDeployment.abi, localSendLibrary)
             const [ulnConfigStruct, outboundConfigStruct] = await localUlnConfig.getUlnAndOutboundConfig(localContractAddress, remoteEid)
 
