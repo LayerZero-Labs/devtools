@@ -5,6 +5,7 @@ export default defineConfig({
     outDir: "./dist",
     clean: true,
     dts: false,
+    minify: true,
     sourcemap: false,
     splitting: false,
     treeshake: true,
