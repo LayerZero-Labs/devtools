@@ -5,6 +5,19 @@ import { HardhatUserConfig } from "hardhat/types"
 import { join, dirname } from "path"
 import { createNetworkLogger } from "./logger"
 
+const resolvePackageDirectory = (packageName: string): string => {
+    // The tricky bit here is the fact that if we resolve packages by their package name,
+    // we might be pointed to a file in some dist directory - node will just pick up the `main`
+    // entry in package.json and point us there
+    //
+    // So in order to get a stable path we choose package.json, pretty solid choice
+    const packageJsonName = join(packageName, "package.json")
+    // We now resolve the path to package.json
+    const packageJsonPath = require.resolve(packageJsonName)
+    // And return its directory
+    return dirname(packageJsonPath)
+}
+
 /**
  * Helper utility that adds external deployment paths for all LayzerZero enabled networks.
  * This will make LayerZero contracts available in your deploy scripts and tasks.
@@ -32,19 +45,10 @@ import { createNetworkLogger } from "./logger"
  * @returns `<THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig` Hardhat config decorator
  */
 export const withLayerZeroDeployments = (...packageNames: string[]) => {
-    // The first thing we do is we resolve the paths to LayerZero packages
     const resolvedDeploymentsDirectories = packageNames
-        // The tricky bit here is the fact that if we resolve packages by their package name,
-        // we might be pointed to a file in some dist directory - node will just pick up the `main`
-        // entry in package.json and point us there
-        //
-        // So in order to get a stable path we choose package.json, pretty solid choice
-        .map((packageName) => join(packageName, "package.json"))
-        // We now resolve the path to package.json
-        .map((packageJsonPath) => require.resolve(packageJsonPath))
-        // Take its directory
-        .map(dirname)
-        // And navigate to the deployments folder
+        // The first thing we do is we resolve the paths to LayerZero packages
+        .map(resolvePackageDirectory)
+        // Then navigate to the deployments folder
         .map((resolvedPackagePath) => join(resolvedPackagePath, "deployments"))
 
     // We return a function that will enrich hardhat config with the external deployments configuration
@@ -102,4 +106,63 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
             ),
         },
     })
+}
+
+/**
+ * Helper utility that appends external artifacts directories
+ * to existing hadrhat config
+ *
+ * ```
+ * // hardhat.config.ts
+ * import { EndpointId } from "@layerzerolabs/lz-definitions"
+ *
+ * const config: HardhatUserConfig = {
+ *   networks: {
+ *     arbitrum: {
+ *       endpointId: EndpointId.ARBITRUM_MAINNET
+ *     },
+ *     fuji: {
+ *       endpointId: EndpointId.AVALANCHE_TESTNET
+ *     }
+ *   }
+ * }
+ *
+ * export default withLayerZeroArtifacts("@layerzerolabs/lz-evm-sdk-v1")
+ * ```
+ *
+ * @param packageNames `string[]`
+ *
+ * @returns `<THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig` Hardhat config decorator
+ */
+export const withLayerZeroArtifacts = (...packageNames: string[]) => {
+    const resolvedArtifactsDirectories = packageNames
+        // The first thing we do is we resolve the paths to LayerZero packages
+        .map(resolvePackageDirectory)
+        // Then navigate to the artifacts folder
+        .map((resolvedPackagePath) => join(resolvedPackagePath, "artifacts"))
+
+    // We return a function that will enrich hardhat config with the external artifacts configuration
+    //
+    // This is a pretty standard way of enriching configuration files that leads to quite nice consumer code
+    return <THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig => {
+        // We'll first grab all the external artifacts already defined
+        const existingArtifacts = new Set(config.external?.contracts?.flatMap(({ artifacts }) => artifacts) ?? [])
+
+        // And only append stuff if we have something new to say
+        const newArtifacts = new Set(resolvedArtifactsDirectories.filter((artifact) => !existingArtifacts.has(artifact)))
+        if (newArtifacts.size === 0) return config
+
+        return {
+            ...config,
+            external: {
+                ...config.external,
+                contracts: [
+                    ...(config.external?.contracts ?? []),
+                    {
+                        artifacts: Array.from(newArtifacts),
+                    },
+                ],
+            },
+        }
+    }
 }

@@ -1,11 +1,11 @@
 import { EndpointId } from "@layerzerolabs/lz-definitions"
 import { expect } from "chai"
 import { describe } from "mocha"
-import { withLayerZeroDeployments } from "../src/config"
+import { withLayerZeroArtifacts, withLayerZeroDeployments } from "../src/config"
 import { dirname, join } from "path"
 
 describe("config", () => {
-    describe("withExternalDeployments()", () => {
+    describe("withLayerZeroDeployments()", () => {
         const resolvedLzEvmSdkPackageJson = dirname(require.resolve(join("@layerzerolabs/lz-evm-sdk-v1", "package.json")))
 
         it("should add no external deployments if no networks have been specified", () => {
@@ -101,6 +101,63 @@ describe("config", () => {
                     deployments: {
                         "vengaboys-testnet": [join(resolvedLzEvmSdkPackageJson, "deployments", "bsc-testnet")],
                     },
+                },
+            })
+        })
+    })
+
+    describe("withLayerZeroArtifacts()", () => {
+        const resolvedLzEvmSdkPackageJson = dirname(require.resolve(join("@layerzerolabs/lz-evm-sdk-v1", "package.json")))
+
+        it("should append external artifacts", () => {
+            const config = {
+                networks: {},
+            }
+
+            expect(withLayerZeroArtifacts("@layerzerolabs/lz-evm-sdk-v1")(config)).to.eql({
+                networks: {},
+                external: {
+                    contracts: [
+                        {
+                            artifacts: [`${resolvedLzEvmSdkPackageJson}/artifacts`],
+                        },
+                    ],
+                },
+            })
+        })
+
+        it("should not append duplicate external artifacts", () => {
+            const config = {
+                external: {
+                    contracts: [
+                        {
+                            artifacts: "./my/external/artifact",
+                        },
+                        {
+                            artifacts: ["./my/other/external/artifact"],
+                        },
+                    ],
+                },
+                networks: {},
+            }
+
+            const configWithSomePath = withLayerZeroArtifacts("@layerzerolabs/lz-evm-sdk-v1", "@layerzerolabs/lz-evm-sdk-v1")(config)
+            const configWithSomePathAgain = withLayerZeroArtifacts("@layerzerolabs/lz-evm-sdk-v1")(configWithSomePath)
+
+            expect(configWithSomePathAgain).to.eql({
+                networks: {},
+                external: {
+                    contracts: [
+                        {
+                            artifacts: "./my/external/artifact",
+                        },
+                        {
+                            artifacts: ["./my/other/external/artifact"],
+                        },
+                        {
+                            artifacts: [`${resolvedLzEvmSdkPackageJson}/artifacts`],
+                        },
+                    ],
                 },
             })
         })
