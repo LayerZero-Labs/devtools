@@ -1,6 +1,6 @@
-import { getContract, getContractAt, getLayerZeroChainId } from "./utils/crossChainHelper"
-import { logError } from "./utils/helpers"
-import { LZ_APP_ABI } from "./constants/abi"
+import { getContract, getContractAt, getLayerZeroChainId } from "@/utils/crossChainHelper"
+import { logError } from "@/utils/helpers"
+import { LZ_APP_ABI } from "@/constants/abi"
 
 export default async function (taskArgs: any, hre: any) {
     const localNetworks = taskArgs.chains.split(",")

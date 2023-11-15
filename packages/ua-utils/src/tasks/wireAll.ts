@@ -1,6 +1,6 @@
-import { Transaction, NetworkTransactions, getContractInstance, getLayerZeroChainId, executeTransactions } from "./utils/crossChainHelper"
-import { configExist, getConfig, logError, printTransactions } from "./utils/helpers"
-import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress } from "./utils/wireAllHelpers"
+import { Transaction, NetworkTransactions, getContractInstance, getLayerZeroChainId, executeTransactions } from "@/utils/crossChainHelper"
+import { configExist, getConfig, logError, printTransactions } from "@/utils/helpers"
+import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress } from "@/utils/wireAllHelpers"
 
 export default async function (taskArgs: any, hre: any) {
     if (!configExist(taskArgs.configPath)) {

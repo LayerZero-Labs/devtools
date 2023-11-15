@@ -1,6 +1,6 @@
-import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from "./utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from "./constants/abi"
-import { logError } from "./utils/helpers"
+import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from "@/utils/crossChainHelper"
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from "@/constants/abi"
+import { logError } from "@/utils/helpers"
 
 export default async (taskArgs: any, hre: any) => {
     const network = hre.network.name

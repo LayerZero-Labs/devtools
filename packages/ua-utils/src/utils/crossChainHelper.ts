@@ -3,12 +3,12 @@ import { Contract, ContractReceipt } from "ethers"
 import EthersAdapter from "@gnosis.pm/safe-ethers-lib"
 import SafeServiceClient from "@gnosis.pm/safe-service-client"
 import Safe from "@gnosis.pm/safe-core-sdk"
-import { LZ_APP_ABI } from "../constants/abi"
-import { LZ_ENDPOINTS } from "../constants/endpoints"
+import { LZ_APP_ABI } from "@/constants/abi"
+import { LZ_ENDPOINTS } from "@/constants/endpoints"
 import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions"
 import { promptToProceed, arrayToCsv, getConfig } from "./helpers"
-const path = require("path")
-const fs = require("fs")
+import path from "path"
+import fs from "fs"
 import { writeFile } from "fs/promises"
 
 export interface ExecutableTransaction {
@@ -300,7 +300,7 @@ export const getDeploymentAddresses = (network: string, throwIfMissing: boolean 
     const files = fs.readdirSync(networkFolderPath).filter((f: string) => f.includes(".json"))
     files.forEach((file: string) => {
         const filepath = path.resolve(networkFolderPath, file)
-        const data = JSON.parse(fs.readFileSync(filepath))
+        const data = JSON.parse(fs.readFileSync(filepath, "utf8"))
         const contractName = file.split(".")[0]
         deploymentAddresses[contractName] = data.address
     })
