@@ -1,8 +1,8 @@
 import { defineConfig } from "tsup"
 
 export default defineConfig({
-    entry: ["src/index.ts"],
-    outDir: "./dist",
+    entry: ["src/tasks/index.ts"],
+    outDir: "./dist/tasks",
     clean: true,
     dts: true,
     sourcemap: true,

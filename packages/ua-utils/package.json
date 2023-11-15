@@ -6,6 +6,18 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "module": "dist/index.mjs",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.js",
+            "import": "./dist/index.mjs"
+        },
+        "./tasks": {
+            "types": "./dist/tasks/index.d.ts",
+            "require": "./dist/tasks/index.js",
+            "import": "./dist/tasks/index.mjs"
+        }
+    },
     "scripts": {
         "build": "npx tsup",
         "clean": "rm -rf dist",

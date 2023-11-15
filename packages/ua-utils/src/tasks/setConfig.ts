@@ -1,4 +1,4 @@
-import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "../utils/helpers"
+import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "@/utils/helpers"
 import {
     executeTransaction,
     executeGnosisTransactions,
@@ -10,8 +10,8 @@ import {
     getApplicationConfig,
     getEndpointAddress,
     getLayerZeroChainId,
-} from "../utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from "../constants/abi"
+} from "@/utils/crossChainHelper"
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from "@/constants/abi"
 import { utils } from "ethers"
 
 // Application config types from UltraLightNodeV2 contract
