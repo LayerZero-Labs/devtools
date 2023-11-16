@@ -24,3 +24,4 @@ concurrency:
 jobs:
     check:
         uses: ./.github/workflows/reusable-test.yaml
+        secrets: inherit
