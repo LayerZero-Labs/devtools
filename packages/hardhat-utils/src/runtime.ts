@@ -3,6 +3,7 @@ import { DeploymentsManager } from "hardhat-deploy/dist/src/DeploymentsManager"
 import { createProvider } from "hardhat/internal/core/providers/construction"
 
 import assert from "assert"
+import memoize from "micro-memoize"
 import pMemoize from "p-memoize"
 import { Signer } from "@ethersproject/abstract-signer"
 import { Provider, JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
@@ -18,7 +19,7 @@ export type GetContract = (contractName: string, signerOrProvider?: Signer | Pro
 
 export type GetContractFactory = (contractName: string, signer?: Signer) => Promise<ContractFactory>
 
-export type MinimalNetwork = Pick<Network, "name" | "config" | "provider">
+export type MinimalNetwork = Pick<Network, "name" | "config" | "provider" | "saveDeployments">
 
 /**
  * Factory function creator for providers that are not on the network
@@ -36,13 +37,15 @@ export type MinimalNetwork = Pick<Network, "name" | "config" | "provider">
  * @param hre `HardhatRuntimeEnvironment`
  * @returns `GetByNetwork<EthereumProvider>`
  */
-export const createGetEthereumProvider = (hre: HardhatRuntimeEnvironment): GetByNetwork<EthereumProvider> =>
-    pMemoize((networkName) => {
-        const networkConfig = hre.config.networks[networkName]
-        assert(networkConfig, `Missing network config for '${networkName}'`)
+export const createGetEthereumProvider = memoize(
+    (hre: HardhatRuntimeEnvironment): GetByNetwork<EthereumProvider> =>
+        pMemoize((networkName) => {
+            const networkConfig = hre.config.networks[networkName]
+            assert(networkConfig, `Missing network config for '${networkName}'`)
 
-        return createProvider(hre.config, networkName, hre.artifacts)
-    })
+            return createProvider(hre.config, networkName, hre.artifacts)
+        })
+)
 
 /**
  * Helper function that wraps an EIP1193Provider with Web3Provider
@@ -65,17 +68,20 @@ export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => 
  * @param hre `HardhatRuntimeEnvironment`
  * @returns `GetByNetwork<MinimalNetwork>`
  */
-export const createGetNetwork = (hre: HardhatRuntimeEnvironment, getProvider = createGetEthereumProvider(hre)): GetByNetwork<MinimalNetwork> =>
-    pMemoize(async (networkName) => {
-        const networkConfig = hre.config.networks[networkName]
-        const networkProvider = await getProvider(networkName)
+export const createGetNetwork = memoize(
+    (hre: HardhatRuntimeEnvironment, getProvider = createGetEthereumProvider(hre)): GetByNetwork<MinimalNetwork> =>
+        pMemoize(async (networkName) => {
+            const networkConfig = hre.config.networks[networkName]
+            const networkProvider = await getProvider(networkName)
 
-        return {
-            name: networkName,
-            config: networkConfig,
-            provider: networkProvider,
-        }
-    })
+            return {
+                name: networkName,
+                config: networkConfig,
+                provider: networkProvider,
+                saveDeployments: networkConfig.saveDeployments,
+            }
+        })
+)
 
 /**
  * Factory function for `DeploymentsExtension` objects that are not one the network
@@ -90,12 +96,14 @@ export const createGetNetwork = (hre: HardhatRuntimeEnvironment, getProvider = c
  * @param hre `HardhatRuntimeEnvironment`
  * @returns `GetByNetwork<DeploymentsExtension>`
  */
-export const createGetDeployments = (hre: HardhatRuntimeEnvironment, getNetwork = createGetNetwork(hre)): GetByNetwork<DeploymentsExtension> =>
-    pMemoize(async (networkName) => {
-        const network = await getNetwork(networkName)
+export const createGetDeployments = memoize(
+    (hre: HardhatRuntimeEnvironment, getNetwork = createGetNetwork(hre)): GetByNetwork<DeploymentsExtension> =>
+        pMemoize(async (networkName) => {
+            const network = await getNetwork(networkName)
 
-        return new DeploymentsManager(hre, network as Network).deploymentsExtension
-    })
+            return new DeploymentsManager(hre, network as Network).deploymentsExtension
+        })
+)
 
 /**
  * Factory function for `Contract` instances that are not one the network
@@ -116,16 +124,18 @@ export const createGetDeployments = (hre: HardhatRuntimeEnvironment, getNetwork 
  * @param hre `HardhatRuntimeEnvironment`
  * @returns `GetByNetwork<GetContract>`
  */
-export const createGetContract = (hre: HardhatRuntimeEnvironment, getDeployments = createGetDeployments(hre)): GetByNetwork<GetContract> =>
-    pMemoize(async (networkName) => {
-        const deployments = await getDeployments(networkName)
+export const createGetContract = memoize(
+    (hre: HardhatRuntimeEnvironment, getDeployments = createGetDeployments(hre)): GetByNetwork<GetContract> =>
+        pMemoize(async (networkName) => {
+            const deployments = await getDeployments(networkName)
 
-        return async (contractName, signerOrProvider) => {
-            const { address, abi } = await deployments.get(contractName)
+            return async (contractName, signerOrProvider) => {
+                const { address, abi } = await deployments.get(contractName)
 
-            return new Contract(address, abi, signerOrProvider)
-        }
-    })
+                return new Contract(address, abi, signerOrProvider)
+            }
+        })
+)
 
 /**
  * Factory function for `ContractFactory` instances that are not one the network
@@ -145,19 +155,18 @@ export const createGetContract = (hre: HardhatRuntimeEnvironment, getDeployments
  * @param hre `HardhatRuntimeEnvironment`
  * @returns `GetByNetwork<GetContractFactory>`
  */
-export const createGetContractFactory = (
-    hre: HardhatRuntimeEnvironment,
-    getDeployments = createGetDeployments(hre)
-): GetByNetwork<GetContractFactory> =>
-    pMemoize(async (networkName) => {
-        const deployments = await getDeployments(networkName)
+export const createGetContractFactory = memoize(
+    (hre: HardhatRuntimeEnvironment, getDeployments = createGetDeployments(hre)): GetByNetwork<GetContractFactory> =>
+        pMemoize(async (networkName) => {
+            const deployments = await getDeployments(networkName)
 
-        return async (contractName, signer) => {
-            const { abi, bytecode } = await deployments.getArtifact(contractName)
+            return async (contractName, signer) => {
+                const { abi, bytecode } = await deployments.getArtifact(contractName)
 
-            return new ContractFactory(abi, bytecode, signer)
-        }
-    })
+                return new ContractFactory(abi, bytecode, signer)
+            }
+        })
+)
 
 export interface NetworkEnvironment {
     network: MinimalNetwork
@@ -190,24 +199,26 @@ export interface NetworkEnvironment {
  *
  * @returns `GetByNetwork<NetworkEnvironment>`
  */
-export const createGetNetworkEnvironment = (
-    hre: HardhatRuntimeEnvironment,
-    getProvider = createGetEthereumProvider(hre),
-    getNetwork = createGetNetwork(hre, getProvider),
-    getDeployments = createGetDeployments(hre, getNetwork),
-    getContract = createGetContract(hre, getDeployments),
-    getContractFactory = createGetContractFactory(hre, getDeployments)
-): GetByNetwork<NetworkEnvironment> =>
-    pMemoize(async (networkName) => {
-        const provider = await getProvider(networkName).then(wrapEIP1193Provider)
-        const network = await getNetwork(networkName)
-        const deployments = await getDeployments(networkName)
+export const createGetNetworkEnvironment = memoize(
+    (
+        hre: HardhatRuntimeEnvironment,
+        getProvider = createGetEthereumProvider(hre),
+        getNetwork = createGetNetwork(hre, getProvider),
+        getDeployments = createGetDeployments(hre, getNetwork),
+        getContract = createGetContract(hre, getDeployments),
+        getContractFactory = createGetContractFactory(hre, getDeployments)
+    ): GetByNetwork<NetworkEnvironment> =>
+        pMemoize(async (networkName) => {
+            const provider = await getProvider(networkName).then(wrapEIP1193Provider)
+            const network = await getNetwork(networkName)
+            const deployments = await getDeployments(networkName)
 
-        return {
-            network,
-            provider,
-            deployments,
-            getContract: await getContract(networkName),
-            getContractFactory: await getContractFactory(networkName),
-        }
-    })
+            return {
+                network,
+                provider,
+                deployments,
+                getContract: await getContract(networkName),
+                getContractFactory: await getContractFactory(networkName),
+            }
+        })
+)

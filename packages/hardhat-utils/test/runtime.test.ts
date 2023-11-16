@@ -20,6 +20,14 @@ describe("runtime", () => {
 
     beforeEach(() => {
         createProviderStub = sinon.stub(providersConstruction, "createProvider")
+
+        // We want to clear the memoization cache before running the test suite
+        createGetEthereumProvider.cache.keys.length = 0
+        createGetEthereumProvider.cache.values.length = 0
+        createGetNetwork.cache.keys.length = 0
+        createGetNetwork.cache.values.length = 0
+        createGetNetworkEnvironment.cache.keys.length = 0
+        createGetNetworkEnvironment.cache.values.length = 0
     })
 
     afterEach(() => {
@@ -63,6 +71,10 @@ describe("runtime", () => {
             expect(provider1).to.equal(provider2)
             expect(provider3).to.equal(provider4)
             expect(provider1).not.to.equal(provider4)
+        })
+
+        it("should cache the factory", () => {
+            expect(createGetEthereumProvider(hre)).to.eql(createGetEthereumProvider(hre))
         })
 
         describe("getSigner()", () => {
@@ -119,6 +131,7 @@ describe("runtime", () => {
                 name: "ethereum-mainnet",
                 config: hre.config.networks["ethereum-mainnet"],
                 provider,
+                saveDeployments: true,
             })
         })
 
@@ -134,6 +147,10 @@ describe("runtime", () => {
             expect(network1).to.equal(network2)
             expect(network3).to.equal(network4)
             expect(network1).not.to.equal(network4)
+        })
+
+        it("should cache the factory", () => {
+            expect(createGetNetwork(hre)).to.eql(createGetNetwork(hre))
         })
     })
 
@@ -160,6 +177,10 @@ describe("runtime", () => {
             expect(deployments).to.have.property("get")
             expect(deployments).to.have.property("getOrNull")
             expect(deployments).to.have.property("save")
+        })
+
+        it("should cache the factory", () => {
+            expect(createGetDeployments(hre)).to.eql(createGetDeployments(hre))
         })
     })
 
@@ -208,6 +229,10 @@ describe("runtime", () => {
             expect(env).to.have.property("network")
             expect(env).to.have.property("deployments")
             expect(env).to.have.property("provider")
+        })
+
+        it("should cache the factory", () => {
+            expect(createGetNetworkEnvironment(hre)).to.eql(createGetNetworkEnvironment(hre))
         })
     })
 })
