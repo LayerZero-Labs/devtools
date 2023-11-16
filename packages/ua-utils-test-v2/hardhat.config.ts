@@ -7,14 +7,8 @@ import { HardhatUserConfig } from "hardhat/types"
  */
 const config: HardhatUserConfig = {
     networks: {
-        "ethereum-mainnet": {
-            url: "https://eth.llamarpc.com",
-        },
-        "bsc-testnet": {
-            url: "https://bsc-testnet.publicnode.com",
-            accounts: {
-                mnemonic: "test test test test test test test test test test test junk",
-            },
+        hardhat: {
+            endpointId: 30_000,
         },
     },
 }
