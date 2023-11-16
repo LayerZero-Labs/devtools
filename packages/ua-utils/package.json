@@ -50,14 +50,14 @@
         "hardhat-deploy": "^0.11.22",
         "ts-node": "^10.9.1",
         "tsup": "^7.2.0",
-        "typescript": "^5.2.2",
-        "@layerzerolabs/hardhat-utils": "~0.0.1"
+        "typescript": "^5.2.2"
     },
     "peerDependencies": {
         "@gnosis.pm/safe-core-sdk": "^2.0.0",
         "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
+        "@layerzerolabs/hardhat-utils": "~0.0.1",
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@nomiclabs/hardhat-ethers": "^2.2.3",
         "ethers": "^5.5.2",
