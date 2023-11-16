@@ -8,6 +8,7 @@ const config: HardhatUserConfig = {
     networks: {
         "ethereum-mainnet": {
             url: "https://eth.llamarpc.com",
+            saveDeployments: true,
         },
         "bsc-testnet": {
             url: "https://bsc-testnet.publicnode.com",

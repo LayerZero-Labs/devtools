@@ -53,6 +53,7 @@
         "hardhat-deploy": "^0.9.19"
     },
     "dependencies": {
+        "micro-memoize": "~4.1.2",
         "p-memoize": "~4.0.1",
         "zod": "^3.22.4"
     }
