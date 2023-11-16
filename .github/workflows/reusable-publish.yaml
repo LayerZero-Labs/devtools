@@ -76,7 +76,7 @@ jobs:
 
               env:
                   # This is here because changesets/action will look for the .npmrc
-                  # in HOME folder and if it doesn't fine one there it will create one
+                  # in HOME folder and if it doesn't find one there it will create one
                   #
                   # Since we want to make sure it uses our .npmrc we'll just point it
                   # to our workspace root
