@@ -1,18 +1,26 @@
-import { getDefaultConfig } from "@layerzerolabs/ua-utils"
+import hre from "hardhat"
 import { expect } from "chai"
 import { describe } from "mocha"
+import { NetworkEnvironment, createGetNetworkEnvironment } from "@layerzerolabs/hardhat-utils"
 
 const NETWORK_NAMES = ["vengaboys", "britney"]
 
 describe("config", () => {
     NETWORK_NAMES.forEach((networkName) => {
-        describe(`Network '${networkName}`, () => {
-            it("should return the default config", async () => {
-                const config = await getDefaultConfig(networkName)
+        const getEnvironment = createGetNetworkEnvironment(hre)
 
-                expect(config).to.equal({
-                    // FIXME
-                })
+        describe(`Network '${networkName}`, () => {
+            let environment: NetworkEnvironment
+
+            before(async () => {
+                environment = await getEnvironment(networkName)
+            })
+
+            it("should have an endpoint deployed", async () => {
+                const endpoint = await environment.getContract("EndpointV2")
+                const endpointId = await endpoint.eid()
+
+                expect(endpointId).to.eql(environment.network.config.endpointId)
             })
         })
     })
