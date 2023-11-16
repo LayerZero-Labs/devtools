@@ -1,7 +1,7 @@
 {
     "name": "@layerzerolabs/hardhat-utils",
     "description": "Hardhat helpers for LayerZero EVM projects",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "private": true,
     "main": "./dist/index.js",
