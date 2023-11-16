@@ -1,5 +1,5 @@
 import hre from "hardhat"
-import { createGetNetworkEnvironment } from "@layerzerolabs/hardhat-utils"
+import { GetByNetwork, createGetNetworkEnvironment } from "@layerzerolabs/hardhat-utils"
 import { defaultAbiCoder } from "@ethersproject/abi"
 
 const CONFIG_TYPE_MAX_MESSAGE_SIZE = 1
@@ -9,8 +9,11 @@ const CONFIG_TYPE_INBOUND_CONFIRMATIONS = 4
 const CONFIG_TYPE_VERIFIERS = 5
 const CONFIG_TYPE_OPTIONAL_VERIFIERS = 6
 
+// TODO Add explicit return type
+export type GetDefaultConfig = GetByNetwork<unknown>
+
 export const createGetDefaultConfig =
-    (getEnvironment = createGetNetworkEnvironment(hre)) =>
+    (getEnvironment = createGetNetworkEnvironment(hre)): GetDefaultConfig =>
     async (network: string) => {
         const environment = await getEnvironment(network)
         const endpointV2 = await environment.getContract("EndpointV2", environment.provider)
