@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "lint": "npx eslint '**/*.{js,ts,json}'",
-        "test": "npx hardhat test"
+        "test": "docker compose run --rm tests"
     },
     "repository": {
         "type": "git",
