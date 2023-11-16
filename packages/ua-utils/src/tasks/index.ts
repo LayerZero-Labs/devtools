@@ -1,7 +1,9 @@
 import { task, types } from "hardhat/config"
+
+import "./getDefaultConfig"
+
 import wireAll from "./wireAll"
 import setConfig from "./setConfig"
-import getDefaultConfig from "./getDefaultConfig"
 import getConfig from "./getConfig"
 import checkWireAllConfig from "./checkWireAllConfig"
 
@@ -18,12 +20,6 @@ task(
     .addOptionalParam("address", "address of the deployed contracts. Should be specified if the contract address is the same on all chains")
     .addOptionalParam("gnosisConfigPath", "the path to a file with Gnosis config. If specified, the transactions will be sent to Gnosis")
     .addOptionalParam("gasLimit", "override execution gasLimit")
-
-task(
-    "getDefaultConfig",
-    "outputs the default Send and Receive Messaging Library versions and the default application config",
-    getDefaultConfig
-).addParam("networks", "comma separated list of networks")
 
 task("getConfig", "outputs the application's Send and Receive Messaging Library versions and the config for remote networks", getConfig)
     .addParam("remoteNetworks", "comma separated list of remote networks")
