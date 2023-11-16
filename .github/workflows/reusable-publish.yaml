@@ -1,12 +1,19 @@
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
+#
+#         Reusable workflow that builds the code and publishes the packages
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
 name: Publish packages
 
 on:
-    push:
-        branches:
-            - main
+    workflow_call:
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
+# We'll default the NPM_TOKEN to an empty value since we use it
+# in .npmrc file and if undefined, the node setup would fail
 env:
     NPM_TOKEN: ""
 
@@ -45,14 +52,10 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-turbo-
 
-            - name: Lint
-              run: yarn lint
-
             - name: Build
               run: yarn build
-
-            - name: Test
-              run: yarn test
+              env:
+                  NODE_ENV: production
 
             # This step uses the changesets CLI to bump the package versions and/or publish the unpublished packages
             #
