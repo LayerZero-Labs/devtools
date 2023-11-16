@@ -1,7 +1,6 @@
 {
     "extends": "../../tsconfig.json",
     "exclude": ["dist", "node_modules"],
-    "include": ["src", "*.config.ts"],
     "compilerOptions": {
         "types": ["node", "mocha"],
         "paths": {
