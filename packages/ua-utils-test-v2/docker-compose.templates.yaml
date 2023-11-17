@@ -14,7 +14,7 @@ services:
     package:
         build:
             args:
-                FILTER: ua-utils-test-v2...
+                PACKAGE: "@layerzerolabs/ua-utils-test-v2"
         extends:
             file: ../../docker-compose.templates.yaml
             service: project
