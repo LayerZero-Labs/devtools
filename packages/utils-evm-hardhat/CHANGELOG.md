@@ -1,4 +1,4 @@
-# @layerzerolabs/utils-hardhat
+# @layerzerolabs/utils-evm-hardhat
 
 ## 0.0.2
 

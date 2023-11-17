@@ -1,5 +1,5 @@
 {
-    "name": "@layerzerolabs/utils-hardhat",
+    "name": "@layerzerolabs/utils-evm-hardhat",
     "description": "Hardhat utilities for LayerZero EVM projects",
     "version": "0.0.2",
     "license": "MIT",
@@ -26,7 +26,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/utils-hardhat"
+        "directory": "packages/utils-evm-hardhat"
     },
     "devDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",

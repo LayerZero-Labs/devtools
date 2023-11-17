@@ -13,7 +13,7 @@ services:
     # Service that contains the whole project
     #
     # It requires the PACKAGE argument that specifies
-    # the target package it should build (e.g. @layerzerolabs/utils-hardhat)
+    # the target package it should build (e.g. @layerzerolabs/utils-evm-hardhat)
     project:
         build:
             context: .
