@@ -1,6 +1,6 @@
 {
-    "name": "@layerzerolabs/ua-utils-test-v2",
-    "description": "Integration tests for ua-utils for V2",
+    "name": "@layerzerolabs/ua-utils-hardhat-test",
+    "description": "Integration tests for ua-utils-hardhat for V2",
     "version": "0.0.1",
     "license": "MIT",
     "private": true,
@@ -11,7 +11,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/ua-utils-test"
+        "directory": "packages/ua-utils-hardhat-test"
     },
     "devDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",
