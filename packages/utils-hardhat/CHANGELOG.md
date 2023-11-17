@@ -1,4 +1,4 @@
-# @layerzerolabs/hardhat-utils
+# @layerzerolabs/utils-hardhat
 
 ## 0.0.2
 

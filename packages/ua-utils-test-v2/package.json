@@ -22,7 +22,7 @@
         "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
-        "@layerzerolabs/hardhat-utils": "~0.0.1",
+        "@layerzerolabs/utils-hardhat": "~0.0.1",
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v2": "~1.5.58",
