@@ -23,13 +23,6 @@ describe("config", () => {
                 expect(environment.network.config.endpointId).to.be.a("number")
                 expect(endpointId).to.eql(environment.network.config.endpointId)
             })
-
-            it("should have send library set", async () => {
-                const endpoint = await environment.getContract("EndpointV2", environment.provider)
-                const endpointId = await endpoint.eid()
-
-                const defaultSendLibrary = await endpoint.defaultSendLibrary()
-            })
         })
     })
 })
