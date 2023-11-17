@@ -1,5 +1,6 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from "@/config.js"
 import prompts from "prompts"
+import { isPackageManagerAvailable } from "./installation.js"
 
 const handlePromptState = (state: any) => {
     if (state.aborted) {
@@ -39,7 +40,10 @@ export const promptForConfig = () =>
             onState: handlePromptState,
             type: "select",
             name: "packageManager",
-            choices: PACKAGE_MANAGERS.map((packageManager) => ({ title: packageManager.label, value: packageManager })),
+            choices: PACKAGE_MANAGERS.filter(isPackageManagerAvailable).map((packageManager) => ({
+                title: packageManager.label,
+                value: packageManager,
+            })),
             message: "What package manager would you like to use in your project?",
         },
     ])
