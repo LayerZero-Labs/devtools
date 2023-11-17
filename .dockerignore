@@ -1,0 +1,14 @@
+# CI/CD files
+.changeset
+.github
+.husky
+
+# Dependencies & deployments
+node_modules
+deployments
+
+# Metadata
+*.md
+
+# Docker files
+docker-compose.templates.yaml

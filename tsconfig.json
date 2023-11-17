@@ -23,6 +23,7 @@
         "allowSyntheticDefaultImports": true,
         "allowJs": true,
         "resolveJsonModule": true,
-        "types": ["node"]
+        "types": ["node"],
+        "skipLibCheck": true
     }
 }

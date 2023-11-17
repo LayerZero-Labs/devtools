@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "lint": "npx eslint '**/*.{js,ts,json}'",
-        "test": "npx hardhat test"
+        "test": "docker compose run --rm tests"
     },
     "repository": {
         "type": "git",
@@ -15,6 +15,7 @@
     },
     "devDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",
+        "@ethersproject/constants": "^5.7.0",
         "@ethersproject/providers": "^5.7.0",
         "@ethersproject/wallet": "^5.7.0",
         "@gnosis.pm/safe-core-sdk": "^2.0.0",
@@ -25,12 +26,12 @@
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v2": "~1.5.58",
-        "@layerzerolabs/ua-utils": "~0.0.15",
-        "@types/chai-as-promised": "^7.1.7",
         "@nomiclabs/hardhat-ethers": "^2.2.3",
-        "ethers": "^5.7.0",
+        "@types/chai-as-promised": "^7.1.7",
+        "@types/mocha": "^10.0.1",
         "chai": "^4.3.10",
         "chai-as-promised": "^7.1.1",
+        "ethers": "^5.7.0",
         "hardhat": "^2.9.9",
         "hardhat-deploy": "^0.11.22",
         "sinon": "^17.0.1",

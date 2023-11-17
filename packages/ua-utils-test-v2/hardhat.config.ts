@@ -1,5 +1,9 @@
+import "hardhat-deploy"
 import { withLayerZeroArtifacts } from "@layerzerolabs/hardhat-utils"
+import { EndpointId } from "@layerzerolabs/lz-definitions"
 import { HardhatUserConfig } from "hardhat/types"
+
+const MNEMONIC = "test test test test test test test test test test test test"
 
 /**
  * This is a dummy hardhat config that enables us to test
@@ -7,13 +11,23 @@ import { HardhatUserConfig } from "hardhat/types"
  */
 const config: HardhatUserConfig = {
     networks: {
-        "ethereum-mainnet": {
-            url: "https://eth.llamarpc.com",
-        },
-        "bsc-testnet": {
-            url: "https://bsc-testnet.publicnode.com",
+        hardhat: {
             accounts: {
-                mnemonic: "test test test test test test test test test test test junk",
+                mnemonic: MNEMONIC,
+            },
+        },
+        vengaboys: {
+            endpointId: EndpointId.ETHEREUM_MAINNET,
+            url: "http://network-vengaboys:8545",
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
+        },
+        britney: {
+            endpointId: EndpointId.AVALANCHE_MAINNET,
+            url: "http://network-britney:8545",
+            accounts: {
+                mnemonic: MNEMONIC,
             },
         },
     },
