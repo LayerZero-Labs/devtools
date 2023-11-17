@@ -19,6 +19,7 @@ export const promptForContinue = async () =>
         type: "confirm",
         name: "pleasecontinue",
         message: "Would you like to continue?",
+        initial: true,
     }).then(({ pleasecontinue }): boolean => pleasecontinue)
 
 export const promptForConfig = () =>
