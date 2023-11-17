@@ -1,7 +1,7 @@
 {
     "name": "@layerzerolabs/ua-utils-hardhat",
-    "description": "Utilities for working with LayerZero EVM contracts",
-    "version": "0.0.15",
+    "description": "Hardhat utilities for working with LayerZero EVM contracts",
+    "version": "0.0.1",
     "license": "MIT",
     "private": true,
     "main": "dist/index.js",

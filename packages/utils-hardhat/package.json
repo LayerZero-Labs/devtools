@@ -1,6 +1,6 @@
 {
     "name": "@layerzerolabs/utils-hardhat",
-    "description": "Hardhat helpers for LayerZero EVM projects",
+    "description": "Hardhat utilities for LayerZero EVM projects",
     "version": "0.0.2",
     "license": "MIT",
     "private": true,
