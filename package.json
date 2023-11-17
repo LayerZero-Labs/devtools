@@ -5,6 +5,7 @@
     "scripts": {
         "clean": "npx turbo run clean",
         "build": "npx turbo run build",
+        "dev": "npx turbo run dev",
         "lint": "npx turbo run lint",
         "test": "npx turbo run test",
         "prepare": "husky install"
