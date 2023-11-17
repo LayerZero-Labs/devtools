@@ -9,7 +9,7 @@ interface Props {
 
 export const ConfigSummary: React.FC<Props> = ({ value }) => {
     return (
-        <Box flexDirection="column">
+        <Box flexDirection="column" marginTop={1} marginBottom={1}>
             <Text>
                 Will create a project in <Text bold>{value.destination || "current"}</Text> directory (
                 <Text bold>{resolve(value.destination)}</Text>)

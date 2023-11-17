@@ -1,5 +1,6 @@
-import { Config } from "@/types.js"
+import type { Config, PackageManager } from "@/types.js"
 import { spawn } from "child_process"
+import which from "which"
 
 export const installDependencies = (config: Config) =>
     new Promise<void>((resolve, reject) => {
@@ -24,3 +25,5 @@ export const installDependencies = (config: Config) =>
             } else resolve()
         })
     })
+
+export const isPackageManagerAvailable = ({ command }: PackageManager): boolean => !!which.sync(command, { nothrow: true })

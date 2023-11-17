@@ -1,5 +1,8 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from "@/config.js"
 import prompts from "prompts"
+import { isPackageManagerAvailable } from "./installation.js"
+import { isDirectory } from "./filesystem.js"
+import { resolve } from "path"
 
 const handlePromptState = (state: any) => {
     if (state.aborted) {
@@ -16,6 +19,7 @@ export const promptForContinue = async () =>
         type: "confirm",
         name: "pleasecontinue",
         message: "Would you like to continue?",
+        initial: true,
     }).then(({ pleasecontinue }): boolean => pleasecontinue)
 
 export const promptForConfig = () =>
@@ -26,7 +30,7 @@ export const promptForConfig = () =>
             name: "destination",
             message: "Where do you want to start your project?",
             initial: "./my-lz-oapp",
-            // FIXME Check whether the directory is empty or does not exist
+            validate: (path: string) => (isDirectory(path) ? `Directory '${resolve(path)}' already exists` : true),
         },
         {
             onState: handlePromptState,
@@ -39,7 +43,10 @@ export const promptForConfig = () =>
             onState: handlePromptState,
             type: "select",
             name: "packageManager",
-            choices: PACKAGE_MANAGERS.map((packageManager) => ({ title: packageManager.label, value: packageManager })),
+            choices: PACKAGE_MANAGERS.filter(isPackageManagerAvailable).map((packageManager) => ({
+                title: packageManager.label,
+                value: packageManager,
+            })),
             message: "What package manager would you like to use in your project?",
         },
     ])
