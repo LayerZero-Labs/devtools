@@ -1,6 +1,8 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from "@/config.js"
 import prompts from "prompts"
 import { isPackageManagerAvailable } from "./installation.js"
+import { isDirectory } from "./filesystem.js"
+import { resolve } from "path"
 
 const handlePromptState = (state: any) => {
     if (state.aborted) {
@@ -27,7 +29,7 @@ export const promptForConfig = () =>
             name: "destination",
             message: "Where do you want to start your project?",
             initial: "./my-lz-oapp",
-            // FIXME Check whether the directory is empty or does not exist
+            validate: (path: string) => (isDirectory(path) ? `Directory '${resolve(path)}' already exists` : true),
         },
         {
             onState: handlePromptState,
