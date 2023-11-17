@@ -17,9 +17,10 @@ describe("config", () => {
             })
 
             it("should have an endpoint deployed", async () => {
-                const endpoint = await environment.getContract("EndpointV2")
+                const endpoint = await environment.getContract("EndpointV2", environment.provider)
                 const endpointId = await endpoint.eid()
 
+                expect(environment.network.config.endpointId).to.be.a("number")
                 expect(endpointId).to.eql(environment.network.config.endpointId)
             })
         })
