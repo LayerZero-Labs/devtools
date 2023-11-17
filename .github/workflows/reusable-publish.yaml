@@ -73,6 +73,7 @@ jobs:
               with:
                   version: yarn changeset version
                   publish: yarn changeset publish
+                  title: "🚀 Version packages"
 
               env:
                   # This is here because changesets/action will look for the .npmrc
