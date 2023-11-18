@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">LayerZero EVM Utilities</h1>
+<h1 align="center">LayerZero Contract Utilities</h1>
 
 ## Development
 
@@ -21,9 +21,9 @@ yarn lint
 yarn test
 ```
 
-## Troubleshooting
+### Troubleshooting
 
-### Problems with committing
+#### Problems with committing
 
 If facing issues when commiting, make sure your `~/.huskyrc` file contains the following:
 

@@ -30,7 +30,7 @@ FROM base as builder
 
 # The name of the package we're building here
 # 
-# e.g. @layerzerolabs/ua-utils
+# e.g. @layerzerolabs/ua-utils-evm-hardhat
 ARG PACKAGE
 
 WORKDIR /app
@@ -108,7 +108,7 @@ FROM dependencies as build
 
 # The name of the package we're building here
 # 
-# e.g. @layerzerolabs/ua-utils
+# e.g. @layerzerolabs/ua-utils-evm-hardhat
 ARG PACKAGE
 
 WORKDIR /app

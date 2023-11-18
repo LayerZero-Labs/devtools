@@ -1,6 +1,6 @@
 {
-    "name": "@layerzerolabs/ua-utils-test-v2",
-    "description": "Integration tests for ua-utils for V2",
+    "name": "@layerzerolabs/ua-utils-evm-hardhat-test",
+    "description": "Integration tests for ua-utils-evm-hardhat for V2",
     "version": "0.0.1",
     "license": "MIT",
     "private": true,
@@ -11,7 +11,7 @@
     "repository": {
         "type": "git",
         "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/ua-utils-test"
+        "directory": "packages/ua-utils-evm-hardhat-test"
     },
     "devDependencies": {
         "@ethersproject/abstract-signer": "^5.7.0",
@@ -22,7 +22,7 @@
         "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
-        "@layerzerolabs/hardhat-utils": "~0.0.1",
+        "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v2": "~1.5.58",

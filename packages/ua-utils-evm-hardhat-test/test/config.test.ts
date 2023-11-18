@@ -1,7 +1,7 @@
 import hre from "hardhat"
 import { expect } from "chai"
 import { describe } from "mocha"
-import { NetworkEnvironment, createGetNetworkEnvironment } from "@layerzerolabs/hardhat-utils"
+import { NetworkEnvironment, createGetNetworkEnvironment } from "../../utils-evm-hardhat/dist"
 
 const NETWORK_NAMES = ["vengaboys", "britney"]
 

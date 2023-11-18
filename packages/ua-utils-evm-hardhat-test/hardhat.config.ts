@@ -1,5 +1,5 @@
 import "hardhat-deploy"
-import { withLayerZeroArtifacts } from "@layerzerolabs/hardhat-utils"
+import { withLayerZeroArtifacts } from "../utils-evm-hardhat/dist"
 import { EndpointId } from "@layerzerolabs/lz-definitions"
 import { HardhatUserConfig } from "hardhat/types"
 

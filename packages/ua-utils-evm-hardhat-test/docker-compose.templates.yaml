@@ -14,13 +14,13 @@ services:
     package:
         build:
             args:
-                PACKAGE: "@layerzerolabs/ua-utils-test-v2"
+                PACKAGE: "@layerzerolabs/ua-utils-evm-hardhat-test"
         extends:
             file: ../../docker-compose.templates.yaml
             service: project
-        working_dir: /app/packages/ua-utils-test-v2
+        working_dir: /app/packages/ua-utils-evm-hardhat-test
         volumes:
-            - ./:/app/packages/ua-utils-test-v2
+            - ./:/app/packages/ua-utils-evm-hardhat-test
 
     # Hardhat node started on port 8545
     node:
