@@ -1,3 +1,4 @@
+import "hardhat-deploy"
 import { HardhatUserConfig } from "hardhat/types"
 
 /**

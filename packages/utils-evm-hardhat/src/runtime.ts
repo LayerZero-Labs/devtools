@@ -1,51 +1,76 @@
-import type { Network, HardhatRuntimeEnvironment, EthereumProvider, EIP1193Provider } from "hardhat/types"
-import { DeploymentsManager } from "hardhat-deploy/dist/src/DeploymentsManager"
-import { createProvider } from "hardhat/internal/core/providers/construction"
+import type { HardhatRuntimeEnvironment, EIP1193Provider } from "hardhat/types"
 
-import assert from "assert"
-import memoize from "micro-memoize"
 import pMemoize from "p-memoize"
-import { Signer } from "@ethersproject/abstract-signer"
-import { Provider, JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
-import { Contract, ContractFactory } from "ethers"
-import { DeploymentsExtension } from "hardhat-deploy/types"
+import { Web3Provider } from "@ethersproject/providers"
+import { ConfigurationError } from "./errors"
+import { HardhatContext } from "hardhat/internal/context"
+import { Environment as HardhatRuntimeEnvironmentImplementation } from "hardhat/internal/core/runtime-environment"
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
  */
 export type GetByNetwork<TValue> = (networkName: string) => Promise<TValue>
 
-export type GetContract = (contractName: string, signerOrProvider?: Signer | Provider) => Promise<Contract>
-
-export type GetContractFactory = (contractName: string, signer?: Signer) => Promise<ContractFactory>
-
-export type MinimalNetwork = Pick<Network, "name" | "config" | "provider" | "saveDeployments">
-
 /**
- * Factory function creator for providers that are not on the network
- * that hardhat has been configured with.
- *
- * This function returns the EIP1193 provider (that hardhat uses internally) that
- * needs to be wrapped for use with ethers (see `wrapEIP1193Provider`)
+ * Creates a clone of the HardhatRuntimeEnvironment for a particular network
  *
  * ```typescript
- * const getProvider = createGetEthereumProvider(hre);
- * const provider = await getProvider("bsc-testnet");
- * const ethersProvider = wrapEIP1193Provider(provider);
+ * const env = getEnvironment("bsc-testnet");
+ *
+ * // All the ususal properties are present
+ * env.deployments.get("MyContract")
  * ```
  *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `GetByNetwork<EthereumProvider>`
  */
-export const createGetEthereumProvider = memoize(
-    (hre: HardhatRuntimeEnvironment): GetByNetwork<EthereumProvider> =>
-        pMemoize((networkName) => {
-            const networkConfig = hre.config.networks[networkName]
-            assert(networkConfig, `Missing network config for '${networkName}'`)
+export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
+    // The first step is to get the hardhat context
+    //
+    // Context is registered globally as a singleton and can be accessed
+    // using the static methods of the HardhatContext class
+    //
+    // In our case we require the context to exist, the other option would be
+    // to create it and set it up - see packages/hardhat-core/src/register.ts for an example setup
+    let context: HardhatContext
+    try {
+        context = HardhatContext.getHardhatContext()
+    } catch (error: unknown) {
+        throw new ConfigurationError(`Could not get Hardhat context: ${error}`)
+    }
 
-            return createProvider(hre.config, networkName, hre.artifacts)
-        })
-)
+    // We also require the hardhat environment to already exist
+    //
+    // Again, we could create it but that means we'd need to duplicate the bootstrap code
+    // that hardhat does when setting up the environment
+    let environment: HardhatRuntimeEnvironment
+    try {
+        environment = context.getHardhatRuntimeEnvironment()
+    } catch (error: unknown) {
+        throw new ConfigurationError(`Could not get Hardhat Runtime Environment: ${error}`)
+    }
+
+    try {
+        // The last step is to create a duplicate enviornment that mimics the original one
+        // with one crucial difference - the network setup
+        return new HardhatRuntimeEnvironmentImplementation(
+            environment.config,
+            {
+                ...environment.hardhatArguments,
+                network: networkName,
+            },
+            environment.tasks,
+            environment.scopes,
+            context.environmentExtenders,
+            context.experimentalHardhatNetworkMessageTraceHooks,
+            environment.userConfig,
+            context.providerExtenders
+            // This is a bit annoying - the environmentExtenders are not stronly typed
+            // so TypeScript complains that the properties required by HardhatRuntimeEnvironment
+            // are not present on HardhatRuntimeEnvironmentImplementation
+        ) as unknown as HardhatRuntimeEnvironment
+    } catch (error: unknown) {
+        throw new ConfigurationError(`Could not setup Hardhat Runtime Environment: ${error}`)
+    }
+})
 
 /**
  * Helper function that wraps an EIP1193Provider with Web3Provider
@@ -55,170 +80,3 @@ export const createGetEthereumProvider = memoize(
  * @returns `Web3Provider`
  */
 export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => new Web3Provider(provider)
-
-/**
- * Factory function for trimmed-down `MinimalNetwork` objects that are not one the network
- * that hardhat has been configured with.
- *
- * ```typescript
- * const getNetwork = createGetNetwork(hre);
- * const network = await getNetwork("bsc-testnet");
- * ```
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `GetByNetwork<MinimalNetwork>`
- */
-export const createGetNetwork = memoize(
-    (hre: HardhatRuntimeEnvironment, getProvider = createGetEthereumProvider(hre)): GetByNetwork<MinimalNetwork> =>
-        pMemoize(async (networkName) => {
-            const networkConfig = hre.config.networks[networkName]
-            const networkProvider = await getProvider(networkName)
-
-            return {
-                name: networkName,
-                config: networkConfig,
-                provider: networkProvider,
-                saveDeployments: networkConfig.saveDeployments,
-            }
-        })
-)
-
-/**
- * Factory function for `DeploymentsExtension` objects that are not one the network
- * that hardhat has been configured with.
- *
- * ```typescript
- * const getDeployments = createGetDeployments(hre);
- * const deployments = await getDeployments("bsc-testnet");
- * const factoryDeploymentOnBscTestnet = await deployments.get("Factory");
- * ```
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `GetByNetwork<DeploymentsExtension>`
- */
-export const createGetDeployments = memoize(
-    (hre: HardhatRuntimeEnvironment, getNetwork = createGetNetwork(hre)): GetByNetwork<DeploymentsExtension> =>
-        pMemoize(async (networkName) => {
-            const network = await getNetwork(networkName)
-
-            return new DeploymentsManager(hre, network as Network).deploymentsExtension
-        })
-)
-
-/**
- * Factory function for `Contract` instances that are not one the network
- * that hardhat has been configured with.
- *
- *
- * ```typescript
- * const getContract = createGetContract(hre);
- * const getContractOnBscTestnet = await getContract("bsc-testnet")
- *
- * const router = await getContractOnBscTestnet("Router");
- *
- * // To get a connected instance, a provider or a signer needs to be passed in
- * const routerWithProvider = getContractOnBscTestnet("Router", provider)
- * const routerWithSigner = getContractOnBscTestnet("Router", signer)
- * ```
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `GetByNetwork<GetContract>`
- */
-export const createGetContract = memoize(
-    (hre: HardhatRuntimeEnvironment, getDeployments = createGetDeployments(hre)): GetByNetwork<GetContract> =>
-        pMemoize(async (networkName) => {
-            const deployments = await getDeployments(networkName)
-
-            return async (contractName, signerOrProvider) => {
-                const { address, abi } = await deployments.get(contractName)
-
-                return new Contract(address, abi, signerOrProvider)
-            }
-        })
-)
-
-/**
- * Factory function for `ContractFactory` instances that are not one the network
- * that hardhat has been configured with.
- *
- *
- * ```typescript
- * const getContractFactory = createGetContractFactory(hre);
- * const getContractFactoryOnBscTestnet = await getContractFactory("bsc-testnet")
- *
- * const router = await getContractFactoryOnBscTestnet("Router");
- *
- * // To get a connected instance, a signer needs to be passed in
- * const routerWithSigner = getContractOnBscTestnet("Router", signer)
- * ```
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `GetByNetwork<GetContractFactory>`
- */
-export const createGetContractFactory = memoize(
-    (hre: HardhatRuntimeEnvironment, getDeployments = createGetDeployments(hre)): GetByNetwork<GetContractFactory> =>
-        pMemoize(async (networkName) => {
-            const deployments = await getDeployments(networkName)
-
-            return async (contractName, signer) => {
-                const { abi, bytecode } = await deployments.getArtifact(contractName)
-
-                return new ContractFactory(abi, bytecode, signer)
-            }
-        })
-)
-
-export interface NetworkEnvironment {
-    network: MinimalNetwork
-    provider: JsonRpcProvider
-    deployments: DeploymentsExtension
-    getContract: GetContract
-    getContractFactory: GetContractFactory
-}
-
-/**
- * Creates a whole per-network environment for a particular network:
- *
- * ```typescript
- * const getEnvironment = createGetNetworkEnvironment(hre);
- * const environment = await getEnvironment("bsc-testnet")
- *
- * const provider = environment.provider
- * const signer = provider.getSigner()
- * const router = environment.getContract("Router")
- * const routerWithProvider = environment.getContract("Router", provider)
- * const routerWithSigner = environment.getContract("Router", signer)
- * const factoryDeployment = await environment.deployments.get("Factory")
- * ```
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @param getProvider `GetByNetwork<EthereumProvider>`
- * @param getNetwork `GetByNetwork<MinimalNetwork>`
- * @param getDeployments `GetByNetwork<DeploymentsExtension>`
- * @param getContract `GetByNetwork<GetContract>`
- *
- * @returns `GetByNetwork<NetworkEnvironment>`
- */
-export const createGetNetworkEnvironment = memoize(
-    (
-        hre: HardhatRuntimeEnvironment,
-        getProvider = createGetEthereumProvider(hre),
-        getNetwork = createGetNetwork(hre, getProvider),
-        getDeployments = createGetDeployments(hre, getNetwork),
-        getContract = createGetContract(hre, getDeployments),
-        getContractFactory = createGetContractFactory(hre, getDeployments)
-    ): GetByNetwork<NetworkEnvironment> =>
-        pMemoize(async (networkName) => {
-            const provider = await getProvider(networkName).then(wrapEIP1193Provider)
-            const network = await getNetwork(networkName)
-            const deployments = await getDeployments(networkName)
-
-            return {
-                network,
-                provider,
-                deployments,
-                getContract: await getContract(networkName),
-                getContractFactory: await getContractFactory(networkName),
-            }
-        })
-)
