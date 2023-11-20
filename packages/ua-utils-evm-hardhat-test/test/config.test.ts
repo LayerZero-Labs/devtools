@@ -1,4 +1,3 @@
-import hre from "hardhat"
 import { expect } from "chai"
 import { describe } from "mocha"
 import { getNetworkRuntimeEnvironment } from "../../utils-evm-hardhat/dist"
