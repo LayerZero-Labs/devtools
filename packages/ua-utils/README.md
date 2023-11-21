@@ -100,6 +100,38 @@ if (isMisconfigured(state)) {
 }
 ```
 
+The `createProperty` is completely abstract though and does not require us to get a single contract property or set it directly. in the following, completely made-up example we'll get multiple properties at once and instead of setting them, we'll just populate the transactions for further executions:
+
+```typescript
+import { createProperty, isMisconfigured } from "@layerzerolabs/ua-utils"
+
+const myContractPropertyWithParams = createProperty({
+    get: (contract: Contract) => Promise.all([contract.getA(), contract.getB()]),
+    set: (contract: Contract, [a, b, c]) => [
+        contract.pupulateTransaction.setA(a),
+        contract.pupulateTransaction.setB(b),
+        contract.pupulateTransaction.setC(c),
+    ],
+    desired: (contract: Contract) => [7, 11, 17],
+})
+
+// We'll again pretend we have a contract at hand
+declare const myContract: Contract
+
+// We'll evaluate this property by passing the required context in - in this case
+// the context consists of a contract, a numeric value and a string value
+//
+// The result of this evaluation is a PropertyState object
+const state = await myContractPropertyWithParams(myContract, when, where)
+
+// The execution goes just like before
+if (isMisconfigured(state)) {
+    const transactions = await state.configure()
+
+    // We now have a list of populated transactions to execute
+}
+```
+
 ### `isConfigured`
 
 Helper type assertion utility that narrows down the `PropertyState` type to `Configured`:
