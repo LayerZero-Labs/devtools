@@ -1,0 +1,49 @@
+{
+    "name": "@layerzerolabs/ua-utils-evm",
+    "description": "Utilities for working with LayerZero EVM projects",
+    "version": "0.0.1",
+    "license": "MIT",
+    "private": true,
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "module": "./dist/index.mjs",
+    "exports": {
+        "types": "./dist/index.d.ts",
+        "require": "./dist/index.js",
+        "import": "./dist/index.mjs"
+    },
+    "files": [
+        "./dist/index.*"
+    ],
+    "scripts": {
+        "build": "npx tsup",
+        "clean": "rm -rf dist",
+        "dev": "npx tsup --watch",
+        "lint": "npx eslint '**/*.{js,ts,json}'",
+        "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
+        "test": "mocha --parallel"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+        "directory": "packages/ua-utils-evm"
+    },
+    "devDependencies": {
+        "@ethersproject/contracts": "5.7.0",
+        "@layerzerolabs/lz-definitions": "~1.5.58",
+        "@layerzerolabs/ua-utils": "~0.1.0",
+        "@types/mocha": "^10.0.1",
+        "@types/sinon": "^17.0.2",
+        "chai": "^4.3.10",
+        "mocha": "^10.2.0",
+        "sinon": "^17.0.1",
+        "ts-node": "^10.9.1",
+        "tsup": "~7.2.0",
+        "typescript": "^5.2.2"
+    },
+    "peerDependencies": {
+        "@ethersproject/contracts": "5.7.0",
+        "@layerzerolabs/lz-definitions": "~1.5.58",
+        "@layerzerolabs/ua-utils": "~0.1.0"
+    }
+}
