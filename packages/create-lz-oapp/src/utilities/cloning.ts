@@ -22,6 +22,9 @@ export const cloneExample = async ({ example, destination }: Config) => {
 
         if (error instanceof Error && "code" in error) {
             switch (error.code) {
+                case "BAD_SRC":
+                    throw new BadGitRefError()
+
                 case "DEST_NOT_EMPTY":
                     throw new DestinationNotEmptyError()
 
@@ -31,6 +34,12 @@ export const cloneExample = async ({ example, destination }: Config) => {
 
                 case "COULD_NOT_DOWNLOAD":
                     throw new DownloadError()
+            }
+        }
+
+        if (error instanceof Error) {
+            if (/fatal: couldn't find remote ref/.test(error.message ?? "")) {
+                throw new MissingGitRefError()
             }
         }
 
@@ -52,6 +61,12 @@ export class DestinationNotEmptyError extends CloningError {
 
 export class MissingGitRefError extends CloningError {
     constructor(message: string = "Could not find the example repository or branch") {
+        super(message)
+    }
+}
+
+export class BadGitRefError extends CloningError {
+    constructor(message: string = "Malformed repository URL") {
         super(message)
     }
 }
