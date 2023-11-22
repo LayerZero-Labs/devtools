@@ -12,12 +12,14 @@
     "test": "npx hardhat test --parallel"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.3",
     "@layerzerolabs/eslint-config-next": "^1.5.60",
     "@layerzerolabs/lz-evm-oapp-v2": "latest",
     "@layerzerolabs/prettier-config-next": "^1.5.60",
     "@layerzerolabs/solhint-config": "^1.5.58",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@rushstack/eslint-patch": "^1.5.1",
+    "ethers": "^5.7.0",
     "hardhat": "^2.9.9",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.11.43",
