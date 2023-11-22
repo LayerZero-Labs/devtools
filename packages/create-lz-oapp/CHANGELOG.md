@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.2
+
+### Patch Changes
+
+-   7a0d823: Add the ability to override the default example repository using env variables
+
 ## 0.1.1
 
 ### Patch Changes
