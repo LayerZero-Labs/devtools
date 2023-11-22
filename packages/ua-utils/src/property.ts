@@ -11,7 +11,7 @@ import assert from "assert"
  */
 export type Property<TContext extends unknown[], TValue = unknown, TResult = unknown> = (
     ...context: TContext
-) => Promise<PropertyState<TValue, TResult>>
+) => Promise<PropertyState<TContext, TValue, TResult>>
 
 /**
  * Type encapsulating two states of a configurable property: `Configured` and `Misconfigured`
@@ -19,7 +19,9 @@ export type Property<TContext extends unknown[], TValue = unknown, TResult = unk
  * Property property is understood as anything that has a getter and setter
  * and its value needs to match a desired value (coming from some sort of a configuration).
  */
-export type PropertyState<TValue = unknown, TResult = unknown> = Configured<TValue> | Misconfigured<TValue, TResult>
+export type PropertyState<TContext extends unknown[], TValue = unknown, TResult = unknown> =
+    | Configured<TContext, TValue>
+    | Misconfigured<TContext, TValue, TResult>
 
 /**
  * Interface for configured state of a configurable property.
@@ -27,7 +29,8 @@ export type PropertyState<TValue = unknown, TResult = unknown> = Configured<TVal
  * In configured state, the current value of the property matches its desired state
  * and no action is necessary.
  */
-export interface Configured<TValue = unknown> {
+export interface Configured<TContext extends unknown[], TValue = unknown> {
+    context: TContext
     value: TValue
     desiredValue?: never
     configure?: never
@@ -39,7 +42,8 @@ export interface Configured<TValue = unknown> {
  * In misconfigured state, the current value of the property does not match its desired state
  * and an action needs to be taken to synchronize these two.
  */
-export interface Misconfigured<TValue = unknown, TResult = unknown> {
+export interface Misconfigured<TContext extends unknown[], TValue = unknown, TResult = unknown> {
+    context: TContext
     value: TValue
     desiredValue: TValue
     configure: () => TResult | Promise<TResult>
@@ -84,10 +88,10 @@ export const createProperty =
             assert.deepStrictEqual(value, desiredValue)
 
             // The values matched, we return a Configured
-            return { value }
+            return { context, value }
         } catch {
             // The values did not match, we'll return a Misconfigured
-            return { value, desiredValue, configure: async () => set(...context, desiredValue) }
+            return { context, value, desiredValue, configure: async () => set(...context, desiredValue) }
         }
     }
 
@@ -97,9 +101,9 @@ export const createProperty =
  * @param value `PropertyState<TValue, TResult>`
  * @returns `value is Misconfigured<TValue, TResult>`
  */
-export const isMisconfigured = <TValue = unknown, TResult = unknown>(
-    value: PropertyState<TValue, TResult>
-): value is Misconfigured<TValue, TResult> => "configure" in value && "desiredValue" in value && typeof value.configure === "function"
+export const isMisconfigured = <TContext extends unknown[], TValue = unknown, TResult = unknown>(
+    value: PropertyState<TContext, TValue, TResult>
+): value is Misconfigured<TContext, TValue, TResult> => "configure" in value && "desiredValue" in value && typeof value.configure === "function"
 
 /**
  * Type assertion utility for narrowing the `PropertyState` type to `Configured` type
@@ -107,4 +111,6 @@ export const isMisconfigured = <TValue = unknown, TResult = unknown>(
  * @param value `PropertyState<TValue, TResult>`
  * @returns `value is Configured<TValue, TResult>`
  */
-export const isConfigured = <TValue = unknown>(value: PropertyState<TValue>): value is Configured<TValue> => !isMisconfigured(value)
+export const isConfigured = <TContext extends unknown[], TValue = unknown>(
+    value: PropertyState<TContext, TValue>
+): value is Configured<TContext, TValue> => !isMisconfigured(value)
