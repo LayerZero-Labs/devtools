@@ -1,9 +1,13 @@
 {
     "$schema": "https://turbo.build/schema.json",
     "pipeline": {
+        "compile": {
+            "outputs": ["artifacts/**", "cache/**"],
+            "dependsOn": ["^build"]
+        },
         "build": {
             "outputs": ["dist/**"],
-            "dependsOn": ["^build"]
+            "dependsOn": ["compile", "^build"]
         },
         "clean": {
             "outputs": [],
