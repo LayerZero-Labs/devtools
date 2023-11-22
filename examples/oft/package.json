@@ -18,7 +18,7 @@
     "@layerzerolabs/solhint-config": "^1.5.58",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@rushstack/eslint-patch": "^1.5.1",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.9.9",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.11.43",
     "hardhat-deploy-ethers": "^0.4.1",
