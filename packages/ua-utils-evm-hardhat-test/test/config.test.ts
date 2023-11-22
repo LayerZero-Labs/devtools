@@ -1,28 +1,27 @@
 import { expect } from "chai"
 import { describe } from "mocha"
-import { getNetworkRuntimeEnvironment } from "../../utils-evm-hardhat/dist"
+import { getNetworkRuntimeEnvironment } from "@layerzerolabs/utils-evm-hardhat"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { BigNumber, Contract } from "ethers"
-import Config = Chai.Config
+import { TransactionResponse } from "@ethersproject/providers"
 
 const NETWORK_NAMES = ["vengaboys", "britney"]
-
 describe("config", () => {
     NETWORK_NAMES.forEach((networkName) => {
         describe(`Network '${networkName}`, () => {
             let environment: HardhatRuntimeEnvironment
             let ultraLightNode302: Contract
             let ulnConfig: Contract
+            let endpoint: Contract
             let endpointId: number
 
             before(async () => {
                 environment = await getNetworkRuntimeEnvironment(networkName)
-                const endpoint = await environment.ethers.getContract("EndpointV2")
+                endpoint = await environment.ethers.getContract("EndpointV2")
                 endpointId = await endpoint.eid()
 
                 ultraLightNode302 = await environment.ethers.getContract("UltraLightNode302")
                 const ulnConfigAddress = await ultraLightNode302.ulnConfig()
-                console.log({ ulnConfigAddress })
 
                 const defaultUnlConfig = {
                     inboundConfirmations: BigNumber.from(0),
@@ -48,23 +47,14 @@ describe("config", () => {
                 let outboundConfigStruct = await ulnConfig.defaultOutboundConfig(endpointId)
 
                 let decodedUlnConfig = decodeUlnConfigStruct(ulnConfigStruct)
-                console.log({ decodedUlnConfig, defaultUnlConfig })
                 expect(decodedUlnConfig).to.eql(defaultUnlConfig)
 
                 let decodeOutboundConfig = decodeOutboundConfigStruct(outboundConfigStruct)
-                console.log({ decodeOutboundConfig, defaultOutboundConfig })
                 expect(decodeOutboundConfig).to.eql(defaultOutboundConfig)
             })
 
-            it("should have an endpoint deployed", async () => {
-                const endpoint = await environment.ethers.getContract("EndpointV2")
-                const endpointId = await endpoint.eid()
-
-                expect(environment.network.config.endpointId).to.be.a("number")
-                expect(endpointId).to.eql(environment.network.config.endpointId)
-            })
-
             it("should setDefaultConfig ", async () => {
+                // TODO clean up test
                 const executerWallet = await environment.ethers.Wallet.createRandom()
                 const executerAddress = executerWallet.address
 
@@ -84,28 +74,43 @@ describe("config", () => {
                     optionalVerifierThreshold: 0,
                 }
 
-                const setUnlConfig = {
-                    inboundConfirmations: setDefaultConfigParam.inboundConfirmations,
-                    useCustomVerifiers: false,
-                    useCustomOptionalVerifiers: false,
-                    verifierCount: setDefaultConfigParam.verifiers.length,
-                    optionalVerifierCount: setDefaultConfigParam.optionalVerifiers.length,
-                    optionalVerifierThreshold: setDefaultConfigParam.optionalVerifierThreshold,
-                    verifiers: setDefaultConfigParam.verifiers,
-                    optionalVerifiers: setDefaultConfigParam.optionalVerifiers,
-                }
+                const setDefaultConfigResponse: TransactionResponse = await ultraLightNode302.setDefaultConfig([setDefaultConfigParam])
+                await setDefaultConfigResponse.wait()
 
-                await ultraLightNode302.setDefaultConfig([setDefaultConfigParam])
+                const registerLibraryResponse: TransactionResponse = await endpoint.registerLibrary(ultraLightNode302.address)
+                await registerLibraryResponse.wait()
+
+                const setDefaultSendLibraryResponse: TransactionResponse = await endpoint.setDefaultSendLibrary(
+                    endpointId,
+                    ultraLightNode302.address
+                )
+                await setDefaultSendLibraryResponse.wait()
+
+                const setDefaultReceiveLibraryResponse: TransactionResponse = await endpoint.setDefaultReceiveLibrary(
+                    endpointId,
+                    ultraLightNode302.address,
+                    0
+                )
+                await setDefaultReceiveLibraryResponse.wait()
+
+                let getDefaultConfigTask = await environment.run("getDefaultConfig", { networks: networkName })
+
+                const defaultSendLibrary = await endpoint.defaultSendLibrary(endpointId)
+                expect(defaultSendLibrary).to.eql(ultraLightNode302.address)
+
+                const defaultReceiveLibrary = await endpoint.defaultReceiveLibrary(endpointId)
+                expect(defaultReceiveLibrary).to.eql(ultraLightNode302.address)
 
                 const ulnConfigStruct = await ulnConfig.getDefaultUlnConfig(endpointId)
-                let decodedUlnConfig = decodeUlnConfigStruct(ulnConfigStruct)
-                console.log({ decodedUlnConfig, setUnlConfig })
-                expect(decodedUlnConfig).to.eql(setUnlConfig)
+                expect(ulnConfigStruct.inboundConfirmations).to.eql(getDefaultConfigTask.inboundConfirmations)
+                expect(ulnConfigStruct.optionalVerifiers).to.eql(getDefaultConfigTask.optionalVerifiers)
+                expect(ulnConfigStruct.optionalVerifierThreshold).to.eql(getDefaultConfigTask.optionalVerifierThreshold)
+                expect(ulnConfigStruct.verifiers).to.eql(getDefaultConfigTask.verifiers)
 
                 const outboundConfigStruct = await ulnConfig.defaultOutboundConfig(endpointId)
-                let decodeOutboundConfig = decodeOutboundConfigStruct(outboundConfigStruct)
-                console.log({ decodeOutboundConfig, setDefaultConfigParam: setDefaultConfigParam.outboundConfig })
-                expect(decodeOutboundConfig).to.eql(setDefaultConfigParam.outboundConfig)
+                expect(outboundConfigStruct.maxMessageSize).to.eql(getDefaultConfigTask.maxMessageSize)
+                expect(outboundConfigStruct.outboundConfirmations).to.eql(getDefaultConfigTask.outboundConfirmations)
+                expect(outboundConfigStruct.executor).to.eql(getDefaultConfigTask.executor)
             })
         })
     })

@@ -6,7 +6,7 @@
     "private": true,
     "scripts": {
         "lint": "npx eslint '**/*.{js,ts,json}'",
-        "test": "docker compose run --rm tests"
+        "test": "docker compose run --rm --build tests"
     },
     "repository": {
         "type": "git",
@@ -23,6 +23,7 @@
         "@gnosis.pm/safe-ethers-lib": "^1.0.0",
         "@gnosis.pm/safe-service-client": "1.1.1",
         "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
+        "@layerzerolabs/ua-utils-evm-hardhat": "~0.0.1",
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
         "@layerzerolabs/lz-evm-sdk-v2": "~1.5.58",
