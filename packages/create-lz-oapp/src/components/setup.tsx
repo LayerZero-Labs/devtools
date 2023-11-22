@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import type { Config } from "@/types.js"
 import { Box, Text } from "ink"
 import { useMutation } from "@tanstack/react-query"
-import { DestinationNotEmptyError, DownloadError, MissingGitRefError, cloneExample } from "@/utilities/cloning.js"
+import { BadGitRefError, DestinationNotEmptyError, DownloadError, MissingGitRefError, cloneExample } from "@/utilities/cloning.js"
 import { Progress } from "./progress.js"
 import { installDependencies } from "@/utilities/installation.js"
 
@@ -60,6 +60,14 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ config, error }) => {
             return (
                 <Text color="red">
                     Destination directory <Text bold>{config.destination}</Text> is not empty
+                </Text>
+            )
+
+        case error instanceof BadGitRefError:
+            return (
+                <Text color="red">
+                    The example <Text bold>{config.example.label}</Text> has its repository URL malformed: '
+                    <Text bold>{config.example.repository}</Text>' does not look like a valid repository
                 </Text>
             )
 

@@ -14,11 +14,24 @@ nvm use
 
 yarn
 
+# Build the entire project
 yarn build
 
+# Lints the entire project
 yarn lint
 
+# Tests the entire project
 yarn test
+
+# Runs the project in development mode
+yarn dev
+```
+
+This project is built using `turborepo`. The above commands are just aliases to `turbo` CLI and as such support all the `turbo` options:
+
+```bash
+# To start the development mode for create-lz-oapp and its depenendencies
+yarn dev --filter=create-lz-oapp...
 ```
 
 ### Troubleshooting

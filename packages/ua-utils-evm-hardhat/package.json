@@ -59,7 +59,7 @@
         "@layerzerolabs/lz-definitions": "~1.5.58",
         "@nomiclabs/hardhat-ethers": "^2.2.3",
         "ethers": "^5.5.2",
-        "hardhat": "~2.12.5",
+        "hardhat": "^2.9.9",
         "hardhat-deploy": "^0.11.22"
     }
 }

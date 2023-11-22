@@ -9,6 +9,7 @@ export interface Example {
     label: string
     repository: string
     directory?: string
+    ref?: string
 }
 
 export interface PackageManager {

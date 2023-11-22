@@ -1,0 +1,32 @@
+{
+  "name": "@layerzerolabs/oft-example",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "lint": "yarn lint:js && yarn lint:sol",
+    "lint:fix": "npx prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
+    "lint:js": "npx eslint '**/*.js' && npx prettier --check .",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "test": "npx hardhat test --parallel"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@layerzerolabs/eslint-config-next": "^1.5.60",
+    "@layerzerolabs/lz-evm-oapp-v2": "latest",
+    "@layerzerolabs/prettier-config-next": "^1.5.60",
+    "@layerzerolabs/solhint-config": "^1.5.58",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@rushstack/eslint-patch": "^1.5.1",
+    "ethers": "^5.7.0",
+    "hardhat": "^2.9.9",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-deploy": "^0.11.43",
+    "hardhat-deploy-ethers": "^0.4.1",
+    "prettier": "^3.0.3",
+    "solhint": "^4.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
