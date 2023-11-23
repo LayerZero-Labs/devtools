@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe } from 'mocha'
-import { getNetworkRuntimeEnvironment } from '../../utils-evm-hardhat/dist'
+import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 const NETWORK_NAMES = ['vengaboys', 'britney']
