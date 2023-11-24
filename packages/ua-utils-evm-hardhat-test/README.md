@@ -4,24 +4,28 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/utils-evm-hardhat</h1>
+<h1 align="center">@layerzerolabs/utils-evm-hardhat-test</h1>
 
-<!-- The badges section -->
-<p align="center">
-  <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/utils-evm-hardhat"/></a>
-  <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/utils-evm-hardhat"/></a>
-  <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/utils-evm-hardhat"/></a>
-</p>
+## Development
 
-## Installation
+This package provides integration tests for `@layerzerolabs/utils-evm-hardhat` executed within a containerized setup. To run the test suite, simply run:
 
 ```bash
-yarn add @layerzerolabs/utils-evm-hardhat
+# You can use the alias command from this package directory
+yarn test
 
-pnpm add @layerzerolabs/utils-evm-hardhat
+# Or use turbo and run from project root
+yarn test --filter=utils-evm-hardhat-test
 
-npm install @layerzerolabs/utils-evm-hardhat
+# Or just use the actual test command from this package directory
+docker compose run --rm tests
+```
+
+In case you're running the tests from the project root, it might sometimes be useful to rebuild the containers
+(for example when adding/removing dependencies) and as a lazy developer, you might not be happy about `cd`ing to the package directory
+and run the command from there. For that usecase the `$DOCKER_COMPOSE_RUN_TESTS_ARGS` environment variable has been added:
+
+```bash
+# To rebuild the containers before running tests from the project root
+DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test --filter=utils-evm-hardhat-test
 ```

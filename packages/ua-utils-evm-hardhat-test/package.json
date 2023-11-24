@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "docker compose run --rm tests"
+    "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
   },
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
@@ -22,9 +22,9 @@
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
-    "@layerzerolabs/lz-definitions": "~1.5.61",
-    "@layerzerolabs/lz-evm-sdk-v1": "~1.5.61",
-    "@layerzerolabs/lz-evm-sdk-v2": "~1.5.61",
+    "@layerzerolabs/lz-definitions": "~1.5.62",
+    "@layerzerolabs/lz-evm-sdk-v1": "~1.5.62",
+    "@layerzerolabs/lz-evm-sdk-v2": "~1.5.62",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/chai-as-promised": "^7.1.7",

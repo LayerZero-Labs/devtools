@@ -1646,14 +1646,14 @@
     prettier "^2.8.3"
     prettier-plugin-solidity "^1.1.1"
 
-"@layerzerolabs/lz-definitions@^1.5.61", "@layerzerolabs/lz-definitions@~1.5.61":
+"@layerzerolabs/lz-definitions@^1.5.61":
   version "1.5.61"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-1.5.61.tgz#a3f9d6d07fcd5e6939147f6deac70fc64d4e7487"
   integrity sha512-GQGqkXtW0bl1hiW7S7IJhqpSJqULrxzW2gbDi5KwHQ+RsZDJ4utzlB4CkhqaU5vbxzbaNV6lVQBzhSvcuBekig==
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-definitions@~1.5.58":
+"@layerzerolabs/lz-definitions@~1.5.62":
   version "1.5.62"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-1.5.62.tgz#f457b3d39625a8346ceabaf0dfeec470a42aa080"
   integrity sha512-+U5jOFcHFR8JRc7R4z8OO7Z7DvOFl49S1V7wHmBhs3DYDvQELjyp0KFxSUoeI/LNS6FCa6XBlbLm1eFr3A1v6g==
@@ -1674,7 +1674,7 @@
     lodash "^4.17.21"
     solidity-bytes-utils "^0.8.0"
 
-"@layerzerolabs/lz-evm-oapp-v2@latest":
+"@layerzerolabs/lz-evm-oapp-v2@~1.5.61":
   version "1.5.61"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-oapp-v2/-/lz-evm-oapp-v2-1.5.61.tgz#500bb544d6b155ee308408fd56412cd8bbebcd3e"
   integrity sha512-D99pcqEmRl6g3JRMd45XktS/CB5mbfWtT8LrYMKrFyd22rKSh44Oxu/N9ltmSYX3M8bVXJDnRvhjqZjG2iAl7g==
@@ -1697,19 +1697,19 @@
     lodash "^4.17.21"
     solidity-bytes-utils "0.8.0"
 
-"@layerzerolabs/lz-evm-sdk-v1@~1.5.61":
-  version "1.5.61"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.61.tgz#436a694e96a154ab112a7b23cf68c118915442a0"
-  integrity sha512-Zezm/bEIfYTde5Hfa7ZmPOyZ5DQ3jFHTPSUBTTJ38elFYJfLADZe21V9ZJb4M+j95j234DalLpscxgBkusHtyw==
+"@layerzerolabs/lz-evm-sdk-v1@~1.5.62":
+  version "1.5.62"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.62.tgz#68be61930283fb2221afe0c934e5c462dfd97d0a"
+  integrity sha512-DvOLq77LDi0UTMBxM7veMYtT1WQbQxDK6AeB94Dw2JPJJFhnANyxVaF52/qSWj7lpXQbQQs/nAuijiO+RvUg6Q==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/providers" "^5.7.2"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-evm-sdk-v2@~1.5.61":
-  version "1.5.61"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.61.tgz#4b64e677061e782aef8ab417c3ed87fada1bcca2"
-  integrity sha512-5SoCh+RkqZqyeS3JDio95jj7unVZwMh0HD6Xxsx24DJp/tB88EsRjbkK4TBphn9UfisFy0PvryWr1Wi1Z7DGNQ==
+"@layerzerolabs/lz-evm-sdk-v2@~1.5.62":
+  version "1.5.62"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.62.tgz#c46768067ee6451823c8ea7db77b0333a37a55fa"
+  integrity sha512-snyoCWnr3IRdkMDIX97pD8XjDNo3TamOQ3zwwYk35Gmgz1m8MXW1s/ovKm6zRYO4zLy3Hz2XUb7OusH6z8ap4g==
   dependencies:
     ethers "^5.7.2"
 
@@ -1779,7 +1779,7 @@
     papaparse "^5.4.1"
     winston "^3.10.0"
 
-"@layerzerolabs/prettier-config-next@^1.5.60":
+"@layerzerolabs/prettier-config-next@^1.5.61":
   version "1.5.61"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/prettier-config-next/-/prettier-config-next-1.5.61.tgz#274a95e36cd796d71c5235158e10217a24250ff4"
   integrity sha512-V8nOv9x0xAwA7vVhHkS09/xhcJlMdg/A6ycEmw/EQWbP0OP7R1i7RIYB2tghC/7BUuCaQL1DTqMNlwQOdoYMuw==

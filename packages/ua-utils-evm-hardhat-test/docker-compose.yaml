@@ -41,16 +41,12 @@ services:
         condition: service_healthy
     # Can't say I love the fact that the deploy scripts are inlined here
     # but at least it's all in this file that bootstraps the whole environment
-    #
-    # The "&" at the end of the lines and "wait" work together to execute the deployments
-    # in parallel and wait until they are all complete
     command:
       - /bin/bash
       - -c
       - |
-        npx hardhat --network vengaboys deploy --reset &
-        npx hardhat --network britney deploy --reset &
-        wait
+        npx hardhat --network vengaboys deploy --reset
+        npx hardhat --network britney deploy --reset
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
