@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "docker compose run --rm tests"
+    "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
   },
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
