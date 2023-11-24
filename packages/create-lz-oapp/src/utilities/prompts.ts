@@ -4,7 +4,7 @@ import { isPackageManagerAvailable } from './installation.js'
 import { isDirectory } from './filesystem.js'
 import { resolve } from 'path'
 
-const handlePromptState = (state: any) => {
+const handlePromptState = (state: { aborted: boolean }) => {
     if (state.aborted) {
         // If we don't re-enable the terminal cursor before exiting
         // the program, the cursor will remain hidden
