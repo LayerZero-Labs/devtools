@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { arePointsEqual, serializePoint, serializeVector } from './coordinates'
+import { arePointsEqual, areSameEndpoint, serializePoint, serializeVector } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 
 export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
@@ -57,6 +57,23 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
         return this.#edges.delete(serializeVector(vector)), this
     }
 
+    reconnect(r: Reconnector<TNodeConfig, TEdgeConfig>): this {
+        const nodes = this.nodes
+
+        return (
+            nodes.forEach((fromNode) =>
+                nodes.forEach((toNode) => {
+                    const existingEdge = this.getEdgeAt({ from: fromNode.point, to: toNode.point })
+                    const newEdge = r(fromNode, toNode, existingEdge)
+
+                    if (newEdge != null) this.addEdges(newEdge)
+                    else if (existingEdge != null) this.removeEdgeAt(existingEdge.vector)
+                })
+            ),
+            this
+        )
+    }
+
     //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
     //  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
     // `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -108,3 +125,19 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
         }
     }
 }
+
+export type Reconnector<TNodeConfig, TEdgeConfig> = (
+    from: OmniNode<TNodeConfig>,
+    to: OmniNode<TNodeConfig>,
+    edge: OmniEdge<TEdgeConfig> | undefined
+) => OmniEdge<TEdgeConfig> | undefined
+
+export const ignoreLoopback =
+    <TNodeConfig, TEdgeConfig>(r: Reconnector<TNodeConfig, TEdgeConfig>): Reconnector<TNodeConfig, TEdgeConfig> =>
+    (from, to, edge) =>
+        areSameEndpoint(from.point, to.point) ? undefined : r(from, to, edge)
+
+export const loopbackOnly =
+    <TNodeConfig, TEdgeConfig>(r: Reconnector<TNodeConfig, TEdgeConfig>): Reconnector<TNodeConfig, TEdgeConfig> =>
+    (from, to, edge) =>
+        areSameEndpoint(from.point, to.point) ? r(from, to, edge) : undefined

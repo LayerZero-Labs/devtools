@@ -1,6 +1,12 @@
 import fc from 'fast-check'
-import { createNodeArbitrary, createEdgeArbitrary, pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
-import { OmniGraphBuilder } from '@/omnigraph/builder'
+import {
+    createNodeArbitrary,
+    createEdgeArbitrary,
+    pointArbitrary,
+    vectorArbitrary,
+    endpointArbitrary,
+} from '../__utils__/arbitraries'
+import { OmniGraphBuilder, ignoreLoopback, loopbackOnly } from '@/omnigraph/builder'
 import { arePointsEqual, areVectorsEqual } from '@/omnigraph'
 
 describe('omnigraph/builder', () => {
@@ -446,6 +452,94 @@ describe('omnigraph/builder', () => {
                         expect(builder.getEdgesTo(edge!.vector.to)).toEqual(edgesTo)
                     })
                 )
+            })
+        })
+    })
+
+    describe('reconnectors', () => {
+        describe('ignoreLoopback', () => {
+            describe('when eids match', () => {
+                it('should return undefined and not call reconnector', () => {
+                    fc.assert(
+                        fc.property(nodeArbitrary, nodeArbitrary, endpointArbitrary, (nodeA, nodeB, eid) => {
+                            const reconnector = jest.fn()
+
+                            const nodeAWithEid = { ...nodeA, point: { ...nodeA.point, eid } }
+                            const nodeBWithEid = { ...nodeB, point: { ...nodeB.point, eid } }
+
+                            const newEdge = ignoreLoopback(reconnector)(nodeAWithEid, nodeBWithEid, undefined)
+                            expect(newEdge).toBeUndefined()
+                            expect(reconnector).not.toHaveBeenCalled()
+                        })
+                    )
+                })
+            })
+
+            describe('when eids differ', () => {
+                it('should call reconnector and return its value', () => {
+                    fc.assert(
+                        fc.property(
+                            nodeArbitrary,
+                            nodeArbitrary,
+                            edgeArbitrary,
+                            edgeArbitrary,
+                            (nodeA, nodeB, edge, reconnectedEdge) => {
+                                fc.pre(nodeA.point.eid !== nodeB.point.eid)
+
+                                const reconnector = jest.fn().mockReturnValue(reconnectedEdge)
+                                const newEdge = ignoreLoopback(reconnector)(nodeA, nodeB, edge)
+
+                                expect(reconnector).toHaveBeenCalledWith(nodeA, nodeB, edge)
+                                expect(newEdge).toBe(reconnectedEdge)
+                            }
+                        )
+                    )
+                })
+            })
+        })
+
+        describe('loopbackOnly', () => {
+            describe('when eids match', () => {
+                it('should call reconnector and return its value', () => {
+                    fc.assert(
+                        fc.property(
+                            nodeArbitrary,
+                            nodeArbitrary,
+                            endpointArbitrary,
+                            edgeArbitrary,
+                            edgeArbitrary,
+                            (nodeA, nodeB, eid, edge, reconnectedEdge) => {
+                                fc.pre(nodeA.point.eid !== nodeB.point.eid)
+
+                                const reconnector = jest.fn().mockReturnValue(reconnectedEdge)
+                                const nodeAWithEid = { ...nodeA, point: { ...nodeA.point, eid } }
+                                const nodeBWithEid = { ...nodeB, point: { ...nodeB.point, eid } }
+
+                                const newEdge = loopbackOnly(reconnector)(nodeAWithEid, nodeBWithEid, edge)
+
+                                expect(newEdge).toBe(reconnectedEdge)
+                                expect(reconnector).toHaveBeenCalledWith(nodeAWithEid, nodeBWithEid, edge)
+                                expect(newEdge).toBe(reconnectedEdge)
+                            }
+                        )
+                    )
+                })
+            })
+
+            describe('when eids differ', () => {
+                it('should return undefined and not call reconnector', () => {
+                    fc.assert(
+                        fc.property(nodeArbitrary, nodeArbitrary, (nodeA, nodeB) => {
+                            fc.pre(nodeA.point.eid !== nodeB.point.eid)
+
+                            const reconnector = jest.fn()
+
+                            const newEdge = loopbackOnly(reconnector)(nodeA, nodeB, undefined)
+                            expect(newEdge).toBeUndefined()
+                            expect(reconnector).not.toHaveBeenCalled()
+                        })
+                    )
+                })
             })
         })
     })
