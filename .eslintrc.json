@@ -1,33 +1,37 @@
 {
-    "root": true,
-    "env": {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "mocha": true,
-        "node": true
-    },
-    "parser": "@typescript-eslint/parser",
-    "plugins": ["@typescript-eslint", "mocha", "prettier"],
-    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
-    "parserOptions": {
-        "ecmaVersion": 8
-    },
-    "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
-    "rules": {
-        "mocha/no-skipped-tests": "error",
-        "mocha/no-exclusive-tests": "error",
-        "prettier/prettier": "error",
+  "root": true,
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "mocha", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
+  "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
+  "rules": {
+    "mocha/no-skipped-tests": "error",
+    "mocha/no-exclusive-tests": "error",
+    "prettier/prettier": "error",
 
-        // Intermediate deescalation to warnings
-        //
-        // FIXME Slowly remove these problems, then remove these overrides
-        "no-undef": "warn",
-        "no-constant-condition": "warn",
+    // Intermediate deescalation to warnings
+    //
+    // FIXME Slowly remove these problems, then remove these overrides
+    "no-undef": "warn",
+    "no-constant-condition": "warn",
 
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": "warn",
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-var-requires": "warn"
-    }
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-var-requires": "warn"
+  }
 }

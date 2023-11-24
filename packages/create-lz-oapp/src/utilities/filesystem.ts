@@ -1,4 +1,4 @@
-import { lstatSync } from "fs"
+import { lstatSync } from 'fs'
 
 export const isDirectory = (path: string) => {
     try {

@@ -1,5 +1,5 @@
-const ENTER_ALT_SCREEN_ANSI = "\x1b[?1049h"
-const EXIT_ALT_SCREEN_ANSI = "\x1b[?1049l"
+const ENTER_ALT_SCREEN_ANSI = '\x1b[?1049h'
+const EXIT_ALT_SCREEN_ANSI = '\x1b[?1049l'
 
 /**
  * Helper function that wraps socket writes with a promise

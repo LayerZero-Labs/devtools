@@ -1,15 +1,15 @@
-import * as ethers from "ethers"
-import { Contract, ContractReceipt } from "ethers"
-import EthersAdapter from "@gnosis.pm/safe-ethers-lib"
-import SafeServiceClient from "@gnosis.pm/safe-service-client"
-import Safe from "@gnosis.pm/safe-core-sdk"
-import { LZ_APP_ABI } from "@/constants/abi"
-import { LZ_ENDPOINTS } from "@/constants/endpoints"
-import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from "@layerzerolabs/lz-definitions"
-import { promptToProceed, arrayToCsv, getConfig } from "./helpers"
-import path from "path"
-import fs from "fs"
-import { writeFile } from "fs/promises"
+import * as ethers from 'ethers'
+import { Contract, ContractReceipt } from 'ethers'
+import EthersAdapter from '@gnosis.pm/safe-ethers-lib'
+import SafeServiceClient from '@gnosis.pm/safe-service-client'
+import Safe from '@gnosis.pm/safe-core-sdk'
+import { LZ_APP_ABI } from '@/constants/abi'
+import { LZ_ENDPOINTS } from '@/constants/endpoints'
+import { MainnetEndpointId, TestnetEndpointId, SandboxEndpointId } from '@layerzerolabs/lz-definitions'
+import { promptToProceed, arrayToCsv, getConfig } from './helpers'
+import path from 'path'
+import fs from 'fs'
+import { writeFile } from 'fs/promises'
 
 export interface ExecutableTransaction {
     contractName: string
@@ -43,7 +43,8 @@ export const getProvider = (hre: any, network: string) => {
     return providerByNetwork[network]
 }
 
-export const getWallet = (index: number) => ethers.Wallet.fromMnemonic(process.env.MNEMONIC || "", `m/44'/60'/0'/0/${index}`)
+export const getWallet = (index: number) =>
+    ethers.Wallet.fromMnemonic(process.env.MNEMONIC || '', `m/44'/60'/0'/0/${index}`)
 
 const connectedWallets: { [key: string]: any } = {}
 export const getConnectedWallet = (hre: any, network: string, walletIndex: number) => {
@@ -70,7 +71,7 @@ export const getDeploymentAddress = (network: string, contractName: string) => {
 
 const contracts: { [key: string]: any } = {}
 export const getContract = async (hre: any, network: string, contractName: string) => {
-    if (network == "hardhat") {
+    if (network == 'hardhat') {
         return await hre.ethers.getContract(contractName)
     }
 
@@ -101,7 +102,13 @@ export const getWalletContract = async (hre: any, network: string, contractName:
     return contract.connect(wallet)
 }
 
-export const getWalletContractAt = async (hre: any, network: string, abi: any, contractAddress: string, walletIndex = 0) => {
+export const getWalletContractAt = async (
+    hre: any,
+    network: string,
+    abi: any,
+    contractAddress: string,
+    walletIndex = 0
+) => {
     const contract = await getContractAt(hre, network, abi, contractAddress)
     const wallet = getConnectedWallet(hre, network, walletIndex)
     return contract.connect(wallet)
@@ -143,14 +150,23 @@ export const executeTransaction = async (
 }
 
 export async function executeTransactions(hre: any, taskArgs: any, transactionBynetwork: any[]) {
-    const columns = ["needChange", "chainId", "remoteChainId", "contractName", "functionName", "args", "diff", "calldata"]
+    const columns = [
+        'needChange',
+        'chainId',
+        'remoteChainId',
+        'contractName',
+        'functionName',
+        'args',
+        'diff',
+        'calldata',
+    ]
 
     const data = transactionBynetwork.reduce((acc, { network, transactions }) => {
         transactions.forEach((transaction: any) => {
             acc.push([
                 network,
                 ...columns.map((key) => {
-                    if (typeof transaction[key] === "object") {
+                    if (typeof transaction[key] === 'object') {
                         return JSON.stringify(transaction[key])
                     } else {
                         return transaction[key]
@@ -160,9 +176,9 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
         })
         return acc
     }, [] as any)
-    await writeFile("./transactions.csv", arrayToCsv(["network"].concat(columns), data))
+    await writeFile('./transactions.csv', arrayToCsv(['network'].concat(columns), data))
 
-    console.log("Full configuration is written at:")
+    console.log('Full configuration is written at:')
     console.log(`file:/${process.cwd()}/transactions.csv`)
 
     const errs: any[] = []
@@ -179,7 +195,7 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
     }
 
     if (taskArgs.n) {
-        await promptToProceed("Would you like to Submit to gnosis?", taskArgs.noPrompt)
+        await promptToProceed('Would you like to Submit to gnosis?', taskArgs.noPrompt)
         const gnosisConfig = getConfig(taskArgs.gnosisConfigPath)
         await Promise.all(
             transactionBynetwork.map(async ({ network, transactions }) => {
@@ -203,7 +219,7 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
             })
         )
     } else {
-        await promptToProceed("Would you like to run these transactions?", taskArgs.noPrompt)
+        await promptToProceed('Would you like to run these transactions?', taskArgs.noPrompt)
         await Promise.all(
             transactionBynetwork.map(async ({ network, transactions }) => {
                 const transactionToCommit = transactions.filter((transaction: any) => transaction.needChange)
@@ -216,7 +232,8 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
                     try {
                         const gasLimit = taskArgs.gasLimit
                         const tx = await executeTransaction(hre, network, transaction, gasLimit)
-                        print[network].past = `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`
+                        print[network].past =
+                            `${transaction.contractName}.${transaction.functionName} (${tx.transactionHash})`
                         successTx++
                         print[network].requests = `${successTx}/${transactionToCommit.length}`
                         printResult()
@@ -240,13 +257,18 @@ export async function executeTransactions(hre: any, taskArgs: any, transactionBy
     }
 
     if (!errs.length) {
-        console.log("Wired all networks successfully")
+        console.log('Wired all networks successfully')
     } else {
         console.log(errs)
     }
 }
 
-export const executeGnosisTransactions = async (hre: any, network: string, gnosisConfig: any, transactions: Transaction[]) => {
+export const executeGnosisTransactions = async (
+    hre: any,
+    network: string,
+    gnosisConfig: any,
+    transactions: Transaction[]
+) => {
     const signer = await getConnectedWallet(hre, network, 0)
     if (!gnosisConfig[network]) {
         throw Error(`Gnosis for ${network} not found or not supported`)
@@ -262,7 +284,7 @@ export const executeGnosisTransactions = async (hre: any, network: string, gnosi
     })
 
     const safeSdk: Safe = await Safe.create({ ethAdapter, safeAddress })
-    const gnosisTransactions = transactions.map((tx) => ({ to: tx.contractAddress, data: tx.calldata!, value: "0" }))
+    const gnosisTransactions = transactions.map((tx) => ({ to: tx.contractAddress, data: tx.calldata!, value: '0' }))
     const nonce = await safeService.getNextNonce(safeAddress)
     const safeTransaction = await safeSdk.createTransaction(gnosisTransactions, { nonce })
 
@@ -278,37 +300,42 @@ export const executeGnosisTransactions = async (hre: any, network: string, gnosi
 
 export const getDeploymentAddresses = (network: string, throwIfMissing: boolean = true): any => {
     const deploymentAddresses: { [key: string]: any } = {}
-    const DEPLOYMENT_PATH = path.resolve("deployments")
+    const DEPLOYMENT_PATH = path.resolve('deployments')
 
     if (!fs.existsSync(DEPLOYMENT_PATH)) {
         return deploymentAddresses
     }
 
     let folderName = network
-    if (network === "hardhat") {
-        folderName = "localhost"
+    if (network === 'hardhat') {
+        folderName = 'localhost'
     }
     const networkFolderName = fs.readdirSync(DEPLOYMENT_PATH).filter((f: string) => f === folderName)[0]
     if (networkFolderName === undefined) {
         if (throwIfMissing) {
-            throw new Error("missing deployment files for endpoint " + folderName)
+            throw new Error('missing deployment files for endpoint ' + folderName)
         }
         return deploymentAddresses
     }
 
     const networkFolderPath = path.resolve(DEPLOYMENT_PATH, folderName)
-    const files = fs.readdirSync(networkFolderPath).filter((f: string) => f.includes(".json"))
+    const files = fs.readdirSync(networkFolderPath).filter((f: string) => f.includes('.json'))
     files.forEach((file: string) => {
         const filepath = path.resolve(networkFolderPath, file)
-        const data = JSON.parse(fs.readFileSync(filepath, "utf8"))
-        const contractName = file.split(".")[0]
+        const data = JSON.parse(fs.readFileSync(filepath, 'utf8'))
+        const contractName = file.split('.')[0]
         deploymentAddresses[contractName] = data.address
     })
 
     return deploymentAddresses
 }
 
-export const getApplicationConfig = async (remoteNetwork: string, sendLibrary: any, receiveLibrary: any, applicationAddress: string) => {
+export const getApplicationConfig = async (
+    remoteNetwork: string,
+    sendLibrary: any,
+    receiveLibrary: any,
+    applicationAddress: string
+) => {
     const remoteChainId = getLayerZeroChainId(remoteNetwork)
     const sendConfig = await sendLibrary.appConfig(applicationAddress, remoteChainId)
     let inboundProofLibraryVersion = sendConfig.inboundProofLibraryVersion
@@ -336,21 +363,21 @@ export const getEndpointAddress = (network: string): string => {
 
 // expecting "chain-environment" eg. "ethereum-mainnet", "ethereum-testnet", "ethereum-sandbox"
 export const getLayerZeroChainId = (network: string): string => {
-    const [chainName, environment] = network.split("-")
+    const [chainName, environment] = network.split('-')
     const chainIdEnum = getChainIdEnum(chainName, environment)
-    if (environment == "mainnet") {
+    if (environment == 'mainnet') {
         return MainnetEndpointId[chainIdEnum as any]
-    } else if (environment == "testnet") {
+    } else if (environment == 'testnet') {
         return TestnetEndpointId[chainIdEnum as any]
-    } else if (environment == "sandbox") {
+    } else if (environment == 'sandbox') {
         return SandboxEndpointId[chainIdEnum as any]
     } else {
-        throw new Error("cannot find chainId")
+        throw new Error('cannot find chainId')
     }
 }
 
 const getChainIdEnum = (chainName: string, environment: string): string => {
-    return `${chainName.split("-")[0].toUpperCase()}_${environment.toUpperCase()}`
+    return `${chainName.split('-')[0].toUpperCase()}_${environment.toUpperCase()}`
 }
 
 export const getContractInstance = async (hre: any, network: string, contractNameOrAddress: string) => {

@@ -1,9 +1,9 @@
-import "hardhat-deploy/dist/src/type-extensions"
+import 'hardhat-deploy/dist/src/type-extensions'
 
-import { endpointIdToNetwork } from "@layerzerolabs/lz-definitions"
-import { HardhatUserConfig } from "hardhat/types"
-import { join, dirname } from "path"
-import { createNetworkLogger } from "./logger"
+import { endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
+import { HardhatUserConfig } from 'hardhat/types'
+import { join, dirname } from 'path'
+import { createNetworkLogger } from './logger'
 
 const resolvePackageDirectory = (packageName: string): string => {
     // The tricky bit here is the fact that if we resolve packages by their package name,
@@ -11,7 +11,7 @@ const resolvePackageDirectory = (packageName: string): string => {
     // entry in package.json and point us there
     //
     // So in order to get a stable path we choose package.json, pretty solid choice
-    const packageJsonName = join(packageName, "package.json")
+    const packageJsonName = join(packageName, 'package.json')
     // We now resolve the path to package.json
     const packageJsonPath = require.resolve(packageJsonName)
     // And return its directory
@@ -49,7 +49,7 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
         // The first thing we do is we resolve the paths to LayerZero packages
         .map(resolvePackageDirectory)
         // Then navigate to the deployments folder
-        .map((resolvedPackagePath) => join(resolvedPackagePath, "deployments"))
+        .map((resolvedPackagePath) => join(resolvedPackagePath, 'deployments'))
 
     // We return a function that will enrich hardhat config with the external deployments configuration
     //
@@ -66,7 +66,9 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
 
                     // Let's first check whether endpointId is defined on the network config
                     if (endpointId == null) {
-                        networkLogger.debug("Endpoint ID not specified in hardhat config, skipping external deployment configuration")
+                        networkLogger.debug(
+                            'Endpoint ID not specified in hardhat config, skipping external deployment configuration'
+                        )
 
                         return []
                     }
@@ -74,8 +76,8 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
                     try {
                         // This operation is unsafe and can throw - let's make sure we don't explode with some unreadable error
                         const layerZeroNetworkName = endpointIdToNetwork(endpointId)
-                        const layerZeroNetworkDeploymentsDirectories = resolvedDeploymentsDirectories.map((deploymentsDirectory) =>
-                            join(deploymentsDirectory, layerZeroNetworkName)
+                        const layerZeroNetworkDeploymentsDirectories = resolvedDeploymentsDirectories.map(
+                            (deploymentsDirectory) => join(deploymentsDirectory, layerZeroNetworkName)
                         )
 
                         return [
@@ -139,7 +141,7 @@ export const withLayerZeroArtifacts = (...packageNames: string[]) => {
         // The first thing we do is we resolve the paths to LayerZero packages
         .map(resolvePackageDirectory)
         // Then navigate to the artifacts folder
-        .map((resolvedPackagePath) => join(resolvedPackagePath, "artifacts"))
+        .map((resolvedPackagePath) => join(resolvedPackagePath, 'artifacts'))
 
     // We return a function that will enrich hardhat config with the external artifacts configuration
     //
@@ -149,7 +151,9 @@ export const withLayerZeroArtifacts = (...packageNames: string[]) => {
         const existingArtifacts = new Set(config.external?.contracts?.flatMap(({ artifacts }) => artifacts) ?? [])
 
         // And only append stuff if we have something new to say
-        const newArtifacts = new Set(resolvedArtifactsDirectories.filter((artifact) => !existingArtifacts.has(artifact)))
+        const newArtifacts = new Set(
+            resolvedArtifactsDirectories.filter((artifact) => !existingArtifacts.has(artifact))
+        )
         if (newArtifacts.size === 0) return config
 
         return {

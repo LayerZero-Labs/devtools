@@ -1,14 +1,20 @@
 {
-    "extends": "@sindresorhus/tsconfig",
-    "compilerOptions": {
-        "outDir": "dist",
-        "declaration": false,
-        "target": "esnext",
-        "types": ["mocha", "node"],
-        "paths": {
-            "@/*": ["./src/*"]
-        }
-    },
-    "files": ["./types/tiged.d.ts"],
-    "include": ["src", "test", "types"]
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "module": "node16",
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
+    "outDir": "dist",
+    "declaration": false,
+    "jsx": "react",
+    "lib": ["dom", "dom.Iterable", "es2022"],
+    "resolveJsonModule": false,
+    "target": "esnext",
+    "types": ["mocha", "node"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "files": ["./types/tiged.d.ts"],
+  "include": ["src", "test", "types"]
 }

@@ -1,12 +1,12 @@
-import { cli } from "cli-ux"
-import fs from "fs"
-import chalk from "chalk"
-import { Transaction, NetworkTransactions } from "./crossChainHelper"
+import { cli } from 'cli-ux'
+import fs from 'fs'
+import chalk from 'chalk'
+import { Transaction, NetworkTransactions } from './crossChainHelper'
 
 export const promptToProceed = async (msg: string, noPrompt: boolean = false) => {
     if (!noPrompt) {
         const proceed = await cli.prompt(`${msg} Y/N`)
-        if (!["y", "yes"].includes(proceed.toLowerCase())) {
+        if (!['y', 'yes'].includes(proceed.toLowerCase())) {
             process.exit(0)
         }
     }
@@ -14,20 +14,20 @@ export const promptToProceed = async (msg: string, noPrompt: boolean = false) =>
 
 export const arrayToCsv = (columns: string[], data: any) =>
     columns
-        .join(",")
-        .concat("\n")
+        .join(',')
+        .concat('\n')
         .concat(
             data
                 .map(
                     (row: any) =>
                         row
                             .map(String) // convert every value to String
-                            .map((v: any) => (v === "undefined" ? "" : v))
+                            .map((v: any) => (v === 'undefined' ? '' : v))
                             .map((v: any) => v.replace(/"/g, '""')) // escape double colons
                             .map((v: any) => `"${v}"`) // quote it
-                            .join(",") // comma-separated
+                            .join(',') // comma-separated
                 )
-                .join("\r\n") // rows starting on new lines
+                .join('\r\n') // rows starting on new lines
         )
 
 export const writeToCsv = async (fileName: string, columns: string[], transactionByNetwork: any[]) => {
@@ -36,10 +36,10 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
             acc.push([
                 network,
                 ...columns.map((key) => {
-                    const keys = key.split("/")
+                    const keys = key.split('/')
                     for (const field in tx) {
                         if (keys.includes(field)) {
-                            if (typeof tx[field] === "object") {
+                            if (typeof tx[field] === 'object') {
                                 return JSON.stringify(tx[field])
                             } else {
                                 return tx[field]
@@ -51,7 +51,7 @@ export const writeToCsv = async (fileName: string, columns: string[], transactio
         })
         return acc
     }, [])
-    fs.writeFileSync(fileName, arrayToCsv(["network"].concat(columns), data))
+    fs.writeFileSync(fileName, arrayToCsv(['network'].concat(columns), data))
     console.log(`Transactions are written to: ${chalk.green(fileName)}`)
 }
 
@@ -66,7 +66,7 @@ export const printTransactions = (columns: string[], transactionByNetwork: Netwo
         totalTransactionsNeedingChange += transactionsNeedingChange.length
 
         if (!transactionsNeedingChange.length) {
-            console.log("No changes needed\n")
+            console.log('No changes needed\n')
         } else {
             console.table(transactionsNeedingChange, columns)
         }
@@ -78,4 +78,4 @@ export const logError = (message: string, includeErrorText: boolean = true) =>
 export const logWarning = (message: string) => console.log(chalk.yellow(`WARNING: ${message}`))
 export const logSuccess = (message: string) => console.log(chalk.green(`${message}`))
 export const configExist = (fileName: string) => fs.existsSync(fileName)
-export const getConfig = (fileName: string) => JSON.parse(fs.readFileSync(fileName, "utf-8"))
+export const getConfig = (fileName: string) => JSON.parse(fs.readFileSync(fileName, 'utf-8'))

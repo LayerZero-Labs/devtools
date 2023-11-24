@@ -1,6 +1,17 @@
-import { Transaction, NetworkTransactions, getContractInstance, getLayerZeroChainId, executeTransactions } from "@/utils/crossChainHelper"
-import { configExist, getConfig, logError, printTransactions } from "@/utils/helpers"
-import { setUseCustomAdapterParams, setMinDstGas, setTrustedRemote, getContractNameOrAddress } from "@/utils/wireAllHelpers"
+import {
+    Transaction,
+    NetworkTransactions,
+    getContractInstance,
+    getLayerZeroChainId,
+    executeTransactions,
+} from '@/utils/crossChainHelper'
+import { configExist, getConfig, logError, printTransactions } from '@/utils/helpers'
+import {
+    setUseCustomAdapterParams,
+    setMinDstGas,
+    setTrustedRemote,
+    getContractNameOrAddress,
+} from '@/utils/wireAllHelpers'
 
 export default async function (taskArgs: any, hre: any) {
     if (!configExist(taskArgs.configPath)) {
@@ -38,13 +49,22 @@ export default async function (taskArgs: any, hre: any) {
             // check if useCustomAdapterParams needs to be set
             const useCustomAdapterParams = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.useCustomAdapterParams
             if (useCustomAdapterParams !== undefined) {
-                transactions.push(...(await setUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress, useCustomAdapterParams)))
+                transactions.push(
+                    ...(await setUseCustomAdapterParams(
+                        hre,
+                        localNetwork,
+                        localContractNameOrAddress,
+                        useCustomAdapterParams
+                    ))
+                )
             }
 
             // check if defaultFeeBp needs to be set
             const defaultFeeBp = WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.defaultFeeBp
             if (defaultFeeBp !== undefined) {
-                transactions.push(...(await setDefaultFeeBp(hre, localNetwork, localContractNameOrAddress, defaultFeeBp)))
+                transactions.push(
+                    ...(await setDefaultFeeBp(hre, localNetwork, localContractNameOrAddress, defaultFeeBp))
+                )
             }
 
             await Promise.all(
@@ -61,30 +81,44 @@ export default async function (taskArgs: any, hre: any) {
 
                     // setTrustedRemote
                     transactions.push(
-                        ...(await setTrustedRemote(hre, localNetwork, localContractNameOrAddress, remoteNetwork, remoteContractNameOrAddress))
+                        ...(await setTrustedRemote(
+                            hre,
+                            localNetwork,
+                            localContractNameOrAddress,
+                            remoteNetwork,
+                            remoteContractNameOrAddress
+                        ))
                     )
 
                     // setFeeBp
-                    if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.feeBpConfig !== undefined) {
+                    if (
+                        WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]
+                            ?.feeBpConfig !== undefined
+                    ) {
                         transactions.push(
                             ...(await setFeeBp(
                                 hre,
                                 localNetwork,
                                 localContractNameOrAddress,
-                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].feeBpConfig,
+                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]
+                                    .feeBpConfig,
                                 getLayerZeroChainId(remoteNetwork)
                             ))
                         )
                     }
 
                     // setMinDstGas
-                    if (WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]?.minDstGasConfig !== undefined) {
+                    if (
+                        WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]
+                            ?.minDstGasConfig !== undefined
+                    ) {
                         transactions.push(
                             ...(await setMinDstGas(
                                 hre,
                                 localNetwork,
                                 localContractNameOrAddress,
-                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork].minDstGasConfig,
+                                WIRE_UP_CONFIG?.chainConfig?.[localNetwork]?.remoteNetworkConfig?.[remoteNetwork]
+                                    .minDstGasConfig,
                                 getLayerZeroChainId(remoteNetwork)
                             ))
                         )
@@ -104,10 +138,10 @@ export default async function (taskArgs: any, hre: any) {
     }, 0)
     if (noChanges == 0) {
         //early return
-        console.log("No changes needed")
+        console.log('No changes needed')
         return
     }
-    const columns = ["needChange", "chainId", "contractName", "functionName", "args", "diff"]
+    const columns = ['needChange', 'chainId', 'contractName', 'functionName', 'args', 'diff']
     printTransactions(columns, transactionByNetwork)
     await executeTransactions(hre, taskArgs, transactionByNetwork)
 }
@@ -123,8 +157,8 @@ async function setDefaultFeeBp(
     const needChange = cur !== defaultFeeBp
 
     // function setDefaultFeeBp(uint16 _feeBp)
-    const functionName = "setDefaultFeeBp"
-    const params = ["uint16"]
+    const functionName = 'setDefaultFeeBp'
+    const params = ['uint16']
     const args = [defaultFeeBp]
 
     const tx: any = {
@@ -155,8 +189,8 @@ async function setFeeBp(
     const needChange = curFeeBp !== feeBpConfig.feeBp || curEnabled !== feeBpConfig.enabled
 
     // function setFeeBp(uint16 _dstChainId, bool _enabled, uint16 _feeBp)
-    const functionName = "setFeeBp"
-    const params = ["uint16", "bool", "uint16"]
+    const functionName = 'setFeeBp'
+    const params = ['uint16', 'bool', 'uint16']
     const args = [remoteChainId, feeBpConfig.enabled, feeBpConfig.feeBp]
     const calldata = localContract.interface.encodeFunctionData(functionName, args)
 
@@ -170,7 +204,12 @@ async function setFeeBp(
     }
     if (tx.needChange) {
         tx.diff = JSON.stringify({
-            feeBp: { oldFeeBpValue: curFeeBp, newFeeBpValue: feeBpConfig.feeBp, oldEnabledFee: curEnabled, newEnabledFee: feeBpConfig.enabled },
+            feeBp: {
+                oldFeeBpValue: curFeeBp,
+                newFeeBpValue: feeBpConfig.feeBp,
+                oldEnabledFee: curEnabled,
+                newEnabledFee: feeBpConfig.enabled,
+            },
         })
     }
     return [tx]

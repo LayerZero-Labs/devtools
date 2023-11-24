@@ -1,33 +1,33 @@
-import { Box, Text } from "ink"
-import Gradient from "ink-gradient"
-import { stdout } from "process"
-import React, { useEffect, useState } from "react"
+import { Box, Text } from "ink";
+import Gradient from "ink-gradient";
+import { stdout } from "process";
+import React, { useEffect, useState } from "react";
 
 export const Header: React.FC = () => (
-    <Box justifyContent="center" marginBottom={5}>
-        <Logo />
-    </Box>
-)
+  <Box justifyContent="center" marginBottom={5}>
+    <Logo />
+  </Box>
+);
 
 export const Logo: React.FC = () => {
-    const [columns, setColumns] = useState<number>(stdout.columns ?? 80)
-    const logo = columns >= 130 ? LOGO_LARGE : LOGO_SMALL
+  const [columns, setColumns] = useState<number>(stdout.columns ?? 80);
+  const logo = columns >= 130 ? LOGO_LARGE : LOGO_SMALL;
 
-    useEffect(() => {
-        const handleResize = () => setColumns(stdout.columns ?? 80)
-        stdout.on("resize", handleResize)
+  useEffect(() => {
+    const handleResize = () => setColumns(stdout.columns ?? 80);
+    stdout.on("resize", handleResize);
 
-        return () => {
-            stdout.off("resize", handleResize)
-        }
-    }, [])
+    return () => {
+      stdout.off("resize", handleResize);
+    };
+  }, []);
 
-    return (
-        <Gradient name="rainbow" key={logo}>
-            <Text>{logo}</Text>
-        </Gradient>
-    )
-}
+  return (
+    <Gradient name="rainbow" key={logo}>
+      <Text>{logo}</Text>
+    </Gradient>
+  );
+};
 
 // prettier-ignore
 const LOGO_LARGE = `

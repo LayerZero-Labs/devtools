@@ -1,10 +1,10 @@
-import "hardhat-deploy"
-import "hardhat-deploy-ethers"
-import { withLayerZeroArtifacts } from "../utils-evm-hardhat/dist"
-import { EndpointId } from "@layerzerolabs/lz-definitions"
-import { HardhatUserConfig } from "hardhat/types"
+import 'hardhat-deploy'
+import 'hardhat-deploy-ethers'
+import { withLayerZeroArtifacts } from '../utils-evm-hardhat/dist'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { HardhatUserConfig } from 'hardhat/types'
 
-const MNEMONIC = "test test test test test test test test test test test test"
+const MNEMONIC = 'test test test test test test test test test test test test'
 
 /**
  * This is a dummy hardhat config that enables us to test
@@ -19,14 +19,14 @@ const config: HardhatUserConfig = {
         },
         vengaboys: {
             endpointId: EndpointId.ETHEREUM_MAINNET,
-            url: "http://network-vengaboys:8545",
+            url: 'http://network-vengaboys:8545',
             accounts: {
                 mnemonic: MNEMONIC,
             },
         },
         britney: {
             endpointId: EndpointId.AVALANCHE_MAINNET,
-            url: "http://network-britney:8545",
+            url: 'http://network-britney:8545',
             accounts: {
                 mnemonic: MNEMONIC,
             },
@@ -34,4 +34,4 @@ const config: HardhatUserConfig = {
     },
 }
 
-export default withLayerZeroArtifacts("@layerzerolabs/lz-evm-sdk-v2")(config)
+export default withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v2')(config)

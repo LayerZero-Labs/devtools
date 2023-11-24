@@ -1,10 +1,10 @@
-import type { HardhatRuntimeEnvironment, EIP1193Provider } from "hardhat/types"
+import type { HardhatRuntimeEnvironment, EIP1193Provider } from 'hardhat/types'
 
-import pMemoize from "p-memoize"
-import { Web3Provider } from "@ethersproject/providers"
-import { ConfigurationError } from "./errors"
-import { HardhatContext } from "hardhat/internal/context"
-import { Environment as HardhatRuntimeEnvironmentImplementation } from "hardhat/internal/core/runtime-environment"
+import pMemoize from 'p-memoize'
+import { Web3Provider } from '@ethersproject/providers'
+import { ConfigurationError } from './errors'
+import { HardhatContext } from 'hardhat/internal/context'
+import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name

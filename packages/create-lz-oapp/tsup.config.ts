@@ -1,17 +1,17 @@
-import { defineConfig } from "tsup"
+import { defineConfig } from 'tsup'
 
 export default defineConfig({
-    entry: ["src/index.tsx"],
-    outDir: "./dist",
+    entry: ['src/index.tsx'],
+    outDir: './dist',
     clean: true,
     dts: false,
     minify: true,
     sourcemap: false,
     splitting: false,
     treeshake: true,
-    format: ["esm"],
+    format: ['esm'],
     env: {
-        NODE_ENV: "production",
+        NODE_ENV: 'production',
     },
     // This needs to be included for the CommonJS interoperability to work
     //
@@ -19,5 +19,5 @@ export default defineConfig({
     banner: {
         js: `import { createRequire as _createRequire } from 'node:module'; const require = _createRequire(import.meta.url);`,
     },
-    external: ["yoga-wasm-web"],
+    external: ['yoga-wasm-web'],
 })

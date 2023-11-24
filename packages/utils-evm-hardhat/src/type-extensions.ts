@@ -1,6 +1,6 @@
-import { EndpointId } from "@layerzerolabs/lz-definitions"
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-declare module "hardhat/types/config" {
+declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
         endpointId?: never
     }

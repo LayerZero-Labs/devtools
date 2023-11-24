@@ -10,13 +10,13 @@
 version: "3.9"
 
 services:
-    # Service that contains the whole project
-    #
-    # It requires the PACKAGE argument that specifies
-    # the target package it should build (e.g. @layerzerolabs/utils-evm-hardhat)
-    project:
-        build:
-            context: .
-            args:
-                PACKAGE:
-                NPM_TOKEN: $NPM_TOKEN
+  # Service that contains the whole project
+  #
+  # It requires the PACKAGE argument that specifies
+  # the target package it should build (e.g. @layerzerolabs/utils-evm-hardhat)
+  project:
+    build:
+      context: .
+      args:
+        PACKAGE:
+        NPM_TOKEN: $NPM_TOKEN

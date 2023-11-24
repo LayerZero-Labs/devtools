@@ -1,39 +1,41 @@
 {
-    "name": "@layerzerolabs/lz-utils",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "clean": "npx turbo run clean",
-        "build": "npx turbo run build",
-        "dev": "npx turbo run dev",
-        "lint": "npx turbo run lint",
-        "test": "npx turbo run test",
-        "prepare": "husky install"
-    },
-    "workspaces": [
-        "examples/*",
-        "packages/*"
-    ],
-    "devDependencies": {
-        "@changesets/cli": "^2.26.2",
-        "@typescript-eslint/eslint-plugin": "^6.9.0",
-        "@typescript-eslint/parser": "^6.9.0",
-        "@types/node": "~18.18.9",
-        "eslint": "^8.53.0",
-        "eslint-config-prettier": "^9.0.0",
-        "eslint-config-standard": "^17.1.0",
-        "eslint-plugin-import": "^2.24.2",
-        "eslint-plugin-mocha": "10.2.0",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-prettier": "^5.0.1",
-        "eslint-plugin-promise": "^6.1.1",
-        "husky": "^8.0.3",
-        "lint-staged": "^15.0.1",
-        "prettier": "^3.0.3",
-        "prettier-plugin-solidity": "^1.0.0-beta.18",
-        "turbo": "1.5.6"
-    },
-    "lint-staged": {
-        "**/*": "npx prettier --write --ignore-unknown"
-    }
+  "name": "@layerzerolabs/lz-utils",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "examples/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npx turbo run build",
+    "clean": "npx turbo run clean",
+    "dev": "npx turbo run dev",
+    "lint": "npx turbo run lint",
+    "prepare": "husky install",
+    "test": "npx turbo run test"
+  },
+  "lint-staged": {
+    "**/*": "npx prettier --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2",
+    "@layerzerolabs/prettier-config-next": "^1.5.60",
+    "@types/node": "~18.18.9",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-mocha": "10.2.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "prettier-plugin-solidity": "^1.0.0-beta.18",
+    "turbo": "1.5.6"
+  }
 }

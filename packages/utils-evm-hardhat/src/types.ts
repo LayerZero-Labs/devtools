@@ -1,8 +1,8 @@
-import { Chain, ChainType, Stage, getChainType } from "@layerzerolabs/lz-definitions"
-import { HardhatError } from "hardhat/internal/core/errors"
-import { ERRORS } from "hardhat/internal/core/errors-list"
-import { CLIArgumentType } from "hardhat/types"
-import { z } from "zod"
+import { Chain, ChainType, Stage, getChainType } from '@layerzerolabs/lz-definitions'
+import { HardhatError } from 'hardhat/internal/core/errors'
+import { ERRORS } from 'hardhat/internal/core/errors-list'
+import { CLIArgumentType } from 'hardhat/types'
+import { z } from 'zod'
 
 const StageSchema = z.nativeEnum(Stage).default(Stage.TESTNET)
 
@@ -32,14 +32,14 @@ const ChainListSchema = CommaSeparatedValuesSchema.pipe(z.array(ChainSchema))
  * Hardhat CLI type for Chain (e.g. avalanche, bsc, base)
  */
 const chains: CLIArgumentType<Chain[]> = {
-    name: "chains",
+    name: 'chains',
     parse(name: string, value: string) {
         const result = ChainListSchema.safeParse(value)
         if (!result.success) {
             throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
                 value,
                 name: name,
-                type: "chains",
+                type: 'chains',
             })
         }
 
@@ -52,14 +52,14 @@ const chains: CLIArgumentType<Chain[]> = {
  * Hardhat CLI type for Stage (mainnet/testnet/sandbox)
  */
 const stage: CLIArgumentType<Stage> = {
-    name: "stage",
+    name: 'stage',
     parse(name: string, value: string) {
         const result = StageSchema.safeParse(value)
         if (!result.success) {
             throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
                 value,
                 name: name,
-                type: "stage",
+                type: 'stage',
             })
         }
 

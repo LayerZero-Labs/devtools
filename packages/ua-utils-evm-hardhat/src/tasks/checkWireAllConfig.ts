@@ -1,11 +1,11 @@
-import { getContract, getContractAt, getLayerZeroChainId } from "@/utils/crossChainHelper"
-import { logError } from "@/utils/helpers"
-import { LZ_APP_ABI } from "@/constants/abi"
+import { getContract, getContractAt, getLayerZeroChainId } from '@/utils/crossChainHelper'
+import { logError } from '@/utils/helpers'
+import { LZ_APP_ABI } from '@/constants/abi'
 
 export default async function (taskArgs: any, hre: any) {
-    const localNetworks = taskArgs.chains.split(",")
+    const localNetworks = taskArgs.chains.split(',')
     const remoteNetworks = localNetworks
-    const contractAddresses = taskArgs?.addresses?.split(",")
+    const contractAddresses = taskArgs?.addresses?.split(',')
 
     const checkWireAllConfigObj: { [key: string]: any } = {}
     await Promise.all(
@@ -17,10 +17,10 @@ export default async function (taskArgs: any, hre: any) {
                 trustedRemoteLookup: {},
             }
 
-            checkWireAllConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = ""
-            checkWireAllConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = ""
-            checkWireAllConfigObj[localNetwork].minDstGasLookup[localNetwork] = ""
-            checkWireAllConfigObj[localNetwork].trustedRemoteLookup[localNetwork] = ""
+            checkWireAllConfigObj[localNetwork].useCustomAdapterParams['useCustomAdapterParams'] = ''
+            checkWireAllConfigObj[localNetwork].withdrawalFeeBps['withdrawalFeeBps'] = ''
+            checkWireAllConfigObj[localNetwork].minDstGasLookup[localNetwork] = ''
+            checkWireAllConfigObj[localNetwork].trustedRemoteLookup[localNetwork] = ''
 
             let localContractNameOrAddress: any
             if (taskArgs?.proxyChain && taskArgs?.proxyContract && localNetwork == taskArgs?.proxyChain) {
@@ -37,13 +37,10 @@ export default async function (taskArgs: any, hre: any) {
             }
 
             if (taskArgs.u)
-                checkWireAllConfigObj[localNetwork].useCustomAdapterParams["useCustomAdapterParams"] = await getUseCustomAdapterParams(
-                    hre,
-                    localNetwork,
-                    localContractNameOrAddress
-                )
+                checkWireAllConfigObj[localNetwork].useCustomAdapterParams['useCustomAdapterParams'] =
+                    await getUseCustomAdapterParams(hre, localNetwork, localContractNameOrAddress)
             if (taskArgs.wfb)
-                checkWireAllConfigObj[localNetwork].withdrawalFeeBps["withdrawalFeeBps"] = await getWithdrawalFeeBps(
+                checkWireAllConfigObj[localNetwork].withdrawalFeeBps['withdrawalFeeBps'] = await getWithdrawalFeeBps(
                     hre,
                     localNetwork,
                     localContractNameOrAddress
@@ -86,7 +83,7 @@ export default async function (taskArgs: any, hre: any) {
     )
 
     if (taskArgs.u) {
-        console.log("Use Custom Adapter Params Table")
+        console.log('Use Custom Adapter Params Table')
         const useCustomAdapterParamsTable = Object.keys(checkWireAllConfigObj).map((network) => ({
             [network]: checkWireAllConfigObj[network].useCustomAdapterParams,
         }))
@@ -94,7 +91,7 @@ export default async function (taskArgs: any, hre: any) {
     }
 
     if (taskArgs.wfb) {
-        console.log("Withdrawal Fee Bps Lookup Table")
+        console.log('Withdrawal Fee Bps Lookup Table')
         const minDstGasLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({
             [network]: checkWireAllConfigObj[network].withdrawalFeeBps,
         }))
@@ -102,7 +99,7 @@ export default async function (taskArgs: any, hre: any) {
     }
 
     if (taskArgs.t) {
-        console.log("Trusted Remote Lookup Table")
+        console.log('Trusted Remote Lookup Table')
         const trustedRemoteLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({
             [network]: checkWireAllConfigObj[network].trustedRemoteLookup,
         }))
@@ -110,7 +107,7 @@ export default async function (taskArgs: any, hre: any) {
     }
 
     if (taskArgs.m) {
-        console.log("Min Dst Gas Lookup Table")
+        console.log('Min Dst Gas Lookup Table')
         const minDstGasLookupTable = Object.keys(checkWireAllConfigObj).map((network) => ({
             [network]: checkWireAllConfigObj[network].minDstGasLookup,
         }))
@@ -118,7 +115,11 @@ export default async function (taskArgs: any, hre: any) {
     }
 }
 
-async function getUseCustomAdapterParams(hre: any, localNetwork: string, localContractNameOrAddress: string): Promise<any> {
+async function getUseCustomAdapterParams(
+    hre: any,
+    localNetwork: string,
+    localContractNameOrAddress: string
+): Promise<any> {
     let localContract
     if (hre.ethers.utils.isAddress(localContractNameOrAddress)) {
         localContract = await getContractAt(hre, localNetwork, LZ_APP_ABI, localContractNameOrAddress)
@@ -139,7 +140,7 @@ async function getWithdrawalFeeBps(hre: any, localNetwork: string, localContract
     try {
         withdrawalFeeBps = await localContract.withdrawalFeeBps()
     } catch (e) {
-        withdrawalFeeBps = "N/A"
+        withdrawalFeeBps = 'N/A'
     }
     return withdrawalFeeBps
 }
@@ -156,7 +157,7 @@ async function getMinDstGas(
     } else {
         localContract = await getContract(hre, localNetwork, localContractNameOrAddress)
     }
-    if (localNetwork === remoteNetwork) return ""
+    if (localNetwork === remoteNetwork) return ''
     const remoteChainId = getLayerZeroChainId(remoteNetwork)
     const minGasPk_0 = await localContract.minDstGasLookup(remoteChainId, 0)
     const minGasPk_1 = await localContract.minDstGasLookup(remoteChainId, 1)
@@ -189,8 +190,11 @@ async function getTrustedRemote(
     }
 
     const remoteContractAddress = await remoteContract.address
-    const desiredTrustedRemote = hre.ethers.utils.solidityPack(["bytes"], [remoteContractAddress + localContract.address.substring(2)])
+    const desiredTrustedRemote = hre.ethers.utils.solidityPack(
+        ['bytes'],
+        [remoteContractAddress + localContract.address.substring(2)]
+    )
     const remoteChainId = getLayerZeroChainId(remoteNetwork)
     const currentTrustedRemote = await localContract.trustedRemoteLookup(remoteChainId)
-    return currentTrustedRemote != desiredTrustedRemote ? (localNetwork === remoteNetwork ? "" : "🟥") : "🟩"
+    return currentTrustedRemote != desiredTrustedRemote ? (localNetwork === remoteNetwork ? '' : '🟥') : '🟩'
 }
