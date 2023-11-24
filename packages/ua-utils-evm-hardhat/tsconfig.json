@@ -2,6 +2,9 @@
   "extends": "../../tsconfig.json",
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
+    "noImplicitReturns": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
     "types": ["node", "mocha"],
     "paths": {
       "@/*": ["./src/*"]
