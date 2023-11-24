@@ -32,7 +32,7 @@
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "ethers": "^5.7.0",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22",
     "hardhat-deploy-ethers": "^0.3.0-beta.12",
     "sinon": "^17.0.1",

@@ -45,7 +45,7 @@
     "cli-ux": "^6.0.9",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.0",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22",
     "ts-node": "^10.9.1",
     "tsup": "^8.0.1",
@@ -59,7 +59,7 @@
     "@layerzerolabs/lz-definitions": "~1.5.58",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "ethers": "^5.5.2",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22"
   }
 }

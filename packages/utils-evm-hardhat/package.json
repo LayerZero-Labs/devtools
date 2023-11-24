@@ -43,7 +43,7 @@
     "@types/mocha": "^10.0.6",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22",
     "sinon": "^17.0.1",
     "ts-node": "^10.9.1",
@@ -55,7 +55,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.58",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.9.19"
   }
 }
