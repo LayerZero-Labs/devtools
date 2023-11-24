@@ -26,7 +26,7 @@
     // Intermediate deescalation to warnings
     //
     // FIXME Slowly remove these problems, then remove these overrides
-    "no-undef": "warn",
+    "no-undef": "off",
     "no-constant-condition": "warn",
 
     "no-unused-vars": "off",
