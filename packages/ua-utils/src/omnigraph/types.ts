@@ -3,23 +3,23 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 export type Address = string
 
 /**
- * OmniNodeCoordinate identifies a point in omniverse, an omnichain universe.
+ * OmniPoint identifies a point in omniverse, an omnichain universe.
  *
  * In layman terms this is a contract deployed on a particular network (represented by an endpoint).
  */
-export interface OmniNodeCoordinate {
+export interface OmniPoint {
     eid: EndpointId
     address: Address
 }
 
 /**
- * OmniEdgeCoordinates identify a line in omniverse, an omnichain universe.
+ * OmniVector identifies a vector in omniverse, an omnichain universe.
  *
- * In layman terms this is a directional connection between two contracts
+ * In layman terms this is a directional connection between two contracts - two points of the omniverse
  */
-export interface OmniEdgeCoordinates {
-    from: OmniNodeCoordinate
-    to: OmniNodeCoordinate
+export interface OmniVector {
+    from: OmniPoint
+    to: OmniPoint
 }
 
 /**
@@ -27,7 +27,7 @@ export interface OmniEdgeCoordinates {
  * with an additional piece of information attached
  */
 export interface OmniNode<TConfig = unknown> {
-    coordinate: OmniNodeCoordinate
+    point: OmniPoint
     config: TConfig
 }
 
@@ -36,7 +36,7 @@ export interface OmniNode<TConfig = unknown> {
  * with an additional piece of information attached
  */
 export interface OmniEdge<TConfig = unknown> {
-    coordinates: OmniEdgeCoordinates
+    vector: OmniVector
     config: TConfig
 }
 

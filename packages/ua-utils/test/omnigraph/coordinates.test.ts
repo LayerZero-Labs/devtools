@@ -1,90 +1,80 @@
 import fc from 'fast-check'
-import {
-    areCoordinatesEqual,
-    isCoordinateEqual,
-    serializeCoordinate,
-    serializeCoordinates,
-} from '@/omnigraph/coordinates'
-import {
-    coordinateArbitrary,
-    addressArbitrary,
-    endpointArbitrary,
-    coordinatesArbitrary,
-} from '../__utils__/arbitraries'
+import { areVectorsEqual, arePointsEqual, serializePoint, serializeVector } from '@/omnigraph/coordinates'
+import { pointArbitrary, addressArbitrary, endpointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
-describe('omnigraph/coordinates', () => {
+describe('omnigraph/vector', () => {
     describe('assertions', () => {
-        describe('isCoordinateEqual', () => {
-            it('should be true for referentially equal coordinates', () => {
+        describe('arePointsEqual', () => {
+            it('should be true for referentially equal vector', () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, (coordinate) => {
-                        expect(isCoordinateEqual(coordinate, coordinate)).toBeTruthy()
+                    fc.property(pointArbitrary, (point) => {
+                        expect(arePointsEqual(point, point)).toBeTruthy()
                     })
                 )
             })
 
-            it('should be true for value equal coordinates', () => {
+            it('should be true for value equal vector', () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, (coordinate) => {
-                        expect(isCoordinateEqual(coordinate, { ...coordinate })).toBeTruthy()
+                    fc.property(pointArbitrary, (point) => {
+                        expect(arePointsEqual(point, { ...point })).toBeTruthy()
                     })
                 )
             })
 
             it("should be false when addresses don't match", () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, addressArbitrary, (coordinate, address) => {
-                        fc.pre(coordinate.address !== address)
+                    fc.property(pointArbitrary, addressArbitrary, (point, address) => {
+                        fc.pre(point.address !== address)
 
-                        expect(isCoordinateEqual(coordinate, { ...coordinate, address })).toBeFalsy()
+                        expect(arePointsEqual(point, { ...point, address })).toBeFalsy()
                     })
                 )
             })
 
             it("should be false when endpoint IDs don't match", () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, endpointArbitrary, (coordinate, eid) => {
-                        fc.pre(coordinate.eid !== eid)
+                    fc.property(pointArbitrary, endpointArbitrary, (point, eid) => {
+                        fc.pre(point.eid !== eid)
 
-                        expect(isCoordinateEqual(coordinate, { ...coordinate, eid })).toBeFalsy()
+                        expect(arePointsEqual(point, { ...point, eid })).toBeFalsy()
                     })
                 )
             })
         })
 
-        describe('areCoordinatesEqual', () => {
-            it('should be true for referentially equal coordinates', () => {
+        describe('areVectorsEqual', () => {
+            it('should be true for referentially equal vector', () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, (coordinates) => {
-                        expect(areCoordinatesEqual(coordinates, coordinates)).toBeTruthy()
+                    fc.property(vectorArbitrary, (vector) => {
+                        expect(areVectorsEqual(vector, vector)).toBeTruthy()
                     })
                 )
             })
 
-            it('should be true for value equal coordinates', () => {
+            it('should be true for value equal vector', () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, (coordinates) => {
-                        expect(areCoordinatesEqual(coordinates, { ...coordinates })).toBeTruthy()
+                    fc.property(vectorArbitrary, (vector) => {
+                        expect(areVectorsEqual(vector, { ...vector })).toBeTruthy()
                     })
                 )
             })
 
-            it("should be false when from coordinate doesn't match", () => {
+            it("should be false when from point doesn't match", () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, coordinateArbitrary, (coordinates, from) => {
-                        fc.pre(!isCoordinateEqual(coordinates.from, from))
+                    fc.property(vectorArbitrary, pointArbitrary, (vector, from) => {
+                        fc.pre(!arePointsEqual(vector.from, from))
 
-                        expect(areCoordinatesEqual(coordinates, { ...coordinates, from })).toBeFalsy()
+                        expect(areVectorsEqual(vector, { ...vector, from })).toBeFalsy()
                     })
                 )
             })
 
-            it("should be false when to coordinate doesn't match", () => {
+            it("should be false when to point doesn't match", () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, coordinateArbitrary, (coordinates, to) => {
-                        fc.pre(!isCoordinateEqual(coordinates.from, to))
+                    fc.property(vectorArbitrary, pointArbitrary, (vector, to) => {
+                        fc.pre(!arePointsEqual(vector.from, to))
 
-                        expect(areCoordinatesEqual(coordinates, { ...coordinates, to })).toBeFalsy()
+                        expect(areVectorsEqual(vector, { ...vector, to })).toBeFalsy()
                     })
                 )
             })
@@ -92,41 +82,41 @@ describe('omnigraph/coordinates', () => {
     })
 
     describe('serialization', () => {
-        describe('serializeCoordinate', () => {
-            it('should produce identical serialized values if the coordinates match', () => {
+        describe('serializePoint', () => {
+            it('should produce identical serialized values if the vector match', () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, (coordinate) => {
-                        expect(serializeCoordinate(coordinate)).toBe(serializeCoordinate({ ...coordinate }))
+                    fc.property(pointArbitrary, (point) => {
+                        expect(serializePoint(point)).toBe(serializePoint({ ...point }))
                     })
                 )
             })
 
-            it("should produce different serialized values if the coordinates don't match", () => {
+            it("should produce different serialized values if the vector don't match", () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, coordinateArbitrary, (coordinateA, coordinateB) => {
-                        fc.pre(!isCoordinateEqual(coordinateA, coordinateB))
+                    fc.property(pointArbitrary, pointArbitrary, (pointA, pointB) => {
+                        fc.pre(!arePointsEqual(pointA, pointB))
 
-                        expect(serializeCoordinate(coordinateA)).not.toBe(serializeCoordinate(coordinateB))
+                        expect(serializePoint(pointA)).not.toBe(serializePoint(pointB))
                     })
                 )
             })
         })
 
-        describe('serializeCoordinates', () => {
-            it('should produce identical serialized values if the coordinates match', () => {
+        describe('serializeVector', () => {
+            it('should produce identical serialized values if the vector match', () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, (coordinates) => {
-                        expect(serializeCoordinates(coordinates)).toBe(serializeCoordinates({ ...coordinates }))
+                    fc.property(vectorArbitrary, (vector) => {
+                        expect(serializeVector(vector)).toBe(serializeVector({ ...vector }))
                     })
                 )
             })
 
-            it("should produce different serialized values if the coordinates don't match", () => {
+            it("should produce different serialized values if the vector don't match", () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, coordinatesArbitrary, (coordinatesA, coordinatesB) => {
-                        fc.pre(!areCoordinatesEqual(coordinatesA, coordinatesB))
+                    fc.property(vectorArbitrary, vectorArbitrary, (lineA, lineB) => {
+                        fc.pre(!areVectorsEqual(lineA, lineB))
 
-                        expect(serializeCoordinates(coordinatesA)).not.toBe(serializeCoordinates(coordinatesB))
+                        expect(serializeVector(lineA)).not.toBe(serializeVector(lineB))
                     })
                 )
             })

@@ -1,6 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { z } from 'zod'
-import type { OmniNodeCoordinate, OmniNode, OmniEdgeCoordinates, OmniEdge } from './types'
+import type { OmniPoint, OmniNode, OmniVector, OmniEdge } from './types'
 
 export const AddressSchema = z.string()
 
@@ -8,14 +8,14 @@ export const EndpointIdSchema: z.ZodSchema<EndpointId, z.ZodTypeDef, unknown> = 
     .nativeEnum(EndpointId)
     .pipe(z.number())
 
-export const OmniNodeCoordinateSchema: z.ZodSchema<OmniNodeCoordinate, z.ZodTypeDef, unknown> = z.object({
+export const OmniPointSchema: z.ZodSchema<OmniPoint, z.ZodTypeDef, unknown> = z.object({
     address: AddressSchema,
     eid: EndpointIdSchema,
 })
 
-export const OmniEdgeCoordinatesSchema: z.ZodSchema<OmniEdgeCoordinates, z.ZodTypeDef, unknown> = z.object({
-    from: OmniNodeCoordinateSchema,
-    to: OmniNodeCoordinateSchema,
+export const OmniVectorSchema: z.ZodSchema<OmniVector, z.ZodTypeDef, unknown> = z.object({
+    from: OmniPointSchema,
+    to: OmniPointSchema,
 })
 
 /**
@@ -29,7 +29,7 @@ export const createOmniNodeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
 ): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown> =>
     z.object({
-        coordinate: OmniNodeCoordinateSchema,
+        point: OmniPointSchema,
         config: configSchema,
     }) as z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown>
 
@@ -44,6 +44,6 @@ export const createOmniEdgeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
 ): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown> =>
     z.object({
-        coordinates: OmniEdgeCoordinatesSchema,
+        vector: OmniVectorSchema,
         config: configSchema,
     }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown>

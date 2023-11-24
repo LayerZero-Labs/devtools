@@ -1,44 +1,42 @@
-import { OmniEdgeCoordinates, OmniNodeCoordinate } from './types'
+import { OmniVector, OmniPoint } from './types'
 
 /**
- * Compares two coordinates by value
+ * Compares two points by value
  *
- * @param a `OmniNodeCoordinate`
- * @param b `OmniNodeCoordinate`
+ * @param a `OmniPoint`
+ * @param b `OmniPoint`
  *
- * @returns `true` if the coordinates point to the same point in omniverse
+ * @returns `true` if the vector point to the same point in omniverse
  */
-export const isCoordinateEqual = (a: OmniNodeCoordinate, b: OmniNodeCoordinate): boolean =>
-    a.address === b.address && a.eid === b.eid
+export const arePointsEqual = (a: OmniPoint, b: OmniPoint): boolean => a.address === b.address && a.eid === b.eid
 
 /**
- * Compares two coordinate vectors
+ * Compares two vectors by value
  *
- * @param a `OmniEdgeCoordinates`
- * @param b `OmniEdgeCoordinates`
+ * @param a `OmniVector`
+ * @param b `OmniVector`
  *
- * @returns `true` if the coordinates point from and to the same point in omniverse
+ * @returns `true` if the vector point from and to the same point in omniverse
  */
-export const areCoordinatesEqual = (a: OmniEdgeCoordinates, b: OmniEdgeCoordinates): boolean =>
-    isCoordinateEqual(a.from, b.from) && isCoordinateEqual(a.to, b.to)
+export const areVectorsEqual = (a: OmniVector, b: OmniVector): boolean =>
+    arePointsEqual(a.from, b.from) && arePointsEqual(a.to, b.to)
 
 /**
- * Serializes a coordinate. Useful for when coordinates need to be used in Map
+ * Serializes a point. Useful for when points need to be used in Map
  * where we cannot adjust the default behavior of using a reference equality
  *
- * @param coordinate `OmniNodeCoordinate`
+ * @param point `OmniPoint`
  *
  * @returns `string`
  */
-export const serializeCoordinate = ({ address, eid }: OmniNodeCoordinate): string => `${eid}|${address}`
+export const serializePoint = ({ address, eid }: OmniPoint): string => `${eid}|${address}`
 
 /**
- * Serializes coordinate vector. Useful for when coordinates need to be used in Map
+ * Serializes a vector. Useful for when vectors need to be used in Map
  * where we cannot adjust the default behavior of using a reference equality
  *
- * @param coordinate `OmniEdgeCoordinates`
+ * @param point `OmniVector`
  *
  * @returns `string`
  */
-export const serializeCoordinates = ({ from, to }: OmniEdgeCoordinates): string =>
-    `${serializeCoordinate(from)} → ${serializeCoordinate(to)}`
+export const serializeVector = ({ from, to }: OmniVector): string => `${serializePoint(from)} → ${serializePoint(to)}`

@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { createOmniEdgeSchema, createOmniNodeSchema } from '@/omnigraph/schema'
 import { z } from 'zod'
-import { coordinateArbitrary, coordinatesArbitrary } from '../__utils__/arbitraries'
+import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
 describe('omnigraph/schema', () => {
     interface TestCase {
@@ -29,16 +29,16 @@ describe('omnigraph/schema', () => {
 
             it('should parse successfully', () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, good, (coordinate, config) => {
-                        expect(schema.safeParse({ coordinate, config }).success).toBeTruthy()
+                    fc.property(pointArbitrary, good, (point, config) => {
+                        expect(schema.safeParse({ point, config }).success).toBeTruthy()
                     })
                 )
             })
 
             it('should not parse', () => {
                 fc.assert(
-                    fc.property(coordinateArbitrary, bad, (coordinate, config) => {
-                        expect(schema.safeParse({ coordinate, config }).success).toBeFalsy()
+                    fc.property(pointArbitrary, bad, (point, config) => {
+                        expect(schema.safeParse({ point, config }).success).toBeFalsy()
                     })
                 )
             })
@@ -51,16 +51,16 @@ describe('omnigraph/schema', () => {
 
             it('should parse successfully', () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, good, (coordinates, config) => {
-                        expect(schema.safeParse({ coordinates, config }).success).toBeTruthy()
+                    fc.property(vectorArbitrary, good, (vector, config) => {
+                        expect(schema.safeParse({ vector, config }).success).toBeTruthy()
                     })
                 )
             })
 
             it('should not parse', () => {
                 fc.assert(
-                    fc.property(coordinatesArbitrary, bad, (coordinates, config) => {
-                        expect(schema.safeParse({ coordinates, config }).success).toBeFalsy()
+                    fc.property(vectorArbitrary, bad, (vector, config) => {
+                        expect(schema.safeParse({ vector, config }).success).toBeFalsy()
                     })
                 )
             })
