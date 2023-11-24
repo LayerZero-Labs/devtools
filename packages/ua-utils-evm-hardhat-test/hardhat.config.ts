@@ -1,6 +1,6 @@
 import 'hardhat-deploy'
 import 'hardhat-deploy-ethers'
-import { withLayerZeroArtifacts } from '../utils-evm-hardhat/dist'
+import { withLayerZeroArtifacts } from '@layerzerolabs/utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
 
