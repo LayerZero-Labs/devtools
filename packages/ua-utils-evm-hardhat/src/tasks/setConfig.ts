@@ -1,4 +1,13 @@
-import { promptToProceed, writeToCsv, logError, logWarning, printTransactions, logSuccess, configExist, getConfig } from "@/utils/helpers"
+import {
+    promptToProceed,
+    writeToCsv,
+    logError,
+    logWarning,
+    printTransactions,
+    logSuccess,
+    configExist,
+    getConfig,
+} from '@/utils/helpers'
 import {
     executeTransaction,
     executeGnosisTransactions,
@@ -10,9 +19,9 @@ import {
     getApplicationConfig,
     getEndpointAddress,
     getLayerZeroChainId,
-} from "@/utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from "@/constants/abi"
-import { utils } from "ethers"
+} from '@/utils/crossChainHelper'
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI, USER_APPLICATION_ABI } from '@/constants/abi'
+import { utils } from 'ethers'
 
 // Application config types from UltraLightNodeV2 contract
 const CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION = 1
@@ -58,22 +67,29 @@ export default async (taskArgs: any, hre: any) => {
                 ? await getContract(hre, network, contractName)
                 : await getContractAt(hre, network, USER_APPLICATION_ABI, contractAddress)
             const appConfig = await endpoint.uaConfigLookup(app.address)
-            const sendLibraryAddress = appConfig.sendVersion === 0 ? await endpoint.defaultSendLibrary() : appConfig.sendLibrary
+            const sendLibraryAddress =
+                appConfig.sendVersion === 0 ? await endpoint.defaultSendLibrary() : appConfig.sendLibrary
             const sendLibrary = await getContractAt(hre, network, MESSAGING_LIBRARY_ABI, sendLibraryAddress)
             let receiveLibrary: any
 
             if (appConfig.sendVersion !== appConfig.receiveVersion) {
                 const receiveLibraryAddress =
-                    appConfig.receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : appConfig.receiveLibraryAddress
+                    appConfig.receiveVersion === 0
+                        ? await endpoint.defaultReceiveLibraryAddress()
+                        : appConfig.receiveLibraryAddress
                 receiveLibrary = await getContractAt(hre, network, MESSAGING_LIBRARY_ABI, receiveLibraryAddress)
             }
 
             if (networkConfig.sendVersion) {
-                transactions.push(...(await setSendVersion(chainId, app, appConfig.sendVersion, networkConfig.sendVersion)))
+                transactions.push(
+                    ...(await setSendVersion(chainId, app, appConfig.sendVersion, networkConfig.sendVersion))
+                )
             }
 
             if (networkConfig.receiveVersion) {
-                transactions.push(...(await setReceiveVersion(chainId, app, appConfig.receiveVersion, networkConfig.receiveVersion)))
+                transactions.push(
+                    ...(await setReceiveVersion(chainId, app, appConfig.receiveVersion, networkConfig.receiveVersion))
+                )
             }
 
             const remoteConfigs = networkConfig.remoteConfigs
@@ -85,7 +101,12 @@ export default async (taskArgs: any, hre: any) => {
                     remoteConfigs.map(async (newConfig: any) => {
                         if (newConfig.remoteChain === network) return
 
-                        const oldConfig = await getApplicationConfig(newConfig.remoteChain, sendLibrary, receiveLibrary, app.address)
+                        const oldConfig = await getApplicationConfig(
+                            newConfig.remoteChain,
+                            sendLibrary,
+                            receiveLibrary,
+                            app.address
+                        )
                         const remoteChainId = getLayerZeroChainId(newConfig.remoteChain)
 
                         if (newConfig.inboundProofLibraryVersion) {
@@ -96,7 +117,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_INBOUND_PROOF_LIBRARY_VERSION,
-                                    "uint16",
+                                    'uint16',
                                     oldConfig.inboundProofLibraryVersion,
                                     newConfig.inboundProofLibraryVersion
                                 ))
@@ -111,7 +132,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_INBOUND_BLOCK_CONFIRMATIONS,
-                                    "uint64",
+                                    'uint64',
                                     oldConfig.inboundBlockConfirmations,
                                     newConfig.inboundBlockConfirmations
                                 ))
@@ -126,7 +147,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_RELAYER,
-                                    "address",
+                                    'address',
                                     oldConfig.relayer,
                                     newConfig.relayer
                                 ))
@@ -141,7 +162,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_OUTBOUND_PROOF_TYPE,
-                                    "uint16",
+                                    'uint16',
                                     oldConfig.outboundProofType,
                                     newConfig.outboundProofType
                                 ))
@@ -156,7 +177,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_OUTBOUND_BLOCK_CONFIRMATIONS,
-                                    "uint64",
+                                    'uint64',
                                     oldConfig.outboundBlockConfirmations,
                                     newConfig.outboundBlockConfirmations
                                 ))
@@ -171,7 +192,7 @@ export default async (taskArgs: any, hre: any) => {
                                     remoteChainId,
                                     app,
                                     CONFIG_TYPE_ORACLE,
-                                    "address",
+                                    'address',
                                     oldConfig.oracle,
                                     newConfig.oracle
                                 ))
@@ -193,14 +214,14 @@ export default async (taskArgs: any, hre: any) => {
     }, 0)
 
     if (totalTransactionsNeedingChange == 0) {
-        console.log("No changes needed")
+        console.log('No changes needed')
         return
     }
 
-    const columns = ["chainId", "remoteChainId", "contractAddress", "functionName", "args", "diff"]
+    const columns = ['chainId', 'remoteChainId', 'contractAddress', 'functionName', 'args', 'diff']
     printTransactions(columns, transactionByNetwork)
-    writeToCsv("setConfigTransactions.csv", columns, transactionByNetwork)
-    await promptToProceed(`Would you like to proceed with the above instructions ${sendToGnosis ? "in Gnosis?" : "?"}`)
+    writeToCsv('setConfigTransactions.csv', columns, transactionByNetwork)
+    await promptToProceed(`Would you like to proceed with the above instructions ${sendToGnosis ? 'in Gnosis?' : '?'}`)
 
     const errors: any[] = []
     const print: any = {}
@@ -220,11 +241,11 @@ export default async (taskArgs: any, hre: any) => {
         await Promise.all(
             transactionByNetwork.map(async ({ network, transactions }) => {
                 const transactionToCommit = transactions.filter((transaction: Transaction) => transaction.needChange)
-                print[network] = print[network] || { requests: "1/1" }
+                print[network] = print[network] || { requests: '1/1' }
                 print[network].current = `executeGnosisTransactions: ${transactionToCommit}`
                 try {
                     await executeGnosisTransactions(hre, network, gnosisConfig, transactionToCommit)
-                    print[network].requests = "1/1"
+                    print[network].requests = '1/1'
                 } catch (err: any) {
                     errors.push({ network, err })
                     print[network].current = err.message
@@ -234,7 +255,7 @@ export default async (taskArgs: any, hre: any) => {
         )
         printResult()
         if (errors.length) {
-            logError(`\nFinished with ${errors.length === 1 ? "an error" : `${errors.length} errors`}`, false)
+            logError(`\nFinished with ${errors.length === 1 ? 'an error' : `${errors.length} errors`}`, false)
             errors.forEach((x) => {
                 console.log(x.err)
                 console.log()
@@ -264,7 +285,9 @@ export default async (taskArgs: any, hre: any) => {
                         print[network].requests = `${successTx}/${transactionToCommit.length}`
                         printResult()
                     } catch (err: any) {
-                        logError(`Failing to call ${transaction.contractName}.${transaction.functionName} on ${network} with an error ${err}`)
+                        logError(
+                            `Failing to call ${transaction.contractName}.${transaction.functionName} on ${network} with an error ${err}`
+                        )
                         errors.push({ network, err })
                         print[network].current = err
                         print[network].err = true
@@ -277,14 +300,19 @@ export default async (taskArgs: any, hre: any) => {
     }
 
     if (!errors.length) {
-        logSuccess("\nFinished successfully")
+        logSuccess('\nFinished successfully')
     }
 }
 
-const setSendVersion = async (chainId: string, app: any, oldSendVersion: any, newSendVersion: any): Promise<Transaction[]> => {
+const setSendVersion = async (
+    chainId: string,
+    app: any,
+    oldSendVersion: any,
+    newSendVersion: any
+): Promise<Transaction[]> => {
     const needChange = oldSendVersion !== newSendVersion
     const contractAddress = app.address
-    const functionName = "setSendVersion"
+    const functionName = 'setSendVersion'
     const args = [newSendVersion]
     const calldata = app.interface.encodeFunctionData(functionName, args)
     const diff = needChange ? { oldValue: oldSendVersion, newValue: newSendVersion } : undefined
@@ -292,10 +320,15 @@ const setSendVersion = async (chainId: string, app: any, oldSendVersion: any, ne
     return [{ needChange, chainId, contractAddress, functionName, args, calldata, diff }]
 }
 
-const setReceiveVersion = async (chainId: string, app: any, currentReceiveVersion: any, newReceiveVersion: any): Promise<Transaction[]> => {
+const setReceiveVersion = async (
+    chainId: string,
+    app: any,
+    currentReceiveVersion: any,
+    newReceiveVersion: any
+): Promise<Transaction[]> => {
     const needChange = currentReceiveVersion !== newReceiveVersion
     const contractAddress = app.address
-    const functionName = "setReceiveVersion"
+    const functionName = 'setReceiveVersion'
     const args = [newReceiveVersion]
     const calldata = app.interface.encodeFunctionData(functionName, args)
     const diff = needChange ? { oldValue: currentReceiveVersion, newValue: newReceiveVersion } : undefined
@@ -315,7 +348,7 @@ const setConfig = async (
 ): Promise<Transaction[]> => {
     const newConfig = utils.defaultAbiCoder.encode([configValueType], [newValue])
     const contractAddress = app.address
-    const functionName = "setConfig"
+    const functionName = 'setConfig'
     const args = [configVersion, remoteChainId, configType, newConfig]
     const needChange = oldValue !== newValue
     const calldata = app.interface.encodeFunctionData(functionName, args)

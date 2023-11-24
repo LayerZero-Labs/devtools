@@ -1,15 +1,15 @@
-import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from "@/utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from "@/constants/abi"
-import { logError } from "@/utils/helpers"
+import { getDeploymentAddresses, getApplicationConfig, getEndpointAddress } from '@/utils/crossChainHelper'
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from '@/constants/abi'
+import { logError } from '@/utils/helpers'
 
 export default async (taskArgs: any, hre: any) => {
     const network = hre.network.name
-    const remoteNetworks = taskArgs.remoteNetworks.split(",")
+    const remoteNetworks = taskArgs.remoteNetworks.split(',')
     const contractName = taskArgs.name
     let contractAddress = taskArgs.address
 
     if (!contractName && !contractAddress) {
-        logError("Provide contract name or address")
+        logError('Provide contract name or address')
         return
     }
 
@@ -30,7 +30,8 @@ export default async (taskArgs: any, hre: any) => {
     let receiveLibrary: any
 
     if (sendVersion !== receiveVersion) {
-        const receiveLibraryAddress = receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : appConfig.receiveLibraryAddress
+        const receiveLibraryAddress =
+            receiveVersion === 0 ? await endpoint.defaultReceiveLibraryAddress() : appConfig.receiveLibraryAddress
         receiveLibrary = await hre.ethers.getContractAt(MESSAGING_LIBRARY_ABI, receiveLibraryAddress)
     }
 
@@ -41,9 +42,9 @@ export default async (taskArgs: any, hre: any) => {
         })
     )
 
-    console.log("Network            ", network)
-    console.log("Application address", contractAddress)
-    console.log("Send version       ", sendVersion)
-    console.log("Receive version    ", receiveVersion)
+    console.log('Network            ', network)
+    console.log('Application address', contractAddress)
+    console.log('Send version       ', sendVersion)
+    console.log('Receive version    ', receiveVersion)
     console.table(remoteConfig)
 }

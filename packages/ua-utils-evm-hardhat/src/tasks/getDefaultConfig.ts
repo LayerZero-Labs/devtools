@@ -1,9 +1,9 @@
-import { ethers } from "ethers"
-import { getProvider, getLayerZeroChainId, getEndpointAddress } from "@/utils/crossChainHelper"
-import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from "@/constants/abi"
+import { ethers } from 'ethers'
+import { getProvider, getLayerZeroChainId, getEndpointAddress } from '@/utils/crossChainHelper'
+import { ENDPOINT_ABI, MESSAGING_LIBRARY_ABI } from '@/constants/abi'
 
 export default async (taskArgs: any, hre: any) => {
-    const networks = taskArgs.networks.split(",")
+    const networks = taskArgs.networks.split(',')
 
     const configByNetwork = await Promise.all(
         networks.map(async (network: string) => {

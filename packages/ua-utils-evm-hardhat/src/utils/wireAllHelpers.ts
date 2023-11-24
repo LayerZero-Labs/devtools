@@ -1,4 +1,4 @@
-import { Transaction, getLayerZeroChainId, getContractInstance } from "./crossChainHelper"
+import { Transaction, getLayerZeroChainId, getContractInstance } from './crossChainHelper'
 
 export async function setUseCustomAdapterParams(
     hre: any,
@@ -11,8 +11,8 @@ export async function setUseCustomAdapterParams(
     const needChange = cur !== useCustom
 
     // function setUseCustomAdapterParams(bool _useCustomAdapterParams)
-    const functionName = "setUseCustomAdapterParams"
-    const params = ["bool"]
+    const functionName = 'setUseCustomAdapterParams'
+    const params = ['bool']
     const args = [useCustom]
 
     const tx: any = {
@@ -46,8 +46,8 @@ export async function setMinDstGas(
         const needChange = cur !== minGas
 
         // function setMinDstGas(uint16 _dstChainId, uint16 _packetType, uint _minGas)
-        const functionName = "setMinDstGas"
-        const params = ["uint16", "uint16", "uint256"]
+        const functionName = 'setMinDstGas'
+        const params = ['uint16', 'uint16', 'uint256']
         const args = [remoteChainId, packetType, minGas]
 
         const tx: any = {
@@ -77,15 +77,18 @@ export async function setTrustedRemote(
     const remoteContract = await getContractInstance(hre, remoteNetwork, remoteContractNameOrAddress)
 
     const remoteContractAddress = await remoteContract.address
-    const desiredTrustedRemote = hre.ethers.utils.solidityPack(["bytes"], [remoteContractAddress + localContract.address.substring(2)])
+    const desiredTrustedRemote = hre.ethers.utils.solidityPack(
+        ['bytes'],
+        [remoteContractAddress + localContract.address.substring(2)]
+    )
 
     const remoteChainId = getLayerZeroChainId(remoteNetwork)
     const cur = await localContract.trustedRemoteLookup(remoteChainId)
     const needChange = cur != desiredTrustedRemote
 
     // function setTrustedRemote(uint16 _srcChainId, bytes calldata _path)
-    const functionName = "setTrustedRemote"
-    const params = ["uint16", "bytes"]
+    const functionName = 'setTrustedRemote'
+    const params = ['uint16', 'bytes']
     const args = [remoteChainId, desiredTrustedRemote]
 
     const tx: any = {

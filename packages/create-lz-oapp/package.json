@@ -1,66 +1,65 @@
 {
-    "name": "create-lz-oapp",
-    "version": "0.1.2",
-    "description": "Create LayerZero OApp with one command",
-    "license": "MIT",
-    "type": "module",
-    "publishConfig": {
-        "access": "public"
-    },
-    "keywords": [
-        "LayerZero",
-        "OApp"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/create-lz-oapp"
-    },
-    "bin": {
-        "create-lz-oapp": "./cli.cjs"
-    },
-    "engines": {
-        "node": ">=18"
-    },
-    "scripts": {
-        "build": "npx tsup",
-        "clean": "rm -rf dist",
-        "dev": "npx tsup --watch",
-        "lint": "npx eslint '**/*.{js,ts,json}'",
-        "prebuild": "tsc -noEmit",
-        "start": "./cli.cjs",
-        "test": "mocha --parallel"
-    },
-    "files": [
-        "./cli.cjs",
-        "./dist"
-    ],
-    "dependencies": {
-        "yoga-wasm-web": "~0.3.3"
-    },
-    "devDependencies": {
-        "@sindresorhus/tsconfig": "^5.0.0",
-        "@tanstack/react-query": "^5.8.3",
-        "@types/mocha": "^10.0.1",
-        "@types/prompts": "^2.4.8",
-        "@types/react": "^18.0.32",
-        "@types/which": "~3.0.2",
-        "chai": "^4.3.10",
-        "commander": "^11.1.0",
-        "eslint-plugin-react": "^7.32.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "ink": "^4.1.0",
-        "ink-gradient": "^3.0.0",
-        "ink-select-input": "^5.0.0",
-        "ink-spinner": "^5.0.0",
-        "ink-text-input": "^5.0.1",
-        "mocha": "^10.0.0",
-        "prompts": "^2.4.2",
-        "react": "^18.2.0",
-        "react-devtools-core": "^4.28.5",
-        "tiged": "^2.12.5",
-        "ts-node": "^10.9.1",
-        "typescript": "^5.2.2",
-        "which": "~4.0.0"
-    }
+  "name": "create-lz-oapp",
+  "version": "0.1.2",
+  "description": "Create LayerZero OApp with one command",
+  "keywords": [
+    "LayerZero",
+    "OApp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+    "directory": "packages/create-lz-oapp"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-lz-oapp": "./cli.cjs"
+  },
+  "files": [
+    "./cli.cjs",
+    "./dist"
+  ],
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "npx tsup",
+    "clean": "rm -rf dist",
+    "dev": "npx tsup --watch",
+    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "start": "./cli.cjs",
+    "test": "mocha --parallel"
+  },
+  "dependencies": {
+    "yoga-wasm-web": "~0.3.3"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.8.4",
+    "@types/mocha": "^10.0.6",
+    "@types/prompts": "^2.4.9",
+    "@types/react": "^18.2.38",
+    "@types/which": "~3.0.3",
+    "chai": "^4.3.10",
+    "commander": "^11.1.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "ink": "^4.1.0",
+    "ink-gradient": "^3.0.0",
+    "ink-select-input": "^5.0.0",
+    "ink-spinner": "^5.0.0",
+    "ink-text-input": "^5.0.1",
+    "mocha": "^10.0.0",
+    "prompts": "^2.4.2",
+    "react": "^18.2.0",
+    "react-devtools-core": "^4.28.5",
+    "tiged": "^2.12.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "which": "~4.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

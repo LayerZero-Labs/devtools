@@ -20,11 +20,11 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@rushstack/eslint-patch": "^1.5.1",
     "ethers": "^5.7.0",
-    "hardhat": "^2.9.9",
+    "hardhat": "^2.19.0",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.11.43",
     "hardhat-deploy-ethers": "^0.4.1",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "solhint": "^4.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"

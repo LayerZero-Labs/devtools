@@ -1,61 +1,61 @@
 {
-    "name": "@layerzerolabs/utils-evm-hardhat",
-    "description": "Hardhat utilities for LayerZero EVM projects",
-    "version": "0.0.2",
-    "license": "MIT",
-    "private": true,
-    "main": "./dist/index.js",
+  "name": "@layerzerolabs/utils-evm-hardhat",
+  "version": "0.0.2",
+  "private": true,
+  "description": "Hardhat utilities for LayerZero EVM projects",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+    "directory": "packages/utils-evm-hardhat"
+  },
+  "license": "MIT",
+  "exports": {
     "types": "./dist/index.d.ts",
-    "module": "./dist/index.mjs",
-    "exports": {
-        "types": "./dist/index.d.ts",
-        "require": "./dist/index.js",
-        "import": "./dist/index.mjs"
-    },
-    "files": [
-        "./dist/index.*"
-    ],
-    "scripts": {
-        "build": "npx tsup",
-        "clean": "rm -rf dist",
-        "dev": "npx tsup --watch",
-        "lint": "npx eslint '**/*.{js,ts,json}'",
-        "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
-        "test": "npx hardhat test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-        "directory": "packages/utils-evm-hardhat"
-    },
-    "devDependencies": {
-        "@ethersproject/abstract-signer": "^5.7.0",
-        "@ethersproject/providers": "^5.7.0",
-        "@ethersproject/wallet": "^5.7.0",
-        "@layerzerolabs/lz-definitions": "~1.5.58",
-        "@layerzerolabs/lz-evm-sdk-v1": "~1.5.58",
-        "@types/chai-as-promised": "^7.1.7",
-        "@types/mocha": "^10.0.1",
-        "chai": "^4.3.10",
-        "chai-as-promised": "^7.1.1",
-        "hardhat": "^2.9.9",
-        "hardhat-deploy": "^0.11.22",
-        "sinon": "^17.0.1",
-        "ts-node": "^10.9.1",
-        "tsup": "~7.2.0",
-        "typescript": "^5.2.2",
-        "winston": "^3.11.0"
-    },
-    "peerDependencies": {
-        "@ethersproject/abstract-signer": "^5.7.0",
-        "@ethersproject/providers": "^5.7.0",
-        "@layerzerolabs/lz-definitions": "~1.5.58",
-        "hardhat": "^2.9.9",
-        "hardhat-deploy": "^0.9.19"
-    },
-    "dependencies": {
-        "micro-memoize": "~4.1.2",
-        "p-memoize": "~4.0.1",
-        "zod": "^3.22.4"
-    }
+    "require": "./dist/index.js",
+    "import": "./dist/index.mjs"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist/index.*"
+  ],
+  "scripts": {
+    "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
+    "build": "npx tsup",
+    "clean": "rm -rf dist",
+    "dev": "npx tsup --watch",
+    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "test": "npx hardhat test"
+  },
+  "dependencies": {
+    "micro-memoize": "~4.1.2",
+    "p-memoize": "~4.0.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
+    "@ethersproject/wallet": "^5.7.0",
+    "@layerzerolabs/lz-definitions": "~1.5.61",
+    "@layerzerolabs/lz-evm-sdk-v1": "~1.5.61",
+    "@types/chai-as-promised": "^7.1.7",
+    "@types/mocha": "^10.0.6",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "hardhat": "^2.19.0",
+    "hardhat-deploy": "^0.11.22",
+    "sinon": "^17.0.1",
+    "ts-node": "^10.9.1",
+    "tsup": "~8.0.1",
+    "typescript": "^5.2.2",
+    "winston": "^3.11.0"
+  },
+  "peerDependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
+    "@layerzerolabs/lz-definitions": "~1.5.58",
+    "hardhat": "^2.19.0",
+    "hardhat-deploy": "^0.9.19"
+  }
 }

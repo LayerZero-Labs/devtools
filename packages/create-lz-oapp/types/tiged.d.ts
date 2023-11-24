@@ -1,7 +1,7 @@
-declare module "tiged" {
-    import EventEmitter from "events"
+declare module 'tiged' {
+    import EventEmitter from 'events'
 
-    export type TigedMode = "git" | "tar"
+    export type TigedMode = 'git' | 'tar'
 
     export interface TigedOptions {
         disableCache?: boolean

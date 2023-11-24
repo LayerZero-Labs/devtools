@@ -1,16 +1,16 @@
-import { createLogger as createWinstonLogger, format, transports } from "winston"
+import { createLogger as createWinstonLogger, format, transports } from 'winston'
 
 /**
  * Valid logging levels
  */
 export enum LogLevel {
-    error = "error",
-    warn = "warn",
-    info = "info",
-    http = "http",
-    verbose = "verbose",
-    debug = "debug",
-    silly = "silly",
+    error = 'error',
+    warn = 'warn',
+    info = 'info',
+    http = 'http',
+    verbose = 'verbose',
+    debug = 'debug',
+    silly = 'silly',
 }
 
 /**
@@ -19,7 +19,7 @@ export enum LogLevel {
  * @param value `unknown`
  * @returns `value is LogLevel`
  */
-const isLogLevel = (value: unknown): value is LogLevel => typeof value === "string" && value in LogLevel
+const isLogLevel = (value: unknown): value is LogLevel => typeof value === 'string' && value in LogLevel
 
 let DEFAULT_LOG_LEVEL = LogLevel.info
 
@@ -30,7 +30,9 @@ let DEFAULT_LOG_LEVEL = LogLevel.info
  */
 export const setDefaultLogLevel = (level: string) => {
     if (!isLogLevel(level)) {
-        console.warn(`Invalid log level specified: ${level}. Ignoring and keeping the current value of ${DEFAULT_LOG_LEVEL}`)
+        console.warn(
+            `Invalid log level specified: ${level}. Ignoring and keeping the current value of ${DEFAULT_LOG_LEVEL}`
+        )
 
         return
     }
@@ -81,8 +83,15 @@ export const createNetworkLogger = (networkName: string, level: string = DEFAULT
  *
  * @returns `Logger`
  */
-export const createNetworkToNetworkLogger = (sourceNetworkName: string, destinationNetworkName: string, level: string = DEFAULT_LOG_LEVEL) =>
-    createLogger(level, format.combine(prefix({ label: `${sourceNetworkName} ➝ ${destinationNetworkName}` }), format.cli()))
+export const createNetworkToNetworkLogger = (
+    sourceNetworkName: string,
+    destinationNetworkName: string,
+    level: string = DEFAULT_LOG_LEVEL
+) =>
+    createLogger(
+        level,
+        format.combine(prefix({ label: `${sourceNetworkName} ➝ ${destinationNetworkName}` }), format.cli())
+    )
 
 /**
  * Helper utility that prefixes logged messages
@@ -94,5 +103,5 @@ export const createNetworkToNetworkLogger = (sourceNetworkName: string, destinat
  */
 const prefix = format((info, { label }) => ({
     ...info,
-    message: `${label ? `[${label}] ` : ""}${info.message}`,
+    message: `${label ? `[${label}] ` : ''}${info.message}`,
 }))
