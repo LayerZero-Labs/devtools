@@ -18,6 +18,16 @@ export const OmniVectorSchema: z.ZodSchema<OmniVector, z.ZodTypeDef, unknown> = 
     to: OmniPointSchema,
 })
 
+export const EmptyOmniNodeSchema = z.object({
+    point: OmniPointSchema,
+    config: z.unknown(),
+})
+
+export const EmptyOmniEdgeSchema = z.object({
+    vector: OmniVectorSchema,
+    config: z.unknown(),
+})
+
 /**
  * Factory for OmniNode schemas
  *
@@ -28,8 +38,7 @@ export const OmniVectorSchema: z.ZodSchema<OmniVector, z.ZodTypeDef, unknown> = 
 export const createOmniNodeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
 ): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown> =>
-    z.object({
-        point: OmniPointSchema,
+    EmptyOmniNodeSchema.extend({
         config: configSchema,
     }) as z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown>
 
@@ -43,7 +52,6 @@ export const createOmniNodeSchema = <TConfig = unknown>(
 export const createOmniEdgeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
 ): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown> =>
-    z.object({
-        vector: OmniVectorSchema,
+    EmptyOmniEdgeSchema.extend({
         config: configSchema,
     }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown>
