@@ -11,6 +11,9 @@ const MNEMONIC = 'test test test test test test test test test test test test'
  * hardhat functionality without mocking too much
  */
 const config: HardhatUserConfig = {
+    solidity: {
+        version: '0.8.19',
+    },
     networks: {
         hardhat: {
             accounts: {
