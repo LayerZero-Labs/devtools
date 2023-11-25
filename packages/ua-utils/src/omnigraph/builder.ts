@@ -57,6 +57,32 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
         return this.#edges.delete(serializeVector(vector)), this
     }
 
+    /**
+     * Reconnect is the most complex method so far. It allows for
+     * reconnection of all the nodes - removing, adding and updating edges.
+     *
+     * At this point the interface is quite simple, a reconnector function is
+     * called for every node combination (including a loopback) and an optional
+     * existing edge.
+     *
+     * Reconnector function returns either an edge (to keep or edit a connection) or `undefined`
+     * (to delete a connection).
+     *
+     * The drawback of this approach is the fact that any edge can be returned,
+     * not only an edge between the two nodes passed in. This flexibility might not be
+     * desirable for most if not all the users. On the other hand of the flexibility spectrum
+     * is the fact that this function can only return one edge.
+     *
+     * To address these issues we could make this function:
+     *
+     * - Return an array of edges - empty for disconnection, filled to add/keep/edit connections
+     * - Return an edge config only. In this case we need to provide a specific value for disconnection
+     *   (since `undefined` can be a valid config) - so we might need to turn the return value into
+     *   a zero/one element tuple (`[TEdgeConfig] | []`) - btw nicely solvable with `Optional` types from functional languages
+     *
+     * @param r `Reconnector<TNodeConfig, TEdgeConfig>`
+     * @returns `this`
+     */
     reconnect(r: Reconnector<TNodeConfig, TEdgeConfig>): this {
         const nodes = this.nodes
 
