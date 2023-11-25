@@ -25,6 +25,7 @@
     "@layerzerolabs/lz-definitions": "~1.5.62",
     "@layerzerolabs/lz-evm-sdk-v1": "~1.5.62",
     "@layerzerolabs/lz-evm-sdk-v2": "~1.5.62",
+    "@layerzerolabs/ua-utils-evm-hardhat": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/chai-as-promised": "^7.1.7",

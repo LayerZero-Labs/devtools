@@ -11,6 +11,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     assert(network.config.endpointId != null, `Missing endpoint ID for network ${network.name}`)
 
     const [deployer] = await getUnnamedAccounts()
+    assert(deployer, 'Missing deployer')
 
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
         from: deployer,
@@ -23,6 +24,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     })
 
     console.table({
+        Network: network.name,
         EndpointV2: endpointV2Deployment.address,
         UltraLightNode302: uln302Deployment.address,
     })

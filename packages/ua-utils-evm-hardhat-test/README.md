@@ -29,3 +29,12 @@ and run the command from there. For that usecase the `$DOCKER_COMPOSE_RUN_TESTS_
 # To rebuild the containers before running tests from the project root
 DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test --filter=utils-evm-hardhat-test
 ```
+
+To monitor the container logs, you'll need to `cd` into the package directory and run:
+
+```bash
+docker compose logs -f
+```
+
+This allows you to see any logs coming from the containers, including detailed logs from the `hardhat` nodes
+.
