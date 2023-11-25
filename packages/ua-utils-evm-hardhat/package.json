@@ -40,6 +40,8 @@
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
     "@layerzerolabs/lz-definitions": "~1.5.62",
+    "@layerzerolabs/ua-utils": "~0.1.0",
+    "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/mocha": "^10.0.6",
     "cli-ux": "^6.0.9",
@@ -48,8 +50,10 @@
     "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22",
     "ts-node": "^10.9.1",
+    "tslib": "~2.6.2",
     "tsup": "^8.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
@@ -57,9 +61,12 @@
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
     "@layerzerolabs/lz-definitions": "~1.5.62",
+    "@layerzerolabs/ua-utils": "~0.1.0",
+    "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "ethers": "^5.5.2",
     "hardhat": "^2.19.0",
-    "hardhat-deploy": "^0.11.22"
+    "hardhat-deploy": "^0.11.22",
+    "zod": "^3.22.4"
   }
 }
