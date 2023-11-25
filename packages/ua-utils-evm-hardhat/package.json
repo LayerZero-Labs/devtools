@@ -66,7 +66,6 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "ethers": "^5.5.2",
     "hardhat": "^2.19.0",
-    "hardhat-deploy": "^0.11.22",
-    "zod": "^3.22.4"
+    "hardhat-deploy": "^0.11.22"
   }
 }
