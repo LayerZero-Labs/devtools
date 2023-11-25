@@ -1,3 +1,4 @@
+import 'hardhat/types/config'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 declare module 'hardhat/types/config' {
