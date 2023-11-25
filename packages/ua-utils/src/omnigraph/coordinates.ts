@@ -1,4 +1,4 @@
-import { OmniVector, OmniPoint } from './types'
+import { OmniVector, OmniPoint, OmniNode } from './types'
 
 /**
  * Compares two points by value
@@ -9,6 +9,16 @@ import { OmniVector, OmniPoint } from './types'
  * @returns `true` if the vector point to the same point in omniverse
  */
 export const arePointsEqual = (a: OmniPoint, b: OmniPoint): boolean => a.address === b.address && a.eid === b.eid
+
+/**
+ * Checks if two points are on the same endpoint
+ *
+ * @param a `OmniPoint`
+ * @param b `OmniPoint`
+ *
+ * @returns `true` if the vector point to the same point in omniverse
+ */
+export const areSameEndpoint = (a: OmniPoint, b: OmniPoint): boolean => a.eid === b.eid
 
 /**
  * Compares two vectors by value
@@ -40,3 +50,12 @@ export const serializePoint = ({ address, eid }: OmniPoint): string => `${eid}|$
  * @returns `string`
  */
 export const serializeVector = ({ from, to }: OmniVector): string => `${serializePoint(from)} → ${serializePoint(to)}`
+
+/**
+ * Helper function to quickly convert a pair of nodes to a vector
+ *
+ * @param a `OmniNode`
+ * @param b `OmniNode`
+ * @returns `OmniVector`
+ */
+export const vectorFromNodes = (a: OmniNode, b: OmniNode): OmniVector => ({ from: a.point, to: b.point })

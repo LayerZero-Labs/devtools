@@ -1,5 +1,11 @@
 import fc from 'fast-check'
-import { areVectorsEqual, arePointsEqual, serializePoint, serializeVector } from '@/omnigraph/coordinates'
+import {
+    areVectorsEqual,
+    arePointsEqual,
+    serializePoint,
+    serializeVector,
+    areSameEndpoint,
+} from '@/omnigraph/coordinates'
 import { pointArbitrary, addressArbitrary, endpointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
 describe('omnigraph/vector', () => {
@@ -75,6 +81,26 @@ describe('omnigraph/vector', () => {
                         fc.pre(!arePointsEqual(vector.from, to))
 
                         expect(areVectorsEqual(vector, { ...vector, to })).toBeFalsy()
+                    })
+                )
+            })
+        })
+
+        describe('areSameEndpoint', () => {
+            it('should return true if the eids match', () => {
+                fc.assert(
+                    fc.property(pointArbitrary, pointArbitrary, (pointA, pointB) => {
+                        expect(areSameEndpoint(pointA, { ...pointB, eid: pointA.eid })).toBeTruthy()
+                    })
+                )
+            })
+
+            it('should return false if the eids differ', () => {
+                fc.assert(
+                    fc.property(pointArbitrary, pointArbitrary, (pointA, pointB) => {
+                        fc.pre(pointA.eid !== pointB.eid)
+
+                        expect(areSameEndpoint(pointA, pointB)).toBeFalsy()
                     })
                 )
             })
