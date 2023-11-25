@@ -294,6 +294,45 @@ describe('omnigraph/builder', () => {
                 )
             })
         })
+
+        describe('reconnect', () => {
+            it('should return self', () => {
+                const builder = new OmniGraphBuilder()
+                const reconnector = jest.fn()
+
+                expect(builder.reconnect(reconnector)).toBe(builder)
+            })
+
+            it('should not call reconnector when there are no nodes', () => {
+                const builder = new OmniGraphBuilder()
+                const reconnector = jest.fn()
+
+                builder.reconnect(reconnector)
+
+                expect(builder.nodes).toEqual([])
+                expect(builder.edges).toEqual([])
+                expect(reconnector).not.toHaveBeenCalled()
+            })
+
+            it('should call reconnector for every node combination', () => {
+                fc.assert(
+                    fc.property(nodesArbitrary, (nodes) => {
+                        const builder = new OmniGraphBuilder()
+                        const reconnector = jest.fn()
+
+                        builder.addNodes(...nodes)
+                        builder.reconnect(reconnector)
+                        expect(reconnector).toHaveBeenCalledTimes(builder.nodes.length * builder.nodes.length)
+
+                        for (const nodeA of builder.nodes) {
+                            for (const nodeB of builder.nodes) {
+                                expect(reconnector).toHaveBeenCalledWith(nodeA, nodeB, undefined)
+                            }
+                        }
+                    })
+                )
+            })
+        })
     })
 
     describe('accessor methods', () => {

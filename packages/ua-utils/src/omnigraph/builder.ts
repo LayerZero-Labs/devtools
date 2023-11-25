@@ -66,8 +66,8 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
                     const existingEdge = this.getEdgeAt({ from: fromNode.point, to: toNode.point })
                     const newEdge = r(fromNode, toNode, existingEdge)
 
+                    if (existingEdge != null) this.removeEdgeAt(existingEdge.vector)
                     if (newEdge != null) this.addEdges(newEdge)
-                    else if (existingEdge != null) this.removeEdgeAt(existingEdge.vector)
                 })
             ),
             this
