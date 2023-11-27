@@ -1,8 +1,10 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { expect } from 'chai'
-import { getNetworkRuntimeEnvironment } from '../src/runtime'
-import { DeploymentSubmission } from 'hardhat-deploy/dist/types'
+import { createNetworkEnvironmentFactory, getNetworkRuntimeEnvironment } from '../src/runtime'
+import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
+import hre from 'hardhat'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 chai.use(chaiAsPromised)
 
@@ -45,6 +47,19 @@ describe('runtime', () => {
             // And finally we check whether it was not by accident saved for ethereum-mainnet
             const nonExistentDeployment = await ethRuntime.deployments.getOrNull('Mock')
             expect(nonExistentDeployment?.args).not.to.eql(deploymentSubmission.args)
+        })
+    })
+
+    describe('createNetworkEnvironmentFactory', () => {
+        it('should reject with an endpoint that is not in the hardhat config', async () => {
+            await expect(createNetworkEnvironmentFactory(hre)(EndpointId.CATHAY_TESTNET)).to.eventually.be.rejected
+        })
+
+        it('should return a HardhatRuntimeEnvironment with correct network', async () => {
+            const runtime = await createNetworkEnvironmentFactory(hre)(EndpointId.ETHEREUM_MAINNET)
+
+            expect(runtime.network.name).to.eql('ethereum-mainnet')
+            expect(runtime.deployments).to.be.an('object')
         })
     })
 })

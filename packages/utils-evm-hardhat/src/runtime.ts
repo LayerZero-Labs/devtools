@@ -5,6 +5,8 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointBasedFactory } from '@layerzerolabs/utils-evm'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
@@ -80,3 +82,37 @@ export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironmen
  * @returns `Web3Provider`
  */
 export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => new Web3Provider(provider)
+
+/**
+ * Creates a factory function for creating HardhatRuntimeEnvironment
+ * based on a hardhat config and an EndpointId
+ *
+ * ```typescript
+ * import hre from "hardhat";
+ *
+ * const factory = createNetworkEnvironmentFactory(hre);
+ * const env = factory(EndpointId.FANTOM_MAINNET)
+ * ```
+ *
+ * @param hre `HardhatRuntimeEnvironment`
+ * @returns `(eid: EndpointId) => Promise<HardhatRuntimeEnvironment>`
+ */
+export const createNetworkEnvironmentFactory = (
+    hre: HardhatRuntimeEnvironment
+): EndpointBasedFactory<HardhatRuntimeEnvironment> => {
+    const networks = Object.entries(hre.config.networks)
+    const networkNamesByEndpointId: Map<EndpointId, string> = new Map(
+        networks.flatMap(([networkName, { endpointId }]) => {
+            if (endpointId == null) return []
+
+            return [[endpointId, networkName]]
+        })
+    )
+
+    return async (eid) => {
+        const networkName = networkNamesByEndpointId.get(eid)
+        if (networkName == null) throw new Error(`No network defined for eid ${eid}`)
+
+        return getNetworkRuntimeEnvironment(networkName)
+    }
+}
