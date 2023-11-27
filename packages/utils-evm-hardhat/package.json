@@ -25,7 +25,8 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "./dist/index.*"
+    "./dist/index.*",
+    "./dist/type-extensions.*"
   ],
   "scripts": {
     "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
