@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { arePointsEqual, areSameEndpoint, serializePoint, serializeVector } from './coordinates'
+import { arePointsEqual, serializePoint, serializeVector } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 
 export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
@@ -106,19 +106,3 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
         }
     }
 }
-
-export type Reconnector<TNodeConfig, TEdgeConfig> = (
-    from: OmniNode<TNodeConfig>,
-    to: OmniNode<TNodeConfig>,
-    edge: OmniEdge<TEdgeConfig> | undefined
-) => OmniEdge<TEdgeConfig> | undefined
-
-export const ignoreLoopback =
-    <TNodeConfig, TEdgeConfig>(r: Reconnector<TNodeConfig, TEdgeConfig>): Reconnector<TNodeConfig, TEdgeConfig> =>
-    (from, to, edge) =>
-        areSameEndpoint(from.point, to.point) ? undefined : r(from, to, edge)
-
-export const loopbackOnly =
-    <TNodeConfig, TEdgeConfig>(r: Reconnector<TNodeConfig, TEdgeConfig>): Reconnector<TNodeConfig, TEdgeConfig> =>
-    (from, to, edge) =>
-        areSameEndpoint(from.point, to.point) ? r(from, to, edge) : undefined
