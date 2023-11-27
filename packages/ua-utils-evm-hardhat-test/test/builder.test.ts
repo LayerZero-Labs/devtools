@@ -33,16 +33,7 @@ describe('builder', () => {
                     config: undefined,
                 },
             ],
-            connections: [
-                {
-                    vector: { from: vengaboysPoint, to: britneyPoint },
-                    config: undefined,
-                },
-                {
-                    vector: { from: britneyPoint, to: vengaboysPoint },
-                    config: undefined,
-                },
-            ],
+            connections: [],
         })
     })
 
@@ -78,16 +69,7 @@ describe('builder', () => {
                     config: undefined,
                 },
             ],
-            connections: [
-                {
-                    vector: { from: vengaboysPoint, to: britneyPoint },
-                    config: undefined,
-                },
-                {
-                    vector: { from: britneyPoint, to: vengaboysPoint },
-                    config: undefined,
-                },
-            ],
+            connections: [],
         })
     })
 })

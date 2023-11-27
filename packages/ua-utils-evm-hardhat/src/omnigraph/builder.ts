@@ -3,8 +3,6 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { OmniGraphBuilder } from '@layerzerolabs/ua-utils'
 import { createNetworkLogger, getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
 import { contractNameToPoint } from './coordinates'
-import { vectorFromNodes } from '@layerzerolabs/ua-utils'
-import { ignoreLoopback } from '@layerzerolabs/ua-utils'
 
 export class OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig> extends OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
     static async fromDeployedContract(
@@ -30,11 +28,6 @@ export class OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig> extends OmniGraph
             builder.addNodes({ point, config: undefined })
         }
 
-        return builder.reconnect(
-            ignoreLoopback((from, to) => ({
-                vector: vectorFromNodes(from, to),
-                config: undefined,
-            }))
-        )
+        return builder
     }
 }
