@@ -166,7 +166,12 @@ describe('omnigraph/builder', () => {
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
                         const builder = new OmniGraphBuilder()
 
-                        builder.addNodes({ point: edge.vector.to, config: nodeConfig })
+                        builder
+                            .addNodes(
+                                { point: edge.vector.from, config: nodeConfig },
+                                { point: edge.vector.to, config: nodeConfig }
+                            )
+                            .removeNodeAt(edge.vector.from)
 
                         expect(() => builder.addEdges(edge)).toThrow()
                     })
@@ -178,7 +183,12 @@ describe('omnigraph/builder', () => {
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
                         const builder = new OmniGraphBuilder()
 
-                        builder.addNodes({ point: edge.vector.from, config: nodeConfig })
+                        builder
+                            .addNodes(
+                                { point: edge.vector.from, config: nodeConfig },
+                                { point: edge.vector.to, config: nodeConfig }
+                            )
+                            .removeNodeAt(edge.vector.to)
 
                         expect(() => builder.addEdges(edge)).toThrow()
                     })
