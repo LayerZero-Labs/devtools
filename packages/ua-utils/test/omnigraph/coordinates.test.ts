@@ -6,7 +6,8 @@ import {
     serializeVector,
     areSameEndpoint,
 } from '@/omnigraph/coordinates'
-import { pointArbitrary, addressArbitrary, endpointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
+import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
+import { addressArbitrary, endpointArbitrary } from '@layerzerolabs/test-utils'
 
 describe('omnigraph/vector', () => {
     describe('assertions', () => {

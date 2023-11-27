@@ -2,6 +2,7 @@ import fc from 'fast-check'
 import { createNodeArbitrary, createEdgeArbitrary, pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 import { OmniGraphBuilder } from '@/omnigraph/builder'
 import { arePointsEqual, areVectorsEqual } from '@/omnigraph'
+import { endpointArbitrary } from '@layerzerolabs/test-utils'
 
 describe('omnigraph/builder', () => {
     const nodeConfigArbitrary = fc.anything()
