@@ -1,25 +1,15 @@
+import type { Web3Provider } from '@ethersproject/providers'
+import type { ProviderFactory } from '@layerzerolabs/utils-evm'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { ProviderFactory, RpcUrlFactory } from '@layerzerolabs/utils-evm'
-import { createProviderFactory as createProviderFactoryBase } from '@layerzerolabs/utils-evm'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import pMemoize from 'p-memoize'
+import { createNetworkEnvironmentFactory, wrapEIP1193Provider } from './runtime'
 
-export const createRpcUrlFactory = (hre: HardhatRuntimeEnvironment): RpcUrlFactory => {
-    const networks = Object.values(hre.config.networks)
-    const urlsByEndpointId: Map<EndpointId, string> = new Map(
-        networks.flatMap((networkConfig) => {
-            if (networkConfig.endpointId == null) return []
+export const createProviderFactory = (hre: HardhatRuntimeEnvironment): ProviderFactory<Web3Provider> => {
+    const networkEnvironmentFactory = createNetworkEnvironmentFactory(hre)
 
-            return [[networkConfig.endpointId, networkConfig.url]]
-        })
-    )
+    return pMemoize(async (eid) => {
+        const env = await networkEnvironmentFactory(eid)
 
-    return async (eid) => {
-        const url = urlsByEndpointId.get(eid)
-        if (url == null) throw new Error(`Missing RPC URL for eid ${eid}`)
-
-        return url
-    }
+        return wrapEIP1193Provider(env.network.provider)
+    })
 }
-
-export const createProviderFactory = (hre: HardhatRuntimeEnvironment): ProviderFactory =>
-    createProviderFactoryBase(createRpcUrlFactory(hre))
