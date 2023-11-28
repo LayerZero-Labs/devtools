@@ -39,6 +39,7 @@
     "p-memoize": "~4.0.1"
   },
   "devDependencies": {
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.62",
     "@layerzerolabs/test-utils": "~0.0.1",
