@@ -30,4 +30,6 @@ services:
       - 8545
     command: ["npx", "hardhat", "node", "--hostname", "0.0.0.0", "--no-deploy"]
     healthcheck:
+      interval: 2s
+      retries: 10
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
