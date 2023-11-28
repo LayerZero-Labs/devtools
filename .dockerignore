@@ -8,6 +8,11 @@
 node_modules
 deployments
 
+# Build files & cache
+artifacts
+dist
+cache
+
 # Metadata
 *.md
 
