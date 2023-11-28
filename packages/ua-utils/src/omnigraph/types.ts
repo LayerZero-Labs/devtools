@@ -51,3 +51,9 @@ export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
     contracts: OmniNode<TNodeConfig>[]
     connections: OmniEdge<TEdgeConfig>[]
 }
+
+export interface OmniTransaction {
+    point: OmniPoint
+
+    data: string
+}
