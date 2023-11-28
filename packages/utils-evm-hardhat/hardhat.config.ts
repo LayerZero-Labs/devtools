@@ -1,3 +1,4 @@
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import 'hardhat-deploy'
 import { HardhatUserConfig } from 'hardhat/types'
 
@@ -10,6 +11,7 @@ const config: HardhatUserConfig = {
         'ethereum-mainnet': {
             url: 'https://eth.llamarpc.com',
             saveDeployments: true,
+            endpointId: EndpointId.ETHEREUM_MAINNET,
         },
         'bsc-testnet': {
             url: 'https://bsc-testnet.publicnode.com',
