@@ -2,6 +2,7 @@
 .changeset
 .github
 .husky
+.turbo
 
 # Dependencies & deployments
 node_modules
