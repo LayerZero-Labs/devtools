@@ -2,10 +2,12 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OmniPoint } from '@layerzerolabs/ua-utils'
 import type { Deployment } from 'hardhat-deploy/dist/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import pMemoize from 'p-memoize'
 import { assertHardhatDeploy } from '../internal/assertions'
-import { getNetworkNamesByEid, getNetworkRuntimeEnvironment } from '../runtime'
-import { OmniContract } from '@layerzerolabs/utils-evm'
+import { createNetworkEnvironmentFactory, getNetworkNamesByEid, getNetworkRuntimeEnvironment } from '../runtime'
+import { EndpointBasedFactory, OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
+import assert from 'assert'
 
 export interface OmniDeployment {
     eid: EndpointId
@@ -46,4 +48,22 @@ export const collectDeployments = async (
     }
 
     return deployments
+}
+
+export const createDeploymentFactoryForContract = (
+    hre: HardhatRuntimeEnvironment,
+    contractName: string
+): EndpointBasedFactory<OmniDeployment> => {
+    assertHardhatDeploy(hre)
+
+    const environmentFactory = createNetworkEnvironmentFactory(hre)
+
+    return pMemoize(async (eid: EndpointId) => {
+        const env = await environmentFactory(eid)
+
+        const deployment = await env.deployments.getOrNull(contractName)
+        assert(deployment, `Could not find a deployment for contract '${contractName}' on endpoint ${eid}`)
+
+        return { eid, deployment }
+    })
 }

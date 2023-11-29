@@ -35,6 +35,7 @@
     "lint": "npx eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
+    "@ethersproject/contracts": "^5.7.0",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
@@ -55,6 +56,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@ethersproject/contracts": "^5.7.0",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
