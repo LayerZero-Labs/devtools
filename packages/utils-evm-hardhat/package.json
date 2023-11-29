@@ -57,6 +57,7 @@
     "fast-check": "^3.14.0",
     "hardhat": "^2.19.0",
     "hardhat-deploy": "^0.11.22",
+    "p-memoize": "~4.0.1",
     "sinon": "^17.0.1",
     "ts-node": "^10.9.1",
     "tsup": "~8.0.1",

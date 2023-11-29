@@ -39,6 +39,7 @@
     "p-memoize": "~4.0.1"
   },
   "devDependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.62",
@@ -52,6 +53,8 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
+    "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.62"
   }
