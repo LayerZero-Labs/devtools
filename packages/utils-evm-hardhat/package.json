@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@ethersproject/wallet": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.62",
@@ -64,6 +65,7 @@
   },
   "peerDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.62",
     "@layerzerolabs/utils-evm": "~0.0.1",

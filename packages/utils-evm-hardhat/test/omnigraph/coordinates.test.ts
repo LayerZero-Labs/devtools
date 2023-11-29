@@ -4,7 +4,12 @@ import { describe } from 'mocha'
 import hre from 'hardhat'
 import { Deployment, DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-utils'
-import { OmniDeployment, collectDeployments, omniDeploymentToPoint } from '../../src/omnigraph'
+import {
+    OmniDeployment,
+    collectDeployments,
+    omniDeploymentToContract,
+    omniDeploymentToPoint,
+} from '../../src/omnigraph'
 import { getNetworkRuntimeEnvironment } from '../../src/runtime'
 
 describe('omnigraph/coordinates', () => {
@@ -124,6 +129,20 @@ describe('omnigraph/coordinates', () => {
                 const omniDeployment: OmniDeployment = { eid, deployment: { address } as Deployment }
 
                 expect(omniDeploymentToPoint(omniDeployment)).to.eql({ eid, address })
+            })
+        )
+    })
+
+    describe('omniDeploymentToContract', () => {
+        fc.assert(
+            fc.property(endpointArbitrary, evmAddressArbitrary, (eid, address) => {
+                const omniDeployment: OmniDeployment = { eid, deployment: { address, abi: [] } as Deployment }
+                const omniContract = omniDeploymentToContract(omniDeployment)
+
+                // chai is not great with deep equality on class instances so we need to compare the result property by property
+                expect(omniContract.eid).to.equal(eid)
+                expect(omniContract.contract.address).to.equal(address)
+                expect(omniContract.contract.interface.fragments).to.eql([])
             })
         )
     })

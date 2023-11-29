@@ -4,6 +4,8 @@ import type { Deployment } from 'hardhat-deploy/dist/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { assertHardhatDeploy } from '../internal/assertions'
 import { getNetworkNamesByEid, getNetworkRuntimeEnvironment } from '../runtime'
+import { OmniContract } from '@layerzerolabs/utils-evm'
+import { Contract } from '@ethersproject/contracts'
 
 export interface OmniDeployment {
     eid: EndpointId
@@ -11,6 +13,11 @@ export interface OmniDeployment {
 }
 
 export const omniDeploymentToPoint = ({ eid, deployment }): OmniPoint => ({ eid, address: deployment.address })
+
+export const omniDeploymentToContract = ({ eid, deployment }): OmniContract => ({
+    eid,
+    contract: new Contract(deployment.address, deployment.abi),
+})
 
 /**
  * Collects all deployment of a certain contract along with their endpoint IDs.
