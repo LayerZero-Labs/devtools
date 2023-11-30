@@ -2,11 +2,12 @@ import type { Web3Provider } from '@ethersproject/providers'
 import type { ProviderFactory } from '@layerzerolabs/utils-evm'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import pMemoize from 'p-memoize'
-import { createNetworkEnvironmentFactory, wrapEIP1193Provider } from './runtime'
+import { createNetworkEnvironmentFactory, getDefaultRuntimeEnvironment, wrapEIP1193Provider } from './runtime'
 
-export const createProviderFactory = (hre: HardhatRuntimeEnvironment): ProviderFactory<Web3Provider> => {
-    const networkEnvironmentFactory = createNetworkEnvironmentFactory(hre)
-
+export const createProviderFactory = (
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
+    networkEnvironmentFactory = createNetworkEnvironmentFactory(hre)
+): ProviderFactory<Web3Provider> => {
     return pMemoize(async (eid) => {
         const env = await networkEnvironmentFactory(eid)
 

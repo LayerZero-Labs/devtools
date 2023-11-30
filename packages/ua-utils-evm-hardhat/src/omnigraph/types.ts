@@ -1,5 +1,4 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OmniDeployment } from './coordinates'
 import { OmniPoint } from '@layerzerolabs/ua-utils'
 import { OmniContract } from '@layerzerolabs/utils-evm'
 
