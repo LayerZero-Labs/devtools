@@ -20,7 +20,7 @@ describe('config', () => {
             })
         })
 
-        it('should not add external deployments for networks without endpointId', () => {
+        it('should not add external deployments for networks without eid', () => {
             const config = {
                 networks: {
                     'vengaboys-testnet': {},
@@ -37,11 +37,11 @@ describe('config', () => {
             })
         })
 
-        it('should not add external deployments for networks with invalid endpointId', () => {
+        it('should not add external deployments for networks with invalid eid', () => {
             const config = {
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: 0,
+                        eid: 0,
                     },
                 },
             }
@@ -49,7 +49,7 @@ describe('config', () => {
             expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: 0,
+                        eid: 0,
                     },
                 },
                 external: {
@@ -62,7 +62,7 @@ describe('config', () => {
             const config = {
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: EndpointId.ARBITRUM_MAINNET,
+                        eid: EndpointId.ARBITRUM_MAINNET,
                     },
                 },
             }
@@ -70,7 +70,7 @@ describe('config', () => {
             expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: EndpointId.ARBITRUM_MAINNET,
+                        eid: EndpointId.ARBITRUM_MAINNET,
                     },
                 },
                 external: {
@@ -85,7 +85,7 @@ describe('config', () => {
             const config = {
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: EndpointId.BSC_TESTNET,
+                        eid: EndpointId.BSC_TESTNET,
                     },
                 },
             }
@@ -99,7 +99,7 @@ describe('config', () => {
             expect(configWithSomePathAgain).to.eql({
                 networks: {
                     'vengaboys-testnet': {
-                        endpointId: EndpointId.BSC_TESTNET,
+                        eid: EndpointId.BSC_TESTNET,
                     },
                 },
                 external: {

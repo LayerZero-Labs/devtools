@@ -11,11 +11,11 @@ const config: HardhatUserConfig = {
         'ethereum-mainnet': {
             url: 'https://eth.llamarpc.com',
             saveDeployments: true,
-            endpointId: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_MAINNET,
         },
         'ethereum-testnet': {
             url: 'https://eth-goerli.public.blastapi.io',
-            endpointId: EndpointId.ETHEREUM_TESTNET,
+            eid: EndpointId.ETHEREUM_TESTNET,
         },
         'bsc-testnet': {
             url: 'https://bsc-testnet.publicnode.com',

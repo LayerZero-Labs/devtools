@@ -119,7 +119,7 @@ export const createNetworkEnvironmentFactory = (
  * Creates a mapping between EndpointId and network name
  * based on the hardhat project configuration.
  *
- * It will silently ignore networks that don't have `endpointId`
+ * It will silently ignore networks that don't have `eid`
  * specified in their network configuration.
  *
  * @param hre `HardhatRuntimeEnvironment`
@@ -132,9 +132,9 @@ export const getNetworkNamesByEid = (
 
     return new Map(
         networks.flatMap(([networkName, networkConfig]) => {
-            if (networkConfig.endpointId == null) return []
+            if (networkConfig.eid == null) return []
 
-            return [[networkConfig.endpointId, networkName]]
+            return [[networkConfig.eid, networkName]]
         })
     )
 }
