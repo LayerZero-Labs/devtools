@@ -5,9 +5,11 @@ import {
     serializePoint,
     serializeVector,
     areSameEndpoint,
+    isVectorPossible,
 } from '@/omnigraph/coordinates'
 import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
-import { addressArbitrary, endpointArbitrary } from '@layerzerolabs/test-utils'
+import { addressArbitrary, endpointArbitrary, stageArbitrary } from '@layerzerolabs/test-utils'
+import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 describe('omnigraph/vector', () => {
     describe('assertions', () => {
@@ -144,6 +146,32 @@ describe('omnigraph/vector', () => {
                         fc.pre(!areVectorsEqual(lineA, lineB))
 
                         expect(serializeVector(lineA)).not.toBe(serializeVector(lineB))
+                    })
+                )
+            })
+        })
+
+        describe('isVectorPossible', () => {
+            it('should return true if two points are on the same stage', () => {
+                fc.assert(
+                    fc.property(endpointArbitrary, endpointArbitrary, addressArbitrary, (eid1, eid2, address) => {
+                        fc.pre(endpointIdToStage(eid1) === endpointIdToStage(eid2))
+
+                        expect(
+                            isVectorPossible({ from: { eid: eid1, address }, to: { eid: eid2, address } })
+                        ).toBeTruthy()
+                    })
+                )
+            })
+
+            it('should return false if two points are not on the same stage', () => {
+                fc.assert(
+                    fc.property(endpointArbitrary, endpointArbitrary, addressArbitrary, (eid1, eid2, address) => {
+                        fc.pre(endpointIdToStage(eid1) !== endpointIdToStage(eid2))
+
+                        expect(
+                            isVectorPossible({ from: { eid: eid1, address }, to: { eid: eid2, address } })
+                        ).toBeFalsy()
                     })
                 )
             })
