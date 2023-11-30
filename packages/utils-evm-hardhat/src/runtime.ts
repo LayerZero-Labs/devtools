@@ -6,7 +6,7 @@ import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointBasedFactory } from '@layerzerolabs/utils-evm'
+import { EndpointBasedFactory } from '@layerzerolabs/utils'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name

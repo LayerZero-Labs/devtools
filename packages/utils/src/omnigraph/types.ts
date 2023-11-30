@@ -1,6 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-
-export type Address = string
+import type { Address } from '@layerzerolabs/utils'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
@@ -50,10 +49,4 @@ export interface OmniEdge<TConfig = unknown> {
 export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
     contracts: OmniNode<TNodeConfig>[]
     connections: OmniEdge<TEdgeConfig>[]
-}
-
-export interface OmniTransaction {
-    point: OmniPoint
-
-    data: string
 }

@@ -1,4 +1,4 @@
-import type { OmniGraph, OmniPoint, OmniTransaction } from '@/omnigraph/types'
+import type { OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/utils'
 import type { IOApp } from './types'
 
 export type OAppFactory = (point: OmniPoint) => IOApp | Promise<IOApp>

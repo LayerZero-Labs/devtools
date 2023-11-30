@@ -1,6 +1,6 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OmniPoint } from '@layerzerolabs/ua-utils'
-import { OmniContract } from '@layerzerolabs/utils-evm'
+import type { OmniPoint } from '@layerzerolabs/utils'
+import type { OmniContract } from '@layerzerolabs/utils-evm'
 
 export interface OmniPointHardhat {
     eid: EndpointId
