@@ -7,7 +7,11 @@ import { OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
 import assert from 'assert'
 import { OmniContractFactory } from './types'
-import { assertHardhatDeploy, createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
+import {
+    assertHardhatDeploy,
+    createNetworkEnvironmentFactory,
+    getDefaultRuntimeEnvironment,
+} from '@layerzerolabs/utils-evm-hardhat'
 
 export interface OmniDeployment {
     eid: EndpointId
@@ -21,9 +25,10 @@ export const omniDeploymentToContract = ({ eid, deployment }): OmniContract => (
     contract: new Contract(deployment.address, deployment.abi),
 })
 
-export const createContractFactory = (hre: HardhatRuntimeEnvironment): OmniContractFactory => {
-    const environmentFactory = createNetworkEnvironmentFactory(hre)
-
+export const createContractFactory = (
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
+    environmentFactory = createNetworkEnvironmentFactory(hre)
+): OmniContractFactory => {
     return pMemoize(async ({ eid, address, contractName }) => {
         const env = await environmentFactory(eid)
         assertHardhatDeploy(env)
