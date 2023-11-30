@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { arePointsEqual, serializePoint, serializeVector } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
+import { formatOmniPoint, formatOmniVector } from './format'
 
 export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
     #nodes: Map<string, OmniNode<TNodeConfig>> = new Map()
@@ -8,10 +9,10 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
     #edges: Map<string, OmniEdge<TEdgeConfig>> = new Map()
 
     #assertCanAddEdge(edge: OmniEdge<TEdgeConfig>): void {
-        const label = serializeVector(edge.vector)
-        const from = serializePoint(edge.vector.from)
+        const label = formatOmniVector(edge.vector)
+        const from = formatOmniPoint(edge.vector.from)
 
-        assert(this.getNodeAt(edge.vector.from), `Cannot add edge '${label}': '${from}' is not in the graph`)
+        assert(this.getNodeAt(edge.vector.from), `Cannot add edge ${label}: ${from} is not in the graph`)
     }
 
     //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
