@@ -13,6 +13,10 @@ const config: HardhatUserConfig = {
             saveDeployments: true,
             endpointId: EndpointId.ETHEREUM_MAINNET,
         },
+        'ethereum-testnet': {
+            url: 'https://eth-goerli.public.blastapi.io',
+            endpointId: EndpointId.ETHEREUM_TESTNET,
+        },
         'bsc-testnet': {
             url: 'https://bsc-testnet.publicnode.com',
             accounts: {

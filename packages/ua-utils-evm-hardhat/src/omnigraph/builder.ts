@@ -1,33 +1,31 @@
-import 'hardhat-deploy/dist/src/type-extensions'
-import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { OmniGraphBuilder } from '@layerzerolabs/ua-utils'
-import { createNetworkLogger, getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
-import { contractNameToPoint } from './coordinates'
+import { type OmniEdge, OmniGraphBuilder, type OmniNode } from '@layerzerolabs/ua-utils'
+import type { OmniDeploymentFactory, OmniGraphHardhat } from './types'
+import { omniDeploymentToPoint } from './coordinates'
 
 export class OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig> extends OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
-    static async fromDeployedContract(
-        hre: HardhatRuntimeEnvironment,
-        contractName: string
-    ): Promise<OmniGraphBuilder<undefined, undefined>> {
-        const builder = new OmniGraphBuilder<undefined, undefined>()
+    static async fromConfig<TNodeConfig, TEdgeConfig>(
+        graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>,
+        deploymentFactory: OmniDeploymentFactory
+    ): Promise<OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig>> {
+        const builder = new OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig>()
 
-        for (const networkName of Object.keys(hre.config.networks)) {
-            const logger = createNetworkLogger(networkName)
-            const env = await getNetworkRuntimeEnvironment(networkName)
-            const point = await contractNameToPoint(env, contractName)
+        const nodes: OmniNode<TNodeConfig>[] = await Promise.all(
+            graph.contracts.map(async ({ contract, config }) => ({
+                point: omniDeploymentToPoint(await deploymentFactory(contract)),
+                config,
+            }))
+        )
 
-            if (point == null) {
-                logger.warn(`Could not find contract '${contractName}'`)
-                logger.warn(``)
-                logger.warn(`- Make sure the contract has been deployed`)
-                logger.warn(`- Make sure to include the endpointId in your hardhat networks config`)
+        const edges: OmniEdge<TEdgeConfig>[] = await Promise.all(
+            graph.connections.map(async ({ from, to, config }) => ({
+                vector: {
+                    from: omniDeploymentToPoint(await deploymentFactory(from)),
+                    to: omniDeploymentToPoint(await deploymentFactory(to)),
+                },
+                config,
+            }))
+        )
 
-                continue
-            }
-
-            builder.addNodes({ point, config: undefined })
-        }
-
-        return builder
+        return builder.addNodes(...nodes).addEdges(...edges)
     }
 }

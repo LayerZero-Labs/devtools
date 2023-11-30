@@ -1,4 +1,4 @@
-import type { HardhatRuntimeEnvironment, EIP1193Provider } from 'hardhat/types'
+import type { HardhatRuntimeEnvironment, EIP1193Provider, Network } from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
 import { Web3Provider } from '@ethersproject/providers'
@@ -100,14 +100,7 @@ export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => 
 export const createNetworkEnvironmentFactory = (
     hre: HardhatRuntimeEnvironment
 ): EndpointBasedFactory<HardhatRuntimeEnvironment> => {
-    const networks = Object.entries(hre.config.networks)
-    const networkNamesByEndpointId: Map<EndpointId, string> = new Map(
-        networks.flatMap(([networkName, { endpointId }]) => {
-            if (endpointId == null) return []
-
-            return [[endpointId, networkName]]
-        })
-    )
+    const networkNamesByEndpointId = getNetworkNamesByEid(hre)
 
     return async (eid) => {
         const networkName = networkNamesByEndpointId.get(eid)
@@ -115,4 +108,26 @@ export const createNetworkEnvironmentFactory = (
 
         return getNetworkRuntimeEnvironment(networkName)
     }
+}
+
+/**
+ * Creates a mapping between EndpointId and network name
+ * based on the hardhat project configuration.
+ *
+ * It will silently ignore networks that don't have `endpointId`
+ * specified in their network configuration.
+ *
+ * @param hre `HardhatRuntimeEnvironment`
+ * @returns `Map<EndpointId, string>`
+ */
+export const getNetworkNamesByEid = (hre: HardhatRuntimeEnvironment): Map<EndpointId, string> => {
+    const networks = Object.entries(hre.config.networks)
+
+    return new Map(
+        networks.flatMap(([networkName, networkConfig]) => {
+            if (networkConfig.endpointId == null) return []
+
+            return [[networkConfig.endpointId, networkName]]
+        })
+    )
 }
