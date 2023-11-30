@@ -5,7 +5,7 @@
     "noImplicitReturns": false,
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
-    "types": ["node", "mocha"],
+    "types": ["node", "jest"],
     "paths": {
       "@/*": ["./src/*"]
     }
