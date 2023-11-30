@@ -2,10 +2,12 @@ import fc from 'fast-check'
 import hre from 'hardhat'
 import { Deployment, DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-utils'
-import { OmniDeployment, createDeploymentFactory, omniDeploymentToContract, omniDeploymentToPoint } from '@/omnigraph'
+import { OmniDeployment, createContractFactory, omniDeploymentToContract, omniDeploymentToPoint } from '@/omnigraph'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { Contract } from '@ethersproject/contracts'
+import { makeZero } from '@layerzerolabs/utils-evm'
 
 describe('omnigraph/coordinates', () => {
     describe('omniDeploymentToPoint', () => {
@@ -36,7 +38,7 @@ describe('omnigraph/coordinates', () => {
         })
     })
 
-    describe('createDeploymentFactory', () => {
+    describe('createContractFactory', () => {
         // Hardhat deploy will try to get the chain ID from the RPC so we can't let it
         const mockSend = (env: HardhatRuntimeEnvironment) => {
             env.network.provider.send = jest.fn().mockResolvedValue(1)
@@ -44,7 +46,7 @@ describe('omnigraph/coordinates', () => {
 
         describe('when called with OmniPointContractName', () => {
             it('should reject when eid does not exist', async () => {
-                const deploymentFactory = createDeploymentFactory(hre)
+                const deploymentFactory = createContractFactory(hre)
 
                 await expect(() =>
                     deploymentFactory({ eid: EndpointId.CANTO_TESTNET, contractName: 'MyContract' })
@@ -53,7 +55,7 @@ describe('omnigraph/coordinates', () => {
 
             it('should reject when contract has not been deployed', async () => {
                 const environmentFactory = createNetworkEnvironmentFactory(hre)
-                const deploymentFactory = createDeploymentFactory(hre)
+                const deploymentFactory = createContractFactory(hre)
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                 mockSend(env)
@@ -65,13 +67,16 @@ describe('omnigraph/coordinates', () => {
 
             it('should resolve when contract has been deployed', async () => {
                 const environmentFactory = createNetworkEnvironmentFactory(hre)
-                const deploymentFactory = createDeploymentFactory(hre)
+                const deploymentFactory = createContractFactory(hre)
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                 mockSend(env)
 
                 // We'll create a dummy deployment first
-                await env.deployments.save('MyContract', {} as DeploymentSubmission)
+                await env.deployments.save('MyContract', {
+                    address: makeZero(undefined),
+                    abi: [],
+                } as DeploymentSubmission)
 
                 // Then check whether the factory will get it for us
                 const deployment = await deploymentFactory({
@@ -81,9 +86,7 @@ describe('omnigraph/coordinates', () => {
 
                 expect(deployment).toEqual({
                     eid: EndpointId.ETHEREUM_MAINNET,
-                    deployment: {
-                        numDeployments: expect.any(Number),
-                    },
+                    contract: expect.any(Contract),
                 })
             })
         })
@@ -92,7 +95,7 @@ describe('omnigraph/coordinates', () => {
             it('should reject when eid does not exist', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const deploymentFactory = createDeploymentFactory(hre)
+                        const deploymentFactory = createContractFactory(hre)
 
                         await expect(() =>
                             deploymentFactory({ eid: EndpointId.CANTO_TESTNET, address })
@@ -104,7 +107,7 @@ describe('omnigraph/coordinates', () => {
             it('should reject when contract has not been deployed', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const deploymentFactory = createDeploymentFactory(hre)
+                        const deploymentFactory = createContractFactory(hre)
 
                         await expect(() =>
                             deploymentFactory({ eid: EndpointId.ETHEREUM_MAINNET, address })
@@ -117,13 +120,13 @@ describe('omnigraph/coordinates', () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
                         const environmentFactory = createNetworkEnvironmentFactory(hre)
-                        const deploymentFactory = createDeploymentFactory(hre)
+                        const deploymentFactory = createContractFactory(hre)
 
                         const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                         mockSend(env)
 
                         // We'll create a dummy deployment with the specified address first
-                        await env.deployments.save('MyContract', { address } as DeploymentSubmission)
+                        await env.deployments.save('MyContract', { address, abi: [] } as DeploymentSubmission)
 
                         // Then check whether the factory will get it for us
                         const deployment = await deploymentFactory({
@@ -133,10 +136,7 @@ describe('omnigraph/coordinates', () => {
 
                         expect(deployment).toEqual({
                             eid: EndpointId.ETHEREUM_MAINNET,
-                            deployment: {
-                                address,
-                                numDeployments: expect.any(Number),
-                            },
+                            contract: expect.any(Contract),
                         })
                     })
                 )
