@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { arePointsEqual, serializePoint, serializeVector } from './coordinates'
+import { arePointsEqual, isVectorPossible, serializePoint, serializeVector } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 import { formatOmniPoint, formatOmniVector } from './format'
 
@@ -12,6 +12,7 @@ export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
         const label = formatOmniVector(edge.vector)
         const from = formatOmniPoint(edge.vector.from)
 
+        assert(isVectorPossible(edge.vector), `Cannot add edge ${label}: cannot connect the two endpoints`)
         assert(this.getNodeAt(edge.vector.from), `Cannot add edge ${label}: ${from} is not in the graph`)
     }
 

@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { createNodeArbitrary, createEdgeArbitrary, pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 import { OmniGraphBuilder } from '@/omnigraph/builder'
-import { arePointsEqual, areVectorsEqual } from '@/omnigraph'
+import { arePointsEqual, areVectorsEqual, isVectorPossible } from '@/omnigraph'
 
 describe('omnigraph/builder', () => {
     const nodeConfigArbitrary = fc.anything()
@@ -122,14 +122,21 @@ describe('omnigraph/builder', () => {
                             fc.pre(!arePointsEqual(nodeA.point, nodeC.point))
                             fc.pre(!arePointsEqual(nodeB.point, nodeC.point))
 
-                            const builder = new OmniGraphBuilder()
-
                             const edgeAB = { vector: { from: nodeA.point, to: nodeB.point }, config: edgeConfig }
                             const edgeAC = { vector: { from: nodeA.point, to: nodeC.point }, config: edgeConfig }
                             const edgeBA = { vector: { from: nodeB.point, to: nodeA.point }, config: edgeConfig }
                             const edgeBC = { vector: { from: nodeB.point, to: nodeC.point }, config: edgeConfig }
                             const edgeCA = { vector: { from: nodeC.point, to: nodeA.point }, config: edgeConfig }
                             const edgeCB = { vector: { from: nodeC.point, to: nodeB.point }, config: edgeConfig }
+
+                            fc.pre(isVectorPossible(edgeAB.vector))
+                            fc.pre(isVectorPossible(edgeAC.vector))
+                            fc.pre(isVectorPossible(edgeBA.vector))
+                            fc.pre(isVectorPossible(edgeBC.vector))
+                            fc.pre(isVectorPossible(edgeCA.vector))
+                            fc.pre(isVectorPossible(edgeCB.vector))
+
+                            const builder = new OmniGraphBuilder()
 
                             builder
                                 .addNodes(nodeA, nodeB, nodeC)
@@ -158,6 +165,27 @@ describe('omnigraph/builder', () => {
             it('should fail if from is not in the graph', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
+                        const builder = new OmniGraphBuilder()
+
+                        builder
+                            .addNodes(
+                                { point: edge.vector.from, config: nodeConfig },
+                                { point: edge.vector.to, config: nodeConfig }
+                            )
+                            .removeNodeAt(edge.vector.from)
+
+                        expect(() => builder.addEdges(edge)).toThrow()
+                    })
+                )
+            })
+
+            it('should fail if vector is not possible', () => {
+                fc.assert(
+                    fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(!isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder
@@ -175,6 +203,8 @@ describe('omnigraph/builder', () => {
             it('should not fail if to is not in the graph', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder
@@ -193,6 +223,8 @@ describe('omnigraph/builder', () => {
             it('should add a single edge', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder
@@ -207,6 +239,8 @@ describe('omnigraph/builder', () => {
             it('should not add a duplicate edge', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder
@@ -226,6 +260,8 @@ describe('omnigraph/builder', () => {
                         edgeConfigArbitrary,
                         nodeConfigArbitrary,
                         (vector, configA, configB, nodeConfig) => {
+                            fc.pre(isVectorPossible(vector))
+
                             const builder = new OmniGraphBuilder()
 
                             const edgeA = { vector, config: configA }
@@ -246,6 +282,8 @@ describe('omnigraph/builder', () => {
             it('should not do anything when there are no edges', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, (edge) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder.removeEdgeAt(edge.vector)
@@ -257,6 +295,8 @@ describe('omnigraph/builder', () => {
             it('should return self', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, (edge) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         expect(builder.removeEdgeAt(edge.vector)).toBe(builder)
@@ -267,6 +307,8 @@ describe('omnigraph/builder', () => {
             it('should remove a edge at a specified vector', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, nodeConfigArbitrary, (edge, nodeConfig) => {
+                        fc.pre(isVectorPossible(edge.vector))
+
                         const builder = new OmniGraphBuilder()
 
                         builder
@@ -283,6 +325,8 @@ describe('omnigraph/builder', () => {
             it('should not remove edges at different vectors', () => {
                 fc.assert(
                     fc.property(edgeArbitrary, edgeArbitrary, nodeConfigArbitrary, (edgeA, edgeB, nodeConfig) => {
+                        fc.pre(isVectorPossible(edgeA.vector))
+                        fc.pre(isVectorPossible(edgeB.vector))
                         fc.pre(!areVectorsEqual(edgeA.vector, edgeB.vector))
 
                         const builder = new OmniGraphBuilder()
@@ -359,6 +403,7 @@ describe('omnigraph/builder', () => {
                     fc.property(edgesArbitrary, nodeConfigArbitrary, (edges, nodeConfig) => {
                         const edge = edges.at(-1)
                         fc.pre(edge != null)
+                        fc.pre(edges.map((e) => e.vector).every(isVectorPossible))
 
                         const builder = new OmniGraphBuilder()
                         const nodes = edges.flatMap(({ vector: { from, to } }) => [
@@ -380,6 +425,7 @@ describe('omnigraph/builder', () => {
                     fc.property(edgesArbitrary, nodeConfigArbitrary, (edges, nodeConfig) => {
                         const edge = edges.at(-1)
                         fc.pre(edge != null)
+                        fc.pre(edges.map((e) => e.vector).every(isVectorPossible))
 
                         const builder = new OmniGraphBuilder()
                         const nodes = edges.flatMap(({ vector: { from, to } }) => [
@@ -410,6 +456,7 @@ describe('omnigraph/builder', () => {
                     fc.property(edgesArbitrary, nodeConfigArbitrary, (edges, nodeConfig) => {
                         const edge = edges.at(-1)
                         fc.pre(edge != null)
+                        fc.pre(edges.map((e) => e.vector).every(isVectorPossible))
 
                         const builder = new OmniGraphBuilder()
                         const nodes = edges.flatMap(({ vector: { from, to } }) => [
@@ -444,6 +491,7 @@ describe('omnigraph/builder', () => {
                     fc.property(edgesArbitrary, nodeConfigArbitrary, (edges, nodeConfig) => {
                         const edge = edges.at(-1)
                         fc.pre(edge != null)
+                        fc.pre(edges.map((e) => e.vector).every(isVectorPossible))
 
                         const builder = new OmniGraphBuilder()
                         const nodes = edges.flatMap(({ vector: { from, to } }) => [
