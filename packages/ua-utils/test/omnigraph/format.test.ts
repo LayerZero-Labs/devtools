@@ -1,19 +1,10 @@
 import { formatEid, formatOmniPoint, formatOmniVector } from '@/omnigraph/format'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ENDPOINT_IDS, addressArbitrary, endpointArbitrary } from '@layerzerolabs/test-utils'
+import { ENDPOINT_IDS } from '@layerzerolabs/test-utils'
 import fc from 'fast-check'
+import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
 describe('omnigraph/format', () => {
-    const omniPointArbitrary = fc.record({
-        eid: endpointArbitrary,
-        address: addressArbitrary,
-    })
-
-    const omniVectorArbitrary = fc.record({
-        from: omniPointArbitrary,
-        to: omniPointArbitrary,
-    })
-
     describe('formatEid', () => {
         it.each(ENDPOINT_IDS)(`should format %d correctly`, (eid) => {
             expect(formatEid(eid)).toMatchSnapshot()
@@ -32,7 +23,7 @@ describe('omnigraph/format', () => {
     describe('formatOmniPoint', () => {
         it('should just work innit', () => {
             fc.assert(
-                fc.property(omniPointArbitrary, (point) => {
+                fc.property(pointArbitrary, (point) => {
                     expect(formatOmniPoint(point)).toBe(`[${point.address} @ ${formatEid(point.eid)}]`)
                 })
             )
@@ -42,7 +33,7 @@ describe('omnigraph/format', () => {
     describe('formatOmniVector', () => {
         it('should just work innit', () => {
             fc.assert(
-                fc.property(omniVectorArbitrary, (vector) => {
+                fc.property(vectorArbitrary, (vector) => {
                     expect(formatOmniVector(vector)).toBe(
                         `${formatOmniPoint(vector.from)} → ${formatOmniPoint(vector.to)}`
                     )
