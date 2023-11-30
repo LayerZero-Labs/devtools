@@ -1,12 +1,12 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OmniDeployment } from './coordinates'
 import { OmniPoint } from '@layerzerolabs/ua-utils'
+import { OmniContract } from '@layerzerolabs/utils-evm'
 
-export type OmniPointHardhat = OmniPoint | OmniPointContractName
-
-export interface OmniPointContractName {
+export interface OmniPointHardhat {
     eid: EndpointId
-    contractName: string
+    contractName?: string
+    address?: string
 }
 
 export interface OmniNodeHardhat<TNodeConfig> {
@@ -25,4 +25,4 @@ export interface OmniGraphHardhat<TNodeConfig = unknown, TEdgeConfig = unknown> 
     connections: OmniEdgeHardhat<TEdgeConfig>[]
 }
 
-export type OmniDeploymentFactory = (point: OmniPointHardhat) => OmniDeployment | Promise<OmniDeployment>
+export type OmniContractFactory = (point: OmniPointHardhat) => OmniContract | Promise<OmniContract>

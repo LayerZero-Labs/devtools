@@ -1,3 +1,4 @@
+import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
 import { OmniVector, OmniPoint, OmniNode } from './types'
 
 /**
@@ -30,6 +31,17 @@ export const areSameEndpoint = (a: OmniPoint, b: OmniPoint): boolean => a.eid ==
  */
 export const areVectorsEqual = (a: OmniVector, b: OmniVector): boolean =>
     arePointsEqual(a.from, b.from) && arePointsEqual(a.to, b.to)
+
+/**
+ * Checks that a vector is _possible_ - i.e. connects two endpoints
+ * that can be connected in reality.
+ *
+ * @param vector `OmniVector`
+ *
+ * @returns `true` if two points of the vector can be connected in reality
+ */
+export const isVectorPossible = ({ from, to }: OmniVector): boolean =>
+    endpointIdToStage(from.eid) === endpointIdToStage(to.eid)
 
 /**
  * Serializes a point. Useful for when points need to be used in Map

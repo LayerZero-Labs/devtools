@@ -1,4 +1,4 @@
-import type { HardhatRuntimeEnvironment, EIP1193Provider, Network } from 'hardhat/types'
+import type { HardhatRuntimeEnvironment, EIP1193Provider } from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
 import { Web3Provider } from '@ethersproject/providers'

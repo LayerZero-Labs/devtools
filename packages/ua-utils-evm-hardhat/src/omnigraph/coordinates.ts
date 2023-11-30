@@ -6,7 +6,7 @@ import pMemoize from 'p-memoize'
 import { OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
 import assert from 'assert'
-import { OmniDeploymentFactory, OmniPointContractName, OmniPointHardhat } from './types'
+import { OmniContractFactory } from './types'
 import { assertHardhatDeploy, createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
 
 export interface OmniDeployment {
@@ -21,36 +21,40 @@ export const omniDeploymentToContract = ({ eid, deployment }): OmniContract => (
     contract: new Contract(deployment.address, deployment.abi),
 })
 
-export const isOmniPointContractName = (point: OmniPointHardhat): point is OmniPointContractName =>
-    'contractName' in point && typeof point.contractName === 'string'
-
-export const createDeploymentFactory = (hre: HardhatRuntimeEnvironment): OmniDeploymentFactory => {
-    assertHardhatDeploy(hre)
-
+export const createContractFactory = (hre: HardhatRuntimeEnvironment): OmniContractFactory => {
     const environmentFactory = createNetworkEnvironmentFactory(hre)
 
-    return pMemoize(async (point) => {
-        const env = await environmentFactory(point.eid)
+    return pMemoize(async ({ eid, address, contractName }) => {
+        const env = await environmentFactory(eid)
         assertHardhatDeploy(env)
 
-        let deployment: Deployment | null
+        assert(
+            contractName != null || address != null,
+            'At least one of contractName, address must be specified for OmniPointHardhat'
+        )
 
-        if (isOmniPointContractName(point)) {
-            deployment = await env.deployments.getOrNull(point.contractName)
+        // If we have both the contract name & address, we go off artifacts
+        if (contractName != null && address != null) {
+            const artifact = await env.deployments.getArtifact(contractName)
+            const contract = new Contract(address, artifact.abi)
 
-            assert(
-                deployment,
-                `Could not find a deployment for contract '${point.contractName}' on endpoint ${point.eid}`
-            )
-        } else {
-            ;[deployment] = await env.deployments.getDeploymentsFromAddress(point.address)
-
-            assert(
-                deployment,
-                `Could not find a deployment for on address '${point.address}' and endpoint ${point.eid}`
-            )
+            return { eid, contract }
         }
 
-        return { eid: point.eid, deployment }
+        // If we have the contract name but no address, we need to get it from the deployments by name
+        if (contractName != null && address == null) {
+            const deployment = await env.deployments.getOrNull(contractName)
+            assert(deployment != null, `Could not find a deployment for contract '${contractName}`)
+
+            return omniDeploymentToContract({ eid, deployment })
+        }
+
+        // And if we only have the address, we need to go get it from deployments by address
+        if (address != null) {
+            const [deployment] = await env.deployments.getDeploymentsFromAddress(address)
+            assert(deployment != null, `Could not find a deployment for address '${address}`)
+
+            return omniDeploymentToContract({ eid, deployment })
+        }
     })
 }
