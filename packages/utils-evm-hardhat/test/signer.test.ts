@@ -1,6 +1,6 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createSignerFactory } from '../src/signer/factory'
+import { createSignerFactory } from '@/signer/factory'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { OmniSignerEVM } from '@layerzerolabs/utils-evm'
 

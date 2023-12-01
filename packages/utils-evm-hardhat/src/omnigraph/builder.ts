@@ -2,7 +2,13 @@ import type { OmniEdge, OmniNode } from '@layerzerolabs/utils'
 import type { OmniContractFactory, OmniGraphHardhat } from './types'
 import { OmniGraphBuilder } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
+import assert from 'assert'
 
+/**
+ * OmniGraphBuilderHardhat houses all hardhat-specific utilities for building OmniGraphs
+ *
+ * It is not an instantiable class - it only provides static utilities for working with OmniGraph
+ */
 export class OmniGraphBuilderHardhat {
     static async fromConfig<TNodeConfig, TEdgeConfig>(
         graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>,
@@ -28,5 +34,12 @@ export class OmniGraphBuilderHardhat {
         )
 
         return builder.addNodes(...nodes).addEdges(...edges)
+    }
+
+    constructor() {
+        assert(
+            false,
+            'OmniGraphBuilderHardhat cannot be instantiated - it only provides static utilities for working with OmniGraph'
+        )
     }
 }

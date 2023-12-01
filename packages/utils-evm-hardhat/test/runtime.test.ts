@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
-import { createNetworkEnvironmentFactory, getNetworkRuntimeEnvironment } from '../src/runtime'
+import { createNetworkEnvironmentFactory, getNetworkRuntimeEnvironment } from '@/runtime'
 import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 

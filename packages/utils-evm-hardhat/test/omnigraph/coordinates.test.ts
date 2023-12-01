@@ -1,14 +1,13 @@
 import fc from 'fast-check'
 import hre from 'hardhat'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
-import { Deployment, DeploymentSubmission } from 'hardhat-deploy/dist/types'
+import { Deployment } from 'hardhat-deploy/dist/types'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-utils'
 import { OmniDeployment, createContractFactory, omniDeploymentToContract, omniDeploymentToPoint } from '@/omnigraph'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
-import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Contract } from '@ethersproject/contracts'
 import { makeZero } from '@layerzerolabs/utils-evm'
+import { createNetworkEnvironmentFactory } from '@/runtime'
 
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 

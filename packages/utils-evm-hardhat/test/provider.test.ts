@@ -1,7 +1,7 @@
-import { getNetworkRuntimeEnvironment } from '../src/runtime'
+import { getNetworkRuntimeEnvironment } from '@/runtime'
 import hre from 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createProviderFactory } from '../src/provider'
+import { createProviderFactory } from '@/provider'
 import { Web3Provider } from '@ethersproject/providers'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result

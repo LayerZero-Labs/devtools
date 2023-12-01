@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { withLayerZeroArtifacts, withLayerZeroDeployments } from '../src/config'
+import { withLayerZeroArtifacts, withLayerZeroDeployments } from '@/config'
 import { dirname, join } from 'path'
 
 describe('config', () => {
