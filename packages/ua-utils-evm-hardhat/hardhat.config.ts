@@ -9,7 +9,7 @@ import { HardhatUserConfig } from 'hardhat/types'
 const config: HardhatUserConfig = {
     networks: {
         withEndpointId: {
-            endpointId: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_MAINNET,
             url: 'no:///way',
             saveDeployments: false,
         },

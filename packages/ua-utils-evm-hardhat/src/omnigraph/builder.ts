@@ -1,5 +1,6 @@
-import { type OmniEdge, OmniGraphBuilder, type OmniNode } from '@layerzerolabs/ua-utils'
+import type { OmniEdge, OmniNode } from '@layerzerolabs/utils'
 import type { OmniContractFactory, OmniGraphHardhat } from './types'
+import { OmniGraphBuilder } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 
 export class OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig> extends OmniGraphBuilder<TNodeConfig, TEdgeConfig> {

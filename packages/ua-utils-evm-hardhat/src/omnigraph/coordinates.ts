@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { OmniPoint } from '@layerzerolabs/ua-utils'
+import type { OmniPoint } from '@layerzerolabs/utils'
 import type { Deployment } from 'hardhat-deploy/dist/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import pMemoize from 'p-memoize'

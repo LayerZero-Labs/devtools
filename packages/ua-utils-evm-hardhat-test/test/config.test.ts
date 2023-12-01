@@ -16,10 +16,10 @@ describe('config', () => {
 
             it('should have an endpoint deployed', async () => {
                 const endpoint = await environment.ethers.getContract('EndpointV2')
-                const endpointId = await endpoint.eid()
+                const eid = await endpoint.eid()
 
-                expect(environment.network.config.endpointId).to.be.a('number')
-                expect(endpointId).to.eql(environment.network.config.endpointId)
+                expect(environment.network.config.eid).to.be.a('number')
+                expect(eid).to.eql(environment.network.config.eid)
             })
         })
     })

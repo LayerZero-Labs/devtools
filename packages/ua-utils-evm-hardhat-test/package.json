@@ -28,6 +28,8 @@
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/ua-utils-evm": "~0.0.1",
     "@layerzerolabs/ua-utils-evm-hardhat": "~0.0.1",
+    "@layerzerolabs/utils": "~0.0.1",
+    "@layerzerolabs/utils-evm": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/chai-as-promised": "^7.1.7",

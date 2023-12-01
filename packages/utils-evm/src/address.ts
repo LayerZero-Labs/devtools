@@ -1,6 +1,7 @@
+import type { Address } from '@layerzerolabs/utils'
 import { AddressZero } from '@ethersproject/constants'
 
-export const ignoreZero = (address: string | null | undefined): string | undefined =>
+export const ignoreZero = (address: Address | null | undefined): string | undefined =>
     address === AddressZero ? undefined : address ?? undefined
 
-export const makeZero = (address: string | null | undefined): string => address ?? AddressZero
+export const makeZero = (address: Address | null | undefined): string => address ?? AddressZero

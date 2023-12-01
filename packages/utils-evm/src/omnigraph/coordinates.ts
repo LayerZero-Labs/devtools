@@ -1,4 +1,4 @@
-import type { OmniPoint } from '@layerzerolabs/ua-utils'
+import type { OmniPoint } from '@layerzerolabs/utils'
 import type { OmniContract } from './types'
 import { Provider } from '@/provider/types'
 

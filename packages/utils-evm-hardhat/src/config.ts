@@ -29,10 +29,10 @@ const resolvePackageDirectory = (packageName: string): string => {
  * const config: HardhatUserConfig = {
  *   networks: {
  *     arbitrum: {
- *       endpointId: EndpointId.ARBITRUM_MAINNET
+ *       eid: EndpointId.ARBITRUM_MAINNET
  *     },
  *     fuji: {
- *       endpointId: EndpointId.AVALANCHE_TESTNET
+ *       eid: EndpointId.AVALANCHE_TESTNET
  *     }
  *   }
  * }
@@ -61,11 +61,11 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
             // Now for the meat of the operation, we'll enrich the external.deployments object
             deployments: Object.fromEntries(
                 Object.entries(config.networks ?? {}).flatMap(([networkName, networkConfig]) => {
-                    const endpointId = networkConfig?.endpointId
+                    const eid = networkConfig?.eid
                     const networkLogger = createNetworkLogger(networkName)
 
-                    // Let's first check whether endpointId is defined on the network config
-                    if (endpointId == null) {
+                    // Let's first check whether eid is defined on the network config
+                    if (eid == null) {
                         networkLogger.debug(
                             'Endpoint ID not specified in hardhat config, skipping external deployment configuration'
                         )
@@ -75,7 +75,7 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
 
                     try {
                         // This operation is unsafe and can throw - let's make sure we don't explode with some unreadable error
-                        const layerZeroNetworkName = endpointIdToNetwork(endpointId)
+                        const layerZeroNetworkName = endpointIdToNetwork(eid)
                         const layerZeroNetworkDeploymentsDirectories = resolvedDeploymentsDirectories.map(
                             (deploymentsDirectory) => join(deploymentsDirectory, layerZeroNetworkName)
                         )
@@ -99,7 +99,7 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
                         ]
                     } catch (error) {
                         networkLogger.error(
-                            `Invalid endpoint ID specified in hardhat config (${endpointId}), skipping external deployment configuration`
+                            `Invalid endpoint ID specified in hardhat config (${eid}), skipping external deployment configuration`
                         )
 
                         return []
@@ -121,10 +121,10 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
  * const config: HardhatUserConfig = {
  *   networks: {
  *     arbitrum: {
- *       endpointId: EndpointId.ARBITRUM_MAINNET
+ *       eid: EndpointId.ARBITRUM_MAINNET
  *     },
  *     fuji: {
- *       endpointId: EndpointId.AVALANCHE_TESTNET
+ *       eid: EndpointId.AVALANCHE_TESTNET
  *     }
  *   }
  * }

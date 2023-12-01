@@ -3,18 +3,18 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
-        endpointId?: never
+        eid?: never
     }
 
     interface HardhatNetworkConfig {
-        endpointId?: never
+        eid?: never
     }
 
     interface HttpNetworkUserConfig {
-        endpointId?: EndpointId
+        eid?: EndpointId
     }
 
     interface HttpNetworkConfig {
-        endpointId?: EndpointId
+        eid?: EndpointId
     }
 }

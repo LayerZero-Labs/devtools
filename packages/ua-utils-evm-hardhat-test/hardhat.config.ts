@@ -21,14 +21,14 @@ const config: HardhatUserConfig = {
             },
         },
         vengaboys: {
-            endpointId: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_MAINNET,
             url: 'http://network-vengaboys:8545',
             accounts: {
                 mnemonic: MNEMONIC,
             },
         },
         britney: {
-            endpointId: EndpointId.AVALANCHE_MAINNET,
+            eid: EndpointId.AVALANCHE_MAINNET,
             url: 'http://network-britney:8545',
             accounts: {
                 mnemonic: MNEMONIC,

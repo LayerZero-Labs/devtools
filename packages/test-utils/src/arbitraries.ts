@@ -9,3 +9,13 @@ export const evmAddressArbitrary = fc.hexaString({ minLength: 40, maxLength: 40 
 export const endpointArbitrary: fc.Arbitrary<EndpointId> = fc.constantFrom(...ENDPOINT_IDS)
 
 export const stageArbitrary: fc.Arbitrary<Stage> = fc.constantFrom(Stage.MAINNET, Stage.TESTNET, Stage.SANDBOX)
+
+export const pointArbitrary = fc.record({
+    eid: endpointArbitrary,
+    address: evmAddressArbitrary,
+})
+
+export const vectorArbitrary = fc.record({
+    from: pointArbitrary,
+    to: pointArbitrary,
+})

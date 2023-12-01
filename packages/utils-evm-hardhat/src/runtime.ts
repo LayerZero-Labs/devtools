@@ -6,7 +6,7 @@ import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointBasedFactory } from '@layerzerolabs/utils-evm'
+import { EndpointBasedFactory } from '@layerzerolabs/utils'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
@@ -119,7 +119,7 @@ export const createNetworkEnvironmentFactory = (
  * Creates a mapping between EndpointId and network name
  * based on the hardhat project configuration.
  *
- * It will silently ignore networks that don't have `endpointId`
+ * It will silently ignore networks that don't have `eid`
  * specified in their network configuration.
  *
  * @param hre `HardhatRuntimeEnvironment`
@@ -132,9 +132,9 @@ export const getNetworkNamesByEid = (
 
     return new Map(
         networks.flatMap(([networkName, networkConfig]) => {
-            if (networkConfig.endpointId == null) return []
+            if (networkConfig.eid == null) return []
 
-            return [[networkConfig.endpointId, networkName]]
+            return [[networkConfig.eid, networkName]]
         })
     )
 }
