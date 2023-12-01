@@ -1,4 +1,5 @@
 export * from './address'
+export * from './endpoint'
 export * from './omnigraph'
 export * from './provider'
 export * from './signer'
