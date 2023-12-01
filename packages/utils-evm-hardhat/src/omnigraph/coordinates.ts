@@ -7,11 +7,8 @@ import { OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
 import assert from 'assert'
 import { OmniContractFactory } from './types'
-import {
-    assertHardhatDeploy,
-    createNetworkEnvironmentFactory,
-    getDefaultRuntimeEnvironment,
-} from '@layerzerolabs/utils-evm-hardhat'
+import { createNetworkEnvironmentFactory, getDefaultRuntimeEnvironment } from '@/runtime'
+import { assertHardhatDeploy } from '@/internal/assertions'
 
 export interface OmniDeployment {
     eid: EndpointId
@@ -33,11 +30,6 @@ export const createContractFactory = (
         const env = await environmentFactory(eid)
         assertHardhatDeploy(env)
 
-        assert(
-            contractName != null || address != null,
-            'At least one of contractName, address must be specified for OmniPointHardhat'
-        )
-
         // If we have both the contract name & address, we go off artifacts
         if (contractName != null && address != null) {
             const artifact = await env.deployments.getArtifact(contractName)
@@ -49,7 +41,7 @@ export const createContractFactory = (
         // If we have the contract name but no address, we need to get it from the deployments by name
         if (contractName != null && address == null) {
             const deployment = await env.deployments.getOrNull(contractName)
-            assert(deployment != null, `Could not find a deployment for contract '${contractName}`)
+            assert(deployment != null, `Could not find a deployment for contract '${contractName}'`)
 
             return omniDeploymentToContract({ eid, deployment })
         }
@@ -57,9 +49,11 @@ export const createContractFactory = (
         // And if we only have the address, we need to go get it from deployments by address
         if (address != null) {
             const [deployment] = await env.deployments.getDeploymentsFromAddress(address)
-            assert(deployment != null, `Could not find a deployment for address '${address}`)
+            assert(deployment != null, `Could not find a deployment for address '${address}'`)
 
             return omniDeploymentToContract({ eid, deployment })
         }
+
+        assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat')
     })
 }
