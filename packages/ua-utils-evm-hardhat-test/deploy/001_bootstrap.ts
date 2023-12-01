@@ -8,14 +8,14 @@ import assert from 'assert'
  * @param env `HardhatRuntimeEnvironment`
  */
 const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network }) => {
-    assert(network.config.endpointId != null, `Missing endpoint ID for network ${network.name}`)
+    assert(network.config.eid != null, `Missing endpoint ID for network ${network.name}`)
 
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
 
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
         from: deployer,
-        args: [network.config.endpointId],
+        args: [network.config.eid],
     })
 
     const sendUln302 = await deployments.deploy('SendUln302', {
