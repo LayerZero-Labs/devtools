@@ -1,6 +1,4 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { expect } from 'chai'
-import { describe } from 'mocha'
 import { withLayerZeroArtifacts, withLayerZeroDeployments } from '../src/config'
 import { dirname, join } from 'path'
 
@@ -13,7 +11,7 @@ describe('config', () => {
         it('should add no external deployments if no networks have been specified', () => {
             const config = {}
 
-            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
+            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
                 external: {
                     deployments: {},
                 },
@@ -27,7 +25,7 @@ describe('config', () => {
                 },
             }
 
-            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
+            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
                 networks: {
                     'vengaboys-testnet': {},
                 },
@@ -46,7 +44,7 @@ describe('config', () => {
                 },
             }
 
-            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
+            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
                 networks: {
                     'vengaboys-testnet': {
                         eid: 0,
@@ -67,7 +65,7 @@ describe('config', () => {
                 },
             }
 
-            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
+            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
                 networks: {
                     'vengaboys-testnet': {
                         eid: EndpointId.ARBITRUM_MAINNET,
@@ -96,7 +94,7 @@ describe('config', () => {
             )(config)
             const configWithSomePathAgain = withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(configWithSomePath)
 
-            expect(configWithSomePathAgain).to.eql({
+            expect(configWithSomePathAgain).toEqual({
                 networks: {
                     'vengaboys-testnet': {
                         eid: EndpointId.BSC_TESTNET,
@@ -121,7 +119,7 @@ describe('config', () => {
                 networks: {},
             }
 
-            expect(withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(config)).to.eql({
+            expect(withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
                 networks: {},
                 external: {
                     contracts: [
@@ -154,7 +152,7 @@ describe('config', () => {
             )(config)
             const configWithSomePathAgain = withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(configWithSomePath)
 
-            expect(configWithSomePathAgain).to.eql({
+            expect(configWithSomePathAgain).toEqual({
                 networks: {},
                 external: {
                     contracts: [

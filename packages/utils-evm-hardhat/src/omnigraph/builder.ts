@@ -3,12 +3,12 @@ import type { OmniContractFactory, OmniGraphHardhat } from './types'
 import { OmniGraphBuilder } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 
-export class OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig> extends OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
+export class OmniGraphBuilderHardhat {
     static async fromConfig<TNodeConfig, TEdgeConfig>(
         graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>,
         contractFactory: OmniContractFactory
-    ): Promise<OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig>> {
-        const builder = new OmniGraphBuilderHardhat<TNodeConfig, TEdgeConfig>()
+    ): Promise<OmniGraphBuilder<TNodeConfig, TEdgeConfig>> {
+        const builder = new OmniGraphBuilder<TNodeConfig, TEdgeConfig>()
 
         const nodes: OmniNode<TNodeConfig>[] = await Promise.all(
             graph.contracts.map(async ({ contract, config }) => ({

@@ -33,7 +33,7 @@
     "build": "npx tsup",
     "clean": "rm -rf dist",
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "devDependencies": {
     "@ethersproject/contracts": "^5.7.0",
