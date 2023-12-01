@@ -108,8 +108,6 @@ exports[`omnigraph/format formatEid should format 217 correctly 1`] = `"MANTA_MA
 
 exports[`omnigraph/format formatEid should format 218 correctly 1`] = `"PGN_MAINNET"`;
 
-exports[`omnigraph/format formatEid should format 230 correctly 1`] = `"SHIMMER_MAINNET"`;
-
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10106 correctly 1`] = `"AVALANCHE_TESTNET"`;
@@ -240,6 +238,8 @@ exports[`omnigraph/format formatEid should format 10223 correctly 1`] = `"PGN_TE
 
 exports[`omnigraph/format formatEid should format 10224 correctly 1`] = `"POLYGONCDK_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10225 correctly 1`] = `"TRON_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10230 correctly 1`] = `"SHIMMER_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -250,7 +250,13 @@ exports[`omnigraph/format formatEid should format 20106 correctly 1`] = `"AVALAN
 
 exports[`omnigraph/format formatEid should format 20109 correctly 1`] = `"POLYGON_SANDBOX"`;
 
+exports[`omnigraph/format formatEid should format 20110 correctly 1`] = `"ARBITRUM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20111 correctly 1`] = `"OPTIMISM_SANDBOX"`;
+
 exports[`omnigraph/format formatEid should format 20121 correctly 1`] = `"ETHEREUM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20225 correctly 1`] = `"TRON_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 30101 correctly 1`] = `"ETHEREUM_V2_MAINNET"`;
 
@@ -359,8 +365,6 @@ exports[`omnigraph/format formatEid should format 30216 correctly 1`] = `"XPLA_V
 exports[`omnigraph/format formatEid should format 30217 correctly 1`] = `"MANTA_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30218 correctly 1`] = `"PGN_V2_MAINNET"`;
-
-exports[`omnigraph/format formatEid should format 30230 correctly 1`] = `"SHIMMER_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 40102 correctly 1`] = `"BSC_V2_TESTNET"`;
 
@@ -488,12 +492,20 @@ exports[`omnigraph/format formatEid should format 40223 correctly 1`] = `"PGN_V2
 
 exports[`omnigraph/format formatEid should format 40224 correctly 1`] = `"POLYGONCDK_V2_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 40225 correctly 1`] = `"TRON_V2_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 50102 correctly 1`] = `"BSC_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50106 correctly 1`] = `"AVALANCHE_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50109 correctly 1`] = `"POLYGON_V2_SANDBOX"`;
 
+exports[`omnigraph/format formatEid should format 50110 correctly 1`] = `"ARBITRUM_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50111 correctly 1`] = `"OPTIMISM_V2_SANDBOX"`;
+
 exports[`omnigraph/format formatEid should format 50121 correctly 1`] = `"ETHEREUM_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50168 correctly 1`] = `"SOLANA_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50225 correctly 1`] = `"TRON_V2_SANDBOX"`;
