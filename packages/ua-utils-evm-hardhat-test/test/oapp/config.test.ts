@@ -1,7 +1,12 @@
 import { configureOApp } from '@layerzerolabs/ua-utils'
 import { OApp } from '@layerzerolabs/ua-utils-evm'
-import { createContractFactory, createProviderFactory, createSignerFactory } from '@layerzerolabs/utils-evm-hardhat'
-import type { OmniGraphHardhat, OmniGraphBuilderHardhat } from '@layerzerolabs/utils-evm-hardhat'
+import {
+    createContractFactory,
+    createProviderFactory,
+    createSignerFactory,
+    OmniGraphBuilderHardhat,
+} from '@layerzerolabs/utils-evm-hardhat'
+import type { OmniGraphHardhat } from '@layerzerolabs/utils-evm-hardhat'
 import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint, connectOmniContract } from '@layerzerolabs/utils-evm'
 import { expect } from 'chai'
