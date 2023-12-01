@@ -50,3 +50,9 @@ export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
     contracts: OmniNode<TNodeConfig>[]
     connections: OmniEdge<TEdgeConfig>[]
 }
+
+/**
+ * OmniPointBasedFactory is a basis for all factories that can create objects
+ * based on OmniPoints - by their character these are typically contract or deployment factories
+ */
+export type OmniPointBasedFactory<TValue> = (point: OmniPoint) => TValue | Promise<TValue>
