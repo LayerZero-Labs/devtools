@@ -1,6 +1,7 @@
-import { OmniGraph, OmniPointBasedFactory } from '@/omnigraph/types'
+import type { OmniGraph, OmniPointBasedFactory } from '@/omnigraph/types'
+import type { OmniTransaction } from '@/transactions/types'
+import type { Address } from '@/types'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { Address, OmniTransaction } from '@layerzerolabs/utils'
 
 export interface IEndpoint {
     defaultSendLibrary(eid: EndpointId): Promise<Address | undefined>
