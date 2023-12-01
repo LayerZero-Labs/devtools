@@ -8,10 +8,7 @@ import { Web3Provider } from '@ethersproject/providers'
 jest.spyOn(Web3Provider.prototype, 'send').mockResolvedValue('1')
 
 describe('provider', () => {
-    // Web3Provider.prototype.s
     describe('createProviderFactory', () => {
-        beforeAll(() => {})
-
         it('should reject with an endpoint that is not in the hardhat config', async () => {
             await expect(createProviderFactory(hre)(EndpointId.CATHAY_TESTNET)).rejects.toBeTruthy()
         })
