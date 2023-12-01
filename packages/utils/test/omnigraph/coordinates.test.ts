@@ -7,8 +7,7 @@ import {
     areSameEndpoint,
     isVectorPossible,
 } from '@/omnigraph/coordinates'
-import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
-import { addressArbitrary, endpointArbitrary, stageArbitrary } from '@layerzerolabs/test-utils'
+import { addressArbitrary, endpointArbitrary, pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-utils'
 import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 describe('omnigraph/vector', () => {

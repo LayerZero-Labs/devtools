@@ -1,47 +1,47 @@
-import { createProviderFactory } from '@layerzerolabs/utils-evm-hardhat'
+import { configureOApp } from '@layerzerolabs/ua-utils'
+import { OApp } from '@layerzerolabs/ua-utils-evm'
+import { createContractFactory, OmniGraphHardhat, OmniGraphBuilderHardhat } from '@layerzerolabs/ua-utils-evm-hardhat'
+import type { OmniPoint } from '@layerzerolabs/utils'
+import { omniContractToPoint, connectOmniContract } from '@layerzerolabs/utils-evm'
+import { createProviderFactory, createSignerFactory } from '@layerzerolabs/utils-evm-hardhat'
 import { expect } from 'chai'
 import { describe } from 'mocha'
-import hre from 'hardhat'
-import { configureOApp, OmniPoint } from '@layerzerolabs/ua-utils'
-import { OApp } from '@layerzerolabs/ua-utils-evm'
-import { omniContractToPoint, connectOmniContract } from '@layerzerolabs/utils-evm'
-import { createContractFactory, OmniGraphHardhat, OmniGraphBuilderHardhat } from '@layerzerolabs/ua-utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 describe('oapp/config', () => {
+    const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
+    const avaxContract = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DefaultOApp' }
+
+    // This is the OApp config that we want to use against our contracts
+    const config: OmniGraphHardhat = {
+        contracts: [
+            {
+                contract: ethContract,
+                config: undefined,
+            },
+            {
+                contract: avaxContract,
+                config: undefined,
+            },
+        ],
+        connections: [
+            {
+                from: ethContract,
+                to: avaxContract,
+                config: undefined,
+            },
+            {
+                from: avaxContract,
+                to: ethContract,
+                config: undefined,
+            },
+        ],
+    }
+
     it('should return all setPeer transactions', async () => {
-        const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
-        const avaxContract = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DefaultOApp' }
-
-        // This is the OApp config that we want to use against our contracts
-        const config: OmniGraphHardhat = {
-            contracts: [
-                {
-                    contract: ethContract,
-                    config: undefined,
-                },
-                {
-                    contract: avaxContract,
-                    config: undefined,
-                },
-            ],
-            connections: [
-                {
-                    from: ethContract,
-                    to: avaxContract,
-                    config: undefined,
-                },
-                {
-                    from: avaxContract,
-                    to: ethContract,
-                    config: undefined,
-                },
-            ],
-        }
-
         // This is the required tooling we need to set up
-        const providerFactory = createProviderFactory(hre)
-        const contractFactory = createContractFactory(hre)
+        const providerFactory = createProviderFactory()
+        const contractFactory = createContractFactory()
         const builder = await OmniGraphBuilderHardhat.fromConfig(config, contractFactory)
 
         // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
@@ -66,5 +66,43 @@ describe('oapp/config', () => {
             await ethSdk.setPeer(avaxPoint.eid, avaxPoint.address),
             await avaxSdk.setPeer(ethPoint.eid, ethPoint.address),
         ])
+    })
+
+    it('should exclude setPeer transactions for peers that have been set', async () => {
+        // This is the required tooling we need to set up
+        const providerFactory = createProviderFactory()
+        const contractFactory = createContractFactory()
+        const builder = await OmniGraphBuilderHardhat.fromConfig(config, contractFactory)
+
+        // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
+        const sdkFactory = async (point: OmniPoint) => {
+            const provider = await providerFactory(point.eid)
+            const contract = await contractFactory(point)
+
+            return new OApp(connectOmniContract(contract, provider))
+        }
+
+        const ethPoint = omniContractToPoint(await contractFactory(ethContract))
+        const ethSdk = await sdkFactory(ethPoint)
+
+        const avaxPoint = omniContractToPoint(await contractFactory(avaxContract))
+        const avaxSdk = await sdkFactory(avaxPoint)
+
+        // Before we configure the OApp, we'll set some peers
+        {
+            const signerFactory = createSignerFactory()
+            const ethSigner = await signerFactory(ethContract.eid)
+            const ethTransaction = await ethSdk.setPeer(avaxPoint.eid, avaxPoint.address)
+            const ethResponse = await ethSigner.signAndSend(ethTransaction)
+            const ethReceipt = await ethResponse.wait()
+
+            expect(ethReceipt.from).to.equal(await ethSigner.signer.getAddress())
+        }
+
+        // Now we configure the OApp
+        const transactions = await configureOApp(builder.graph, sdkFactory)
+
+        // And expect the setPeer on the eth contact not to be there
+        expect(transactions).to.eql([await avaxSdk.setPeer(ethPoint.eid, ethPoint.address)])
     })
 })

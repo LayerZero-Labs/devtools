@@ -1,5 +1,6 @@
 import fc from 'fast-check'
-import { createNodeArbitrary, createEdgeArbitrary, pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
+import { pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-utils'
+import { createNodeArbitrary, createEdgeArbitrary } from '../__utils__/arbitraries'
 import { OmniGraphBuilder } from '@/omnigraph/builder'
 import { arePointsEqual, areVectorsEqual, isVectorPossible } from '@/omnigraph'
 

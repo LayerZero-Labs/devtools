@@ -1,7 +1,7 @@
-import { Address, OmniTransaction } from '@layerzerolabs/ua-utils'
+import type { IOApp } from '@layerzerolabs/ua-utils'
+import type { Address, OmniTransaction } from '@layerzerolabs/utils'
 import { omniContractToPoint, OmniContract, ignoreZero, makeZero } from '@layerzerolabs/utils-evm'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { IOApp } from '@layerzerolabs/ua-utils'
+import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export class OApp implements IOApp {
     constructor(public readonly contract: OmniContract) {}

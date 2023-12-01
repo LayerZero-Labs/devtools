@@ -1,7 +1,7 @@
 import fc from 'fast-check'
+import { pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-utils'
 import { createOmniEdgeSchema, createOmniNodeSchema } from '@/omnigraph/schema'
 import { z } from 'zod'
-import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
 describe('omnigraph/schema', () => {
     interface TestCase {
