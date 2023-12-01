@@ -15,18 +15,24 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
         from: deployer,
-        args: [network.config.endpointId, AddressZero],
+        args: [network.config.endpointId],
     })
 
-    const uln302Deployment = await deployments.deploy('UltraLightNode302', {
+    const sendUln302 = await deployments.deploy('SendUln302', {
         from: deployer,
-        args: [endpointV2Deployment.address, 0],
+        args: [endpointV2Deployment.address, 0, 0],
+    })
+
+    const receiveUln302 = await deployments.deploy('ReceiveUln302', {
+        from: deployer,
+        args: [endpointV2Deployment.address],
     })
 
     console.table({
         Network: network.name,
         EndpointV2: endpointV2Deployment.address,
-        UltraLightNode302: uln302Deployment.address,
+        SendUln302: sendUln302.address,
+        ReceiveUln302: receiveUln302.address,
     })
 }
 
