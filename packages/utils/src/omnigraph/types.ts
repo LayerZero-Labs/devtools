@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { Address } from '@layerzerolabs/utils'
+import type { Address } from '@/types'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
