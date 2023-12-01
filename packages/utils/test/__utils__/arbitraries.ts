@@ -1,16 +1,6 @@
 import fc from 'fast-check'
-import { addressArbitrary, endpointArbitrary } from '@layerzerolabs/test-utils'
-import { OmniEdge, OmniNode, OmniPoint, OmniVector } from '@/omnigraph/types'
-
-export const pointArbitrary: fc.Arbitrary<OmniPoint> = fc.record({
-    eid: endpointArbitrary,
-    address: addressArbitrary,
-})
-
-export const vectorArbitrary: fc.Arbitrary<OmniVector> = fc.record({
-    from: pointArbitrary,
-    to: pointArbitrary,
-})
+import { pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-utils'
+import type { OmniEdge, OmniNode } from '@/omnigraph/types'
 
 export const createNodeArbitrary = <TConfig = unknown>(
     configArbitrary: fc.Arbitrary<TConfig>

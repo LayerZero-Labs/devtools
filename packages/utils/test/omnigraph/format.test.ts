@@ -1,8 +1,7 @@
 import { formatEid, formatOmniPoint, formatOmniVector } from '@/omnigraph/format'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ENDPOINT_IDS } from '@layerzerolabs/test-utils'
+import { ENDPOINT_IDS, pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-utils'
 import fc from 'fast-check'
-import { pointArbitrary, vectorArbitrary } from '../__utils__/arbitraries'
 
 describe('omnigraph/format', () => {
     describe('formatEid', () => {
