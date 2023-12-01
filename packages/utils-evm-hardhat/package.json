@@ -50,7 +50,6 @@
     "@layerzerolabs/lz-evm-sdk-v1": "~1.5.65",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils-evm": "~0.0.1",
-    "@types/chai-as-promised": "^7.1.7",
     "@types/jest": "^29.5.10",
     "fast-check": "^3.14.0",
     "hardhat": "^2.19.0",
