@@ -11338,26 +11338,6 @@ tsort@0.0.1:
   resolved "https://registry.npmjs.org/tsort/-/tsort-0.0.1.tgz"
   integrity sha512-Tyrf5mxF8Ofs1tNoxA13lFeZ2Zrbd6cKbuH3V+MQ5sb6DtBj5FjrXVsRWT8YvNAQTqNoz66dz1WsbigI22aEnw==
 
-tsup@^7.2.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/tsup/-/tsup-7.3.0.tgz#c7776e08c7ef55ed69def2c6e7ba4719005f5abd"
-  integrity sha512-Ja1eaSRrE+QarmATlNO5fse2aOACYMBX+IZRKy1T+gpyH+jXgRrl5l4nHIQJQ1DoDgEjHDTw8cpE085UdBZuWQ==
-  dependencies:
-    bundle-require "^4.0.0"
-    cac "^6.7.12"
-    chokidar "^3.5.1"
-    debug "^4.3.1"
-    esbuild "^0.19.2"
-    execa "^5.0.0"
-    globby "^11.0.3"
-    joycon "^3.0.1"
-    postcss-load-config "^4.0.1"
-    resolve-from "^5.0.0"
-    rollup "^4.0.2"
-    source-map "0.8.0-beta.0"
-    sucrase "^3.20.3"
-    tree-kill "^1.2.2"
-
 tsup@^8.0.1, tsup@~8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/tsup/-/tsup-8.0.1.tgz#04a0170f7bbe77e81da3b53006b0a40282291833"
