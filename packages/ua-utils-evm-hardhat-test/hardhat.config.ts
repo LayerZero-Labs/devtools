@@ -3,6 +3,7 @@ import 'hardhat-deploy-ethers'
 import { withLayerZeroArtifacts } from '@layerzerolabs/utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
+import '@layerzerolabs/ua-utils-evm-hardhat/tasks'
 
 const MNEMONIC = 'test test test test test test test test test test test test'
 
