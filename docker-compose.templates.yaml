@@ -38,8 +38,7 @@ services:
   evm-node:
     extends:
       service: project
-    working_dir: /app/packages/test-evm-node
-    command: ["npx", "turbo", "start"]
+    command: ["npx", "turbo", "start", "--filter", "test-evm-node"]
     healthcheck:
       interval: 2s
       retries: 10
