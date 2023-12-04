@@ -40,5 +40,6 @@ services:
       network-britney:
         condition: service_healthy
     volumes:
+      - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       - ./packages:/app/packages
     command: "npx turbo test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS"
