@@ -11392,7 +11392,7 @@ turbo-darwin-64@1.5.6:
 
 turbo-darwin-arm64@1.5.6:
   version "1.5.6"
-  resolved "https://registry.npmjs.org/turbo-darwin-arm64/-/turbo-darwin-arm64-1.5.6.tgz"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-1.5.6.tgz#bed2bba126d53d7bbfd45f95e239fc43fd5bccbf"
   integrity sha512-c/aXgW9JuXT2bJSKf01pdSDQKnrdcdj3WFKmKiVldb9We6eqFzI0fLHBK97k5LM/OesmRMfCMQ2Cv2DU8RqBAA==
 
 turbo-linux-64@1.5.6:
@@ -11417,7 +11417,7 @@ turbo-windows-arm64@1.5.6:
 
 turbo@1.5.6:
   version "1.5.6"
-  resolved "https://registry.npmjs.org/turbo/-/turbo-1.5.6.tgz"
+  resolved "https://registry.yarnpkg.com/turbo/-/turbo-1.5.6.tgz#7dac8db14b2452afa45c57c050ff19989d4ab074"
   integrity sha512-xJO/fhiMo4lI62iGR9OgUfJTC9tnnuoMwNC52IfvvBDEPlA8RWGMS8SFpDVG9bNCXvVRrtUTNJXMe6pJWBiOTA==
   optionalDependencies:
     turbo-darwin-64 "1.5.6"

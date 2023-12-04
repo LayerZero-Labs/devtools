@@ -11,11 +11,16 @@ FROM node:18.16.0 as base
 
 ENV YARN_CACHE_FOLDER=/tmp/yarn_cache
 
+# We'll need a mock NPM_TOKEN to execute any yarn commands
+ENV NPM_TOKEN=
+
 # Update the system packages
 RUN apt-get update
 RUN apt-get install -y \
     # Get the envsubst command (see below)
-    gettext-base
+    gettext-base \
+    # Get the json utilities
+    jq
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -27,11 +32,6 @@ RUN apt-get install -y \
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM base as builder
-
-# The name of the package we're building here
-# 
-# e.g. @layerzerolabs/ua-utils-evm-hardhat
-ARG PACKAGE
 
 WORKDIR /app
 
@@ -47,7 +47,14 @@ COPY . .
 # 
 # See more here https://turbo.build/repo/docs/reference/command-line-reference/prune
 # And here https://turbo.build/repo/docs/handbook/deploying-with-docker
-RUN turbo prune $PACKAGE --docker
+# 
+# There's an open issue on turbo github to support pruning
+# without scope, in the meantime we'll use yarn workspaces info
+# in combination with jq to get a full list of the workspace packages
+# and prefix them with --scope
+# 
+# See https://github.com/vercel/turbo/issues/4074
+RUN turbo prune $(yarn workspaces --silent info | jq -r 'keys | map("--scope " + .) | join(" ")') --docker
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -99,17 +106,14 @@ RUN \
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#               Image that builds the package
+#        Image that prepares the project for development
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM dependencies as build
+FROM dependencies as development
 
-# The name of the package we're building here
-# 
-# e.g. @layerzerolabs/ua-utils-evm-hardhat
-ARG PACKAGE
+ENV NPM_TOKEN=
 
 WORKDIR /app
 
@@ -118,6 +122,3 @@ COPY tsconfig.json ./
 
 # Now we grab the full source code from the builder step
 COPY --from=builder /app/out/full/ .
-
-# And finally we build the package
-RUN yarn build --filter=$PACKAGE...

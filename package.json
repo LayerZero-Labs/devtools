@@ -12,7 +12,7 @@
     "dev": "npx turbo run dev",
     "lint": "npx turbo run lint",
     "prepare": "husky install",
-    "test": "npx turbo run test"
+    "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
   },
   "lint-staged": {
     "**/*": "npx prettier --write --ignore-unknown"
