@@ -36,6 +36,6 @@
     "lint-staged": "^15.1.0",
     "prettier": "^3.1.0",
     "prettier-plugin-solidity": "^1.0.0-beta.18",
-    "turbo": "1.10.16"
+    "turbo": "1.9.6"
   }
 }
