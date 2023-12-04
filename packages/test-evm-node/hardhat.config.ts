@@ -1,7 +1,6 @@
 import assert from 'assert'
 import { HardhatUserConfig } from 'hardhat/types'
 
-// test test test test test test test test test test test test
 const MNEMONIC = process.env.MNEMONIC
 assert(MNEMONIC, `Missing MNEMONIC environment variable`)
 
