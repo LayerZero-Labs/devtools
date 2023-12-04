@@ -18,35 +18,12 @@ services:
   network-vengaboys:
     extends:
       file: docker-compose.templates.yaml
-      service: node
+      service: evm-node
 
   network-britney:
     extends:
       file: docker-compose.templates.yaml
-      service: node
-
-  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
-  #
-  #        Bootstrap script that deploys all the networks
-  #
-  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-  bootstrap:
-    extends:
-      file: docker-compose.templates.yaml
-      service: package
-    depends_on:
-      network-vengaboys:
-        condition: service_healthy
-      network-britney:
-        condition: service_healthy
-    # Can't say I love the fact that the deploy scripts are inlined here
-    # but at least it's all in this file that bootstraps the whole environment
-    command:
-      - /bin/bash
-      - -c
-      - |
-        npx hardhat --network vengaboys deploy --reset
-        npx hardhat --network britney deploy --reset
+      service: evm-node
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -56,8 +33,12 @@ services:
   tests:
     extends:
       file: docker-compose.templates.yaml
-      service: package
+      service: project
     depends_on:
-      bootstrap:
-        condition: service_completed_successfully
-    command: ["npx", "hardhat", "test"]
+      network-vengaboys:
+        condition: service_healthy
+      network-britney:
+        condition: service_healthy
+    volumes:
+      - ./packages:/app/packages
+    command: ["npx", "turbo", "test"]

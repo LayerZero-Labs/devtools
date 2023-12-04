@@ -11,7 +11,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
+    "pretest": "npx hardhat --network vengaboys deploy --reset && npx hardhat --network britney deploy --reset",
+    "test": "npx hardhat test"
   },
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
