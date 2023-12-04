@@ -41,4 +41,4 @@ services:
         condition: service_healthy
     volumes:
       - ./packages:/app/packages
-    command: ["npx", "turbo", "test"]
+    command: "npx turbo test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS"
