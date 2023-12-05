@@ -153,20 +153,20 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     const transactions = [...sendUlnTransactions, ...receiveUlnTransactions, ...endpointTransactions]
 
-    logger.info(`Executing ${transactions.length} transactions`)
+    logger.debug(`Executing ${transactions.length} transactions`)
 
     for (const transaction of transactions) {
         const signer = await signerFactory(transaction.point.eid)
         const description = transaction.description ?? '[no description]'
 
-        logger.info(`${formatOmniPoint(transaction.point)}: ${description}`)
+        logger.debug(`${formatOmniPoint(transaction.point)}: ${description}`)
 
         const response = await signer.signAndSend(transaction)
-        logger.info(`${formatOmniPoint(transaction.point)}: ${description}: ${response.transactionHash}`)
+        logger.debug(`${formatOmniPoint(transaction.point)}: ${description}: ${response.transactionHash}`)
 
         const receipt = await response.wait()
-        logger.info(`${formatOmniPoint(transaction.point)}: ${description}: ${receipt.transactionHash}`)
+        logger.debug(`${formatOmniPoint(transaction.point)}: ${description}: ${receipt.transactionHash}`)
     }
 
-    logger.info(`Done configuring endpoint`)
+    logger.debug(`Done configuring endpoint`)
 }
