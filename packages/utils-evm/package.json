@@ -41,6 +41,7 @@
   "devDependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.68",
@@ -53,7 +54,8 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsup": "~8.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
@@ -62,6 +64,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.67",
     "@layerzerolabs/ua-utils": "~0.1.0",
-    "@layerzerolabs/utils": "~0.0.1"
+    "@layerzerolabs/utils": "~0.0.1",
+    "zod": "^3.22.4"
   }
 }
