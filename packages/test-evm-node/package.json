@@ -1,0 +1,21 @@
+{
+  "name": "@layerzerolabs/test-evm-node",
+  "version": "0.0.1",
+  "private": true,
+  "description": "EVM node for E2E testing purposes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+    "directory": "packages/test-evm-node"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "start": "npx hardhat node --hostname 0.0.0.0"
+  },
+  "devDependencies": {
+    "hardhat": "^2.19.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

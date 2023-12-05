@@ -7,7 +7,8 @@ export interface HardhatRuntimeEnvironmentWithDeployments extends HardhatRuntime
     deployments: DeploymentsExtension
 }
 
-export const assertHardhatDeploy = (
+export function assertHardhatDeploy(
     hre: HardhatRuntimeEnvironment
-): asserts hre is HardhatRuntimeEnvironmentWithDeployments =>
+): asserts hre is HardhatRuntimeEnvironmentWithDeployments {
     assert(hre.deployments, `You don't seem to be using hardhat-deploy in your project`)
+}

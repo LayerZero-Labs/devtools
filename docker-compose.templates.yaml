@@ -18,5 +18,34 @@ services:
     build:
       context: .
       args:
-        PACKAGE:
+        # In order not to embed the NPM_TOKEN to the image, we'll pass it as an build argument
+        #
+        # This works in conjunction with the adjacent Dockerfile that:
+        #
+        # - interpolates .npmrc with this argument
+        # - installs the depenendencies
+        # - deletes the interpolated file
+        #
+        # This all needs to be done within one layer so that there is no way of reverse engineering
+        # the Dockerfile and getting the NPM_TOKEN out
         NPM_TOKEN: $NPM_TOKEN
+    # We'll provide a single testing MNEMONIC for the project so that the test EVM nodes
+    # account are in sync with the hardhat accounts
+    environment:
+      - MNEMONIC='test test test test test test test test test test test test'
+
+  # EVM node for testing purposes
+  evm-node:
+    extends:
+      service: project
+    command: ["npx", "turbo", "start", "--filter", "test-evm-node"]
+    healthcheck:
+      interval: 2s
+      retries: 10
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
+
+  # Service that can build this package
+  tests:
+    extends:
+      service: project
+    working_dir: /app/packages/ua-utils-evm-hardhat-test

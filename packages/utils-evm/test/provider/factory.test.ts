@@ -3,6 +3,10 @@ import { createProviderFactory } from '@/provider/factory'
 import { endpointArbitrary } from '@layerzerolabs/test-utils'
 import { JsonRpcProvider } from '@ethersproject/providers'
 
+// We'll use the fake timers to work around the fact that JsonRpcProvider uses setTimeout
+// to schedule a task in the queue in its constructor
+jest.useFakeTimers()
+
 describe('provider/factory', () => {
     describe('createProviderFactory', () => {
         const errorArbitrary = fc.anything()

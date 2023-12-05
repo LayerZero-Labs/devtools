@@ -1,11 +1,13 @@
 import 'hardhat-deploy'
 import 'hardhat-deploy-ethers'
+import assert from 'assert'
 import { withLayerZeroArtifacts } from '@layerzerolabs/utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
 import '@layerzerolabs/ua-utils-evm-hardhat/tasks'
 
-const MNEMONIC = 'test test test test test test test test test test test test'
+const MNEMONIC = process.env.MNEMONIC
+assert(MNEMONIC, `Missing MNEMONIC environment variable`)
 
 /**
  * This is a dummy hardhat config that enables us to test
@@ -16,11 +18,6 @@ const config: HardhatUserConfig = {
         version: '0.8.19',
     },
     networks: {
-        hardhat: {
-            accounts: {
-                mnemonic: MNEMONIC,
-            },
-        },
         vengaboys: {
             eid: EndpointId.ETHEREUM_MAINNET,
             url: 'http://network-vengaboys:8545',

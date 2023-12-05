@@ -1630,10 +1630,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@layerzerolabs/eslint-config-next@^1.5.60":
-  version "1.5.61"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/eslint-config-next/-/eslint-config-next-1.5.61.tgz#d189bc030f3e4f02c15a1e1f0ea0a716a566dc89"
-  integrity sha512-I/GKGdAhtN77B3NjaX3rWNSHUuQAddxj3ZPmyrB5ZPQ0GE8P2b7fbKN14KRqZwHgqB1jqzP3LVdYj1v+ZQgGTw==
+"@layerzerolabs/eslint-config-next@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/eslint-config-next/-/eslint-config-next-1.5.68.tgz#bde3d7f07c36124205bf7f43444e2e5172f39093"
+  integrity sha512-d2KIsvLcMQ4dyhiWQEi62CKdlTHcxka5ZW3C4LsiLpfhYz0kHHcuYZu0Im9GG5aLb5ETjk9XmCEqeZ6j9kHlVg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.55.0"
     "@typescript-eslint/parser" "^5.50.0"
@@ -1646,83 +1646,83 @@
     prettier "^2.8.3"
     prettier-plugin-solidity "^1.1.1"
 
-"@layerzerolabs/lz-definitions@^1.5.65", "@layerzerolabs/lz-definitions@~1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-definitions/-/lz-definitions-1.5.65.tgz#b2bf5b1cd3883edb6321c794f10ca3788385f6bd"
-  integrity sha512-UeUyHVf0DKwn9OTu+E5lN6wyTXqvrFesY3cq6Ogq3TUe9PfMj8WM2aQWZCPC+O9G4SxQr+7ra2bR3zzxtCOAdQ==
+"@layerzerolabs/lz-definitions@^1.5.68", "@layerzerolabs/lz-definitions@~1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-definitions/-/lz-definitions-1.5.68.tgz#e9c55d89ff231009e6cd1355909a816e2c9c30f0"
+  integrity sha512-SoBI9kRvRWIZ5iplINODHazBQxYjYETEA8zV0CM5D9Xto+LBDS88suST+sw/3ILyajtn4wuv9O6ZFScamyK6YA==
   dependencies:
     tiny-invariant "^1.3.1"
 
-"@layerzerolabs/lz-evm-messagelib-v2@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-messagelib-v2/-/lz-evm-messagelib-v2-1.5.65.tgz#1291cfd95465c738ff20a7e571432754f9f512f8"
-  integrity sha512-mgZJWJrkCA79nigG6rJd5vtdhRF7nj2Q49KpzVZ9FGiH1WIQPwDcmuGy1CkBpBWKBL1IiyHCGz6d9incH/G25Q==
+"@layerzerolabs/lz-evm-messagelib-v2@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-messagelib-v2/-/lz-evm-messagelib-v2-1.5.68.tgz#9b6b09ce6c0738d09f4a5822270858a5ec23cdef"
+  integrity sha512-voS7UjBJiQzizIVXcAwlxkzLogsfVTaGU3AaFW8fOBFRYszS1Gr1hB9dsD7YHIqATBs+rcQTejAsFlEtOgdozA==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
-    "@layerzerolabs/lz-evm-protocol-v2" "^1.5.65"
-    "@layerzerolabs/lz-utilities" "^1.5.65"
-    "@layerzerolabs/ops-plugin-core" "^1.5.65"
+    "@layerzerolabs/lz-evm-protocol-v2" "^1.5.68"
+    "@layerzerolabs/lz-utilities" "^1.5.68"
+    "@layerzerolabs/ops-plugin-core" "^1.5.68"
     "@openzeppelin/contracts" "^4.8.0"
     "@openzeppelin/contracts-upgradeable" "^4.8.0"
     lodash "^4.17.21"
     solidity-bytes-utils "^0.8.0"
 
-"@layerzerolabs/lz-evm-oapp-v2@~1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-oapp-v2/-/lz-evm-oapp-v2-1.5.65.tgz#c3557e39a43a460647d28da8b473cb656e0a2a1e"
-  integrity sha512-sUHF+6RXshxk77A1Sw2KO19xeUTdBz4IDIAX3B524T5LaAPE9jPQueZ3kptZa7zKmaBrilNg1pZHhZj8nf4ZoQ==
+"@layerzerolabs/lz-evm-oapp-v2@~1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-oapp-v2/-/lz-evm-oapp-v2-1.5.68.tgz#a71e11d65b3093b1a12d45ccc2ace24934f737f3"
+  integrity sha512-o54QT1k3h/fZZZF3x/lTcUhghqwS5QmpxL+8cZ1wmhzsrnwCjJY6yftjjvSyju6jYWHQ7HRVUKpisCMHJEUT7A==
   dependencies:
-    "@layerzerolabs/lz-evm-messagelib-v2" "^1.5.65"
-    "@layerzerolabs/lz-evm-protocol-v2" "^1.5.65"
-    "@layerzerolabs/lz-evm-v1-0.7" "^1.5.65"
+    "@layerzerolabs/lz-evm-messagelib-v2" "^1.5.68"
+    "@layerzerolabs/lz-evm-protocol-v2" "^1.5.68"
+    "@layerzerolabs/lz-evm-v1-0.7" "^1.5.68"
     "@openzeppelin/contracts" "^4.8.0"
     "@openzeppelin/contracts-upgradeable" "^4.8.0"
     lodash "^4.17.21"
     solidity-bytes-utils "^0.8.0"
 
-"@layerzerolabs/lz-evm-protocol-v2@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-protocol-v2/-/lz-evm-protocol-v2-1.5.65.tgz#679c3f5e825eaa1c673635a5cd30a84c5e6349d1"
-  integrity sha512-aeVjKh2FJKCRuEN1abCP9vabw/CGeAppRF8cnwVnXr/gVsoekWl4AXhnXqvELeaIoObBIynSVT+p6dXuV4Qu2g==
+"@layerzerolabs/lz-evm-protocol-v2@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-protocol-v2/-/lz-evm-protocol-v2-1.5.68.tgz#d2e55087d28d853ccb309d948ca7550bfa0c1c51"
+  integrity sha512-GJCyq8QB75HnpYQIqvasvTjOzIP96/Yugn8reoT3feEoiswSUONP0ieoPHNlSlBiiN8JW14KO1J+pIkm/f80iQ==
   dependencies:
-    "@layerzerolabs/ops-plugin-core" "^1.5.65"
+    "@layerzerolabs/ops-plugin-core" "^1.5.68"
     "@openzeppelin/contracts" "^4.8.1"
     lodash "^4.17.21"
     solidity-bytes-utils "0.8.0"
 
-"@layerzerolabs/lz-evm-sdk-v1@~1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.65.tgz#7def213bfa68bc78b34be4ea92fc6089908d1799"
-  integrity sha512-2gNhKUBXhbRCmkXKhoz9jcNTcHKqjt7lwBxQc8PIPjuEXqO0DCSvZHmkaubNSlWthcCKTIa50yzxb/dC3A4YNQ==
+"@layerzerolabs/lz-evm-sdk-v1@~1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.68.tgz#5e865affa1d181bd675bd57dcfceb1c7049743f2"
+  integrity sha512-Dc5j9cOnj7UoGyY6T/K6FE3qAAtNvbvdwzmHBaPYY9KDIhyhFf0phg1CFwegBQ+1nwNIluUEjfwGRN74gFCP7Q==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/providers" "^5.7.2"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-evm-sdk-v2@~1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.65.tgz#e2a37a3a9238d22d8d6665e85de4ce152baf4826"
-  integrity sha512-0lQOoJMnY4Q+0ehnh9Dr4PuX8cUj9AxPPnv8NYuB1rE5u5hTK79NjvrR+fcfkKJ4VYwNU5ZmCxR2t0BlCAlbyQ==
+"@layerzerolabs/lz-evm-sdk-v2@~1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.68.tgz#116a1a387f0e859c1300317755d04dcbac04e405"
+  integrity sha512-OhyoDbMJXQaMpRCnJYk7EKVGzy+5pMkNyUvuVbuXUC4zK7hQpYquzJCefTAvONbmE1CAd+Og6EYO54k2kGdaIw==
   dependencies:
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-evm-v1-0.7@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-evm-v1-0.7/-/lz-evm-v1-0.7-1.5.65.tgz#856dd320327962c06c4f7cd9c5aba19180ab1111"
-  integrity sha512-3ezfZD0FLe9Fx2mFcvBGxNE9XUgnS60voJ2ByN62GmUoaCK20xiHkcZRJ5eL+7rhoTPOb6tb9E9FDsK7mI5ocQ==
+"@layerzerolabs/lz-evm-v1-0.7@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-v1-0.7/-/lz-evm-v1-0.7-1.5.68.tgz#028ed3a78018d2d205a6fa373096b60b812e0924"
+  integrity sha512-y77NsU+d8uUKLv+4wd7YIXjeqQ31lOQqt3vRKejIrDPc8mJVyh1gc9TdMGVcMUo2CHZMyC4Fefy8ebrBSWWIGA==
   dependencies:
-    "@layerzerolabs/ops-plugin-core" "^1.5.65"
+    "@layerzerolabs/ops-plugin-core" "^1.5.68"
     "@openzeppelin/contracts" "3.4.2-solc-0.7"
     "@openzeppelin/contracts-upgradeable" "3.4.2-solc-0.7"
     lodash "^4.17.21"
 
-"@layerzerolabs/lz-utilities@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/lz-utilities/-/lz-utilities-1.5.65.tgz#b1f0f50b98d33bf89ec25dc22d879ff7612a680b"
-  integrity sha512-pYz0MIELvN/Ur9jLDIFSz03rIg0qx0i2LKtYYHROarRIvfbmwSXoTkVn3jrPKViT7BFtCEZMfi0dVnQg8BgBMw==
+"@layerzerolabs/lz-utilities@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-utilities/-/lz-utilities-1.5.68.tgz#fd6a06aeb2ff2bd8dff4c5b84b1d7577eedbb0dc"
+  integrity sha512-vHuZMxqgXsgYz54cOMQsjJYMwVLCQY6huyUWhgCyH3UDENS3eL5WCvEfNJJHlCQhLCYzGwfnEQ4s/4Y1Fa/jaw==
   dependencies:
     "@ethersproject/providers" "^5.7.2"
-    "@layerzerolabs/lz-definitions" "^1.5.65"
+    "@layerzerolabs/lz-definitions" "^1.5.68"
     "@noble/hashes" "^1.3.2"
     "@solana/web3.js" "^1.78.4"
     aptos "^1.19.0"
@@ -1734,13 +1734,13 @@
     tree-kill "^1.2.2"
     winston "^3.10.0"
 
-"@layerzerolabs/ops-core@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/ops-core/-/ops-core-1.5.65.tgz#32a3426ffbbac91081d6f3663f208721fa3de956"
-  integrity sha512-0cxPr/ELV09wcW23HmcVUbUg9sUIs8SMxHdVxtZg0zoEThs1gFg8E61ZSG9xa2kZsWvyCuGrBs/dhZD9t4DzKg==
+"@layerzerolabs/ops-core@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/ops-core/-/ops-core-1.5.68.tgz#4c2a3acf210df314a5dce14803b7d21ff0e5bee4"
+  integrity sha512-8x070m9MpAgeQeYjSDzN0x0LpveRusFBnadvUz0pVawJGXIwSYlBjTi+OruwFOnUMXUPQyzMUlmS3eUL4ru2hw==
   dependencies:
-    "@layerzerolabs/lz-definitions" "^1.5.65"
-    "@layerzerolabs/lz-utilities" "^1.5.65"
+    "@layerzerolabs/lz-definitions" "^1.5.68"
+    "@layerzerolabs/lz-utilities" "^1.5.68"
     "@solana/web3.js" "^1.74.0"
     aptos "^1.6.0"
     bip39 "^3.0.4"
@@ -1754,16 +1754,16 @@
     tiny-invariant "^1.3.1"
     ts-node "^10.9.1"
 
-"@layerzerolabs/ops-plugin-core@^1.5.65":
-  version "1.5.65"
-  resolved "https://registry.npmjs.org/@layerzerolabs/ops-plugin-core/-/ops-plugin-core-1.5.65.tgz#d23f9c821786513a134cb20d3ece0025131abe59"
-  integrity sha512-qJuQhELtMA6TRrheNP7uYOJEw3Af9y8qD/kRbabIevJx6Av6KZJQDLJZp6f8N77Mj75TNRPlZxcUdYrR4DwS7w==
+"@layerzerolabs/ops-plugin-core@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/ops-plugin-core/-/ops-plugin-core-1.5.68.tgz#1f4dd320d5c72004c6ba62c1ea40db49fd3955d7"
+  integrity sha512-vmcRmxqUYO0BI3fbmXMhyy+afGA4kden6P08N4PyHn5nanoRFPxaDaQxjfkfipVhjDE43K6yh2ETje7NrcHFkA==
   dependencies:
     "@inquirer/confirm" "^2.0.7"
     "@inquirer/prompts" "^3.0.1"
-    "@layerzerolabs/lz-definitions" "^1.5.65"
-    "@layerzerolabs/lz-utilities" "^1.5.65"
-    "@layerzerolabs/ops-core" "^1.5.65"
+    "@layerzerolabs/lz-definitions" "^1.5.68"
+    "@layerzerolabs/lz-utilities" "^1.5.68"
+    "@layerzerolabs/ops-core" "^1.5.68"
     "@solana/web3.js" "^1.74.0"
     aptos "^1.6.0"
     commander "^11.0.0"
@@ -1772,19 +1772,19 @@
     papaparse "^5.4.1"
     winston "^3.10.0"
 
-"@layerzerolabs/prettier-config-next@^1.5.61":
-  version "1.5.61"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/prettier-config-next/-/prettier-config-next-1.5.61.tgz#274a95e36cd796d71c5235158e10217a24250ff4"
-  integrity sha512-V8nOv9x0xAwA7vVhHkS09/xhcJlMdg/A6ycEmw/EQWbP0OP7R1i7RIYB2tghC/7BUuCaQL1DTqMNlwQOdoYMuw==
+"@layerzerolabs/prettier-config-next@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/prettier-config-next/-/prettier-config-next-1.5.68.tgz#123bc09667555711e8ea86b04ebf859588c726f9"
+  integrity sha512-KedyLSBR5Tvvcn/qxZOgR2Lf0CFZwdGHU1AECT33zPKevcb3S+Eosy17bjwZl6fl7YlwJfKiqocPcVQIu4ssBA==
   dependencies:
     prettier "^2.8.3"
     prettier-plugin-packagejson "^2.4.3"
     prettier-plugin-solidity "^1.1.2"
 
-"@layerzerolabs/solhint-config@^1.5.58":
-  version "1.5.61"
-  resolved "https://registry.yarnpkg.com/@layerzerolabs/solhint-config/-/solhint-config-1.5.61.tgz#25456d5ae7fc058a324b297f79dd9dff25838dca"
-  integrity sha512-xosvSUOefmyephdZiMO4SlqWGQQaPs/nzvOjkfWcTp3sYVcaJ1DR5exCZDh/jzildBEjwLys7ZtWaWNT+W+35g==
+"@layerzerolabs/solhint-config@^1.5.68":
+  version "1.5.68"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/solhint-config/-/solhint-config-1.5.68.tgz#d197f24f0c8476d3125e47dca779861ee9927a90"
+  integrity sha512-kXTbgXt3wxM8AYsAsO5j3U7dLJkUmQogdCq9gYOrpvGKRT6BhDL6LLFOQnjmf2rkiqHaHHBLOcPIh8Q9Zntb+g==
 
 "@manypkg/find-root@^1.1.0":
   version "1.1.0"
@@ -11338,26 +11338,6 @@ tsort@0.0.1:
   resolved "https://registry.npmjs.org/tsort/-/tsort-0.0.1.tgz"
   integrity sha512-Tyrf5mxF8Ofs1tNoxA13lFeZ2Zrbd6cKbuH3V+MQ5sb6DtBj5FjrXVsRWT8YvNAQTqNoz66dz1WsbigI22aEnw==
 
-tsup@^7.2.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/tsup/-/tsup-7.3.0.tgz#c7776e08c7ef55ed69def2c6e7ba4719005f5abd"
-  integrity sha512-Ja1eaSRrE+QarmATlNO5fse2aOACYMBX+IZRKy1T+gpyH+jXgRrl5l4nHIQJQ1DoDgEjHDTw8cpE085UdBZuWQ==
-  dependencies:
-    bundle-require "^4.0.0"
-    cac "^6.7.12"
-    chokidar "^3.5.1"
-    debug "^4.3.1"
-    esbuild "^0.19.2"
-    execa "^5.0.0"
-    globby "^11.0.3"
-    joycon "^3.0.1"
-    postcss-load-config "^4.0.1"
-    resolve-from "^5.0.0"
-    rollup "^4.0.2"
-    source-map "0.8.0-beta.0"
-    sucrase "^3.20.3"
-    tree-kill "^1.2.2"
-
 tsup@^8.0.1, tsup@~8.0.1:
   version "8.0.1"
   resolved "https://registry.yarnpkg.com/tsup/-/tsup-8.0.1.tgz#04a0170f7bbe77e81da3b53006b0a40282291833"
@@ -11412,7 +11392,7 @@ turbo-darwin-64@1.5.6:
 
 turbo-darwin-arm64@1.5.6:
   version "1.5.6"
-  resolved "https://registry.npmjs.org/turbo-darwin-arm64/-/turbo-darwin-arm64-1.5.6.tgz"
+  resolved "https://registry.yarnpkg.com/turbo-darwin-arm64/-/turbo-darwin-arm64-1.5.6.tgz#bed2bba126d53d7bbfd45f95e239fc43fd5bccbf"
   integrity sha512-c/aXgW9JuXT2bJSKf01pdSDQKnrdcdj3WFKmKiVldb9We6eqFzI0fLHBK97k5LM/OesmRMfCMQ2Cv2DU8RqBAA==
 
 turbo-linux-64@1.5.6:
@@ -11437,7 +11417,7 @@ turbo-windows-arm64@1.5.6:
 
 turbo@1.5.6:
   version "1.5.6"
-  resolved "https://registry.npmjs.org/turbo/-/turbo-1.5.6.tgz"
+  resolved "https://registry.yarnpkg.com/turbo/-/turbo-1.5.6.tgz#7dac8db14b2452afa45c57c050ff19989d4ab074"
   integrity sha512-xJO/fhiMo4lI62iGR9OgUfJTC9tnnuoMwNC52IfvvBDEPlA8RWGMS8SFpDVG9bNCXvVRrtUTNJXMe6pJWBiOTA==
   optionalDependencies:
     turbo-darwin-64 "1.5.6"

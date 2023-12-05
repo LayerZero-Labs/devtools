@@ -31,7 +31,7 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "~1.5.65",
+    "@layerzerolabs/lz-definitions": "~1.5.68",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
     "@types/jest": "^29.5.10",
@@ -40,12 +40,12 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tslib": "~2.6.2",
-    "tsup": "^7.2.0",
+    "tsup": "~8.0.1",
     "typescript": "^5.2.2",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~1.5.65",
+    "@layerzerolabs/lz-definitions": "~1.5.67",
     "@layerzerolabs/utils": "~0.0.1",
     "zod": "^3.22.4"
   }
