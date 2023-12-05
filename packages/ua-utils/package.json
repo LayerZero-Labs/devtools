@@ -45,7 +45,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~1.5.67",
+    "@layerzerolabs/lz-definitions": "~1.5.68",
     "@layerzerolabs/utils": "~0.0.1",
     "zod": "^3.22.4"
   }

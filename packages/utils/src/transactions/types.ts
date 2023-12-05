@@ -4,6 +4,7 @@ import { EndpointBasedFactory } from '@/types'
 export interface OmniTransaction {
     point: OmniPoint
     data: string
+    description?: string
 }
 
 export interface OmniTransactionResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
