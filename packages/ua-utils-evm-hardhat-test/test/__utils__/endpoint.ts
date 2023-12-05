@@ -25,20 +25,40 @@ import { formatOmniPoint } from '@layerzerolabs/utils'
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
 export const ethReceiveUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302' }
 export const ethSendUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302' }
+export const ethExecutor = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'Executor' }
+export const ethDvn = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DVN' }
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
+export const avaxExecutor = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'Executor' }
+export const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
 
-export const defaultExecutorConfig: Uln302ExecutorConfig = {
-    maxMessageSize: 10000,
-    executor: '0x0000000000000000000000000000000000000001',
+export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
+
+/**
+ * Helper function to generate the default Uln302ExecutorConfig for a given chain.
+ *
+ * @param executorAddress The local Executor address.
+ */
+export const getDefaultExecutorConfig = (executorAddress: string): Uln302ExecutorConfig => {
+    return {
+        maxMessageSize: MAX_MESSAGE_SIZE,
+        executor: executorAddress,
+    }
 }
 
-export const defaultUlnConfig: Uln302UlnConfig = {
-    confirmations: BigInt(1),
-    requiredDVNs: ['0x0000000000000000000000000000000000000002', '0x0000000000000000000000000000000000000003'],
-    optionalDVNs: [],
-    optionalDVNThreshold: 0,
+/**
+ * Helper function to generate the default Uln302UlnConfig for a given chain.
+ *
+ * @param dvnAddress The local DVN address.
+ */
+export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
+    return {
+        confirmations: BigInt(1),
+        requiredDVNs: [dvnAddress],
+        optionalDVNs: [],
+        optionalDVNThreshold: 0,
+    }
 }
 
 /**
@@ -68,6 +88,13 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const avaxSendUlnPoint = omniContractToPoint(await contractFactory(avaxSendUln))
     const ethReceiveUlnPoint = omniContractToPoint(await contractFactory(ethReceiveUln))
     const avaxReceiveUlnPoint = omniContractToPoint(await contractFactory(avaxReceiveUln))
+    const ethExecutorPoint = omniContractToPoint(await contractFactory(ethExecutor))
+    const avaxExecutorPoint = omniContractToPoint(await contractFactory(avaxExecutor))
+    const ethDvnPoint = omniContractToPoint(await contractFactory(ethDvn))
+    const avaxDvnPoint = omniContractToPoint(await contractFactory(avaxDvn))
+
+    const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
+    const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
 
     // This is the graph for SendUln302
     const sendUlnConfig: OmniGraphHardhat<Uln302NodeConfig, unknown> = {
@@ -75,15 +102,19 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethSendUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, defaultUlnConfig]],
-                    defaultExecutorConfigs: [[EndpointId.AVALANCHE_MAINNET, defaultExecutorConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.AVALANCHE_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                    ],
                 },
             },
             {
                 contract: avaxSendUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, defaultUlnConfig]],
-                    defaultExecutorConfigs: [[EndpointId.ETHEREUM_MAINNET, defaultExecutorConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.ETHEREUM_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                    ],
                 },
             },
         ],
@@ -96,14 +127,14 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethReceiveUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, defaultUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
             {
                 contract: avaxReceiveUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, defaultUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },

@@ -16,7 +16,6 @@ export class OApp implements IOApp {
 
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
-
         return this.createTransaction(data)
     }
 

@@ -1,6 +1,9 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
 import assert from 'assert'
 import { formatEid } from '@layerzerolabs/utils'
+import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/utils-evm-hardhat'
+
+const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toString()
 
 /**
  * This deploy function will deploy and configure LayerZero endpoint
@@ -31,11 +34,119 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         args: [endpointV2Deployment.address],
     })
 
+    await Promise.all(
+        ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
+            deployments.delete(contractName)
+        )
+    )
+    const priceFeed = await deployments.deploy('PriceFeed', {
+        from: deployer,
+        proxy: {
+            owner: deployer,
+            proxyContract: 'OptimizedTransparentProxy',
+            execute: {
+                init: {
+                    methodName: 'initialize',
+                    args: [deployer],
+                },
+            },
+        },
+    })
+
+    await deployments.delete('ExecutorFeeLib')
+    const executorFeeLib = await deployments.deploy('ExecutorFeeLib', {
+        from: deployer,
+        args: [DEFAULT_NATIVE_DECIMALS_RATE],
+    })
+
+    await Promise.all(
+        ['Executor_Proxy', 'Executor_Implementation', 'Executor', 'ExecutorProxyAdmin'].map((contractName) =>
+            deployments.delete(contractName)
+        )
+    )
+    const executor = await deployments.deploy('Executor', {
+        from: deployer,
+        log: true,
+        skipIfAlreadyDeployed: true,
+        proxy: {
+            owner: deployer,
+            proxyContract: 'OptimizedTransparentProxy',
+            viaAdminContract: { name: 'ExecutorProxyAdmin', artifact: 'ProxyAdmin' },
+            execute: {
+                init: {
+                    methodName: 'initialize',
+                    args: [
+                        endpointV2Deployment.address, // _endpoint
+                        receiveUln302.address, // _receiveUln301
+                        [sendUln302.address], // _messageLibs
+                        priceFeed.address, // _priceFeed
+                        deployer, // _roleAdmin
+                        [deployer], // _admins
+                    ],
+                },
+                onUpgrade: {
+                    methodName: 'onUpgrade',
+                    args: [receiveUln302.address],
+                },
+            },
+        },
+    })
+
+    const signerFactory = createSignerFactory()
+    const signer = await signerFactory(network.config.eid) // local network signer
+    const connectedContractFactory = createConnectedContractFactory()
+
+    const executorContract = (
+        await connectedContractFactory({
+            eid: network.config.eid,
+            contractName: 'Executor',
+        })
+    ).contract.connect(signer.signer)
+    executorContract.functions.setWorkerFeeLib &&
+        (await executorContract.functions.setWorkerFeeLib(executorFeeLib.address, {
+            from: await signer.signer.getAddress(),
+        }))
+
+    await deployments.delete('DVN')
+    const dvn = await deployments.deploy('DVN', {
+        from: deployer,
+        args: [
+            network.config.eid, // vid
+            [sendUln302.address], // messageLibs
+            priceFeed.address, // priceFeed
+            [deployer], // signers
+            1, // quorum
+            [deployer], // admins
+        ],
+    })
+
+    await deployments.delete('DVNFeeLib')
+    const dvnFeeLib = await deployments.deploy('DVNFeeLib', {
+        from: deployer,
+        args: [DEFAULT_NATIVE_DECIMALS_RATE],
+    })
+
+    const dvnContract = (
+        await connectedContractFactory({
+            eid: network.config.eid,
+            contractName: 'DVN',
+        })
+    ).contract.connect(signer.signer)
+    dvnContract.functions.setWorkerFeeLib &&
+        (await dvnContract.functions.setWorkerFeeLib(dvnFeeLib.address, {
+            from: await signer.signer.getAddress(),
+        }))
+
     console.table({
         Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
         EndpointV2: endpointV2Deployment.address,
         SendUln302: sendUln302.address,
         ReceiveUln302: receiveUln302.address,
+        PriceFeed: priceFeed.address,
+        Executor: executor.address,
+        ExecutorFeeLib: executorFeeLib.address,
+        DVN: dvn.address,
+        DVNFeeLib: dvnFeeLib.address,
     })
 }
 

@@ -3,16 +3,18 @@ import { createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat
 import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
 
 describe('endpoint/config', () => {
     const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
     const ethReceiveUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302' }
     const ethSendUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302' }
+    const ethDvn = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DVN' }
     const avaxEndpoint = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'EndpointV2' }
     const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302' }
     const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
+    const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
 
     beforeEach(async () => {
         await setupDefaultEndpoint()
@@ -68,8 +70,11 @@ describe('endpoint/config', () => {
             const ethConfig = await ethSendUlnSdk.getUlnConfig(avaxSendUlnPoint.eid, avaxSendUlnPoint.address)
             const avaxConfig = await avaxSendUlnSdk.getUlnConfig(ethSendUlnPoint.eid, ethSendUlnPoint.address)
 
-            expect(ethConfig).toEqual(defaultUlnConfig)
-            expect(avaxConfig).toEqual(defaultUlnConfig)
+            const ethDvnPoint = omniContractToPoint(await connectedContractFactory(ethDvn))
+            const avaxDvnPoint = omniContractToPoint(await connectedContractFactory(avaxDvn))
+
+            expect(ethConfig).toEqual(getDefaultUlnConfig(ethDvnPoint.address))
+            expect(avaxConfig).toEqual(getDefaultUlnConfig(avaxDvnPoint.address))
         })
     })
 })
