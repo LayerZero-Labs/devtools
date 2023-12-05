@@ -22,10 +22,12 @@ concurrency:
 
 jobs:
   check:
+    name: Check code
     uses: ./.github/workflows/reusable-test.yaml
     secrets: inherit
 
   publish:
+    name: Publish NPM packages
     needs: check
     uses: ./.github/workflows/reusable-publish.yaml
     secrets: inherit
