@@ -13,6 +13,7 @@ import { expect } from 'chai'
 import { describe } from 'mocha'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployOApp } from '../__utils__/oapp'
 
 describe('oapp/config', () => {
     const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
@@ -46,6 +47,7 @@ describe('oapp/config', () => {
 
     beforeEach(async () => {
         await setupDefaultEndpoint()
+        await deployOApp()
     })
 
     it('should return all setPeer transactions', async () => {
