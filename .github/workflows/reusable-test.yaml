@@ -19,6 +19,7 @@ env:
 
 jobs:
   build-and-test:
+    name: Build, Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

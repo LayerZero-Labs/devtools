@@ -1,12 +1,12 @@
 {
-  "name": "@layerzerolabs/ua-utils",
-  "version": "0.1.0",
+  "name": "@layerzerolabs/protocol-utils",
+  "version": "0.0.1",
   "private": true,
-  "description": "Utilities for working with LayerZero contracts",
+  "description": "Utilities for working with LayerZero protocol contracts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
-    "directory": "packages/ua-utils"
+    "directory": "packages/protocol-utils"
   },
   "license": "MIT",
   "exports": {
