@@ -2,7 +2,8 @@ import type { Address, OmniGraph, OmniPointBasedFactory, OmniTransaction } from 
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IUln302 {
-    getUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig>
+    getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig>
+    getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
     setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
 }
