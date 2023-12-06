@@ -4,22 +4,19 @@ import 'hardhat-deploy-ethers/internal/type-extensions'
 import { ethers } from 'ethers'
 import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
 
-const CONFIG_TYPE_EXECUTOR = 1
-const CONFIG_TYPE_ULN = 2
 interface TaskArgs {
     networks: string
 }
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
-    // TODO add logging
-    // const logger = createLogger()
     console.log(taskArgs)
     const networks = taskArgs.networks.split(',')
     const configByNetwork = await Promise.all(
         networks.map(async (network: string) => {
             console.log({ network })
+
+            const defaultConfigs = {}
             const environment = await getNetworkRuntimeEnvironment(network)
             const endpointV2 = await environment.ethers.getContract('EndpointV2')
-            const eid = await endpointV2.eid()
 
             await Promise.all(
                 networks.map(async (remoteNetwork) => {
@@ -44,6 +41,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                         remoteEnvironment.ethers.constants.AddressZero,
                         1
                     )
+
                     let [maxMessageSize, executor] = ethers.utils.defaultAbiCoder.decode(
                         ['uint32', 'address'],
                         sendExecutorConfigBytes
@@ -54,27 +52,21 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                         remoteEnvironment.ethers.constants.AddressZero,
                         2
                     )
-                    let [
-                        confirmations,
-                        requiredVerifiersCount,
-                        optionalVerifiersCount,
-                        optionalVerifiersThreshold,
-                        requiredVerifiers,
-                        optionalVerifiers,
-                    ] = ethers.utils.defaultAbiCoder.decode(
-                        ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
+
+                    let decodedSendUlnConfig = ethers.utils.defaultAbiCoder.decode(
+                        ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
                         sendUlnConfigBytes
                     )
 
                     let sendUln = {
                         maxMessageSize: maxMessageSize,
                         executor: executor,
-                        confirmations: confirmations,
-                        requiredVerifiersCount: requiredVerifiersCount,
-                        optionalVerifiersCount: optionalVerifiersCount,
-                        optionalVerifiersThreshold: optionalVerifiersThreshold,
-                        requiredVerifiers: requiredVerifiers,
-                        optionalVerifiers: optionalVerifiers,
+                        confirmations: decodedSendUlnConfig[0][0].toNumber(),
+                        requiredDVNCount: decodedSendUlnConfig[0][1],
+                        optionalDVNCount: decodedSendUlnConfig[0][2],
+                        optionalDVNThreshold: decodedSendUlnConfig[0][3],
+                        requiredDVNs: decodedSendUlnConfig[0][4],
+                        optionalDVNs: decodedSendUlnConfig[0][5],
                     }
 
                     let receiveUlnConfigBytes = await receiveUln302.getConfig(
@@ -82,52 +74,48 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                         remoteEnvironment.ethers.constants.AddressZero,
                         2
                     )
-                    ;[
-                        confirmations,
-                        requiredVerifiersCount,
-                        optionalVerifiersCount,
-                        optionalVerifiersThreshold,
-                        requiredVerifiers,
-                        optionalVerifiers,
-                    ] = ethers.utils.defaultAbiCoder.decode(
-                        ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
+                    let decodedReceiveUlnConfig = ethers.utils.defaultAbiCoder.decode(
+                        ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
                         receiveUlnConfigBytes
                     )
 
                     let receiveUln = {
-                        confirmations: confirmations,
-                        requiredVerifiersCount: requiredVerifiersCount,
-                        optionalVerifiersCount: optionalVerifiersCount,
-                        optionalVerifiersThreshold: optionalVerifiersThreshold,
-                        requiredVerifiers: requiredVerifiers,
-                        optionalVerifiers: optionalVerifiers,
+                        confirmations: decodedReceiveUlnConfig[0][0].toNumber(),
+                        requiredDVNCount: decodedReceiveUlnConfig[0][1],
+                        optionalDVNCount: decodedReceiveUlnConfig[0][2],
+                        optionalDVNThreshold: decodedReceiveUlnConfig[0][3],
+                        requiredDVNs: decodedReceiveUlnConfig[0][4],
+                        optionalDVNs: decodedReceiveUlnConfig[0][5],
                     }
 
-                    // const consoleTableDefaultConfig = {
-                    //     network,
-                    //     defaultSendLibrary,
-                    //     defaultReceiveLibrary,
-                    //     maxMessageSize: maxMessageSize[0],
-                    //     outboundConfirmations: outboundConfirmations[0].toNumber(),
-                    //     executor: executor.toString(),
-                    //     inboundBlockConfirmations: inboundConfirmations[0].toNumber(),
-                    //     verifiers: verifiers[0].toString(),
-                    //     optionalVerifiers,
-                    //     optionalVerifierThreshold,
-                    // }
-                    return {
-                        network,
-                        remoteNetwork,
-                        defaultSendLibrary,
-                        defaultReceiveLibrary,
+                    let defaultLibrary = {
+                        network: network,
+                        remoteNetwork: remoteNetwork,
+                        defaultSendLibrary: defaultSendLibrary,
+                        defaultReceiveLibrary: defaultReceiveLibrary,
+                    }
+
+                    let ulnConfig = {
                         sendUln: sendUln,
                         receiveUln: receiveUln,
                     }
+
+                    let config = {
+                        defaultLibrary: defaultLibrary,
+                        ulnConfig: ulnConfig,
+                    }
+
+                    console.log(`************************************************`)
+                    console.log(`${network.toUpperCase()}`)
+                    console.log(`************************************************`)
+                    console.table(defaultLibrary)
+                    console.table(ulnConfig)
+                    defaultConfigs[`${network}`] = config
                 })
             )
+            return defaultConfigs
         })
     )
-    console.log(configByNetwork)
     return configByNetwork
 }
 
