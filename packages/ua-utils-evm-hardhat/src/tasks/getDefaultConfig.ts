@@ -1,8 +1,8 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import 'hardhat-deploy-ethers/internal/type-extensions'
-import { ethers } from 'ethers'
-import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
+import { assertHardhatDeploy, getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
+import { Interface } from '@ethersproject/abi'
 
 interface TaskArgs {
     networks: string
@@ -13,6 +13,8 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
         networks.map(async (network: string) => {
             const defaultConfigs = {}
             const environment = await getNetworkRuntimeEnvironment(network)
+            assertHardhatDeploy(environment)
+
             const endpointV2 = await environment.ethers.getContract('EndpointV2')
 
             await Promise.all(
@@ -27,6 +29,12 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                     const defaultSendLibrary = await endpointV2.defaultSendLibrary(remoteEid)
                     const defaultReceiveLibrary = await endpointV2.defaultReceiveLibrary(remoteEid)
 
+                    const sendLibBaseArtifact = await environment.deployments.getArtifact('SendLibBase')
+                    const sendLibBaseInterface = new Interface(sendLibBaseArtifact.abi)
+
+                    const ulnBaseArtifact = await environment.deployments.getArtifact('UlnBase')
+                    const ulnBaseInterface = new Interface(ulnBaseArtifact.abi)
+
                     const sendUln302Factory = await environment.ethers.getContractFactory('SendUln302')
                     const sendUln302 = sendUln302Factory.attach(defaultSendLibrary)
 
@@ -38,9 +46,8 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                         remoteEnvironment.ethers.constants.AddressZero,
                         1
                     )
-
-                    const [maxMessageSize, executor] = ethers.utils.defaultAbiCoder.decode(
-                        ['uint32', 'address'],
+                    const [{ maxMessageSize, executor }] = sendLibBaseInterface.decodeFunctionResult(
+                        'getExecutorConfig',
                         sendExecutorConfigBytes
                     )
 
@@ -50,20 +57,15 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                         2
                     )
 
-                    const decodedSendUlnConfig = ethers.utils.defaultAbiCoder.decode(
-                        ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
-                        sendUlnConfigBytes
-                    )
+                    const [sendUlnConfig] = ulnBaseInterface.decodeFunctionResult('getUlnConfig', sendUlnConfigBytes)
 
                     const sendUln = {
                         maxMessageSize: maxMessageSize,
                         executor: executor,
-                        confirmations: decodedSendUlnConfig[0][0].toNumber(),
-                        requiredDVNCount: decodedSendUlnConfig[0][1],
-                        optionalDVNCount: decodedSendUlnConfig[0][2],
-                        optionalDVNThreshold: decodedSendUlnConfig[0][3],
-                        requiredDVNs: decodedSendUlnConfig[0][4],
-                        optionalDVNs: decodedSendUlnConfig[0][5],
+                        confirmations: sendUlnConfig.confirmations.toNumber(),
+                        optionalDVNThreshold: sendUlnConfig.optionalDVNThreshold,
+                        requiredDVNs: sendUlnConfig.requiredDVNs,
+                        optionalDVNs: sendUlnConfig.optionalDVNs,
                     }
 
                     const receiveUlnConfigBytes = await receiveUln302.getConfig(
@@ -71,18 +73,17 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                         remoteEnvironment.ethers.constants.AddressZero,
                         2
                     )
-                    const decodedReceiveUlnConfig = ethers.utils.defaultAbiCoder.decode(
-                        ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
+
+                    const [receiveUlnConfig] = ulnBaseInterface.decodeFunctionResult(
+                        'getUlnConfig',
                         receiveUlnConfigBytes
                     )
 
                     const receiveUln = {
-                        confirmations: decodedReceiveUlnConfig[0][0].toNumber(),
-                        requiredDVNCount: decodedReceiveUlnConfig[0][1],
-                        optionalDVNCount: decodedReceiveUlnConfig[0][2],
-                        optionalDVNThreshold: decodedReceiveUlnConfig[0][3],
-                        requiredDVNs: decodedReceiveUlnConfig[0][4],
-                        optionalDVNs: decodedReceiveUlnConfig[0][5],
+                        confirmations: receiveUlnConfig.confirmations.toNumber(),
+                        optionalDVNThreshold: receiveUlnConfig.optionalDVNThreshold,
+                        requiredDVNs: receiveUlnConfig.requiredDVNs,
+                        optionalDVNs: receiveUlnConfig.optionalDVNs,
                     }
 
                     const defaultLibrary = {
@@ -107,7 +108,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                     console.log(`************************************************`)
                     console.table(defaultLibrary)
                     console.table(ulnConfig)
-                    defaultConfigs[`${network}`] = config
+                    defaultConfigs[network] = config
                 })
             )
             return defaultConfigs

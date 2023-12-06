@@ -36,6 +36,7 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",

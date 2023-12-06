@@ -1,8 +1,8 @@
 import { describe } from 'mocha'
 import { defaultExecutorConfig, defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
-const hre = require('hardhat')
-const { expect } = require('chai')
+import hre from 'hardhat'
+import { expect } from 'chai'
 
 describe('task: getDefaultConfig', () => {
     beforeEach(async () => {
@@ -10,7 +10,7 @@ describe('task: getDefaultConfig', () => {
     })
 
     it('should return default configurations', async () => {
-        const networks = Object.keys(hre.userConfig.networks)
+        const networks = Object.keys(hre.userConfig.networks ?? {})
         const taskRunEnv = await getNetworkRuntimeEnvironment(networks[0])
         const getDefaultConfigTask = await taskRunEnv.run('getDefaultConfig', { networks: networks.toString() })
 
@@ -36,8 +36,6 @@ describe('task: getDefaultConfig', () => {
             expect(defaultConfig.ulnConfig.sendUln.confirmations.toString()).to.eql(
                 defaultUlnConfig.confirmations.toString()
             )
-            expect(defaultConfig.ulnConfig.sendUln.requiredDVNCount).to.eql(defaultUlnConfig.requiredDVNs.length)
-            expect(defaultConfig.ulnConfig.sendUln.optionalDVNCount).to.eql(defaultUlnConfig.optionalDVNs.length)
             expect(defaultConfig.ulnConfig.sendUln.optionalDVNThreshold).to.eql(defaultUlnConfig.optionalDVNThreshold)
             expect(defaultConfig.ulnConfig.sendUln.requiredDVNs).to.eql(defaultUlnConfig.requiredDVNs)
             expect(defaultConfig.ulnConfig.sendUln.optionalDVNs).to.eql(defaultUlnConfig.optionalDVNs)
@@ -46,8 +44,6 @@ describe('task: getDefaultConfig', () => {
             expect(defaultConfig.ulnConfig.receiveUln.confirmations.toString()).to.eql(
                 defaultUlnConfig.confirmations.toString()
             )
-            expect(defaultConfig.ulnConfig.receiveUln.requiredDVNCount).to.eql(defaultUlnConfig.requiredDVNs.length)
-            expect(defaultConfig.ulnConfig.receiveUln.optionalDVNCount).to.eql(defaultUlnConfig.optionalDVNs.length)
             expect(defaultConfig.ulnConfig.receiveUln.optionalDVNThreshold).to.eql(
                 defaultUlnConfig.optionalDVNThreshold
             )
