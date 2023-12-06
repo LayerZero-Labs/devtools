@@ -1,8 +1,8 @@
 import { describe } from 'mocha'
 import { defaultExecutorConfig, defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
-const hre = require('hardhat')
-const { expect } = require('chai')
+import hre from 'hardhat'
+import { expect } from 'chai'
 
 describe('task: getDefaultConfig', () => {
     beforeEach(async () => {
