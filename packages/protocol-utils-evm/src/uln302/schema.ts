@@ -1,4 +1,5 @@
 import { AddressSchema } from '@layerzerolabs/utils'
+import { BigNumberishNumberSchema } from '@layerzerolabs/utils-evm'
 import { BigNumberishBigintSchema } from '@layerzerolabs/utils-evm'
 import { z } from 'zod'
 
@@ -10,6 +11,14 @@ export const Uln302UlnConfigSchema = z.object({
     requiredDVNs: z.array(AddressSchema),
     optionalDVNs: z.array(AddressSchema),
     optionalDVNThreshold: z.coerce.number().int().nonnegative(),
+})
+
+/**
+ * Schema for parsing an ethers-specific ExecutorConfig into a common format
+ */
+export const Uln302ExecutorConfigSchema = z.object({
+    maxMessageSize: BigNumberishNumberSchema,
+    executor: AddressSchema,
 })
 
 /**
