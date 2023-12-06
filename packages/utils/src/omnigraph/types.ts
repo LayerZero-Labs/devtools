@@ -22,6 +22,14 @@ export interface OmniVector {
 }
 
 /**
+ * OmniError represents an arbitrary error that occurred on a particular point in omniverse.
+ */
+export interface OmniError<TError = unknown> {
+    point: OmniPoint
+    error: TError
+}
+
+/**
  * OmniNode represents a point in omniverse
  * with an additional piece of information attached
  */
