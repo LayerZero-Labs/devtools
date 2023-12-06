@@ -4,10 +4,10 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/utils-evm-hardhat-test</h1>
+<h1 align="center">@layerzerolabs/ua-utils-evm-hardhat-test</h1>
 
 ## Development
 
-This package provides integration tests for `@layerzerolabs/utils-evm-hardhat` executed within a containerized setup. These tests are dependent on two networks that are bootstrapped in the root `docker-compose.yaml` and will only run when executed within that environment.
+This package provides integration tests for `@layerzerolabs/ua-utils-evm-hardhat` executed within a containerized setup. These tests are dependent on two networks that are bootstrapped in the root `docker-compose.yaml` and will only run when executed within that environment.
 
 Please see the root [`README.md`](../../README.md) for more information.
