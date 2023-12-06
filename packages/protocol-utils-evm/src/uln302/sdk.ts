@@ -1,20 +1,30 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
-import { formatEid, type OmniTransaction } from '@layerzerolabs/utils'
-import { omniContractToPoint, type OmniContract } from '@layerzerolabs/utils-evm'
-import { Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
+import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/utils'
+import { omniContractToPoint, type OmniContract, makeZero } from '@layerzerolabs/utils-evm'
+import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
 
 export class Uln302 implements IUln302 {
     constructor(public readonly contract: OmniContract) {}
 
-    async getUlnConfig(eid: EndpointId, address: string): Promise<Uln302UlnConfig> {
-        const config = await this.contract.contract.getUlnConfig(address, eid)
+    async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
+        const config = await this.contract.contract.getUlnConfig(makeZero(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
         // is actually an array with extra properties
         return Uln302UlnConfigSchema.parse({ ...config })
+    }
+
+    async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
+        const config = await this.contract.contract.getExecutorConfig(makeZero(address), eid)
+
+        // Now we convert the ethers-specific object into the common structure
+        //
+        // Here we need to spread the config into an object because what ethers gives us
+        // is actually an array with extra properties
+        return Uln302ExecutorConfigSchema.parse({ ...config })
     }
 
     async setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction> {
