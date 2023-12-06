@@ -24,4 +24,4 @@ export interface OmniGraphHardhat<TNodeConfig = unknown, TEdgeConfig = unknown> 
     connections: OmniEdgeHardhat<TEdgeConfig>[]
 }
 
-export type OmniContractFactory = (point: OmniPointHardhat) => OmniContract | Promise<OmniContract>
+export type OmniContractFactoryHardhat = (point: OmniPointHardhat) => OmniContract | Promise<OmniContract>
