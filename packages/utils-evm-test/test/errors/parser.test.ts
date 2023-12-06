@@ -173,6 +173,7 @@ describe('errors/parser', () => {
                 })
             )
         })
+
         it('should never reject', async () => {
             const errorParser = createErrorParser(omniContractFactory)
 

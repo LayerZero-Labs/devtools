@@ -119,6 +119,6 @@ const createContractDecoder =
  * @returns `string[]` A list of possible error revert strings
  */
 const getErrorDataCandidates = (error: unknown): string[] =>
-    [(error as any)?.error?.data?.data, (error as any)?.error?.data, (error as any)?.data, error].filter(
+    [(error as any)?.error?.data?.data, (error as any)?.error?.data, (error as any)?.data].filter(
         (candidate: unknown) => typeof candidate === 'string'
     )
