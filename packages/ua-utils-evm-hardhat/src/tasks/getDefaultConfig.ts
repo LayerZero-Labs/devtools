@@ -1,123 +1,57 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import 'hardhat-deploy-ethers/internal/type-extensions'
-import { assertHardhatDeploy, getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
-import { Interface } from '@ethersproject/abi'
+import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
+import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
 
 interface TaskArgs {
     networks: string
 }
 
-const CONFIG_TYPE_EXECUTOR = 1
-const CONFIG_TYPE_ULN = 2
-
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
-    const networks = taskArgs.networks.split(',')
-    return await Promise.all(
-        networks.map(async (network: string) => {
-            const defaultConfigs = {}
-            const environment = await getNetworkRuntimeEnvironment(network)
-            assertHardhatDeploy(environment)
+    const networks = new Set(taskArgs.networks.split(','))
+    const contractFactory = createConnectedContractFactory()
+    const configs: Record<string, Record<string, unknown>> = {}
 
-            const endpointV2 = await environment.ethers.getContract('EndpointV2')
+    for (const localNetworkName of networks) {
+        const localEid = getEidForNetworkName(localNetworkName)
+        const localEndpointSDK = new Endpoint(await contractFactory({ eid: localEid, contractName: 'EndpointV2' }))
 
-            await Promise.all(
-                networks.map(async (remoteNetwork) => {
-                    // skip wiring itself
-                    if (network === remoteNetwork) return
+        configs[localNetworkName] = {}
 
-                    const remoteEnvironment = await getNetworkRuntimeEnvironment(remoteNetwork)
-                    const remoteEndpointV2 = await remoteEnvironment.ethers.getContract('EndpointV2')
-                    const remoteEid = await remoteEndpointV2.eid()
+        for (const remoteNetworkName of networks) {
+            if (remoteNetworkName === localNetworkName) continue
 
-                    const defaultSendLibrary = await endpointV2.defaultSendLibrary(remoteEid)
-                    const defaultReceiveLibrary = await endpointV2.defaultReceiveLibrary(remoteEid)
+            const remoteEid = getEidForNetworkName(localNetworkName)
 
-                    const sendLibBaseArtifact = await environment.deployments.getArtifact('SendLibBase')
-                    const sendLibBaseInterface = new Interface(sendLibBaseArtifact.abi)
-
-                    const ulnBaseArtifact = await environment.deployments.getArtifact('UlnBase')
-                    const ulnBaseInterface = new Interface(ulnBaseArtifact.abi)
-
-                    const sendUln302Factory = await environment.ethers.getContractFactory('SendUln302')
-                    const sendUln302 = sendUln302Factory.attach(defaultSendLibrary)
-
-                    const receiveUln302Factory = await environment.ethers.getContractFactory('ReceiveUln302')
-                    const receiveUln302 = receiveUln302Factory.attach(defaultReceiveLibrary)
-
-                    const sendExecutorConfigBytes = await sendUln302.getConfig(
-                        remoteEid,
-                        remoteEnvironment.ethers.constants.AddressZero,
-                        CONFIG_TYPE_EXECUTOR
-                    )
-                    const [{ maxMessageSize, executor }] = sendLibBaseInterface.decodeFunctionResult(
-                        'getExecutorConfig',
-                        sendExecutorConfigBytes
-                    )
-
-                    const sendUlnConfigBytes = await sendUln302.getConfig(
-                        remoteEid,
-                        remoteEnvironment.ethers.constants.AddressZero,
-                        CONFIG_TYPE_ULN
-                    )
-
-                    const [sendUlnConfig] = ulnBaseInterface.decodeFunctionResult('getUlnConfig', sendUlnConfigBytes)
-
-                    const sendUln = {
-                        maxMessageSize: maxMessageSize,
-                        executor: executor,
-                        confirmations: sendUlnConfig.confirmations.toNumber(),
-                        optionalDVNThreshold: sendUlnConfig.optionalDVNThreshold,
-                        requiredDVNs: sendUlnConfig.requiredDVNs,
-                        optionalDVNs: sendUlnConfig.optionalDVNs,
-                    }
-
-                    const receiveUlnConfigBytes = await receiveUln302.getConfig(
-                        remoteEid,
-                        remoteEnvironment.ethers.constants.AddressZero,
-                        CONFIG_TYPE_ULN
-                    )
-
-                    const [receiveUlnConfig] = ulnBaseInterface.decodeFunctionResult(
-                        'getUlnConfig',
-                        receiveUlnConfigBytes
-                    )
-
-                    const receiveUln = {
-                        confirmations: receiveUlnConfig.confirmations.toNumber(),
-                        optionalDVNThreshold: receiveUlnConfig.optionalDVNThreshold,
-                        requiredDVNs: receiveUlnConfig.requiredDVNs,
-                        optionalDVNs: receiveUlnConfig.optionalDVNs,
-                    }
-
-                    const defaultLibrary = {
-                        network: network,
-                        remoteNetwork: remoteNetwork,
-                        defaultSendLibrary: defaultSendLibrary,
-                        defaultReceiveLibrary: defaultReceiveLibrary,
-                    }
-
-                    const ulnConfig = {
-                        sendUln: sendUln,
-                        receiveUln: receiveUln,
-                    }
-
-                    const config = {
-                        defaultLibrary: defaultLibrary,
-                        ulnConfig: ulnConfig,
-                    }
-
-                    console.log(`************************************************`)
-                    console.log(`${network.toUpperCase()}`)
-                    console.log(`************************************************`)
-                    console.table(defaultLibrary)
-                    console.table(ulnConfig)
-                    defaultConfigs[network] = config
-                })
+            // First we get the SDK for the local send library
+            const defaultSendLibrary = await localEndpointSDK.defaultSendLibrary(remoteEid)
+            const localSendUlnSDK = new Uln302(
+                await contractFactory({ eid: localEid, contractName: 'SendUln302', address: defaultSendLibrary })
             )
-            return defaultConfigs
-        })
-    )
+
+            // Then we get the SDK for the local receive library
+            const defaultReceiveLibrary = await localEndpointSDK.defaultReceiveLibrary(remoteEid)
+            const localReceiveUlnSDK = new Uln302(
+                await contractFactory({ eid: localEid, contractName: 'ReceiveUln302', address: defaultReceiveLibrary })
+            )
+
+            // Now let's get the configs
+            const sendUlnConfig = await localSendUlnSDK.getUlnConfig(remoteEid)
+            const sendExecutorConfig = await localSendUlnSDK.getExecutorConfig(remoteEid)
+            const receiveUlnConfig = await localReceiveUlnSDK.getUlnConfig(remoteEid)
+
+            configs[localNetworkName][remoteNetworkName] = {
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig,
+            }
+
+            console.table(sendUlnConfig)
+            console.table(sendExecutorConfig)
+            console.table(receiveUlnConfig)
+        }
+    }
 }
 
 task(
