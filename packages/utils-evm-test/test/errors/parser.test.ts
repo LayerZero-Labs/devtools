@@ -173,6 +173,21 @@ describe('errors/parser', () => {
                 })
             )
         })
+        it('should never reject', async () => {
+            const errorParser = createErrorParser(omniContractFactory)
+
+            await fc.assert(
+                fc.asyncProperty(pointArbitrary, fc.anything(), async (point, error) => {
+                    const omniError: OmniError = { error, point }
+                    const parsedError = await errorParser(omniError)
+
+                    expect(parsedError.point).to.eql(point)
+                    expect(parsedError.error).to.be.instanceOf(UnknownError)
+                    expect(parsedError.error.reason).to.be.undefined
+                    expect(parsedError.error.message).to.eql(`Unknown error: ${error}`)
+                })
+            )
+        })
 
         // FIXME Write tests for throwWithRevertAndNoArguments - in hardhat node they don't seem to revert
         // FIXME Write tests for throwWithRequireAndNoArguments - in hardhat node they don't seem to revert
