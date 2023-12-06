@@ -8,12 +8,9 @@ interface TaskArgs {
     networks: string
 }
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
-    console.log(taskArgs)
     const networks = taskArgs.networks.split(',')
     const configByNetwork = await Promise.all(
         networks.map(async (network: string) => {
-            console.log({ network })
-
             const defaultConfigs = {}
             const environment = await getNetworkRuntimeEnvironment(network)
             const endpointV2 = await environment.ethers.getContract('EndpointV2')

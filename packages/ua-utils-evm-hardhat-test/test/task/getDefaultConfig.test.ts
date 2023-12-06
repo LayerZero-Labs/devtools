@@ -10,7 +10,6 @@ describe('task: getDefaultConfig', () => {
     })
 
     it('should return default configurations', async () => {
-        console.log(Object.keys(hre.userConfig.networks))
         const networks = Object.keys(hre.userConfig.networks)
         const taskRunEnv = await getNetworkRuntimeEnvironment(networks[0])
         const getDefaultConfigTask = await taskRunEnv.run('getDefaultConfig', { networks: networks.toString() })
