@@ -7,6 +7,7 @@ import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointBasedFactory } from '@layerzerolabs/utils'
+import assert from 'assert'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
@@ -137,4 +138,25 @@ export const getNetworkNamesByEid = (
             return [[networkConfig.eid, networkName]]
         })
     )
+}
+
+/**
+ * Gets an EndpointId defined in the hardhat config
+ * for a particular network name (as an `eid` property).
+ *
+ * Throws if the network or the eid are not defined
+ *
+ * @param networkName `string`
+ * @param hre `HardhatRuntimeEnvironment`
+ * @returns `EndpointId`
+ */
+export const getEidForNetworkName = (
+    networkName: string,
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
+) => {
+    const networkConfig = hre.config.networks[networkName]
+    assert(networkConfig, `Network '${networkName}' is not defined in hardhat config`)
+    assert(networkConfig.eid != null, `Network '${networkName}' does not have 'eid' property defined in its config`)
+
+    return networkConfig.eid
 }
