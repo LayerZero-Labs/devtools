@@ -13,6 +13,16 @@ describe('errors/parser', () => {
         let contract: Contract
         let omniContractFactory: OmniContractFactory
 
+        /**
+         * Helper utility that swaps the promise resolution for rejection and other way around
+         *
+         * This is useful for the below tests since we are testing that promises reject
+         * and want to get their rejection values.
+         *
+         * @param promise `Promise<unknown>`
+         *
+         * @returns `Promise<unknown>`
+         */
         const assertFailed = async (promise: Promise<unknown>): Promise<unknown> =>
             promise.then(
                 (result) => {
