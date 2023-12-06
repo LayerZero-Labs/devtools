@@ -11,13 +11,16 @@ import { BigNumberishBigintSchema } from '../schema'
  *
  * @param contractFactory `OmniContractFactory`
  *
- * @returns `(error: OmniError<unknown>): Promise<OmniError<ContractError>>` `OmniError` parser
+ * @returns `(omniError: OmniError<unknown>): Promise<OmniError<ContractError>>` `OmniError` parser
  */
 export const createErrorParser =
     (contractFactory: OmniContractFactory) =>
     async ({ error, point }: OmniError<unknown>): Promise<OmniError<ContractError>> => {
         try {
-            // First we'll try to decode basic errors
+            // If the error already is a ContractError, we'll continue
+            if (error instanceof ContractError) return { error, point }
+
+            // If the error is unknown we'll try to decode basic errors
             const candidates = getErrorDataCandidates(error)
             const [basicError] = candidates.flatMap(basicDecoder)
             if (basicError != null) return { point, error: basicError }

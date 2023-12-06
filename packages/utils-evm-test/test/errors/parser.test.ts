@@ -45,6 +45,21 @@ describe('errors/parser', () => {
             omniContractFactory = async ({ eid, address }) => ({ eid, contract: contractFactory.attach(address) })
         })
 
+        it('should pass an error through if it already is a ContractError', async () => {
+            const errorParser = createErrorParser(omniContractFactory)
+
+            await fc.assert(
+                fc.asyncProperty(pointArbitrary, async (point) => {
+                    const omniError: OmniError = { error: new RevertError('A reason is worth a million bytes'), point }
+                    const parsedError = await errorParser(omniError)
+
+                    expect(parsedError.point).to.eql(point)
+                    expect(parsedError.error).to.be.instanceOf(RevertError)
+                    expect(parsedError.error.reason).to.equal('A reason is worth a million bytes')
+                })
+            )
+        })
+
         it('should parse assert/panic', async () => {
             const errorParser = createErrorParser(omniContractFactory)
 
