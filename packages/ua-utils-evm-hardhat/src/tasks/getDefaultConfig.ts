@@ -7,7 +7,7 @@ import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
 interface TaskArgs {
     networks: string
 }
-export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
+export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
     console.log(taskArgs)
     const networks = taskArgs.networks.split(',')
     const configByNetwork = await Promise.all(
@@ -36,29 +36,29 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                     const receiveUln302Factory = await environment.ethers.getContractFactory('ReceiveUln302')
                     const receiveUln302 = receiveUln302Factory.attach(defaultReceiveLibrary)
 
-                    let sendExecutorConfigBytes = await sendUln302.getConfig(
+                    const sendExecutorConfigBytes = await sendUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
                         1
                     )
 
-                    let [maxMessageSize, executor] = ethers.utils.defaultAbiCoder.decode(
+                    const [maxMessageSize, executor] = ethers.utils.defaultAbiCoder.decode(
                         ['uint32', 'address'],
                         sendExecutorConfigBytes
                     )
 
-                    let sendUlnConfigBytes = await sendUln302.getConfig(
+                    const sendUlnConfigBytes = await sendUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
                         2
                     )
 
-                    let decodedSendUlnConfig = ethers.utils.defaultAbiCoder.decode(
+                    const decodedSendUlnConfig = ethers.utils.defaultAbiCoder.decode(
                         ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
                         sendUlnConfigBytes
                     )
 
-                    let sendUln = {
+                    const sendUln = {
                         maxMessageSize: maxMessageSize,
                         executor: executor,
                         confirmations: decodedSendUlnConfig[0][0].toNumber(),
@@ -69,17 +69,17 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                         optionalDVNs: decodedSendUlnConfig[0][5],
                     }
 
-                    let receiveUlnConfigBytes = await receiveUln302.getConfig(
+                    const receiveUlnConfigBytes = await receiveUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
                         2
                     )
-                    let decodedReceiveUlnConfig = ethers.utils.defaultAbiCoder.decode(
+                    const decodedReceiveUlnConfig = ethers.utils.defaultAbiCoder.decode(
                         ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
                         receiveUlnConfigBytes
                     )
 
-                    let receiveUln = {
+                    const receiveUln = {
                         confirmations: decodedReceiveUlnConfig[0][0].toNumber(),
                         requiredDVNCount: decodedReceiveUlnConfig[0][1],
                         optionalDVNCount: decodedReceiveUlnConfig[0][2],
@@ -88,19 +88,19 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
                         optionalDVNs: decodedReceiveUlnConfig[0][5],
                     }
 
-                    let defaultLibrary = {
+                    const defaultLibrary = {
                         network: network,
                         remoteNetwork: remoteNetwork,
                         defaultSendLibrary: defaultSendLibrary,
                         defaultReceiveLibrary: defaultReceiveLibrary,
                     }
 
-                    let ulnConfig = {
+                    const ulnConfig = {
                         sendUln: sendUln,
                         receiveUln: receiveUln,
                     }
 
-                    let config = {
+                    const config = {
                         defaultLibrary: defaultLibrary,
                         ulnConfig: ulnConfig,
                     }
