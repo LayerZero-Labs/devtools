@@ -28,7 +28,7 @@
     "chai": "^4.3.10",
     "ethers": "^5.7.0",
     "fast-check": "^3.14.0",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.19.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

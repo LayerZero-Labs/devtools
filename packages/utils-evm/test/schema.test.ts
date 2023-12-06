@@ -1,9 +1,6 @@
 import fc from 'fast-check'
-import { AddressZero } from '@ethersproject/constants'
-import { evmAddressArbitrary } from '@layerzerolabs/test-utils'
-import { ignoreZero, makeZero } from '@/address'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { BigNumberishBigintSchema, BigNumberishSchema } from '@/schema'
+import { BigNumberishBigintSchema, BigNumberishNumberSchema, BigNumberishSchema } from '@/schema'
 
 describe('schema', () => {
     const bigIntArbitrary = fc.bigInt()
@@ -37,6 +34,31 @@ describe('schema', () => {
 
                     expect(typeof parsed).toBe('bigint')
                     expect(BigNumber.from(parsed)).toEqual(BigNumber.from(bigNumberish))
+                })
+            )
+        })
+    })
+
+    describe('BigNumberishNumberSchema', () => {
+        it('should parse BigNumberish into a number if within bounds', () => {
+            fc.assert(
+                fc.property(bigNumberishArbitrary, (bigNumberish) => {
+                    fc.pre(BigNumber.from(bigNumberish).abs().lte(BigInt(Number.MAX_SAFE_INTEGER)))
+
+                    const parsed = BigNumberishNumberSchema.parse(bigNumberish)
+
+                    expect(typeof parsed).toBe('number')
+                    expect(BigNumber.from(parsed)).toEqual(BigNumber.from(bigNumberish))
+                })
+            )
+        })
+
+        it('should throw an error if there is an overflow', () => {
+            fc.assert(
+                fc.property(bigNumberishArbitrary, (bigNumberish) => {
+                    fc.pre(BigNumber.from(bigNumberish).abs().gt(BigInt(Number.MAX_SAFE_INTEGER)))
+
+                    expect(() => BigNumberishNumberSchema.parse(bigNumberish)).toThrow('overflow')
                 })
             )
         })
