@@ -1,5 +1,5 @@
 import type { OmniEdge, OmniNode } from '@layerzerolabs/utils'
-import type { OmniContractFactory, OmniGraphHardhat } from './types'
+import type { OmniContractFactoryHardhat, OmniGraphHardhat } from './types'
 import { OmniGraphBuilder } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import assert from 'assert'
@@ -12,7 +12,7 @@ import assert from 'assert'
 export class OmniGraphBuilderHardhat {
     static async fromConfig<TNodeConfig, TEdgeConfig>(
         graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>,
-        contractFactory: OmniContractFactory
+        contractFactory: OmniContractFactoryHardhat
     ): Promise<OmniGraphBuilder<TNodeConfig, TEdgeConfig>> {
         const builder = new OmniGraphBuilder<TNodeConfig, TEdgeConfig>()
 
