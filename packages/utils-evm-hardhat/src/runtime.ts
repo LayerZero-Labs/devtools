@@ -6,7 +6,7 @@ import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointBasedFactory } from '@layerzerolabs/utils'
+import { EndpointBasedFactory, formatEid } from '@layerzerolabs/utils'
 import assert from 'assert'
 
 /**
@@ -14,6 +14,14 @@ import assert from 'assert'
  */
 export type GetByNetwork<TValue> = (networkName: string) => Promise<TValue>
 
+/**
+ * Returns the default hardhat context for the project, i.e.
+ * the context that the project has been setup with.
+ *
+ * Throws if there is no context.
+ *
+ * @returns {HardhatContext}
+ */
 export const getDefaultContext = (): HardhatContext => {
     // Context is registered globally as a singleton and can be accessed
     // using the static methods of the HardhatContext class
@@ -27,6 +35,13 @@ export const getDefaultContext = (): HardhatContext => {
     }
 }
 
+/**
+ * Returns the default `HardhatRuntimeEnvironment` (`hre`) for the project.
+ *
+ * Throws if there is no `HardhatRuntimeEnvironment`.
+ *
+ * @returns {HardhatRuntimeEnvironment}
+ */
 export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
     // The first step is to get the hardhat context
     const context = getDefaultContext()
@@ -51,6 +66,8 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
  * ```
+ *
+ * @returns {Promise<HardhatRuntimeEnvironment>}
  */
 export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
     const context = getDefaultContext()
@@ -84,8 +101,8 @@ export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironmen
  * Helper function that wraps an EIP1193Provider with Web3Provider
  * so that we can use it further with ethers
  *
- * @param provider `EIP1193Provider`
- * @returns `Web3Provider`
+ * @param {EIP1193Provider} provider
+ * @returns {Web3Provider}
  */
 export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => new Web3Provider(provider)
 
@@ -100,44 +117,13 @@ export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => 
  * const env = factory(EndpointId.FANTOM_MAINNET)
  * ```
  *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `(eid: EndpointId) => Promise<HardhatRuntimeEnvironment>`
+ * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @returns {(eid: EndpointId) => Promise<HardhatRuntimeEnvironment>}
  */
 export const createNetworkEnvironmentFactory = (
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
 ): EndpointBasedFactory<HardhatRuntimeEnvironment> => {
-    const networkNamesByEndpointId = getNetworkNamesByEid(hre)
-
-    return async (eid) => {
-        const networkName = networkNamesByEndpointId.get(eid)
-        if (networkName == null) throw new Error(`No network defined for eid ${eid}`)
-
-        return getNetworkRuntimeEnvironment(networkName)
-    }
-}
-
-/**
- * Creates a mapping between EndpointId and network name
- * based on the hardhat project configuration.
- *
- * It will silently ignore networks that don't have `eid`
- * specified in their network configuration.
- *
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `Map<EndpointId, string>`
- */
-export const getNetworkNamesByEid = (
-    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
-): Map<EndpointId, string> => {
-    const networks = Object.entries(hre.config.networks)
-
-    return new Map(
-        networks.flatMap(([networkName, networkConfig]) => {
-            if (networkConfig.eid == null) return []
-
-            return [[networkConfig.eid, networkName]]
-        })
-    )
+    return async (eid) => getNetworkRuntimeEnvironment(getNetworkNameForEid(eid, hre))
 }
 
 /**
@@ -146,17 +132,55 @@ export const getNetworkNamesByEid = (
  *
  * Throws if the network or the eid are not defined
  *
- * @param networkName `string`
- * @param hre `HardhatRuntimeEnvironment`
- * @returns `EndpointId`
+ * @param {string} networkName
+ * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @returns {EndpointId}
  */
 export const getEidForNetworkName = (
     networkName: string,
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
-) => {
+): EndpointId => {
     const networkConfig = hre.config.networks[networkName]
     assert(networkConfig, `Network '${networkName}' is not defined in hardhat config`)
     assert(networkConfig.eid != null, `Network '${networkName}' does not have 'eid' property defined in its config`)
 
     return networkConfig.eid
+}
+
+/**
+ * Gets a network name with its `eid` property matching
+ * a particular `eid`
+ *
+ * Throws if there is no such network or if there are multiple
+ * networks defined with the same `eid`
+ *
+ * @param {EndpointId} eid
+ * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @returns {string}
+ */
+export const getNetworkNameForEid = (
+    eid: EndpointId,
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
+): string => {
+    const networkNames: string[] = []
+
+    for (const [networkName, networkConfig] of Object.entries(hre.config.networks)) {
+        // This is basically just an extra condition that ensures that even if the user
+        // passes undefined / null despite the TypeScript telling them not to, they won't get a messed up return value
+        if (networkConfig.eid == null) continue
+
+        if (eid === networkConfig.eid) networkNames.push(networkName)
+    }
+
+    // Here we error out of the user by accident specified the same eid for multiple networks
+    assert(
+        networkNames.length < 2,
+        `Multiple networks found with 'eid' set to ${eid} (${formatEid(eid)}): ${networkNames.join(', ')}`
+    )
+
+    // Here we error out if there are no networks with this eid
+    const networkName = networkNames.at(0)
+    assert(networkName, `Could not find a network for eid ${eid} (${formatEid(eid)})`)
+
+    return networkName
 }
