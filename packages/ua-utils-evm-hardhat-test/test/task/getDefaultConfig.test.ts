@@ -2,7 +2,7 @@ import { describe } from 'mocha'
 import { defaultExecutorConfig, defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
 import hre from 'hardhat'
-import { expect } from 'chai'
+import { expect, assert } from 'chai'
 
 describe('task: getDefaultConfig', () => {
     beforeEach(async () => {
@@ -11,13 +11,17 @@ describe('task: getDefaultConfig', () => {
 
     it('should return default configurations', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
-        const taskRunEnv = await getNetworkRuntimeEnvironment(networks[0])
+        const localNetwork = networks.at(0)
+        assert(localNetwork, 'At least one network must be configured')
+
+        const taskRunEnv = await getNetworkRuntimeEnvironment(localNetwork)
         const getDefaultConfigTask = await taskRunEnv.run('getDefaultConfig', { networks: networks.toString() })
 
         for (const networkIndex in networks) {
             const defaultConfigObj = getDefaultConfigTask[networkIndex]
             const networkName = networks[networkIndex]
-            const defaultConfig = defaultConfigObj[`${networkName}`]
+            assert(networkName, 'networkName must be defined')
+            const defaultConfig = defaultConfigObj[networkName]
 
             // verify the returned config is the current network
             expect(networkName).to.eql(defaultConfig.defaultLibrary.network)

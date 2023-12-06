@@ -7,9 +7,13 @@ import { Interface } from '@ethersproject/abi'
 interface TaskArgs {
     networks: string
 }
+
+const CONFIG_TYPE_EXECUTOR = 1
+const CONFIG_TYPE_ULN = 2
+
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
     const networks = taskArgs.networks.split(',')
-    const configByNetwork = await Promise.all(
+    return await Promise.all(
         networks.map(async (network: string) => {
             const defaultConfigs = {}
             const environment = await getNetworkRuntimeEnvironment(network)
@@ -44,7 +48,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                     const sendExecutorConfigBytes = await sendUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
-                        1
+                        CONFIG_TYPE_EXECUTOR
                     )
                     const [{ maxMessageSize, executor }] = sendLibBaseInterface.decodeFunctionResult(
                         'getExecutorConfig',
@@ -54,7 +58,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                     const sendUlnConfigBytes = await sendUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
-                        2
+                        CONFIG_TYPE_ULN
                     )
 
                     const [sendUlnConfig] = ulnBaseInterface.decodeFunctionResult('getUlnConfig', sendUlnConfigBytes)
@@ -71,7 +75,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                     const receiveUlnConfigBytes = await receiveUln302.getConfig(
                         remoteEid,
                         remoteEnvironment.ethers.constants.AddressZero,
-                        2
+                        CONFIG_TYPE_ULN
                     )
 
                     const [receiveUlnConfig] = ulnBaseInterface.decodeFunctionResult(
@@ -114,7 +118,6 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
             return defaultConfigs
         })
     )
-    return configByNetwork
 }
 
 task(
