@@ -1,6 +1,6 @@
 import type { IOApp } from '@layerzerolabs/ua-utils'
 import type { Address, OmniTransaction } from '@layerzerolabs/utils'
-import { omniContractToPoint, OmniContract, ignoreZero, makeZeroAddress, makeBytes32 } from '@layerzerolabs/utils-evm'
+import { omniContractToPoint, OmniContract, ignoreZero, makeBytes32 } from '@layerzerolabs/utils-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export class OApp implements IOApp {
@@ -10,11 +10,14 @@ export class OApp implements IOApp {
         return ignoreZero(await this.contract.contract.peers(eid))
     }
 
+    async hasPeer(eid: EndpointId, address: Address | null | undefined): Promise<boolean> {
+        const peer = await this.peers(eid)
+
+        return makeBytes32(peer) === makeBytes32(address)
+    }
+
     async setPeer(eid: EndpointId, address: Address | null | undefined): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setPeer', [
-            eid,
-            makeBytes32(makeZeroAddress(address)),
-        ])
+        const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
 
         return this.createTransaction(data)
     }
