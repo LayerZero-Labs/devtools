@@ -117,9 +117,6 @@ ENV NPM_TOKEN=
 
 WORKDIR /app
 
-# We want to make sure that the cache folder is globally writable
-RUN chmod a+x /root/.cache
-
 # For some reason we're missing tsconfig.json when using turbo prune
 COPY tsconfig.json ./
 
