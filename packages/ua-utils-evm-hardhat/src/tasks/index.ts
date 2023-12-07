@@ -1,1 +1,2 @@
 import './getDefaultConfig'
+import './getOAppConfig'

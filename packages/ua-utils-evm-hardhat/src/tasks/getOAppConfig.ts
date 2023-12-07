@@ -5,16 +5,18 @@ import { getConfig } from '@/tasks/getConfig'
 
 interface TaskArgs {
     networks: string
+    addresses: string
 }
 
-export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
+export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
     // @ts-ignore
     return getConfig(taskArgs)
 }
 
 task(
-    'getDefaultConfig',
+    'getOAppConfig',
     'outputs the default Send and Receive Messaging Library versions and the default application config'
 )
     .addParam('networks', 'comma separated list of networks')
-    .setAction(getDefaultConfig)
+    .addParam('addresses', 'comma separated list of addresses')
+    .setAction(getOAppConfig)

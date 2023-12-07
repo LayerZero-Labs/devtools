@@ -10,6 +10,14 @@ export class Endpoint implements IEndpoint {
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
 
+    async getSendLibrary(sender: Address, dstEid: EndpointId): Promise<string | undefined> {
+        return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
+    }
+
+    async getReceiveLibrary(receiver: Address, srcEid: EndpointId): Promise<[string | undefined, boolean]> {
+        return await this.contract.contract.getReceiveLibrary(receiver, srcEid)
+    }
+
     async setDefaultReceiveLibrary(
         eid: EndpointId,
         lib: string | null | undefined,
