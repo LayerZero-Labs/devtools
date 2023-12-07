@@ -11,11 +11,8 @@ describe('task: getDefaultConfig', () => {
 
     it('should return default configurations', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
-        const localNetwork = networks.at(0)
-        assert(localNetwork, 'At least one network must be configured')
+        const getDefaultConfigTask = await hre.run('getDefaultConfig', { networks: networks.toString() })
 
-        const taskRunEnv = await getNetworkRuntimeEnvironment(localNetwork)
-        const getDefaultConfigTask = await taskRunEnv.run('getDefaultConfig', { networks: networks.toString() })
         for (const localNetwork of networks) {
             for (const remoteNetwork of networks) {
                 if (localNetwork === remoteNetwork) continue
