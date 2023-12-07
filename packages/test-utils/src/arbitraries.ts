@@ -2,6 +2,10 @@ import fc from 'fast-check'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 import { ENDPOINT_IDS } from './constants'
 
+export const nullishArbitrary = fc.constantFrom(null, undefined)
+
+export const nullableArbitrary = <T>(a: fc.Arbitrary<T>) => fc.oneof(a, nullishArbitrary)
+
 export const addressArbitrary = fc.string()
 
 export const evmAddressArbitrary = fc.hexaString({ minLength: 40, maxLength: 40 }).map((address) => `0x${address}`)
