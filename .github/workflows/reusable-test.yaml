@@ -50,7 +50,20 @@ jobs:
           path: node_modules/.cache/turbo
           key: ${{ runner.os }}-turbo-${{ github.ref_name }}
           restore-keys: |
+            ${{ runner.os }}-turbo-${{ github.ref_name }}
             ${{ runner.os }}-turbo-
+
+      # Cache hardhat compilers
+      #
+      # This step will speed up workflow runs that use hardhat compilation
+      - name: Cache hardhat compilers
+        uses: actions/cache@v3
+        with:
+          path: .cache/hardhat
+          key: ${{ runner.os }}-hardhat-${{ github.ref_name }}
+          restore-keys: |
+            ${{ runner.os }}-hardhat-${{ github.ref_name }}
+            ${{ runner.os }}-hardhat-
 
       - name: Lint
         run: yarn lint
