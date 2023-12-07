@@ -54,7 +54,7 @@ describe('oapp/config', () => {
         // This is the required tooling we need to set up
         const contractFactory = createContractFactory()
         const connectedContractFactory = createConnectedContractFactory(contractFactory)
-        const builder = await OmniGraphBuilderHardhat.fromConfig(config, contractFactory)
+        const builder = await OmniGraphBuilderHardhat.fromConfig(config)
 
         // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
         const sdkFactory = async (point: OmniPoint) => new OApp(await connectedContractFactory(point))
@@ -79,7 +79,7 @@ describe('oapp/config', () => {
         // This is the required tooling we need to set up
         const contractFactory = createContractFactory()
         const connectedContractFactory = createConnectedContractFactory(contractFactory)
-        const builder = await OmniGraphBuilderHardhat.fromConfig(config, contractFactory)
+        const builder = await OmniGraphBuilderHardhat.fromConfig(config)
 
         // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
         const sdkFactory = async (point: OmniPoint) => new OApp(await connectedContractFactory(point))

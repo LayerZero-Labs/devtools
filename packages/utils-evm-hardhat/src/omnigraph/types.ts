@@ -4,8 +4,8 @@ import type { OmniContract } from '@layerzerolabs/utils-evm'
 
 export interface OmniPointHardhat {
     eid: EndpointId
-    contractName?: string
-    address?: string
+    contractName?: string | null
+    address?: string | null
 }
 
 export interface OmniNodeHardhat<TNodeConfig> {
@@ -14,8 +14,8 @@ export interface OmniNodeHardhat<TNodeConfig> {
 }
 
 export interface OmniEdgeHardhat<TEdgeConfig> {
-    from: OmniPointHardhat
-    to: OmniPointHardhat
+    from: OmniPointHardhat | OmniPoint
+    to: OmniPointHardhat | OmniPoint
     config: TEdgeConfig
 }
 
