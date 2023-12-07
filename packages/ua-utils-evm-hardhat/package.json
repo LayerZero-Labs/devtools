@@ -36,15 +36,12 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@gnosis.pm/safe-core-sdk": "^2.0.0",
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
-    "@layerzerolabs/lz-definitions": "~1.5.68",
-    "@layerzerolabs/protocol-utils": "~0.0.1",
-    "@layerzerolabs/protocol-utils-evm": "~0.0.1",
+    "@layerzerolabs/lz-definitions": "~1.5.69",
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
@@ -54,7 +51,7 @@
     "dotenv": "^16.0.3",
     "ethers": "^5.7.0",
     "fast-check": "^3.14.0",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.22",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
@@ -69,13 +66,13 @@
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
-    "@layerzerolabs/lz-definitions": "~1.5.68",
+    "@layerzerolabs/lz-definitions": "~1.5.69",
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "ethers": "^5.5.2",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.22"
   }
 }

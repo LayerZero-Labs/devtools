@@ -19,7 +19,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/lz-definitions": "~1.5.68",
+    "@layerzerolabs/lz-definitions": "~1.5.69",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm": "~0.0.1",
@@ -28,7 +28,7 @@
     "chai": "^4.3.10",
     "ethers": "^5.7.0",
     "fast-check": "^3.14.0",
-    "hardhat": "^2.19.0",
+    "hardhat": "^2.19.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
