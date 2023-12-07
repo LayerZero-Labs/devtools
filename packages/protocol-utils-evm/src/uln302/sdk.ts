@@ -1,14 +1,14 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
 import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/utils'
-import { omniContractToPoint, type OmniContract, makeZero } from '@layerzerolabs/utils-evm'
+import { omniContractToPoint, type OmniContract, makeZeroAddress } from '@layerzerolabs/utils-evm'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
 
 export class Uln302 implements IUln302 {
     constructor(public readonly contract: OmniContract) {}
 
     async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
-        const config = await this.contract.contract.getUlnConfig(makeZero(address), eid)
+        const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
@@ -18,7 +18,7 @@ export class Uln302 implements IUln302 {
     }
 
     async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
-        const config = await this.contract.contract.getExecutorConfig(makeZero(address), eid)
+        const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
