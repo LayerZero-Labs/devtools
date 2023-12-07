@@ -25,3 +25,6 @@ dist
 
 # Github actions
 .netrc
+
+# Cache
+.cache
