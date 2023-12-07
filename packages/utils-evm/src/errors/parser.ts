@@ -32,12 +32,12 @@ export const createErrorParser =
             if (customError != null) return { point, error: customError }
 
             // If none of the decoding works, we'll send a generic error back
-            return { point, error: new UnknownError(`Unknown error: ${error}`) }
+            return { point, error: new UnknownError(`Unknown error: ${toStringSafe(error)}`) }
         } catch {
             // If we fail, we send an unknown error back
             return {
                 point,
-                error: new UnknownError(`Unexpected error: ${error}`),
+                error: new UnknownError(`Unexpected error: ${toStringSafe(error)}`),
             }
         }
     }
@@ -122,3 +122,20 @@ const getErrorDataCandidates = (error: unknown): string[] =>
     [(error as any)?.error?.data?.data, (error as any)?.error?.data, (error as any)?.data].filter(
         (candidate: unknown) => typeof candidate === 'string'
     )
+
+/**
+ * Solves an issue with objects that cannot be converted to primitive values
+ * and when stringified, they fail
+ *
+ * See https://stackoverflow.com/questions/41164750/cannot-convert-object-to-primitive-value
+ *
+ * @param {unknown} obj
+ * @returns {string} String representation of an object or `'[unknown]'`
+ */
+const toStringSafe = (obj: unknown): string => {
+    try {
+        return String(obj)
+    } catch {
+        return '[unknown]'
+    }
+}
