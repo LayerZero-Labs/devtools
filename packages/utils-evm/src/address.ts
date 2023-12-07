@@ -10,7 +10,20 @@ import { AddressZero } from '@ethersproject/constants'
  * @param {Bytes32 | Address | null | undefined} address
  * @returns {string}
  */
-export const makeBytes32 = (address: Bytes32 | Address | null | undefined): Bytes32 => hexZeroPad(address || '0x0', 32)
+export const makeBytes32 = (address?: Bytes32 | Address | null | undefined): Bytes32 => hexZeroPad(address || '0x0', 32)
+
+/**
+ * Compares two Bytes32-like values by value (i.e. ignores casing on strings
+ * and string length)
+ *
+ * @param {Bytes32 | Address | null | undefined} a
+ * @param {Bytes32 | Address | null | undefined} b
+ * @returns {boolean}
+ */
+export const areBytes32Equal = (
+    a: Bytes32 | Address | null | undefined,
+    b: Bytes32 | Address | null | undefined
+): boolean => BigInt(makeBytes32(a)) === BigInt(makeBytes32(b))
 
 /**
  * Checks whether a value is a zero value.

@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { AddressZero } from '@ethersproject/constants'
 import { evmAddressArbitrary, evmBytes32Arbitrary } from '@layerzerolabs/test-utils'
-import { ignoreZero, isZero, makeBytes32, makeZeroAddress } from '@/address'
+import { areBytes32Equal, ignoreZero, isZero, makeBytes32, makeZeroAddress } from '@/address'
 
 describe('address', () => {
     const ZERO_BYTES = '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -46,6 +46,54 @@ describe('address', () => {
             fc.assert(
                 fc.property(evmBytes32Arbitrary, (bytes) => {
                     expect(makeBytes32(bytes)).toBe(bytes)
+                })
+            )
+        })
+    })
+
+    describe('areBytes32Equal', () => {
+        const zeroishBytes32Arbitrary = fc.constantFrom(null, undefined, '0x', '0x0', makeZeroAddress(), ZERO_BYTES)
+
+        it('should return true for two nullish values', () => {
+            fc.assert(
+                fc.property(zeroishBytes32Arbitrary, zeroishBytes32Arbitrary, (a, b) => {
+                    expect(areBytes32Equal(a, b)).toBe(true)
+                })
+            )
+        })
+
+        it('should return true for two identical values', () => {
+            fc.assert(
+                fc.property(evmBytes32Arbitrary, (a) => {
+                    expect(areBytes32Equal(a, a)).toBe(true)
+                })
+            )
+        })
+
+        it('should return true for an address and bytes', () => {
+            fc.assert(
+                fc.property(evmAddressArbitrary, (address) => {
+                    expect(areBytes32Equal(address, makeBytes32(address))).toBe(true)
+                })
+            )
+        })
+
+        it('should return false for a zeroish value and a non-zeroish address', () => {
+            fc.assert(
+                fc.property(zeroishBytes32Arbitrary, evmAddressArbitrary, (bytes, address) => {
+                    fc.pre(!isZero(address))
+
+                    expect(areBytes32Equal(bytes, address)).toBe(false)
+                })
+            )
+        })
+
+        it('should return false for a zeroish value and a non-zeroish bytes', () => {
+            fc.assert(
+                fc.property(zeroishBytes32Arbitrary, evmBytes32Arbitrary, (a, b) => {
+                    fc.pre(!isZero(b))
+
+                    expect(areBytes32Equal(a, b)).toBe(false)
                 })
             )
         })
