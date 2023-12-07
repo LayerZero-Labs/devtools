@@ -50,7 +50,6 @@ jobs:
           path: node_modules/.cache/turbo
           key: ${{ runner.os }}-turbo-${{ github.ref_name }}
           restore-keys: |
-            ${{ runner.os }}-turbo-${{ github.ref_name }}
             ${{ runner.os }}-turbo-
 
       # Cache hardhat compilers
@@ -62,7 +61,6 @@ jobs:
           path: .cache/hardhat
           key: ${{ runner.os }}-hardhat-${{ github.ref_name }}
           restore-keys: |
-            ${{ runner.os }}-hardhat-${{ github.ref_name }}
             ${{ runner.os }}-hardhat-
 
       - name: Build
