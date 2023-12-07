@@ -14,7 +14,7 @@ assert(MNEMONIC, `Missing MNEMONIC environment variable`)
  */
 const config: HardhatUserConfig = {
     solidity: {
-        version: '0.8.19',
+        version: '0.8.22',
     },
     networks: {
         vengaboys: {
