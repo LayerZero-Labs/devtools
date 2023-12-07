@@ -6,7 +6,7 @@ import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-util
 import { OmniDeployment, createContractFactory, omniDeploymentToContract, omniDeploymentToPoint } from '@/omnigraph'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from '@ethersproject/contracts'
-import { makeZero } from '@layerzerolabs/utils-evm'
+import { makeZeroAddress } from '@layerzerolabs/utils-evm'
 import { createNetworkEnvironmentFactory } from '@/runtime'
 
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
@@ -64,7 +64,7 @@ describe('omnigraph/coordinates', () => {
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                 jest.spyOn(env.deployments, 'getOrNull').mockResolvedValue({
-                    address: makeZero(undefined),
+                    address: makeZeroAddress(undefined),
                     abi: [],
                 })
 
@@ -116,7 +116,7 @@ describe('omnigraph/coordinates', () => {
                         const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                         jest.spyOn(env.deployments, 'getDeploymentsFromAddress').mockResolvedValue([
                             {
-                                address: makeZero(undefined),
+                                address: makeZeroAddress(undefined),
                                 abi: [],
                             },
                         ])

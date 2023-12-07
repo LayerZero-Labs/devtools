@@ -1,7 +1,7 @@
 import type { IEndpoint } from '@layerzerolabs/protocol-utils'
 import { formatEid, type Address, type OmniTransaction } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ignoreZero, makeZero, omniContractToPoint, type OmniContract } from '@layerzerolabs/utils-evm'
+import { ignoreZero, makeZeroAddress, omniContractToPoint, type OmniContract } from '@layerzerolabs/utils-evm'
 
 export class Endpoint implements IEndpoint {
     constructor(public readonly contract: OmniContract) {}
@@ -17,13 +17,13 @@ export class Endpoint implements IEndpoint {
     ): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultReceiveLibrary', [
             eid,
-            makeZero(lib),
+            makeZeroAddress(lib),
             gracePeriod,
         ])
 
         return {
             ...this.createTransaction(data),
-            description: `Setting default receive library for ${formatEid(eid)} to ${makeZero(lib)}`,
+            description: `Setting default receive library for ${formatEid(eid)} to ${makeZeroAddress(lib)}`,
         }
     }
 
@@ -32,7 +32,10 @@ export class Endpoint implements IEndpoint {
     }
 
     async setDefaultSendLibrary(eid: EndpointId, lib: Address | null | undefined): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setDefaultSendLibrary', [eid, makeZero(lib)])
+        const data = this.contract.contract.interface.encodeFunctionData('setDefaultSendLibrary', [
+            eid,
+            makeZeroAddress(lib),
+        ])
 
         return {
             ...this.createTransaction(data),

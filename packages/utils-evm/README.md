@@ -27,3 +27,31 @@ pnpm add @layerzerolabs/utils-evm
 
 npm install @layerzerolabs/utils-evm
 ```
+
+### Address utilities
+
+#### ignoreZero(address: Address | null | undefined)
+
+Turns EVM zero addresses to `undefined`
+
+```typescript
+import { ignoreZero } from "@layerzerolabs/utils-evm";
+
+ignoreZero("0xEe6cF2E1Bc7645F8439d241ce37820305F2BB3F8"); // Returns '0xEe6cF2E1Bc7645F8439d241ce37820305F2BB3F8'
+ignoreZero("0x0000000000000000000000000000000000000000"); // Returns undefined
+ignoreZero(undefined); // Returns undefined
+ignoreZero(null); // Returns undefined
+```
+
+#### makeZeroAddress(address)
+
+Turns `null` and `undefined` into EVM zero address
+
+```typescript
+import { makeZeroAddress } from "@layerzerolabs/utils-evm";
+
+makeZeroAddress("0xEe6cF2E1Bc7645F8439d241ce37820305F2BB3F8"); // Returns '0xEe6cF2E1Bc7645F8439d241ce37820305F2BB3F8'
+makeZeroAddress("0x0000000000000000000000000000000000000000"); // Returns '0x0000000000000000000000000000000000000000'
+makeZeroAddress(undefined); // Returns '0x0000000000000000000000000000000000000000'
+makeZeroAddress(null); // Returns '0x0000000000000000000000000000000000000000'
+```
