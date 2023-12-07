@@ -16,43 +16,39 @@ describe('task: getDefaultConfig', () => {
 
         const taskRunEnv = await getNetworkRuntimeEnvironment(localNetwork)
         const getDefaultConfigTask = await taskRunEnv.run('getDefaultConfig', { networks: networks.toString() })
+        for (const localNetwork of networks) {
+            for (const remoteNetwork of networks) {
+                if (localNetwork === remoteNetwork) continue
 
-        for (const networkIndex in networks) {
-            const defaultConfigObj = getDefaultConfigTask[networkIndex]
-            const networkName = networks[networkIndex]
-            assert(networkName, 'networkName must be defined')
-            const defaultConfig = defaultConfigObj[networkName]
+                const defaultConfig = getDefaultConfigTask[localNetwork][remoteNetwork]
+                const network = await getNetworkRuntimeEnvironment(localNetwork)
+                const sendUln302 = await network.ethers.getContract('SendUln302')
+                const receiveUln302 = await network.ethers.getContract('ReceiveUln302')
 
-            // verify the returned config is the current network
-            expect(networkName).to.eql(defaultConfig.defaultLibrary.network)
+                // verify defaultSendLibrary & defaultReceiveLibrary
+                expect(defaultConfig.defaultSendLibrary).to.eql(sendUln302.address)
+                expect(defaultConfig.defaultReceiveLibrary).to.eql(receiveUln302.address)
 
-            const network = await getNetworkRuntimeEnvironment(networkName)
-            const sendUln302 = await network.ethers.getContract('SendUln302')
-            const receiveUln302 = await network.ethers.getContract('ReceiveUln302')
+                // verify sendUln
+                expect(defaultConfig.sendExecutorConfig.maxMessageSize).to.eql(defaultExecutorConfig.maxMessageSize)
+                expect(defaultConfig.sendExecutorConfig.executor).to.eql(defaultExecutorConfig.executor)
+                expect(defaultConfig.sendUlnConfig.confirmations.toString()).to.eql(
+                    defaultUlnConfig.confirmations.toString()
+                )
+                expect(defaultConfig.sendUlnConfig.optionalDVNThreshold).to.eql(defaultUlnConfig.optionalDVNThreshold)
+                expect(defaultConfig.sendUlnConfig.requiredDVNs).to.eql(defaultUlnConfig.requiredDVNs)
+                expect(defaultConfig.sendUlnConfig.optionalDVNs).to.eql(defaultUlnConfig.optionalDVNs)
 
-            // verify defaultSendLibrary & defaultReceiveLibrary
-            expect(defaultConfig.defaultLibrary.defaultSendLibrary).to.eql(sendUln302.address)
-            expect(defaultConfig.defaultLibrary.defaultReceiveLibrary).to.eql(receiveUln302.address)
-
-            // verify sendUln
-            expect(defaultConfig.ulnConfig.sendUln.maxMessageSize).to.eql(defaultExecutorConfig.maxMessageSize)
-            expect(defaultConfig.ulnConfig.sendUln.executor).to.eql(defaultExecutorConfig.executor)
-            expect(defaultConfig.ulnConfig.sendUln.confirmations.toString()).to.eql(
-                defaultUlnConfig.confirmations.toString()
-            )
-            expect(defaultConfig.ulnConfig.sendUln.optionalDVNThreshold).to.eql(defaultUlnConfig.optionalDVNThreshold)
-            expect(defaultConfig.ulnConfig.sendUln.requiredDVNs).to.eql(defaultUlnConfig.requiredDVNs)
-            expect(defaultConfig.ulnConfig.sendUln.optionalDVNs).to.eql(defaultUlnConfig.optionalDVNs)
-
-            // verify receiveUln
-            expect(defaultConfig.ulnConfig.receiveUln.confirmations.toString()).to.eql(
-                defaultUlnConfig.confirmations.toString()
-            )
-            expect(defaultConfig.ulnConfig.receiveUln.optionalDVNThreshold).to.eql(
-                defaultUlnConfig.optionalDVNThreshold
-            )
-            expect(defaultConfig.ulnConfig.receiveUln.requiredDVNs).to.eql(defaultUlnConfig.requiredDVNs)
-            expect(defaultConfig.ulnConfig.receiveUln.optionalDVNs).to.eql(defaultUlnConfig.optionalDVNs)
+                // verify receiveUln
+                expect(defaultConfig.receiveUlnConfig.confirmations.toString()).to.eql(
+                    defaultUlnConfig.confirmations.toString()
+                )
+                expect(defaultConfig.receiveUlnConfig.optionalDVNThreshold).to.eql(
+                    defaultUlnConfig.optionalDVNThreshold
+                )
+                expect(defaultConfig.receiveUlnConfig.requiredDVNs).to.eql(defaultUlnConfig.requiredDVNs)
+                expect(defaultConfig.receiveUlnConfig.optionalDVNs).to.eql(defaultUlnConfig.optionalDVNs)
+            }
         }
     })
 })

@@ -22,7 +22,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
-            const remoteEid = getEidForNetworkName(localNetworkName)
+            const remoteEid = getEidForNetworkName(remoteNetworkName)
 
             // First we get the SDK for the local send library
             const defaultSendLibrary = await localEndpointSDK.defaultSendLibrary(remoteEid)
@@ -42,16 +42,25 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
             const receiveUlnConfig = await localReceiveUlnSDK.getUlnConfig(remoteEid)
 
             configs[localNetworkName][remoteNetworkName] = {
+                defaultSendLibrary: defaultSendLibrary,
+                defaultReceiveLibrary: defaultReceiveLibrary,
                 sendUlnConfig,
                 sendExecutorConfig,
                 receiveUlnConfig,
             }
 
-            console.table(sendUlnConfig)
-            console.table(sendExecutorConfig)
-            console.table(receiveUlnConfig)
+            printConsoleTable(
+                localNetworkName,
+                remoteNetworkName,
+                defaultSendLibrary,
+                defaultReceiveLibrary,
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig
+            )
         }
     }
+    return configs
 }
 
 task(
@@ -60,3 +69,51 @@ task(
 )
     .addParam('networks', 'comma separated list of networks')
     .setAction(getDefaultConfig)
+
+const printConsoleTable = (
+    localNetworkName: string,
+    remoteNetworkName: string,
+    defaultSendLibrary: string,
+    defaultReceiveLibrary: string,
+    sendUlnConfig: Record<any, any>,
+    sendExecutorConfig: Record<any, any>,
+    receiveUlnConfig: Record<any, any>
+) => {
+    const defaultLibraryTable = {
+        network: localNetworkName,
+        remoteNetwork: remoteNetworkName,
+        defaultSendLibrary: defaultSendLibrary,
+        defaultReceiveLibrary: defaultReceiveLibrary,
+    }
+
+    const sendUln = {
+        maxMessageSize: sendExecutorConfig.maxMessageSize,
+        executor: sendExecutorConfig.executor,
+        confirmations: parseInt(sendUlnConfig.confirmations.toString()),
+        optionalDVNThreshold: sendUlnConfig.optionalDVNThreshold,
+        requiredDVNs: sendUlnConfig.requiredDVNs,
+        optionalDVNs: sendUlnConfig.optionalDVNs,
+    }
+
+    const receiveUln = {
+        confirmations: parseInt(receiveUlnConfig.confirmations.toString()),
+        optionalDVNThreshold: receiveUlnConfig.optionalDVNThreshold,
+        requiredDVNs: receiveUlnConfig.requiredDVNs,
+        optionalDVNs: receiveUlnConfig.optionalDVNs,
+    }
+
+    const sendUlnConfigTable = {
+        sendUln: sendUln,
+    }
+
+    const receiveUlnConfigTable = {
+        receiveUln: receiveUln,
+    }
+
+    console.log(`************************************************`)
+    console.log(`${localNetworkName.toUpperCase()}`)
+    console.log(`************************************************`)
+    console.table(defaultLibraryTable)
+    console.table(sendUlnConfigTable)
+    console.table(receiveUlnConfigTable)
+}
