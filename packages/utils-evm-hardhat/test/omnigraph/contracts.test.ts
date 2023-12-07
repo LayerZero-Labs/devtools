@@ -4,7 +4,7 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
 import { createConnectedContractFactory } from '@/omnigraph'
 import { pointArbitrary } from '@layerzerolabs/test-utils'
 import { Contract } from '@ethersproject/contracts'
-import { makeZero } from '@layerzerolabs/utils-evm'
+import { makeZeroAddress } from '@layerzerolabs/utils-evm'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
 jest.spyOn(Web3Provider.prototype, 'send').mockResolvedValue('1')
@@ -28,7 +28,7 @@ describe('omnigraph/contracts', () => {
             await fc.assert(
                 fc.asyncProperty(pointArbitrary, async (point) => {
                     const error = new Error()
-                    const contractFactory = jest.fn().mockResolvedValue(new Contract(makeZero(undefined), []))
+                    const contractFactory = jest.fn().mockResolvedValue(new Contract(makeZeroAddress(undefined), []))
                     const providerFactory = jest.fn().mockRejectedValue(error)
                     const connectedContractFactory = createConnectedContractFactory(contractFactory, providerFactory)
 
@@ -40,7 +40,7 @@ describe('omnigraph/contracts', () => {
         it('should return a connected contract', async () => {
             await fc.assert(
                 fc.asyncProperty(pointArbitrary, async (point) => {
-                    const contract = new Contract(makeZero(undefined), [])
+                    const contract = new Contract(makeZeroAddress(undefined), [])
                     const provider = new JsonRpcProvider()
                     const contractFactory = jest.fn().mockResolvedValue({ eid: point.eid, contract })
                     const providerFactory = jest.fn().mockResolvedValue(provider)

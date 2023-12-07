@@ -185,8 +185,14 @@ describe('errors/parser', () => {
                     expect(parsedError.point).to.eql(point)
                     expect(parsedError.error).to.be.instanceOf(UnknownError)
                     expect(parsedError.error.reason).to.be.undefined
-                    expect(parsedError.error.message).to.eql(`Unknown error: ${error}`)
-                })
+                    expect(parsedError.error.message).to.match(/Unknown error: /)
+                }),
+                // Test case for when toString method of the error is not defined
+                {
+                    seed: 223418789,
+                    path: '40:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:1:77:77',
+                    endOnFailure: true,
+                }
             )
         })
 

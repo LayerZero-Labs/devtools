@@ -42,4 +42,11 @@ services:
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       - ./packages:/app/packages
+      # Hardhat has an issue with caching compilers inside a docker container,
+      # failing with EACCES -13 error, pointing to a permissions issue with the cache folder.
+      #
+      # The workaround is to provide an outside volume to work
+      # as a cache directory for hardhat so that the permissions
+      # don't clash
+      - ./.cache/hardhat:/root/.cache/hardhat-nodejs
     command: "npx turbo test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS"
