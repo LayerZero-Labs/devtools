@@ -46,7 +46,7 @@ Returns `true` if specified filesystem `path` points to a file, `false` otherwis
 
 Returns `true` if specified filesystem `path` can be read by the current user, `false` otherwise. Does not throw if `path` does not exist on the filesystem, instead returns `false`
 
-### Standdard input/output utilities
+### Standard input/output utilities
 
 #### promptToContinue([message, defaultValue])
 
