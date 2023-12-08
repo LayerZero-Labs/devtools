@@ -3,7 +3,21 @@ import { arePointsEqual, isVectorPossible, serializePoint, serializeVector } fro
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 import { formatOmniPoint, formatOmniVector } from './format'
 
-export class OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
+export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
+    /**
+     * Syntactic sugar utility for cloning graphs
+     *
+     * @param {OmniGraph<TNodeConfig, TEdgeConfig>} graph
+     * @returns {OmniGraph<TNodeConfig, TEdgeConfig>}
+     */
+    static fromGraph<TNodeConfig = unknown, TEdgeConfig = unknown>(
+        graph: OmniGraph<TNodeConfig, TEdgeConfig>
+    ): OmniGraphBuilder<TNodeConfig, TEdgeConfig> {
+        return new OmniGraphBuilder<TNodeConfig, TEdgeConfig>()
+            .addNodes(...graph.contracts)
+            .addEdges(...graph.connections)
+    }
+
     #nodes: Map<string, OmniNode<TNodeConfig>> = new Map()
 
     #edges: Map<string, OmniEdge<TEdgeConfig>> = new Map()

@@ -55,7 +55,7 @@ describe('task: getOAppConfig', () => {
         }
     })
 
-    it.skip('should return app specific configurations', async () => {
-        // TODO
-    })
+    // TODO - app specific configuration testing
+    // it('should return app specific configurations', async () => {
+    // })
 })

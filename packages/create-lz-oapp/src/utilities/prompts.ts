@@ -1,7 +1,7 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from '@/config.js'
 import prompts from 'prompts'
 import { isPackageManagerAvailable } from './installation.js'
-import { isDirectory } from './filesystem.js'
+import { isDirectory } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
 
 const handlePromptState = (state: { aborted: boolean }) => {
