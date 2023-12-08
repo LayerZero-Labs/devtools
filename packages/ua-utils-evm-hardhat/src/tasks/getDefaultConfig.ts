@@ -1,6 +1,5 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import 'hardhat-deploy-ethers/internal/type-extensions'
 import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
 import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
 

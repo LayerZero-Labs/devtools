@@ -1,5 +1,4 @@
 import 'hardhat-deploy'
-import 'hardhat-deploy-ethers'
 import assert from 'assert'
 import { withLayerZeroArtifacts } from '@layerzerolabs/utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
