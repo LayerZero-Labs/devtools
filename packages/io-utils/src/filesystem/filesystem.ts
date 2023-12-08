@@ -1,6 +1,6 @@
 import { accessSync, constants, lstatSync } from 'fs'
 
-export const isDirectory = (path: string) => {
+export const isDirectory = (path: string): boolean => {
     try {
         return lstatSync(path).isDirectory()
     } catch {
@@ -8,7 +8,7 @@ export const isDirectory = (path: string) => {
     }
 }
 
-export const isFile = (path: string) => {
+export const isFile = (path: string): boolean => {
     try {
         return lstatSync(path).isFile()
     } catch {
@@ -16,7 +16,7 @@ export const isFile = (path: string) => {
     }
 }
 
-export const isReadable = (path: string) => {
+export const isReadable = (path: string): boolean => {
     try {
         return accessSync(path, constants.R_OK), true
     } catch {

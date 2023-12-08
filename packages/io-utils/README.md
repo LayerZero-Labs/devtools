@@ -29,3 +29,19 @@ yarn install @layerzerolabs/io-utils
 ```bash
 npm install @layerzerolabs/io-utils
 ```
+
+## API Documentation
+
+### Filesystem utilities
+
+#### isDirectory(path)
+
+Returns `true` if specified filesystem `path` points to a directory, `false` otherwise. Does not throw if `path` does not exist on the filesystem, instead returns `false`
+
+#### isFile(path)
+
+Returns `true` if specified filesystem `path` points to a file, `false` otherwise. Does not throw if `path` does not exist on the filesystem, instead returns `false`
+
+#### isReadable(path)
+
+Returns `true` if specified filesystem `path` can be read by the current user, `false` otherwise. Does not throw if `path` does not exist on the filesystem, instead returns `false`
