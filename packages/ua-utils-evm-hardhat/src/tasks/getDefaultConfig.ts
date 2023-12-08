@@ -1,15 +1,44 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import 'hardhat-deploy-ethers/internal/type-extensions'
-import { getConfig } from '@/tasks/getConfig'
+import { getReceiveConfig, getSendConfig, printConsoleTable } from '@/utils/taskHelpers'
 
 interface TaskArgs {
     networks: string
 }
 
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
-    // @ts-ignore
-    return getConfig(taskArgs)
+    const networks = new Set(taskArgs.networks.split(','))
+    const configs: Record<string, Record<string, unknown>> = {}
+    for (const localNetworkName of networks) {
+        configs[localNetworkName] = {}
+        for (const remoteNetworkName of networks) {
+            if (remoteNetworkName === localNetworkName) continue
+            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = await getSendConfig(
+                localNetworkName,
+                remoteNetworkName
+            )
+            const [receiveLibrary, receiveUlnConfig] = await getReceiveConfig(localNetworkName, remoteNetworkName)
+
+            configs[localNetworkName][remoteNetworkName] = {
+                defaultSendLibrary: sendLibrary,
+                defaultReceiveLibrary: receiveLibrary,
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig,
+            }
+
+            printConsoleTable(
+                localNetworkName,
+                remoteNetworkName,
+                sendLibrary,
+                receiveLibrary,
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig
+            )
+        }
+    }
+    return configs
 }
 
 task(

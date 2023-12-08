@@ -1,16 +1,54 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import 'hardhat-deploy-ethers/internal/type-extensions'
-import { getConfig } from '@/tasks/getConfig'
+import { getReceiveConfig, getSendConfig, printConsoleTable } from '@/utils/taskHelpers'
+import assert from 'assert'
 
 interface TaskArgs {
     networks: string
     addresses: string
 }
 
-export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
-    // @ts-ignore
-    return getConfig(taskArgs)
+export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs, ...args) => {
+    const networks = taskArgs.networks.split(',')
+    const addresses = taskArgs.addresses.split(',')
+    assert(networks.length === addresses.length, 'Passed in networks must match length of passed in addresses.')
+    const configs: Record<string, Record<string, unknown>> = {}
+
+    for (const [index, localNetworkName] of networks.entries()) {
+        configs[localNetworkName] = {}
+        for (const remoteNetworkName of networks) {
+            if (remoteNetworkName === localNetworkName) continue
+            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = await getSendConfig(
+                localNetworkName,
+                remoteNetworkName,
+                addresses[index]
+            )
+            const [receiveLibrary, receiveUlnConfig] = await getReceiveConfig(
+                localNetworkName,
+                remoteNetworkName,
+                addresses[index]
+            )
+
+            configs[localNetworkName][remoteNetworkName] = {
+                defaultSendLibrary: sendLibrary,
+                defaultReceiveLibrary: receiveLibrary,
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig,
+            }
+
+            printConsoleTable(
+                localNetworkName,
+                remoteNetworkName,
+                sendLibrary,
+                receiveLibrary,
+                sendUlnConfig,
+                sendExecutorConfig,
+                receiveUlnConfig
+            )
+        }
+    }
+    return configs
 }
 
 task(

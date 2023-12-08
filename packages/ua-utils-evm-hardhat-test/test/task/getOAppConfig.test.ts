@@ -1,6 +1,6 @@
 import { describe } from 'mocha'
 import { defaultExecutorConfig, defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
-import { getNetworkRuntimeEnvironment } from '@layerzerolabs/utils-evm-hardhat'
+import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
 import hre from 'hardhat'
 import { expect, assert } from 'chai'
 import { AddressZero } from '@ethersproject/constants'
@@ -13,23 +13,24 @@ describe('task: getOAppConfig', () => {
     it('should return app default configurations when addresses are not oapps', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
         const addresses = new Array(networks.length).fill(AddressZero).toString()
-        console.log({ addresses })
         const getDefaultConfigTask = await hre.run('getOAppConfig', {
             networks: networks.toString(),
-            addresses: addresses,
+            addresses: addresses.toString(),
         })
+        const contractFactory = createContractFactory()
+
         for (const localNetwork of networks) {
+            const localEid = getEidForNetworkName(localNetwork)
             for (const remoteNetwork of networks) {
                 if (localNetwork === remoteNetwork) continue
 
                 const defaultConfig = getDefaultConfigTask[localNetwork][remoteNetwork]
-                const network = await getNetworkRuntimeEnvironment(localNetwork)
-                const sendUln302 = await network.ethers.getContract('SendUln302')
-                const receiveUln302 = await network.ethers.getContract('ReceiveUln302')
+                const sendUln302 = await contractFactory({ contractName: 'SendUln302', eid: localEid })
+                const receiveUln302 = await contractFactory({ contractName: 'ReceiveUln302', eid: localEid })
 
                 // verify defaultSendLibrary & defaultReceiveLibrary
-                expect(defaultConfig.defaultSendLibrary).to.eql(sendUln302.address)
-                expect(defaultConfig.defaultReceiveLibrary).to.eql(receiveUln302.address)
+                expect(defaultConfig.defaultSendLibrary).to.eql(sendUln302.contract.address)
+                expect(defaultConfig.defaultReceiveLibrary).to.eql(receiveUln302.contract.address)
 
                 // verify sendUln
                 expect(defaultConfig.sendExecutorConfig.maxMessageSize).to.eql(defaultExecutorConfig.maxMessageSize)
