@@ -6,18 +6,15 @@ import type { OmniContractFactoryHardhat, OmniEdgeHardhat, OmniGraphHardhat, Omn
 
 export const createOmniNodeHardhatTransformer =
     (contractFactory: OmniContractFactoryHardhat = createContractFactory()) =>
-    async <TNodeConfig = unknown>({
-        contract,
-        config,
-    }: OmniNodeHardhat<TNodeConfig>): Promise<OmniNode<TNodeConfig>> => {
+    async <TNodeConfig>({ contract, config }: OmniNodeHardhat<TNodeConfig>): Promise<OmniNode<TNodeConfig>> => {
         const point = isOmniPoint(contract) ? contract : omniContractToPoint(await contractFactory(contract))
 
-        return { point, config }
+        return { point, config: config as TNodeConfig }
     }
 
 export const createOmniEdgeHardhatTransformer =
     (contractFactory: OmniContractFactoryHardhat = createContractFactory()) =>
-    async <TEdgeConfig = unknown>({
+    async <TEdgeConfig>({
         from: fromContract,
         to: toContract,
         config,
@@ -25,7 +22,7 @@ export const createOmniEdgeHardhatTransformer =
         const from = isOmniPoint(fromContract) ? fromContract : omniContractToPoint(await contractFactory(fromContract))
         const to = isOmniPoint(toContract) ? toContract : omniContractToPoint(await contractFactory(toContract))
 
-        return { vector: { from, to }, config }
+        return { vector: { from, to }, config: config as TEdgeConfig }
     }
 
 export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unknown> = (
@@ -33,7 +30,7 @@ export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unk
 ) => Promise<OmniGraph<TNodeConfig, TEdgeConfig>>
 
 export const createOmniGraphHardhatTransformer =
-    <TNodeConfig = unknown, TEdgeConfig = unknown>(
+    <TNodeConfig, TEdgeConfig>(
         nodeTransformer = createOmniNodeHardhatTransformer(),
         edgeTransformer = createOmniEdgeHardhatTransformer()
     ): OmniGraphHardhatTransformer<TNodeConfig, TEdgeConfig> =>

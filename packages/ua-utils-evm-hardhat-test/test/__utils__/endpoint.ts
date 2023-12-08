@@ -116,11 +116,9 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
         contracts: [
             {
                 contract: ethEndpoint,
-                config: undefined,
             },
             {
                 contract: avaxEndpoint,
-                config: undefined,
             },
         ],
         connections: [

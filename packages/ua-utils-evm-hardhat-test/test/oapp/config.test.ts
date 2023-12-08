@@ -23,23 +23,19 @@ describe('oapp/config', () => {
         contracts: [
             {
                 contract: ethContract,
-                config: undefined,
             },
             {
                 contract: avaxContract,
-                config: undefined,
             },
         ],
         connections: [
             {
                 from: ethContract,
                 to: avaxContract,
-                config: undefined,
             },
             {
                 from: avaxContract,
                 to: ethContract,
-                config: undefined,
             },
         ],
     }
