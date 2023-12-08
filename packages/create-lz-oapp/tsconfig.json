@@ -10,7 +10,7 @@
     "lib": ["dom", "dom.Iterable", "es2022"],
     "resolveJsonModule": false,
     "target": "esnext",
-    "types": ["mocha", "node"],
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["./src/*"]
     }
