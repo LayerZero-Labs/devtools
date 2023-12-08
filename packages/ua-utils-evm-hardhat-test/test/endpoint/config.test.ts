@@ -1,8 +1,7 @@
+import 'hardhat'
 import { createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
 import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
-import { expect } from 'chai'
-import { describe } from 'mocha'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { defaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
@@ -39,8 +38,8 @@ describe('endpoint/config', () => {
             const ethSendUlnPoint = omniContractToPoint(await connectedContractFactory(ethSendUln))
             const avaxSendUlnPoint = omniContractToPoint(await connectedContractFactory(avaxSendUln))
 
-            expect(ethDefaultSendLib).to.equal(ethSendUlnPoint.address)
-            expect(avaxDefaultSendLib).to.equal(avaxSendUlnPoint.address)
+            expect(ethDefaultSendLib).toBe(ethSendUlnPoint.address)
+            expect(avaxDefaultSendLib).toBe(avaxSendUlnPoint.address)
 
             // Then let's check the receive libraries
             const ethDefaultReceiveLib = await ethEndpointSdk.defaultReceiveLibrary(avaxEndpointPoint.eid)
@@ -49,8 +48,8 @@ describe('endpoint/config', () => {
             const ethReceiveUlnPoint = omniContractToPoint(await connectedContractFactory(ethReceiveUln))
             const avaxReceiveUlnPoint = omniContractToPoint(await connectedContractFactory(avaxReceiveUln))
 
-            expect(ethDefaultReceiveLib).to.equal(ethReceiveUlnPoint.address)
-            expect(avaxDefaultReceiveLib).to.equal(avaxReceiveUlnPoint.address)
+            expect(ethDefaultReceiveLib).toBe(ethReceiveUlnPoint.address)
+            expect(avaxDefaultReceiveLib).toBe(avaxReceiveUlnPoint.address)
         })
     })
 
@@ -69,8 +68,8 @@ describe('endpoint/config', () => {
             const ethConfig = await ethSendUlnSdk.getUlnConfig(avaxSendUlnPoint.eid, avaxSendUlnPoint.address)
             const avaxConfig = await avaxSendUlnSdk.getUlnConfig(ethSendUlnPoint.eid, ethSendUlnPoint.address)
 
-            expect(ethConfig).to.eql(defaultUlnConfig)
-            expect(avaxConfig).to.eql(defaultUlnConfig)
+            expect(ethConfig).toEqual(defaultUlnConfig)
+            expect(avaxConfig).toEqual(defaultUlnConfig)
         })
     })
 })

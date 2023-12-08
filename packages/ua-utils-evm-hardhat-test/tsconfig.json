@@ -3,7 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "include": ["src", "test", "deploy", "*.config.ts"],
   "compilerOptions": {
-    "module": "commonjs",
-    "types": ["node", "mocha"]
+    "moduleResolution": "node",
+    "types": ["node", "jest"]
   }
 }
