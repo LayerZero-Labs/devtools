@@ -45,3 +45,19 @@ Returns `true` if specified filesystem `path` points to a file, `false` otherwis
 #### isReadable(path)
 
 Returns `true` if specified filesystem `path` can be read by the current user, `false` otherwise. Does not throw if `path` does not exist on the filesystem, instead returns `false`
+
+### Standdard input/output utilities
+
+#### promptToContinue([message, defaultValue])
+
+Asks the user whether they want to continue and reads the input from the CLI standard input. By default the question displayed is `Do you want to continue?` and the default response is `yes`
+
+```typescript
+const goahead = await promptToContinue();
+
+// To ask a different question
+const goahead = await promptToContinue("Are you sure?");
+
+// To default the response to false, good for important and unsafe decisions
+const goahead = await promptToContinue("Are you sure?", false);
+```
