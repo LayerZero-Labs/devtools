@@ -41,6 +41,7 @@
   "devDependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.69",
@@ -59,6 +60,7 @@
   "peerDependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/lz-definitions": "~1.5.69",

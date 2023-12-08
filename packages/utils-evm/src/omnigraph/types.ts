@@ -1,10 +1,8 @@
 import type { Contract } from '@ethersproject/contracts'
-import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { OmniPoint } from '@layerzerolabs/utils'
+import type { OmniPoint, WithEid } from '@layerzerolabs/utils'
 
-export interface OmniContract<TContract extends Contract = Contract> {
-    eid: EndpointId
+export type OmniContract<TContract extends Contract = Contract> = WithEid<{
     contract: TContract
-}
+}>
 
 export type OmniContractFactory = (point: OmniPoint) => OmniContract | Promise<OmniContract>
