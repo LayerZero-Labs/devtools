@@ -4,12 +4,11 @@
     "browser": true,
     "commonjs": true,
     "es6": true,
-    "mocha": true,
     "node": true,
     "jest": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "mocha", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -20,8 +19,6 @@
   },
   "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
   "rules": {
-    "mocha/no-skipped-tests": "error",
-    "mocha/no-exclusive-tests": "error",
     "prettier/prettier": "error",
 
     // Intermediate deescalation to warnings

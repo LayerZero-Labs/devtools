@@ -4,6 +4,6 @@
   "include": ["src", "test", "*.config.ts"],
   "compilerOptions": {
     "module": "commonjs",
-    "types": ["node", "mocha"]
+    "types": ["node", "jest"]
   }
 }
