@@ -30,7 +30,7 @@ export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName:
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
 
 export const defaultExecutorConfig: Uln302ExecutorConfig = {
-    maxMessageSize: 1024,
+    maxMessageSize: 10000,
     executor: '0x0000000000000000000000000000000000000001',
 }
 
