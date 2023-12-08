@@ -37,7 +37,7 @@ describe('errors/parser', () => {
                 (error) => error
             )
 
-        before(async () => {
+        beforeAll(async () => {
             const contractFactory = await hre.ethers.getContractFactory(CONTRACT_NAME)
 
             contract = await contractFactory.deploy()
