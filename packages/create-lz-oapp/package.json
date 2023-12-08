@@ -33,6 +33,7 @@
     "yoga-wasm-web": "~0.3.3"
   },
   "devDependencies": {
+    "@layerzerolabs/io-utils": "~0.0.1",
     "@tanstack/react-query": "^5.8.4",
     "@types/mocha": "^10.0.6",
     "@types/prompts": "^2.4.9",
