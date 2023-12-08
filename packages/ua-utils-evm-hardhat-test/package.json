@@ -11,7 +11,8 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "npx hardhat test"
+    "pretest": "npx hardhat compile",
+    "test": "jest --runInBand"
   },
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
@@ -22,6 +23,7 @@
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
+    "@layerzerolabs/io-utils": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~1.5.69",
     "@layerzerolabs/lz-evm-sdk-v1": "~1.5.69",
     "@layerzerolabs/lz-evm-sdk-v2": "~1.5.69",
@@ -34,14 +36,12 @@
     "@layerzerolabs/utils-evm": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
     "@nomicfoundation/hardhat-ethers": "^3.0.2",
-    "@types/chai-as-promised": "^7.1.7",
-    "@types/mocha": "^10.0.6",
-    "chai": "^4.3.10",
-    "chai-as-promised": "^7.1.1",
+    "@types/jest": "^29.5.10",
     "ethers": "^5.7.0",
     "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.22",
-    "sinon": "^17.0.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

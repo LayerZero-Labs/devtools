@@ -25,8 +25,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/",
-    "LICENSE"
+    "tasks",
+    "dist"
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
@@ -41,6 +41,7 @@
     "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
+    "@layerzerolabs/io-utils": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~1.5.69",
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/utils": "~0.0.1",

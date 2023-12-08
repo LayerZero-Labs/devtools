@@ -4,6 +4,6 @@
   "include": ["src", "test", "deploy", "*.config.ts"],
   "compilerOptions": {
     "module": "commonjs",
-    "types": ["node", "mocha"]
+    "types": ["node", "jest"]
   }
 }
