@@ -1,6 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { z } from 'zod'
-import type { OmniPoint, OmniNode, OmniVector, OmniEdge } from './types'
+import type { OmniPoint, OmniNode, OmniVector, OmniEdge, OmniGraph } from './types'
 
 export const AddressSchema = z.string()
 
@@ -29,6 +29,14 @@ export const EmptyOmniEdgeSchema = z.object({
 })
 
 /**
+ * Helper assertion utility for `OmniPoint` instances
+ *
+ * @param {unknown} value
+ * @returns {boolean} `true` if the value is an `OmniPoint`, `false` otherwise
+ */
+export const isOmniPoint = (value: unknown): value is OmniPoint => OmniPointSchema.safeParse(value).success
+
+/**
  * Factory for OmniNode schemas
  *
  * @param configSchema Schema of the config contained in the node
@@ -45,9 +53,9 @@ export const createOmniNodeSchema = <TConfig = unknown>(
 /**
  * Factory for OmniEdge schemas
  *
- * @param configSchema `z.ZodSchema<TConfig>` Schema of the config contained in the edge
+ * @param {z.ZodSchema<TConfig>} configSchema Schema of the config contained in the edge
  *
- * @returns `z.ZodSchema<OmniEdge<TConfig>>` schema for an edge with the particular config type
+ * @returns {z.ZodSchema<OmniEdge<TConfig>>} Schema for an edge with the particular config type
  */
 export const createOmniEdgeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
@@ -55,3 +63,20 @@ export const createOmniEdgeSchema = <TConfig = unknown>(
     EmptyOmniEdgeSchema.extend({
         config: configSchema,
     }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown>
+
+/**
+ * Factory for OmniGraph schemas
+ *
+ * @param {z.ZodSchema<OmniNode<TNodeConfig>, z.ZodTypeDef, unknown>} nodeSchema
+ * @param {z.ZodSchema<OmniEdge<TEdgeConfig>, z.ZodTypeDef, unknown>} edgeSchema
+ *
+ * @returns {z.ZodSchema<OmniGraph<TNodeConfig, TEdgeConfig>, z.ZodTypeDef, unknown>}
+ */
+export const createOmniGraphSchema = <TNodeConfig = unknown, TEdgeConfig = unknown>(
+    nodeSchema: z.ZodSchema<OmniNode<TNodeConfig>, z.ZodTypeDef, unknown>,
+    edgeSchema: z.ZodSchema<OmniEdge<TEdgeConfig>, z.ZodTypeDef, unknown>
+): z.ZodSchema<OmniGraph<TNodeConfig, TEdgeConfig>, z.ZodTypeDef, unknown> =>
+    z.object({
+        contracts: z.array(nodeSchema),
+        connections: z.array(edgeSchema),
+    })

@@ -144,11 +144,11 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     }
 
     // Now we compile a list of all the transactions that need to be executed for the ULNs and Endpoints
-    const builderEndpoint = await OmniGraphBuilderHardhat.fromConfig(config, contractFactory)
+    const builderEndpoint = await OmniGraphBuilderHardhat.fromConfig(config)
     const endpointTransactions = await configureEndpoint(builderEndpoint.graph, endpointSdkFactory)
-    const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig, contractFactory)
+    const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
-    const builderReceiveUln = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig, contractFactory)
+    const builderReceiveUln = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig)
     const receiveUlnTransactions = await configureUln302(builderReceiveUln.graph, ulnSdkFactory)
 
     const transactions = [...sendUlnTransactions, ...receiveUlnTransactions, ...endpointTransactions]
