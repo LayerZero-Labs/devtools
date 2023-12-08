@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
+    "pretest": "npx hardhat compile",
     "test": "jest --runInBand"
   },
   "devDependencies": {
