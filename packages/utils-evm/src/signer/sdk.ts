@@ -53,11 +53,9 @@ export class OmniSignerEVM implements OmniSigner {
         // from?: string,
         // nonce?: BigNumberish,
 
-        // gasLimit?: BigNumberish,
         // gasPrice?: BigNumberish,
 
         // data?: BytesLike,
-        // value?: BigNumberish,
         // chainId?: number
 
         // type?: number;
@@ -67,8 +65,13 @@ export class OmniSignerEVM implements OmniSigner {
         // maxFeePerGas?: BigNumberish;
 
         return {
+            // mandatory
             to: transaction.point.address,
             data: transaction.data,
+
+            // optional
+            ...(transaction.gasLimit && { gasLimit: transaction.gasLimit }),
+            ...(transaction.value && { value: transaction.value }),
         }
     }
 }
