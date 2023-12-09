@@ -33,15 +33,11 @@ describe('task/oapp/wire', () => {
 
     describe('with invalid configs', () => {
         it('should fail if the config file does not exist', async () => {
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: './does-not-exist.js' })).rejects.toThrow(
-                /Unable to read config file/
-            )
+            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: './does-not-exist.js' })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a file', async () => {
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: __dirname })).rejects.toThrow(
-                /Unable to read config file/
-            )
+            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: __dirname })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
@@ -49,9 +45,7 @@ describe('task/oapp/wire', () => {
 
             expect(isFile(readme)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: readme })).rejects.toThrow(
-                /Unable to read config file/
-            )
+            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: readme })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JSON file', async () => {
