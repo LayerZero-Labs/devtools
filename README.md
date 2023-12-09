@@ -30,7 +30,7 @@ yarn dev
 This project is built using `turborepo`. The above commands are just aliases to `turbo` CLI and as such support all the `turbo` options:
 
 ```bash
-# To start the development mode for create-lz-oapp and its depenendencies
+# To start the development mode for create-lz-oapp and its dependencies
 yarn dev --filter=create-lz-oapp...
 ```
 
@@ -78,7 +78,7 @@ This allows you to monitor logs coming from e.g. the `hardhat` nodes
 
 #### Problems with committing
 
-If facing issues when commiting, make sure your `~/.huskyrc` file contains the following:
+If facing issues when committing, make sure your `~/.huskyrc` file contains the following:
 
 ```bash
 # This loads nvm.sh and sets the correct PATH before running hook
@@ -94,6 +94,6 @@ To update external `@layerzerolabs` packages, you can use the builtin `yarn` uti
 yarn upgrade-interactive --scope @layerzerolabs --latest
 ```
 
-However, this utility has an issue with packages that are listed both at the workspace root and in the individual packages, e.g. `@layerzerolabs/prettier-config-next` - it errors out saying that a a workspace package could not be found.
+However, this utility has an issue with packages that are listed both at the workspace root and in the individual packages, e.g. `@layerzerolabs/prettier-config-next` - it errors out saying that a workspace package could not be found.
 
 To work around this (since this version of yarn is outdated and a fix for this problem will not be provided), you can remove the entries from the root `package.json` before running the command, then add them back (just don't forget to update their versions).
