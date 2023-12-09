@@ -14,6 +14,9 @@ export interface IEndpoint {
 
     isRegisteredLibrary(lib: Address): Promise<boolean>
     registerLibrary(lib: Address): Promise<OmniTransaction>
+
+    getSendLibrary(sender: Address, dstEid: EndpointId): Promise<string | undefined>
+    getReceiveLibrary(receiver: Address, srcEid: EndpointId): Promise<[string | undefined, boolean]>
 }
 
 export interface EndpointEdgeConfig {
