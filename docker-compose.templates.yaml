@@ -41,7 +41,7 @@ services:
     command: ["npx", "turbo", "start", "--filter", "test-evm-node"]
     healthcheck:
       interval: 2s
-      retries: 10
+      retries: 20
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
 
   # Service that can build this package
