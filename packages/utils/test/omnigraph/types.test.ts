@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { OmniEdge, OmniNode, OmniPoint, OmniVector } from '@/omnigraph'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 

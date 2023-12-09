@@ -9,7 +9,7 @@ interface TaskArgs {
     addresses: string
 }
 
-export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs, ...args) => {
+export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
     const networks = taskArgs.networks.split(',')
     const addresses = taskArgs.addresses.split(',')
     assert(networks.length === addresses.length, 'Passed in networks must match length of passed in addresses.')
