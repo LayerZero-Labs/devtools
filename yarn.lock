@@ -1710,7 +1710,16 @@
     lodash "^4.17.21"
     solidity-bytes-utils "^0.8.0"
 
-"@layerzerolabs/lz-evm-sdk-v1@^1.5.69", "@layerzerolabs/lz-evm-sdk-v1@~1.5.70":
+"@layerzerolabs/lz-evm-sdk-v1@^1.5.70":
+  version "1.5.71"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.71.tgz#b6c89358c09e21e6931d47b1a8c8ce48b3dced0b"
+  integrity sha512-X7A9DbMqLuAUSxTBaG1KJNRj/RRn2Oago4ON1fy4tupWLgSoSb9U6eDM0uU3ZNZISJXwfhau94N04lsRNokVaA==
+  dependencies:
+    "@ethersproject/abi" "^5.7.0"
+    "@ethersproject/providers" "^5.7.0"
+    ethers "^5.7.2"
+
+"@layerzerolabs/lz-evm-sdk-v1@~1.5.70":
   version "1.5.70"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v1/-/lz-evm-sdk-v1-1.5.70.tgz#939b939aad8dcfd71ecc50effbc22b5a52eb9d73"
   integrity sha512-8A3WJH2RNVVDKO4Cr63VOXM7lH3lr8V6nFmA1jaTlOB+hF/u39bDgmlwU0oOnAc/ByXHfe1vxPe79VzFy1eaDw==
@@ -1719,7 +1728,15 @@
     "@ethersproject/providers" "^5.7.0"
     ethers "^5.7.2"
 
-"@layerzerolabs/lz-evm-sdk-v2@^1.5.69", "@layerzerolabs/lz-evm-sdk-v2@~1.5.70":
+"@layerzerolabs/lz-evm-sdk-v2@^1.5.70":
+  version "1.5.71"
+  resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.71.tgz#8496638a43ecec9593989cb73346c98703c1de01"
+  integrity sha512-S076L4kSuS1x3vfSdIe5y4hcf1QplTg/0hMJfSzoMD/epJEvFPy6h7bzIQ5JtusuuyE6qa3IqsVD+3s9k+eveQ==
+  dependencies:
+    dotenv "^16.3.1"
+    ethers "^5.7.2"
+
+"@layerzerolabs/lz-evm-sdk-v2@~1.5.70":
   version "1.5.70"
   resolved "https://registry.yarnpkg.com/@layerzerolabs/lz-evm-sdk-v2/-/lz-evm-sdk-v2-1.5.70.tgz#3c1edaa446fabb7f94fde8ecba36906f97f46efa"
   integrity sha512-ujkq6SQE8aQV3xD1+GX3M3QfBONHGOR+rS4oFWIH8w3TXCHymISDR+O2klaOebgr6Jl9u55qTnPLsE4OOio/gQ==
@@ -4881,7 +4898,7 @@ dom-walk@^0.1.0:
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
   integrity sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
 
-dotenv@^16.0.3:
+dotenv@^16.0.3, dotenv@^16.3.1:
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
   integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==

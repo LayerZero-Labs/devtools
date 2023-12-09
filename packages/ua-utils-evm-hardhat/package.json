@@ -67,7 +67,7 @@
     "@gnosis.pm/safe-ethers-lib": "^1.0.0",
     "@gnosis.pm/safe-service-client": "1.1.1",
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~1.5.69",
+    "@layerzerolabs/lz-definitions": "~1.5.70",
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
