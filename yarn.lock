@@ -6731,7 +6731,7 @@ hardhat-contract-sizer@^2.10.0:
     cli-table3 "^0.6.0"
     strip-ansi "^6.0.0"
 
-hardhat-deploy@^0.11.22, hardhat-deploy@^0.11.43:
+hardhat-deploy@^0.11.43:
   version "0.11.43"
   resolved "https://registry.npmjs.org/hardhat-deploy/-/hardhat-deploy-0.11.43.tgz"
   integrity sha512-D760CjDtinwjOCpKOvdyRtIJYLQIYXmhfgkFe+AkxlYM9bPZ/T4tZ/xIB2tR89ZT+z0hF1YuZFBXIL3/G/9T5g==
