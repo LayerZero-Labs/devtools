@@ -21,15 +21,10 @@
   "rules": {
     "prettier/prettier": "error",
 
-    // Intermediate deescalation to warnings
-    //
-    // FIXME Slowly remove these problems, then remove these overrides
-    "no-undef": "off",
-    "no-constant-condition": "warn",
-
+    // This rule needs to be disabled otherwise ESLint will error out
+    // on things like TypeScript enums or function types
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-var-requires": "warn"
+
+    "@typescript-eslint/no-explicit-any": "warn"
   }
 }

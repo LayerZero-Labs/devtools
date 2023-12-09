@@ -48,6 +48,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath }) => {
     }
 
     // At this point we have a correctly typed config
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const config: OAppOmniGraphHardhat = configParseResult.data
 
     const go = await promptToContinue()
