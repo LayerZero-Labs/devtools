@@ -32,7 +32,7 @@
   "devDependencies": {
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
-    "@layerzerolabs/lz-definitions": "~1.5.69",
+    "@layerzerolabs/lz-definitions": "~1.5.70",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/ua-utils": "~0.1.0",
     "@layerzerolabs/utils-evm": "~0.0.1",
