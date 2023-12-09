@@ -1,2 +1,5 @@
+artifacts
+cache
+deployments
 dist
 node_modules
