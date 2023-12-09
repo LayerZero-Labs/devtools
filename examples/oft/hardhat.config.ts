@@ -1,6 +1,7 @@
 import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
+import '@layerzerolabs/toolbox-hardhat'
 import { HardhatUserConfig } from 'hardhat/types'
 
 import './tasks/'

@@ -1,9 +1,8 @@
 import 'hardhat-deploy'
+import '@layerzerolabs/toolbox-hardhat'
 import assert from 'assert'
-import { withLayerZeroArtifacts } from '@layerzerolabs/utils-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { HardhatUserConfig } from 'hardhat/types'
-import '@layerzerolabs/ua-utils-evm-hardhat/tasks'
+import type { HardhatUserConfig } from 'hardhat/types'
 
 const MNEMONIC = process.env.MNEMONIC
 assert(MNEMONIC, `Missing MNEMONIC environment variable`)
@@ -34,4 +33,4 @@ const config: HardhatUserConfig = {
     },
 }
 
-export default withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v2')(config)
+export default config
