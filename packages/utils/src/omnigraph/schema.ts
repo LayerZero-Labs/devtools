@@ -4,7 +4,7 @@ import type { OmniPoint, OmniNode, OmniVector, OmniEdge, OmniGraph } from './typ
 
 export const AddressSchema = z.string()
 
-export const EndpointIdSchema: z.ZodSchema<EndpointId, z.ZodTypeDef, unknown> = z
+export const EndpointIdSchema: z.ZodSchema<EndpointId, z.ZodTypeDef, string | number> = z
     .nativeEnum(EndpointId)
     .pipe(z.number())
 
@@ -20,12 +20,12 @@ export const OmniVectorSchema: z.ZodSchema<OmniVector, z.ZodTypeDef, unknown> = 
 
 export const EmptyOmniNodeSchema = z.object({
     point: OmniPointSchema,
-    config: z.unknown(),
+    config: z.unknown().optional(),
 })
 
 export const EmptyOmniEdgeSchema = z.object({
     vector: OmniVectorSchema,
-    config: z.unknown(),
+    config: z.unknown().optional(),
 })
 
 /**
@@ -37,6 +37,16 @@ export const EmptyOmniEdgeSchema = z.object({
 export const isOmniPoint = (value: unknown): value is OmniPoint => OmniPointSchema.safeParse(value).success
 
 /**
+ * Helper assertion utility that checks whether an `OmniGraph`
+ * has at least any contracts or connections defined
+ *
+ * @param {OmniGraph} graph
+ * @returns {boolean}
+ */
+export const isOmniGraphEmpty = ({ contracts, connections }: OmniGraph): boolean =>
+    contracts.length === 0 && connections.length === 0
+
+/**
  * Factory for OmniNode schemas
  *
  * @param configSchema Schema of the config contained in the node
@@ -45,10 +55,10 @@ export const isOmniPoint = (value: unknown): value is OmniPoint => OmniPointSche
  */
 export const createOmniNodeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
-): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown> =>
+): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef> =>
     EmptyOmniNodeSchema.extend({
         config: configSchema,
-    }) as z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown>
+    }) as z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef>
 
 /**
  * Factory for OmniEdge schemas
@@ -59,10 +69,10 @@ export const createOmniNodeSchema = <TConfig = unknown>(
  */
 export const createOmniEdgeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
-): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown> =>
+): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef> =>
     EmptyOmniEdgeSchema.extend({
         config: configSchema,
-    }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown>
+    }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef>
 
 /**
  * Factory for OmniGraph schemas

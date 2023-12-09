@@ -1,15 +1,14 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { Address } from '@/types'
+import type { Address, WithOptionals } from '@/types'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
  *
  * In layman terms this is a contract deployed on a particular network (represented by an endpoint).
  */
-export interface OmniPoint {
-    eid: EndpointId
+export type OmniPoint = WithEid<{
     address: Address
-}
+}>
 
 /**
  * OmniVector identifies a vector in omniverse, an omnichain universe.
@@ -33,19 +32,19 @@ export interface OmniError<TError = unknown> {
  * OmniNode represents a point in omniverse
  * with an additional piece of information attached
  */
-export interface OmniNode<TConfig = unknown> {
+export type OmniNode<TConfig = unknown> = WithOptionals<{
     point: OmniPoint
     config: TConfig
-}
+}>
 
 /**
  * OmniEdge represents a connection between two points in omniverse
  * with an additional piece of information attached
  */
-export interface OmniEdge<TConfig = unknown> {
+export type OmniEdge<TConfig = unknown> = WithOptionals<{
     vector: OmniVector
     config: TConfig
-}
+}>
 
 /**
  * OmniGraph is a collection of nodes and edges of omniverse
@@ -64,3 +63,8 @@ export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
  * based on OmniPoints - by their character these are typically contract or deployment factories
  */
 export type OmniPointBasedFactory<TValue> = (point: OmniPoint) => TValue | Promise<TValue>
+
+/**
+ * Helper type that adds eid property to an underlying type
+ */
+export type WithEid<TValue> = TValue & { eid: EndpointId }

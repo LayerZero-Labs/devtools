@@ -1,6 +1,5 @@
 import fc from 'fast-check'
 import hre from 'hardhat'
-import { expect } from 'chai'
 import { Contract } from '@ethersproject/contracts'
 import {
     createErrorParser,
@@ -33,12 +32,12 @@ describe('errors/parser', () => {
         const assertFailed = async (promise: Promise<unknown>): Promise<unknown> =>
             promise.then(
                 (result) => {
-                    expect.fail(`Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`)
+                    fail(`Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`)
                 },
                 (error) => error
             )
 
-        before(async () => {
+        beforeAll(async () => {
             const contractFactory = await hre.ethers.getContractFactory(CONTRACT_NAME)
 
             contract = await contractFactory.deploy()
@@ -53,9 +52,9 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error: new RevertError('A reason is worth a million bytes'), point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(RevertError)
-                    expect(parsedError.error.reason).to.equal('A reason is worth a million bytes')
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(RevertError)
+                    expect(parsedError.error.reason).toBe('A reason is worth a million bytes')
                 })
             )
         })
@@ -69,9 +68,9 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(PanicError)
-                    expect(parsedError.error.reason).to.eql(BigInt(1))
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(PanicError)
+                    expect(parsedError.error.reason).toEqual(BigInt(1))
                 })
             )
         })
@@ -85,9 +84,9 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(RevertError)
-                    expect(parsedError.error.reason).to.eql('my bad')
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(RevertError)
+                    expect(parsedError.error.reason).toEqual('my bad')
                 })
             )
         })
@@ -101,9 +100,9 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(RevertError)
-                    expect(parsedError.error.reason).to.eql('my bad')
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(RevertError)
+                    expect(parsedError.error.reason).toEqual('my bad')
                 })
             )
         })
@@ -117,10 +116,10 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(CustomError)
-                    expect(parsedError.error.reason).to.eql('CustomErrorWithNoArguments')
-                    expect((parsedError.error as CustomError).args).to.eql([])
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(CustomError)
+                    expect(parsedError.error.reason).toEqual('CustomErrorWithNoArguments')
+                    expect((parsedError.error as CustomError).args).toEqual([])
                 })
             )
         })
@@ -134,10 +133,10 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(CustomError)
-                    expect(parsedError.error.reason).to.eql('CustomErrorWithAnArgument')
-                    expect((parsedError.error as CustomError).args).to.eql(['my bad'])
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(CustomError)
+                    expect(parsedError.error.reason).toEqual('CustomErrorWithAnArgument')
+                    expect((parsedError.error as CustomError).args).toEqual(['my bad'])
                 })
             )
         })
@@ -150,10 +149,10 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error: 'some weird error', point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(UnknownError)
-                    expect(parsedError.error.reason).to.be.undefined
-                    expect(parsedError.error.message).to.eql('Unknown error: some weird error')
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(UnknownError)
+                    expect(parsedError.error.reason).toBeUndefined()
+                    expect(parsedError.error.message).toEqual('Unknown error: some weird error')
                 })
             )
         })
@@ -166,10 +165,10 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error: new Error('some weird error'), point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(UnknownError)
-                    expect(parsedError.error.reason).to.be.undefined
-                    expect(parsedError.error.message).to.eql('Unknown error: Error: some weird error')
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(UnknownError)
+                    expect(parsedError.error.reason).toBeUndefined()
+                    expect(parsedError.error.message).toEqual('Unknown error: Error: some weird error')
                 })
             )
         })
@@ -182,10 +181,10 @@ describe('errors/parser', () => {
                     const omniError: OmniError = { error, point }
                     const parsedError = await errorParser(omniError)
 
-                    expect(parsedError.point).to.eql(point)
-                    expect(parsedError.error).to.be.instanceOf(UnknownError)
-                    expect(parsedError.error.reason).to.be.undefined
-                    expect(parsedError.error.message).to.match(/Unknown error: /)
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(UnknownError)
+                    expect(parsedError.error.reason).toBeUndefined()
+                    expect(parsedError.error.message).toMatch(/Unknown error: /)
                 }),
                 // Test case for when toString method of the error is not defined
                 {

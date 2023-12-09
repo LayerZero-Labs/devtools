@@ -1,23 +1,19 @@
-import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OmniPoint } from '@layerzerolabs/utils'
-import type { Deployment } from 'hardhat-deploy/dist/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import pMemoize from 'p-memoize'
 import { OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
 import assert from 'assert'
-import { OmniContractFactoryHardhat } from './types'
+import { OmniContractFactoryHardhat, OmniDeployment } from './types'
 import { createNetworkEnvironmentFactory, getDefaultRuntimeEnvironment } from '@/runtime'
 import { assertHardhatDeploy } from '@/internal/assertions'
 
-export interface OmniDeployment {
-    eid: EndpointId
-    deployment: Deployment
-}
+export const omniDeploymentToPoint = ({ eid, deployment }: OmniDeployment): OmniPoint => ({
+    eid,
+    address: deployment.address,
+})
 
-export const omniDeploymentToPoint = ({ eid, deployment }): OmniPoint => ({ eid, address: deployment.address })
-
-export const omniDeploymentToContract = ({ eid, deployment }): OmniContract => ({
+export const omniDeploymentToContract = ({ eid, deployment }: OmniDeployment): OmniContract => ({
     eid,
     contract: new Contract(deployment.address, deployment.abi),
 })
