@@ -20,29 +20,11 @@ describe('task: getDefaultConfig', () => {
                 const sendUln302 = await contractFactory({ contractName: 'SendUln302', eid: localEid })
                 const receiveUln302 = await contractFactory({ contractName: 'ReceiveUln302', eid: localEid })
 
-                // verify defaultSendLibrary & defaultReceiveLibrary
                 expect(defaultConfig.defaultSendLibrary).toEqual(sendUln302.contract.address)
                 expect(defaultConfig.defaultReceiveLibrary).toEqual(receiveUln302.contract.address)
-
-                // verify sendUln
-                expect(defaultConfig.sendExecutorConfig.maxMessageSize).toEqual(defaultExecutorConfig.maxMessageSize)
-                expect(defaultConfig.sendExecutorConfig.executor).toEqual(defaultExecutorConfig.executor)
-                expect(defaultConfig.sendUlnConfig.confirmations.toString()).toEqual(
-                    defaultUlnConfig.confirmations.toString()
-                )
-                expect(defaultConfig.sendUlnConfig.optionalDVNThreshold).toEqual(defaultUlnConfig.optionalDVNThreshold)
-                expect(defaultConfig.sendUlnConfig.requiredDVNs).toEqual(defaultUlnConfig.requiredDVNs)
-                expect(defaultConfig.sendUlnConfig.optionalDVNs).toEqual(defaultUlnConfig.optionalDVNs)
-
-                // verify receiveUln
-                expect(defaultConfig.receiveUlnConfig.confirmations.toString()).toEqual(
-                    defaultUlnConfig.confirmations.toString()
-                )
-                expect(defaultConfig.receiveUlnConfig.optionalDVNThreshold).toEqual(
-                    defaultUlnConfig.optionalDVNThreshold
-                )
-                expect(defaultConfig.receiveUlnConfig.requiredDVNs).toEqual(defaultUlnConfig.requiredDVNs)
-                expect(defaultConfig.receiveUlnConfig.optionalDVNs).toEqual(defaultUlnConfig.optionalDVNs)
+                expect(defaultConfig.sendExecutorConfig).toEqual(defaultExecutorConfig)
+                expect(defaultConfig.sendUlnConfig).toEqual(defaultUlnConfig)
+                expect(defaultConfig.receiveUlnConfig).toEqual(defaultUlnConfig)
             }
         }
     })
