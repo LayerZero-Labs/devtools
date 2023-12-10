@@ -32,8 +32,8 @@ describe('endpoint/config', () => {
             const avaxEndpointSdk = await sdkFactory(avaxEndpointPoint)
 
             // First let's check the send libraries
-            const ethDefaultSendLib = await ethEndpointSdk.defaultSendLibrary(avaxEndpointPoint.eid)
-            const avaxDefaultSendLib = await avaxEndpointSdk.defaultSendLibrary(ethEndpointPoint.eid)
+            const ethDefaultSendLib = await ethEndpointSdk.getDefaultSendLibrary(avaxEndpointPoint.eid)
+            const avaxDefaultSendLib = await avaxEndpointSdk.getDefaultSendLibrary(ethEndpointPoint.eid)
 
             const ethSendUlnPoint = omniContractToPoint(await connectedContractFactory(ethSendUln))
             const avaxSendUlnPoint = omniContractToPoint(await connectedContractFactory(avaxSendUln))
@@ -42,8 +42,8 @@ describe('endpoint/config', () => {
             expect(avaxDefaultSendLib).toBe(avaxSendUlnPoint.address)
 
             // Then let's check the receive libraries
-            const ethDefaultReceiveLib = await ethEndpointSdk.defaultReceiveLibrary(avaxEndpointPoint.eid)
-            const avaxDefaultReceiveLib = await avaxEndpointSdk.defaultReceiveLibrary(ethEndpointPoint.eid)
+            const ethDefaultReceiveLib = await ethEndpointSdk.getDefaultReceiveLibrary(avaxEndpointPoint.eid)
+            const avaxDefaultReceiveLib = await avaxEndpointSdk.getDefaultReceiveLibrary(ethEndpointPoint.eid)
 
             const ethReceiveUlnPoint = omniContractToPoint(await connectedContractFactory(ethReceiveUln))
             const avaxReceiveUlnPoint = omniContractToPoint(await connectedContractFactory(avaxReceiveUln))
