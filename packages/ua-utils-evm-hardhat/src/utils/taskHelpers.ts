@@ -18,7 +18,7 @@ export async function getSendConfig(
     if (address) {
         sendLibrary = await localEndpointSDK.getSendLibrary(address, remoteEid)
     } else {
-        sendLibrary = await localEndpointSDK.defaultSendLibrary(remoteEid)
+        sendLibrary = await localEndpointSDK.getDefaultSendLibrary(remoteEid)
     }
 
     const localSendUlnSDK = new Uln302(
@@ -45,7 +45,7 @@ export async function getReceiveConfig(
     if (address) {
         receiveLibrary = (await localEndpointSDK.getReceiveLibrary(address, remoteEid))[0]
     } else {
-        receiveLibrary = await localEndpointSDK.defaultReceiveLibrary(remoteEid)
+        receiveLibrary = await localEndpointSDK.getDefaultReceiveLibrary(remoteEid)
     }
 
     const localReceiveUlnSDK = new Uln302(

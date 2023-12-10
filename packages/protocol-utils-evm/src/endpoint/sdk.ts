@@ -6,7 +6,7 @@ import { ignoreZero, makeZeroAddress, omniContractToPoint, type OmniContract } f
 export class Endpoint implements IEndpoint {
     constructor(public readonly contract: OmniContract) {}
 
-    async defaultReceiveLibrary(eid: EndpointId): Promise<string | undefined> {
+    async getDefaultReceiveLibrary(eid: EndpointId): Promise<string | undefined> {
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
 
@@ -35,7 +35,7 @@ export class Endpoint implements IEndpoint {
         }
     }
 
-    async defaultSendLibrary(eid: EndpointId): Promise<string | undefined> {
+    async getDefaultSendLibrary(eid: EndpointId): Promise<string | undefined> {
         return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
     }
 

@@ -27,4 +27,4 @@ export interface Uln302NodeConfig {
 
 export type Uln302OmniGraph = OmniGraph<Uln302NodeConfig, unknown>
 
-export type Uln302Factory = OmniPointBasedFactory<IUln302>
+export type Uln302Factory<TUln302 extends IUln302 = IUln302> = OmniPointBasedFactory<TUln302>
