@@ -22,13 +22,13 @@ describe('oapp/sdk', () => {
         contract: oappOmniContractArbitrary,
     })
 
-    describe('peers', () => {
+    describe('getPeer', () => {
         it('should call peers on the contract', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, endpointArbitrary, async (omniContract, peerEid) => {
                     const sdk = new OApp(omniContract)
 
-                    await sdk.peers(peerEid)
+                    await sdk.getPeer(peerEid)
 
                     expect(omniContract.contract.peers).toHaveBeenCalledTimes(1)
                     expect(omniContract.contract.peers).toHaveBeenCalledWith(peerEid)
@@ -47,7 +47,7 @@ describe('oapp/sdk', () => {
 
                         const sdk = new OApp(omniContract)
 
-                        expect(sdk.peers(peerEid)).resolves.toBeUndefined()
+                        expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
                     }
                 )
             )
@@ -64,7 +64,7 @@ describe('oapp/sdk', () => {
 
                         const sdk = new OApp(omniContract)
 
-                        await expect(sdk.peers(peerEid)).resolves.toBe(peer)
+                        await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
                     }
                 )
             )

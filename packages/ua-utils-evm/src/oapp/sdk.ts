@@ -6,12 +6,12 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 export class OApp implements IOApp {
     constructor(public readonly contract: OmniContract) {}
 
-    async peers(eid: EndpointId): Promise<Bytes32 | undefined> {
+    async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
         return ignoreZero(await this.contract.contract.peers(eid))
     }
 
     async hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean> {
-        return areBytes32Equal(await this.peers(eid), address)
+        return areBytes32Equal(await this.getPeer(eid), address)
     }
 
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
