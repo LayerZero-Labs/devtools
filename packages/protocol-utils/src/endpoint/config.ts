@@ -14,7 +14,7 @@ export const configureEndpointDefaultReceiveLibraries: EndpointConfigurator = as
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
                 const sdk = await createSdk(from)
-                const address = await sdk.defaultReceiveLibrary(to.eid)
+                const address = await sdk.getDefaultReceiveLibrary(to.eid)
 
                 // If the library is already set as default, do nothing
                 if (config.defaultReceiveLibrary === address) return []
@@ -40,7 +40,7 @@ export const configureEndpointDefaultSendLibraries: EndpointConfigurator = async
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
                 const sdk = await createSdk(from)
-                const address = await sdk.defaultSendLibrary(to.eid)
+                const address = await sdk.getDefaultSendLibrary(to.eid)
 
                 // If the library is already set as default, do nothing
                 if (config.defaultSendLibrary === address) return []
