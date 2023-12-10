@@ -11,4 +11,4 @@ export interface IOApp {
 
 export type OAppOmniGraph = OmniGraph<unknown, unknown>
 
-export type OAppFactory = OmniPointBasedFactory<IOApp>
+export type OAppFactory<TOApp extends IOApp = IOApp> = OmniPointBasedFactory<TOApp>

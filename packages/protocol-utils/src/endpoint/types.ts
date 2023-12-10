@@ -27,4 +27,4 @@ export interface EndpointEdgeConfig {
 
 export type EndpointOmniGraph = OmniGraph<unknown, EndpointEdgeConfig>
 
-export type EndpointFactory = OmniPointBasedFactory<IEndpoint>
+export type EndpointFactory<TEndpoint extends IEndpoint = IEndpoint> = OmniPointBasedFactory<TEndpoint>
