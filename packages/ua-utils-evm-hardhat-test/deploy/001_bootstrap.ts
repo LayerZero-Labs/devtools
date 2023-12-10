@@ -4,6 +4,7 @@ import { formatEid } from '@layerzerolabs/utils'
 import { wrapEIP1193Provider } from '@layerzerolabs/utils-evm-hardhat'
 import env from 'hardhat'
 import { Contract } from 'ethers'
+import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
 
 const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toString()
 
@@ -96,9 +97,11 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 
     const signer = wrapEIP1193Provider(env.network.provider).getSigner()
     const executorContract = new Contract(executor.address, executor.abi).connect(signer)
-    await executorContract.setWorkerFeeLib?.(executorFeeLib.address, {
+    const setExecFeeLibResp: TransactionResponse = await executorContract.setWorkerFeeLib?.(executorFeeLib.address, {
         from: await signer.getAddress(),
     })
+    const setExecFeeLibReceipt: TransactionReceipt = await setExecFeeLibResp.wait()
+    assert(setExecFeeLibReceipt?.status === 1)
 
     await deployments.delete('DVN')
     const dvn = await deployments.deploy('DVN', {
@@ -120,7 +123,11 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     })
 
     const dvnContract = new Contract(dvn.address, dvn.abi).connect(signer)
-    await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address, { from: await signer.getAddress() })
+    const setDvnFeeLibResp: TransactionResponse = await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address, {
+        from: await signer.getAddress(),
+    })
+    const setDvnFeeLibReceipt: TransactionReceipt = await setDvnFeeLibResp.wait()
+    assert(setDvnFeeLibReceipt?.status === 1)
 
     console.table({
         Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
