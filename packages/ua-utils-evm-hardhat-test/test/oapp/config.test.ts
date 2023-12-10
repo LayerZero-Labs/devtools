@@ -1,14 +1,12 @@
 import 'hardhat'
 import { configureOApp } from '@layerzerolabs/ua-utils'
-import { OApp } from '@layerzerolabs/ua-utils-evm'
+import { createOAppFactory } from '@layerzerolabs/ua-utils-evm'
 import {
     createConnectedContractFactory,
-    createContractFactory,
     createSignerFactory,
     OmniGraphBuilderHardhat,
 } from '@layerzerolabs/utils-evm-hardhat'
 import type { OmniGraphHardhat } from '@layerzerolabs/utils-evm-hardhat'
-import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { setupDefaultEndpoint } from '../__utils__/endpoint'
@@ -49,9 +47,7 @@ describe('oapp/config', () => {
         // This is the required tooling we need to set up
         const contractFactory = createConnectedContractFactory()
         const builder = await OmniGraphBuilderHardhat.fromConfig(config)
-
-        // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
-        const sdkFactory = async (point: OmniPoint) => new OApp(await contractFactory(point))
+        const sdkFactory = createOAppFactory(contractFactory)
 
         // This is where the configuration happens
         const transactions = await configureOApp(builder.graph, sdkFactory)
@@ -71,12 +67,9 @@ describe('oapp/config', () => {
 
     it('should exclude setPeer transactions for peers that have been set', async () => {
         // This is the required tooling we need to set up
-        const contractFactory = createContractFactory()
-        const connectedContractFactory = createConnectedContractFactory(contractFactory)
+        const contractFactory = createConnectedContractFactory()
         const builder = await OmniGraphBuilderHardhat.fromConfig(config)
-
-        // This so far the only non-oneliner, a function that returns an SDK for a contract on a network
-        const sdkFactory = async (point: OmniPoint) => new OApp(await connectedContractFactory(point))
+        const sdkFactory = createOAppFactory(contractFactory)
 
         const ethPoint = omniContractToPoint(await contractFactory(ethContract))
         const ethSdk = await sdkFactory(ethPoint)
