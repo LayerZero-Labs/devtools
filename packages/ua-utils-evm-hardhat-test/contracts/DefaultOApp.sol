@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-contract DefaultOApp {
-    mapping(uint256 => bytes32) public peers;
+import { OmniCounter as OmniCounterImpl } from "@layerzerolabs/lz-evm-oapp-v2/contracts/examples/OmniCounter.sol";
 
-    function setPeer(uint256 eid, bytes32 peer) external {
-        peers[eid] = peer;
-    }
+contract DefaultOApp is OmniCounterImpl {
+    constructor(address _endpoint) OmniCounterImpl(_endpoint) {}
 }

@@ -14,8 +14,10 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     assert(deployer, 'Missing deployer')
 
     await deployments.delete('DefaultOApp')
+    const endpointV2 = await deployments.get('EndpointV2')
     const defaultOAppDeployment = await deployments.deploy('DefaultOApp', {
         from: deployer,
+        args: [endpointV2.address],
     })
 
     console.table({
