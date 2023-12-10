@@ -1,7 +1,9 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
 import assert from 'assert'
 import { formatEid } from '@layerzerolabs/utils'
-import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/utils-evm-hardhat'
+import { wrapEIP1193Provider } from '@layerzerolabs/utils-evm-hardhat'
+import env from 'hardhat'
+import { Contract } from 'ethers'
 
 const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toString()
 
@@ -92,20 +94,11 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         },
     })
 
-    const signerFactory = createSignerFactory()
-    const signer = await signerFactory(network.config.eid) // local network signer
-    const connectedContractFactory = createConnectedContractFactory()
-
-    const executorContract = (
-        await connectedContractFactory({
-            eid: network.config.eid,
-            contractName: 'Executor',
-        })
-    ).contract.connect(signer.signer)
-    executorContract.functions.setWorkerFeeLib &&
-        (await executorContract.functions.setWorkerFeeLib(executorFeeLib.address, {
-            from: await signer.signer.getAddress(),
-        }))
+    const signer = wrapEIP1193Provider(env.network.provider).getSigner()
+    const executorContract = new Contract(executor.address, executor.abi).connect(signer)
+    await executorContract.setWorkerFeeLib?.(executorFeeLib.address, {
+        from: await signer.getAddress(),
+    })
 
     await deployments.delete('DVN')
     const dvn = await deployments.deploy('DVN', {
@@ -126,16 +119,8 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         args: [DEFAULT_NATIVE_DECIMALS_RATE],
     })
 
-    const dvnContract = (
-        await connectedContractFactory({
-            eid: network.config.eid,
-            contractName: 'DVN',
-        })
-    ).contract.connect(signer.signer)
-    dvnContract.functions.setWorkerFeeLib &&
-        (await dvnContract.functions.setWorkerFeeLib(dvnFeeLib.address, {
-            from: await signer.signer.getAddress(),
-        }))
+    const dvnContract = new Contract(dvn.address, dvn.abi).connect(signer)
+    await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address, { from: await signer.getAddress() })
 
     console.table({
         Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
