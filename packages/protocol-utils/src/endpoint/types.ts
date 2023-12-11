@@ -1,4 +1,11 @@
-import type { Address, OmniGraph, OmniPointBasedFactory, OmniTransaction, IOmniSDK } from '@layerzerolabs/utils'
+import type {
+    Address,
+    OmniGraph,
+    OmniPointBasedFactory,
+    OmniTransaction,
+    IOmniSDK,
+    Bytes32,
+} from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IEndpoint extends IOmniSDK {
@@ -15,8 +22,11 @@ export interface IEndpoint extends IOmniSDK {
     isRegisteredLibrary(lib: Address): Promise<boolean>
     registerLibrary(lib: Address): Promise<OmniTransaction>
 
-    getSendLibrary(sender: Address, dstEid: EndpointId): Promise<string | undefined>
-    getReceiveLibrary(receiver: Address, srcEid: EndpointId): Promise<[string | undefined, boolean]>
+    getSendLibrary(sender: Address, dstEid: EndpointId): Promise<Address | undefined>
+    getReceiveLibrary(
+        receiver: Address,
+        srcEid: EndpointId
+    ): Promise<[address: Bytes32 | undefined, isDefault: boolean]>
 }
 
 export interface EndpointEdgeConfig {

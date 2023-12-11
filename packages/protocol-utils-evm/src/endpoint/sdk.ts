@@ -4,21 +4,24 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, makeZeroAddress, OmniSDK } from '@layerzerolabs/utils-evm'
 
 export class Endpoint extends OmniSDK implements IEndpoint {
-    async getDefaultReceiveLibrary(eid: EndpointId): Promise<string | undefined> {
+    async getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined> {
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
 
-    async getSendLibrary(sender: Address, dstEid: EndpointId): Promise<string | undefined> {
+    async getSendLibrary(sender: Address, dstEid: EndpointId): Promise<Address | undefined> {
         return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
     }
 
-    async getReceiveLibrary(receiver: Address, srcEid: EndpointId): Promise<[string | undefined, boolean]> {
+    async getReceiveLibrary(
+        receiver: Address,
+        srcEid: EndpointId
+    ): Promise<[address: Address | undefined, isDefault: boolean]> {
         return await this.contract.contract.getReceiveLibrary(receiver, srcEid)
     }
 
     async setDefaultReceiveLibrary(
         eid: EndpointId,
-        lib: string | null | undefined,
+        lib: Address | null | undefined,
         gracePeriod: number = 0
     ): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultReceiveLibrary', [
@@ -33,7 +36,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async getDefaultSendLibrary(eid: EndpointId): Promise<string | undefined> {
+    async getDefaultSendLibrary(eid: EndpointId): Promise<Address | undefined> {
         return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
     }
 
@@ -53,7 +56,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return this.contract.contract.isRegisteredLibrary(lib)
     }
 
-    async registerLibrary(lib: string): Promise<OmniTransaction> {
+    async registerLibrary(lib: Address): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('registerLibrary', [lib])
 
         return {
