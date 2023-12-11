@@ -1,12 +1,10 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
 import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/utils'
-import { omniContractToPoint, type OmniContract, makeZeroAddress } from '@layerzerolabs/utils-evm'
+import { makeZeroAddress, OmniSDK } from '@layerzerolabs/utils-evm'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
 
-export class Uln302 implements IUln302 {
-    constructor(public readonly contract: OmniContract) {}
-
+export class Uln302 extends OmniSDK implements IUln302 {
     async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
         const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
 
@@ -49,13 +47,6 @@ export class Uln302 implements IUln302 {
         return {
             ...this.createTransaction(data),
             description: `Setting default ULN config for ${formatEid(eid)}: ${JSON.stringify(serializedConfig)}`,
-        }
-    }
-
-    protected createTransaction(data: string): OmniTransaction {
-        return {
-            point: omniContractToPoint(this.contract),
-            data,
         }
     }
 }

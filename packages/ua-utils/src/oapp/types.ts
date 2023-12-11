@@ -1,10 +1,10 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint } from '@layerzerolabs/protocol-utils'
-import type { Address, OmniGraph, OmniTransaction } from '@layerzerolabs/utils'
+import type { Address, OmniGraph, OmniTransaction, IOmniSDK } from '@layerzerolabs/utils'
 import type { Bytes32 } from '@layerzerolabs/utils'
 import type { OmniPointBasedFactory } from '@layerzerolabs/utils'
 
-export interface IOApp {
+export interface IOApp extends IOmniSDK {
     getEndpoint(): Promise<IEndpoint>
     getPeer(eid: EndpointId): Promise<Bytes32 | undefined>
     hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean>

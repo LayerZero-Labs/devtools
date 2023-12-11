@@ -68,3 +68,10 @@ export type OmniPointBasedFactory<TValue> = (point: OmniPoint) => TValue | Promi
  * Helper type that adds eid property to an underlying type
  */
 export type WithEid<TValue> = TValue & { eid: EndpointId }
+
+/**
+ * Base interface for all SDKs
+ */
+export interface IOmniSDK {
+    point: OmniPoint
+}

@@ -1,8 +1,7 @@
 import type { IOApp } from '@layerzerolabs/ua-utils'
 import type { Bytes32, Address, OmniTransaction } from '@layerzerolabs/utils'
 import {
-    omniContractToPoint,
-    OmniContract,
+    type OmniContract,
     ignoreZero,
     makeBytes32,
     areBytes32Equal,
@@ -11,12 +10,15 @@ import {
 } from '@layerzerolabs/utils-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-utils'
+import { OmniSDK } from '@layerzerolabs/utils-evm'
 
-export class OApp implements IOApp {
+export class OApp extends OmniSDK implements IOApp {
     constructor(
-        public readonly contract: OmniContract,
+        contract: OmniContract,
         private readonly endpointFactory: EndpointFactory
-    ) {}
+    ) {
+        super(contract)
+    }
 
     async getEndpoint(): Promise<IEndpoint> {
         let address: string
@@ -52,12 +54,5 @@ export class OApp implements IOApp {
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
         return this.createTransaction(data)
-    }
-
-    protected createTransaction(data: string): OmniTransaction {
-        return {
-            point: omniContractToPoint(this.contract),
-            data,
-        }
     }
 }
