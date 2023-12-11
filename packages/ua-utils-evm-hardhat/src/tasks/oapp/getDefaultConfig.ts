@@ -1,6 +1,7 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { getReceiveConfig, getSendConfig, printConsoleTable } from '@/utils/taskHelpers'
+import { printRecord } from '@layerzerolabs/io-utils'
+import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_GET_DEFAULT_CONFIG } from '@/constants'
 
 interface TaskArgs {
@@ -28,15 +29,15 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                 receiveUlnConfig,
             }
 
-            printConsoleTable(
+            printRecord({
                 localNetworkName,
                 remoteNetworkName,
                 sendLibrary,
                 receiveLibrary,
                 sendUlnConfig,
                 sendExecutorConfig,
-                receiveUlnConfig
-            )
+                receiveUlnConfig,
+            })
         }
     }
     return configs
