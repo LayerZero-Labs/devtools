@@ -20,7 +20,7 @@ export class OApp extends OmniSDK implements IOApp {
         super(contract)
     }
 
-    async getEndpoint(): Promise<IEndpoint> {
+    async getEndpointSDK(): Promise<IEndpoint> {
         let address: string
 
         // First we'll need the endpoint address from the contract

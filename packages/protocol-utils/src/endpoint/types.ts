@@ -7,8 +7,11 @@ import type {
     Bytes32,
 } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
+import type { IUln302 } from '@/uln302/types'
 
 export interface IEndpoint extends IOmniSDK {
+    getUln302SDK(address: Address): Promise<IUln302>
+
     getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined>
     setDefaultReceiveLibrary(
         eid: EndpointId,

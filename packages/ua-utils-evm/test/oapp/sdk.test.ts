@@ -228,7 +228,7 @@ describe('oapp/sdk', () => {
         })
     })
 
-    describe('getEndpoint', () => {
+    describe('getEndpointSDK', () => {
         it('should reject if the call to endpoint() rejects', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, async (omniContract) => {
@@ -236,7 +236,7 @@ describe('oapp/sdk', () => {
 
                     const sdk = new OApp(omniContract, endpointFactory)
 
-                    await expect(sdk.getEndpoint()).rejects.toThrow(/Failed to get endpoint address for OApp/)
+                    await expect(sdk.getEndpointSDK()).rejects.toThrow(/Failed to get endpoint address for OApp/)
                 })
             )
         })
@@ -251,7 +251,7 @@ describe('oapp/sdk', () => {
 
                         const sdk = new OApp(omniContract, endpointFactory)
 
-                        await expect(sdk.getEndpoint()).rejects.toThrow(
+                        await expect(sdk.getEndpointSDK()).rejects.toThrow(
                             /Endpoint cannot be instantiated: Endpoint address has been set to a zero value for OApp/
                         )
                     }
@@ -273,7 +273,7 @@ describe('oapp/sdk', () => {
                         endpointFactory.mockReset().mockResolvedValue(endpointSdk)
 
                         const sdk = new OApp(omniContract, endpointFactory)
-                        const endpoint = await sdk.getEndpoint()
+                        const endpoint = await sdk.getEndpointSDK()
 
                         expect(endpoint).toBe(endpointSdk)
 
