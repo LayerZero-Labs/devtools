@@ -1,9 +1,28 @@
-import type { IEndpoint } from '@layerzerolabs/protocol-utils'
-import { formatEid, type Address, type OmniTransaction } from '@layerzerolabs/utils'
+import assert from 'assert'
+import type { IEndpoint, IUln302, Uln302Factory } from '@layerzerolabs/protocol-utils'
+import { formatEid, type Address, type OmniTransaction, formatOmniPoint, OmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ignoreZero, makeZeroAddress, OmniSDK } from '@layerzerolabs/utils-evm'
+import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
 
 export class Endpoint extends OmniSDK implements IEndpoint {
+    constructor(
+        contract: OmniContract,
+        private readonly uln302Factory: Uln302Factory
+    ) {
+        super(contract)
+    }
+
+    async getUln302SDK(address: Address): Promise<IUln302> {
+        assert(
+            !isZero(address),
+            `Uln302 cannot be instantiated: Uln302 address cannot be a zero value for Endpoint ${formatOmniPoint(
+                this.point
+            )}`
+        )
+
+        return await this.uln302Factory({ eid: this.point.eid, address })
+    }
+
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined> {
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }

@@ -1,7 +1,8 @@
 import pMemoize from 'p-memoize'
-import { OmniContractFactory } from '@layerzerolabs/utils-evm'
+import type { EndpointFactory, Uln302Factory } from '@layerzerolabs/protocol-utils'
+import type { OmniContractFactory } from '@layerzerolabs/utils-evm'
 import { Endpoint } from './sdk'
-import { EndpointFactory } from '@layerzerolabs/protocol-utils'
+import { createUln302Factory } from '@/uln302/factory'
 
 /**
  * Syntactic sugar that creates an instance of EVM `Endpoint` SDK
@@ -10,5 +11,7 @@ import { EndpointFactory } from '@layerzerolabs/protocol-utils'
  * @param {OmniContractFactory} contractFactory
  * @returns {EndpointFactory<Endpoint>}
  */
-export const createEndpointFactory = (contractFactory: OmniContractFactory): EndpointFactory<Endpoint> =>
-    pMemoize(async (point) => new Endpoint(await contractFactory(point)))
+export const createEndpointFactory = (
+    contractFactory: OmniContractFactory,
+    uln302Factory: Uln302Factory = createUln302Factory(contractFactory)
+): EndpointFactory<Endpoint> => pMemoize(async (point) => new Endpoint(await contractFactory(point), uln302Factory))
