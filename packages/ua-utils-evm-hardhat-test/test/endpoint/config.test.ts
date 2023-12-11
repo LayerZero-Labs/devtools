@@ -1,10 +1,9 @@
 import 'hardhat'
 import { createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
-import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
-import { Uln302, createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
+import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
 
 describe('endpoint/config', () => {
     const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
