@@ -4,7 +4,7 @@ import type { OmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
-import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
+import { Uln302, createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
 
 describe('endpoint/config', () => {
     const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
@@ -24,7 +24,7 @@ describe('endpoint/config', () => {
         it('should have default libraries configured', async () => {
             // This is the required tooling we need to set up
             const connectedContractFactory = createConnectedContractFactory()
-            const sdkFactory = async (point: OmniPoint) => new Endpoint(await connectedContractFactory(point))
+            const sdkFactory = createEndpointFactory(connectedContractFactory)
 
             // Now for the purposes of the test, we need to get coordinates of our contracts
             const ethEndpointPoint = omniContractToPoint(await connectedContractFactory(ethEndpoint))
@@ -59,7 +59,7 @@ describe('endpoint/config', () => {
         it('should have default executors configured', async () => {
             // This is the required tooling we need to set up
             const connectedContractFactory = createConnectedContractFactory()
-            const sdkFactory = async (point: OmniPoint) => new Uln302(await connectedContractFactory(point))
+            const sdkFactory = createUln302Factory(connectedContractFactory)
 
             const ethSendUlnPoint = omniContractToPoint(await connectedContractFactory(ethSendUln))
             const avaxSendUlnPoint = omniContractToPoint(await connectedContractFactory(avaxSendUln))

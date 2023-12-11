@@ -12,14 +12,12 @@ import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import {
     configureEndpoint,
     EndpointEdgeConfig,
-    EndpointFactory,
     Uln302NodeConfig,
     Uln302ExecutorConfig,
     configureUln302,
-    Uln302Factory,
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-utils'
-import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
+import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
 import { formatOmniPoint } from '@layerzerolabs/utils'
 
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
@@ -76,8 +74,8 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const environmentFactory = createNetworkEnvironmentFactory()
     const contractFactory = createConnectedContractFactory()
     const signerFactory = createSignerFactory()
-    const endpointSdkFactory: EndpointFactory = async (point) => new Endpoint(await contractFactory(point))
-    const ulnSdkFactory: Uln302Factory = async (point) => new Uln302(await contractFactory(point))
+    const ulnSdkFactory = createUln302Factory(contractFactory)
+    const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
 
     // First we deploy the endpoint
     await deploy(await environmentFactory(EndpointId.ETHEREUM_MAINNET))
