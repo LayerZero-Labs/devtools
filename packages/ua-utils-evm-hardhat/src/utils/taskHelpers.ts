@@ -1,7 +1,7 @@
 import { Address } from '@layerzerolabs/utils'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
 import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
-import { Endpoint, Uln302 } from '@layerzerolabs/protocol-utils-evm'
+import { Endpoint, Uln302, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
 
 export async function getSendConfig(
     localNetworkName: string,
@@ -11,7 +11,11 @@ export async function getSendConfig(
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
-    const localEndpointSDK = new Endpoint(await contractFactory({ eid: localEid, contractName: 'EndpointV2' }))
+    const uln302Factory = createUln302Factory(contractFactory)
+    const localEndpointSDK = new Endpoint(
+        await contractFactory({ eid: localEid, contractName: 'EndpointV2' }),
+        uln302Factory
+    )
 
     // First we get the SDK for the local send library
     let sendLibrary: Address
@@ -38,7 +42,11 @@ export async function getReceiveConfig(
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
-    const localEndpointSDK = new Endpoint(await contractFactory({ eid: localEid, contractName: 'EndpointV2' }))
+    const uln302Factory = createUln302Factory(contractFactory)
+    const localEndpointSDK = new Endpoint(
+        await contractFactory({ eid: localEid, contractName: 'EndpointV2' }),
+        uln302Factory
+    )
 
     // First we get the SDK for the local send library
     let receiveLibrary: Address
