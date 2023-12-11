@@ -59,12 +59,6 @@ export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
 }
 
 /**
- * OmniPointBasedFactory is a basis for all factories that can create objects
- * based on OmniPoints - by their character these are typically contract or deployment factories
- */
-export type OmniPointBasedFactory<TValue> = (point: OmniPoint) => TValue | Promise<TValue>
-
-/**
  * Helper type that adds eid property to an underlying type
  */
 export type WithEid<TValue> = TValue & { eid: EndpointId }

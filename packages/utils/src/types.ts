@@ -4,6 +4,23 @@ export type Address = string
 
 export type Bytes32 = string
 
+/**
+ * Generic type for a hybrid (sync / async) factory
+ * that generates an instance of `TOutput` based on arguments of type `TInput`
+ *
+ * `TInput` represents the list of all function arguments that need to be passed to the factory:
+ *
+ * ```typescript
+ * const mySyncFactory: Factory<[number, boolean], string> = (num: number, bool: boolean): string => "hello"
+ *
+ * const mySyncFactory: Factory<[], string> = async () => "hello"
+ * ```
+ *
+ * The hybrid aspect just makes it easier for implementers - if the logic is synchronous,
+ * this type will not force any extra `async`.
+ */
+export type Factory<TInput extends unknown[], TOutput> = (...input: TInput) => TOutput | Promise<TOutput>
+
 export type EndpointBasedFactory<TValue> = (eid: EndpointId) => TValue | Promise<TValue>
 
 /**

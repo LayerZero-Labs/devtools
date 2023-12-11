@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { OmniEdge, OmniNode, OmniPoint, OmniVector } from '@/omnigraph'
+import { Factory } from '@/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 describe('schema/types', () => {
@@ -118,6 +119,36 @@ describe('schema/types', () => {
         it('should work with destructuring', () => {
             const edge: OmniEdge<number> = { vector, config: 6 }
             const anotherNode: OmniEdge<number> = { vector: edge.vector, config: edge.config }
+        })
+    })
+
+    describe('Factory', () => {
+        it('should not allow a factory that changes input types', () => {
+            // @ts-expect-error The input of the factory is a string, not a boolean
+            const factory: Factory<[boolean], boolean> = (a: string): boolean => !!a
+        })
+
+        it('should not allow a factory that changes output types', () => {
+            // @ts-expect-error The output of the factory is a string, not a boolean
+            const factory: Factory<[boolean], boolean> = (a: string): string => a
+        })
+
+        it('should not allow a factory that changes input types', () => {
+            // @ts-expect-error The input of the factory is a string, not a boolean
+            const factory: Factory<[boolean], boolean> = async (a: string): boolean => !!a
+        })
+
+        it('should not allow a factory that changes output types', () => {
+            // @ts-expect-error The output of the factory is a string, not a boolean
+            const factory: Factory<[boolean], boolean> = async (a: string): string => a
+        })
+
+        it('should allow a sync factory', () => {
+            const factory: Factory<[boolean], boolean> = (a: boolean) => a
+        })
+
+        it('should allow an sync factory', () => {
+            const factory: Factory<[boolean], boolean> = async (a: boolean) => a
         })
     })
 })
