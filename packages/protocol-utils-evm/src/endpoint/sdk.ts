@@ -1,11 +1,9 @@
 import type { IEndpoint } from '@layerzerolabs/protocol-utils'
 import { formatEid, type Address, type OmniTransaction } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ignoreZero, makeZeroAddress, omniContractToPoint, type OmniContract } from '@layerzerolabs/utils-evm'
+import { ignoreZero, makeZeroAddress, OmniSDK } from '@layerzerolabs/utils-evm'
 
-export class Endpoint implements IEndpoint {
-    constructor(public readonly contract: OmniContract) {}
-
+export class Endpoint extends OmniSDK implements IEndpoint {
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<string | undefined> {
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
@@ -61,13 +59,6 @@ export class Endpoint implements IEndpoint {
         return {
             ...this.createTransaction(data),
             description: `Registering library ${lib}`,
-        }
-    }
-
-    protected createTransaction(data: string): OmniTransaction {
-        return {
-            point: omniContractToPoint(this.contract),
-            data,
         }
     }
 }
