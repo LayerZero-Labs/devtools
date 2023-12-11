@@ -1,7 +1,7 @@
-import type { Address, OmniGraph, OmniPointBasedFactory, OmniTransaction } from '@layerzerolabs/utils'
+import type { Address, OmniGraph, OmniPointBasedFactory, OmniTransaction, IOmniSDK } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
-export interface IEndpoint {
+export interface IEndpoint extends IOmniSDK {
     getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined>
     setDefaultReceiveLibrary(
         eid: EndpointId,
