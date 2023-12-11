@@ -1,6 +1,6 @@
 import assert from 'assert'
 import type { IEndpoint, IUln302, Uln302Factory } from '@layerzerolabs/protocol-utils'
-import { formatEid, type Address, type OmniTransaction, formatOmniPoint, OmniPoint } from '@layerzerolabs/utils'
+import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
 
