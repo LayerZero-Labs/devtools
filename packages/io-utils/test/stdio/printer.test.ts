@@ -1,6 +1,20 @@
 import { printRecord } from '@/stdio'
 
 describe('stdio/printer', () => {
+    let CI: string | undefined
+
+    // We want to force non-colorful output to make the snapshots more readable
+    // and to make the tests consistent both in & out of the container
+    beforeAll(() => {
+        CI = process.env.CI
+
+        process.env.CI = '1'
+    })
+
+    afterAll(() => {
+        process.env.CI = CI
+    })
+
     describe('printRecord', () => {
         const record = {
             string: 'something',
