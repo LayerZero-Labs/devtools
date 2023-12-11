@@ -17,7 +17,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     const endpointV2 = await deployments.get('EndpointV2')
     const defaultOAppDeployment = await deployments.deploy('DefaultOApp', {
         from: deployer,
-        args: [endpointV2.address],
+        args: [endpointV2.address, deployer],
     })
 
     console.table({

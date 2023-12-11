@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.0;
 
-import { OFT } from "@layerzerolabs/lz-evm-oapp-v2/contracts/standards/oft/OFT.sol";
+import { OFT } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/OFT.sol";
 
 contract YourOFT is OFT {
     constructor(
         string memory _name,
         string memory _symbol,
-        uint8 _localDecimals,
-        address _endpoint
-    ) OFT(_name, _symbol, _localDecimals, _endpoint) {}
+        address _lzEndpoint,
+        address _owner
+    ) OFT(_name, _symbol, _lzEndpoint, _owner) {}
 
     // TODO In the event you wish to add custom logic to your OFT contract, uncomment these and alter any corresponding logic...
 
