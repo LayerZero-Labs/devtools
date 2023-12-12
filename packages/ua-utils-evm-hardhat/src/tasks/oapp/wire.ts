@@ -26,7 +26,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     const logger = createLogger()
 
     // First we check that the config file is indeed there and we can read it
-    logger.debug(`Checking config file '${oappConfigPath}' for existence & readability`)
+    logger.verbose(`Checking config file '${oappConfigPath}' for existence & readability`)
     const isConfigReadable = isFile(oappConfigPath) && isReadable(oappConfigPath)
     if (!isConfigReadable) {
         throw new Error(
@@ -35,26 +35,26 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     }
 
     // Keep talking to the user
-    logger.debug(`Config file '${oappConfigPath}' exists & is readable`)
+    logger.verbose(`Config file '${oappConfigPath}' exists & is readable`)
 
     // Now let's see if we can load the config file
     let rawConfig: unknown
     try {
-        logger.debug(`Loading config file '${oappConfigPath}'`)
+        logger.verbose(`Loading config file '${oappConfigPath}'`)
 
         rawConfig = require(oappConfigPath)
     } catch (error) {
         throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
     }
 
-    logger.debug(`Loaded config file '${oappConfigPath}'`)
+    logger.verbose(`Loaded config file '${oappConfigPath}'`)
 
     // It's time to make sure that the config is not malformed
     //
     // At this stage we are only interested in the shape of the data,
     // we are not checking whether the information makes sense (e.g.
     // whether there are no missing nodes etc)
-    logger.debug(`Validating the structure of config file '${oappConfigPath}'`)
+    logger.verbose(`Validating the structure of config file '${oappConfigPath}'`)
     const configParseResult = OAppOmniGraphHardhatSchema.safeParse(rawConfig)
     if (configParseResult.success === false) {
         // FIXME Error formatting
@@ -76,12 +76,12 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     const hardhatGraph: OAppOmniGraphHardhat = configParseResult.data
 
     // We'll also print out the whole config for verbose loggers
-    logger.debug(`Config file '${oappConfigPath}' has correct structure`)
-    logger.verbose(`The hardhat config is:\n\n${printRecord(hardhatGraph)}`)
+    logger.verbose(`Config file '${oappConfigPath}' has correct structure`)
+    logger.debug(`The hardhat config is:\n\n${printRecord(hardhatGraph)}`)
 
     // What we need to do now is transform the config from hardhat format to the generic format
     // with addresses instead of contractNames
-    logger.debug(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
+    logger.verbose(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
     let graph: OAppOmniGraph
     try {
         // The transformation is achieved using a builder that also validates the resulting graph
@@ -95,11 +95,11 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     }
 
     // Show more detailed logs to interested users
-    logger.debug(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
-    logger.verbose(`The resulting config is:\n\n${printRecord(graph)}`)
+    logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
+    logger.debug(`The resulting config is:\n\n${printRecord(graph)}`)
 
     // At this point we are ready to create the list of transactions
-    logger.debug(`Creating a list of wiring transactions`)
+    logger.verbose(`Creating a list of wiring transactions`)
     const contractFactory = createConnectedContractFactory()
     const oAppFactory = createOAppFactory(contractFactory)
 
@@ -114,8 +114,8 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     const printedTransactions = printTransactions(transactions)
 
     // Flood users with debug output
-    logger.debug(`Created a list of wiring transactions`)
-    logger.verbose(`Following transactions are necessary:\n\n${printedTransactions}`)
+    logger.verbose(`Created a list of wiring transactions`)
+    logger.debug(`Following transactions are necessary:\n\n${printedTransactions}`)
 
     // If there are no transactions that need to be executed, we'll just exit
     if (transactions.length === 0) {
