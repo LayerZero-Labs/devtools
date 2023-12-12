@@ -1,4 +1,3 @@
-import { setupDefaultEndpoint } from '../../__utils__/endpoint'
 import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
@@ -28,12 +27,13 @@ describe('task/oapp/wire', () => {
 
     beforeEach(async () => {
         promptToContinueMock.mockReset()
-
-        await setupDefaultEndpoint()
-        await deployOApp()
     })
 
     describe('with invalid configs', () => {
+        beforeAll(async () => {
+            await deployOApp()
+        })
+
         it('should fail if the config file does not exist', async () => {
             await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: './does-not-exist.js' })).rejects.toMatchSnapshot()
         })
@@ -76,6 +76,10 @@ describe('task/oapp/wire', () => {
     })
 
     describe('with valid configs', () => {
+        beforeEach(async () => {
+            await deployOApp()
+        })
+
         it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
 

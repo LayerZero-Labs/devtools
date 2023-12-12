@@ -5,7 +5,6 @@ import {
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
 } from '@layerzerolabs/utils-evm-hardhat'
-import deploy from '../../deploy/001_bootstrap'
 import { createLogger } from '@layerzerolabs/io-utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
@@ -78,8 +77,10 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
 
     // First we deploy the endpoint
-    await deploy(await environmentFactory(EndpointId.ETHEREUM_MAINNET))
-    await deploy(await environmentFactory(EndpointId.AVALANCHE_MAINNET))
+    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+
+    await Promise.all([eth.deployments.fixture('EndpointV2'), avax.deployments.fixture('EndpointV2')])
 
     // For the graphs, we'll also need the pointers to the contracts
     const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))

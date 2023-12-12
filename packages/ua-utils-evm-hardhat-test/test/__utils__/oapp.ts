@@ -1,10 +1,10 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
-import deploy from '../../deploy/002_oapp'
 
 export const deployOApp = async () => {
     const environmentFactory = createNetworkEnvironmentFactory()
+    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
-    await deploy(await environmentFactory(EndpointId.ETHEREUM_MAINNET))
-    await deploy(await environmentFactory(EndpointId.AVALANCHE_MAINNET))
+    await Promise.all([eth.deployments.fixture('OApp'), avax.deployments.fixture('OApp')])
 }

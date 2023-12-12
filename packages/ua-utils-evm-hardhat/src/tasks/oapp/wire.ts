@@ -1,16 +1,18 @@
 import { task, types } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
-import { isFile, isReadable, printRecord, promptToContinue } from '@layerzerolabs/io-utils'
+import {
+    isFile,
+    isReadable,
+    createLogger,
+    setDefaultLogLevel,
+    promptToContinue,
+    printJson,
+} from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
 import { createOAppFactory } from '@layerzerolabs/ua-utils-evm'
-import {
-    OmniGraphBuilderHardhat,
-    createConnectedContractFactory,
-    createLogger,
-    setDefaultLogLevel,
-} from '@layerzerolabs/utils-evm-hardhat'
+import { OmniGraphBuilderHardhat, createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
 import { OmniTransaction } from '@layerzerolabs/utils'
 import { printTransactions } from '@layerzerolabs/utils'
 
@@ -77,7 +79,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // We'll also print out the whole config for verbose loggers
     logger.verbose(`Config file '${oappConfigPath}' has correct structure`)
-    logger.debug(`The hardhat config is:\n\n${printRecord(hardhatGraph)}`)
+    logger.debug(`The hardhat config is:\n\n${printJson(hardhatGraph)}`)
 
     // What we need to do now is transform the config from hardhat format to the generic format
     // with addresses instead of contractNames
@@ -96,7 +98,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // Show more detailed logs to interested users
     logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
-    logger.debug(`The resulting config is:\n\n${printRecord(graph)}`)
+    logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)
@@ -110,12 +112,9 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         throw new Error(`An error occurred while getting the OApp configuration: ${error}`)
     }
 
-    // We'll just save the printed transactions for users that want to see them
-    const printedTransactions = printTransactions(transactions)
-
     // Flood users with debug output
     logger.verbose(`Created a list of wiring transactions`)
-    logger.debug(`Following transactions are necessary:\n\n${printedTransactions}`)
+    logger.debug(`Following transactions are necessary:\n\n${printJson(transactions)}`)
 
     // If there are no transactions that need to be executed, we'll just exit
     if (transactions.length === 0) {
@@ -133,7 +132,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // Ask them whether they want to see them
     const previewTransactions = await promptToContinue(`Would you like to preview the transactions before continuing?`)
-    if (previewTransactions) logger.info(`\n${printedTransactions}`)
+    if (previewTransactions) logger.info(`\n${printTransactions(transactions)}`)
 
     // Now ask the user whether they want to go ahead with signing them
     const go = await promptToContinue()
