@@ -1,12 +1,12 @@
 import {
     createConnectedContractFactory,
-    createLogger,
     createNetworkEnvironmentFactory,
     createSignerFactory,
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
 } from '@layerzerolabs/utils-evm-hardhat'
 import deploy from '../../deploy/001_bootstrap'
+import { createLogger } from '@layerzerolabs/io-utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import {

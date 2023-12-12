@@ -3,7 +3,7 @@ import 'hardhat-deploy/dist/src/type-extensions'
 import { endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
 import { join, dirname } from 'path'
-import { createNetworkLogger } from './logger'
+import { createModuleLogger } from '@layerzerolabs/io-utils'
 
 const resolvePackageDirectory = (packageName: string): string => {
     // The tricky bit here is the fact that if we resolve packages by their package name,
@@ -62,7 +62,7 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
             deployments: Object.fromEntries(
                 Object.entries(config.networks ?? {}).flatMap(([networkName, networkConfig]) => {
                     const eid = networkConfig?.eid
-                    const networkLogger = createNetworkLogger(networkName)
+                    const networkLogger = createModuleLogger(networkName)
 
                     // Let's first check whether eid is defined on the network config
                     if (eid == null) {

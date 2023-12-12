@@ -46,6 +46,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@ethersproject/wallet": "^5.7.0",
+    "@layerzerolabs/io-utils": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~1.5.72",
     "@layerzerolabs/lz-evm-sdk-v1": "~1.5.72",
     "@layerzerolabs/test-utils": "~0.0.1",
@@ -60,13 +61,13 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsup": "~8.0.1",
-    "typescript": "^5.2.2",
-    "winston": "^3.11.0"
+    "typescript": "^5.2.2"
   },
   "peerDependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
+    "@layerzerolabs/io-utils": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~1.5.72",
     "@layerzerolabs/utils-evm": "~0.0.1",
     "hardhat": "^2.19.2",
