@@ -12,6 +12,8 @@
     "dev": "npx turbo run dev",
     "lint": "npx turbo run lint",
     "prepare": "husky install",
+    "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys",
+    "stop": "docker compose down",
     "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
   },
   "lint-staged": {

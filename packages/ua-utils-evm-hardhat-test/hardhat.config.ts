@@ -22,24 +22,26 @@ const config: HardhatUserConfig = {
     networks: {
         vengaboys: {
             eid: EndpointId.ETHEREUM_MAINNET,
-            url: 'http://network-vengaboys:8545',
-            // For exposed networks
+            // Containerized setup defines these environment variables
+            // to point the networks to the internal ones
             //
-            // See root README.md for information on how to use exposed networks
+            // If these are not specified, exposed networks are used
             //
-            // url: 'http://localhost:10001',
+            // See root README.md for usage with exposed network
+            url: process.env.NETWORK_URL_VENGABOYS ?? 'http://localhost:10001',
             accounts: {
                 mnemonic: MNEMONIC,
             },
         },
         britney: {
             eid: EndpointId.AVALANCHE_MAINNET,
-            url: 'http://network-britney:8545',
-            // For exposed networks
+            // Containerized setup defines these environment variables
+            // to point the networks to the internal ones
             //
-            // See root README.md for information on how to use exposed networks
+            // If these are not specified, exposed networks are used
             //
-            // url: 'http://localhost:10002',
+            // See root README.md for usage with exposed network
+            url: process.env.NETWORK_URL_BRITNEY ?? 'http://localhost:10002',
             accounts: {
                 mnemonic: MNEMONIC,
             },

@@ -79,10 +79,20 @@ This allows you to monitor logs coming from e.g. the `hardhat` nodes
 It is possible to expose the test networks defined in `docker-compose.yaml` on your host machine. To do this, you can run:
 
 ```bash
-docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys
+yarn start
 ```
 
-You can then adjust your `hardhat.config.ts` to point to `http://localhost:{10001,10002}` for access to `britney`/`vengaboys` networks. You will need to use the `MNEMONIC` defined in `docker-compose.templates.yaml` if you require funded accounts.
+You will need to use the `MNEMONIC` defined in `docker-compose.templates.yaml` if you require funded accounts:
+
+```bash
+export MNEMONIC='test test test test test test test test test test test junk'
+```
+
+To stop the network containers, just run:
+
+```bash
+yarn stop
+```
 
 **Don't forget that the state of the local networks disappears after they are stopped and any deployment files created in one session will be invalid in the next one.**
 
