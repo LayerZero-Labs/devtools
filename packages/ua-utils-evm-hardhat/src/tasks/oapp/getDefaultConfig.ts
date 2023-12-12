@@ -29,15 +29,17 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
                 receiveUlnConfig,
             }
 
-            printRecord({
-                localNetworkName,
-                remoteNetworkName,
-                sendLibrary,
-                receiveLibrary,
-                sendUlnConfig,
-                sendExecutorConfig,
-                receiveUlnConfig,
-            })
+            console.log(
+                printRecord({
+                    localNetworkName,
+                    remoteNetworkName,
+                    sendLibrary,
+                    receiveLibrary,
+                    sendUlnConfig,
+                    sendExecutorConfig,
+                    receiveUlnConfig,
+                })
+            )
         }
     }
     return configs
