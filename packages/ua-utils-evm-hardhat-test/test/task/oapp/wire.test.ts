@@ -68,7 +68,7 @@ describe('task/oapp/wire', () => {
             await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
         })
 
-        it.only('should fail with a misconfigured file (001)', async () => {
+        it('should fail with a misconfigured file (001)', async () => {
             const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
 
             await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
