@@ -33,6 +33,11 @@ services:
     # account are in sync with the hardhat accounts
     environment:
       - MNEMONIC='test test test test test test test test test test test test'
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"
 
   # EVM node for testing purposes
   evm-node:

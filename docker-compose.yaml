@@ -39,6 +39,8 @@ services:
         condition: service_healthy
       network-britney:
         condition: service_healthy
+    logging:
+      driver: none
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       - ./packages:/app/packages
