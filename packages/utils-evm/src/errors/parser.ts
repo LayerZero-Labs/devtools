@@ -147,9 +147,14 @@ const createContractDecoder =
  * @returns `string[]` A list of possible error revert strings
  */
 const getErrorDataCandidates = (error: unknown): string[] =>
-    [(error as any)?.error?.data?.data, (error as any)?.error?.data, (error as any)?.data].filter(
-        (candidate: unknown) => typeof candidate === 'string'
-    )
+    [
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any)?.error?.data?.data,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any)?.error?.data,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any)?.data,
+    ].filter((candidate: unknown) => typeof candidate === 'string')
 
 /**
  * Solves an issue with objects that cannot be converted to primitive values
