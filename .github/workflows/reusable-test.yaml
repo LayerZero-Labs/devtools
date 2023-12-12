@@ -76,3 +76,17 @@ jobs:
         # non-containerized and containerized development
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Collect docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          dest: "./logs"
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Store docker logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          path: ./logs
