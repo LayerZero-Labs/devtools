@@ -31,7 +31,7 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "~1.5.70",
+    "@layerzerolabs/lz-definitions": "~1.5.72",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
     "@types/jest": "^29.5.10",
@@ -45,7 +45,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~1.5.70",
+    "@layerzerolabs/lz-definitions": "~1.5.72",
     "@layerzerolabs/utils": "~0.0.1",
     "zod": "^3.22.4"
   }
