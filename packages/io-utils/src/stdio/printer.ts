@@ -1,5 +1,7 @@
 import Table, { HorizontalTableRow } from 'cli-table3'
 
+export const printJson = (obj: unknown, pretty = true): string => JSON.stringify(obj, null, pretty ? '\t' : undefined)
+
 export const printRecord = <TRecord extends object>(obj: TRecord, title?: string | number): string => {
     const table = new Table({
         wordWrap: true,
@@ -21,3 +23,11 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
 
     return table.push(...headers, ...rows), table.toString()
 }
+
+/**
+ * Helper utility for printing out boolean values
+ *
+ * @param {boolean | null | undefined} value
+ * @returns {string}
+ */
+export const printBoolean = (value: boolean | null | undefined): string => (value == null ? '∅' : value ? '✅' : '❌')

@@ -1,12 +1,13 @@
-import type { HardhatRuntimeEnvironment, EIP1193Provider } from 'hardhat/types'
+import type { HardhatRuntimeEnvironment, EthereumProvider } from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
-import { Web3Provider } from '@ethersproject/providers'
+import type { JsonRpcProvider } from '@ethersproject/providers'
 import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointBasedFactory, formatEid } from '@layerzerolabs/utils'
+import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
 import assert from 'assert'
 
 /**
@@ -98,13 +99,13 @@ export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironmen
 })
 
 /**
- * Helper function that wraps an EIP1193Provider with Web3Provider
- * so that we can use it further with ethers
+ * Helper function that wraps an EthereumProvider with EthersProviderWrapper
+ * so that we can use it further with ethers as a regular JsonRpcProvider
  *
  * @param {EIP1193Provider} provider
- * @returns {Web3Provider}
+ * @returns {JsonRpcProvider}
  */
-export const wrapEIP1193Provider = (provider: EIP1193Provider): Web3Provider => new Web3Provider(provider)
+export const wrapEIP1193Provider = (provider: EthereumProvider): JsonRpcProvider => new EthersProviderWrapper(provider)
 
 /**
  * Creates a factory function for creating HardhatRuntimeEnvironment

@@ -1,4 +1,4 @@
-import { createLogger as createWinstonLogger, format, transports } from 'winston'
+import { createLogger as createWinstonLogger, format, transports, Logger } from 'winston'
 
 /**
  * Valid logging levels
@@ -56,19 +56,19 @@ export const createLogger = (level: string = DEFAULT_LOG_LEVEL, logFormat = form
     })
 
 /**
- * Creates a logger for single network interactions.
+ * Creates a logger a module specific logging.
  *
- * The messages will be prefixed with the network pair:
+ * The messages will be prefixed with the module name:
  *
- * `[ethereum-mainnet] Some message`
+ * `[module] Some message`
  *
- * @param networkName `string`
- * @param level `LogLevel` Default to the globally set log level (@see `setDefaultLogLevel`)
+ * @param {string} module
+ * @param {string} [level] Default to the globally set log level (@see `setDefaultLogLevel`)
  *
- * @returns `Logger`
+ * @returns {Logger}
  */
-export const createNetworkLogger = (networkName: string, level: string = DEFAULT_LOG_LEVEL) =>
-    createLogger(level, format.combine(prefix({ label: networkName }), format.cli()))
+export const createModuleLogger = (module: string, level: string = DEFAULT_LOG_LEVEL): Logger =>
+    createLogger(level, format.combine(prefix({ label: module }), format.cli()))
 
 /**
  * Creates a logger for network-to-network interactions.
@@ -77,21 +77,18 @@ export const createNetworkLogger = (networkName: string, level: string = DEFAULT
  *
  * `[ethereum-mainnet ➝ avalanche-mainnet] Some message`
  *
- * @param sourceNetworkName `string`
- * @param destinationNetworkName `string`
- * @param level `LogLevel` Default to the globally set log level (@see `setDefaultLogLevel`)
+ * @param {string} sourceModule
+ * @param {string} destinationModule
+ * @param {string} [level] Default to the globally set log level (@see `setDefaultLogLevel`)
  *
- * @returns `Logger`
+ * @returns {Logger}
  */
-export const createNetworkToNetworkLogger = (
-    sourceNetworkName: string,
-    destinationNetworkName: string,
+export const createModuleInteractionLogger = (
+    sourceModule: string,
+    destinationModule: string,
     level: string = DEFAULT_LOG_LEVEL
-) =>
-    createLogger(
-        level,
-        format.combine(prefix({ label: `${sourceNetworkName} ➝ ${destinationNetworkName}` }), format.cli())
-    )
+): Logger =>
+    createLogger(level, format.combine(prefix({ label: `${sourceModule} ➝ ${destinationModule}` }), format.cli()))
 
 /**
  * Helper utility that prefixes logged messages
