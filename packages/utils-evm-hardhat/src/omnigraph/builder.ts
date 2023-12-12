@@ -1,7 +1,7 @@
-import type { OmniGraphHardhat } from './types'
+import type { OmniGraphHardhat, OmniGraphHardhatTransformer } from './types'
 import { OmniGraphBuilder } from '@layerzerolabs/utils'
 import assert from 'assert'
-import { OmniGraphHardhatTransformer, createOmniGraphHardhatTransformer } from './transformations'
+import { createOmniGraphHardhatTransformer } from './transformations'
 
 /**
  * OmniGraphBuilderHardhat houses all hardhat-specific utilities for building OmniGraphs

@@ -4,6 +4,7 @@ import {
     createOmniEdgeHardhatTransformer,
     createOmniGraphHardhatTransformer,
     createOmniNodeHardhatTransformer,
+    createOmniPointHardhatTransformer,
 } from '@/omnigraph/transformations'
 import { Contract } from '@ethersproject/contracts'
 import { endpointArbitrary, evmAddressArbitrary, nullableArbitrary, pointArbitrary } from '@layerzerolabs/test-utils'
@@ -16,22 +17,44 @@ describe('omnigraph/transformations', () => {
         address: nullableArbitrary(evmAddressArbitrary),
     })
 
-    describe('createOmniNodeHardhatTransformer', () => {
+    describe('createOmniPointHardhatTransformer', () => {
         it('should pass the original value if contract is already an OmniPoint', async () => {
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.anything(), async (point, config) => {
+                fc.asyncProperty(pointArbitrary, async (point) => {
                     const contractFactory = jest.fn().mockRejectedValue('Oh no')
-                    const transformer = createOmniNodeHardhatTransformer(contractFactory)
+                    const transformer = createOmniPointHardhatTransformer(contractFactory)
 
-                    const node = await transformer({ contract: point, config })
+                    const transformed = await transformer(point)
 
-                    expect(node).toEqual({ point, config })
+                    expect(transformed).toBe(point)
                     expect(contractFactory).not.toHaveBeenCalled()
                 })
             )
         })
 
         it('should call the contractFactory if contract is not an OmniPoint', async () => {
+            await fc.assert(
+                fc.asyncProperty(pointHardhatArbitrary, evmAddressArbitrary, async (point, address) => {
+                    fc.pre(!isOmniPoint(point))
+
+                    const contract = new Contract(address, [])
+                    const contractFactory = jest
+                        .fn()
+                        .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
+                    const transformer = createOmniPointHardhatTransformer(contractFactory)
+
+                    const transformed = await transformer(point)
+
+                    expect(transformed).toEqual({ eid: point.eid, address })
+                    expect(contractFactory).toHaveBeenCalledTimes(1)
+                    expect(contractFactory).toHaveBeenCalledWith(point)
+                })
+            )
+        })
+    })
+
+    describe('createOmniNodeHardhatTransformer', () => {
+        it('should call the pointTransformer on the point', async () => {
             await fc.assert(
                 fc.asyncProperty(
                     pointHardhatArbitrary,
@@ -40,17 +63,17 @@ describe('omnigraph/transformations', () => {
                     async (point, address, config) => {
                         fc.pre(!isOmniPoint(point))
 
-                        const contract = new Contract(address, [])
-                        const contractFactory = jest
-                            .fn()
-                            .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
-                        const transformer = createOmniNodeHardhatTransformer(contractFactory)
+                        const pointTransformer = jest.fn().mockImplementation(async (point: OmniPointHardhat) => ({
+                            eid: point.eid,
+                            address: address,
+                        }))
+                        const transformer = createOmniNodeHardhatTransformer(pointTransformer)
 
                         const node = await transformer({ contract: point, config })
 
                         expect(node).toEqual({ point: { eid: point.eid, address }, config })
-                        expect(contractFactory).toHaveBeenCalledTimes(1)
-                        expect(contractFactory).toHaveBeenCalledWith(point)
+                        expect(pointTransformer).toHaveBeenCalledTimes(1)
+                        expect(pointTransformer).toHaveBeenCalledWith(point)
                     }
                 )
             )
@@ -58,73 +81,7 @@ describe('omnigraph/transformations', () => {
     })
 
     describe('createOmniEdgeHardhatTransformer', () => {
-        it('should pass the original values if from and to are already OmniPoints', async () => {
-            await fc.assert(
-                fc.asyncProperty(pointArbitrary, pointArbitrary, fc.anything(), async (from, to, config) => {
-                    const contractFactory = jest.fn().mockRejectedValue('Oh no')
-                    const transformer = createOmniEdgeHardhatTransformer(contractFactory)
-
-                    const edge = await transformer({ from, to, config })
-
-                    expect(edge).toEqual({ vector: { from, to }, config })
-                    expect(contractFactory).not.toHaveBeenCalled()
-                })
-            )
-        })
-
-        it('should call the contractFactory if from is not an OmniPoint', async () => {
-            await fc.assert(
-                fc.asyncProperty(
-                    pointHardhatArbitrary,
-                    pointArbitrary,
-                    evmAddressArbitrary,
-                    fc.anything(),
-                    async (from, to, address, config) => {
-                        fc.pre(!isOmniPoint(from))
-
-                        const contract = new Contract(address, [])
-                        const contractFactory = jest
-                            .fn()
-                            .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
-                        const transformer = createOmniEdgeHardhatTransformer(contractFactory)
-
-                        const edge = await transformer({ from, to, config })
-
-                        expect(edge).toEqual({ vector: { from: { eid: from.eid, address }, to }, config })
-                        expect(contractFactory).toHaveBeenCalledTimes(1)
-                        expect(contractFactory).toHaveBeenCalledWith(from)
-                    }
-                )
-            )
-        })
-
-        it('should call the contractFactory if to is not an OmniPoint', async () => {
-            await fc.assert(
-                fc.asyncProperty(
-                    pointArbitrary,
-                    pointHardhatArbitrary,
-                    evmAddressArbitrary,
-                    fc.anything(),
-                    async (from, to, address, config) => {
-                        fc.pre(!isOmniPoint(to))
-
-                        const contract = new Contract(address, [])
-                        const contractFactory = jest
-                            .fn()
-                            .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
-                        const transformer = createOmniEdgeHardhatTransformer(contractFactory)
-
-                        const edge = await transformer({ from, to, config })
-
-                        expect(edge).toEqual({ vector: { from, to: { eid: to.eid, address } }, config })
-                        expect(contractFactory).toHaveBeenCalledTimes(1)
-                        expect(contractFactory).toHaveBeenCalledWith(to)
-                    }
-                )
-            )
-        })
-
-        it('should call the contractFactory if from & to are not OmniPoints', async () => {
+        it('should call the pointTransformer on from and to', async () => {
             await fc.assert(
                 fc.asyncProperty(
                     pointHardhatArbitrary,
@@ -132,14 +89,11 @@ describe('omnigraph/transformations', () => {
                     evmAddressArbitrary,
                     fc.anything(),
                     async (from, to, address, config) => {
-                        fc.pre(!isOmniPoint(from))
-                        fc.pre(!isOmniPoint(to))
-
-                        const contract = new Contract(address, [])
-                        const contractFactory = jest
-                            .fn()
-                            .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
-                        const transformer = createOmniEdgeHardhatTransformer(contractFactory)
+                        const pointTransformer = jest.fn().mockImplementation(async (point: OmniPointHardhat) => ({
+                            eid: point.eid,
+                            address,
+                        }))
+                        const transformer = createOmniEdgeHardhatTransformer(pointTransformer)
 
                         const edge = await transformer({ from, to, config })
 
@@ -147,9 +101,9 @@ describe('omnigraph/transformations', () => {
                             vector: { from: { eid: from.eid, address }, to: { eid: to.eid, address } },
                             config,
                         })
-                        expect(contractFactory).toHaveBeenCalledTimes(2)
-                        expect(contractFactory).toHaveBeenCalledWith(from)
-                        expect(contractFactory).toHaveBeenCalledWith(to)
+                        expect(pointTransformer).toHaveBeenCalledTimes(2)
+                        expect(pointTransformer).toHaveBeenCalledWith(from)
+                        expect(pointTransformer).toHaveBeenCalledWith(to)
                     }
                 )
             )

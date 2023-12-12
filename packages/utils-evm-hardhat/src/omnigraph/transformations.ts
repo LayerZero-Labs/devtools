@@ -1,33 +1,57 @@
-import type { OmniEdge, OmniGraph, OmniNode } from '@layerzerolabs/utils'
+import type { OmniEdge, OmniNode } from '@layerzerolabs/utils'
 import { isOmniPoint } from '@layerzerolabs/utils'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { createContractFactory } from './coordinates'
-import type { OmniContractFactoryHardhat, OmniEdgeHardhat, OmniGraphHardhat, OmniNodeHardhat } from './types'
+import type {
+    OmniContractFactoryHardhat,
+    OmniEdgeHardhat,
+    OmniGraphHardhatTransformer,
+    OmniNodeHardhat,
+    OmniPointHardhatTransformer,
+} from './types'
 
+/**
+ * Create a function capable of transforming `OmniPointHardhat` to a regular `OmniPoint`
+ * with some help from an `OmniContractFactoryHardhat`
+ *
+ * @param {OmniContractFactoryHardhat} contractFactory
+ * @returns {OmniPointHardhatTransformer}
+ */
+export const createOmniPointHardhatTransformer =
+    (contractFactory: OmniContractFactoryHardhat = createContractFactory()): OmniPointHardhatTransformer =>
+    async (point) =>
+        isOmniPoint(point) ? point : omniContractToPoint(await contractFactory(point))
+
+/**
+ * Create a function capable of transforming `OmniNodeHardhat` to a regular `OmniNode`
+ * with some help from an `OmniPointHardhatTransformer`
+ *
+ * @param {OmniPointHardhatTransformer} [pointTransformer]
+ * @returns
+ */
 export const createOmniNodeHardhatTransformer =
-    (contractFactory: OmniContractFactoryHardhat = createContractFactory()) =>
-    async <TNodeConfig>({ contract, config }: OmniNodeHardhat<TNodeConfig>): Promise<OmniNode<TNodeConfig>> => {
-        const point = isOmniPoint(contract) ? contract : omniContractToPoint(await contractFactory(contract))
+    (pointTransformer = createOmniPointHardhatTransformer()) =>
+    async <TNodeConfig>({ contract, config }: OmniNodeHardhat<TNodeConfig>): Promise<OmniNode<TNodeConfig>> => ({
+        point: await pointTransformer(contract),
+        config: config as TNodeConfig,
+    })
 
-        return { point, config: config as TNodeConfig }
-    }
-
+/**
+ * Create a function capable of transforming `OmniEdgeHardhat` to a regular `OmniEdge`
+ * with some help from an `OmniPointHardhatTransformer`
+ *
+ * @param {OmniPointHardhatTransformer} [pointTransformer]
+ * @returns
+ */
 export const createOmniEdgeHardhatTransformer =
-    (contractFactory: OmniContractFactoryHardhat = createContractFactory()) =>
-    async <TEdgeConfig>({
-        from: fromContract,
-        to: toContract,
-        config,
-    }: OmniEdgeHardhat<TEdgeConfig>): Promise<OmniEdge<TEdgeConfig>> => {
-        const from = isOmniPoint(fromContract) ? fromContract : omniContractToPoint(await contractFactory(fromContract))
-        const to = isOmniPoint(toContract) ? toContract : omniContractToPoint(await contractFactory(toContract))
-
-        return { vector: { from, to }, config: config as TEdgeConfig }
-    }
-
-export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unknown> = (
-    graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>
-) => Promise<OmniGraph<TNodeConfig, TEdgeConfig>>
+    (pointTransformer = createOmniPointHardhatTransformer()) =>
+    async <TEdgeConfig>({ from, to, config }: OmniEdgeHardhat<TEdgeConfig>): Promise<OmniEdge<TEdgeConfig>> => ({
+        vector: {
+            from: await pointTransformer(from),
+            to: await pointTransformer(to),
+        },
+        config: config as TEdgeConfig,
+    })
 
 export const createOmniGraphHardhatTransformer =
     <TNodeConfig, TEdgeConfig>(

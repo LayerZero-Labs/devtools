@@ -1,4 +1,4 @@
-import type { OmniPoint, WithEid, WithOptionals } from '@layerzerolabs/utils'
+import type { OmniGraph, OmniPoint, WithEid, WithOptionals } from '@layerzerolabs/utils'
 import type { OmniContract } from '@layerzerolabs/utils-evm'
 import type { Deployment } from 'hardhat-deploy/dist/types'
 
@@ -50,3 +50,9 @@ export interface OmniGraphHardhat<TNodeConfig = unknown, TEdgeConfig = unknown> 
 }
 
 export type OmniContractFactoryHardhat = (point: OmniPointHardhat) => OmniContract | Promise<OmniContract>
+
+export type OmniPointHardhatTransformer = (point: OmniPointHardhat | OmniPoint) => Promise<OmniPoint>
+
+export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unknown> = (
+    graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>
+) => Promise<OmniGraph<TNodeConfig, TEdgeConfig>>
