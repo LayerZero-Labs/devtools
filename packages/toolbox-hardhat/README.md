@@ -96,3 +96,19 @@ const config = {
 
 module.exports = config;
 ```
+
+## Usage
+
+### Tasks
+
+This package comes with several `hardhat` tasks to speed up your workflow. In order to prevent name collisions, these have been prefixed with `lz:`:
+
+- [`lz:oapp:wire`](#tasks-lz-oapp-wire)
+
+#### `lz:oapp:wire` <a id="tasks-lz-oapp-wire"></a>
+
+Wires the individual `OApp` contracts together, calling `setPeer`.
+
+```bash
+npx hardhat lz:oapp:wire
+```
