@@ -1,11 +1,11 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createSignerFactory } from '@/signer/factory'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
 import { OmniSignerEVM } from '@layerzerolabs/utils-evm'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
-jest.spyOn(Web3Provider.prototype, 'send').mockResolvedValue('1')
+jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chainId: 1, name: 'mock' })
 
 describe('signer', () => {
     describe('createSignerFactory', () => {
@@ -18,14 +18,14 @@ describe('signer', () => {
 
             expect(signer).toBeInstanceOf(OmniSignerEVM)
             expect(signer.signer).toBeInstanceOf(JsonRpcSigner)
-            expect(signer.signer.provider).toBeInstanceOf(Web3Provider)
+            expect(signer.signer.provider).toBeInstanceOf(JsonRpcProvider)
 
             // Ethers has this ugly habit of importing files here and there,
             // firing RPC requests and all.
             //
             // If we don't wait for the provider to be ready, jest will complain
             // about requests being made after test teardown
-            await (signer.signer.provider as Web3Provider)?.ready
+            await (signer.signer.provider as JsonRpcProvider)?.ready
         })
     })
 })

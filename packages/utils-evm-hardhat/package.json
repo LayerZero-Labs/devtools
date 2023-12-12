@@ -51,6 +51,7 @@
     "@layerzerolabs/lz-evm-sdk-v1": "~1.5.72",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils-evm": "~0.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@types/jest": "^29.5.10",
     "fast-check": "^3.14.0",
     "hardhat": "^2.19.2",
@@ -70,6 +71,7 @@
     "@layerzerolabs/io-utils": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~1.5.72",
     "@layerzerolabs/utils-evm": "~0.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.43"
   }

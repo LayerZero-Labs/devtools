@@ -2,10 +2,10 @@ import { getNetworkRuntimeEnvironment } from '@/runtime'
 import hre from 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createProviderFactory } from '@/provider'
-import { Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
-jest.spyOn(Web3Provider.prototype, 'send').mockResolvedValue('1')
+jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chainId: 1, name: 'mock' })
 
 describe('provider', () => {
     describe('createProviderFactory', () => {
@@ -17,8 +17,11 @@ describe('provider', () => {
             const env = await getNetworkRuntimeEnvironment('ethereum-mainnet')
             const provider = await createProviderFactory(hre)(EndpointId.ETHEREUM_MAINNET)
 
-            expect(provider).toBeInstanceOf(Web3Provider)
-            expect(provider.provider).toEqual(env.network.provider)
+            expect(provider).toBeInstanceOf(JsonRpcProvider)
+
+            // Here we're checking that the provider is configured with the correct network provider
+            jest.spyOn(env.network.provider, 'send').mockResolvedValue('sent')
+            expect(await provider.send('dummy', [])).toBe('sent')
 
             // Ethers has this ugly habit of importing files here and there,
             // firing RPC requests and all.
