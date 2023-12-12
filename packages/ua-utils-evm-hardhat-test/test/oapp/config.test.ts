@@ -38,8 +38,11 @@ describe('oapp/config', () => {
         ],
     }
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         await setupDefaultEndpoint()
+    })
+
+    beforeEach(async () => {
         await deployOApp()
     })
 
