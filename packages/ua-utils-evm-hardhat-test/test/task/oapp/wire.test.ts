@@ -2,7 +2,7 @@ import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-utils'
 import { relative, resolve } from 'path'
 import { TASK_LZ_WIRE_OAPP } from '@layerzerolabs/ua-utils-evm-hardhat'
-import { deployOApp } from '../../__utils__/oapp'
+import { deployOAppFixture } from '../../__utils__/oapp'
 import { cwd } from 'process'
 
 jest.mock('@layerzerolabs/io-utils', () => {
@@ -32,7 +32,7 @@ describe('task/oapp/wire', () => {
 
     describe('with invalid configs', () => {
         beforeAll(async () => {
-            await deployOApp()
+            await deployOAppFixture()
         })
 
         it('should fail if the config file does not exist', async () => {
@@ -78,7 +78,7 @@ describe('task/oapp/wire', () => {
 
     describe('with valid configs', () => {
         beforeEach(async () => {
-            await deployOApp()
+            await deployOAppFixture()
         })
 
         it('should exit if there is nothing to wire', async () => {
