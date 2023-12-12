@@ -1,8 +1,6 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint } from '@layerzerolabs/protocol-utils'
-import type { Address, OmniGraph, OmniTransaction, IOmniSDK } from '@layerzerolabs/utils'
-import type { Bytes32 } from '@layerzerolabs/utils'
-import type { OmniPointBasedFactory } from '@layerzerolabs/utils'
+import type { Address, Bytes32, Factory, OmniGraph, OmniTransaction, IOmniSDK, OmniPoint } from '@layerzerolabs/utils'
 
 export interface IOApp extends IOmniSDK {
     getEndpointSDK(): Promise<IEndpoint>
@@ -13,4 +11,4 @@ export interface IOApp extends IOmniSDK {
 
 export type OAppOmniGraph = OmniGraph<unknown, unknown>
 
-export type OAppFactory<TOApp extends IOApp = IOApp> = OmniPointBasedFactory<TOApp>
+export type OAppFactory<TOApp extends IOApp = IOApp, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TOApp>
