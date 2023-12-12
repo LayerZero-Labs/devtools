@@ -1,8 +1,9 @@
 import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-utils'
-import { resolve } from 'path'
+import { relative, resolve } from 'path'
 import { TASK_LZ_WIRE_OAPP } from '@layerzerolabs/ua-utils-evm-hardhat'
-import { deployOApp } from '../../__utils__/oapp'
+import { deployOAppFixture } from '../../__utils__/oapp'
+import { cwd } from 'process'
 
 jest.mock('@layerzerolabs/io-utils', () => {
     const original = jest.requireActual('@layerzerolabs/io-utils')
@@ -31,7 +32,7 @@ describe('task/oapp/wire', () => {
 
     describe('with invalid configs', () => {
         beforeAll(async () => {
-            await deployOApp()
+            await deployOAppFixture()
         })
 
         it('should fail if the config file does not exist', async () => {
@@ -77,11 +78,20 @@ describe('task/oapp/wire', () => {
 
     describe('with valid configs', () => {
         beforeEach(async () => {
-            await deployOApp()
+            await deployOAppFixture()
         })
 
         it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
+
+            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
+        it('should work with relative paths', async () => {
+            const oappConfigAbsolute = configPathFixture('valid.config.empty.js')
+            const oappConfig = relative(cwd(), oappConfigAbsolute)
 
             await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
 

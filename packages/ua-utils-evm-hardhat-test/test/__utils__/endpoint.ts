@@ -59,28 +59,42 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
- * Helper function that deploys a fresh endpoint infrastructure:
- *
- * - EndpointV2
- * - ReceiveUln302
- * - SendUln302
- *
- * After deploying, it will wire up the elements with minimal configuration
+ * Deploys an enpoint fixture. Useful for tests
  */
-export const setupDefaultEndpoint = async (): Promise<void> => {
-    // This is the tooling we are going to need
-    const logger = createLogger()
+export const deployEndpointFixture = async () => {
     const environmentFactory = createNetworkEnvironmentFactory()
-    const contractFactory = createConnectedContractFactory()
-    const signerFactory = createSignerFactory()
-    const ulnSdkFactory = createUln302Factory(contractFactory)
-    const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
-
-    // First we deploy the endpoint
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
     await Promise.all([eth.deployments.fixture('EndpointV2'), avax.deployments.fixture('EndpointV2')])
+}
+
+/**
+ * Deploys an enpoint fixture. Useful for when deployment files need to be persisted
+ */
+export const deployEndpoint = async () => {
+    const environmentFactory = createNetworkEnvironmentFactory()
+    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+
+    await Promise.all([
+        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: true }),
+        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: true }),
+    ])
+}
+
+/**
+ * Helper function that wires the endpoint infrastructure.
+ *
+ * The contracts still need to be deployed (use deployEndpoint or deployEndpointFixture)
+ */
+export const setupDefaultEndpoint = async (): Promise<void> => {
+    // This is the tooling we are going to need
+    const logger = createLogger()
+    const contractFactory = createConnectedContractFactory()
+    const signerFactory = createSignerFactory()
+    const ulnSdkFactory = createUln302Factory(contractFactory)
+    const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
 
     // For the graphs, we'll also need the pointers to the contracts
     const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))

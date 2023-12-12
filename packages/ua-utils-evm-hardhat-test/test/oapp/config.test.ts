@@ -9,8 +9,8 @@ import {
 import type { OmniGraphHardhat } from '@layerzerolabs/utils-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { setupDefaultEndpoint } from '../__utils__/endpoint'
-import { deployOApp } from '../__utils__/oapp'
+import { deployEndpointFixture, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployOAppFixture } from '../__utils__/oapp'
 
 describe('oapp/config', () => {
     const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
@@ -39,11 +39,12 @@ describe('oapp/config', () => {
     }
 
     beforeAll(async () => {
+        await deployEndpointFixture()
         await setupDefaultEndpoint()
     })
 
     beforeEach(async () => {
-        await deployOApp()
+        await deployOAppFixture()
     })
 
     it('should return all setPeer transactions', async () => {

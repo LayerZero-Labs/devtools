@@ -2,7 +2,7 @@ import 'hardhat'
 import { createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployEndpointFixture, getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-utils-evm'
 
 describe('endpoint/config', () => {
@@ -16,6 +16,7 @@ describe('endpoint/config', () => {
     const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
 
     beforeEach(async () => {
+        await deployEndpointFixture()
         await setupDefaultEndpoint()
     })
 

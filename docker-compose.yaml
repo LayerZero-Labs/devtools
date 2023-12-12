@@ -41,6 +41,18 @@ services:
         condition: service_healthy
     logging:
       driver: none
+    # The default containerized setup will specify the network URLs
+    # for the internal networks
+    #
+    # This works in conjunction with hardhat configs in the test projects.
+    #
+    # If these environment variables are not specified, the exposed networks are used
+    # that need to be started using docker compose up:
+    #
+    # docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys
+    environment:
+      - NETWORK_URL_BRITNEY=http://network-britney:8545
+      - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       - ./packages:/app/packages

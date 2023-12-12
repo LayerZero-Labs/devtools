@@ -4,6 +4,10 @@ import assert from 'assert'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { HardhatUserConfig } from 'hardhat/types'
 
+// These tasks are only for when you want to play with this setup
+// using your own keyboard (using exposed networks)
+import './tasks'
+
 const MNEMONIC = process.env.MNEMONIC
 assert(MNEMONIC, `Missing MNEMONIC environment variable`)
 
@@ -18,14 +22,26 @@ const config: HardhatUserConfig = {
     networks: {
         vengaboys: {
             eid: EndpointId.ETHEREUM_MAINNET,
-            url: 'http://network-vengaboys:8545',
+            // Containerized setup defines these environment variables
+            // to point the networks to the internal ones
+            //
+            // If these are not specified, exposed networks are used
+            //
+            // See root README.md for usage with exposed network
+            url: process.env.NETWORK_URL_VENGABOYS ?? 'http://localhost:10001',
             accounts: {
                 mnemonic: MNEMONIC,
             },
         },
         britney: {
             eid: EndpointId.AVALANCHE_MAINNET,
-            url: 'http://network-britney:8545',
+            // Containerized setup defines these environment variables
+            // to point the networks to the internal ones
+            //
+            // If these are not specified, exposed networks are used
+            //
+            // See root README.md for usage with exposed network
+            url: process.env.NETWORK_URL_BRITNEY ?? 'http://localhost:10002',
             accounts: {
                 mnemonic: MNEMONIC,
             },

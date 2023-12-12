@@ -15,6 +15,7 @@ import { createOAppFactory } from '@layerzerolabs/ua-utils-evm'
 import { OmniGraphBuilderHardhat, createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
 import { OmniTransaction } from '@layerzerolabs/utils'
 import { printTransactions } from '@layerzerolabs/utils'
+import { resolve } from 'path'
 
 interface TaskArgs {
     oappConfig: string
@@ -44,7 +45,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     try {
         logger.verbose(`Loading config file '${oappConfigPath}'`)
 
-        rawConfig = require(oappConfigPath)
+        rawConfig = require(resolve(oappConfigPath))
     } catch (error) {
         throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
     }

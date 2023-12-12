@@ -74,6 +74,28 @@ docker compose logs -f
 
 This allows you to monitor logs coming from e.g. the `hardhat` nodes
 
+#### Exposing test networks on `localhost`
+
+It is possible to expose the test networks defined in `docker-compose.yaml` on your host machine. To do this, you can run:
+
+```bash
+yarn start
+```
+
+You will need to use the `MNEMONIC` defined in `docker-compose.templates.yaml` if you require funded accounts:
+
+```bash
+export MNEMONIC='test test test test test test test test test test test junk'
+```
+
+To stop the network containers, just run:
+
+```bash
+yarn stop
+```
+
+**Don't forget that the state of the local networks disappears after they are stopped and any deployment files created in one session will be invalid in the next one.**
+
 ### Troubleshooting
 
 #### Problems with committing

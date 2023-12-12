@@ -1,4 +1,9 @@
-import { getDefaultExecutorConfig, getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
+import {
+    deployEndpointFixture,
+    getDefaultExecutorConfig,
+    getDefaultUlnConfig,
+    setupDefaultEndpoint,
+} from '../__utils__/endpoint'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_GET_DEFAULT_CONFIG } from '@layerzerolabs/ua-utils-evm-hardhat'
@@ -6,6 +11,7 @@ import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 
 describe('task: getDefaultConfig', () => {
     beforeEach(async () => {
+        await deployEndpointFixture()
         await setupDefaultEndpoint()
     })
 
