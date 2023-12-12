@@ -1,5 +1,5 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
-import type { OmniContract, OmniContractFactory } from '@/omnigraph/types'
+import type { OmniContractFactory } from '@/omnigraph/types'
 import type { OmniError } from '@layerzerolabs/utils'
 import { ContractError, CustomError, UnknownError, PanicError, RevertError } from './errors'
 import { BigNumberishBigintSchema } from '../schema'
