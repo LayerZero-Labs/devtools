@@ -1,8 +1,18 @@
 import { task, types } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
-import { isFile, isReadable, promptToContinue } from '@layerzerolabs/io-utils'
+import { isFile, isReadable, printRecord, promptToContinue } from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
+import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
+import { createOAppFactory } from '@layerzerolabs/ua-utils-evm'
+import {
+    OmniGraphBuilderHardhat,
+    createConnectedContractFactory,
+    createLogger,
+    setDefaultLogLevel,
+} from '@layerzerolabs/utils-evm-hardhat'
+import { OmniTransaction } from '@layerzerolabs/utils'
+import { printTransactions } from '@layerzerolabs/utils'
 
 interface TaskArgs {
     oappConfig: string
@@ -62,10 +72,70 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         )
     }
 
-    // At this point we have a correctly typed config
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const config: OAppOmniGraphHardhat = configParseResult.data
+    // At this point we have a correctly typed config in the hardhat format
+    const hardhatGraph: OAppOmniGraphHardhat = configParseResult.data
 
+    // We'll also print out the whole config for verbose loggers
+    logger.debug(`Config file '${oappConfigPath}' has correct structure`)
+    logger.verbose(`The hardhat config is:\n\n${printRecord(hardhatGraph)}`)
+
+    // What we need to do now is transform the config from hardhat format to the generic format
+    // with addresses instead of contractNames
+    logger.debug(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
+    let graph: OAppOmniGraph
+    try {
+        // The transformation is achieved using a builder that also validates the resulting graph
+        // (i.e. makes sure that all the contracts exist and connections are valid)
+        const builder = await OmniGraphBuilderHardhat.fromConfig(hardhatGraph)
+
+        // We only need the graph so we throw away the builder
+        graph = builder.graph
+    } catch (error) {
+        throw new Error(`Config from file '${oappConfigPath}' is invalid: ${error}`)
+    }
+
+    // Show more detailed logs to interested users
+    logger.debug(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
+    logger.verbose(`The resulting config is:\n\n${printRecord(graph)}`)
+
+    // At this point we are ready to create the list of transactions
+    logger.debug(`Creating a list of wiring transactions`)
+    const contractFactory = createConnectedContractFactory()
+    const oAppFactory = createOAppFactory(contractFactory)
+
+    let transactions: OmniTransaction[]
+    try {
+        transactions = await configureOApp(graph, oAppFactory)
+    } catch (error) {
+        throw new Error(`An error occurred while getting the OApp configuration: ${error}`)
+    }
+
+    // We'll just save the printed transactions for users that want to see them
+    const printedTransactions = printTransactions(transactions)
+
+    // Flood users with debug output
+    logger.debug(`Created a list of wiring transactions`)
+    logger.verbose(`Following transactions are necessary:\n\n${printedTransactions}`)
+
+    // If there are no transactions that need to be executed, we'll just exit
+    if (transactions.length === 0) {
+        logger.info(`The OApp is wired, no action is necessary`)
+
+        return []
+    }
+
+    // Tell the user about the transactions
+    logger.info(
+        transactions.length === 1
+            ? `There is 1 transaction required to configure the OApp`
+            : `There are ${transactions.length} transactions required to configure the OApp`
+    )
+
+    // Ask them whether they want to see them
+    const previewTransactions = await promptToContinue(`Would you like to preview the transactions before continuing?`)
+    if (previewTransactions) logger.info(`\n${printedTransactions}`)
+
+    // Now ask the user whether they want to go ahead with signing them
     const go = await promptToContinue()
     if (!go) {
         return undefined

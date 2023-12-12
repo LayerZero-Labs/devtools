@@ -3,6 +3,7 @@ import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
 import { TASK_LZ_WIRE_OAPP } from '@layerzerolabs/ua-utils-evm-hardhat'
+import { deployOApp } from '../../__utils__/oapp'
 
 jest.mock('@layerzerolabs/io-utils', () => {
     const original = jest.requireActual('@layerzerolabs/io-utils')
@@ -29,6 +30,7 @@ describe('task/oapp/wire', () => {
         promptToContinueMock.mockReset()
 
         await setupDefaultEndpoint()
+        await deployOApp()
     })
 
     describe('with invalid configs', () => {
@@ -65,33 +67,60 @@ describe('task/oapp/wire', () => {
 
             await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
         })
+
+        it.only('should fail with a misconfigured file (001)', async () => {
+            const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
+
+            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
+        })
     })
 
     describe('with valid configs', () => {
-        it('should ask the user whether they want to continue', async () => {
+        it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
+
+            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
+        it('should have verbose output if requested (so called eye test, check the test output)', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            promptToContinueMock.mockResolvedValue(false)
+
+            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, logLevel: 'verbose' })
+
+            expect(promptToContinueMock).toHaveBeenCalledTimes(2)
+        })
+
+        it('should ask the user whether they want to see the transactions & continue', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
 
             promptToContinueMock.mockResolvedValue(true)
 
             await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
 
-            expect(promptToContinueMock).toHaveBeenCalledTimes(1)
+            expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
 
         it('should return undefined if the user decides not to continue', async () => {
-            const oappConfig = configPathFixture('valid.config.empty.js')
+            const oappConfig = configPathFixture('valid.config.connected.js')
 
             promptToContinueMock.mockResolvedValue(false)
 
             const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
 
             expect(result).toBeUndefined()
+            expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
 
         it('should return a list of transactions if the user decides to continue', async () => {
-            const oappConfig = configPathFixture('valid.config.empty.js')
+            const oappConfig = configPathFixture('valid.config.connected.js')
 
-            promptToContinueMock.mockResolvedValue(true)
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
 
             const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
 
