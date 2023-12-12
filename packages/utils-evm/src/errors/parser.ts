@@ -3,6 +3,8 @@ import type { OmniContract, OmniContractFactory } from '@/omnigraph/types'
 import type { OmniError } from '@layerzerolabs/utils'
 import { ContractError, CustomError, UnknownError, PanicError, RevertError } from './errors'
 import { BigNumberishBigintSchema } from '../schema'
+import type { Contract } from '@ethersproject/contracts'
+import type { OmniContractErrorParser } from './types'
 
 /**
  * Creates an asynchronous error parser for EVM contract errors.
@@ -15,32 +17,58 @@ import { BigNumberishBigintSchema } from '../schema'
  */
 export const createErrorParser =
     (contractFactory: OmniContractFactory) =>
-    async ({ error, point }: OmniError<unknown>): Promise<OmniError<ContractError>> => {
-        try {
-            // If the error already is a ContractError, we'll continue
-            if (error instanceof ContractError) return { error, point }
+    async ({ error, point }: OmniError<unknown>): Promise<OmniError<ContractError>> => ({
+        point,
+        error: createContractErrorParser(await contractFactory(point))(error),
+    })
 
-            // If the error is unknown we'll try to decode basic errors
-            const candidates = getErrorDataCandidates(error)
-            const [basicError] = candidates.flatMap(basicDecoder)
-            if (basicError != null) return { point, error: basicError }
+/**
+ * Creates an error parser based on a specific `OmniContract`
+ *
+ * This call will never fail and will always return an instance of `ContractError`
+ *
+ * @param {OmniContract | null | undefined} contract
+ * @returns {ContractError}
+ */
+export const createContractErrorParser =
+    (contract: OmniContract | null | undefined): OmniContractErrorParser =>
+    (error) =>
+        // First we'll try to decode a contract error if we have a contract
+        (contract ? parseContractError(error, contract.contract) : null) ??
+        // Then we'll try decoding a generic one
+        parseGenericError(error) ??
+        // The we throw a generic one
+        new UnknownError(`Unknown error: ${toStringSafe(error)}`)
 
-            // Then we'll try to decode custom errors
-            const contract = await contractFactory(point)
-            const contractDecoder = createContractDecoder(contract)
-            const [customError] = candidates.flatMap(contractDecoder)
-            if (customError != null) return { point, error: customError }
+export const parseContractError = (error: unknown, contract: Contract): ContractError | undefined => {
+    // If the error already is a ContractError, we'll continue
+    if (error instanceof ContractError) return error
 
-            // If none of the decoding works, we'll send a generic error back
-            return { point, error: new UnknownError(`Unknown error: ${toStringSafe(error)}`) }
-        } catch {
-            // If we fail, we send an unknown error back
-            return {
-                point,
-                error: new UnknownError(`Unexpected error: ${toStringSafe(error)}`),
-            }
-        }
+    try {
+        // If the error is unknown we'll try to decode basic errors
+        const candidates = getErrorDataCandidates(error)
+
+        const contractDecoder = createContractDecoder(contract)
+        return candidates.flatMap(contractDecoder).at(0)
+    } catch {
+        return undefined
     }
+}
+
+export const parseGenericError = (error: unknown): ContractError | undefined => {
+    // If the error already is a ContractError, we'll continue
+    if (error instanceof ContractError) return error
+
+    try {
+        // If the error is unknown we'll try to decode basic errors
+        const candidates = getErrorDataCandidates(error)
+
+        // And return the first candidate
+        return candidates.flatMap(basicDecoder).at(0)
+    } catch {
+        return undefined
+    }
+}
 
 // If a contract reverts using revert, the error data will be prefixed with this beauty
 const REVERT_ERROR_PREFIX = '0x08c379a0'
@@ -91,12 +119,12 @@ const basicDecoder = (data: string): ContractError[] => {
 /**
  * Contract decoder uses the contract ABIs to decode error revert string
  *
- * @param contract `OmniContract`
+ * @param contract `Contract`
  *
  * @returns `(data: string) => ContractError[]` Custom error decoder
  */
 const createContractDecoder =
-    ({ contract }: OmniContract) =>
+    (contract: Contract) =>
     (data: string): ContractError[] => {
         try {
             const errorDescription = contract.interface.parseError(data)
