@@ -82,10 +82,22 @@ It is possible to expose the test networks defined in `docker-compose.yaml` on y
 yarn start
 ```
 
-You will need to use the `MNEMONIC` defined in `docker-compose.templates.yaml` if you require funded accounts:
+Once the networks are running, you can go to the `ua-utils-evm-hardhat-test` package:
 
 ```bash
-export MNEMONIC='test test test test test test test test test test test junk'
+cd packages/ua-utils-hardhat-test
+```
+
+Setup the default `EndpointV2` and `DefaultOApp`:
+
+```bash
+npx hardhat lz:test:oapp:deploy
+```
+
+And execute `hardhat` tasks as usual:
+
+```bash
+npx hardhat lz:oapp:getDefaultConfig
 ```
 
 To stop the network containers, just run:
