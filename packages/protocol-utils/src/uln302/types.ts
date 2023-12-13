@@ -8,10 +8,6 @@ export interface IUln302 extends IOmniSDK {
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
 }
 
-export const CONFIG_TYPE_EXECUTOR = 1
-
-export const CONFIG_TYPE_ULN = 2
-
 export interface Uln302ExecutorConfig {
     maxMessageSize: number
     executor: string

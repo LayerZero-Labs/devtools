@@ -2,7 +2,6 @@ import assert from 'assert'
 import type {
     IEndpoint,
     IUln302,
-    SetConfigParam,
     Uln302ExecutorConfig,
     Uln302Factory,
     Uln302UlnConfig,
@@ -10,8 +9,12 @@ import type {
 import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
-import { CONFIG_TYPE_EXECUTOR, CONFIG_TYPE_ULN, Timeout } from '@layerzerolabs/protocol-utils'
+import { Timeout } from '@layerzerolabs/protocol-utils'
 import { defaultAbiCoder } from '@ethersproject/abi'
+
+export const CONFIG_TYPE_EXECUTOR = 1
+
+export const CONFIG_TYPE_ULN = 2
 
 export class Endpoint extends OmniSDK implements IEndpoint {
     constructor(
@@ -129,46 +132,19 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
-    async setConfig(lib: Address, params: SetConfigParam[]): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, params])
-
-        console.log({ params })
-
-        let description: string = ''
-        for (const param of params) {
-            description += `Setting ${
-                param.configType === CONFIG_TYPE_EXECUTOR ? 'executor' : 'uln'
-            } config for endpoint ${formatEid(param.eid)}. `
-        }
-
-        return {
-            ...this.createTransaction(data),
-            description: description,
-        }
+    async getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+        const encodedExecutorBytes = await this.contract.contract.getConfig(oapp, lib, eid, CONFIG_TYPE_EXECUTOR)
+        const [maxMessageSize, executor] = defaultAbiCoder.decode(['uint32', 'address'], encodedExecutorBytes)
+        return { maxMessageSize, executor }
     }
 
-    async getConfig(
-        oapp: Address,
-        lib: Address,
-        eid: EndpointId,
-        configType: number
-    ): Promise<Uln302ExecutorConfig | Uln302UlnConfig> {
-        assert(
-            configType === CONFIG_TYPE_EXECUTOR || configType === CONFIG_TYPE_ULN,
-            `configType invalid ${configType}`
+    async getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
+        const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, CONFIG_TYPE_ULN)
+        const [confirmations, , , optionalDVNThreshold, requiredDVNs, optionalDVNs] = defaultAbiCoder.decode(
+            ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
+            encodedUlnBytes
         )
-        if (configType === CONFIG_TYPE_EXECUTOR) {
-            const encodedExecutorBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
-            const [maxMessageSize, executor] = defaultAbiCoder.decode(['uint32', 'address'], encodedExecutorBytes)
-            return { maxMessageSize, executor }
-        } else {
-            const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
-            const [confirmations, , , optionalDVNThreshold, requiredDVNs, optionalDVNs] = defaultAbiCoder.decode(
-                ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
-                encodedUlnBytes
-            )
-            return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
-        }
+        return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
     }
 
     isRegisteredLibrary(lib: Address): Promise<boolean> {
