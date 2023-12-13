@@ -48,9 +48,3 @@ services:
       interval: 2s
       retries: 20
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
-
-  # Service that can build this package
-  tests:
-    extends:
-      service: project
-    working_dir: /app/packages/ua-utils-evm-hardhat-test

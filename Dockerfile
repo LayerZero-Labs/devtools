@@ -1,3 +1,17 @@
+# We will alow consumers to specify the node version in case we want
+# to test under different versions (since we cannot control users environment)
+# 
+# There is nothing wrong with 18.16.0 except for a tiny issue
+# in docker compose - a segmentation fault that happens
+# when we try to use a dynamic import in our tests (affecting both mocha & jest)
+# 
+# The issue has been described here https://github.com/jestjs/jest/issues/12286
+# And relates to this node issue here https://github.com/nodejs/node/issues/43205
+# 
+# This issue does not affect users, it's only related to the test runner
+# so the code will still work on node 18.16.0
+ARG NODE_VERSION=20.10.0
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -7,7 +21,7 @@
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:18.16.0 as base
+FROM node:$NODE_VERSION as base
 
 ENV YARN_CACHE_FOLDER=/tmp/yarn_cache
 
