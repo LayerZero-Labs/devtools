@@ -35,7 +35,7 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
  * @param {Task<T>[]} tasks
  * @returns {Promise<T>}
  */
-export const first = async <T>(...tasks: Task<T>[]): Promise<T> => {
+export const first = async <T>(tasks: Task<T>[]): Promise<T> => {
     assert(tasks.length !== 0, `Must have at least one task for first()`)
 
     let lastError: unknown
@@ -61,4 +61,4 @@ export const first = async <T>(...tasks: Task<T>[]): Promise<T> => {
 export const firstFactory =
     <TInput extends unknown[], TOutput>(...factories: Factory<TInput, TOutput>[]): Factory<TInput, TOutput> =>
     async (...input) =>
-        await first(...factories.map((factory) => () => factory(...input)))
+        await first(factories.map((factory) => () => factory(...input)))

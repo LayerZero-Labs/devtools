@@ -75,7 +75,7 @@ describe('common/promise', () => {
 
     describe('first', () => {
         it('should reject if called with no factories', async () => {
-            await expect(first()).rejects.toThrow('Must have at least one task for first()')
+            await expect(first([])).rejects.toThrow('Must have at least one task for first()')
         })
 
         it('should resolve if the first task resolves', async () => {
@@ -84,7 +84,7 @@ describe('common/promise', () => {
                     const task = jest.fn().mockResolvedValue(value)
                     const tasks = errors.map((error) => jest.fn().mockRejectedValue(error))
 
-                    expect(await first(task, ...tasks)).toBe(value)
+                    expect(await first([task, ...tasks])).toBe(value)
 
                     // Make sure none of the other factories got called
                     for (const factory of tasks) {
@@ -100,7 +100,7 @@ describe('common/promise', () => {
                     const tasks = errors.map((error) => jest.fn().mockRejectedValue(error))
                     const task = jest.fn().mockResolvedValue(value)
 
-                    expect(await first(...tasks, task)).toBe(value)
+                    expect(await first([...tasks, task])).toBe(value)
 
                     // Make sure all the tasks got called
                     for (const factory of tasks) {
@@ -118,7 +118,7 @@ describe('common/promise', () => {
                     const tasks = errors.map((error) => jest.fn().mockRejectedValue(error))
                     const task = jest.fn().mockRejectedValue(error)
 
-                    await expect(first(...tasks, task)).rejects.toBe(error)
+                    await expect(first([...tasks, task])).rejects.toBe(error)
 
                     // Make sure all the tasks got called
                     for (const factory of tasks) {
