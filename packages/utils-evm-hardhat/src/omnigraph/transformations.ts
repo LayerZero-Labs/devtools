@@ -9,6 +9,7 @@ import type {
     OmniNodeHardhat,
     OmniPointHardhatTransformer,
 } from './types'
+import { parallel } from '@layerzerolabs/utils'
 
 /**
  * Create a function capable of transforming `OmniPointHardhat` to a regular `OmniPoint`
@@ -56,9 +57,10 @@ export const createOmniEdgeHardhatTransformer =
 export const createOmniGraphHardhatTransformer =
     <TNodeConfig, TEdgeConfig>(
         nodeTransformer = createOmniNodeHardhatTransformer(),
-        edgeTransformer = createOmniEdgeHardhatTransformer()
+        edgeTransformer = createOmniEdgeHardhatTransformer(),
+        applicative = parallel
     ): OmniGraphHardhatTransformer<TNodeConfig, TEdgeConfig> =>
-    async (graph) => ({
-        contracts: await Promise.all(graph.contracts.map(nodeTransformer)),
-        connections: await Promise.all(graph.connections.map(edgeTransformer)),
+    async ({ contracts, connections }) => ({
+        contracts: await applicative(contracts.map((contract) => () => nodeTransformer(contract))),
+        connections: await applicative(connections.map((connection) => () => edgeTransformer(connection))),
     })
