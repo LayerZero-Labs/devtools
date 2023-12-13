@@ -1,23 +1,32 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
-import assert from 'assert'
+import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
 import { formatEid } from '@layerzerolabs/utils'
 import { wrapEIP1193Provider } from '@layerzerolabs/utils-evm-hardhat'
-import env from 'hardhat'
+import assert from 'assert'
 import { Contract } from 'ethers'
-import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
+import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
 const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toString()
 
 /**
- * This deploy function will deploy and configure LayerZero endpoint
+ * This `deploy` function will deploy and configure LayerZero EndpointV2.  This includes:
+ * - EndpointV2
+ * - SendUln302
+ * - ReceiveUln302
+ * - PriceFeed
+ * - Executor
+ * - ExecutorFeeLib
+ * - DVN
+ * - DVNFeeLib
  *
- * @param env `HardhatRuntimeEnvironment`
+ * @param {HardhatRuntimeEnvironment} env
  */
-const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network }) => {
+const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network }: HardhatRuntimeEnvironment) => {
     assert(network.config.eid != null, `Missing endpoint ID for network ${network.name}`)
 
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
+    const signer = wrapEIP1193Provider(network.provider).getSigner()
 
     await deployments.delete('EndpointV2')
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
@@ -109,13 +118,15 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         },
     })
 
-    const signer = wrapEIP1193Provider(env.network.provider).getSigner()
     const executorContract = new Contract(executor.address, executor.abi).connect(signer)
-    const setExecFeeLibResp: TransactionResponse = await executorContract.setWorkerFeeLib?.(executorFeeLib.address, {
-        from: await signer.getAddress(),
-    })
-    const setExecFeeLibReceipt: TransactionReceipt = await setExecFeeLibResp.wait()
+    const setExecFeeLibResp: TransactionResponse = await executorContract.setWorkerFeeLib(executorFeeLib.address)
+    const setExecFeeLibReceipt: TransactionReceipt = await setExecFeeLibResp.wait(1)
     assert(setExecFeeLibReceipt?.status === 1)
+    const polledExecutorFeeLib = await executorContract.workerFeeLib?.()
+    assert(
+        polledExecutorFeeLib?.toLowerCase() === executorFeeLib.address.toLowerCase(),
+        'Executor worker fee lib not set correctly'
+    )
 
     await deployments.delete('DVN')
     const dvn = await deployments.deploy('DVN', {
@@ -137,11 +148,11 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     })
 
     const dvnContract = new Contract(dvn.address, dvn.abi).connect(signer)
-    const setDvnFeeLibResp: TransactionResponse = await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address, {
-        from: await signer.getAddress(),
-    })
+    const setDvnFeeLibResp: TransactionResponse = await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address)
     const setDvnFeeLibReceipt: TransactionReceipt = await setDvnFeeLibResp.wait()
     assert(setDvnFeeLibReceipt?.status === 1)
+    const polledDvnFeeLib = await dvnContract.workerFeeLib?.()
+    assert(polledDvnFeeLib?.toLowerCase() === dvnFeeLib.address.toLowerCase(), 'DVN worker fee lib not set correctly')
 
     console.table({
         Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
