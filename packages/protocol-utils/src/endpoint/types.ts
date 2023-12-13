@@ -40,19 +40,10 @@ export interface IEndpoint extends IOmniSDK {
     ): Promise<Uln302ExecutorConfig | Uln302UlnConfig>
 }
 
-export const CONFIG_TYPE_EXECUTOR = 1
-
-export const CONFIG_TYPE_ULN = 2
-
 export interface SetConfigParam {
     eid: EndpointId
     configType: number
     config: string
-}
-
-export interface ReceiveLibraryConfig {
-    receiveLibrary: string
-    gracePeriod: number
 }
 
 export interface Timeout {

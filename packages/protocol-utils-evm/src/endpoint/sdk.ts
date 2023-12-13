@@ -10,7 +10,7 @@ import type {
 import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
-import { Timeout, CONFIG_TYPE_EXECUTOR, CONFIG_TYPE_ULN } from '@layerzerolabs/protocol-utils'
+import { CONFIG_TYPE_EXECUTOR, CONFIG_TYPE_ULN, Timeout } from '@layerzerolabs/protocol-utils'
 import { defaultAbiCoder } from '@ethersproject/abi'
 
 export class Endpoint extends OmniSDK implements IEndpoint {
