@@ -119,3 +119,18 @@ yarn upgrade-interactive --scope @layerzerolabs --latest
 However, this utility has an issue with packages that are listed both at the workspace root and in the individual packages, e.g. `@layerzerolabs/prettier-config-next` - it errors out saying that a workspace package could not be found.
 
 To work around this (since this version of yarn is outdated and a fix for this problem will not be provided), you can remove the entries from the root `package.json` before running the command, then add them back (just don't forget to update their versions).
+
+#### Problems using the `dev` script
+
+`turbo` might complain about concurrency issues when running `yarn dev`:
+
+```diff
+- error preparing engine: Invalid persistent task configuration:
+- You have 18 persistent tasks but `turbo` is configured for concurrency of 10. Set --concurrency to at least 19
+```
+
+If you see this error, just follow turbo's lead and use:
+
+```bash
+yarn dev --concurrency 19
+```

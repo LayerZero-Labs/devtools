@@ -15,6 +15,7 @@
     },
     "dev": {
       "cache": false,
+      "dependsOn": ["^build"],
       "outputs": [],
       "persistent": true
     },
