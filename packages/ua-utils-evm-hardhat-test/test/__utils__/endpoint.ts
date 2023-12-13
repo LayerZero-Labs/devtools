@@ -22,11 +22,15 @@ import { formatOmniPoint } from '@layerzerolabs/utils'
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
 export const ethReceiveUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302' }
 export const ethSendUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302' }
+export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302_Opt2' }
+export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302_Opt2' }
 export const ethExecutor = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'Executor' }
 export const ethDvn = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DVN' }
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
+export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302_Opt2' }
+export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302_Opt2' }
 export const avaxExecutor = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'Executor' }
 export const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
 
@@ -155,6 +159,51 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
         connections: [],
     }
 
+    const sendUlnConfig_Opt2: OmniGraphHardhat<Uln302NodeConfig, unknown> = {
+        contracts: [
+            {
+                contract: ethSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.AVALANCHE_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: avaxSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.ETHEREUM_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                    ],
+                },
+            },
+        ],
+        connections: [],
+    }
+
+    // This is the graph for ReceiveUln302
+    const receiveUlnConfig_Opt2: OmniGraphHardhat<Uln302NodeConfig, unknown> = {
+        contracts: [
+            {
+                contract: ethReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: avaxReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+        ],
+        connections: [],
+    }
+
     // This is the graph for EndpointV2
     const config: OmniGraphHardhat<unknown, EndpointEdgeConfig> = {
         contracts: [
@@ -188,12 +237,26 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     // Now we compile a list of all the transactions that need to be executed for the ULNs and Endpoints
     const builderEndpoint = await OmniGraphBuilderHardhat.fromConfig(config)
     const endpointTransactions = await configureEndpoint(builderEndpoint.graph, endpointSdkFactory)
+
     const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
+
     const builderReceiveUln = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig)
     const receiveUlnTransactions = await configureUln302(builderReceiveUln.graph, ulnSdkFactory)
 
-    const transactions = [...sendUlnTransactions, ...receiveUlnTransactions, ...endpointTransactions]
+    const builderSendUln_Opt2 = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig_Opt2)
+    const sendUlnTransactions_Opt2 = await configureUln302(builderSendUln_Opt2.graph, ulnSdkFactory)
+
+    const builderReceiveUln_Opt2 = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig_Opt2)
+    const receiveUlnTransactions_Opt2 = await configureUln302(builderReceiveUln_Opt2.graph, ulnSdkFactory)
+
+    const transactions = [
+        ...sendUlnTransactions,
+        ...receiveUlnTransactions,
+        ...endpointTransactions,
+        ...sendUlnTransactions_Opt2,
+        ...receiveUlnTransactions_Opt2,
+    ]
 
     logger.debug(`Executing ${transactions.length} transactions`)
 

@@ -37,6 +37,20 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         args: [endpointV2Deployment.address],
     })
 
+    await deployments.delete('SendUln302_Opt2')
+    const SendUln302_Opt2 = await deployments.deploy('SendUln302_Opt2', {
+        contract: 'SendUln302',
+        from: deployer,
+        args: [endpointV2Deployment.address, 0, 0],
+    })
+
+    await deployments.delete('ReceiveUln302_Opt2')
+    const ReceiveUln302_Opt2 = await deployments.deploy('ReceiveUln302_Opt2', {
+        contract: 'ReceiveUln302',
+        from: deployer,
+        args: [endpointV2Deployment.address],
+    })
+
     await Promise.all(
         ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
             deployments.delete(contractName)
@@ -134,6 +148,8 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         EndpointV2: endpointV2Deployment.address,
         SendUln302: sendUln302.address,
         ReceiveUln302: receiveUln302.address,
+        SendUln302_Opt2: SendUln302_Opt2.address,
+        ReceiveUln302_Opt2: ReceiveUln302_Opt2.address,
         PriceFeed: priceFeed.address,
         Executor: executor.address,
         ExecutorFeeLib: executorFeeLib.address,
