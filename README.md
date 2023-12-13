@@ -82,10 +82,28 @@ It is possible to expose the test networks defined in `docker-compose.yaml` on y
 yarn start
 ```
 
-You will need to use the `MNEMONIC` defined in `docker-compose.templates.yaml` if you require funded accounts:
+Once the networks are running, you can go to the `ua-utils-evm-hardhat-test` package:
 
 ```bash
-export MNEMONIC='test test test test test test test test test test test junk'
+cd packages/ua-utils-hardhat-test
+```
+
+Setup the default `EndpointV2` and `DefaultOApp`:
+
+```bash
+npx hardhat lz:test:oapp:deploy
+```
+
+And execute `hardhat` tasks as usual:
+
+```bash
+npx hardhat lz:oapp:getDefaultConfig
+```
+
+If you are developing tasks, it's useful to build the code when it changes. To do this, run the following from the project root:
+
+```bash
+yarn dev
 ```
 
 To stop the network containers, just run:
@@ -119,3 +137,18 @@ yarn upgrade-interactive --scope @layerzerolabs --latest
 However, this utility has an issue with packages that are listed both at the workspace root and in the individual packages, e.g. `@layerzerolabs/prettier-config-next` - it errors out saying that a workspace package could not be found.
 
 To work around this (since this version of yarn is outdated and a fix for this problem will not be provided), you can remove the entries from the root `package.json` before running the command, then add them back (just don't forget to update their versions).
+
+#### Problems using the `dev` script
+
+`turbo` might complain about concurrency issues when running `yarn dev`:
+
+```diff
+- error preparing engine: Invalid persistent task configuration:
+- You have 18 persistent tasks but `turbo` is configured for concurrency of 10. Set --concurrency to at least 19
+```
+
+If you see this error, just follow turbo's lead and use:
+
+```bash
+yarn dev --concurrency 19
+```
