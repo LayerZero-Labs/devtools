@@ -1,5 +1,5 @@
-import type { OmniGraph, OmniPoint, WithEid, WithOptionals } from '@layerzerolabs/utils'
-import type { OmniContract } from '@layerzerolabs/utils-evm'
+import type { Factory, OmniGraph, OmniPoint, WithEid, WithOptionals } from '@layerzerolabs/utils'
+import type { OmniContractFactory } from '@layerzerolabs/utils-evm'
 import type { Deployment } from 'hardhat-deploy/dist/types'
 
 /**
@@ -20,6 +20,8 @@ export type OmniPointHardhat = WithEid<{
     contractName?: string | null
     address?: string | null
 }>
+
+export type WithContractName<T> = T & { contractName: string }
 
 /**
  * Hardhat-specific variation of `OmniNode` that uses `OmniPointHardhat`
@@ -49,10 +51,11 @@ export interface OmniGraphHardhat<TNodeConfig = unknown, TEdgeConfig = unknown> 
     connections: OmniEdgeHardhat<TEdgeConfig>[]
 }
 
-export type OmniContractFactoryHardhat = (point: OmniPointHardhat) => OmniContract | Promise<OmniContract>
+export type OmniContractFactoryHardhat = OmniContractFactory<OmniPointHardhat>
 
-export type OmniPointHardhatTransformer = (point: OmniPointHardhat | OmniPoint) => Promise<OmniPoint>
+export type OmniPointHardhatTransformer = Factory<[OmniPointHardhat | OmniPoint], OmniPoint>
 
-export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unknown> = (
-    graph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>
-) => Promise<OmniGraph<TNodeConfig, TEdgeConfig>>
+export type OmniGraphHardhatTransformer<TNodeConfig = unknown, TEdgeConfig = unknown> = Factory<
+    [OmniGraphHardhat<TNodeConfig, TEdgeConfig>],
+    OmniGraph<TNodeConfig, TEdgeConfig>
+>
