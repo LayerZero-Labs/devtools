@@ -163,14 +163,10 @@ export class Endpoint extends OmniSDK implements IEndpoint {
             return { maxMessageSize, executor }
         } else {
             const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
-            const [
-                confirmations,
-                requiredDVNCount,
-                optionalDVNCount,
-                optionalDVNThreshold,
-                requiredDVNs,
-                optionalDVNs,
-            ] = defaultAbiCoder.decode(['tuple(uint64,uint8,uint8,uint8,address[],address[])'], encodedUlnBytes)
+            const [confirmations, , , optionalDVNThreshold, requiredDVNs, optionalDVNs] = defaultAbiCoder.decode(
+                ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
+                encodedUlnBytes
+            )
             return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
         }
     }
