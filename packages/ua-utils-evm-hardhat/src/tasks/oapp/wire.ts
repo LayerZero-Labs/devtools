@@ -46,7 +46,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     try {
         logger.verbose(`Loading config file '${oappConfigPath}'`)
 
-        rawConfig = require(resolve(oappConfigPath))
+        rawConfig = await import(resolve(oappConfigPath))
     } catch (error) {
         throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
     }
