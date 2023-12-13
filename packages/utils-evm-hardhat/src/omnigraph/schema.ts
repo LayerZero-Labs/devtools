@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { EndpointIdSchema, OmniPointSchema } from '@layerzerolabs/utils'
-import type { OmniEdgeHardhat, OmniGraphHardhat, OmniNodeHardhat, OmniPointHardhat } from './types'
+import type { OmniEdgeHardhat, OmniGraphHardhat, OmniNodeHardhat, OmniPointHardhat, WithContractName } from './types'
 
 export const OmniPointHardhatSchema: z.ZodSchema<OmniPointHardhat, z.ZodTypeDef, unknown> = z.object({
     eid: EndpointIdSchema,
@@ -57,3 +57,6 @@ export const createOmniGraphHardhatSchema = <TNodeConfig = unknown, TEdgeConfig 
         contracts: z.array(nodeSchema),
         connections: z.array(edgeSchema),
     })
+
+export const hasContractName = <T extends object>(value: T): value is WithContractName<T> =>
+    'contractName' in value && typeof value.contractName === 'string'
