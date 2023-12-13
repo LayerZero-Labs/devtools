@@ -1,8 +1,17 @@
 import assert from 'assert'
-import type { IEndpoint, IUln302, Uln302Factory } from '@layerzerolabs/protocol-utils'
+import type {
+    IEndpoint,
+    IUln302,
+    SetConfigParam,
+    Uln302ExecutorConfig,
+    Uln302Factory,
+    Uln302UlnConfig,
+} from '@layerzerolabs/protocol-utils'
 import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
+import { Timeout, CONFIG_TYPE_EXECUTOR, CONFIG_TYPE_ULN } from '@layerzerolabs/protocol-utils'
+import { defaultAbiCoder } from '@ethersproject/abi'
 
 export class Endpoint extends OmniSDK implements IEndpoint {
     constructor(
@@ -68,6 +77,101 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return {
             ...this.createTransaction(data),
             description: `Setting default send library for ${formatEid(eid)} to ${lib}`,
+        }
+    }
+
+    async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
+        return await this.contract.contract.defaultReceiveLibraryTimeout(eid)
+    }
+
+    async setSendLibrary(eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setSendLibrary', [eid, newLib])
+
+        return {
+            ...this.createTransaction(data),
+            description: `Setting send library for ${formatEid(eid)} to ${newLib}`,
+        }
+    }
+
+    async setReceiveLibrary(
+        eid: EndpointId,
+        newLib: Address | null | undefined,
+        gracePeriod: number
+    ): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibrary', [
+            eid,
+            newLib,
+            gracePeriod,
+        ])
+
+        return {
+            ...this.createTransaction(data),
+            description: `Setting receive library for ${formatEid(eid)} to ${newLib} with grace period ${gracePeriod}`,
+        }
+    }
+
+    async setReceiveLibraryTimeout(
+        eid: EndpointId,
+        lib: Address | null | undefined,
+        expiry: number
+    ): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibraryTimeout', [eid, lib, expiry])
+
+        return {
+            ...this.createTransaction(data),
+            description: `Setting receive library timeout for ${formatEid(
+                eid
+            )} to ${lib} with expiration period ${expiry}`,
+        }
+    }
+
+    async getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout> {
+        return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
+    }
+
+    async setConfig(lib: Address, params: SetConfigParam[]): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, params])
+
+        console.log({ params })
+
+        let description: string = ''
+        for (const param of params) {
+            description += `Setting ${
+                param.configType === CONFIG_TYPE_EXECUTOR ? 'executor' : 'uln'
+            } config for endpoint ${formatEid(param.eid)}. `
+        }
+
+        return {
+            ...this.createTransaction(data),
+            description: description,
+        }
+    }
+
+    async getConfig(
+        oapp: Address,
+        lib: Address,
+        eid: EndpointId,
+        configType: number
+    ): Promise<Uln302ExecutorConfig | Uln302UlnConfig> {
+        assert(
+            configType === CONFIG_TYPE_EXECUTOR || configType === CONFIG_TYPE_ULN,
+            `configType invalid ${configType}`
+        )
+        if (configType === CONFIG_TYPE_EXECUTOR) {
+            const encodedExecutorBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
+            const [maxMessageSize, executor] = defaultAbiCoder.decode(['uint32', 'address'], encodedExecutorBytes)
+            return { maxMessageSize, executor }
+        } else {
+            const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
+            const [
+                confirmations,
+                requiredDVNCount,
+                optionalDVNCount,
+                optionalDVNThreshold,
+                requiredDVNs,
+                optionalDVNs,
+            ] = defaultAbiCoder.decode(['tuple(uint64,uint8,uint8,uint8,address[],address[])'], encodedUlnBytes)
+            return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
         }
     }
 
