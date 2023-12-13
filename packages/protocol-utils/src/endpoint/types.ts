@@ -31,13 +31,9 @@ export interface IEndpoint extends IOmniSDK {
     setReceiveLibrary(eid: EndpointId, newLib: Address, gracePeriod: number): Promise<OmniTransaction>
     setReceiveLibraryTimeout(eid: EndpointId, newLib: Address, expiry: number): Promise<OmniTransaction>
 
-    setConfig(lib: Address, params: SetConfigParam[]): Promise<OmniTransaction>
-    getConfig(
-        oapp: Address,
-        lib: Address,
-        eid: EndpointId,
-        configType: number
-    ): Promise<Uln302ExecutorConfig | Uln302UlnConfig>
+    getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
+
+    getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
 }
 
 export interface SetConfigParam {
