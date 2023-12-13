@@ -100,6 +100,12 @@ And execute `hardhat` tasks as usual:
 npx hardhat lz:oapp:getDefaultConfig
 ```
 
+If you are developing tasks, it's useful to build the code when it changes. To do this, run the following from the project root:
+
+```bash
+yarn dev
+```
+
 To stop the network containers, just run:
 
 ```bash
