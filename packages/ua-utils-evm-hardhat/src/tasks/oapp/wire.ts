@@ -9,6 +9,7 @@ import {
     promptToContinue,
     printJson,
     pluralizeNoun,
+    importDefault,
 } from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
@@ -46,7 +47,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     try {
         logger.verbose(`Loading config file '${oappConfigPath}'`)
 
-        rawConfig = await import(resolve(oappConfigPath))
+        rawConfig = await importDefault(resolve(oappConfigPath))
     } catch (error) {
         throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
     }
