@@ -10,13 +10,13 @@ describe('language/plurals', () => {
     describe('pluralizeNoun', () => {
         describe('without custom plural', () => {
             it.each([0, 1, 2, 3, 4, 5, 11, 12, 21, 100, 1234])(`should work for %d`, (n) =>
-                expect(pluralizeNoun('cat', n)).toMatchSnapshot()
+                expect(pluralizeNoun(n, 'cat')).toMatchSnapshot()
             )
         })
 
         describe('with custom plural', () => {
             it.each([0, 1, 2, 3, 4, 5, 11, 12, 21, 100, 1234])(`should work for %d`, (n) =>
-                expect(pluralizeNoun('cactus', n, 'cacti')).toMatchSnapshot()
+                expect(pluralizeNoun(n, 'cactus', 'cacti')).toMatchSnapshot()
             )
         })
     })

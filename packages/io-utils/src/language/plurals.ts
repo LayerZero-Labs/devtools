@@ -15,8 +15,8 @@ const ordinals: Record<Intl.LDMLPluralRule, string> = {
  *
  * ```typescript
  * pluralizeOrdinal(7) // 7th
- * pluralizeNoun(1) // 1st
- * pluralizeNoun(19, 'cacti') // 19th
+ * pluralizeOrdinal(1) // 1st
+ * pluralizeOrdinal(19) // 19th
  * ```
  *
  * @param {number} n
@@ -33,17 +33,17 @@ export const pluralizeOrdinal = (n: number): string => {
  * Choose a correct form of a noun based on cardinality.
  *
  * ```typescript
- * pluralizeNoun('cat', 7) // cats
- * pluralizeNoun('cat', 1) // cat
- * pluralizeNoun('cactus', 19, 'cacti') // cacti
+ * pluralizeNoun(7, 'cat') // cats
+ * pluralizeNoun(1, 'cat') // cat
+ * pluralizeNoun(19, 'cactus', 'cacti') // cacti
  * ```
  *
- * @param {string} singular The signular form of the english noun
  * @param {number} n
+ * @param {string} singular The signular form of the english noun
  * @param {string} [plural] Plural version of the noun for irregular cases
  * @returns {string}
  */
-export const pluralizeNoun = (singular: string, n: number, plural: string = `${singular}s`): string => {
+export const pluralizeNoun = (n: number, singular: string, plural: string = `${singular}s`): string => {
     const rule = cardinalRules.select(n)
     if (rule === 'one') return singular
 

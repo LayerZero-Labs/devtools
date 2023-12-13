@@ -128,8 +128,8 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     // Tell the user about the transactions
     logger.info(
         pluralizeNoun(
-            `There is 1 transaction required to configure the OApp`,
             transactions.length,
+            `There is 1 transaction required to configure the OApp`,
             `There are ${transactions.length} transactions required to configure the OApp`
         )
     )

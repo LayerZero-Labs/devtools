@@ -23,7 +23,7 @@ export const createSignAndSend =
         if (n === 0) return logger.debug(`No transactions to sign, exiting`), [[], []]
 
         // Tell the user how many we are signing
-        logger.debug(`Signing ${n} ${pluralizeNoun('transaction', n)}`)
+        logger.debug(`Signing ${n} ${pluralizeNoun(n, 'transaction')}`)
 
         // We'll gather the successful transactions here
         const successful: OmniTransactionWithReceipt[] = []
@@ -55,7 +55,7 @@ export const createSignAndSend =
         }
 
         // Tell the inquisitive user what a good job we did
-        logger.debug(`Successfully signed ${n} ${pluralizeNoun('transaction', n)}`)
+        logger.debug(`Successfully signed ${n} ${pluralizeNoun(n, 'transaction')}`)
 
         return [successful, []]
     }
