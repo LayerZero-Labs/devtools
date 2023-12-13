@@ -25,6 +25,16 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
 }
 
 /**
+ * Executes tasks in parallel
+ *
+ * Will resolve with the output of all tasks or reject with the any rejection.
+ *
+ * @param {Task<T>[]} tasks
+ * @returns {Promise<T[]>}
+ */
+export const parallel = async <T>(tasks: Task<T>[]): Promise<T[]> => await Promise.all(tasks.map((task) => task()))
+
+/**
  * Executes tasks in a sequence until one resolves.
  *
  * Will resolve with the output of the first task that resolves
