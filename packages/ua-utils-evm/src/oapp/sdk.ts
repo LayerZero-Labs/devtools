@@ -15,7 +15,7 @@ import { OmniSDK } from '@layerzerolabs/utils-evm'
 export class OApp extends OmniSDK implements IOApp {
     constructor(
         contract: OmniContract,
-        private readonly endpointFactory: EndpointFactory
+        protected readonly endpointFactory: EndpointFactory
     ) {
         super(contract)
     }
