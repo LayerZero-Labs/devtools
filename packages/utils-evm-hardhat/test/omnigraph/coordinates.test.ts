@@ -43,7 +43,7 @@ describe('omnigraph/coordinates', () => {
     describe('createContractFactory', () => {
         describe('when called with OmniPointContractName', () => {
             it('should reject when eid does not exist', async () => {
-                const contractFactory = createContractFactory(hre)
+                const contractFactory = createContractFactory()
 
                 await expect(() =>
                     contractFactory({ eid: EndpointId.CANTO_TESTNET, contractName: 'MyContract' })
@@ -51,7 +51,7 @@ describe('omnigraph/coordinates', () => {
             })
 
             it('should reject when contract has not been deployed', async () => {
-                const contractFactory = createContractFactory(hre)
+                const contractFactory = createContractFactory()
 
                 await expect(() =>
                     contractFactory({ eid: EndpointId.ETHEREUM_MAINNET, contractName: 'MyContract' })
@@ -60,7 +60,7 @@ describe('omnigraph/coordinates', () => {
 
             it('should resolve when contract has been deployed', async () => {
                 const environmentFactory = createNetworkEnvironmentFactory(hre)
-                const contractFactory = createContractFactory(hre, environmentFactory)
+                const contractFactory = createContractFactory(environmentFactory)
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                 jest.spyOn(env.deployments, 'getOrNull').mockResolvedValue({
@@ -86,7 +86,7 @@ describe('omnigraph/coordinates', () => {
             it('should reject when eid does not exist', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const contractFactory = createContractFactory(hre)
+                        const contractFactory = createContractFactory()
 
                         await expect(() =>
                             contractFactory({ eid: EndpointId.CANTO_TESTNET, address })
@@ -98,7 +98,7 @@ describe('omnigraph/coordinates', () => {
             it('should reject when contract has not been deployed', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const contractFactory = createContractFactory(hre)
+                        const contractFactory = createContractFactory()
 
                         await expect(() =>
                             contractFactory({ eid: EndpointId.ETHEREUM_MAINNET, address })
@@ -111,7 +111,7 @@ describe('omnigraph/coordinates', () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
                         const environmentFactory = createNetworkEnvironmentFactory(hre)
-                        const contractFactory = createContractFactory(hre, environmentFactory)
+                        const contractFactory = createContractFactory(environmentFactory)
 
                         const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
                         jest.spyOn(env.deployments, 'getDeploymentsFromAddress').mockResolvedValue([
