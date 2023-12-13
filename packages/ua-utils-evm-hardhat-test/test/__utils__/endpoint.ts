@@ -5,7 +5,6 @@ import {
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
 } from '@layerzerolabs/utils-evm-hardhat'
-import { createLogger } from '@layerzerolabs/io-utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { omniContractToPoint } from '@layerzerolabs/utils-evm'
 import {
@@ -90,7 +89,6 @@ export const deployEndpoint = async () => {
  */
 export const setupDefaultEndpoint = async (): Promise<void> => {
     // This is the tooling we are going to need
-    const logger = createLogger()
     const contractFactory = createConnectedContractFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
     const ulnSdkFactory = createUln302Factory(contractFactory)
