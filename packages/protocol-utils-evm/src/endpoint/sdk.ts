@@ -2,6 +2,7 @@ import assert from 'assert'
 import type {
     IEndpoint,
     IUln302,
+    SetConfigParam,
     Uln302ExecutorConfig,
     Uln302Factory,
     Uln302UlnConfig,
@@ -10,7 +11,7 @@ import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
 import { Timeout } from '@layerzerolabs/protocol-utils'
-import { defaultAbiCoder } from '@ethersproject/abi'
+import { Uln302 } from '@/uln302'
 
 export const CONFIG_TYPE_EXECUTOR = 1
 
@@ -132,19 +133,64 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
+    async setUlnConfig(
+        oapp: Address,
+        eidArray: EndpointId[],
+        ulnConfigArray: Uln302UlnConfig[]
+    ): Promise<OmniTransaction> {
+        assert(eidArray.length === ulnConfigArray.length, `array length should match`)
+        const uln = (await this.getUln302SDK(oapp)) as Uln302
+        const setConfigParamArray: SetConfigParam[] = []
+        for (const [index, ulnConfig] of ulnConfigArray.entries()) {
+            const eid = eidArray[index]
+            assert(eid !== undefined, `eid must be defined`)
+            setConfigParamArray.push({
+                eid: eid,
+                configType: CONFIG_TYPE_ULN,
+                config: uln.encodeUlnConfig(ulnConfig),
+            })
+        }
+
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, setConfigParamArray])
+        return {
+            ...this.createTransaction(data),
+            description: `Set Executor Config for oapp: ${oapp}`,
+        }
+    }
+
+    async setExecutorConfig(
+        oapp: Address,
+        eidArray: EndpointId[],
+        executorConfigArray: Uln302ExecutorConfig[]
+    ): Promise<OmniTransaction> {
+        assert(eidArray.length === executorConfigArray.length, `array length should match`)
+        const uln = (await this.getUln302SDK(oapp)) as Uln302
+        const setConfigParamArray: SetConfigParam[] = []
+        for (const [index, executorConfig] of executorConfigArray.entries()) {
+            const eid = eidArray[index]
+            assert(eid !== undefined, `eid must be defined`)
+            setConfigParamArray.push({
+                eid: eid,
+                configType: CONFIG_TYPE_EXECUTOR,
+                config: uln.encodeExecutorConfig(executorConfig),
+            })
+        }
+
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, setConfigParamArray])
+        return {
+            ...this.createTransaction(data),
+            description: `Set Executor Config for oapp: ${oapp}`,
+        }
+    }
+
     async getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
-        const encodedExecutorBytes = await this.contract.contract.getConfig(oapp, lib, eid, CONFIG_TYPE_EXECUTOR)
-        const [maxMessageSize, executor] = defaultAbiCoder.decode(['uint32', 'address'], encodedExecutorBytes)
-        return { maxMessageSize, executor }
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getExecutorConfig(eid, oapp)
     }
 
     async getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
-        const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, CONFIG_TYPE_ULN)
-        const [confirmations, , , optionalDVNThreshold, requiredDVNs, optionalDVNs] = defaultAbiCoder.decode(
-            ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
-            encodedUlnBytes
-        )
-        return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getUlnConfig(eid, oapp)
     }
 
     isRegisteredLibrary(lib: Address): Promise<boolean> {
