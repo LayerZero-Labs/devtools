@@ -6,6 +6,13 @@
 
 <h1 align="center">LayerZero Contract Utilities</h1>
 
+## Code layout
+
+The code is arranged into:
+
+- **Reusable packages** under `./packages` directory
+- **Example projects** under `./examples` directory
+
 ## Development
 
 ```bash
