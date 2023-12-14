@@ -18,6 +18,8 @@ export interface Uln302UlnConfig {
     optionalDVNThreshold: number
     requiredDVNs: string[]
     optionalDVNs: string[]
+    requiredDVNCount?: number
+    optionalDVNCount?: number
 }
 
 export interface Uln302NodeConfig {

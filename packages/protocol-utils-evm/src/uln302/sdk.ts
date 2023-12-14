@@ -3,6 +3,8 @@ import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerol
 import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/utils'
 import { makeZeroAddress, OmniSDK } from '@layerzerolabs/utils-evm'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
+import assert from 'assert'
+import { printRecord } from '@layerzerolabs/io-utils'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
@@ -33,6 +35,34 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return this.createTransaction(data)
     }
 
+    decodeExecutorConfig(executorConfigBytes: string): Uln302ExecutorConfig {
+        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult(
+            'getExecutorConfig',
+            executorConfigBytes
+        )
+
+        return Uln302ExecutorConfigSchema.parse({ ...rtnConfig })
+    }
+
+    encodeExecutorConfig(config: Uln302ExecutorConfig): string {
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getExecutorConfig', [config])
+
+        return assert(typeof encoded === 'string', 'Must be a string'), encoded
+    }
+
+    decodeUlnConfig(ulnConfigBytes: string): Uln302UlnConfig {
+        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getUlnConfig', ulnConfigBytes)
+
+        return Uln302UlnConfigSchema.parse({ ...rtnConfig })
+    }
+
+    encodeUlnConfig(config: Uln302UlnConfig): string {
+        const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getUlnConfig', [serializedConfig])
+
+        return assert(typeof encoded === 'string', 'Must be a string'), encoded
+    }
+
     async setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction> {
         const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
@@ -46,7 +76,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
         return {
             ...this.createTransaction(data),
-            description: `Setting default ULN config for ${formatEid(eid)}: ${JSON.stringify(serializedConfig)}`,
+            description: `Setting default ULN config for ${formatEid(eid)}: ${printRecord(serializedConfig)}`,
         }
     }
 }
