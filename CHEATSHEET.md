@@ -55,15 +55,15 @@ This property is required for a lot of the tooling to work - the link between ne
 
 ```typescript
 // By network name (as specified in hardhat config)
-import { getHREByNetworkName } from "@layerzerolabs/utils-evm-hardhat";
+import { getHreByNetworkName } from "@layerzerolabs/utils-evm-hardhat";
 
-const environment = await getHREByNetworkName("avalanche-testnet");
+const environment = await getHreByNetworkName("avalanche-testnet");
 
 // By endpoint ID (as specified in hardhat config, using the eid property of a network)
-import { createGetHREByEid } from "@layerzerolabs/utils-evm-hardhat";
+import { createGetHreByEid } from "@layerzerolabs/utils-evm-hardhat";
 
 // In this case we need to instantiate an environemnt factory
-const getEnvironment = createGetHREByEid();
+const getEnvironment = createGetHreByEid();
 
 const eid = EndpointId.AVALANCHE_TESTNET;
 const environment = await getNetworkRuntimeEnvironmentByEid(eid);

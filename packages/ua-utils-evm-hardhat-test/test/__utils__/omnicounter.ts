@@ -1,8 +1,8 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createGetHREByEid } from '@layerzerolabs/utils-evm-hardhat'
+import { createGetHreByEid } from '@layerzerolabs/utils-evm-hardhat'
 
 export const deployOmniCounter = async () => {
-    const environmentFactory = createGetHREByEid()
+    const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
@@ -13,7 +13,7 @@ export const deployOmniCounter = async () => {
 }
 
 export const deployOmniCounterFixture = async () => {
-    const environmentFactory = createGetHREByEid()
+    const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 

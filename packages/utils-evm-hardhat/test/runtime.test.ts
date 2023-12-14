@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
-import { createGetHREByEid, getEidForNetworkName, getNetworkNameForEid, getHREByNetworkName } from '@/runtime'
+import { createGetHreByEid, getEidForNetworkName, getNetworkNameForEid, getHreByNetworkName } from '@/runtime'
 import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
@@ -8,13 +8,13 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 
 describe('runtime', () => {
-    describe('getHREByNetworkName', () => {
+    describe('getHreByNetworkName', () => {
         it('should reject with an invalid network', async () => {
-            await expect(getHREByNetworkName('not-in-hardhat-config')).rejects.toBeTruthy()
+            await expect(getHreByNetworkName('not-in-hardhat-config')).rejects.toBeTruthy()
         })
 
         it('should return a HardhatRuntimeEnvironment with correct network', async () => {
-            const runtime = await getHREByNetworkName('ethereum-mainnet')
+            const runtime = await getHreByNetworkName('ethereum-mainnet')
 
             expect(runtime.network.name).toEqual('ethereum-mainnet')
             expect(runtime.deployments).toMatchObject({
@@ -23,8 +23,8 @@ describe('runtime', () => {
         })
 
         it('should have the config setup correctly', async () => {
-            const ethRuntime = await getHREByNetworkName('ethereum-mainnet')
-            const bscRuntime = await getHREByNetworkName('bsc-testnet')
+            const ethRuntime = await getHreByNetworkName('ethereum-mainnet')
+            const bscRuntime = await getHreByNetworkName('bsc-testnet')
 
             expect(ethRuntime.network.name).toBe('ethereum-mainnet')
             expect(ethRuntime.network.config).toBe(hre.config.networks['ethereum-mainnet'])
@@ -33,8 +33,8 @@ describe('runtime', () => {
         })
 
         it('should save the deployment to correct network', async () => {
-            const bscRuntime = await getHREByNetworkName('bsc-testnet')
-            const ethRuntime = await getHREByNetworkName('ethereum-mainnet')
+            const bscRuntime = await getHreByNetworkName('bsc-testnet')
+            const ethRuntime = await getHreByNetworkName('ethereum-mainnet')
             const now = Date.now()
             const deploymentSubmission = {
                 args: ['bsc-testnet', now],
@@ -53,15 +53,15 @@ describe('runtime', () => {
         })
     })
 
-    describe('createGetHREByEid()', () => {
+    describe('createGetHreByEid()', () => {
         it('should reject with an endpoint that is not in the hardhat config', async () => {
-            await expect(createGetHREByEid(hre)(EndpointId.CATHAY_TESTNET)).rejects.toThrow(
+            await expect(createGetHreByEid(hre)(EndpointId.CATHAY_TESTNET)).rejects.toThrow(
                 'Could not find a network for eid 10171 (CATHAY_TESTNET)'
             )
         })
 
         it('should return a HardhatRuntimeEnvironment with correct network', async () => {
-            const runtime = await createGetHREByEid(hre)(EndpointId.ETHEREUM_MAINNET)
+            const runtime = await createGetHreByEid(hre)(EndpointId.ETHEREUM_MAINNET)
 
             expect(runtime.network.name).toEqual('ethereum-mainnet')
             expect(runtime.deployments).toMatchObject({

@@ -67,7 +67,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  * Creates a clone of the HardhatRuntimeEnvironment for a particular network
  *
  * ```typescript
- * const env = getHREByNetworkName("bsc-testnet");
+ * const env = getHreByNetworkName("bsc-testnet");
  *
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
@@ -75,7 +75,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  *
  * @returns {Promise<HardhatRuntimeEnvironment>}
  */
-export const getHREByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
+export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
     const context = getDefaultContext()
     const environment = getDefaultRuntimeEnvironment()
 
@@ -108,7 +108,8 @@ export const getHREByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
  * identified by endpoint ID
  *
  * ```typescript
- * const env = createGetHREByEid()(EndpointId.AVALANCHE_V2_TESTNET);
+ * const getHreByEid = createGetHreByEid()
+ * const env = await getHreByEid(EndpointId.AVALANCHE_V2_TESTNET);
  *
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
@@ -116,10 +117,10 @@ export const getHREByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
  *
  * @returns {Promise<HardhatRuntimeEnvironment>}
  */
-export const createGetHREByEid = (
+export const createGetHreByEid = (
     hre = getDefaultRuntimeEnvironment()
 ): EndpointBasedFactory<HardhatRuntimeEnvironment> =>
-    pMemoize(async (eid: EndpointId) => getHREByNetworkName(getNetworkNameForEid(eid, hre)))
+    pMemoize(async (eid: EndpointId) => getHreByNetworkName(getNetworkNameForEid(eid, hre)))
 
 /**
  * Helper function that wraps an EthereumProvider with EthersProviderWrapper

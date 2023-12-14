@@ -1,10 +1,10 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import type { ProviderFactory } from '@layerzerolabs/utils-evm'
 import pMemoize from 'p-memoize'
-import { createGetHREByEid, wrapEIP1193Provider } from './runtime'
+import { createGetHreByEid, wrapEIP1193Provider } from './runtime'
 
 export const createProviderFactory = (
-    networkEnvironmentFactory = createGetHREByEid()
+    networkEnvironmentFactory = createGetHreByEid()
 ): ProviderFactory<JsonRpcProvider> => {
     return pMemoize(async (eid) => {
         const env = await networkEnvironmentFactory(eid)

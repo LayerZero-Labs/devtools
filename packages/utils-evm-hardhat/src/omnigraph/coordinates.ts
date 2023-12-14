@@ -4,7 +4,7 @@ import { OmniContract } from '@layerzerolabs/utils-evm'
 import { Contract } from '@ethersproject/contracts'
 import assert from 'assert'
 import { OmniContractFactoryHardhat, OmniDeployment } from './types'
-import { createGetHREByEid } from '@/runtime'
+import { createGetHreByEid } from '@/runtime'
 import { assertHardhatDeploy } from '@/internal/assertions'
 
 export const omniDeploymentToPoint = ({ eid, deployment }: OmniDeployment): OmniPoint => ({
@@ -17,7 +17,7 @@ export const omniDeploymentToContract = ({ eid, deployment }: OmniDeployment): O
     contract: new Contract(deployment.address, deployment.abi),
 })
 
-export const createContractFactory = (environmentFactory = createGetHREByEid()): OmniContractFactoryHardhat => {
+export const createContractFactory = (environmentFactory = createGetHreByEid()): OmniContractFactoryHardhat => {
     return pMemoize(async ({ eid, address, contractName }) => {
         const env = await environmentFactory(eid)
         assertHardhatDeploy(env)
