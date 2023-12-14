@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "examples/*",
-    "packages/*"
+    "packages/*",
+    "tests/*"
   ],
   "scripts": {
     "build": "npx turbo run build",
