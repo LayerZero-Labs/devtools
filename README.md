@@ -158,3 +158,18 @@ If you see this error, just follow turbo's lead and use:
 ```bash
 yarn dev --concurrency 19
 ```
+
+#### Problems with snapshots
+
+We use jest snapshots in a lot of places throughout the codebase. When an intentional change to the codebase is made and snapshots need to be updated, there are several ways of doing so:
+
+- Erase the original snapshot file and run the test. The snapshot will be recreated and the diff should only show your expected changes
+- Run the tests from within the affected package with `-u` flag. This will update the snapshots.
+
+For some packages the snapshot output depends on environment variables and other factors. For example the `io-utils` tests for printers have different output based on whether the active shell is`TTY` orwhether the `CI` environment variable is set and non-empty.
+
+If you encounter errors when running these tests, just set the environment variable before running the test:
+
+```bash
+CI=1 yarn test
+```
