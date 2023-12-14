@@ -119,7 +119,14 @@ RUN \
     rm -rf .npmrc .npmrctemplate
 
 # Run the package scripts in a separate step in which the NPM_TOKEN is not available
-RUN yarn install --frozen-lockfile --offline
+RUN \
+    #  Mount yarn cache
+    --mount=type=cache,target=/tmp/yarn_cache \
+    # Run the scripts
+    # 
+    # yarn does not have a dedicated command to do this so to emulate that
+    # we will do an offline install which will reinstall the packages from local cache and run the scripts
+    yarn install --frozen-lockfile --offline
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
