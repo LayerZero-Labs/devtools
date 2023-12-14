@@ -38,6 +38,8 @@ export const importDefault = async (path: string): Promise<unknown> => {
     const logger = createModuleLogger('filesystem')
 
     // Let's use a dynamic import first
+    //
+    // This will not work in new node versions without experimental ESM module support
     try {
         logger.debug(`Importing default from '${path}' using dynamic import`)
         const result = await import(path)
@@ -57,7 +59,12 @@ export const importDefault = async (path: string): Promise<unknown> => {
         logger.debug(`Importing default from '${path}' using require`)
         const result = await require(path)
 
-        return logger.debug(`Imported from '${path}' using require`), result
+        if (result != null && result.__esModule) {
+            return logger.debug(`Found default in '${path}' using require`), result.default
+        }
+
+        // If not let's just return the whole export
+        return logger.debug(`Did not find default in '${path}' using require, returning the whole thing`), result
     } catch (error) {
         logger.debug(`Failed to import from '${path}' using require: ${error}`)
 
