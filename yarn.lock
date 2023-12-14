@@ -10386,10 +10386,10 @@ run-parallel@^1.1.9:
   dependencies:
     queue-microtask "^1.2.2"
 
-rustbn.js@~0.2.0:
-  version "0.2.0"
-  resolved "https://registry.npmjs.org/rustbn.js/-/rustbn.js-0.2.0.tgz"
-  integrity sha512-4VlvkRUuCJvr2J6Y0ImW7NvTCriMi7ErOAqWk1y69vAdoNIzCF3yPmgeNzx+RQTLEDFq5sHfscn1MwHxP9hNfA==
+rustbn.js@^0.3.0, rustbn.js@~0.2.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/rustbn.js/-/rustbn.js-0.3.0.tgz#79cdeda8a1158f21eecc5a765d1d893c52cb7df7"
+  integrity sha512-RXLW0TSDBFlujBgq/ZdWa6ADGKiEFZgSqRdCcSXy8XiPqLPApKwaJjf14ImspysQm2mI8hA3EBWN+IOQReqwtA==
 
 safe-array-concat@^1.0.1:
   version "1.0.1"
