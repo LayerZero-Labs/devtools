@@ -112,9 +112,21 @@ RUN \
     # Substitute NPM_TOKEN in .npmrc
     NPM_TOKEN=$NPM_TOKEN envsubst < .npmrctemplate > .npmrc && \
     # Install dependencies (fail if we forgot to update the lockfile)
-    yarn install --prefer-offline --frozen-lockfile --non-interactive && \
+    # 
+    # We will also skip the package scripts since in this operation the NPM_TOKEN is available
+    yarn install --prefer-offline --frozen-lockfile --non-interactive --ignore-scripts && \
     # Remove .npmrc/.npmrctemplate immediately
     rm -rf .npmrc .npmrctemplate
+
+# Run the package scripts in a separate step in which the NPM_TOKEN is not available
+RUN \
+    #  Mount yarn cache
+    --mount=type=cache,target=/tmp/yarn_cache \
+    # Run the scripts
+    # 
+    # yarn does not have a dedicated command to do this so to emulate that
+    # we will do an offline install which will reinstall the packages from local cache and run the scripts
+    yarn install --frozen-lockfile --offline
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
