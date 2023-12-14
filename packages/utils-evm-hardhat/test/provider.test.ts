@@ -1,5 +1,5 @@
-import { getNetworkRuntimeEnvironment } from '@/runtime'
-import hre from 'hardhat'
+import 'hardhat'
+import { createGetNetworkRuntimeEnvironmentByEid } from '@/runtime'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createProviderFactory } from '@/provider'
 import { JsonRpcProvider } from '@ethersproject/providers'
@@ -10,12 +10,17 @@ jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chain
 describe('provider', () => {
     describe('createProviderFactory', () => {
         it('should reject with an endpoint that is not in the hardhat config', async () => {
-            await expect(createProviderFactory(hre)(EndpointId.CATHAY_TESTNET)).rejects.toBeTruthy()
+            const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()
+            const providerFactory = createProviderFactory(environmentFactory)
+
+            await expect(providerFactory(EndpointId.CATHAY_TESTNET)).rejects.toBeTruthy()
         })
 
-        it('should return a Web3Provider wrapping the network provider', async () => {
-            const env = await getNetworkRuntimeEnvironment('ethereum-mainnet')
-            const provider = await createProviderFactory(hre)(EndpointId.ETHEREUM_MAINNET)
+        it('should return a JsonRpcProvider wrapping the network provider', async () => {
+            const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()
+            const providerFactory = createProviderFactory(environmentFactory)
+            const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+            const provider = await providerFactory(EndpointId.ETHEREUM_MAINNET)
 
             expect(provider).toBeInstanceOf(JsonRpcProvider)
 
