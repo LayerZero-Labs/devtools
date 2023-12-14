@@ -1,18 +1,8 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from '@/config.js'
 import prompts from 'prompts'
 import { isPackageManagerAvailable } from './installation.js'
-import { isDirectory } from '@layerzerolabs/io-utils'
+import { handlePromptState, isDirectory } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
-
-const handlePromptState = (state: { aborted: boolean }) => {
-    if (state.aborted) {
-        // If we don't re-enable the terminal cursor before exiting
-        // the program, the cursor will remain hidden
-        process.stdout.write('\x1B[?25h')
-        process.stdout.write('\n')
-        process.exit(1)
-    }
-}
 
 export const promptForContinue = async () =>
     prompts({
