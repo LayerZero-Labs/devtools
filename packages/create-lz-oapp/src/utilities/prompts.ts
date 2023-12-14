@@ -4,14 +4,6 @@ import { isPackageManagerAvailable } from './installation.js'
 import { handlePromptState, isDirectory } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
 
-export const promptForContinue = async () =>
-    prompts({
-        type: 'confirm',
-        name: 'pleasecontinue',
-        message: 'Would you like to continue?',
-        initial: true,
-    }).then(({ pleasecontinue }): boolean => pleasecontinue)
-
 export const promptForConfig = () =>
     prompts([
         {
