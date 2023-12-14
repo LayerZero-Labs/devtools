@@ -1,4 +1,4 @@
-import { printRecord, printZodErrors } from '@/stdio'
+import { printJson, printRecord, printZodErrors } from '@/stdio'
 import assert from 'assert'
 import { z } from 'zod'
 
@@ -136,6 +136,18 @@ describe('stdio/printer', () => {
             expect(printZodErrors(propertyObjectError5)).toMatchSnapshot()
             expect(printZodErrors(propertyObjectError6)).toMatchSnapshot()
             expect(printZodErrors(noPropertyObjectError)).toMatchSnapshot()
+        })
+    })
+
+    describe('printJson', () => {
+        it('should handle bigints', () => {
+            expect(
+                printJson({
+                    bigint: BigInt(
+                        '0b1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'
+                    ),
+                })
+            ).toMatchSnapshot()
         })
     })
 })

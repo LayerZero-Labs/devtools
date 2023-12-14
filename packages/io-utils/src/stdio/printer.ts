@@ -1,7 +1,12 @@
 import Table, { HorizontalTableRow } from 'cli-table3'
 import type { ZodError } from 'zod'
 
-export const printJson = (obj: unknown, pretty = true): string => JSON.stringify(obj, null, pretty ? '\t' : undefined)
+export const printJson = (obj: unknown, pretty = true): string =>
+    JSON.stringify(
+        obj,
+        (key, value) => (typeof value === 'bigint' ? value.toString(10) : value),
+        pretty ? '\t' : undefined
+    )
 
 export const printRecord = <TRecord extends object>(obj: TRecord, title?: string | number): string => {
     const table = new Table({
