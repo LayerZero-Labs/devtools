@@ -1,6 +1,6 @@
 import {
     createConnectedContractFactory,
-    createNetworkEnvironmentFactory,
+    createGetHreByEid,
     createSignerFactory,
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
@@ -65,7 +65,7 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
  * Deploys an enpoint fixture. Useful for tests
  */
 export const deployEndpointFixture = async () => {
-    const environmentFactory = createNetworkEnvironmentFactory()
+    const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
@@ -76,7 +76,7 @@ export const deployEndpointFixture = async () => {
  * Deploys an enpoint fixture. Useful for when deployment files need to be persisted
  */
 export const deployEndpoint = async () => {
-    const environmentFactory = createNetworkEnvironmentFactory()
+    const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
