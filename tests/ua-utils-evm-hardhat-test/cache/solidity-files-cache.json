@@ -1,0 +1,1462 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/app/tests/ua-utils-evm-hardhat-test/contracts/DefaultOApp.sol": {
+      "lastModificationDate": 1702591956389,
+      "contentHash": "05c7e791aa310ce14dd2918ef01e5be4",
+      "sourceName": "contracts/DefaultOApp.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol"],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["DefaultOApp"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "3c538937eb99c6f17a293044680627f5",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["./OAppSender.sol", "./OAppReceiver.sol", "./OAppCore.sol"],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OApp"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "1edd36ac640375ade85e2cf38045f07d",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+        "./OAppCore.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OAppSender"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppCore.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "d89555c818ef633e018bcb1c5a8d8fc1",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppCore.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./interfaces/IOAppCore.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OAppCore"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppReceiver.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "14ccace8694c3e490c92f6ecb4cdacc4",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppReceiver.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
+        "./OAppCore.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OAppReceiver"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "4d90940e37a4df02e08e73df94799375",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./IMessageLibManager.sol",
+        "./IMessagingComposer.sol",
+        "./IMessagingChannel.sol",
+        "./IMessagingContext.sol"
+      ],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["ILayerZeroEndpointV2"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+      "lastModificationDate": 1702592016901,
+      "contentHash": "1b5d667d3740d866eca0352758e59827",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol",
+        "../extensions/IERC20Permit.sol",
+        "../../../utils/Address.sol"
+      ],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["SafeERC20"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+      "lastModificationDate": 1702592013554,
+      "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
+      "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["../utils/Context.sol"],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["Ownable"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppCore.sol": {
+      "lastModificationDate": 1702592016896,
+      "contentHash": "99144f3feb68996935599ad86e40a15c",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppCore.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["IOAppCore"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/utils/Context.sol": {
+      "lastModificationDate": 1702592013563,
+      "contentHash": "f07feb4a44b1a4872370da5aa70e8e46",
+      "sourceName": "@openzeppelin/contracts/utils/Context.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["Context"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "8af2577f04a11315f56f5a742a33fa6d",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["IMessagingContext"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "8a8f45cd090637f726c796a1cae1581d",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["IMessagingChannel"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "b980db0780d4c90a177314fe688d5f7b",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["IMessagingComposer"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "6c0c2d62539e7ee49a01f3db46c5868f",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["IMessageLibManager"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1702592013563,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.1"],
+      "artifacts": ["Address"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1702592015860,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["IERC20"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+      "lastModificationDate": 1702592016901,
+      "contentHash": "525fcdad8d171312933f47baf01d1ed8",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["IERC20Permit"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "68aafd50d7c9671b6abb8b9ea8a9b10c",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["./ILayerZeroEndpointV2.sol"],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["ILayerZeroReceiver"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/examples/OmniCounter.sol": {
+      "lastModificationDate": 1702592016896,
+      "contentHash": "2309561ca8b1554f21ef7a7a4cc2d9da",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/examples/OmniCounter.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol",
+        "../OApp.sol",
+        "../libs/OptionsBuilder.sol",
+        "../../precrime/OAppPreCrimeSimulator.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["MsgCodec", "OmniCounter"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "af2d4b8df083275c2bbf191c75b7f09d",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./interfaces/IPreCrime.sol",
+        "./interfaces/IOAppPreCrimeSimulator.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OAppPreCrimeSimulator"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol": {
+      "lastModificationDate": 1702592016896,
+      "contentHash": "17b98ffd414ca691947026ba04c78bd1",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "solidity-bytes-utils/contracts/BytesLib.sol",
+        "@openzeppelin/contracts/utils/math/SafeCast.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
+        "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OptionsBuilder"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol": {
+      "lastModificationDate": 1702592015012,
+      "contentHash": "7e9c5bf1da7b99f8ae5e72fd88a41752",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["ILayerZeroComposer"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol": {
+      "lastModificationDate": 1702592016896,
+      "contentHash": "80133495d52b1ad91bb1936ffc6566a1",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["../libs/Packet.sol"],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["IOAppPreCrimeSimulator"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol": {
+      "lastModificationDate": 1702592016896,
+      "contentHash": "9fe2c22ac0b985b7145b207094019e88",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["IPreCrime"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol": {
+      "lastModificationDate": 1702592016895,
+      "contentHash": "40a14c6195262bb9392bbd355fb1cae4",
+      "sourceName": "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["PacketDecoder"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol": {
+      "lastModificationDate": 1702592016898,
+      "contentHash": "17fdfd831fffd874279b604dc5086aea",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "../../interfaces/ISendLib.sol",
+        "../../libs/AddressCast.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["PacketV1Codec"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "899ec412b27e6612f1f455ef7e17fe5f",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["./ILayerZeroEndpointV2.sol", "./IMessageLib.sol"],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["ISendLib"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol": {
+      "lastModificationDate": 1702592015014,
+      "contentHash": "6d22d8a2b22745069c23e6a6d3ba348c",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["./Errors.sol"],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["AddressCast"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": {
+      "lastModificationDate": 1702592015013,
+      "contentHash": "35d09a713b6b49ad904994d4f5ca4bee",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "./IMessageLibManager.sol"
+      ],
+      "versionPragmas": [">=0.8.0"],
+      "artifacts": ["IMessageLib"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+      "lastModificationDate": 1702592015860,
+      "contentHash": "03e6768535ac4da0e9756f1d8a4a018a",
+      "sourceName": "@openzeppelin/contracts/utils/introspection/IERC165.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["IERC165"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol": {
+      "lastModificationDate": 1702592015014,
+      "contentHash": "361ca7306a059f2520e8ed55251ff898",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["Errors"]
+    },
+    "/app/node_modules/solidity-bytes-utils/contracts/BytesLib.sol": {
+      "lastModificationDate": 1702592014637,
+      "contentHash": "f4aae4537e2686b91fcd881aeed71657",
+      "sourceName": "solidity-bytes-utils/contracts/BytesLib.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [">=0.8.0 <0.9.0"],
+      "artifacts": ["BytesLib"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol": {
+      "lastModificationDate": 1702592016898,
+      "contentHash": "7e24edd905961d0e95bd044b542db563",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": ["../../libs/CalldataBytesLib.sol"],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["ExecutorOptions"]
+    },
+    "/app/node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
+      "lastModificationDate": 1702592015857,
+      "contentHash": "67cf2dfe1d1c22b4ea7f242e8a17f431",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeCast.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.0"],
+      "artifacts": ["SafeCast"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol": {
+      "lastModificationDate": 1702592016897,
+      "contentHash": "dcb8674e07b534a14982440c2e7cdb24",
+      "sourceName": "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "solidity-bytes-utils/contracts/BytesLib.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
+        "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["DVNOptions"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol": {
+      "lastModificationDate": 1702592015014,
+      "contentHash": "60e4f3571f6d6fcea1618f7f4039d371",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["CalldataBytesLib"]
+    },
+    "/app/node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol": {
+      "lastModificationDate": 1702592016898,
+      "contentHash": "670e5ac4085367fc92e0db9cbf795d03",
+      "sourceName": "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["BitMaps"]
+    },
+    "/app/tests/ua-utils-evm-hardhat-test/contracts/OmniCounter.sol": {
+      "lastModificationDate": 1702591956389,
+      "contentHash": "a50ba12f272019fd17b5c2b153f04dbc",
+      "sourceName": "contracts/OmniCounter.sol",
+      "solcConfig": {
+        "version": "0.8.22",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": ["ast"]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/examples/OmniCounter.sol"
+      ],
+      "versionPragmas": ["^0.8.22"],
+      "artifacts": ["OmniCounter"]
+    }
+  }
+}

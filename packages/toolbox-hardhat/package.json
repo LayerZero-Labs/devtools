@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "^1.5.72",
-    "@layerzerolabs/lz-evm-sdk-v1": "^1.5.72",
-    "@layerzerolabs/lz-evm-sdk-v2": "^1.5.72",
+    "@layerzerolabs/lz-definitions": "^2.0.2",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.0.2",
+    "@layerzerolabs/lz-evm-sdk-v2": "^2.0.2",
     "@layerzerolabs/protocol-utils": "~0.0.1",
     "@layerzerolabs/protocol-utils-evm": "~0.0.1",
     "@layerzerolabs/ua-utils": "~0.1.0",
