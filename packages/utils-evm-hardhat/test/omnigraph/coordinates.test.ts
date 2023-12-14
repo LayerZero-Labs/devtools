@@ -59,7 +59,7 @@ describe('omnigraph/coordinates', () => {
             })
 
             it('should resolve when contract has been deployed', async () => {
-                const environmentFactory = createGetHREByEid()(hre)
+                const environmentFactory = createGetHREByEid(hre)
                 const contractFactory = createContractFactory(environmentFactory)
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
@@ -110,7 +110,7 @@ describe('omnigraph/coordinates', () => {
             it('should resolve when contract has been deployed', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const environmentFactory = createGetHREByEid()(hre)
+                        const environmentFactory = createGetHREByEid(hre)
                         const contractFactory = createContractFactory(environmentFactory)
 
                         const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
