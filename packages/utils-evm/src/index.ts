@@ -1,5 +1,6 @@
 export * from './address'
 export * from './errors'
+export * from './events'
 export * from './omnigraph'
 export * from './provider'
 export * from './schema'

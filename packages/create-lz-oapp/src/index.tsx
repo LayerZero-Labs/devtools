@@ -1,11 +1,12 @@
 import React from "react";
 import { render } from "ink";
 import { Command } from "commander";
-import { promptForConfig, promptForContinue } from "@/utilities/prompts.js";
+import { promptForConfig } from "@/utilities/prompts.js";
 import { Header } from "@/components/branding.js";
 import { ConfigSummary } from "@/components/config.js";
 import { Setup } from "@/components/setup.js";
 import { Providers } from "@/components/providers.js";
+import { promptToContinue } from "@layerzerolabs/io-utils";
 
 new Command("create-lz-oapp")
   .description("Create LayerZero OApp with one command")
@@ -20,7 +21,7 @@ new Command("create-lz-oapp")
       render(<ConfigSummary value={config} />).unmount();
 
       // Then we confirm we want to do this after showing the user what they have specified
-      const continuePlease = await promptForContinue();
+      const continuePlease = await promptToContinue();
       if (!continuePlease) {
         return;
       }
