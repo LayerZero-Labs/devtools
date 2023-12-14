@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@types/jest": "^29.5.10",
     "fast-check": "^3.14.0",
@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "zod": "^3.22.4"
   }
 }

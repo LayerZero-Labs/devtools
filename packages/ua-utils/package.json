@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/protocol-utils": "~0.0.1",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
@@ -47,7 +47,7 @@
   },
   "peerDependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/protocol-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
     "zod": "^3.22.4"

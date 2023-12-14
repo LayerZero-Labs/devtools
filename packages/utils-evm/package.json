@@ -46,7 +46,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/test-utils": "~0.0.1",
     "@layerzerolabs/utils": "~0.0.1",
     "@types/jest": "^29.5.10",
@@ -64,7 +64,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/lz-definitions": "~1.5.72",
+    "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/utils": "~0.0.1",
     "zod": "^3.22.4"
   }
