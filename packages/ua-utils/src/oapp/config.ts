@@ -3,8 +3,6 @@ import type { OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-utils'
 import { formatOmniVector } from '@layerzerolabs/utils'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
-import { SetConfigParam } from '@layerzerolabs/protocol-utils'
-import { defaultAbiCoder } from '@ethersproject/abi'
 import assert from 'assert'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
@@ -89,8 +87,6 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
         graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
             const oappSdk = await createSdk(from)
             const endpointSdk = await oappSdk.getEndpointSDK()
-            const sendConfigs: SetConfigParam[] = []
-            const receiveConfigs: SetConfigParam[] = []
             const transactions: OmniTransaction[] = []
 
             if (config?.sendConfig) {
@@ -138,11 +134,6 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
             }
 
             if (config?.receiveConfig) {
-                const setUlnConfigParam: SetConfigParam = {
-                    eid: to.eid,
-                    configType: 2,
-                    config: '',
-                }
                 const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
                     ? [config.receiveLibraryConfig?.receiveLibrary, false]
                     : await endpointSdk.getReceiveLibrary(from.address, to.eid)
@@ -164,7 +155,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                 }
             }
 
-            if (!sendConfigs.length && !receiveConfigs.length) return []
+            if (!transactions.length) return []
             return [...transactions]
         })
     )
