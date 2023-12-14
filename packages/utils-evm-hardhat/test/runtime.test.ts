@@ -4,7 +4,7 @@ import {
     createGetNetworkRuntimeEnvironmentByEid,
     getEidForNetworkName,
     getNetworkNameForEid,
-    getNetworkRuntimeEnvironment,
+    getNetworkRuntimeEnvironmentByName,
 } from '@/runtime'
 import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -13,13 +13,13 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 
 describe('runtime', () => {
-    describe('getNetworkRuntimeEnvironment', () => {
+    describe('getNetworkRuntimeEnvironmentByName', () => {
         it('should reject with an invalid network', async () => {
-            await expect(getNetworkRuntimeEnvironment('not-in-hardhat-config')).rejects.toBeTruthy()
+            await expect(getNetworkRuntimeEnvironmentByName('not-in-hardhat-config')).rejects.toBeTruthy()
         })
 
         it('should return a HardhatRuntimeEnvironment with correct network', async () => {
-            const runtime = await getNetworkRuntimeEnvironment('ethereum-mainnet')
+            const runtime = await getNetworkRuntimeEnvironmentByName('ethereum-mainnet')
 
             expect(runtime.network.name).toEqual('ethereum-mainnet')
             expect(runtime.deployments).toMatchObject({
@@ -28,8 +28,8 @@ describe('runtime', () => {
         })
 
         it('should have the config setup correctly', async () => {
-            const ethRuntime = await getNetworkRuntimeEnvironment('ethereum-mainnet')
-            const bscRuntime = await getNetworkRuntimeEnvironment('bsc-testnet')
+            const ethRuntime = await getNetworkRuntimeEnvironmentByName('ethereum-mainnet')
+            const bscRuntime = await getNetworkRuntimeEnvironmentByName('bsc-testnet')
 
             expect(ethRuntime.network.name).toBe('ethereum-mainnet')
             expect(ethRuntime.network.config).toBe(hre.config.networks['ethereum-mainnet'])
@@ -38,8 +38,8 @@ describe('runtime', () => {
         })
 
         it('should save the deployment to correct network', async () => {
-            const bscRuntime = await getNetworkRuntimeEnvironment('bsc-testnet')
-            const ethRuntime = await getNetworkRuntimeEnvironment('ethereum-mainnet')
+            const bscRuntime = await getNetworkRuntimeEnvironmentByName('bsc-testnet')
+            const ethRuntime = await getNetworkRuntimeEnvironmentByName('ethereum-mainnet')
             const now = Date.now()
             const deploymentSubmission = {
                 args: ['bsc-testnet', now],
