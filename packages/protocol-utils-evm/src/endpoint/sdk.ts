@@ -5,6 +5,7 @@ import type {
     SetConfigParam,
     Uln302ExecutorConfig,
     Uln302Factory,
+    Uln302SetUlnConfig,
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-utils'
 import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
@@ -12,10 +13,10 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
 import { Timeout } from '@layerzerolabs/protocol-utils'
 import { Uln302 } from '@/uln302'
+import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-utils'
 
-export const CONFIG_TYPE_EXECUTOR = 1
-
-export const CONFIG_TYPE_ULN = 2
+const CONFIG_TYPE_EXECUTOR = 1
+const CONFIG_TYPE_ULN = 2
 
 export class Endpoint extends OmniSDK implements IEndpoint {
     constructor(
@@ -133,53 +134,33 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
-    async setUlnConfig(
-        oapp: Address,
-        eidArray: EndpointId[],
-        ulnConfigArray: Uln302UlnConfig[]
-    ): Promise<OmniTransaction> {
-        assert(eidArray.length === ulnConfigArray.length, `array length should match`)
-        const uln = (await this.getUln302SDK(oapp)) as Uln302
-        const setConfigParamArray: SetConfigParam[] = []
-        for (const [index, ulnConfig] of ulnConfigArray.entries()) {
-            const eid = eidArray[index]
-            assert(eid !== undefined, `eid must be defined`)
-            setConfigParamArray.push({
-                eid: eid,
-                configType: CONFIG_TYPE_ULN,
-                config: uln.encodeUlnConfig(ulnConfig),
-            })
-        }
+    async setUlnConfig(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        const setConfigParams: SetConfigParam[] = setUlnConfig.map(({ eid, ulnConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_ULN,
+            config: uln.encodeUlnConfig(ulnConfig),
+        }))
 
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, setConfigParamArray])
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
         return {
             ...this.createTransaction(data),
-            description: `Set Executor Config for oapp: ${oapp}`,
+            description: `Set Executor Config for lib: ${lib}`,
         }
     }
 
-    async setExecutorConfig(
-        oapp: Address,
-        eidArray: EndpointId[],
-        executorConfigArray: Uln302ExecutorConfig[]
-    ): Promise<OmniTransaction> {
-        assert(eidArray.length === executorConfigArray.length, `array length should match`)
-        const uln = (await this.getUln302SDK(oapp)) as Uln302
-        const setConfigParamArray: SetConfigParam[] = []
-        for (const [index, executorConfig] of executorConfigArray.entries()) {
-            const eid = eidArray[index]
-            assert(eid !== undefined, `eid must be defined`)
-            setConfigParamArray.push({
-                eid: eid,
-                configType: CONFIG_TYPE_EXECUTOR,
-                config: uln.encodeExecutorConfig(executorConfig),
-            })
-        }
+    async setExecutorConfig(lib: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<OmniTransaction> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        const setConfigParams: SetConfigParam[] = setExecutorConfig.map(({ eid, executorConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_EXECUTOR,
+            config: uln.encodeExecutorConfig(executorConfig),
+        }))
 
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, setConfigParamArray])
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
         return {
             ...this.createTransaction(data),
-            description: `Set Executor Config for oapp: ${oapp}`,
+            description: `Set Executor Config for lib: ${lib}`,
         }
     }
 

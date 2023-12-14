@@ -2,14 +2,10 @@ import { Address, flattenTransactions, type OmniTransaction } from '@layerzerola
 import type { OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-utils'
 import { formatOmniVector } from '@layerzerolabs/utils'
-import {
-    CONFIG_TYPE_EXECUTOR,
-    CONFIG_TYPE_ULN,
-    Uln302ExecutorConfig,
-    Uln302UlnConfig,
-} from '@layerzerolabs/protocol-utils'
+import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
 import { SetConfigParam } from '@layerzerolabs/protocol-utils'
 import { defaultAbiCoder } from '@ethersproject/abi'
+import assert from 'assert'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
@@ -102,14 +98,8 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     ? config.sendLibrary
                     : (await endpointSdk.getSendLibrary(from.address, to.eid)) ?? ''
                 const sendExecutorConfig: Uln302ExecutorConfig = <Uln302ExecutorConfig>(
-                    await endpointSdk.getConfig(from.address, currentSendLibrary, to.eid, CONFIG_TYPE_EXECUTOR)
+                    await endpointSdk.getExecutorConfig(from.address, currentSendLibrary, to.eid)
                 )
-
-                const setExecutorConfigParam: SetConfigParam = {
-                    eid: to.eid,
-                    configType: CONFIG_TYPE_EXECUTOR,
-                    config: '',
-                }
 
                 // 1) executor
                 // - maxMessageSize
@@ -118,17 +108,11 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     sendExecutorConfig.maxMessageSize !== config.sendConfig.executorConfig.maxMessageSize ||
                     sendExecutorConfig.executor !== config.sendConfig.executorConfig.executor
                 ) {
-                    setExecutorConfigParam.config = defaultAbiCoder.encode(
-                        ['uint32', 'address'],
-                        [config.sendConfig.executorConfig.maxMessageSize, config.sendConfig.executorConfig.executor]
+                    transactions.push(
+                        await endpointSdk.setExecutorConfig(currentSendLibrary, [
+                            { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
+                        ])
                     )
-                    sendConfigs.push(setExecutorConfigParam)
-                }
-
-                const setUlnConfigParam: SetConfigParam = {
-                    eid: to.eid,
-                    configType: CONFIG_TYPE_ULN,
-                    config: '',
                 }
 
                 // 2) uln
@@ -137,7 +121,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                 // - requiredDVNs
                 // - optionalDVNs
                 const sendUlnConfig = <Uln302UlnConfig>(
-                    await endpointSdk.getConfig(from.address, currentSendLibrary, to.eid, CONFIG_TYPE_ULN)
+                    await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
                 )
                 if (
                     sendUlnConfig.confirmations !== config.sendConfig.ulnConfig.confirmations ||
@@ -145,34 +129,26 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     sendUlnConfig.requiredDVNs !== config.sendConfig.ulnConfig.requiredDVNs ||
                     sendUlnConfig.optionalDVNs !== config.sendConfig.ulnConfig.optionalDVNs
                 ) {
-                    setUlnConfigParam.config = defaultAbiCoder.encode(
-                        ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
-                        [
-                            config.sendConfig.ulnConfig.confirmations,
-                            config.sendConfig.ulnConfig.requiredDVNs.length,
-                            config.sendConfig.ulnConfig.optionalDVNs.length,
-                            config.sendConfig.ulnConfig.optionalDVNThreshold,
-                            config.sendConfig.ulnConfig.requiredDVNs,
-                            config.sendConfig.ulnConfig.optionalDVNs,
-                        ]
+                    transactions.push(
+                        await endpointSdk.setUlnConfig(currentSendLibrary, [
+                            { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                        ])
                     )
-                    sendConfigs.push(setUlnConfigParam)
                 }
-
-                if (sendConfigs.length) transactions.push(await endpointSdk.setConfig(currentSendLibrary, sendConfigs))
             }
 
             if (config?.receiveConfig) {
                 const setUlnConfigParam: SetConfigParam = {
                     eid: to.eid,
-                    configType: CONFIG_TYPE_ULN,
+                    configType: 2,
                     config: '',
                 }
                 const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
                     ? [config.receiveLibraryConfig?.receiveLibrary, false]
                     : await endpointSdk.getReceiveLibrary(from.address, to.eid)
+                assert(currentReceiveLibrary !== undefined, 'currentReceiveLibrary must be defined')
                 const receiveUlnConfig: Uln302UlnConfig = <Uln302UlnConfig>(
-                    await endpointSdk.getConfig(from.address, currentReceiveLibrary!, to.eid, CONFIG_TYPE_ULN)
+                    await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
                 )
                 if (
                     receiveUlnConfig.confirmations !== config.receiveConfig.ulnConfig.confirmations ||
@@ -180,21 +156,12 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     receiveUlnConfig.requiredDVNs !== config.receiveConfig.ulnConfig.requiredDVNs ||
                     receiveUlnConfig.optionalDVNs !== config.receiveConfig.ulnConfig.optionalDVNs
                 ) {
-                    setUlnConfigParam.config = defaultAbiCoder.encode(
-                        ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
-                        [
-                            config.receiveConfig.ulnConfig.confirmations,
-                            config.receiveConfig.ulnConfig.requiredDVNs.length,
-                            config.receiveConfig.ulnConfig.optionalDVNs.length,
-                            config.receiveConfig.ulnConfig.optionalDVNThreshold,
-                            config.receiveConfig.ulnConfig.requiredDVNs,
-                            config.receiveConfig.ulnConfig.optionalDVNs,
-                        ]
+                    transactions.push(
+                        await endpointSdk.setUlnConfig(currentReceiveLibrary, [
+                            { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
+                        ])
                     )
-                    receiveConfigs.push(setUlnConfigParam)
                 }
-                if (receiveConfigs.length)
-                    transactions.push(await endpointSdk.setConfig(currentReceiveLibrary!, receiveConfigs))
             }
 
             if (!sendConfigs.length && !receiveConfigs.length) return []
