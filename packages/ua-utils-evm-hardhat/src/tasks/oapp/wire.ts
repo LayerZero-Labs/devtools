@@ -20,9 +20,13 @@ import { resolve } from 'path'
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
+    ci?: boolean
 }
 
-const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info', ci = false }) => {
+    // We only want to be asking users for input if we are not in interactive mode
+    const isInteractive = !ci
+
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
@@ -91,18 +95,26 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     )
 
     // Ask them whether they want to see them
-    const previewTransactions = await promptToContinue(`Would you like to preview the transactions before continuing?`)
+    const previewTransactions = isInteractive
+        ? await promptToContinue(`Would you like to preview the transactions before continuing?`)
+        : true
     if (previewTransactions) logger.info(`\n${printTransactions(transactions)}`)
 
     // Now ask the user whether they want to go ahead with signing them
-    const go = await promptToContinue()
-    if (!go) {
-        return undefined
-    }
+    const shouldSubmit = isInteractive
+        ? await promptToContinue(`Would you like to submit the required transactions?`)
+        : true
+    if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), undefined
 
     return []
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam(
+        'ci',
+        'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
+        false,
+        types.boolean
+    )
     .setAction(action)
