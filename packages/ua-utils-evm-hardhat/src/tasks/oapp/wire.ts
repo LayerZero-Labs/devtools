@@ -8,6 +8,7 @@ import {
     setDefaultLogLevel,
     promptToContinue,
     printJson,
+    printZodErrors,
     pluralizeNoun,
     importDefault,
 } from '@layerzerolabs/io-utils'
@@ -62,18 +63,10 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     logger.verbose(`Validating the structure of config file '${oappConfigPath}'`)
     const configParseResult = OAppOmniGraphHardhatSchema.safeParse(rawConfig)
     if (configParseResult.success === false) {
-        // FIXME Error formatting
-        const errors = configParseResult.error.flatten(
-            (issue) => `Property '${issue.path.join('.') ?? '[root]'}': ${issue.message}`
-        )
-        const formErrors = errors.formErrors.map((error) => `- ${error}`).join(`\n`)
-        const fieldErrors = Object.entries(errors.fieldErrors).map(
-            ([field, errors]) => `\n${field}:\n${errors.map((error) => `- ${error}`).join(`\n`)}`
-        )
-        const allErrors = [...formErrors, fieldErrors]
+        const userFriendlyErrors = printZodErrors(configParseResult.error)
 
         throw new Error(
-            `Config from file '${oappConfigPath}' is malformed. Please fix the following errors:\n\n${allErrors}`
+            `Config from file '${oappConfigPath}' is malformed. Please fix the following errors:\n\n${userFriendlyErrors}`
         )
     }
 
