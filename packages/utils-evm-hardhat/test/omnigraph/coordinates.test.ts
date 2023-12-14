@@ -7,7 +7,7 @@ import { OmniDeployment, createContractFactory, omniDeploymentToContract, omniDe
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from '@ethersproject/contracts'
 import { makeZeroAddress } from '@layerzerolabs/utils-evm'
-import { createGetNetworkRuntimeEnvironmentByEid } from '@/runtime'
+import { createGetHREByEid } from '@/runtime'
 
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 
@@ -59,7 +59,7 @@ describe('omnigraph/coordinates', () => {
             })
 
             it('should resolve when contract has been deployed', async () => {
-                const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()(hre)
+                const environmentFactory = createGetHREByEid()(hre)
                 const contractFactory = createContractFactory(environmentFactory)
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
@@ -110,7 +110,7 @@ describe('omnigraph/coordinates', () => {
             it('should resolve when contract has been deployed', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
-                        const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()(hre)
+                        const environmentFactory = createGetHREByEid()(hre)
                         const contractFactory = createContractFactory(environmentFactory)
 
                         const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)

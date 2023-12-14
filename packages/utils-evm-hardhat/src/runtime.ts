@@ -67,7 +67,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  * Creates a clone of the HardhatRuntimeEnvironment for a particular network
  *
  * ```typescript
- * const env = getNetworkRuntimeEnvironmentByName("bsc-testnet");
+ * const env = getHREByNetworkName("bsc-testnet");
  *
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
@@ -75,42 +75,40 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  *
  * @returns {Promise<HardhatRuntimeEnvironment>}
  */
-export const getNetworkRuntimeEnvironmentByName: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(
-    async (networkName) => {
-        const context = getDefaultContext()
-        const environment = getDefaultRuntimeEnvironment()
+export const getHREByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
+    const context = getDefaultContext()
+    const environment = getDefaultRuntimeEnvironment()
 
-        try {
-            // The last step is to create a duplicate enviornment that mimics the original one
-            // with one crucial difference - the network setup
-            return new HardhatRuntimeEnvironmentImplementation(
-                environment.config,
-                {
-                    ...environment.hardhatArguments,
-                    network: networkName,
-                },
-                environment.tasks,
-                environment.scopes,
-                context.environmentExtenders,
-                context.experimentalHardhatNetworkMessageTraceHooks,
-                environment.userConfig,
-                context.providerExtenders
-                // This is a bit annoying - the environmentExtenders are not stronly typed
-                // so TypeScript complains that the properties required by HardhatRuntimeEnvironment
-                // are not present on HardhatRuntimeEnvironmentImplementation
-            ) as unknown as HardhatRuntimeEnvironment
-        } catch (error: unknown) {
-            throw new ConfigurationError(`Could not setup Hardhat Runtime Environment: ${error}`)
-        }
+    try {
+        // The last step is to create a duplicate enviornment that mimics the original one
+        // with one crucial difference - the network setup
+        return new HardhatRuntimeEnvironmentImplementation(
+            environment.config,
+            {
+                ...environment.hardhatArguments,
+                network: networkName,
+            },
+            environment.tasks,
+            environment.scopes,
+            context.environmentExtenders,
+            context.experimentalHardhatNetworkMessageTraceHooks,
+            environment.userConfig,
+            context.providerExtenders
+            // This is a bit annoying - the environmentExtenders are not stronly typed
+            // so TypeScript complains that the properties required by HardhatRuntimeEnvironment
+            // are not present on HardhatRuntimeEnvironmentImplementation
+        ) as unknown as HardhatRuntimeEnvironment
+    } catch (error: unknown) {
+        throw new ConfigurationError(`Could not setup Hardhat Runtime Environment: ${error}`)
     }
-)
+})
 
 /**
  * Creates a clone of the HardhatRuntimeEnvironment for a particular network
  * identified by endpoint ID
  *
  * ```typescript
- * const env = createGetNetworkRuntimeEnvironmentByEid()(EndpointId.AVALANCHE_V2_TESTNET);
+ * const env = createGetHREByEid()(EndpointId.AVALANCHE_V2_TESTNET);
  *
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
@@ -118,10 +116,10 @@ export const getNetworkRuntimeEnvironmentByName: GetByNetwork<HardhatRuntimeEnvi
  *
  * @returns {Promise<HardhatRuntimeEnvironment>}
  */
-export const createGetNetworkRuntimeEnvironmentByEid = (
+export const createGetHREByEid = (
     hre = getDefaultRuntimeEnvironment()
 ): EndpointBasedFactory<HardhatRuntimeEnvironment> =>
-    pMemoize(async (eid: EndpointId) => getNetworkRuntimeEnvironmentByName(getNetworkNameForEid(eid, hre)))
+    pMemoize(async (eid: EndpointId) => getHREByNetworkName(getNetworkNameForEid(eid, hre)))
 
 /**
  * Helper function that wraps an EthereumProvider with EthersProviderWrapper
