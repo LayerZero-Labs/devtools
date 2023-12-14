@@ -5,13 +5,18 @@ import type {
     SetConfigParam,
     Uln302ExecutorConfig,
     Uln302Factory,
+    Uln302SetUlnConfig,
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-utils'
 import { formatEid, type Address, type OmniTransaction, formatOmniPoint } from '@layerzerolabs/utils'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ignoreZero, isZero, makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/utils-evm'
-import { CONFIG_TYPE_EXECUTOR, CONFIG_TYPE_ULN, Timeout } from '@layerzerolabs/protocol-utils'
-import { defaultAbiCoder } from '@ethersproject/abi'
+import { Timeout } from '@layerzerolabs/protocol-utils'
+import { Uln302 } from '@/uln302'
+import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-utils'
+
+const CONFIG_TYPE_EXECUTOR = 1
+const CONFIG_TYPE_ULN = 2
 
 export class Endpoint extends OmniSDK implements IEndpoint {
     constructor(
@@ -129,46 +134,44 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
-    async setConfig(lib: Address, params: SetConfigParam[]): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, params])
+    async setUlnConfig(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        const setConfigParams: SetConfigParam[] = setUlnConfig.map(({ eid, ulnConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_ULN,
+            config: uln.encodeUlnConfig(ulnConfig),
+        }))
 
-        console.log({ params })
-
-        let description: string = ''
-        for (const param of params) {
-            description += `Setting ${
-                param.configType === CONFIG_TYPE_EXECUTOR ? 'executor' : 'uln'
-            } config for endpoint ${formatEid(param.eid)}. `
-        }
-
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
         return {
             ...this.createTransaction(data),
-            description: description,
+            description: `Set Executor Config for lib: ${lib}`,
         }
     }
 
-    async getConfig(
-        oapp: Address,
-        lib: Address,
-        eid: EndpointId,
-        configType: number
-    ): Promise<Uln302ExecutorConfig | Uln302UlnConfig> {
-        assert(
-            configType === CONFIG_TYPE_EXECUTOR || configType === CONFIG_TYPE_ULN,
-            `configType invalid ${configType}`
-        )
-        if (configType === CONFIG_TYPE_EXECUTOR) {
-            const encodedExecutorBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
-            const [maxMessageSize, executor] = defaultAbiCoder.decode(['uint32', 'address'], encodedExecutorBytes)
-            return { maxMessageSize, executor }
-        } else {
-            const encodedUlnBytes = await this.contract.contract.getConfig(oapp, lib, eid, configType)
-            const [confirmations, , , optionalDVNThreshold, requiredDVNs, optionalDVNs] = defaultAbiCoder.decode(
-                ['tuple(uint64,uint8,uint8,uint8,address[],address[])'],
-                encodedUlnBytes
-            )
-            return { confirmations, optionalDVNThreshold, requiredDVNs, optionalDVNs }
+    async setExecutorConfig(lib: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<OmniTransaction> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        const setConfigParams: SetConfigParam[] = setExecutorConfig.map(({ eid, executorConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_EXECUTOR,
+            config: uln.encodeExecutorConfig(executorConfig),
+        }))
+
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
+        return {
+            ...this.createTransaction(data),
+            description: `Set Executor Config for lib: ${lib}`,
         }
+    }
+
+    async getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getExecutorConfig(eid, oapp)
+    }
+
+    async getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getUlnConfig(eid, oapp)
     }
 
     isRegisteredLibrary(lib: Address): Promise<boolean> {
