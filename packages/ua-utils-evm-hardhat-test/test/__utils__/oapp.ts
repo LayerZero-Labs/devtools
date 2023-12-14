@@ -1,8 +1,8 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createNetworkEnvironmentFactory } from '@layerzerolabs/utils-evm-hardhat'
+import { createGetNetworkRuntimeEnvironmentByEid } from '@layerzerolabs/utils-evm-hardhat'
 
 export const deployOApp = async () => {
-    const environmentFactory = createNetworkEnvironmentFactory()
+    const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 
@@ -13,7 +13,7 @@ export const deployOApp = async () => {
 }
 
 export const deployOAppFixture = async () => {
-    const environmentFactory = createNetworkEnvironmentFactory()
+    const environmentFactory = createGetNetworkRuntimeEnvironmentByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
 

@@ -1,7 +1,7 @@
 import hre from 'hardhat'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
 import {
-    createNetworkEnvironmentFactory,
+    createGetNetworkRuntimeEnvironmentByEid,
     getEidForNetworkName,
     getNetworkNameForEid,
     getNetworkRuntimeEnvironment,
@@ -58,15 +58,15 @@ describe('runtime', () => {
         })
     })
 
-    describe('createNetworkEnvironmentFactory', () => {
+    describe('createGetNetworkRuntimeEnvironmentByEid()', () => {
         it('should reject with an endpoint that is not in the hardhat config', async () => {
-            await expect(createNetworkEnvironmentFactory(hre)(EndpointId.CATHAY_TESTNET)).rejects.toThrow(
+            await expect(createGetNetworkRuntimeEnvironmentByEid()(hre)(EndpointId.CATHAY_TESTNET)).rejects.toThrow(
                 'Could not find a network for eid 10171 (CATHAY_TESTNET)'
             )
         })
 
         it('should return a HardhatRuntimeEnvironment with correct network', async () => {
-            const runtime = await createNetworkEnvironmentFactory(hre)(EndpointId.ETHEREUM_MAINNET)
+            const runtime = await createGetNetworkRuntimeEnvironmentByEid()(hre)(EndpointId.ETHEREUM_MAINNET)
 
             expect(runtime.network.name).toEqual('ethereum-mainnet')
             expect(runtime.deployments).toMatchObject({

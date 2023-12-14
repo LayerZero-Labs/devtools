@@ -1,12 +1,10 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import type { ProviderFactory } from '@layerzerolabs/utils-evm'
-import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import pMemoize from 'p-memoize'
-import { createNetworkEnvironmentFactory, getDefaultRuntimeEnvironment, wrapEIP1193Provider } from './runtime'
+import { createGetNetworkRuntimeEnvironmentByEid, wrapEIP1193Provider } from './runtime'
 
 export const createProviderFactory = (
-    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
-    networkEnvironmentFactory = createNetworkEnvironmentFactory(hre)
+    networkEnvironmentFactory = createGetNetworkRuntimeEnvironmentByEid()
 ): ProviderFactory<JsonRpcProvider> => {
     return pMemoize(async (eid) => {
         const env = await networkEnvironmentFactory(eid)
