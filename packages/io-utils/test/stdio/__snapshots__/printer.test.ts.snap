@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`stdio/printer printJson should handle bigints 1`] = `
+"{
+	"bigint": "1684996666696914987166688442938726917102321526408785780068975640575"
+}"
+`;
+
 exports[`stdio/printer printRecord should return a list of items with indices for an array 1`] = `
 "┌───┬──────────────────┐
 │ 0 │ something        │
