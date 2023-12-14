@@ -12,6 +12,7 @@ The code is arranged into:
 
 - **Reusable packages** under `./packages` directory
 - **Example projects** under `./examples` directory
+- **Test projects & helpers** under `./tests` directory
 
 ## Development
 
