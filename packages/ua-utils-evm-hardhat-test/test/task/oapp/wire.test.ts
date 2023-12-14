@@ -98,6 +98,14 @@ describe('task/oapp/wire', () => {
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
+        it('should work with typescript', async () => {
+            const oappConfig = configPathFixture('valid.config.empty.ts')
+
+            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
         it('should have debug output if requested (so called eye test, check the test output)', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 

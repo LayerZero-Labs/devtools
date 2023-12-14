@@ -9,6 +9,16 @@ export interface OmniTransaction {
     value?: string | bigint | number
 }
 
+export interface OmniTransactionWithResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
+    transaction: OmniTransaction
+    response: OmniTransactionResponse<TReceipt>
+}
+
+export interface OmniTransactionWithReceipt<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
+    transaction: OmniTransaction
+    receipt: TReceipt
+}
+
 export interface OmniTransactionResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
     transactionHash: string
     wait: (confirmations?: number) => Promise<TReceipt>

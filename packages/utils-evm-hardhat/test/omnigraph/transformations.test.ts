@@ -8,13 +8,24 @@ import {
 } from '@/omnigraph/transformations'
 import { Contract } from '@ethersproject/contracts'
 import { endpointArbitrary, evmAddressArbitrary, nullableArbitrary, pointArbitrary } from '@layerzerolabs/test-utils'
-import { isOmniPoint } from '@layerzerolabs/utils'
+import { isOmniPoint, parallel, sequence } from '@layerzerolabs/utils'
 
 describe('omnigraph/transformations', () => {
     const pointHardhatArbitrary = fc.record({
         eid: endpointArbitrary,
         contractName: nullableArbitrary(fc.string()),
         address: nullableArbitrary(evmAddressArbitrary),
+    })
+
+    const nodeHardhatArbitrary = fc.record({
+        contract: pointHardhatArbitrary,
+        config: fc.anything(),
+    })
+
+    const edgeHardhatArbitrary = fc.record({
+        from: pointHardhatArbitrary,
+        to: pointHardhatArbitrary,
+        config: fc.anything(),
     })
 
     describe('createOmniPointHardhatTransformer', () => {
@@ -128,17 +139,6 @@ describe('omnigraph/transformations', () => {
         })
 
         it('should call the nodeTransformer and edgeTransformer for every node and edge and return the result', async () => {
-            const nodeHardhatArbitrary = fc.record({
-                contract: pointHardhatArbitrary,
-                config: fc.anything(),
-            })
-
-            const edgeHardhatArbitrary = fc.record({
-                from: pointHardhatArbitrary,
-                to: pointHardhatArbitrary,
-                config: fc.anything(),
-            })
-
             await fc.assert(
                 fc.asyncProperty(
                     fc.array(nodeHardhatArbitrary),
@@ -152,6 +152,34 @@ describe('omnigraph/transformations', () => {
 
                         expect(graph.contracts).toEqual(contracts.map((node) => ({ node })))
                         expect(graph.connections).toEqual(connections.map((edge) => ({ edge })))
+                    }
+                )
+            )
+        })
+
+        it('should support sequential applicative', async () => {
+            await fc.assert(
+                fc.asyncProperty(
+                    fc.array(nodeHardhatArbitrary),
+                    fc.array(edgeHardhatArbitrary),
+                    async (contracts, connections) => {
+                        const nodeTransformer = jest.fn().mockImplementation(async (node) => ({ node }))
+                        const edgeTransformer = jest.fn().mockImplementation(async (edge) => ({ edge }))
+                        const transformerSequential = createOmniGraphHardhatTransformer(
+                            nodeTransformer,
+                            edgeTransformer,
+                            sequence
+                        )
+                        const transformerParallel = createOmniGraphHardhatTransformer(
+                            nodeTransformer,
+                            edgeTransformer,
+                            parallel
+                        )
+
+                        const graphSequential = await transformerSequential({ contracts, connections })
+                        const graphParallel = await transformerParallel({ contracts, connections })
+
+                        expect(graphSequential).toEqual(graphParallel)
                     }
                 )
             )

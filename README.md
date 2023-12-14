@@ -64,6 +64,12 @@ DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-utils-evm-hardhat-test yarn test
 DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
 ```
 
+You also combine the environment variables:
+
+```bash
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-utils-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
+```
+
 #### Container logs
 
 To monitor the container logs you'll need to run:

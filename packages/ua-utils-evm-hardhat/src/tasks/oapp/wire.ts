@@ -8,6 +8,8 @@ import {
     setDefaultLogLevel,
     promptToContinue,
     printJson,
+    pluralizeNoun,
+    importDefault,
 } from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
@@ -45,7 +47,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     try {
         logger.verbose(`Loading config file '${oappConfigPath}'`)
 
-        rawConfig = require(resolve(oappConfigPath))
+        rawConfig = await importDefault(resolve(oappConfigPath))
     } catch (error) {
         throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
     }
@@ -126,9 +128,11 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // Tell the user about the transactions
     logger.info(
-        transactions.length === 1
-            ? `There is 1 transaction required to configure the OApp`
-            : `There are ${transactions.length} transactions required to configure the OApp`
+        pluralizeNoun(
+            transactions.length,
+            `There is 1 transaction required to configure the OApp`,
+            `There are ${transactions.length} transactions required to configure the OApp`
+        )
     )
 
     // Ask them whether they want to see them
