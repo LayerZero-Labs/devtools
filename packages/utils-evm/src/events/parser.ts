@@ -1,4 +1,4 @@
-import { LogDescription } from '@ethersproject/abi'
+import type { LogDescription } from '@ethersproject/abi'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionReceipt } from '@ethersproject/providers'
 
@@ -19,7 +19,7 @@ export const parseLogs = (receipt: TransactionReceipt, contract: Contract): LogD
         } catch {
             return []
         }
-    }) || []
+    }) ?? []
 
 /**
  * Parse event logs with a specific name.
