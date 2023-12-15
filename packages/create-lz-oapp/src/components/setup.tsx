@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import type { Config } from "@/types.js";
+import type { Config } from "@/types";
 import { Box, Text } from "ink";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -8,9 +8,9 @@ import {
   DownloadError,
   MissingGitRefError,
   cloneExample,
-} from "@/utilities/cloning.js";
-import { Progress } from "./progress.js";
-import { installDependencies } from "@/utilities/installation.js";
+} from "@/utilities/cloning";
+import { Progress } from "./progress";
+import { installDependencies } from "@/utilities/installation";
 
 interface Props {
   config: Config;

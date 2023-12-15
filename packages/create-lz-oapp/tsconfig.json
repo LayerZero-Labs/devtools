@@ -1,15 +1,11 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-    "module": "node16",
-    "moduleResolution": "node16",
-    "moduleDetection": "force",
     "outDir": "dist",
     "declaration": false,
     "jsx": "react",
     "lib": ["dom", "dom.Iterable", "es2022"],
     "resolveJsonModule": false,
-    "target": "esnext",
     "types": ["jest", "node"],
     "paths": {
       "@/*": ["./src/*"]

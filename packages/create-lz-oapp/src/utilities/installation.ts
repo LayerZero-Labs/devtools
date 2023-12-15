@@ -1,4 +1,4 @@
-import type { Config, PackageManager } from '@/types.js'
+import type { Config, PackageManager } from '@/types'
 import { spawn } from 'child_process'
 import which from 'which'
 

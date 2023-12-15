@@ -1,4 +1,4 @@
-import { Config, Example } from '@/types.js'
+import { Config, Example } from '@/types'
 import { rm } from 'fs/promises'
 import tiged from 'tiged'
 

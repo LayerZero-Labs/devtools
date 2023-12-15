@@ -1,4 +1,4 @@
-import type { Example, PackageManager } from '@/types.js'
+import type { Example, PackageManager } from '@/types'
 
 /**
  * To enable example development in a custom repository

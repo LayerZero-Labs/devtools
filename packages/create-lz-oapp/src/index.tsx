@@ -1,12 +1,12 @@
 import React from "react";
 import { render } from "ink";
 import { Command } from "commander";
-import { promptForConfig } from "@/utilities/prompts.js";
-import { Header } from "@/components/branding.js";
-import { ConfigSummary } from "@/components/config.js";
-import { Setup } from "@/components/setup.js";
-import { Providers } from "@/components/providers.js";
+import { promptForConfig } from "@/utilities/prompts";
+import { ConfigSummary } from "@/components/config";
+import { Setup } from "@/components/setup";
+import { Providers } from "@/components/providers";
 import { promptToContinue } from "@layerzerolabs/io-utils";
+import { printLogo } from "@layerzerolabs/io-utils/swag";
 
 new Command("create-lz-oapp")
   .description("Create LayerZero OApp with one command")
@@ -14,7 +14,7 @@ new Command("create-lz-oapp")
     // const exitAltScreen = await altScreen()
 
     try {
-      render(<Header />).unmount();
+      printLogo();
 
       // First we get the config from the user
       const config = await promptForConfig();

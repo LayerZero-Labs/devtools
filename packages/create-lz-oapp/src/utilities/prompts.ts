@@ -1,6 +1,6 @@
-import { EXAMPLES, PACKAGE_MANAGERS } from '@/config.js'
+import { EXAMPLES, PACKAGE_MANAGERS } from '@/config'
 import prompts from 'prompts'
-import { isPackageManagerAvailable } from './installation.js'
+import { isPackageManagerAvailable } from './installation'
 import { handlePromptState, isDirectory } from '@layerzerolabs/io-utils'
 import { resolve } from 'path'
 

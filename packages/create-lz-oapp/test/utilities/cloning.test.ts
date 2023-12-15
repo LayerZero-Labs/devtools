@@ -1,4 +1,4 @@
-import { createExampleGitURL } from '@/utilities/cloning.js'
+import { createExampleGitURL } from '@/utilities/cloning'
 
 describe('utilities/cloning', () => {
     describe('createExampleGitURL', () => {
