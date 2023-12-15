@@ -121,7 +121,7 @@ describe('oapp/config', () => {
         expect(transactions).toEqual(expectedOAppConfigTransactions)
     })
 
-    it.only('should exclude setPeer transactions for peers that have been set', async () => {
+    it('should exclude setPeer transactions for peers that have been set', async () => {
         const ethTestConfig: OAppTestConfig = await getDefaultEthConfig()
         const avaxTestConfig: OAppTestConfig = await getDefaultAvaxConfig()
         const ethOAppConfig: OAppEdgeConfig = await setUpConfig(ethTestConfig)
