@@ -4,7 +4,6 @@ import { Command } from "commander";
 import { promptForConfig } from "@/utilities/prompts";
 import { ConfigSummary } from "@/components/config";
 import { Setup } from "@/components/setup";
-import { Providers } from "@/components/providers";
 import { promptToContinue } from "@layerzerolabs/io-utils";
 import { printLogo } from "@layerzerolabs/io-utils/swag";
 
@@ -27,11 +26,7 @@ new Command("create-lz-oapp")
       }
 
       // Then the last step is to show the setup flow
-      const setup = render(
-        <Providers>
-          <Setup config={config} />
-        </Providers>,
-      );
+      const setup = render(<Setup config={config} />);
 
       // And wait for it to exit
       await setup.waitUntilExit();

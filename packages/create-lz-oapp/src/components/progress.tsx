@@ -1,31 +1,25 @@
 import React from "react";
 import { Box, Text } from "ink";
 import Spinner from "ink-spinner";
-import { UseMutationResult } from "@tanstack/react-query";
+import { TaskState } from "@/utilities/tasks";
 
 type ErrorComponent = React.ComponentType<{ error: unknown }>;
 
 interface Props {
   error: ErrorComponent;
   message: string;
-  mutation: Pick<UseMutationResult, "isPending" | "isSuccess" | "error">;
+  state: TaskState<unknown> | undefined;
 }
 
-export const Progress: React.FC<Props> = ({
-  mutation,
-  message,
-  error: Error,
-}) => {
-  const { isPending, isSuccess, error } = mutation;
-
+export const Progress: React.FC<Props> = ({ state, message, error: Error }) => {
   return (
     <Box flexDirection="column">
       <Box>
-        {isPending ? (
+        {state?.loading ? (
           <Spinner />
-        ) : isSuccess ? (
+        ) : state?.success ? (
           <Text color="green">✔</Text>
-        ) : error ? (
+        ) : state?.failure ? (
           <Text color="red">𐄂</Text>
         ) : (
           <Text color="yellow">○</Text>
@@ -33,11 +27,11 @@ export const Progress: React.FC<Props> = ({
         <Text> {message}</Text>
       </Box>
 
-      {error == null ? null : (
+      {state?.failure ? (
         <Box marginLeft={2}>
-          <Error error={error} />
+          <Error error={state.error} />
         </Box>
-      )}
+      ) : null}
     </Box>
   );
 };

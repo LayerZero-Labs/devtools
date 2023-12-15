@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import type { Config } from "@/types";
 import { Box, Text } from "ink";
-import { useMutation } from "@tanstack/react-query";
 import {
   BadGitRefError,
   DestinationNotEmptyError,
@@ -11,42 +10,37 @@ import {
 } from "@/utilities/cloning";
 import { Progress } from "./progress";
 import { installDependencies } from "@/utilities/installation";
+import { useTask } from "@/utilities/tasks";
 
 interface Props {
   config: Config;
 }
 
 export const Setup: React.FC<Props> = ({ config }) => {
-  const clone = useMutation({
-    mutationKey: ["setup", "clone"],
-    mutationFn: () => cloneExample(config),
+  const clone = useTask(() => cloneExample(config));
+  const install = useTask(() => installDependencies(config));
+  const setup = useTask(async () => {
+    await clone.run();
+    await install.run();
   });
 
-  const install = useMutation({
-    mutationKey: ["setup", "install"],
-    mutationFn: () => installDependencies(config),
-  });
-
-  const { mutate: setup } = useMutation({
-    mutationKey: ["setup", "flow"],
-    mutationFn: async () => {
-      await clone.mutateAsync();
-      await install.mutateAsync();
-    },
-  });
-
-  useEffect(() => setup(), [setup]);
+  useEffect(() => {
+    setup.run().catch(() => {});
+    // It's important to remember that setup as an object changes references, it's only the run method that's referentially stable
+    //
+    // Adding setup as dependency of this hook will result in an infinite loop
+  }, [setup.run]);
 
   return (
     <Box flexDirection="column">
       <Progress
         message="Getting example source code"
-        mutation={clone}
+        state={clone.state}
         error={({ error }) => <ErrorMessage config={config} error={error} />}
       />
       <Progress
         message="Installing dependencies"
-        mutation={install}
+        state={install.state}
         error={({ error }) => <ErrorMessage config={config} error={error} />}
       />
     </Box>
