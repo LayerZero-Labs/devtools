@@ -91,22 +91,29 @@ describe('oapp/config', () => {
             await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethTestConfig.sendLibrary))
             await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethTestConfig.receiveLibrary))
 
-            let omniTx = await ethEndpointSdk.setSendLibrary(avaxPoint.eid, ethTestConfig.sendLibrary)
-            await ethSigner.signAndSend(await ethOAppSdk.callEndpoint(omniTx.data))
-
-            omniTx = await ethEndpointSdk.setReceiveLibrary(avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
-            await ethSigner.signAndSend(await ethOAppSdk.callEndpoint(omniTx.data))
+            await ethSigner.signAndSend(
+                await ethEndpointSdk.setSendLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.sendLibrary)
+            )
+            await ethSigner.signAndSend(
+                await ethEndpointSdk.setReceiveLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
+            )
 
             // register new Send and Receive ULNs AVAX
             const avaxSigner = await signerFactory(avaxContract.eid)
             await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxTestConfig.sendLibrary))
             await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxTestConfig.receiveLibrary))
 
-            omniTx = await avaxEndpointSdk.setSendLibrary(ethPoint.eid, avaxTestConfig.sendLibrary)
-            await avaxSigner.signAndSend(await avaxOAppSdk.callEndpoint(omniTx.data))
-
-            omniTx = await avaxEndpointSdk.setReceiveLibrary(ethPoint.eid, avaxTestConfig.receiveLibrary, 0)
-            await avaxSigner.signAndSend(await avaxOAppSdk.callEndpoint(omniTx.data))
+            await avaxSigner.signAndSend(
+                await avaxEndpointSdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxTestConfig.sendLibrary)
+            )
+            await avaxSigner.signAndSend(
+                await avaxEndpointSdk.setReceiveLibrary(
+                    avaxPoint.address,
+                    ethPoint.eid,
+                    avaxTestConfig.receiveLibrary,
+                    0
+                )
+            )
         }
 
         // This is where the configuration happens
@@ -153,12 +160,12 @@ describe('oapp/config', () => {
             await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethTestConfig.sendLibrary))
             await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethTestConfig.receiveLibrary))
 
-            let omniTx = await ethEndpointSdk.setSendLibrary(avaxPoint.eid, ethTestConfig.sendLibrary)
-            await ethSigner.signAndSend(await ethOAppSdk.callEndpoint(omniTx.data))
-
-            omniTx = await ethEndpointSdk.setReceiveLibrary(avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
-            await ethSigner.signAndSend(await ethOAppSdk.callEndpoint(omniTx.data))
-
+            await ethSigner.signAndSend(
+                await ethEndpointSdk.setSendLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.sendLibrary)
+            )
+            await ethSigner.signAndSend(
+                await ethEndpointSdk.setReceiveLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
+            )
             await ethSigner.signAndSend(await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address))
 
             // register new Send and Receive ULNs AVAX
@@ -166,11 +173,17 @@ describe('oapp/config', () => {
             await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxTestConfig.sendLibrary))
             await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxTestConfig.receiveLibrary))
 
-            omniTx = await avaxEndpointSdk.setSendLibrary(ethPoint.eid, avaxTestConfig.sendLibrary)
-            await avaxSigner.signAndSend(await avaxOAppSdk.callEndpoint(omniTx.data))
-
-            omniTx = await avaxEndpointSdk.setReceiveLibrary(ethPoint.eid, avaxTestConfig.receiveLibrary, 0)
-            await avaxSigner.signAndSend(await avaxOAppSdk.callEndpoint(omniTx.data))
+            await avaxSigner.signAndSend(
+                await avaxEndpointSdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxTestConfig.sendLibrary)
+            )
+            await avaxSigner.signAndSend(
+                await avaxEndpointSdk.setReceiveLibrary(
+                    avaxPoint.address,
+                    ethPoint.eid,
+                    avaxTestConfig.receiveLibrary,
+                    0
+                )
+            )
         }
 
         // This is where the configuration happens
@@ -326,9 +339,14 @@ const createExpectedTransactions = async (
     return [
         await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
         await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
-        await ethEndpointSdk.setReceiveLibraryTimeout(avaxPoint.eid, ethTestConfig.receiveLibrary, 0),
-        await avaxEndpointSdk.setReceiveLibraryTimeout(ethPoint.eid, avaxTestConfig.receiveLibrary, 0),
-        await ethEndpointSdk.setExecutorConfig(ethTestConfig.sendLibrary, [
+        await ethEndpointSdk.setReceiveLibraryTimeout(ethPoint.address, avaxPoint.eid, ethTestConfig.receiveLibrary, 0),
+        await avaxEndpointSdk.setReceiveLibraryTimeout(
+            avaxPoint.address,
+            ethPoint.eid,
+            avaxTestConfig.receiveLibrary,
+            0
+        ),
+        await ethEndpointSdk.setExecutorConfig(ethPoint.address, ethTestConfig.sendLibrary, [
             {
                 eid: avaxPoint.eid,
                 executorConfig: {
@@ -337,7 +355,7 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await ethEndpointSdk.setUlnConfig(ethTestConfig.sendLibrary, [
+        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.sendLibrary, [
             {
                 eid: avaxPoint.eid,
                 ulnConfig: {
@@ -350,7 +368,7 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await ethEndpointSdk.setUlnConfig(ethTestConfig.receiveLibrary, [
+        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.receiveLibrary, [
             {
                 eid: avaxPoint.eid,
                 ulnConfig: {
@@ -363,7 +381,7 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await avaxEndpointSdk.setExecutorConfig(avaxTestConfig.sendLibrary, [
+        await avaxEndpointSdk.setExecutorConfig(avaxPoint.address, avaxTestConfig.sendLibrary, [
             {
                 eid: ethPoint.eid,
                 executorConfig: {
@@ -372,7 +390,7 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await avaxEndpointSdk.setUlnConfig(avaxTestConfig.sendLibrary, [
+        await avaxEndpointSdk.setUlnConfig(avaxPoint.address, avaxTestConfig.sendLibrary, [
             {
                 eid: ethPoint.eid,
                 ulnConfig: {
@@ -385,7 +403,7 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await avaxEndpointSdk.setUlnConfig(avaxTestConfig.receiveLibrary, [
+        await avaxEndpointSdk.setUlnConfig(avaxPoint.address, avaxTestConfig.receiveLibrary, [
             {
                 eid: ethPoint.eid,
                 ulnConfig: {

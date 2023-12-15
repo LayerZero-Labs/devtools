@@ -9,7 +9,6 @@ export interface IOApp extends IOmniSDK {
     getPeer(eid: EndpointId): Promise<Bytes32 | undefined>
     hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
-    callEndpoint(callData: string): Promise<OmniTransaction>
 }
 
 export interface ReceiveLibraryConfig {

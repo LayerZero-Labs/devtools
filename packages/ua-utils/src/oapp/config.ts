@@ -39,7 +39,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
             const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
             if (currentSendLibrary === config.sendLibrary) return []
-            return [await endpointSdk.setSendLibrary(to.eid, config.sendLibrary)]
+            return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
         })
     )
 
@@ -53,6 +53,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
             if (currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) return []
             return [
                 await endpointSdk.setReceiveLibrary(
+                    from.address,
                     to.eid,
                     config.receiveLibraryConfig.receiveLibrary,
                     config.receiveLibraryConfig.gracePeriod
@@ -75,6 +76,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                 return []
             return [
                 await endpointSdk.setReceiveLibraryTimeout(
+                    from.address,
                     to.eid,
                     config.receiveLibraryTimeoutConfig.lib,
                     config.receiveLibraryTimeoutConfig.expiry
@@ -105,7 +107,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     sendExecutorConfig.executor !== config.sendConfig.executorConfig.executor
                 ) {
                     transactions.push(
-                        await endpointSdk.setExecutorConfig(currentSendLibrary, [
+                        await endpointSdk.setExecutorConfig(from.address, currentSendLibrary, [
                             { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
                         ])
                     )
@@ -126,7 +128,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     sendUlnConfig.optionalDVNs !== config.sendConfig.ulnConfig.optionalDVNs
                 ) {
                     transactions.push(
-                        await endpointSdk.setUlnConfig(currentSendLibrary, [
+                        await endpointSdk.setUlnConfig(from.address, currentSendLibrary, [
                             { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
                         ])
                     )
@@ -148,7 +150,7 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
                     receiveUlnConfig.optionalDVNs !== config.receiveConfig.ulnConfig.optionalDVNs
                 ) {
                     transactions.push(
-                        await endpointSdk.setUlnConfig(currentReceiveLibrary, [
+                        await endpointSdk.setUlnConfig(from.address, currentReceiveLibrary, [
                             { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
                         ])
                     )

@@ -20,11 +20,6 @@ export class OApp extends OmniSDK implements IOApp {
         super(contract)
     }
 
-    async callEndpoint(callData: string): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('callEndpoint', [callData])
-        return this.createTransaction(data)
-    }
-
     async getEndpointSDK(): Promise<IEndpoint> {
         let address: string
 
