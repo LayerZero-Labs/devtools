@@ -6,14 +6,19 @@ import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointBasedFactory, formatEid } from '@layerzerolabs/utils'
+import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/utils'
 import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
 import assert from 'assert'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
  */
-export type GetByNetwork<TValue> = (networkName: string) => Promise<TValue>
+export type GetByNetwork<TValue> = Factory<[networkName: string], TValue>
+
+/**
+ * Helper type for when we need to grab something asynchronously by the network name
+ */
+export type GetByEid<TValue> = Factory<[eid: EndpointId], TValue>
 
 /**
  * Returns the default hardhat context for the project, i.e.
@@ -62,7 +67,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  * Creates a clone of the HardhatRuntimeEnvironment for a particular network
  *
  * ```typescript
- * const env = getEnvironment("bsc-testnet");
+ * const env = getHreByNetworkName("bsc-testnet");
  *
  * // All the ususal properties are present
  * env.deployments.get("MyContract")
@@ -70,7 +75,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  *
  * @returns {Promise<HardhatRuntimeEnvironment>}
  */
-export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
+export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMemoize(async (networkName) => {
     const context = getDefaultContext()
     const environment = getDefaultRuntimeEnvironment()
 
@@ -99,6 +104,25 @@ export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironmen
 })
 
 /**
+ * Creates a clone of the HardhatRuntimeEnvironment for a particular network
+ * identified by endpoint ID
+ *
+ * ```typescript
+ * const getHreByEid = createGetHreByEid()
+ * const env = await getHreByEid(EndpointId.AVALANCHE_V2_TESTNET);
+ *
+ * // All the ususal properties are present
+ * env.deployments.get("MyContract")
+ * ```
+ *
+ * @returns {Promise<HardhatRuntimeEnvironment>}
+ */
+export const createGetHreByEid = (
+    hre = getDefaultRuntimeEnvironment()
+): EndpointBasedFactory<HardhatRuntimeEnvironment> =>
+    pMemoize(async (eid: EndpointId) => getHreByNetworkName(getNetworkNameForEid(eid, hre)))
+
+/**
  * Helper function that wraps an EthereumProvider with EthersProviderWrapper
  * so that we can use it further with ethers as a regular JsonRpcProvider
  *
@@ -106,26 +130,6 @@ export const getNetworkRuntimeEnvironment: GetByNetwork<HardhatRuntimeEnvironmen
  * @returns {JsonRpcProvider}
  */
 export const wrapEIP1193Provider = (provider: EthereumProvider): JsonRpcProvider => new EthersProviderWrapper(provider)
-
-/**
- * Creates a factory function for creating HardhatRuntimeEnvironment
- * based on a hardhat config and an EndpointId
- *
- * ```typescript
- * import hre from "hardhat";
- *
- * const factory = createNetworkEnvironmentFactory(hre);
- * const env = factory(EndpointId.FANTOM_MAINNET)
- * ```
- *
- * @param {HardhatRuntimeEnvironment | undefined} [hre]
- * @returns {(eid: EndpointId) => Promise<HardhatRuntimeEnvironment>}
- */
-export const createNetworkEnvironmentFactory = (
-    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
-): EndpointBasedFactory<HardhatRuntimeEnvironment> => {
-    return async (eid) => getNetworkRuntimeEnvironment(getNetworkNameForEid(eid, hre))
-}
 
 /**
  * Gets an EndpointId defined in the hardhat config

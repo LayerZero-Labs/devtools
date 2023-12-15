@@ -31,7 +31,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     await deployments.delete('EndpointV2')
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
         from: deployer,
-        args: [network.config.eid],
+        args: [network.config.eid, deployer],
     })
 
     await deployments.delete('SendUln302')

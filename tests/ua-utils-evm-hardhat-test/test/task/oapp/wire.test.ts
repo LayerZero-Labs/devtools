@@ -116,6 +116,17 @@ describe('task/oapp/wire', () => {
             expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
 
+        it('should not ask the user for input if --ci flag is truthy and execute all transactions', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            promptToContinueMock.mockResolvedValue(false)
+
+            const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+
+            expect(result).toEqual([])
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
         it('should ask the user whether they want to see the transactions & continue', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 

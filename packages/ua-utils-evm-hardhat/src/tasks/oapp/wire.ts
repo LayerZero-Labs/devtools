@@ -2,15 +2,12 @@ import { task, types } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
 import {
-    isFile,
-    isReadable,
     createLogger,
+    createConfigLoader,
     setDefaultLogLevel,
     promptToContinue,
     printJson,
-    printZodErrors,
     pluralizeNoun,
-    importDefault,
 } from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
@@ -23,55 +20,24 @@ import { resolve } from 'path'
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
+    ci?: boolean
 }
 
-const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info', ci = false }) => {
+    // We only want to be asking users for input if we are not in interactive mode
+    const isInteractive = !ci
+
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
+    // And we'll create a logger for ourselves
     const logger = createLogger()
 
-    // First we check that the config file is indeed there and we can read it
-    logger.verbose(`Checking config file '${oappConfigPath}' for existence & readability`)
-    const isConfigReadable = isFile(oappConfigPath) && isReadable(oappConfigPath)
-    if (!isConfigReadable) {
-        throw new Error(
-            `Unable to read config file '${oappConfigPath}'. Check that the file exists and is readable to your terminal user`
-        )
-    }
-
-    // Keep talking to the user
-    logger.verbose(`Config file '${oappConfigPath}' exists & is readable`)
-
-    // Now let's see if we can load the config file
-    let rawConfig: unknown
-    try {
-        logger.verbose(`Loading config file '${oappConfigPath}'`)
-
-        rawConfig = await importDefault(resolve(oappConfigPath))
-    } catch (error) {
-        throw new Error(`Unable to read config file '${oappConfigPath}': ${error}`)
-    }
-
-    logger.verbose(`Loaded config file '${oappConfigPath}'`)
-
-    // It's time to make sure that the config is not malformed
-    //
-    // At this stage we are only interested in the shape of the data,
-    // we are not checking whether the information makes sense (e.g.
-    // whether there are no missing nodes etc)
-    logger.verbose(`Validating the structure of config file '${oappConfigPath}'`)
-    const configParseResult = OAppOmniGraphHardhatSchema.safeParse(rawConfig)
-    if (configParseResult.success === false) {
-        const userFriendlyErrors = printZodErrors(configParseResult.error)
-
-        throw new Error(
-            `Config from file '${oappConfigPath}' is malformed. Please fix the following errors:\n\n${userFriendlyErrors}`
-        )
-    }
+    // Now we create our config loader
+    const configLoader = createConfigLoader<OAppOmniGraphHardhat>(OAppOmniGraphHardhatSchema)
 
     // At this point we have a correctly typed config in the hardhat format
-    const hardhatGraph: OAppOmniGraphHardhat = configParseResult.data
+    const hardhatGraph: OAppOmniGraphHardhat = await configLoader(resolve(oappConfigPath))
 
     // We'll also print out the whole config for verbose loggers
     logger.verbose(`Config file '${oappConfigPath}' has correct structure`)
@@ -129,18 +95,26 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     )
 
     // Ask them whether they want to see them
-    const previewTransactions = await promptToContinue(`Would you like to preview the transactions before continuing?`)
+    const previewTransactions = isInteractive
+        ? await promptToContinue(`Would you like to preview the transactions before continuing?`)
+        : true
     if (previewTransactions) logger.info(`\n${printTransactions(transactions)}`)
 
     // Now ask the user whether they want to go ahead with signing them
-    const go = await promptToContinue()
-    if (!go) {
-        return undefined
-    }
+    const shouldSubmit = isInteractive
+        ? await promptToContinue(`Would you like to submit the required transactions?`)
+        : true
+    if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), undefined
 
     return []
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam(
+        'ci',
+        'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
+        false,
+        types.boolean
+    )
     .setAction(action)

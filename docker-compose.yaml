@@ -56,6 +56,7 @@ services:
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       - ./packages:/app/packages
+      - ./tests:/app/tests
       # Hardhat has an issue with caching compilers inside a docker container,
       # failing with EACCES -13 error, pointing to a permissions issue with the cache folder.
       #
