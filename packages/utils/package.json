@@ -27,7 +27,7 @@
     "build": "npx tsup",
     "clean": "rm -rf dist",
     "lint": "npx eslint '**/*.{js,ts,json}'",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "devDependencies": {
     "@layerzerolabs/io-utils": "~0.0.1",
