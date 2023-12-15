@@ -17,8 +17,8 @@
     "create-lz-oapp": "./cli.cjs"
   },
   "files": [
-    "./cli.cjs",
-    "./dist"
+    "cli.js",
+    "dist"
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",

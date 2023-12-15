@@ -51,7 +51,6 @@
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.2",
     "@types/jest": "^29.5.10",
-    "cli-ux": "^6.0.9",
     "dotenv": "^16.0.3",
     "ethers": "^5.7.0",
     "fast-check": "^3.14.0",

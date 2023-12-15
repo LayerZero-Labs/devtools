@@ -15,6 +15,7 @@
     "test": "jest --runInBand --forceExit --verbose"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.6",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
