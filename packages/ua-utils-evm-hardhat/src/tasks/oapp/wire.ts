@@ -8,12 +8,17 @@ import {
     promptToContinue,
     printJson,
     pluralizeNoun,
+    printBoolean,
 } from '@layerzerolabs/io-utils'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-utils'
 import { createOAppFactory } from '@layerzerolabs/ua-utils-evm'
-import { OmniGraphBuilderHardhat, createConnectedContractFactory } from '@layerzerolabs/utils-evm-hardhat'
-import { OmniTransaction } from '@layerzerolabs/utils'
+import {
+    OmniGraphBuilderHardhat,
+    createConnectedContractFactory,
+    createSignerFactory,
+} from '@layerzerolabs/utils-evm-hardhat'
+import { createSignAndSend, OmniTransaction } from '@layerzerolabs/utils'
 import { printTransactions } from '@layerzerolabs/utils'
 import { resolve } from 'path'
 
@@ -106,6 +111,28 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         : true
     if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), undefined
 
+    // The last step is to execute those transactions
+    //
+    // For now we are only allowing sign & send using the accounts confgiured in hardhat config
+    const signAndSend = createSignAndSend(createSignerFactory())
+
+    logger.verbose(`Sending the transactions`)
+    const results = await signAndSend(transactions)
+
+    logger.verbose(`Sent the transactions`)
+    logger.debug(`Received the following output:\n\n${printJson(results)}`)
+
+    // FIXME We need to check whether we got any errors and display those to the user
+    logger.info(
+        pluralizeNoun(
+            transactions.length,
+            `Successfully sent 1 transaction`,
+            `Successfully sent ${transactions.length} transactions`
+        )
+    )
+    logger.info(`${printBoolean(true)} Your OApp is now configured`)
+
+    // FIXME We need to return the results
     return []
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
