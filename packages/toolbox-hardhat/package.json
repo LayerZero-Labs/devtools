@@ -41,6 +41,10 @@
     "@layerzerolabs/utils": "~0.0.1",
     "@layerzerolabs/utils-evm": "~0.0.1",
     "@layerzerolabs/utils-evm-hardhat": "~0.0.1",
+    "ink": "^3.2.0",
+    "ink-gradient": "^2.0.0",
+    "react": "^17.0.2",
+    "yoga-layout-prebuilt": "^1.9.6",
     "zod": "^3.22.4"
   },
   "devDependencies": {
