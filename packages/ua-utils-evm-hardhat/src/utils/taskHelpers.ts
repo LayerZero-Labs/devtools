@@ -1,5 +1,5 @@
 import { Address } from '@layerzerolabs/utils'
-import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
+import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-utils'
 import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/utils-evm-hardhat'
 import { createEndpointFactory } from '@layerzerolabs/protocol-utils-evm'
 
@@ -34,7 +34,7 @@ export async function getReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
     address?: Address
-): Promise<[Address, Uln302UlnConfig]> {
+): Promise<[Address, Uln302UlnConfig, Timeout]> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -50,8 +50,15 @@ export async function getReceiveConfig(
         receiveLibrary = await localEndpointSDK.getDefaultReceiveLibrary(remoteEid)
     }
 
+    let receiveLibraryTimeout: Timeout
+    if (address) {
+        receiveLibraryTimeout = await localEndpointSDK.getReceiveLibraryTimeout(address, remoteEid)
+    } else {
+        receiveLibraryTimeout = await localEndpointSDK.getDefaultReceiveLibraryTimeout(remoteEid)
+    }
+
     const localReceiveUlnSDK = await localEndpointSDK.getUln302SDK(receiveLibrary)
 
     const receiveUlnConfig = await localReceiveUlnSDK.getUlnConfig(remoteEid)
-    return [receiveLibrary, receiveUlnConfig]
+    return [receiveLibrary, receiveUlnConfig, receiveLibraryTimeout]
 }

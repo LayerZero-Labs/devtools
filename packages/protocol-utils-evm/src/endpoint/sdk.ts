@@ -89,8 +89,8 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.defaultReceiveLibraryTimeout(eid)
     }
 
-    async setSendLibrary(eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setSendLibrary', [eid, newLib])
+    async setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setSendLibrary', [oapp, eid, newLib])
 
         return {
             ...this.createTransaction(data),
@@ -99,11 +99,13 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async setReceiveLibrary(
+        oapp: Address,
         eid: EndpointId,
         newLib: Address | null | undefined,
         gracePeriod: number
     ): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibrary', [
+            oapp,
             eid,
             newLib,
             gracePeriod,
@@ -116,11 +118,17 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async setReceiveLibraryTimeout(
+        oapp: Address,
         eid: EndpointId,
         lib: Address | null | undefined,
         expiry: number
     ): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibraryTimeout', [eid, lib, expiry])
+        const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibraryTimeout', [
+            oapp,
+            eid,
+            lib,
+            expiry,
+        ])
 
         return {
             ...this.createTransaction(data),
@@ -134,7 +142,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
-    async setUlnConfig(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
+    async setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
         const uln = (await this.getUln302SDK(lib)) as Uln302
         const setConfigParams: SetConfigParam[] = setUlnConfig.map(({ eid, ulnConfig }) => ({
             eid,
@@ -142,14 +150,18 @@ export class Endpoint extends OmniSDK implements IEndpoint {
             config: uln.encodeUlnConfig(ulnConfig),
         }))
 
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParams])
         return {
             ...this.createTransaction(data),
             description: `Set Executor Config for lib: ${lib}`,
         }
     }
 
-    async setExecutorConfig(lib: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<OmniTransaction> {
+    async setExecutorConfig(
+        oapp: Address,
+        lib: Address,
+        setExecutorConfig: Uln302SetExecutorConfig[]
+    ): Promise<OmniTransaction> {
         const uln = (await this.getUln302SDK(lib)) as Uln302
         const setConfigParams: SetConfigParam[] = setExecutorConfig.map(({ eid, executorConfig }) => ({
             eid,
@@ -157,7 +169,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
             config: uln.encodeExecutorConfig(executorConfig),
         }))
 
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [lib, setConfigParams])
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParams])
         return {
             ...this.createTransaction(data),
             description: `Set Executor Config for lib: ${lib}`,

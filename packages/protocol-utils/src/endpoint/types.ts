@@ -27,15 +27,19 @@ export interface IEndpoint extends IOmniSDK {
     getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout>
     getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout>
 
-    setSendLibrary(eid: EndpointId, newLib: Address): Promise<OmniTransaction>
-    setReceiveLibrary(eid: EndpointId, newLib: Address, gracePeriod: number): Promise<OmniTransaction>
-    setReceiveLibraryTimeout(eid: EndpointId, newLib: Address, expiry: number): Promise<OmniTransaction>
+    setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address): Promise<OmniTransaction>
+    setReceiveLibrary(oapp: Address, eid: EndpointId, newLib: Address, gracePeriod: number): Promise<OmniTransaction>
+    setReceiveLibraryTimeout(oapp: Address, eid: EndpointId, newLib: Address, expiry: number): Promise<OmniTransaction>
 
     getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
-    setExecutorConfig(oapp: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<OmniTransaction>
+    setExecutorConfig(
+        oapp: Address,
+        lib: Address,
+        setExecutorConfig: Uln302SetExecutorConfig[]
+    ): Promise<OmniTransaction>
 
     getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
-    setUlnConfig(oapp: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
+    setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
 }
 
 export type Uln302SetExecutorConfig = { eid: EndpointId; executorConfig: Uln302ExecutorConfig }
