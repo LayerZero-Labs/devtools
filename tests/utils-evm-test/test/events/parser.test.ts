@@ -1,7 +1,8 @@
 import { parseLogs, parseLogsWithName } from '@layerzerolabs/utils-evm'
 import fc from 'fast-check'
-import hre from 'hardhat'
+import { HardhatContext } from 'hardhat/internal/context'
 import { Contract } from '@ethersproject/contracts'
+import hre from 'hardhat'
 
 describe('events/parser', () => {
     const EMITTER = 'Emitter'
@@ -21,6 +22,10 @@ describe('events/parser', () => {
 
         const parallelFactory = await hre.ethers.getContractFactory(PARALLEL_EMITTER)
         parallel = await parallelFactory.deploy()
+    })
+
+    afterAll(() => {
+        HardhatContext.deleteHardhatContext()
     })
 
     it('parent no arg event', async () => {
