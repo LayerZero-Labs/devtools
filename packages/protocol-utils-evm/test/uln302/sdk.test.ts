@@ -1,5 +1,4 @@
 import { type OmniContract } from '@layerzerolabs/utils-evm'
-import { before, describe } from 'node:test'
 import { Uln302 } from '@/uln302'
 import { MainnetEndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from '@ethersproject/contracts'
@@ -9,7 +8,8 @@ import artifact from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln30
 
 describe('uln302/sdk', () => {
     let contract, omniContract: OmniContract, ulnSdk
-    before(async () => {
+
+    beforeAll(async () => {
         contract = new Contract(AddressZero, artifact.abi)
         omniContract = { eid: MainnetEndpointId.ETHEREUM_MAINNET, contract }
         ulnSdk = new Uln302(omniContract)
