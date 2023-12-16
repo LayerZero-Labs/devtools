@@ -41,7 +41,7 @@ export const configureSendLibraries: OAppConfigurator = async (graph, createSdk)
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (!config.sendLibrary) return []
+                if (!config?.sendLibrary) return []
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
@@ -57,7 +57,7 @@ export const configureReceiveLibraries: OAppConfigurator = async (graph, createS
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (config.receiveLibraryConfig == null) return []
+                if (config?.receiveLibraryConfig == null) return []
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()

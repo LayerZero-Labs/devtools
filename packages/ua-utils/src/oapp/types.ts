@@ -28,6 +28,6 @@ export interface OAppEdgeConfig {
     }
 }
 
-export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig>
+export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>
 
 export type OAppFactory<TOApp extends IOApp = IOApp, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TOApp>

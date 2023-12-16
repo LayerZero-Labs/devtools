@@ -32,6 +32,7 @@
     "prebuild": "tsc -noEmit",
     "build": "npx tsup",
     "clean": "rm -rf dist",
+    "dev": "npx tsup --watch",
     "lint": "npx eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
