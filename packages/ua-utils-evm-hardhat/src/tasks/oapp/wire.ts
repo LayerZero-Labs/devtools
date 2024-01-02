@@ -21,6 +21,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/utils'
 import { printTransactions } from '@layerzerolabs/utils'
 import { resolve } from 'path'
+import { printLogo } from '@layerzerolabs/io-utils/swag'
 
 interface TaskArgs {
     oappConfig: string
@@ -29,6 +30,8 @@ interface TaskArgs {
 }
 
 const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info', ci = false }) => {
+    printLogo()
+
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
 

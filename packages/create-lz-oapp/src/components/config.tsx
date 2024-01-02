@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { Config } from "@/types.js";
+import { Config } from "@/types";
 import { resolve } from "path";
 
 interface Props {
