@@ -1,9 +1,9 @@
 import { extendConfig } from 'hardhat/config'
-import { withLayerZeroArtifacts, withLayerZeroDeployments } from '@layerzerolabs/utils-evm-hardhat'
+import { withLayerZeroArtifacts, withLayerZeroDeployments } from '@layerzerolabs/devtools-evm-hardhat'
 
 // Here we extend the HardhatUserConfig types & import all the LayerZero tasks
-import '@layerzerolabs/utils-evm-hardhat/type-extensions'
-import '@layerzerolabs/ua-utils-evm-hardhat/tasks'
+import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
+import '@layerzerolabs/ua-devtools-evm-hardhat/tasks'
 
 // Here we create our two config extenders, two curried functions
 // that accept hardhat user config and return a hardhat user config with external

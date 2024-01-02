@@ -1,7 +1,7 @@
 import { EXAMPLES, PACKAGE_MANAGERS } from '@/config'
 import prompts from 'prompts'
 import { isPackageManagerAvailable } from './installation'
-import { handlePromptState, isDirectory } from '@layerzerolabs/io-utils'
+import { handlePromptState, isDirectory } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 
 export const promptForConfig = () =>
