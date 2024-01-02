@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "npx eslint '**/*.{js,ts,json}'",
     "pretest": "npx hardhat compile",
-    "test": "jest --passWithNoTests --forceExit"
+    "test": "jest"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",

@@ -1,6 +1,5 @@
 import { parseLogs, parseLogsWithName } from '@layerzerolabs/devtools-evm'
 import fc from 'fast-check'
-import { HardhatContext } from 'hardhat/internal/context'
 import { Contract } from '@ethersproject/contracts'
 import hre from 'hardhat'
 
@@ -22,10 +21,6 @@ describe('events/parser', () => {
 
         const parallelFactory = await hre.ethers.getContractFactory(PARALLEL_EMITTER)
         parallel = await parallelFactory.deploy()
-    })
-
-    afterAll(() => {
-        HardhatContext.deleteHardhatContext()
     })
 
     it('parent no arg event', async () => {
@@ -51,39 +46,54 @@ describe('events/parser', () => {
         )
     })
 
-    it('child one arg event', async () => {
+    it('not parse an event with one arg from a different contract', async () => {
         await fc.assert(
             fc.asyncProperty(fc.integer({ min: 0 }), async (arg) => {
                 const receipt = await (await child.emitOneArgEvent(arg)).wait()
                 expect(parseLogsWithName(receipt, parent, 'OneArgEvent')).toEqual([])
-                fc.assert(
-                    fc.property(fc.string(), (name) => {
-                        fc.pre(name !== 'OneArgEvent')
-
-                        expect(parseLogsWithName(receipt, parent, name)).toEqual([])
-                    })
-                )
-            })
+            }),
+            { numRuns: 10 }
         )
     })
 
-    it('child many arg event', async () => {
+    it('not parse an event with one arg with unknown name', async () => {
         await fc.assert(
-            fc.asyncProperty(fc.integer({ min: 0, max: 10 }), async (count) => {
+            fc.asyncProperty(fc.integer({ min: 0 }), fc.string(), async (arg, name) => {
+                fc.pre(name !== 'OneArgEvent')
+
+                const receipt = await (await child.emitOneArgEvent(arg)).wait()
+                expect(parseLogsWithName(receipt, parent, name)).toEqual([])
+            }),
+            { numRuns: 10 }
+        )
+    })
+
+    it('not parse an event with many args from a different contract', async () => {
+        const eventNameArbitrary = fc.constantFrom('NoArgEvent', 'OneArgEvent', 'FourArgEvent')
+
+        await fc.assert(
+            fc.asyncProperty(fc.integer({ min: 0, max: 10 }), eventNameArbitrary, async (count, name) => {
                 const receipt = await (await child.emitMany(count)).wait()
-                await Promise.all(
-                    ['NoArgEvent', 'OneArgEvent', 'FourArgEvent'].map((eventName) => {
-                        expect(parseLogsWithName(receipt, child, eventName)).toHaveLength(count)
-                        expect(parseLogsWithName(receipt, parent, eventName)).toEqual([])
-                    })
-                )
-                fc.assert(
-                    fc.property(fc.string(), (name) => {
-                        fc.pre(name !== 'FourArgEvent')
-                        expect(parseLogsWithName(receipt, parent, name)).toEqual([])
-                    })
-                )
-            })
+
+                expect(parseLogsWithName(receipt, child, name)).toHaveLength(count)
+                expect(parseLogsWithName(receipt, parent, name)).toEqual([])
+            }),
+            { numRuns: 10 }
+        )
+    })
+
+    it('not parse an event with many args with unknown name from a different contract', async () => {
+        await fc.assert(
+            fc.asyncProperty(fc.integer({ min: 0, max: 10 }), fc.string(), async (count, name) => {
+                fc.pre(name !== 'NoArgEvent')
+                fc.pre(name !== 'OneArgEvent')
+                fc.pre(name !== 'FourArgEvent')
+
+                const receipt = await (await child.emitMany(count)).wait()
+
+                expect(parseLogsWithName(receipt, parent, name)).toEqual([])
+            }),
+            { numRuns: 10 }
         )
     })
 
