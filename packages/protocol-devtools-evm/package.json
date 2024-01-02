@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-evm",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Utilities for LayerZero EVM protocol contracts",
   "repository": {
     "type": "git",
@@ -43,10 +43,10 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.0.1",
-    "@layerzerolabs/devtools-evm": "~0.0.1",
+    "@layerzerolabs/devtools": "~0.0.0",
+    "@layerzerolabs/devtools-evm": "~0.0.0",
     "@layerzerolabs/lz-definitions": "~2.0.2",
-    "@layerzerolabs/protocol-devtools": "~0.0.1",
+    "@layerzerolabs/protocol-devtools": "~0.0.0",
     "@layerzerolabs/test-devtools": "~0.0.1",
     "@types/jest": "^29.5.10",
     "fast-check": "^3.14.0",
@@ -62,10 +62,10 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.0.1",
-    "@layerzerolabs/devtools-evm": "~0.0.1",
+    "@layerzerolabs/devtools": "~0.0.0",
+    "@layerzerolabs/devtools-evm": "~0.0.0",
     "@layerzerolabs/lz-definitions": "~2.0.2",
-    "@layerzerolabs/protocol-devtools": "~0.0.1"
+    "@layerzerolabs/protocol-devtools": "~0.0.0"
   },
   "publishConfig": {
     "access": "restricted"
