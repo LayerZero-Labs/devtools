@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">LayerZero Contract Utilities</h1>
+<h1 align="center">LayerZero Developer Utilities</h1>
 
 ## Code layout
 
@@ -60,8 +60,8 @@ yarn test
 To only run a specific test suite, you can define `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS` environment variable before running the tests. This variable will be passed to the underlying `turbo` command and can contain any arguments that this command understands, for example:
 
 ```bash
-# To only run tests for @layerzerolabs/ua-utils-evm-hardhat-test package
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-utils-evm-hardhat-test yarn test
+# To only run tests for @layerzerolabs/ua-devtools-evm-hardhat-test package
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test yarn test
 ```
 
 #### Rebuilding containers
@@ -75,7 +75,7 @@ DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
 You also combine the environment variables:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-utils-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
 ```
 
 #### Container logs
@@ -96,10 +96,10 @@ It is possible to expose the test networks defined in `docker-compose.yaml` on y
 yarn start
 ```
 
-Once the networks are running, you can go to the `ua-utils-evm-hardhat-test` package:
+Once the networks are running, you can go to the `ua-devtools-evm-hardhat-test` package:
 
 ```bash
-cd packages/ua-utils-hardhat-test
+cd packages/ua-devtools-hardhat-test
 ```
 
 Setup the default `EndpointV2` and `DefaultOApp`:
@@ -174,7 +174,7 @@ We use jest snapshots in a lot of places throughout the codebase. When an intent
 - Erase the original snapshot file and run the test. The snapshot will be recreated and the diff should only show your expected changes
 - Run the tests from within the affected package with `-u` flag. This will update the snapshots.
 
-For some packages the snapshot output depends on environment variables and other factors. For example the `io-utils` tests for printers have different output based on whether the active shell is`TTY` orwhether the `CI` environment variable is set and non-empty.
+For some packages the snapshot output depends on environment variables and other factors. For example the `io-devtools` tests for printers have different output based on whether the active shell is`TTY` orwhether the `CI` environment variable is set and non-empty.
 
 If you encounter errors when running these tests, just set the environment variable before running the test:
 

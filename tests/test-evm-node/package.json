@@ -5,7 +5,7 @@
   "description": "EVM node for E2E testing purposes",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
     "directory": "tests/test-evm-node"
   },
   "license": "MIT",

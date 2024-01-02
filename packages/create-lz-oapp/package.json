@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LayerZero-Labs/lz-utils.git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
     "directory": "packages/create-lz-oapp"
   },
   "license": "MIT",
@@ -32,7 +32,7 @@
     "yoga-layout-prebuilt": "^1.9.6"
   },
   "devDependencies": {
-    "@layerzerolabs/io-utils": "~0.0.1",
+    "@layerzerolabs/io-devtools": "~0.0.1",
     "@types/jest": "^29.5.10",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.73",
