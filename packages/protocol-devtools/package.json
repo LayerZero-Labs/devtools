@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools",
   "version": "0.0.1",
-  "private": true,
   "description": "Utilities for working with LayerZero protocol contracts",
   "repository": {
     "type": "git",
@@ -48,5 +47,8 @@
     "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~2.0.2",
     "zod": "^3.22.4"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }

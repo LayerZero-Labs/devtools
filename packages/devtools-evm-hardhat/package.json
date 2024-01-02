@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-hardhat",
   "version": "0.0.1",
-  "private": true,
   "description": "Hardhat utilities for LayerZero EVM projects",
   "repository": {
     "type": "git",
@@ -74,5 +73,8 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.43"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }

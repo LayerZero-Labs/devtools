@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/io-devtools",
   "version": "0.0.1",
-  "private": true,
   "description": "Utilities for working with I/O in LayerZero devtools",
   "repository": {
     "type": "git",
@@ -74,5 +73,8 @@
     "yoga-layout-prebuilt": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
