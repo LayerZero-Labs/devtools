@@ -1,3 +1,3 @@
-import { OmniGraphHardhat } from '../../../devtools-evm-hardhat/dist'
+import { OmniGraphHardhat } from '@layerzerolabs/devtools-evm-hardhat'
 
 export type OAppOmniGraphHardhat = OmniGraphHardhat<unknown, unknown>

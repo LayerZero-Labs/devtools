@@ -1,7 +1,14 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint, Timeout } from '@layerzerolabs/protocol-devtools'
-import type { Address, Factory, IOmniSDK, OmniGraph, OmniPoint, OmniTransaction } from '../../../devtools/dist'
-import type { Bytes32 } from '../../../devtools/dist'
+import type {
+    Address,
+    Bytes32,
+    Factory,
+    IOmniSDK,
+    OmniGraph,
+    OmniPoint,
+    OmniTransaction,
+} from '@layerzerolabs/devtools'
 import type { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 
 export interface IOApp extends IOmniSDK {
