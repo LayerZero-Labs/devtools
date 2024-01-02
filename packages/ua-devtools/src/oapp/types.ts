@@ -18,21 +18,26 @@ export interface IOApp extends IOmniSDK {
     setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
 }
 
-export interface ReceiveLibraryConfig {
+export interface OAppReceiveLibraryConfig {
     receiveLibrary: string
     gracePeriod: number
 }
+
+export interface OAppSendConfig {
+    executorConfig: Uln302ExecutorConfig
+    ulnConfig: Uln302UlnConfig
+}
+
+export interface OAppReceiveConfig {
+    ulnConfig: Uln302UlnConfig
+}
+
 export interface OAppEdgeConfig {
     sendLibrary?: string
-    receiveLibraryConfig?: ReceiveLibraryConfig
+    receiveLibraryConfig?: OAppReceiveLibraryConfig
     receiveLibraryTimeoutConfig?: Timeout
-    sendConfig?: {
-        executorConfig: Uln302ExecutorConfig
-        ulnConfig: Uln302UlnConfig
-    }
-    receiveConfig?: {
-        ulnConfig: Uln302UlnConfig
-    }
+    sendConfig?: OAppSendConfig
+    receiveConfig?: OAppReceiveConfig
 }
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>
