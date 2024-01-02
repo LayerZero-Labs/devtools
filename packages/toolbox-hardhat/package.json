@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-hardhat",
   "version": "0.0.1",
-  "private": true,
   "description": "One-stop-shop for developing LayerZero applications using hardhat",
   "repository": {
     "type": "git",
@@ -62,5 +61,8 @@
     "ethers": "^5.7.0",
     "hardhat": "^2.19.2",
     "hardhat-deploy": "^0.11.43"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }

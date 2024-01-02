@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
   "version": "0.0.1",
-  "private": true,
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -52,5 +51,8 @@
     "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/protocol-devtools": "~0.0.1",
     "zod": "^3.22.4"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
