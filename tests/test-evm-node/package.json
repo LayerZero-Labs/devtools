@@ -14,7 +14,7 @@
     "start": "npx hardhat node --hostname 0.0.0.0"
   },
   "devDependencies": {
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
