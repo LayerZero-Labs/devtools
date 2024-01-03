@@ -20,18 +20,14 @@ export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
         configs[localNetworkName] = {}
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
-            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = await getSendConfig(
-                localNetworkName,
-                remoteNetworkName,
-                addresses[index]
-            )
-            const [receiveLibrary, receiveUlnConfig] = await getReceiveConfig(
-                localNetworkName,
-                remoteNetworkName,
-                addresses[index]
-            )
 
-            configs[localNetworkName][remoteNetworkName] = {
+            const receiveConfig = await getReceiveConfig(localNetworkName, remoteNetworkName, addresses[index])
+            const sendConfig = await getSendConfig(localNetworkName, remoteNetworkName, addresses[index])
+
+            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = sendConfig ?? []
+            const [receiveLibrary, receiveUlnConfig] = receiveConfig ?? []
+
+            configs[localNetworkName]![remoteNetworkName] = {
                 defaultSendLibrary: sendLibrary,
                 defaultReceiveLibrary: receiveLibrary,
                 sendUlnConfig,

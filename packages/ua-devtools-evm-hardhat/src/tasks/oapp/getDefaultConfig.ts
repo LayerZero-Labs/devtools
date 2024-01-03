@@ -15,13 +15,14 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
         configs[localNetworkName] = {}
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
-            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = await getSendConfig(
-                localNetworkName,
-                remoteNetworkName
-            )
-            const [receiveLibrary, receiveUlnConfig] = await getReceiveConfig(localNetworkName, remoteNetworkName)
 
-            configs[localNetworkName][remoteNetworkName] = {
+            const receiveConfig = await getReceiveConfig(localNetworkName, remoteNetworkName)
+            const sendConfig = await getSendConfig(localNetworkName, remoteNetworkName)
+
+            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = sendConfig ?? []
+            const [receiveLibrary, receiveUlnConfig] = receiveConfig ?? []
+
+            configs[localNetworkName]![remoteNetworkName] = {
                 defaultSendLibrary: sendLibrary,
                 defaultReceiveLibrary: receiveLibrary,
                 sendUlnConfig,
