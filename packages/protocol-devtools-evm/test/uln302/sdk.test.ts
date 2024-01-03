@@ -1,6 +1,6 @@
 import { type OmniContract } from '@layerzerolabs/devtools-evm'
 import { Uln302 } from '@/uln302'
-import { MainnetEndpointId } from '@layerzerolabs/lz-definitions'
+import { MainnetV2EndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from '@ethersproject/contracts'
 import { AddressZero } from '@ethersproject/constants'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
@@ -11,7 +11,7 @@ describe('uln302/sdk', () => {
 
     beforeAll(async () => {
         contract = new Contract(AddressZero, artifact.abi)
-        omniContract = { eid: MainnetEndpointId.ETHEREUM_MAINNET, contract }
+        omniContract = { eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET, contract }
         ulnSdk = new Uln302(omniContract)
     })
 

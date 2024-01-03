@@ -21,7 +21,7 @@ const config: HardhatUserConfig = {
     },
     networks: {
         vengaboys: {
-            eid: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
             // Containerized setup defines these environment variables
             // to point the networks to the internal ones
             //
@@ -34,7 +34,7 @@ const config: HardhatUserConfig = {
             },
         },
         britney: {
-            eid: EndpointId.AVALANCHE_MAINNET,
+            eid: EndpointId.AVALANCHE_V2_MAINNET,
             // Containerized setup defines these environment variables
             // to point the networks to the internal ones
             //

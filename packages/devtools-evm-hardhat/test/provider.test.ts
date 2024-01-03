@@ -19,8 +19,8 @@ describe('provider', () => {
         it('should return a JsonRpcProvider wrapping the network provider', async () => {
             const environmentFactory = createGetHreByEid()
             const providerFactory = createProviderFactory(environmentFactory)
-            const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
-            const provider = await providerFactory(EndpointId.ETHEREUM_MAINNET)
+            const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+            const provider = await providerFactory(EndpointId.ETHEREUM_V2_MAINNET)
 
             expect(provider).toBeInstanceOf(JsonRpcProvider)
 

@@ -6,14 +6,14 @@ import { deployEndpointFixture, getDefaultUlnConfig, setupDefaultEndpoint } from
 import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
 
 describe('endpoint/config', () => {
-    const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
-    const ethReceiveUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302' }
-    const ethSendUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302' }
-    const ethDvn = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DVN' }
-    const avaxEndpoint = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'EndpointV2' }
-    const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302' }
-    const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
-    const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
+    const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
+    const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
+    const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
+    const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN' }
+    const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
+    const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
+    const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
+    const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
 
     beforeEach(async () => {
         await deployEndpointFixture()

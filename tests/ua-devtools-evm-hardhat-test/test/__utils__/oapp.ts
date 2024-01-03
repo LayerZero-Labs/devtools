@@ -3,8 +3,8 @@ import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 
 export const deployOApp = async () => {
     const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
         eth.deployments.run('OApp', { writeDeploymentsToFiles: true }),
@@ -14,8 +14,8 @@ export const deployOApp = async () => {
 
 export const deployOAppFixture = async () => {
     const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([eth.deployments.fixture('OApp'), avax.deployments.fixture('OApp')])
 }

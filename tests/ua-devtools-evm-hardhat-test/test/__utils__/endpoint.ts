@@ -18,20 +18,20 @@ import {
 import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
 import { createSignAndSend } from '@layerzerolabs/devtools'
 
-export const ethEndpoint = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'EndpointV2' }
-export const ethReceiveUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302' }
-export const ethSendUln = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302' }
-export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'ReceiveUln302_Opt2' }
-export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'SendUln302_Opt2' }
-export const ethExecutor = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'Executor' }
-export const ethDvn = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DVN' }
-export const avaxEndpoint = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'EndpointV2' }
-export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302' }
-export const avaxSendUln = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302' }
-export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'ReceiveUln302_Opt2' }
-export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'SendUln302_Opt2' }
-export const avaxExecutor = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'Executor' }
-export const avaxDvn = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DVN' }
+export const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
+export const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
+export const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
+export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
+export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302_Opt2' }
+export const ethExecutor = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'Executor' }
+export const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN' }
+export const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
+export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
+export const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
+export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
+export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302_Opt2' }
+export const avaxExecutor = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'Executor' }
+export const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
 
 export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
 
@@ -66,8 +66,8 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
  */
 export const deployEndpointFixture = async () => {
     const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([eth.deployments.fixture('EndpointV2'), avax.deployments.fixture('EndpointV2')])
 }
@@ -77,8 +77,8 @@ export const deployEndpointFixture = async () => {
  */
 export const deployEndpoint = async () => {
     const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_MAINNET)
+    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
         eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: true }),
@@ -117,18 +117,18 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethSendUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [
-                        [EndpointId.AVALANCHE_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                        [EndpointId.AVALANCHE_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
                     ],
                 },
             },
             {
                 contract: avaxSendUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, avaxUlnConfig]],
                     defaultExecutorConfigs: [
-                        [EndpointId.ETHEREUM_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                        [EndpointId.ETHEREUM_V2_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
                     ],
                 },
             },
@@ -142,14 +142,14 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethReceiveUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
             {
                 contract: avaxReceiveUln,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, avaxUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
@@ -162,18 +162,18 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethSendUln2_Opt2,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [
-                        [EndpointId.AVALANCHE_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                        [EndpointId.AVALANCHE_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
                     ],
                 },
             },
             {
                 contract: avaxSendUln2_Opt2,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, avaxUlnConfig]],
                     defaultExecutorConfigs: [
-                        [EndpointId.ETHEREUM_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                        [EndpointId.ETHEREUM_V2_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
                     ],
                 },
             },
@@ -187,14 +187,14 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             {
                 contract: ethReceiveUln2_Opt2,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.AVALANCHE_MAINNET, ethUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
             {
                 contract: avaxReceiveUln2_Opt2,
                 config: {
-                    defaultUlnConfigs: [[EndpointId.ETHEREUM_MAINNET, avaxUlnConfig]],
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, avaxUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },

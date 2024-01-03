@@ -11,7 +11,7 @@ const config: HardhatUserConfig = {
         'ethereum-mainnet': {
             url: 'no:///way',
             saveDeployments: false,
-            eid: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
         },
         'ethereum-testnet': {
             url: 'no:///way',

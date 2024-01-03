@@ -54,7 +54,7 @@ describe('omnigraph/coordinates', () => {
                 const contractFactory = createContractFactory()
 
                 await expect(() =>
-                    contractFactory({ eid: EndpointId.ETHEREUM_MAINNET, contractName: 'MyContract' })
+                    contractFactory({ eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'MyContract' })
                 ).rejects.toBeTruthy()
             })
 
@@ -62,7 +62,7 @@ describe('omnigraph/coordinates', () => {
                 const environmentFactory = createGetHreByEid(hre)
                 const contractFactory = createContractFactory(environmentFactory)
 
-                const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+                const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
                 jest.spyOn(env.deployments, 'getOrNull').mockResolvedValue({
                     address: makeZeroAddress(undefined),
                     abi: [],
@@ -70,12 +70,12 @@ describe('omnigraph/coordinates', () => {
 
                 // Then check whether the factory will get it for us
                 const deployment = await contractFactory({
-                    eid: EndpointId.ETHEREUM_MAINNET,
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
                     contractName: 'MyContract',
                 })
 
                 expect(deployment).toEqual({
-                    eid: EndpointId.ETHEREUM_MAINNET,
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
                     contract: expect.any(Contract),
                 })
                 expect(env.deployments.getOrNull).toHaveBeenCalledWith('MyContract')
@@ -101,7 +101,7 @@ describe('omnigraph/coordinates', () => {
                         const contractFactory = createContractFactory()
 
                         await expect(() =>
-                            contractFactory({ eid: EndpointId.ETHEREUM_MAINNET, address })
+                            contractFactory({ eid: EndpointId.ETHEREUM_V2_MAINNET, address })
                         ).rejects.toThrow(/Could not find a deployment for address/)
                     })
                 )
@@ -113,7 +113,7 @@ describe('omnigraph/coordinates', () => {
                         const environmentFactory = createGetHreByEid(hre)
                         const contractFactory = createContractFactory(environmentFactory)
 
-                        const env = await environmentFactory(EndpointId.ETHEREUM_MAINNET)
+                        const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
                         jest.spyOn(env.deployments, 'getDeploymentsFromAddress').mockResolvedValue([
                             {
                                 address: makeZeroAddress(undefined),
@@ -123,12 +123,12 @@ describe('omnigraph/coordinates', () => {
 
                         // Then check whether the factory will get it for us
                         const deployment = await contractFactory({
-                            eid: EndpointId.ETHEREUM_MAINNET,
+                            eid: EndpointId.ETHEREUM_V2_MAINNET,
                             address,
                         })
 
                         expect(deployment).toEqual({
-                            eid: EndpointId.ETHEREUM_MAINNET,
+                            eid: EndpointId.ETHEREUM_V2_MAINNET,
                             contract: expect.any(Contract),
                         })
                         expect(env.deployments.getOrNull).toHaveBeenCalledWith('MyContract')
