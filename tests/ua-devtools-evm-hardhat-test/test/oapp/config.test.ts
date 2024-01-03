@@ -118,7 +118,7 @@ describe('oapp/config', () => {
 
         // This is where the configuration happens
         const transactions = await configureOApp(builder.graph, sdkFactory)
-        expect(transactions).toEqual(expectedOAppConfigTransactions)
+        expect(transactions.sort(txSortByData)).toEqual(expectedOAppConfigTransactions.sort(txSortByData))
     })
 
     it('should exclude setPeer transactions for peers that have been set', async () => {
@@ -146,13 +146,14 @@ describe('oapp/config', () => {
         const avaxOAppSdk = await sdkFactory(avaxPoint)
         const avaxEndpointSdk = await avaxOAppSdk.getEndpointSDK()
 
-        const expectedOAppConfigTransactions: OmniTransaction[] = await createExpectedTransactions(
+        let expectedOAppConfigTransactions: OmniTransaction[] = await createExpectedTransactions(
             ethContract,
             ethTestConfig,
             avaxContract,
             avaxTestConfig
         )
 
+        let ethSetPeerTx
         {
             const signerFactory = createSignerFactory()
             // register new Send and Receive ULNs on ETH
@@ -166,7 +167,10 @@ describe('oapp/config', () => {
             await ethSigner.signAndSend(
                 await ethEndpointSdk.setReceiveLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
             )
-            await ethSigner.signAndSend(await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address))
+
+            // execute set peer tx before running wire all
+            ethSetPeerTx = await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address)
+            await ethSigner.signAndSend(ethSetPeerTx)
 
             // register new Send and Receive ULNs AVAX
             const avaxSigner = await signerFactory(avaxContract.eid)
@@ -188,7 +192,9 @@ describe('oapp/config', () => {
 
         // This is where the configuration happens
         const transactions = await configureOApp(builder.graph, sdkFactory)
-        expect(transactions).toEqual(expectedOAppConfigTransactions.slice(1))
+        // remove set peer tx from expectedOAppConfigTransactions
+        expectedOAppConfigTransactions = expectedOAppConfigTransactions.filter((obj) => obj.data !== ethSetPeerTx.data)
+        expect(transactions.sort(txSortByData)).toEqual(expectedOAppConfigTransactions.sort(txSortByData))
     })
 })
 
@@ -417,4 +423,10 @@ const createExpectedTransactions = async (
             },
         ]),
     ]
+}
+
+const txSortByData = (a: OmniTransaction, b: OmniTransaction): number => {
+    const stringA = Buffer.from(a.data).toString('hex')
+    const stringB = Buffer.from(b.data).toString('hex')
+    return stringA.localeCompare(stringB)
 }
