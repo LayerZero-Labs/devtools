@@ -118,7 +118,7 @@ describe('oapp/config', () => {
 
         // This is where the configuration happens
         const transactions = await configureOApp(builder.graph, sdkFactory)
-        expect(transactions.sort(txSortByData)).toEqual(expectedOAppConfigTransactions.sort(txSortByData))
+        expect(transactions).toEqual(expectedOAppConfigTransactions)
     })
 
     it('should exclude setPeer transactions for peers that have been set', async () => {
@@ -194,7 +194,7 @@ describe('oapp/config', () => {
         const transactions = await configureOApp(builder.graph, sdkFactory)
         // remove set peer tx from expectedOAppConfigTransactions
         expectedOAppConfigTransactions = expectedOAppConfigTransactions.filter((obj) => obj.data !== ethSetPeerTx.data)
-        expect(transactions.sort(txSortByData)).toEqual(expectedOAppConfigTransactions.sort(txSortByData))
+        expect(transactions).toEqual(expectedOAppConfigTransactions)
     })
 })
 
@@ -374,19 +374,6 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.receiveLibrary, [
-            {
-                eid: avaxPoint.eid,
-                ulnConfig: {
-                    confirmations: ethTestConfig.receiveUlnConfirmations,
-                    optionalDVNThreshold: ethTestConfig.receiveUlnOptionalDVNThreshold,
-                    requiredDVNs: ethTestConfig.receiveUlnRequiredDVNs,
-                    optionalDVNs: ethTestConfig.receiveUlnOptionalDVNs,
-                    requiredDVNCount: ethTestConfig.receiveUlnRequiredDVNs.length,
-                    optionalDVNCount: ethTestConfig.receiveUlnOptionalDVNs.length,
-                },
-            },
-        ]),
         await avaxEndpointSdk.setExecutorConfig(avaxPoint.address, avaxTestConfig.sendLibrary, [
             {
                 eid: ethPoint.eid,
@@ -409,6 +396,19 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
+        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.receiveLibrary, [
+            {
+                eid: avaxPoint.eid,
+                ulnConfig: {
+                    confirmations: ethTestConfig.receiveUlnConfirmations,
+                    optionalDVNThreshold: ethTestConfig.receiveUlnOptionalDVNThreshold,
+                    requiredDVNs: ethTestConfig.receiveUlnRequiredDVNs,
+                    optionalDVNs: ethTestConfig.receiveUlnOptionalDVNs,
+                    requiredDVNCount: ethTestConfig.receiveUlnRequiredDVNs.length,
+                    optionalDVNCount: ethTestConfig.receiveUlnOptionalDVNs.length,
+                },
+            },
+        ]),
         await avaxEndpointSdk.setUlnConfig(avaxPoint.address, avaxTestConfig.receiveLibrary, [
             {
                 eid: ethPoint.eid,
@@ -423,10 +423,4 @@ const createExpectedTransactions = async (
             },
         ]),
     ]
-}
-
-const txSortByData = (a: OmniTransaction, b: OmniTransaction): number => {
-    const stringA = Buffer.from(a.data).toString('hex')
-    const stringB = Buffer.from(b.data).toString('hex')
-    return stringA.localeCompare(stringB)
 }

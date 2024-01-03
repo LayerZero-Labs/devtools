@@ -112,9 +112,8 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
                 const transactions: OmniTransaction[] = []
 
                 if (config?.sendConfig) {
-                    const currentSendLibrary: Address = config.sendLibrary
-                        ? config.sendLibrary
-                        : (await endpointSdk.getSendLibrary(from.address, to.eid)) ?? ''
+                    const currentSendLibrary =
+                        config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
                     assert(currentSendLibrary !== undefined, 'currentSendLibrary must be defined')
                     const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
                         from.address,
@@ -149,7 +148,6 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
                     }
                 }
 
-                if (!transactions.length) return []
                 return [...transactions]
             })
         )
@@ -185,7 +183,6 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
                     }
                 }
 
-                if (!transactions.length) return []
                 return [...transactions]
             })
         )
