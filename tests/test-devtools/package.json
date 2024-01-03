@@ -29,7 +29,7 @@
     "lint": "npx eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.0.2",
+    "@layerzerolabs/lz-definitions": "~2.0.7",
     "fast-check": "^3.14.0",
     "ts-node": "^10.9.1",
     "tslib": "~2.6.2",
@@ -37,7 +37,7 @@
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.0.2",
+    "@layerzerolabs/lz-definitions": "~2.0.7",
     "fast-check": "^3.14.0"
   }
 }

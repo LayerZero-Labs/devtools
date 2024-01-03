@@ -246,6 +246,10 @@ exports[`omnigraph/format formatEid should format 10231 correctly 1`] = `"ARBSEP
 
 exports[`omnigraph/format formatEid should format 10232 correctly 1`] = `"OPTSEP_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10233 correctly 1`] = `"BERA_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10234 correctly 1`] = `"VENN_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20102 correctly 1`] = `"BSC_SANDBOX"`;
@@ -495,6 +499,10 @@ exports[`omnigraph/format formatEid should format 40224 correctly 1`] = `"POLYGO
 exports[`omnigraph/format formatEid should format 40231 correctly 1`] = `"ARBSEP_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40232 correctly 1`] = `"OPTSEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40233 correctly 1`] = `"BERA_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40234 correctly 1`] = `"VENN_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 50102 correctly 1`] = `"BSC_V2_SANDBOX"`;
 

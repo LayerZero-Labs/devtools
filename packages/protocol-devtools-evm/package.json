@@ -45,7 +45,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/devtools-evm": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~2.0.2",
+    "@layerzerolabs/lz-definitions": "~2.0.7",
     "@layerzerolabs/protocol-devtools": "~0.0.1",
     "@layerzerolabs/test-devtools": "~0.0.1",
     "@types/jest": "^29.5.10",
@@ -64,7 +64,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/devtools-evm": "~0.0.1",
-    "@layerzerolabs/lz-definitions": "~2.0.2",
+    "@layerzerolabs/lz-definitions": "~2.0.7",
     "@layerzerolabs/protocol-devtools": "~0.0.1"
   },
   "publishConfig": {
