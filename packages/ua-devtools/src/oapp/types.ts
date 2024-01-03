@@ -1,7 +1,14 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint, Timeout } from '@layerzerolabs/protocol-devtools'
-import type { Address, Factory, IOmniSDK, OmniGraph, OmniPoint, OmniTransaction } from '../../../devtools/dist'
-import type { Bytes32 } from '../../../devtools/dist'
+import type {
+    Address,
+    Bytes32,
+    Factory,
+    IOmniSDK,
+    OmniGraph,
+    OmniPoint,
+    OmniTransaction,
+} from '@layerzerolabs/devtools'
 import type { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 
 export interface IOApp extends IOmniSDK {
@@ -11,21 +18,26 @@ export interface IOApp extends IOmniSDK {
     setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
 }
 
-export interface ReceiveLibraryConfig {
+export interface OAppReceiveLibraryConfig {
     receiveLibrary: string
     gracePeriod: number
 }
+
+export interface OAppSendConfig {
+    executorConfig: Uln302ExecutorConfig
+    ulnConfig: Uln302UlnConfig
+}
+
+export interface OAppReceiveConfig {
+    ulnConfig: Uln302UlnConfig
+}
+
 export interface OAppEdgeConfig {
     sendLibrary?: string
-    receiveLibraryConfig?: ReceiveLibraryConfig
+    receiveLibraryConfig?: OAppReceiveLibraryConfig
     receiveLibraryTimeoutConfig?: Timeout
-    sendConfig?: {
-        executorConfig: Uln302ExecutorConfig
-        ulnConfig: Uln302UlnConfig
-    }
-    receiveConfig?: {
-        ulnConfig: Uln302UlnConfig
-    }
+    sendConfig?: OAppSendConfig
+    receiveConfig?: OAppReceiveConfig
 }
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>

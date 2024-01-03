@@ -1,3 +1,4 @@
-import { OmniGraphHardhat } from '../../../devtools-evm-hardhat/dist'
+import { OmniGraphHardhat } from '@layerzerolabs/devtools-evm-hardhat'
+import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
-export type OAppOmniGraphHardhat = OmniGraphHardhat<unknown, unknown>
+export type OAppOmniGraphHardhat = OmniGraphHardhat<unknown, OAppEdgeConfig | undefined>

@@ -1,4 +1,12 @@
-import type { Address, Factory, OmniGraph, OmniPoint, OmniTransaction, IOmniSDK, Bytes32 } from '../../../devtools/dist'
+import type {
+    Address,
+    Factory,
+    OmniGraph,
+    OmniPoint,
+    OmniTransaction,
+    IOmniSDK,
+    Bytes32,
+} from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@/uln302/types'
 
