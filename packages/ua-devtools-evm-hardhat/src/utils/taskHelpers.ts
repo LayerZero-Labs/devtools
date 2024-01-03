@@ -7,7 +7,7 @@ export async function getSendConfig(
     localNetworkName: string,
     remoteNetworkName: string,
     address?: Address
-): Promise<[Address, Uln302UlnConfig, Uln302ExecutorConfig]> {
+): Promise<[Address, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -16,12 +16,12 @@ export async function getSendConfig(
     const localEndpointSDK = await endpointFactory({ eid: localEid, contractName: 'EndpointV2' })
 
     // First we get the SDK for the local send library
-    let sendLibrary: Address
-    if (address) {
-        sendLibrary = await localEndpointSDK.getSendLibrary(address, remoteEid)
-    } else {
-        sendLibrary = await localEndpointSDK.getDefaultSendLibrary(remoteEid)
-    }
+    const sendLibrary =
+        address == null
+            ? await localEndpointSDK.getDefaultSendLibrary(remoteEid)
+            : await localEndpointSDK.getSendLibrary(address, remoteEid)
+
+    if (sendLibrary == null) return undefined
 
     const localSendUlnSDK = await localEndpointSDK.getUln302SDK(sendLibrary)
     const sendUlnConfig = await localSendUlnSDK.getUlnConfig(remoteEid)
@@ -34,7 +34,7 @@ export async function getReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
     address?: Address
-): Promise<[Address, Uln302UlnConfig, Timeout]> {
+): Promise<[Address, Uln302UlnConfig, Timeout] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -43,12 +43,12 @@ export async function getReceiveConfig(
     const localEndpointSDK = await endpointFactory({ eid: localEid, contractName: 'EndpointV2' })
 
     // First we get the SDK for the local send library
-    let receiveLibrary: Address
-    if (address) {
-        receiveLibrary = (await localEndpointSDK.getReceiveLibrary(address, remoteEid))[0]
-    } else {
-        receiveLibrary = await localEndpointSDK.getDefaultReceiveLibrary(remoteEid)
-    }
+    const receiveLibrary =
+        address == null
+            ? await localEndpointSDK.getDefaultReceiveLibrary(remoteEid)
+            : await localEndpointSDK.getReceiveLibrary(address, remoteEid).then(([address]) => address)
+
+    if (receiveLibrary == null) return undefined
 
     let receiveLibraryTimeout: Timeout
     if (address) {
