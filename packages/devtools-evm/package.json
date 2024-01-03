@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Utilities for LayerZero EVM projects",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.0.0",
+    "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~2.0.2",
     "@layerzerolabs/test-devtools": "~0.0.1",
     "@types/jest": "^29.5.10",
@@ -63,7 +63,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.0.0",
+    "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~2.0.2",
     "zod": "^3.22.4"
   },
