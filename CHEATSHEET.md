@@ -4,6 +4,10 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+</p>
+
 <h1 align="center">Developer Cheatsheet</h1>
 
 ## Glossary
