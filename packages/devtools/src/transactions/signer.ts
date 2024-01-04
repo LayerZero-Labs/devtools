@@ -49,7 +49,9 @@ export const createSignAndSend =
 
                 const result = { transaction, receipt }
                 successful.push(result)
-                onProgress?.(result, successful)
+
+                // We'll create a clone of the successful array so that the consumers can't mutate it
+                onProgress?.(result, [...successful])
             } catch (error) {
                 logger.debug(`Failed to process ${ordinal} transaction: ${error}`)
 

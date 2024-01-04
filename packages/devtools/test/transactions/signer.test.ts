@@ -191,11 +191,12 @@ describe('transactions/signer', () => {
 
                     // We check whether onProgress has been called for every transaction
                     for (const [index, transaction] of transactions.entries()) {
-                        expect(handleProgress).toHaveBeenCalledWith(
+                        expect(handleProgress).toHaveBeenNthCalledWith(
+                            index + 1,
                             // We expect the transaction in question to be passed
                             { transaction, receipt },
                             // As well as the list of all the successful transactions so far
-                            transactions.slice(0, index + 1)
+                            transactions.slice(0, index + 1).map((transaction) => ({ transaction, receipt }))
                         )
                     }
                 })
