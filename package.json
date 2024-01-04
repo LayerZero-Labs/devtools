@@ -2,23 +2,18 @@
   "name": "@layerzerolabs/devtools",
   "version": "0.0.1",
   "private": true,
-  "workspaces": [
-    "examples/*",
-    "packages/*",
-    "tests/*"
-  ],
   "scripts": {
-    "build": "npx turbo run build",
-    "clean": "npx turbo run clean",
-    "dev": "npx turbo run dev",
-    "lint": "npx turbo run lint",
+    "build": "$npm_execpath turbo run build",
+    "clean": "$npm_execpath turbo run clean",
+    "dev": "$npm_execpath turbo run dev",
+    "lint": "$npm_execpath turbo run lint",
     "prepare": "husky install",
     "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys",
     "stop": "docker compose down",
     "test": "docker compose run --rm $DOCKER_COMPOSE_RUN_TESTS_ARGS tests"
   },
   "lint-staged": {
-    "**/*": "npx prettier --write --ignore-unknown"
+    "**/*": "pnpm prettier --write --ignore-unknown"
   },
   "resolutions": {
     "rustbn.js": "^0.3.0"
@@ -42,5 +37,6 @@
     "prettier": "^3.1.1",
     "prettier-plugin-solidity": "^1.3.1",
     "turbo": "1.11.0"
-  }
+  },
+  "packageManager": "pnpm@8.14.0"
 }

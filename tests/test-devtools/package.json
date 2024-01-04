@@ -24,9 +24,9 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "npx tsup",
+    "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
-    "lint": "npx eslint '**/*.{js,ts,json}'"
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
     "@layerzerolabs/lz-definitions": "~2.0.7",

@@ -27,11 +27,11 @@
     "./dist/index.*"
   ],
   "scripts": {
-    "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
-    "build": "npx tsup",
+    "prebuild": "$npm_execpath tsc --noEmit -p tsconfig.build.json",
+    "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
-    "dev": "npx tsup --watch",
-    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "test": "jest"
   },
   "dependencies": {
@@ -45,7 +45,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
-    "@ethersproject/providers": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/lz-definitions": "~2.0.7",
     "@layerzerolabs/test-devtools": "~0.0.1",

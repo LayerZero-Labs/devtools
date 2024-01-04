@@ -21,7 +21,7 @@ forge test
 #### Using Hardhat
 
 ```bash
-yarn
-npx hardhat compile
-npx hardhat test
+pnpm
+pnpm hardhat compile
+pnpm hardhat test
 ```

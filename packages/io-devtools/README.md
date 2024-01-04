@@ -23,7 +23,7 @@ pnpm install @layerzerolabs/io-utils
 ```
 
 ```bash
-yarn install @layerzerolabs/io-utils
+pnpm install @layerzerolabs/io-utils
 ```
 
 ```bash

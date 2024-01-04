@@ -4,12 +4,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "compile": "npx hardhat compile",
-    "lint": "yarn lint:js && yarn lint:sol",
-    "lint:fix": "npx prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
-    "lint:js": "npx eslint '**/*.js' && npx prettier --check .",
+    "compile": "$npm_execpath hardhat compile",
+    "lint": "$npm_execpath lint:js && $npm_execpath lint:sol",
+    "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
+    "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "npx hardhat test --parallel"
+    "test": "$npm_execpath hardhat test --parallel"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",

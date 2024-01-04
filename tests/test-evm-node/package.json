@@ -10,8 +10,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "npx eslint '**/*.{js,ts,json}'",
-    "start": "npx hardhat node --hostname 0.0.0.0"
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
   },
   "devDependencies": {
     "hardhat": "^2.19.4",

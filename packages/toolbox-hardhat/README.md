@@ -12,13 +12,9 @@
 
 ```bash
 yarn add @layerzerolabs/toolbox-hardhat
-```
 
-```bash
 pnpm add @layerzerolabs/toolbox-hardhat
-```
 
-```bash
 npm install @layerzerolabs/toolbox-hardhat
 ```
 
@@ -110,5 +106,5 @@ This package comes with several `hardhat` tasks to speed up your workflow. In or
 Wires the individual `OApp` contracts together, calling `setPeer`.
 
 ```bash
-npx hardhat lz:oapp:wire
+pnpm hardhat lz:oapp:wire
 ```
