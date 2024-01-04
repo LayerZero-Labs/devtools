@@ -22,10 +22,18 @@ jobs:
     name: Build, Lint & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          # Since we only want to run tests & build on the affected packages, we'll
+          # need to use the --since turbo CLI option which requires the whole range
+          # of commits between the base and the head to be present
+          #
+          # In order to do that we'll fetch all the commits from this PR (and add 1 to account for the base)
+          fetch-depth: $(( ${{ github.event.pull_request.commits }} + 1 ))
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
           version: 8
           run_install: false
@@ -73,10 +81,10 @@ jobs:
         run: pnpm lint
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --since=${{ github.event.pull_request.base.sha }}
 
       - name: Test
-        run: pnpm test
+        run: DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--since=${{ github.event.pull_request.base.sha }}" pnpm test
         # Since we're running the E2E tests in docker, we'll need to reinstall
         # the node modules. This is a temporary solution to bridge us between
         # non-containerized and containerized development
