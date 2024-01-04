@@ -29,10 +29,10 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "pnpm tsup",
+    "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
-    "dev": "pnpm tsup --watch",
-    "lint": "pnpm eslint '**/*.{js,ts,json}'",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {

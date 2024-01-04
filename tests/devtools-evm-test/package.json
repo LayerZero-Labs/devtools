@@ -11,8 +11,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache",
-    "lint": "pnpm eslint '**/*.{js,ts,json}'",
-    "pretest": "pnpm hardhat compile",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "pretest": "$npm_execpath hardhat compile",
     "test": "jest"
   },
   "devDependencies": {
