@@ -24,6 +24,10 @@ The code is arranged into:
 # or nvm install if nvm use fails
 nvm use
 
+# If pnpm is not installed on your local machine, you can install it using corepack
+corepack enable
+
+# Install project dependencies
 pnpm install
 
 # Build the entire project
