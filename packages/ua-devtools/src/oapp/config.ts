@@ -182,3 +182,26 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
             })
         )
     )
+
+export const checkOAppPeers = async (graph, createSdk) => {
+    let checkWireAllConfigObj: { [key: string]: any } = {}
+    await Promise.all(
+        graph.connections.map(async ({ vector: { from, to } }): Promise<void> => {
+            let localNetwork = from.eid
+            assert(localNetwork !== undefined, 'localNetwork must be defined')
+            let remoteNetwork = to.eid
+            assert(remoteNetwork !== undefined, 'remoteNetwork must be defined')
+            checkWireAllConfigObj[localNetwork] = {
+                peer: {
+                    [localNetwork]: '',
+                },
+            }
+            const sdk = await createSdk(from)
+            const hasPeer = await sdk.hasPeer(to.eid, to.address)
+
+            if (hasPeer) checkWireAllConfigObj[localNetwork].peer[remoteNetwork] = '🟩'
+            else checkWireAllConfigObj[localNetwork].peer[remoteNetwork] = '🟥'
+        })
+    )
+    return checkWireAllConfigObj;
+}
