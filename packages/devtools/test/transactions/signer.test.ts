@@ -165,5 +165,41 @@ describe('transactions/signer', () => {
                 )
             )
         })
+
+        it('should call onProgress for every successful transaction', async () => {
+            await fc.assert(
+                fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                    // We'll prepare some mock objects for this test
+                    // to mock the transaction responses and receipts
+                    const receipt = { transactionHash: '0x0' }
+
+                    // Our successful wait will produce a receipt
+                    const successfulWait = jest.fn().mockResolvedValue(receipt)
+                    const successfullResponse: OmniTransactionResponse = {
+                        transactionHash: '0x0',
+                        wait: successfulWait,
+                    }
+
+                    // Our signAndSend will then use the map to resolve/reject transactions
+                    const signAndSend = jest.fn().mockResolvedValue(successfullResponse)
+                    const sign = jest.fn().mockRejectedValue('Oh god no')
+                    const signerFactory: OmniSignerFactory = jest.fn().mockResolvedValue({ signAndSend, sign })
+                    const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                    const handleProgress = jest.fn()
+                    await signAndSendTransactions(transactions, handleProgress)
+
+                    // We check whether onProgress has been called for every transaction
+                    for (const [index, transaction] of transactions.entries()) {
+                        expect(handleProgress).toHaveBeenCalledWith(
+                            // We expect the transaction in question to be passed
+                            { transaction, receipt },
+                            // As well as the list of all the successful transactions so far
+                            transactions.slice(0, index)
+                        )
+                    }
+                })
+            )
+        })
     })
 })
