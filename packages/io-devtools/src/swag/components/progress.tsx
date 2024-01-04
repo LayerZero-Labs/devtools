@@ -8,13 +8,13 @@ export interface ProgressBarProps {
    */
   progress?: number;
   /**
-   * Number of characters to leave before the progressbar
+   * Text to appear before the progressbar
    */
-  before?: number;
+  before?: string;
   /**
-   * Number of characters to leave after the progressbar
+   * Text to appear after the progressbar
    */
-  after?: number;
+  after?: string;
   /**
    * Number of available columns
    */
@@ -24,11 +24,12 @@ export interface ProgressBarProps {
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   columns = process.stdout.columns ?? 80,
   progress = 0,
-  before = 0,
-  after = 0,
+  before = "",
+  after = "",
 }) => {
   // First we calculate the available space
-  const space = Math.max(0, columns - before - after);
+  const padding = before.length + after.length;
+  const space = Math.max(0, columns - padding);
 
   // Then we clamp the progress, just in case
   const clampedProgress = Math.max(0, Math.min(1, progress));
@@ -37,13 +38,21 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const numChars = Math.min(Math.floor(space * clampedProgress), space);
   const chars = CHARACTER.repeat(numChars);
 
+  // Then we calculate the amount of "empty" characters we need and put them together
+  const numEmptyChars = space - numChars;
+  const emptyChars = EMPTY_CHARACTER.repeat(numEmptyChars);
+
   return (
-    <Box marginBottom={5} marginTop={5}>
+    <Box>
       <Text>{before}</Text>
 
-      <Gradient name="rainbow">
-        <Text>{chars}</Text>
-      </Gradient>
+      <Box alignItems="center">
+        <Gradient name="rainbow">
+          <Text>{chars}</Text>
+        </Gradient>
+
+        <Text>{emptyChars}</Text>
+      </Box>
 
       <Text>{after}</Text>
     </Box>
@@ -51,3 +60,4 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 };
 
 const CHARACTER = "█";
+const EMPTY_CHARACTER = "░";

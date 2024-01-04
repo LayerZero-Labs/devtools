@@ -120,12 +120,18 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     const signAndSend = createSignAndSend(createSignerFactory())
 
     // Now we render a progressbar to monitor the task progress
-    const progressBar = render(createProgressBar())
+    const progressBar = render(createProgressBar({ before: 'Signing... ', after: ` 0/${transactions.length}` }))
 
     logger.verbose(`Sending the transactions`)
     const results = await signAndSend(transactions, (result, results) => {
         // We'll keep updating the progressbar as we sign the transactions
-        progressBar.rerender(createProgressBar({ progress: results.length / transactions.length }))
+        progressBar.rerender(
+            createProgressBar({
+                progress: results.length / transactions.length,
+                before: 'Signing... ',
+                after: ` ${results.length}/${transactions.length}`,
+            })
+        )
     })
 
     // And finally we drop the progressbar and continue
