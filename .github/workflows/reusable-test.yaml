@@ -36,14 +36,14 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
 
-      # Install the dependencies without running the post-install scripts
-      - name: Install Dependencies
+      # Fetch the dependencies without running the post-install scripts
+      - name: Fetch Dependencies
         run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Run the post-install scripts
-      - name: Build Dependencies
+      # Install the dependencies and run the post-install scripts
+      - name: Install Dependencies
         run: pnpm install --frozen-lockfile --offline
 
       # Cache build artifacts from turbo
