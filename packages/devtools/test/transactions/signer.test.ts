@@ -195,7 +195,7 @@ describe('transactions/signer', () => {
                             // We expect the transaction in question to be passed
                             { transaction, receipt },
                             // As well as the list of all the successful transactions so far
-                            transactions.slice(0, index)
+                            transactions.slice(0, index + 1)
                         )
                     }
                 })
