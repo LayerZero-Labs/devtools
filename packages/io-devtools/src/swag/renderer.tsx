@@ -17,11 +17,11 @@ import { ProgressBar, ProgressBarProps } from "./components/progress";
  * ```
  *
  * @param {ProgressBarProps} props
- * @returns {React.ReactNode}
+ * @returns {React.ReactElement<ProgressBarProps>}
  */
 export const createProgressBar = (
   props: ProgressBarProps = {},
-): React.ReactNode => <ProgressBar {...props} />;
+): React.ReactElement<ProgressBarProps> => <ProgressBar {...props} />;
 
 /**
  * Reexport the render from ink so that we can use it without importing directly from ink
