@@ -43,8 +43,8 @@ type OAppTestConfig = {
     receiveUlnOptionalDVNThreshold: number
 }
 describe('oapp/config', () => {
-    const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
-    const avaxContract = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DefaultOApp' }
+    const ethContract = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
+    const avaxContract = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
 
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {

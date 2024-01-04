@@ -2,12 +2,12 @@
 const { EndpointId } = require('@layerzerolabs/lz-definitions');
 
 const ethContract = {
-    eid: EndpointId.ETHEREUM_MAINNET,
+    eid: EndpointId.ETHEREUM_V2_MAINNET,
     contractName: 'DefaultOApp',
 };
 
 const avaxContract = {
-    eid: EndpointId.AVALANCHE_MAINNET,
+    eid: EndpointId.AVALANCHE_V2_MAINNET,
     contractName: 'DefaultOApp',
 };
 

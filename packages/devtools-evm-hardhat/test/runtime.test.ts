@@ -61,7 +61,7 @@ describe('runtime', () => {
         })
 
         it('should return a HardhatRuntimeEnvironment with correct network', async () => {
-            const runtime = await createGetHreByEid(hre)(EndpointId.ETHEREUM_MAINNET)
+            const runtime = await createGetHreByEid(hre)(EndpointId.ETHEREUM_V2_MAINNET)
 
             expect(runtime.network.name).toEqual('ethereum-mainnet')
             expect(runtime.deployments).toMatchObject({
@@ -85,7 +85,7 @@ describe('runtime', () => {
 
         it('should return eid if defined', () => {
             expect(getEidForNetworkName('ethereum-testnet')).toBe(EndpointId.ETHEREUM_TESTNET)
-            expect(getEidForNetworkName('ethereum-mainnet')).toBe(EndpointId.ETHEREUM_MAINNET)
+            expect(getEidForNetworkName('ethereum-mainnet')).toBe(EndpointId.ETHEREUM_V2_MAINNET)
         })
     })
 
