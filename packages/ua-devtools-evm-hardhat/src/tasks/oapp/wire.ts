@@ -21,7 +21,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { printTransactions } from '@layerzerolabs/devtools'
 import { resolve } from 'path'
-import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { createProgressBar, printLogo, render } from '@layerzerolabs/io-devtools/swag'
 
 interface TaskArgs {
     oappConfig: string
@@ -119,8 +119,17 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     // For now we are only allowing sign & send using the accounts confgiured in hardhat config
     const signAndSend = createSignAndSend(createSignerFactory())
 
+    // Now we render a progressbar to monitor the task progress
+    const progressBar = render(createProgressBar())
+
     logger.verbose(`Sending the transactions`)
-    const results = await signAndSend(transactions)
+    const results = await signAndSend(transactions, (result, results) => {
+        // We'll keep updating the progressbar as we sign the transactions
+        progressBar.rerender(createProgressBar({ progress: results.length / transactions.length }))
+    })
+
+    // And finally we drop the progressbar and continue
+    progressBar.clear()
 
     logger.verbose(`Sent the transactions`)
     logger.debug(`Received the following output:\n\n${printJson(results)}`)
