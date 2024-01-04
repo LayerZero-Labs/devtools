@@ -2,6 +2,10 @@
 Dockerfile
 docker-*.yaml
 
+# Git
+.git
+.gitignore
+
 # CI/CD files
 .changeset
 .github
