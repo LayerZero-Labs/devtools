@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { IncrementOutput, IOmniCounter } from '@layerzerolabs/omnicounter-devtools'
+import { IncrementOutput, IncrementType, IOmniCounter } from '@layerzerolabs/omnicounter-devtools'
 import { EndpointFactory } from '@layerzerolabs/protocol-devtools'
 import { OApp } from '@layerzerolabs/ua-devtools-evm'
 import { Address } from '@layerzerolabs/devtools'
@@ -15,7 +15,7 @@ export class OmniCounter extends OApp implements IOmniCounter {
 
     public async increment(
         eid: EndpointId,
-        type: number,
+        type: IncrementType,
         options: Uint8Array,
         receiver: Address
     ): Promise<IncrementOutput> {

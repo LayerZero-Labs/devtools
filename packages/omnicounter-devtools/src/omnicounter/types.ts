@@ -8,6 +8,13 @@ export type IncrementOutput = {
     gasLimit: bigint
 }
 
+export enum IncrementType {
+    VANILLA_TYPE = 1,
+    COMPOSED_TYPE = 2,
+    ABA_TYPE = 3,
+    COMPOSED_ABA_TYPE = 4,
+}
+
 export interface IOmniCounter {
-    increment(eid: EndpointId, type: number, options: Uint8Array, receiver: Address): Promise<IncrementOutput>
+    increment(eid: EndpointId, type: IncrementType, options: Uint8Array, receiver: Address): Promise<IncrementOutput>
 }

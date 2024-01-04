@@ -31,6 +31,7 @@
     "@layerzerolabs/lz-evm-sdk-v1": "~2.0.7",
     "@layerzerolabs/lz-evm-sdk-v2": "~2.0.7",
     "@layerzerolabs/lz-utility-v2": "~2.0.7",
+    "@layerzerolabs/omnicounter-devtools": "~0.0.1",
     "@layerzerolabs/omnicounter-devtools-evm": "~0.0.1",
     "@layerzerolabs/protocol-devtools": "~0.0.1",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.1",

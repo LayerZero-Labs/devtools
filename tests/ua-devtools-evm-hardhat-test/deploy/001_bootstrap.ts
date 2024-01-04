@@ -29,6 +29,8 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
     const signer = wrapEIP1193Provider(network.provider).getSigner()
+
+    // TODO: move price configuration to a separate sdk and make bootstrap of the configuration optional
     const dstEid = BigNumber.from(
         network.config.eid === EndpointId.ETHEREUM_V2_MAINNET
             ? EndpointId.AVALANCHE_V2_MAINNET
