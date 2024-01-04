@@ -24,26 +24,26 @@ The code is arranged into:
 # or nvm install if nvm use fails
 nvm use
 
-yarn
+pnpm install
 
 # Build the entire project
-yarn build
+pnpm build
 
 # Lints the entire project
-yarn lint
+pnpm lint
 
 # Tests the entire project
-yarn test
+pnpm test
 
 # Runs the project in development mode
-yarn dev
+pnpm dev
 ```
 
 This project is built using `turborepo`. The above commands are just aliases to `turbo` CLI and as such support all the `turbo` options:
 
 ```bash
 # To start the development mode for create-lz-oapp and its dependencies
-yarn dev --filter=create-lz-oapp...
+pnpm dev --filter=create-lz-oapp...
 ```
 
 ### Running tests
@@ -56,7 +56,7 @@ The tests are by default executed in a containerized environment that sets up tw
 You can run the whole test suite within this environment by running:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 #### Refining tested packages
@@ -65,7 +65,7 @@ To only run a specific test suite, you can define `DOCKER_COMPOSE_RUN_TESTS_TURB
 
 ```bash
 # To only run tests for @layerzerolabs/ua-devtools-evm-hardhat-test package
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test yarn test
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test pnpm test
 ```
 
 #### Rebuilding containers
@@ -73,13 +73,13 @@ DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test yarn t
 `docker compose` will by default reuse images for containers it has already built. If by any chance you are seeing code changes not being reflected in your test runs, you can force docker to rebuild the images by defining `DOCKER_COMPOSE_RUN_TESTS_ARGS` environment variable. This variable will be passed to the underlying `docker compose run` command and can contain any arguments that this command understands, for example:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
+DOCKER_COMPOSE_RUN_TESTS_ARGS=--build pnpm test
 ```
 
 You also combine the environment variables:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build yarn test
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build pnpm test
 ```
 
 #### Container logs
@@ -97,7 +97,7 @@ This allows you to monitor logs coming from e.g. the `hardhat` nodes
 It is possible to expose the test networks defined in `docker-compose.yaml` on your host machine. To do this, you can run:
 
 ```bash
-yarn start
+pnpm start
 ```
 
 Once the networks are running, you can go to the `ua-devtools-evm-hardhat-test` package:
@@ -109,25 +109,25 @@ cd packages/ua-devtools-hardhat-test
 Setup the default `EndpointV2` and `DefaultOApp`:
 
 ```bash
-npx hardhat lz:test:oapp:deploy
+pnpm hardhat lz:test:oapp:deploy
 ```
 
 And execute `hardhat` tasks as usual:
 
 ```bash
-npx hardhat lz:oapp:getDefaultConfig
+pnpm hardhat lz:oapp:getDefaultConfig
 ```
 
 If you are developing tasks, it's useful to build the code when it changes. To do this, run the following from the project root:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 To stop the network containers, just run:
 
 ```bash
-yarn stop
+pnpm stop
 ```
 
 **Don't forget that the state of the local networks disappears after they are stopped and any deployment files created in one session will be invalid in the next one.**
@@ -144,21 +144,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
-#### Problems with package updating
-
-To update external `@layerzerolabs` packages, you can use the builtin `yarn` utility:
-
-```bash
-yarn upgrade-interactive --scope @layerzerolabs --latest
-```
-
-However, this utility has an issue with packages that are listed both at the workspace root and in the individual packages, e.g. `@layerzerolabs/prettier-config-next` - it errors out saying that a workspace package could not be found.
-
-To work around this (since this version of yarn is outdated and a fix for this problem will not be provided), you can remove the entries from the root `package.json` before running the command, then add them back (just don't forget to update their versions).
-
 #### Problems using the `dev` script
 
-`turbo` might complain about concurrency issues when running `yarn dev`:
+`turbo` might complain about concurrency issues when running `pnpm dev`:
 
 ```diff
 - error preparing engine: Invalid persistent task configuration:
@@ -168,7 +156,7 @@ To work around this (since this version of yarn is outdated and a fix for this p
 If you see this error, just follow turbo's lead and use:
 
 ```bash
-yarn dev --concurrency 19
+pnpm dev --concurrency 19
 ```
 
 #### Problems with snapshots
@@ -183,5 +171,5 @@ For some packages the snapshot output depends on environment variables and other
 If you encounter errors when running these tests, just set the environment variable before running the test:
 
 ```bash
-CI=1 yarn test
+CI=1 pnpm test
 ```

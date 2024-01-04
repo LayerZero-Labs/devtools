@@ -23,10 +23,10 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "npx tsup",
+    "build": "pnpm tsup",
     "clean": "rm -rf dist",
-    "dev": "npx tsup --watch",
-    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "dev": "pnpm tsup --watch",
+    "lint": "pnpm eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {

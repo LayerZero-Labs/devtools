@@ -24,21 +24,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-          cache: "yarn"
+          cache: "pnpm"
 
       # Install the dependencies without running the post-install scripts
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile --prefer-offline --ignore-scripts
+        run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Run the post-install scripts
       - name: Build Dependencies
-        run: yarn install --frozen-lockfile --offline
+        run: pnpm install --frozen-lockfile --offline
 
       # Cache build artifacts from turbo
       #
@@ -64,13 +70,13 @@ jobs:
             ${{ runner.os }}-hardhat-
 
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Test
-        run: yarn test
+        run: pnpm test
         # Since we're running the E2E tests in docker, we'll need to reinstall
         # the node modules. This is a temporary solution to bridge us between
         # non-containerized and containerized development

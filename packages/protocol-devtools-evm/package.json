@@ -27,11 +27,11 @@
     "./dist/index.*"
   ],
   "scripts": {
-    "prebuild": "npx tsc --noEmit -p tsconfig.build.json",
-    "build": "npx tsup",
+    "prebuild": "pnpm tsc --noEmit -p tsconfig.build.json",
+    "build": "pnpm tsup",
     "clean": "rm -rf dist",
-    "dev": "npx tsup --watch",
-    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "dev": "pnpm tsup --watch",
+    "lint": "pnpm eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {

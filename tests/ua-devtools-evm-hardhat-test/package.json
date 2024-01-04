@@ -10,15 +10,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "npx eslint '**/*.{js,ts,json}'",
-    "pretest": "npx hardhat compile",
+    "lint": "pnpm eslint '**/*.{js,ts,json}'",
+    "pretest": "pnpm hardhat compile",
     "test": "jest --runInBand --forceExit --verbose"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
-    "@ethersproject/providers": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/devtools-evm": "~0.0.1",

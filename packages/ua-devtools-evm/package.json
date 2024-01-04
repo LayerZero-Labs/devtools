@@ -23,9 +23,9 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "npx tsup",
+    "build": "pnpm tsup",
     "clean": "rm -rf dist",
-    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "lint": "pnpm eslint '**/*.{js,ts,json}'",
     "test": "jest"
   },
   "dependencies": {

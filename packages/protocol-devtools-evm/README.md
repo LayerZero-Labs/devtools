@@ -25,7 +25,7 @@ npm install --save @layerzerolabs/protocol-utils-evm
 ```
 
 ```bash
-yarn install @layerzerolabs/protocol-utils-evm
+pnpm install @layerzerolabs/protocol-utils-evm
 ```
 
 ```bash

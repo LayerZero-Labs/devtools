@@ -12,5 +12,5 @@ artifacts
 #foundry test compilation files
 out
 
-# yarn
-yarn-error.log
+# pnpm
+pnpm-error.log

@@ -23,7 +23,7 @@ npm install --save @layerzerolabs/protocol-utils
 ```
 
 ```bash
-yarn install @layerzerolabs/protocol-utils
+pnpm install @layerzerolabs/protocol-utils
 ```
 
 ```bash
