@@ -25,6 +25,7 @@ FROM node:$NODE_VERSION as base
 
 # We'll need a mock NPM_TOKEN to execute any pnpm commands
 ENV NPM_TOKEN=
+ENV PATH "/root/.foundry/bin:$PATH"
 
 # Update the system packages
 RUN apt-get update
@@ -34,10 +35,24 @@ RUN apt-get install -y \
     # Get the json utilities
     jq
 
+# Install foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
+RUN foundryup
+
 # Enable corepack, new node package manager manager
 # 
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
+
+# Output versions
+RUN node -v
+RUN pnpm -v
+RUN git --version
+RUN forge --version
+RUN anvil --version
+RUN chisel --version
+RUN cast --version
+
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
