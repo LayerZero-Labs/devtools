@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "exclude": ["dist", "node_modules"],
-  "include": ["src", "test"],
+  "include": ["src"],
   "compilerOptions": {
     "types": ["node"],
     "paths": {
