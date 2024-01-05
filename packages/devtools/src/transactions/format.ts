@@ -1,19 +1,13 @@
-import { printRecord } from '@layerzerolabs/io-devtools'
 import { OmniTransaction } from './types'
+import { formatEid } from '@/omnigraph/format'
 
-/**
- * Placeholder for a more detailed OmniTransaction printer
- *
- * @param {OmniTransaction} transaction
- * @returns {string}
- */
-export const printTransaction = (transaction: OmniTransaction): string => printRecord(transaction)
-
-/**
- * Placeholder for a more detailed OmniTransaction list printer
- *
- * @param {OmniTransaction[]} transactions
- * @returns {string}
- */
-export const printTransactions = (transactions: OmniTransaction[]): string =>
-    printRecord(transactions.map(printTransaction))
+export const formatOmniTransaction = (
+    transaction: OmniTransaction
+): Record<string, string | number | bigint | undefined> => ({
+    Endpoint: formatEid(transaction.point.eid),
+    Address: transaction.point.address,
+    Description: transaction.description,
+    Data: transaction.data,
+    Value: transaction.value,
+    'Gas Limit': transaction.gasLimit,
+})
