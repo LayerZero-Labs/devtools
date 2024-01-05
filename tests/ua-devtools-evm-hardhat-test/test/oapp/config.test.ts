@@ -24,7 +24,7 @@ import {
 } from '../__utils__/endpoint'
 import { OmniTransaction } from '@layerzerolabs/devtools'
 
-type OAppTestConfig = {
+export type OAppTestConfig = {
     sendLibrary: string
     receiveLibrary: string
     executorLibrary: string
@@ -203,7 +203,7 @@ const getLibraryAddress = async (library: OmniPointHardhat): Promise<string> => 
     return executorPoint.address
 }
 
-const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeConfig> => {
+export const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeConfig> => {
     return {
         sendLibrary: testConfig.sendLibrary,
         receiveLibraryConfig: {
@@ -241,7 +241,7 @@ const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeConfig> 
     }
 }
 
-const setUpOmniGraphHardhat = (
+export const setUpOmniGraphHardhat = (
     ethContract: OmniPointHardhat,
     ethOAppConfig: OAppEdgeConfig,
     avaxContract,
@@ -271,7 +271,7 @@ const setUpOmniGraphHardhat = (
     }
 }
 
-const getDefaultEthConfig = async (): Promise<OAppTestConfig> => {
+export const getDefaultEthConfig = async (): Promise<OAppTestConfig> => {
     const ethDVNAddress = await getLibraryAddress(ethDvn)
     const avaxDvnPoint = await getLibraryAddress(avaxDvn)
     const ethSendUlnRequiredDVNs: string[] = [avaxDvnPoint]
@@ -298,7 +298,7 @@ const getDefaultEthConfig = async (): Promise<OAppTestConfig> => {
     }
 }
 
-const getDefaultAvaxConfig = async (): Promise<OAppTestConfig> => {
+export const getDefaultAvaxConfig = async (): Promise<OAppTestConfig> => {
     const ethDVNAddress = await getLibraryAddress(ethDvn)
     const avaxDvnPoint = await getLibraryAddress(avaxDvn)
     const avaxSendUlnRequiredDVNs: string[] = [ethDVNAddress]
