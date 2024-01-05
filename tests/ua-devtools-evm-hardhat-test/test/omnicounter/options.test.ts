@@ -28,49 +28,31 @@ import {
     setUpOmniGraphHardhat,
 } from '../oapp/config.test'
 
-/**
- * The maximum value of an uint16.
- */
+// The maximum value of an uint16.
 const MAX_UINT_16: number = 0xffff
 
-/**
- * The maximum value of an uint128.
- */
+// The maximum value of an uint128.
 const MAX_UINT_128: bigint = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
 
-/**
- * The minimum native drop measured in native gas unit.
- */
+// The minimum native drop measured in native gas unit.
 const DEFAULT_MIN_NATIVE_DROP: bigint = BigInt(0)
 
-/**
- * The maximum native drop measured in native gas unit (currently configured in 001_bootstap.ts).
- */
+// The maximum native drop measured in native gas unit (currently configured in 001_bootstap.ts).
 const DEFAULT_MAX_NATIVE_DROP: bigint = parseEther('0.25').toBigInt()
 
-/**
- * The minimum gasLimit for an Option.
- */
+// The minimum gasLimit for an Option.
 const MIN_GAS_LIMIT = BigInt(0)
 
-/**
- * The maximum gasLimit for an Option.
- */
+// The maximum gasLimit for an Option.
 const MAX_GAS_LIMIT = MAX_UINT_128
 
-/**
- * The minimum index for a Composed Option.
- */
+// The minimum index for a Composed Option.
 const MIN_COMPOSED_INDEX: number = 0
 
-/**
- * The maximum index for a Composed Option.
- */
+// The maximum index for a Composed Option.
 const MAX_COMPOSED_INDEX: number = MAX_UINT_16
 
-/**
- * An OmniCounter User Application specific arbitrary using the different types of "increment".
- */
+// An OmniCounter User Application specific arbitrary using the different types of "increment".
 const omnicounterIncrementTypeArbitrary: fc.Arbitrary<IncrementType> = fc.constantFrom(
     IncrementType.VANILLA_TYPE,
     IncrementType.COMPOSED_TYPE,
@@ -78,22 +60,16 @@ const omnicounterIncrementTypeArbitrary: fc.Arbitrary<IncrementType> = fc.consta
     IncrementType.COMPOSED_ABA_TYPE
 )
 
-/**
- * An arbitrary for gasLimit.
- */
+// An arbitrary for gasLimit.
 const gasLimitArbitrary: fc.Arbitrary<bigint> = fc.bigInt({ min: MIN_GAS_LIMIT, max: MAX_GAS_LIMIT })
 
-/**
- * An arbitrary for value (native drop).
- */
+// An arbitrary for value (native drop).
 const nativeDropArbitrary: fc.Arbitrary<bigint> = fc.bigInt({
     min: DEFAULT_MIN_NATIVE_DROP,
     max: DEFAULT_MAX_NATIVE_DROP,
 })
 
-/**
- * An arbitrary for Composed Option index.
- */
+// An arbitrary for Composed Option index.
 const composedIndexArbitrary: fc.Arbitrary<number> = fc.integer({ min: MIN_COMPOSED_INDEX, max: MAX_COMPOSED_INDEX })
 
 /**
@@ -102,9 +78,7 @@ const composedIndexArbitrary: fc.Arbitrary<number> = fc.integer({ min: MIN_COMPO
  */
 const applyPremium = (input: bigint) => (BigInt(input) * BigInt(110)) / BigInt(100)
 
-/**
- * Test the OApp options using the OmniCounter OApp as the test contract.
- */
+// Test the OApp options using the OmniCounter OApp as the test contract.
 describe('oapp/options', () => {
     const ethOmniCounter = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'OmniCounter' }
     const avaxOmniCounter = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'OmniCounter' }
@@ -151,11 +125,7 @@ describe('oapp/options', () => {
         expect(await avaxSdk.hasPeer(ethPoint.eid, ethPoint.address)).toBe(true)
     })
 
-    /**
-     * Helper function to perform OmniCounter.increment(...) and return the matching PacketSent logs.
-     * @param {number} type
-     * @param {Options} options
-     */
+    // Helper function to perform OmniCounter.increment(...) and return the matching PacketSent logs.
     const incrementAndReturnLogs = async (type: number, options: Options) => {
         const incrementOutput = await ethSdk.increment(avaxPoint.eid, type, options.toBytes(), avaxPoint.address)
         const incrementTx: OmniTransaction = {
@@ -184,13 +154,8 @@ describe('oapp/options', () => {
                 gasLimitArbitrary,
                 nativeDropArbitrary,
 
-                /**
-                 * Test the generation and submission of arbitrary LZ_RECEIVE Options.  The transaction should succeed,
-                 * and the options from the transaction receipt logs should match the generated input.
-                 * @param {number} type
-                 * @param {bigint} gasLimit
-                 * @param {bigint} value
-                 */
+                // Test the generation and submission of arbitrary LZ_RECEIVE Options.  The transaction should succeed,
+                // and the options from the transaction receipt logs should match the generated input.
                 async (type: number, gasLimit: bigint, value: bigint) => {
                     const options = Options.newOptions().addExecutorLzReceiveOption(
                         gasLimit.toString(),
@@ -212,14 +177,8 @@ describe('oapp/options', () => {
                 gasLimitArbitrary,
                 nativeDropArbitrary,
 
-                /**
-                 * Test the generation and submission of arbitrary COMPOSE Options.  The transaction should succeed, and
-                 * the options from the transaction receipt logs should match the generated input.
-                 * @param {number} type
-                 * @param {number} index
-                 * @param {bigint} gasLimit
-                 * @param {bigint} value
-                 */
+                // Test the generation and submission of arbitrary COMPOSE Options.  The transaction should succeed, and
+                // the options from the transaction receipt logs should match the generated input.
                 async (type: number, index: number, gasLimit: bigint, value: bigint) => {
                     const options = Options.newOptions().addExecutorComposeOption(
                         index,
@@ -241,12 +200,8 @@ describe('oapp/options', () => {
                 omnicounterIncrementTypeArbitrary,
                 nativeDropArbitrary,
 
-                /**
-                 * Test the generation and submission of arbitrary NATIVE_DROP Options.  The transaction should
-                 * succeed, and the options from the transaction receipt logs should match the generated input.
-                 * @param type
-                 * @param value
-                 */
+                // Test the generation and submission of arbitrary NATIVE_DROP Options.  The transaction should succeed,
+                // and the options from the transaction receipt logs should match the generated input.
                 async (type: number, value: bigint) => {
                     const options = Options.newOptions().addExecutorNativeDropOption(value.toString(), address)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
@@ -259,16 +214,18 @@ describe('oapp/options', () => {
 
     it('executorOrderedExecutionOption', async () => {
         await fc.assert(
-            /**
-             * Test the generation and submission of arbitrary ORDERED Options.  The transaction should succeed, and the
-             * options from the transaction receipt logs should match the generated input.
-             */
-            fc.asyncProperty(omnicounterIncrementTypeArbitrary, async (type) => {
-                const options = Options.newOptions().addExecutorOrderedExecutionOption()
-                const packetSentEvents = await incrementAndReturnLogs(type, options)
-                expect(packetSentEvents).toHaveLength(1)
-                expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
-            })
+            fc.asyncProperty(
+                omnicounterIncrementTypeArbitrary,
+
+                // Test the generation and submission of arbitrary ORDERED Options.  The transaction should succeed, and the
+                // options from the transaction receipt logs should match the generated input.
+                async (type) => {
+                    const options = Options.newOptions().addExecutorOrderedExecutionOption()
+                    const packetSentEvents = await incrementAndReturnLogs(type, options)
+                    expect(packetSentEvents).toHaveLength(1)
+                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                }
+            )
         )
     })
 
@@ -293,15 +250,9 @@ describe('oapp/options', () => {
                 stackedGasLimitArbitrary,
                 stackedValueArbitrary,
 
-                /**
-                 * Test the generation of multiple Options in a single Packet.  The transaction should succeed.  Options
-                 * should be decoded to match inputs.  gasLimit and nativeDrop should be summed for Packets that have
-                 * multiple COMPOSE options for the same index.
-                 * @param type
-                 * @param index
-                 * @param gasLimit
-                 * @param value
-                 */
+                // Test the generation of multiple Options in a single Packet.  The transaction should succeed.  Options
+                // should be decoded to match inputs.  gasLimit and nativeDrop should be summed for Packets that have
+                // multiple COMPOSE options for the same index.
                 async (type: number, index: number, gasLimit: bigint, value: bigint) => {
                     const gasLimitStr = gasLimit.toString()
                     const valueStr = value.toString()
