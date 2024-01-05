@@ -1,3 +1,4 @@
+import { MessageParams, MessagingFee } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import type {
     IEndpoint,
@@ -196,6 +197,14 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return {
             ...this.createTransaction(data),
             description: `Registering library ${lib}`,
+        }
+    }
+
+    public async quote(params: MessageParams, sender: Address): Promise<MessagingFee> {
+        const { nativeFee, lzTokenFee } = await this.contract.contract.quote(params, sender)
+        return {
+            nativeFee: BigInt(nativeFee),
+            lzTokenFee: BigInt(lzTokenFee),
         }
     }
 }
