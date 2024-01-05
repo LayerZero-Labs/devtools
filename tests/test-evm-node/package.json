@@ -10,12 +10,13 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "npx eslint '**/*.{js,ts,json}'",
-    "start": "npx hardhat node --hostname 0.0.0.0"
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
   },
   "devDependencies": {
-    "hardhat": "^2.19.2",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "hardhat": "^2.19.4",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "typescript": "^5.3.3"
   }
 }

@@ -43,7 +43,7 @@ services:
   evm-node:
     extends:
       service: project
-    command: ["npx", "turbo", "start", "--filter", "test-evm-node"]
+    command: ["pnpm", "turbo", "start", "--filter", "test-evm-node"]
     healthcheck:
       interval: 2s
       retries: 20

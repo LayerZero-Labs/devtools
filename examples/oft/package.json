@@ -4,33 +4,34 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "compile": "npx hardhat compile",
-    "lint": "yarn lint:js && yarn lint:sol",
-    "lint:fix": "npx prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
-    "lint:js": "npx eslint '**/*.js' && npx prettier --check .",
+    "compile": "$npm_execpath hardhat compile",
+    "lint": "$npm_execpath lint:js && $npm_execpath lint:sol",
+    "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
+    "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "npx hardhat test --parallel"
+    "test": "$npm_execpath hardhat test --parallel"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
+    "@babel/core": "^7.23.7",
     "@layerzerolabs/eslint-config-next": "^2.0.7",
     "@layerzerolabs/lz-definitions": "~2.0.7",
     "@layerzerolabs/lz-evm-oapp-v2": "~2.0.7",
+    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.7",
     "@layerzerolabs/prettier-config-next": "^2.0.7",
     "@layerzerolabs/solhint-config": "^2.0.7",
     "@layerzerolabs/toolbox-hardhat": "~0.0.1",
-    "@nomicfoundation/hardhat-ethers": "^3.0.2",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@openzeppelin/contracts": "^4.8.1",
-    "@rushstack/eslint-patch": "^1.5.1",
+    "@openzeppelin/contracts": "^4.9.5",
+    "@rushstack/eslint-patch": "^1.6.1",
     "ethers": "^5.7.0",
-    "hardhat": "^2.19.2",
+    "hardhat": "^2.19.4",
     "hardhat-contract-sizer": "^2.10.0",
-    "hardhat-deploy": "^0.11.43",
-    "prettier": "^3.1.0",
+    "hardhat-deploy": "^0.11.45",
+    "prettier": "^3.1.1",
     "solhint": "^4.0.0",
     "solidity-bytes-utils": "^0.8.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }

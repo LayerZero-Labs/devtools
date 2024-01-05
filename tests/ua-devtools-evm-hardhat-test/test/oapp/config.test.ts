@@ -42,8 +42,8 @@ type OAppTestConfig = {
     receiveUlnOptionalDVNThreshold: number
 }
 describe('oapp/config', () => {
-    const ethContract = { eid: EndpointId.ETHEREUM_MAINNET, contractName: 'DefaultOApp' }
-    const avaxContract = { eid: EndpointId.AVALANCHE_MAINNET, contractName: 'DefaultOApp' }
+    const ethContract = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
+    const avaxContract = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
 
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
@@ -145,13 +145,14 @@ describe('oapp/config', () => {
         const avaxOAppSdk = await sdkFactory(avaxPoint)
         const avaxEndpointSdk = await avaxOAppSdk.getEndpointSDK()
 
-        const expectedOAppConfigTransactions: OmniTransaction[] = await createExpectedTransactions(
+        let expectedOAppConfigTransactions: OmniTransaction[] = await createExpectedTransactions(
             ethContract,
             ethTestConfig,
             avaxContract,
             avaxTestConfig
         )
 
+        let ethSetPeerTx
         {
             const signerFactory = createSignerFactory()
             // register new Send and Receive ULNs on ETH
@@ -165,7 +166,10 @@ describe('oapp/config', () => {
             await ethSigner.signAndSend(
                 await ethEndpointSdk.setReceiveLibrary(ethPoint.address, avaxPoint.eid, ethTestConfig.receiveLibrary, 0)
             )
-            await ethSigner.signAndSend(await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address))
+
+            // execute set peer tx before running wire all
+            ethSetPeerTx = await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address)
+            await ethSigner.signAndSend(ethSetPeerTx)
 
             // register new Send and Receive ULNs AVAX
             const avaxSigner = await signerFactory(avaxContract.eid)
@@ -187,7 +191,9 @@ describe('oapp/config', () => {
 
         // This is where the configuration happens
         const transactions = await configureOApp(builder.graph, sdkFactory)
-        expect(transactions).toEqual(expectedOAppConfigTransactions.slice(1))
+        // remove set peer tx from expectedOAppConfigTransactions
+        expectedOAppConfigTransactions = expectedOAppConfigTransactions.filter((obj) => obj.data !== ethSetPeerTx.data)
+        expect(transactions).toEqual(expectedOAppConfigTransactions)
     })
 })
 
@@ -367,19 +373,6 @@ const createExpectedTransactions = async (
                 },
             },
         ]),
-        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.receiveLibrary, [
-            {
-                eid: avaxPoint.eid,
-                ulnConfig: {
-                    confirmations: ethTestConfig.receiveUlnConfirmations,
-                    optionalDVNThreshold: ethTestConfig.receiveUlnOptionalDVNThreshold,
-                    requiredDVNs: ethTestConfig.receiveUlnRequiredDVNs,
-                    optionalDVNs: ethTestConfig.receiveUlnOptionalDVNs,
-                    requiredDVNCount: ethTestConfig.receiveUlnRequiredDVNs.length,
-                    optionalDVNCount: ethTestConfig.receiveUlnOptionalDVNs.length,
-                },
-            },
-        ]),
         await avaxEndpointSdk.setExecutorConfig(avaxPoint.address, avaxTestConfig.sendLibrary, [
             {
                 eid: ethPoint.eid,
@@ -399,6 +392,19 @@ const createExpectedTransactions = async (
                     optionalDVNs: avaxTestConfig.sendUlnOptionalDVNs,
                     requiredDVNCount: avaxTestConfig.sendUlnRequiredDVNs.length,
                     optionalDVNCount: avaxTestConfig.sendUlnOptionalDVNs.length,
+                },
+            },
+        ]),
+        await ethEndpointSdk.setUlnConfig(ethPoint.address, ethTestConfig.receiveLibrary, [
+            {
+                eid: avaxPoint.eid,
+                ulnConfig: {
+                    confirmations: ethTestConfig.receiveUlnConfirmations,
+                    optionalDVNThreshold: ethTestConfig.receiveUlnOptionalDVNThreshold,
+                    requiredDVNs: ethTestConfig.receiveUlnRequiredDVNs,
+                    optionalDVNs: ethTestConfig.receiveUlnOptionalDVNs,
+                    requiredDVNCount: ethTestConfig.receiveUlnRequiredDVNs.length,
+                    optionalDVNCount: ethTestConfig.receiveUlnOptionalDVNs.length,
                 },
             },
         ]),

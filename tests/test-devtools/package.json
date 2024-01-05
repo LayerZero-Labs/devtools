@@ -24,17 +24,17 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "npx tsup",
+    "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
-    "lint": "npx eslint '**/*.{js,ts,json}'"
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
     "@layerzerolabs/lz-definitions": "~2.0.7",
-    "fast-check": "^3.14.0",
-    "ts-node": "^10.9.1",
+    "fast-check": "^3.15.0",
+    "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-definitions": "~2.0.7",

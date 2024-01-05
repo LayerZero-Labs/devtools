@@ -28,11 +28,11 @@ describe.only('task: checkWire', () => {
     it('should show one chain (eth) is connected', async () => {
         const oappConfig = configPathFixture('valid.config.connected.js')
         const ethContract = {
-            eid: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
             contractName: 'DefaultOApp',
         }
         const avaxContract = {
-            eid: EndpointId.AVALANCHE_MAINNET,
+            eid: EndpointId.AVALANCHE_V2_MAINNET,
             contractName: 'DefaultOApp',
         }
         const contractFactory = createContractFactory()
@@ -51,11 +51,11 @@ describe.only('task: checkWire', () => {
     it('should show all chains are connected', async () => {
         const oappConfig = configPathFixture('valid.config.connected.js')
         const ethContract = {
-            eid: EndpointId.ETHEREUM_MAINNET,
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
             contractName: 'DefaultOApp',
         }
         const avaxContract = {
-            eid: EndpointId.AVALANCHE_MAINNET,
+            eid: EndpointId.AVALANCHE_V2_MAINNET,
             contractName: 'DefaultOApp',
         }
         const contractFactory = createContractFactory()

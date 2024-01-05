@@ -29,29 +29,30 @@
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "npx tsup",
+    "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
-    "lint": "npx eslint '**/*.{js,ts,json}'",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "cli-table3": "^0.6.3",
+    "logform": "^2.6.0",
     "prompts": "^2.4.2",
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.10",
-    "@types/react": "^17.0.73",
-    "fast-check": "^3.14.0",
+    "@types/jest": "^29.5.11",
+    "@types/react": "^17.0.74",
+    "fast-check": "^3.15.0",
     "ink": "^3.2.0",
     "ink-gradient": "^2.0.0",
     "jest": "^29.7.0",
     "react": "^17.0.2",
     "ts-jest": "^29.1.1",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
   "peerDependencies": {

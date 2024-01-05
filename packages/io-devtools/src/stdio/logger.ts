@@ -1,3 +1,4 @@
+import type { Format } from 'logform'
 import { createLogger as createWinstonLogger, format, transports, Logger } from 'winston'
 
 /**
@@ -48,7 +49,7 @@ export const setDefaultLogLevel = (level: string) => {
  *
  * @returns `Logger`
  */
-export const createLogger = (level: string = DEFAULT_LOG_LEVEL, logFormat = format.cli()) =>
+export const createLogger = (level: string = DEFAULT_LOG_LEVEL, logFormat: Format = format.cli()) =>
     createWinstonLogger({
         level,
         format: logFormat,

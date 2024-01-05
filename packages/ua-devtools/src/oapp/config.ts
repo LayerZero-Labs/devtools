@@ -1,4 +1,4 @@
-import { Address, flattenTransactions, OmniGraph, type OmniTransaction } from '@layerzerolabs/devtools'
+import { flattenTransactions, OmniGraph, type OmniTransaction } from '@layerzerolabs/devtools'
 import { flattenReadTransactions, HasPeer, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector } from '@layerzerolabs/devtools'
@@ -14,7 +14,8 @@ export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, crea
         await configureSendLibraries(graph, createSdk),
         await configureReceiveLibraries(graph, createSdk),
         await configureReceiveLibraryTimeouts(graph, createSdk),
-        await configureOAppConfigs(graph, createSdk),
+        await configureSendConfig(graph, createSdk),
+        await configureReceiveConfig(graph, createSdk),
     ])
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
@@ -103,7 +104,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
         )
     )
 
-export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
+export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
@@ -112,18 +113,15 @@ export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGrap
                 const transactions: OmniTransaction[] = []
 
                 if (config?.sendConfig) {
-                    const currentSendLibrary: Address = config.sendLibrary
-                        ? config.sendLibrary
-                        : (await endpointSdk.getSendLibrary(from.address, to.eid)) ?? ''
+                    const currentSendLibrary =
+                        config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
+                    assert(currentSendLibrary !== undefined, 'currentSendLibrary must be defined')
                     const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
                         from.address,
                         currentSendLibrary,
                         to.eid
                     )
 
-                    // 1) executor
-                    // - maxMessageSize
-                    // - executor
                     if (
                         sendExecutorConfig.maxMessageSize !== config.sendConfig.executorConfig.maxMessageSize ||
                         sendExecutorConfig.executor !== config.sendConfig.executorConfig.executor
@@ -135,11 +133,6 @@ export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGrap
                         )
                     }
 
-                    // 2) uln
-                    // - confirmations
-                    // - optionalDVNThreshold
-                    // - requiredDVNs
-                    // - optionalDVNs
                     const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
 
                     if (
@@ -155,6 +148,19 @@ export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGrap
                         )
                     }
                 }
+
+                return [...transactions]
+            })
+        )
+    )
+
+export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                const oappSdk = await createSdk(from)
+                const endpointSdk = await oappSdk.getEndpointSDK()
+                const transactions: OmniTransaction[] = []
 
                 if (config?.receiveConfig) {
                     const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
@@ -178,7 +184,6 @@ export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGrap
                     }
                 }
 
-                if (!transactions.length) return []
                 return [...transactions]
             })
         )

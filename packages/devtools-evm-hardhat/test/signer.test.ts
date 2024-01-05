@@ -14,7 +14,7 @@ describe('signer', () => {
         })
 
         it('should return an OmniSignerEVM', async () => {
-            const signer = await createSignerFactory()(EndpointId.ETHEREUM_MAINNET)
+            const signer = await createSignerFactory()(EndpointId.ETHEREUM_V2_MAINNET)
 
             expect(signer).toBeInstanceOf(OmniSignerEVM)
             expect(signer.signer).toBeInstanceOf(JsonRpcSigner)

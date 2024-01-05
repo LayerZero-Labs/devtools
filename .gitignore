@@ -1,8 +1,8 @@
 # Logs
 logs
 *.log
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
+pnpm-error.log*
 
 # Dependency directories
 node_modules/

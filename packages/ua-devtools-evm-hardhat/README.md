@@ -47,7 +47,7 @@ The package adds the following tasks:
   Usage:
 
   ```sh
-  npx hardhat getDefaultConfig --networks ethereum,bsc,polygon,avalanche
+  pnpm hardhat getDefaultConfig --networks ethereum,bsc,polygon,avalanche
   ```
 
 - `getConfig` returns the configuration of the specified contract.
@@ -62,7 +62,7 @@ The package adds the following tasks:
   Usage:
 
   ```sh
-  npx hardhat getConfig --network ethereum --remote-networks bsc,polygon,avalanche --name OFT
+  pnpm hardhat getConfig --network ethereum --remote-networks bsc,polygon,avalanche --name OFT
   ```
 
 - `setConfig` sets the configuration of the specified contract.
@@ -77,7 +77,7 @@ The package adds the following tasks:
   Usage:
 
   ```sh
-  npx hardhat setConfig --networks ethereum,bsc,avalanche --name OFT --config-path "./appConfig.json" --gnosis-config-path "./gnosisConfig.json"
+  pnpm hardhat setConfig --networks ethereum,bsc,avalanche --name OFT --config-path "./appConfig.json" --gnosis-config-path "./gnosisConfig.json"
   ```
 
    <br/>
@@ -171,11 +171,11 @@ The package adds the following tasks:
   Usage:
 
   ```sh
-  npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet --contract ExampleOFTV2
+  pnpm hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet --contract ExampleOFTV2
 
-  npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --contract OFTV2 --proxy-contract ProxyOFTV2 --proxy-chain optimism-testnet
+  pnpm hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --contract OFTV2 --proxy-contract ProxyOFTV2 --proxy-chain optimism-testnet
 
-  npx hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17,0x27631753FC88e7b45a46679B9Cd2e06378cB43dC"
+  pnpm hardhat checkWireAllConfig --e testnet --u --t --m --chains ethereum-testnet,arbitrum-testnet,optimism-testnet --addresses "0xD90E022dE858DfDFC3C0f66b0D9ACD12CA6eA3Ec,0x137d4e9C2431A3DCBa6e615E9438F2c558353a17,0x27631753FC88e7b45a46679B9Cd2e06378cB43dC"
   ```
 
     <br>
@@ -193,7 +193,7 @@ The package adds the following tasks:
   Usage:
 
   ```sh
-  npx hardhat --network ethereum-testnet wireAll --e testnet
+  pnpm hardhat --network ethereum-testnet wireAll --e testnet
   ```
 
   Below is an example of the wire all configuration

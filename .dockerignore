@@ -1,8 +1,19 @@
+# Docker
+Dockerfile
+docker-*.yaml
+
+# Git
+.git
+.gitignore
+
 # CI/CD files
 .changeset
 .github
 .husky
 .turbo
+
+# Misc
+*ignore
 
 # Dependencies & deployments
 node_modules
@@ -15,6 +26,3 @@ cache
 
 # Metadata
 *.md
-
-# Docker files
-docker-compose.templates.yaml

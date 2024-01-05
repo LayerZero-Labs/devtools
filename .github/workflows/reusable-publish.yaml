@@ -24,21 +24,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version-file: ".nvmrc"
-          cache: "yarn"
+          cache: "pnpm"
 
-      # Install the dependencies without running the post-install scripts
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile --prefer-offline --ignore-scripts
+      # Fetch the dependencies without running the post-install scripts
+      - name: Fetch Dependencies
+        run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Run the post-install scripts
-      - name: Build Dependencies
-        run: yarn install --frozen-lockfile --offline
+      # Install the dependencies and run the post-install scripts
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --offline
 
       # Cache build artifacts from turbo
       #
@@ -64,7 +70,7 @@ jobs:
             ${{ runner.os }}-hardhat-
 
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           NODE_ENV: production
 
@@ -82,8 +88,8 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
-          version: yarn changeset version
-          publish: yarn changeset publish
+          version: pnpm changeset version
+          publish: pnpm changeset publish
           title: "🚀 Version packages"
 
         env:

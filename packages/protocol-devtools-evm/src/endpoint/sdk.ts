@@ -153,7 +153,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParams])
         return {
             ...this.createTransaction(data),
-            description: `Set Executor Config for lib: ${lib}`,
+            description: `Set UlnConfig Config for lib: ${lib}`,
         }
     }
 
