@@ -18,56 +18,23 @@ env:
   NPM_TOKEN: ""
 
 jobs:
-  build-and-test:
-    name: Build, Lint & Test
+  build:
+    name: Build & Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/install-dependencies
         with:
-          version: 8
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: ".nvmrc"
-          cache: "pnpm"
-
-      # Fetch the dependencies without running the post-install scripts
-      - name: Fetch Dependencies
-        run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
-        env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Install the dependencies and run the post-install scripts
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile --offline
-
-      # Cache build artifacts from turbo
-      #
-      # This step will speed up workflow runs that don't touch the whole codebase
-      # (or the ones that don't touch the codebase at all)
-      - name: Cache turbo build setup
-        uses: actions/cache@v3
-        with:
-          path: node_modules/.cache/turbo
-          key: ${{ runner.os }}-turbo-${{ github.ref_name }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-
-
-      # Cache hardhat compilers
-      #
-      # This step will speed up workflow runs that use hardhat compilation
-      - name: Cache hardhat compilers
-        uses: actions/cache@v3
-        with:
-          path: .cache/hardhat
-          key: ${{ runner.os }}-hardhat-${{ github.ref_name }}
-          restore-keys: |
-            ${{ runner.os }}-hardhat-
+      - name: Setup build cache
+        uses: ./.github/workflows/actions/setup-build-cache
 
       - name: Lint
         run: pnpm lint
