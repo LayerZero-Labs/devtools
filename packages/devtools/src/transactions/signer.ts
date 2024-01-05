@@ -12,7 +12,8 @@ import type { OmniError } from '@/omnigraph/types'
 export const createSignAndSend =
     (createSigner: OmniSignerFactory) =>
     async (
-        transactions: OmniTransaction[]
+        transactions: OmniTransaction[],
+        onProgress?: (result: OmniTransactionWithReceipt, results: OmniTransactionWithReceipt[]) => unknown
     ): Promise<[successful: OmniTransactionWithReceipt[], errors: OmniError[]]> => {
         const logger = createModuleLogger('sign & send')
 
@@ -46,7 +47,11 @@ export const createSignAndSend =
                 const receipt = await response.wait()
                 logger.debug(`Finished ${ordinal} transaction`)
 
-                successful.push({ transaction, receipt })
+                const result = { transaction, receipt }
+                successful.push(result)
+
+                // We'll create a clone of the successful array so that the consumers can't mutate it
+                onProgress?.(result, [...successful])
             } catch (error) {
                 logger.debug(`Failed to process ${ordinal} transaction: ${error}`)
 

@@ -411,6 +411,9 @@ importers:
         specifier: ^1.9.6
         version: 1.10.0
     devDependencies:
+      '@types/ink-gradient':
+        specifier: ^2.0.4
+        version: 2.0.4
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -3613,6 +3616,12 @@ packages:
 
   /@types/http-cache-semantics@4.0.4:
     resolution: {integrity: sha512-1m0bIFVc7eJWyve9S0RnuRgcQqF/Xd5QsUZAZeQFr1Q3/p9JWoQQEqmVy+DPTNpGXwhgIetAoYF8JSc33q29QA==}
+    dev: true
+
+  /@types/ink-gradient@2.0.4:
+    resolution: {integrity: sha512-cE89zTHJSYfqdSwmDuGQHVCmhpHHR6eciJ4hGYAA7HA+2d7NaTwGnrEGuAt6CFG83cxxa/D2/9IWFans5MneJw==}
+    dependencies:
+      '@types/react': 17.0.74
     dev: true
 
   /@types/istanbul-lib-coverage@2.0.6:
