@@ -30,13 +30,13 @@ describe('transactions/signer', () => {
 
                     // Our successful wait will produce a receipt
                     const successfulWait = jest.fn().mockResolvedValue(receipt)
-                    const successfullResponse: OmniTransactionResponse = {
+                    const successfulResponse: OmniTransactionResponse = {
                         transactionHash: '0x0',
                         wait: successfulWait,
                     }
 
                     // Our signAndSend will then use the map to resolve/reject transactions
-                    const signAndSend = jest.fn().mockResolvedValue(successfullResponse)
+                    const signAndSend = jest.fn().mockResolvedValue(successfulResponse)
                     const sign = jest.fn().mockRejectedValue('Oh god no')
                     const signerFactory: OmniSignerFactory = jest.fn().mockResolvedValue({ signAndSend, sign })
                     const signAndSendTransactions = createSignAndSend(signerFactory)
@@ -69,7 +69,7 @@ describe('transactions/signer', () => {
 
                         // Our successful wait will produce a receipt
                         const successfulWait = jest.fn().mockResolvedValue(receipt)
-                        const successfullResponse: OmniTransactionResponse = {
+                        const successfulResponse: OmniTransactionResponse = {
                             transactionHash: '0x0',
                             wait: successfulWait,
                         }
@@ -87,8 +87,8 @@ describe('transactions/signer', () => {
                         // This map relies on the fact that we are passing the transaction object without modifying it
                         // so the objects are referentially equal
                         const implementations: Map<OmniTransaction, Promise<unknown>> = new Map([
-                            ...firstBatch.map((t) => [t, Promise.resolve(successfullResponse)] as const),
-                            ...secondBatch.map((t) => [t, Promise.resolve(successfullResponse)] as const),
+                            ...firstBatch.map((t) => [t, Promise.resolve(successfulResponse)] as const),
+                            ...secondBatch.map((t) => [t, Promise.resolve(successfulResponse)] as const),
                             [failedTransaction, Promise.resolve(unsuccessfulResponse)],
                         ])
 
@@ -127,7 +127,7 @@ describe('transactions/signer', () => {
                         const error = new Error('Failed transaction')
                         const receipt = { transactionHash: '0x0' }
                         const successfulWait = jest.fn().mockResolvedValue(receipt)
-                        const successfullResponse: OmniTransactionResponse = {
+                        const successfulResponse: OmniTransactionResponse = {
                             transactionHash: '0x0',
                             wait: successfulWait,
                         }
@@ -138,8 +138,8 @@ describe('transactions/signer', () => {
                         // This map relies on the fact that we are passing the transaction object without modifying it
                         // so the objects are referentially equal
                         const implementations: Map<OmniTransaction, Promise<unknown>> = new Map([
-                            ...firstBatch.map((t) => [t, Promise.resolve(successfullResponse)] as const),
-                            ...secondBatch.map((t) => [t, Promise.resolve(successfullResponse)] as const),
+                            ...firstBatch.map((t) => [t, Promise.resolve(successfulResponse)] as const),
+                            ...secondBatch.map((t) => [t, Promise.resolve(successfulResponse)] as const),
                             [failedTransaction, Promise.reject(error)],
                         ])
 
@@ -163,6 +163,43 @@ describe('transactions/signer', () => {
                         }
                     }
                 )
+            )
+        })
+
+        it('should call onProgress for every successful transaction', async () => {
+            await fc.assert(
+                fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                    // We'll prepare some mock objects for this test
+                    // to mock the transaction responses and receipts
+                    const receipt = { transactionHash: '0x0' }
+
+                    // Our successful wait will produce a receipt
+                    const successfulWait = jest.fn().mockResolvedValue(receipt)
+                    const successfulResponse: OmniTransactionResponse = {
+                        transactionHash: '0x0',
+                        wait: successfulWait,
+                    }
+
+                    // Our signAndSend will then use the map to resolve/reject transactions
+                    const signAndSend = jest.fn().mockResolvedValue(successfulResponse)
+                    const sign = jest.fn().mockRejectedValue('Oh god no')
+                    const signerFactory: OmniSignerFactory = jest.fn().mockResolvedValue({ signAndSend, sign })
+                    const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                    const handleProgress = jest.fn()
+                    await signAndSendTransactions(transactions, handleProgress)
+
+                    // We check whether onProgress has been called for every transaction
+                    for (const [index, transaction] of transactions.entries()) {
+                        expect(handleProgress).toHaveBeenNthCalledWith(
+                            index + 1,
+                            // We expect the transaction in question to be passed
+                            { transaction, receipt },
+                            // As well as the list of all the successful transactions so far
+                            transactions.slice(0, index + 1).map((transaction) => ({ transaction, receipt }))
+                        )
+                    }
+                })
             )
         })
     })
