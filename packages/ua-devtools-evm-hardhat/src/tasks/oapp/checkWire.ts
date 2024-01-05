@@ -3,7 +3,7 @@ import { task, types } from 'hardhat/config'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { TASK_LZ_CHECK_WIRE_OAPP } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { HasPeer, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { OAppPeers, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
@@ -15,7 +15,7 @@ interface TaskArgs {
     logLevel?: string
 }
 
-type Connections<TKey extends string | number | symbol> = Record<TKey, Record<TKey, string>>
+type ConnectedPeers<TKey extends string | number | symbol> = Record<TKey, Record<TKey, string>>
 
 export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
     printLogo()
@@ -31,22 +31,26 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
     const contractFactory = createConnectedContractFactory()
     const oAppFactory = createOAppFactory(contractFactory)
 
-    const checkOAppPeersResult: HasPeer[] = await checkOAppPeers(graph, oAppFactory)
-    const connections: Connections<string> = {}
-    checkOAppPeersResult.map(({ vector: { from } }) => {
-        connections[endpointIdToNetwork(from.eid)] = {
-            [endpointIdToNetwork(from.eid)]: '',
-        }
-    })
-    checkOAppPeersResult.map(({ vector: { from, to }, hasPeer }) => {
-        const connection = connections[endpointIdToNetwork(from.eid)]
+    const checkOAppPeersArray: OAppPeers[] = await checkOAppPeers(graph, oAppFactory)
+    const connectedPeers: ConnectedPeers<string> = {}
+    for (const oappPeer of checkOAppPeersArray) {
+        const fromNetwork = endpointIdToNetwork(oappPeer.vector.from.eid)
+        const toNetwork = endpointIdToNetwork(oappPeer.vector.to.eid)
 
-        if (connection != null) {
-            connection[endpointIdToNetwork(to.eid)] = hasPeer ? '🟩' : '🟥'
+        if (!connectedPeers[fromNetwork]) {
+            connectedPeers[fromNetwork] = {
+                [fromNetwork]: '',
+            }
         }
-    })
-    console.table(connections)
-    return connections
+
+        const connection = connectedPeers[fromNetwork]
+        if (connection && !connection[toNetwork]) {
+            connection[toNetwork] = oappPeer.hasPeer ? '🟩' : '🟥'
+        }
+    }
+
+    console.table(connectedPeers)
+    return connectedPeers
 }
 
 task(

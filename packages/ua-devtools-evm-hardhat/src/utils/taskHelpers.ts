@@ -11,7 +11,7 @@ import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { resolve } from 'path'
 
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
-import { Logger } from 'winston'
+import { Logger } from '@layerzerolabs/io-devtools'
 
 export async function getSendConfig(
     localNetworkName: string,

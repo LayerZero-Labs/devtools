@@ -1,12 +1,12 @@
 import { flattenTransactions, OmniGraph, type OmniTransaction } from '@layerzerolabs/devtools'
-import { flattenReadTransactions, HasPeer, OAppFactory, OAppOmniGraph } from './types'
+import { OAppPeers, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
-export type OAppRead = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<HasPeer[]>
+export type OAppRead = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppPeers[]>
 
 export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
     flattenTransactions([
@@ -189,14 +189,12 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
         )
     )
 
-export const checkOAppPeers: OAppRead = async (graph: OmniGraph, createSdk: OAppFactory): Promise<HasPeer[]> => {
-    return flattenReadTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector }): Promise<HasPeer> => {
-                const sdk = await createSdk(vector.from)
-                const hasPeer = await sdk.hasPeer(vector.to.eid, vector.to.address)
-                return { vector: vector, hasPeer }
-            })
-        )
+export const checkOAppPeers: OAppRead = async (graph: OmniGraph, createSdk: OAppFactory): Promise<OAppPeers[]> => {
+    return await Promise.all(
+        graph.connections.map(async ({ vector }): Promise<OAppPeers> => {
+            const sdk = await createSdk(vector.from)
+            const hasPeer = await sdk.hasPeer(vector.to.eid, vector.to.address)
+            return { vector: vector, hasPeer }
+        })
     )
 }

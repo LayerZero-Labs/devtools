@@ -41,15 +41,10 @@ export interface OAppEdgeConfig {
     receiveConfig?: OAppReceiveConfig
 }
 
-export interface HasPeer {
+export interface OAppPeers {
     vector: OmniVector
     hasPeer: boolean
 }
-
-const isNonNullable = <T>(value: T | null | undefined): value is T => value != null
-
-export const flattenReadTransactions = (transations: (HasPeer | HasPeer[] | null | undefined)[]): HasPeer[] =>
-    transations.filter(isNonNullable).flat()
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>
 

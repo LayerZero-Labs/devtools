@@ -15,7 +15,6 @@ import { createConnectedContractFactory, createSignerFactory } from '@layerzerol
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { printTransactions } from '@layerzerolabs/devtools'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
-import { resolve } from 'path'
 import { createProgressBar, printLogo, render } from '@layerzerolabs/io-devtools/swag'
 
 interface TaskArgs {
