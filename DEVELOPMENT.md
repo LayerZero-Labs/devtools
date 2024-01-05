@@ -95,7 +95,7 @@ To only run a specific test suite, you can define `DOCKER_COMPOSE_RUN_TESTS_TURB
 
 ```bash
 # To only run tests for @layerzerolabs/ua-devtools-evm-hardhat-test package
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test pnpm test
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test pnpm test:ci
 ```
 
 #### Adjusting docker commands <a id="running-tests--adjusting-docker-commands"></a>
