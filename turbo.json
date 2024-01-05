@@ -29,8 +29,7 @@
     },
     "test": {
       "cache": false,
-      "outputs": [],
-      "dependsOn": ["^build"]
+      "outputs": []
     }
   },
   "globalDependencies": ["tsconfig.json"]
