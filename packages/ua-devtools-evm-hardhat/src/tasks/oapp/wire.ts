@@ -22,6 +22,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { resolve } from 'path'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
+import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 
 interface TaskArgs {
     oappConfig: string
@@ -40,35 +41,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-
-    // Now we create our config loader
-    const configLoader = createConfigLoader<OAppOmniGraphHardhat>(OAppOmniGraphHardhatSchema)
-
-    // At this point we have a correctly typed config in the hardhat format
-    const hardhatGraph: OAppOmniGraphHardhat = await configLoader(resolve(oappConfigPath))
-
-    // We'll also print out the whole config for verbose loggers
-    logger.verbose(`Config file '${oappConfigPath}' has correct structure`)
-    logger.debug(`The hardhat config is:\n\n${printJson(hardhatGraph)}`)
-
-    // What we need to do now is transform the config from hardhat format to the generic format
-    // with addresses instead of contractNames
-    logger.verbose(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
-    let graph: OAppOmniGraph
-    try {
-        // The transformation is achieved using a builder that also validates the resulting graph
-        // (i.e. makes sure that all the contracts exist and connections are valid)
-        const builder = await OmniGraphBuilderHardhat.fromConfig(hardhatGraph)
-
-        // We only need the graph so we throw away the builder
-        graph = builder.graph
-    } catch (error) {
-        throw new Error(`Config from file '${oappConfigPath}' is invalid: ${error}`)
-    }
-
-    // Show more detailed logs to interested users
-    logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
-    logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)
