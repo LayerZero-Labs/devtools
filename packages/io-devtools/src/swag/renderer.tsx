@@ -24,6 +24,6 @@ export const createProgressBar = (
 ): React.ReactElement<ProgressBarProps> => <ProgressBar {...props} />;
 
 /**
- * Reexport the render from ink so that we can use it without importing directly from ink
+ * Re-export the render from ink so that we can use it without importing directly from ink
  */
 export { render } from "ink";
