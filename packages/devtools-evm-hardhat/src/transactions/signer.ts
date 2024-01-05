@@ -1,7 +1,7 @@
+import pMemoize from 'p-memoize'
 import type { OmniSignerFactory } from '@layerzerolabs/devtools'
 import { OmniSignerEVM } from '@layerzerolabs/devtools-evm'
-import pMemoize from 'p-memoize'
-import { createProviderFactory } from '../provider'
+import { createProviderFactory } from '@/provider'
 
 export const createSignerFactory = (
     addressOrIndex?: string | number,
