@@ -61,32 +61,32 @@ const MAX_GAS_LIMIT = MAX_UINT_128
 /**
  * The minimum index for a Composed Option.
  */
-const MIN_INDEX: number = 0
+const MIN_COMPOSED_INDEX: number = 0
 
 /**
  * The maximum index for a Composed Option.
  */
-const MAX_INDEX: number = MAX_UINT_16
+const MAX_COMPOSED_INDEX: number = MAX_UINT_16
 
 /**
  * An OmniCounter User Application specific arbitrary using the different types of "increment".
  */
-const OMNICOUNTER_INCREMENT_TYPE_ARBITRARY: fc.Arbitrary<IncrementType> = fc.oneof(
-    fc.constant(IncrementType.VANILLA_TYPE),
-    fc.constant(IncrementType.COMPOSED_TYPE),
-    fc.constant(IncrementType.ABA_TYPE),
-    fc.constant(IncrementType.COMPOSED_ABA_TYPE)
+const omnicounterIncrementTypeArbitrary: fc.Arbitrary<IncrementType> = fc.constantFrom(
+    IncrementType.VANILLA_TYPE,
+    IncrementType.COMPOSED_TYPE,
+    IncrementType.ABA_TYPE,
+    IncrementType.COMPOSED_ABA_TYPE
 )
 
 /**
  * An arbitrary for gasLimit.
  */
-const GAS_LIMIT_ARBITRARY: fc.Arbitrary<bigint> = fc.bigInt({ min: MIN_GAS_LIMIT, max: MAX_GAS_LIMIT })
+const gasLimitArbitrary: fc.Arbitrary<bigint> = fc.bigInt({ min: MIN_GAS_LIMIT, max: MAX_GAS_LIMIT })
 
 /**
  * An arbitrary for value (native drop).
  */
-const NATIVE_DROP_ARBITRARY: fc.Arbitrary<bigint> = fc.bigInt({
+const nativeDropArbitrary: fc.Arbitrary<bigint> = fc.bigInt({
     min: DEFAULT_MIN_NATIVE_DROP,
     max: DEFAULT_MAX_NATIVE_DROP,
 })
@@ -94,7 +94,7 @@ const NATIVE_DROP_ARBITRARY: fc.Arbitrary<bigint> = fc.bigInt({
 /**
  * An arbitrary for Composed Option index.
  */
-const INDEX_ARBITRARY: fc.Arbitrary<number> = fc.integer({ min: MIN_INDEX, max: MAX_INDEX })
+const composedIndexArbitrary: fc.Arbitrary<number> = fc.integer({ min: MIN_COMPOSED_INDEX, max: MAX_COMPOSED_INDEX })
 
 /**
  * Helper used to apply a 10% premium to input.
@@ -180,9 +180,9 @@ describe('oapp/options', () => {
         )
         await fc.assert(
             fc.asyncProperty(
-                OMNICOUNTER_INCREMENT_TYPE_ARBITRARY,
-                GAS_LIMIT_ARBITRARY,
-                NATIVE_DROP_ARBITRARY,
+                omnicounterIncrementTypeArbitrary,
+                gasLimitArbitrary,
+                nativeDropArbitrary,
 
                 /**
                  * Test the generation and submission of arbitrary LZ_RECEIVE Options.  The transaction should succeed,
@@ -207,10 +207,10 @@ describe('oapp/options', () => {
     it('executorComposeOption', async () => {
         await fc.assert(
             fc.asyncProperty(
-                OMNICOUNTER_INCREMENT_TYPE_ARBITRARY,
-                INDEX_ARBITRARY,
-                GAS_LIMIT_ARBITRARY,
-                NATIVE_DROP_ARBITRARY,
+                omnicounterIncrementTypeArbitrary,
+                composedIndexArbitrary,
+                gasLimitArbitrary,
+                nativeDropArbitrary,
 
                 /**
                  * Test the generation and submission of arbitrary COMPOSE Options.  The transaction should succeed, and
@@ -238,8 +238,8 @@ describe('oapp/options', () => {
         const address = await ethSigner.signer.getAddress()
         await fc.assert(
             fc.asyncProperty(
-                OMNICOUNTER_INCREMENT_TYPE_ARBITRARY,
-                NATIVE_DROP_ARBITRARY,
+                omnicounterIncrementTypeArbitrary,
+                nativeDropArbitrary,
 
                 /**
                  * Test the generation and submission of arbitrary NATIVE_DROP Options.  The transaction should
@@ -263,7 +263,7 @@ describe('oapp/options', () => {
              * Test the generation and submission of arbitrary ORDERED Options.  The transaction should succeed, and the
              * options from the transaction receipt logs should match the generated input.
              */
-            fc.asyncProperty(fc.integer({ min: 1, max: 4 }), async (type) => {
+            fc.asyncProperty(omnicounterIncrementTypeArbitrary, async (type) => {
                 const options = Options.newOptions().addExecutorOrderedExecutionOption()
                 const packetSentEvents = await incrementAndReturnLogs(type, options)
                 expect(packetSentEvents).toHaveLength(1)
@@ -288,8 +288,8 @@ describe('oapp/options', () => {
         const address = await ethSigner.signer.getAddress()
         await fc.assert(
             fc.asyncProperty(
-                OMNICOUNTER_INCREMENT_TYPE_ARBITRARY,
-                INDEX_ARBITRARY,
+                omnicounterIncrementTypeArbitrary,
+                composedIndexArbitrary,
                 stackedGasLimitArbitrary,
                 stackedValueArbitrary,
 
