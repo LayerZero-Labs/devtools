@@ -55,8 +55,6 @@ services:
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
-      - ./packages:/app/packages
-      - ./tests:/app/tests
       # Hardhat has an issue with caching compilers inside a docker container,
       # failing with EACCES -13 error, pointing to a permissions issue with the cache folder.
       #
@@ -64,4 +62,4 @@ services:
       # as a cache directory for hardhat so that the permissions
       # don't clash
       - ./.cache/hardhat:/root/.cache/hardhat-nodejs
-    command: "pnpm turbo test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS"
+    command: pnpm test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS

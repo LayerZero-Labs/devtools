@@ -52,18 +52,44 @@ pnpm dev --filter=create-lz-oapp...
 
 ### Running tests
 
-The tests are by default executed in a containerized environment that sets up two `hardhat` nodes accessible from within the environment:
+There are two options when it comes to running tests:
+
+- [CI mode](#running-tests--ci-mode)
+- [Local mode](#running-tests--local-mode)
+
+#### CI mode <a id="running-tests--ci-mode"></a>
+
+In the CI mode, the tests are ran inside a docker container based on the provided `Dockerfile`. You can run the tests in the CI mode by running:
+
+```bash
+pnpm test:ci
+```
+
+In the CI mode, the containers are rebuilt before every test run. [See below for how to refine the packages](#running-tests--refining-tested-packages) for which the tests will be run. [See below for how to adjust the `docker run` command behavior](#running-tests--adjusting-docker-commands).
+
+In the CI mode the environment sets up two `hardhat` nodes only accessible from within the environment:
 
 - `http://network-britney:8545`
 - `http://network-vengaboys:8545`
 
-You can run the whole test suite within this environment by running:
+Their URLs are exposed to the containers under `NETWORK_URL_BRITNEY` and `NETWORK_URL_VENGABOYS` environment variables. The accounts on these networks are funded based on the `MNEMONIC` environment variable that's also exposed to the containers.
+
+#### Local mode <a id="running-tests--local-mode"></a>
+
+In the local mode, the tests are executed on the developer machine. You can run the tests in the local mode by running:
 
 ```bash
-pnpm test
+pnpm test:local
 ```
 
-#### Refining tested packages
+In the local mode the environment sets up two `hardhat` nodes accessible from the host machine:
+
+- `http://localhost:10001`
+- `http://localhost:10002`
+
+The accounts on these networks are funded based on the `MNEMONIC` environment variable that is set based on the `.env` file.
+
+#### Refining tested packages <a id="running-tests--refining-tested-packages"></a>
 
 To only run a specific test suite, you can define `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS` environment variable before running the tests. This variable will be passed to the underlying `turbo` command and can contain any arguments that this command understands, for example:
 
@@ -72,18 +98,20 @@ To only run a specific test suite, you can define `DOCKER_COMPOSE_RUN_TESTS_TURB
 DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test pnpm test
 ```
 
-#### Rebuilding containers
+#### Adjusting docker commands <a id="running-tests--adjusting-docker-commands"></a>
 
-`docker compose` will by default reuse images for containers it has already built. If by any chance you are seeing code changes not being reflected in your test runs, you can force docker to rebuild the images by defining `DOCKER_COMPOSE_RUN_TESTS_ARGS` environment variable. This variable will be passed to the underlying `docker compose run` command and can contain any arguments that this command understands, for example:
+The test commands use `docker compose up` and `docker compose run` commands to setup necessary services. If you need to change the behavior of these commands by passing some CLI arguments, you can do so using the `DOCKER_COMPOSE_ARGS` environment variable.
+
+`docker compose` will by default reuse images for containers it has already built. If by any chance you are seeing code changes not being reflected in your local mode test runs, you can force docker to rebuild the images by defining `DOCKER_COMPOSE_ARGS` environment variable. This variable will be passed to the underlying `docker compose run` command and can contain any arguments that this command understands, for example:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_ARGS=--build pnpm test
+DOCKER_COMPOSE_ARGS=--build pnpm test:local
 ```
 
 You also combine the environment variables:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_RUN_TESTS_ARGS=--build pnpm test
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_ARGS=--build pnpm test:local
 ```
 
 #### Container logs
@@ -91,7 +119,7 @@ DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER
 To monitor the container logs you'll need to run:
 
 ```bash
-docker compose logs -f
+pnpm logs
 ```
 
 This allows you to monitor logs coming from e.g. the `hardhat` nodes
