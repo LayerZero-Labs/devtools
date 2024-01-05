@@ -1,5 +1,5 @@
+import { createModuleLogger } from '@/stdio/logger'
 import { accessSync, constants, lstatSync } from 'fs'
-import { createModuleLogger } from '..'
 
 export const isDirectory = (path: string): boolean => {
     try {
