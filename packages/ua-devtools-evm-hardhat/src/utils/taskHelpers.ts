@@ -9,7 +9,6 @@ import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
 import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { resolve } from 'path'
-
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { Logger } from '@layerzerolabs/io-devtools'
 

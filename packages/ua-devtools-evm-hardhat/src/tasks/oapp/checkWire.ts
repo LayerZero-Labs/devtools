@@ -3,13 +3,12 @@ import { task, types } from 'hardhat/config'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { TASK_LZ_CHECK_WIRE_OAPP } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { OAppPeers, OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
+import { OAppPeers, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
-import { OmniTransaction } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     oappConfig: string

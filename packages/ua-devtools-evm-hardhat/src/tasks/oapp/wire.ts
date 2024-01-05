@@ -3,24 +3,20 @@ import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
 import {
     createLogger,
-    createConfigLoader,
     setDefaultLogLevel,
     promptToContinue,
     printJson,
     pluralizeNoun,
     printBoolean,
 } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import {
-    OmniGraphBuilderHardhat,
     createConnectedContractFactory,
     createSignerFactory,
     formatOmniTransaction,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
-import { resolve } from 'path'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 
