@@ -7,9 +7,7 @@ import type { HardhatUserConfig } from 'hardhat/types'
 // using your own keyboard (using exposed networks)
 import './tasks'
 
-// We will default the mnemonic to the value we use in docker compose
-// for easy exposed network workflow
-const MNEMONIC = process.env.MNEMONIC ?? 'test test test test test test test test test test test junk'
+const MNEMONIC = process.env.MNEMONIC ?? ''
 
 /**
  * This is a dummy hardhat config that enables us to test
