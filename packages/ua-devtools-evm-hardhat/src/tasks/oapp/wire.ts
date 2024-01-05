@@ -19,9 +19,9 @@ import {
     createSignerFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
-import { printTransactions } from '@layerzerolabs/devtools'
+import { formatOmniTransaction } from '@layerzerolabs/devtools'
 import { resolve } from 'path'
-import { createProgressBar, printLogo, render } from '@layerzerolabs/io-devtools/swag'
+import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 
 interface TaskArgs {
     oappConfig: string
@@ -106,7 +106,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     const previewTransactions = isInteractive
         ? await promptToContinue(`Would you like to preview the transactions before continuing?`)
         : true
-    if (previewTransactions) logger.info(`\n${printTransactions(transactions)}`)
+    if (previewTransactions) printRecords(transactions.map(formatOmniTransaction))
 
     // Now ask the user whether they want to go ahead with signing them
     const shouldSubmit = isInteractive
