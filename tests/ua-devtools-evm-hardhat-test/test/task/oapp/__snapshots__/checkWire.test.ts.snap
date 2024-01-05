@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`task: checkWire should show no chains are connected 1`] = `
+{
+  "avalanche-mainnet": {
+    "avalanche-mainnet": "",
+    "ethereum-mainnet": "🟥",
+  },
+  "ethereum-mainnet": {
+    "avalanche-mainnet": "🟥",
+    "ethereum-mainnet": "",
+  },
+}
+`;
+
+exports[`task: checkWire should show one chain is connected 1`] = `
+{
+  "avalanche-mainnet": {
+    "avalanche-mainnet": "",
+    "ethereum-mainnet": "🟥",
+  },
+  "ethereum-mainnet": {
+    "avalanche-mainnet": "🟩",
+    "ethereum-mainnet": "",
+  },
+}
+`;
+
+exports[`task: checkWire should show wire all 1`] = `
+{
+  "avalanche-mainnet": {
+    "avalanche-mainnet": "",
+    "ethereum-mainnet": "🟩",
+  },
+  "ethereum-mainnet": {
+    "avalanche-mainnet": "🟩",
+    "ethereum-mainnet": "",
+  },
+}
+`;

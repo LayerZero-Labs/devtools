@@ -1,13 +1,17 @@
 import { Address } from '@layerzerolabs/devtools'
 import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
-import { createConnectedContractFactory, getEidForNetworkName, OmniGraphBuilderHardhat } from '@layerzerolabs/devtools-evm-hardhat'
-import {createConfigLoader, createLogger, printJson, setDefaultLogLevel} from '@layerzerolabs/io-devtools'
+import {
+    createConnectedContractFactory,
+    getEidForNetworkName,
+    OmniGraphBuilderHardhat,
+} from '@layerzerolabs/devtools-evm-hardhat'
+import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
 import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { resolve } from 'path'
 
-import {OAppOmniGraph} from "@layerzerolabs/ua-devtools";
-import {Logger} from "winston";
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { Logger } from 'winston'
 
 export async function getSendConfig(
     localNetworkName: string,
@@ -99,5 +103,5 @@ export async function validateAndTransformOappConfig(oappConfigPath: string, log
     logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
     logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
 
-    return graph;
+    return graph
 }

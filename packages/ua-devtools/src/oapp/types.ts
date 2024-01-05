@@ -8,6 +8,7 @@ import type {
     OmniGraph,
     OmniPoint,
     OmniTransaction,
+    OmniVector,
 } from '@layerzerolabs/devtools'
 import type { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 
@@ -39,6 +40,16 @@ export interface OAppEdgeConfig {
     sendConfig?: OAppSendConfig
     receiveConfig?: OAppReceiveConfig
 }
+
+export interface HasPeer {
+    vector: OmniVector
+    hasPeer: boolean
+}
+
+const isNonNullable = <T>(value: T | null | undefined): value is T => value != null
+
+export const flattenReadTransactions = (transations: (HasPeer | HasPeer[] | null | undefined)[]): HasPeer[] =>
+    transations.filter(isNonNullable).flat()
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>
 

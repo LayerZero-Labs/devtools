@@ -3,26 +3,19 @@ import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
 import {
     createLogger,
-    createConfigLoader,
     setDefaultLogLevel,
     promptToContinue,
     printJson,
     pluralizeNoun,
     printBoolean,
 } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import {
-    OmniGraphBuilderHardhat,
-    createConnectedContractFactory,
-    createSignerFactory,
-} from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { printTransactions } from '@layerzerolabs/devtools'
-import { resolve } from 'path'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import {validateAndTransformOappConfig} from "@/utils/taskHelpers";
+import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 
 interface TaskArgs {
     oappConfig: string
@@ -41,7 +34,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    let graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)

@@ -1,11 +1,12 @@
-import { Address, flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
-import type { OAppFactory, OAppOmniGraph } from './types'
+import { Address, flattenTransactions, OmniGraph, type OmniTransaction } from '@layerzerolabs/devtools'
+import { flattenReadTransactions, HasPeer, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
+export type OAppRead = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<HasPeer[]>
 
 export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
     flattenTransactions([
@@ -102,7 +103,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
         )
     )
 
-export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =>
+export const configureOAppConfigs: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
@@ -183,25 +184,14 @@ export const configureOAppConfigs: OAppConfigurator = async (graph, createSdk) =
         )
     )
 
-export const checkOAppPeers = async (graph, createSdk) => {
-    let checkWireAllConfigObj: { [key: string]: any } = {}
-    await Promise.all(
-        graph.connections.map(async ({ vector: { from, to } }): Promise<void> => {
-            let localNetwork = from.eid
-            assert(localNetwork !== undefined, 'localNetwork must be defined')
-            let remoteNetwork = to.eid
-            assert(remoteNetwork !== undefined, 'remoteNetwork must be defined')
-            checkWireAllConfigObj[localNetwork] = {
-                peer: {
-                    [localNetwork]: '',
-                },
-            }
-            const sdk = await createSdk(from)
-            const hasPeer = await sdk.hasPeer(to.eid, to.address)
-
-            if (hasPeer) checkWireAllConfigObj[localNetwork].peer[remoteNetwork] = '🟩'
-            else checkWireAllConfigObj[localNetwork].peer[remoteNetwork] = '🟥'
-        })
+export const checkOAppPeers: OAppRead = async (graph: OmniGraph, createSdk: OAppFactory): Promise<HasPeer[]> => {
+    return flattenReadTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector }): Promise<HasPeer> => {
+                const sdk = await createSdk(vector.from)
+                const hasPeer = await sdk.hasPeer(vector.to.eid, vector.to.address)
+                return { vector: vector, hasPeer }
+            })
+        )
     )
-    return checkWireAllConfigObj;
 }
