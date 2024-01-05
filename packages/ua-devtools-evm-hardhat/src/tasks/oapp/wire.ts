@@ -17,9 +17,9 @@ import {
     OmniGraphBuilderHardhat,
     createConnectedContractFactory,
     createSignerFactory,
+    formatOmniTransaction,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
-import { formatOmniTransaction } from '@layerzerolabs/devtools'
 import { resolve } from 'path'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 
