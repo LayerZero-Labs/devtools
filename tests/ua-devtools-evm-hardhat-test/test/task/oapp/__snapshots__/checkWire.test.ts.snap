@@ -1,40 +1,94 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`task: checkWire should show all chains are connected 1`] = `
-{
-  "avalanche-mainnet": {
-    "avalanche-mainnet": "",
-    "ethereum-mainnet": "🟩",
+[
+  {
+    "hasPeer": true,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+    },
   },
-  "ethereum-mainnet": {
-    "avalanche-mainnet": "🟩",
-    "ethereum-mainnet": "",
+  {
+    "hasPeer": true,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+    },
   },
-}
+]
 `;
 
 exports[`task: checkWire should show no chains are connected 1`] = `
-{
-  "avalanche-mainnet": {
-    "avalanche-mainnet": "",
-    "ethereum-mainnet": "🟥",
+[
+  {
+    "hasPeer": false,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+    },
   },
-  "ethereum-mainnet": {
-    "avalanche-mainnet": "🟥",
-    "ethereum-mainnet": "",
+  {
+    "hasPeer": false,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+    },
   },
-}
+]
 `;
 
 exports[`task: checkWire should show one chain (eth) is connected 1`] = `
-{
-  "avalanche-mainnet": {
-    "avalanche-mainnet": "",
-    "ethereum-mainnet": "🟥",
+[
+  {
+    "hasPeer": false,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+    },
   },
-  "ethereum-mainnet": {
-    "avalanche-mainnet": "🟩",
-    "ethereum-mainnet": "",
+  {
+    "hasPeer": true,
+    "vector": {
+      "from": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30101,
+      },
+      "to": {
+        "address": "0x38a024C0b412B9d1db8BC398140D00F5Af3093D4",
+        "eid": 30106,
+      },
+    },
   },
-}
+]
 `;
