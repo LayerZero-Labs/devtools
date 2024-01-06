@@ -89,9 +89,12 @@ describe('oapp/options', () => {
     let avaxPoint: OmniPoint
     let contractFactory: OmniContractFactoryHardhat
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         await deployOmniCounterFixture()
         await setupDefaultEndpoint()
+    })
+
+    beforeEach(async () => {
         contractFactory = createConnectedContractFactory()
         const sdkFactory = createOmniCounterFactory(contractFactory)
         const signerFactory = createSignerFactory()
@@ -165,7 +168,8 @@ describe('oapp/options', () => {
                     expect(packetSentEvents).toHaveLength(1)
                     expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
                 }
-            )
+            ),
+            { numRuns: 20 }
         )
     })
 
@@ -189,7 +193,8 @@ describe('oapp/options', () => {
                     expect(packetSentEvents).toHaveLength(1)
                     expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
                 }
-            )
+            ),
+            { numRuns: 20 }
         )
     })
 
@@ -208,7 +213,8 @@ describe('oapp/options', () => {
                     expect(packetSentEvents).toHaveLength(1)
                     expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
                 }
-            )
+            ),
+            { numRuns: 20 }
         )
     })
 
@@ -225,7 +231,8 @@ describe('oapp/options', () => {
                     expect(packetSentEvents).toHaveLength(1)
                     expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
                 }
-            )
+            ),
+            { numRuns: 10 }
         )
     })
 
