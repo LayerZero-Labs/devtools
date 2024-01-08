@@ -12,7 +12,7 @@ import { deepStrictEqual } from 'assert'
  * @param {unknown} b
  * @returns {boolean}
  */
-export const isDeepEqual = <T>(a: T, b: unknown): b is T => {
+export const isDeepEqual = (a: unknown, b: unknown): boolean => {
     try {
         return deepStrictEqual(a, b), true
     } catch {
