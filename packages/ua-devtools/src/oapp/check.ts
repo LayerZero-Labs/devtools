@@ -1,4 +1,3 @@
-import { OmniGraph } from '@layerzerolabs/devtools'
 import { OAppFactory, OAppOmniGraph, OAppPeers } from '@/oapp/types'
 
 export type OAppRead = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppPeers[]>

@@ -1,5 +1,5 @@
-import { flattenTransactions, OmniGraph, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OAppPeers, OAppFactory, OAppOmniGraph } from './types'
+import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
+import { OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
