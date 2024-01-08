@@ -8,6 +8,7 @@ import type {
     OmniGraph,
     OmniPoint,
     OmniTransaction,
+    OmniVector,
 } from '@layerzerolabs/devtools'
 import type { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 
@@ -38,6 +39,11 @@ export interface OAppEdgeConfig {
     receiveLibraryTimeoutConfig?: Timeout
     sendConfig?: OAppSendConfig
     receiveConfig?: OAppReceiveConfig
+}
+
+export interface OAppPeers {
+    vector: OmniVector
+    hasPeer: boolean
 }
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>

@@ -1,5 +1,5 @@
 import 'hardhat'
-import { configureOApp } from '@layerzerolabs/ua-devtools'
+import { configureOApp, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import {
     createConnectedContractFactory,
@@ -22,7 +22,6 @@ import {
     ethSendUln2_Opt2,
     setupDefaultEndpoint,
 } from '../__utils__/endpoint'
-import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { OmniTransaction } from '@layerzerolabs/devtools'
 
 export type OAppTestConfig = {
