@@ -14,13 +14,21 @@ import {
     Uln302ExecutorConfig,
     configureUln302,
     Uln302UlnConfig,
+    configurePriceFeed,
+    PriceFeedEdgeConfig,
+    PriceData,
 } from '@layerzerolabs/protocol-devtools'
-import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
+import {
+    createEndpointFactory,
+    createPriceFeedFactory,
+    createUln302Factory,
+} from '@layerzerolabs/protocol-devtools-evm'
 import { createSignAndSend } from '@layerzerolabs/devtools'
 
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
 export const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
+export const ethPriceFeed = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'PriceFeed' }
 export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const ethExecutor = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'Executor' }
@@ -28,12 +36,19 @@ export const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN'
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
+export const avaxPriceFeed = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'PriceFeed' }
 export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const avaxExecutor = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'Executor' }
 export const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
 
 export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
+
+const defaultPriceData: PriceData = {
+    priceRatio: '100000000000000000000',
+    gasPriceInUnit: 1,
+    gasPerByte: 1,
+}
 
 /**
  * Helper function to generate the default Uln302ExecutorConfig for a given chain.
@@ -97,6 +112,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const signAndSend = createSignAndSend(createSignerFactory())
     const ulnSdkFactory = createUln302Factory(contractFactory)
     const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
+    const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
 
     // For the graphs, we'll also need the pointers to the contracts
     const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))
@@ -110,6 +126,34 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
     const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
+
+    // This is the graph for PriceFeed
+    const priceFeedConfig: OmniGraphHardhat<unknown, PriceFeedEdgeConfig> = {
+        contracts: [
+            {
+                contract: ethPriceFeed,
+            },
+            {
+                contract: avaxPriceFeed,
+            },
+        ],
+        connections: [
+            {
+                from: ethPriceFeed,
+                to: avaxPriceFeed,
+                config: {
+                    priceData: defaultPriceData,
+                },
+            },
+            {
+                from: avaxPriceFeed,
+                to: ethPriceFeed,
+                config: {
+                    priceData: defaultPriceData,
+                },
+            },
+        ],
+    }
 
     // This is the graph for SendUln302
     const sendUlnConfig: OmniGraphHardhat<Uln302NodeConfig, unknown> = {
@@ -236,6 +280,9 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const builderEndpoint = await OmniGraphBuilderHardhat.fromConfig(config)
     const endpointTransactions = await configureEndpoint(builderEndpoint.graph, endpointSdkFactory)
 
+    const builderPriceFeed = await OmniGraphBuilderHardhat.fromConfig(priceFeedConfig)
+    const priceFeedTransactions = await configurePriceFeed(builderPriceFeed.graph, priceFeedSdkFactory)
+
     const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
 
@@ -249,6 +296,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const receiveUlnTransactions_Opt2 = await configureUln302(builderReceiveUln_Opt2.graph, ulnSdkFactory)
 
     const transactions = [
+        ...priceFeedTransactions,
         ...sendUlnTransactions,
         ...receiveUlnTransactions,
         ...endpointTransactions,
