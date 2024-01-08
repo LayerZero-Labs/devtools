@@ -1,7 +1,7 @@
 import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
 import type { OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
-import { formatOmniVector } from '@layerzerolabs/devtools'
+import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 
@@ -81,22 +81,21 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (!config?.receiveLibraryTimeoutConfig) return []
+                if (config?.receiveLibraryTimeoutConfig == null) return []
+
+                const { receiveLibraryTimeoutConfig } = config
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
                 const timeout = await endpointSdk.getReceiveLibraryTimeout(from.address, to.eid)
 
-                if (
-                    timeout.lib === config.receiveLibraryTimeoutConfig.lib &&
-                    timeout.expiry === config.receiveLibraryTimeoutConfig.expiry
-                )
-                    return []
+                if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) return []
+
                 return [
                     await endpointSdk.setReceiveLibraryTimeout(
                         from.address,
                         to.eid,
-                        config.receiveLibraryTimeoutConfig.lib,
-                        config.receiveLibraryTimeoutConfig.expiry
+                        receiveLibraryTimeoutConfig.lib,
+                        receiveLibraryTimeoutConfig.expiry
                     ),
                 ]
             })
@@ -109,46 +108,45 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
+
+                if (config?.sendConfig == null) return []
+
                 const transactions: OmniTransaction[] = []
 
-                if (config?.sendConfig) {
-                    const currentSendLibrary =
-                        config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
-                    assert(currentSendLibrary !== undefined, 'currentSendLibrary must be defined')
-                    const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
-                        from.address,
-                        currentSendLibrary,
-                        to.eid
+                const currentSendLibrary =
+                    config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
+                assert(
+                    currentSendLibrary !== undefined,
+                    'sendLibrary has not been set in your config and no default value exists'
+                )
+
+                const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
+                    from.address,
+                    currentSendLibrary,
+                    to.eid
+                )
+
+                // TODO Normalize the config values using a schema before comparing them
+                if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
+                    transactions.push(
+                        await endpointSdk.setExecutorConfig(from.address, currentSendLibrary, [
+                            { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
+                        ])
                     )
-
-                    if (
-                        sendExecutorConfig.maxMessageSize !== config.sendConfig.executorConfig.maxMessageSize ||
-                        sendExecutorConfig.executor !== config.sendConfig.executorConfig.executor
-                    ) {
-                        transactions.push(
-                            await endpointSdk.setExecutorConfig(from.address, currentSendLibrary, [
-                                { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
-                            ])
-                        )
-                    }
-
-                    const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
-
-                    if (
-                        sendUlnConfig.confirmations !== config.sendConfig.ulnConfig.confirmations ||
-                        sendUlnConfig.optionalDVNThreshold !== config.sendConfig.ulnConfig.optionalDVNThreshold ||
-                        sendUlnConfig.requiredDVNs !== config.sendConfig.ulnConfig.requiredDVNs ||
-                        sendUlnConfig.optionalDVNs !== config.sendConfig.ulnConfig.optionalDVNs
-                    ) {
-                        transactions.push(
-                            await endpointSdk.setUlnConfig(from.address, currentSendLibrary, [
-                                { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
-                            ])
-                        )
-                    }
                 }
 
-                return [...transactions]
+                const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
+
+                // TODO Normalize the config values using a schema before comparing them
+                if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
+                    transactions.push(
+                        await endpointSdk.setUlnConfig(from.address, currentSendLibrary, [
+                            { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                        ])
+                    )
+                }
+
+                return transactions
             })
         )
     )
@@ -165,16 +163,17 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
                     const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
                         ? [config.receiveLibraryConfig?.receiveLibrary, false]
                         : await endpointSdk.getReceiveLibrary(from.address, to.eid)
-                    assert(currentReceiveLibrary !== undefined, 'currentReceiveLibrary must be defined')
+                    assert(
+                        currentReceiveLibrary !== undefined,
+                        'receiveLibrary has not been set in your config and no default value exists'
+                    )
+
                     const receiveUlnConfig: Uln302UlnConfig = <Uln302UlnConfig>(
                         await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
                     )
-                    if (
-                        receiveUlnConfig.confirmations !== config.receiveConfig.ulnConfig.confirmations ||
-                        receiveUlnConfig.optionalDVNThreshold !== config.receiveConfig.ulnConfig.optionalDVNThreshold ||
-                        receiveUlnConfig.requiredDVNs !== config.receiveConfig.ulnConfig.requiredDVNs ||
-                        receiveUlnConfig.optionalDVNs !== config.receiveConfig.ulnConfig.optionalDVNs
-                    ) {
+
+                    // TODO Normalize the config values using a schema before comparing them
+                    if (!isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) {
                         transactions.push(
                             await endpointSdk.setUlnConfig(from.address, currentReceiveLibrary, [
                                 { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
