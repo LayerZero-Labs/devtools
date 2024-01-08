@@ -10,5 +10,5 @@
 # (The "." will execute this inside the current shell instead of creating a child one)
 
 set -a
-source ${1:=.env}
+source ${1:-.env}
 set +a
