@@ -1,7 +1,8 @@
 import React from "react";
 import { render } from "ink";
 import { Logo } from "./components/logo";
-import { RecordList, RecordData, Record } from "./components/record";
+import { Record, RecordList, type RecordData } from "./components/record";
+import { Table, type TableRow } from "./components/table";
 
 export const printLogo = () => render(<Logo />).unmount();
 
@@ -10,3 +11,5 @@ export const printRecord = (data: RecordData) =>
 
 export const printRecords = (data: RecordData[]) =>
   render(<RecordList data={data} />).unmount();
+
+export const printTable = (data: TableRow[]) => render(<Table data={data} />);

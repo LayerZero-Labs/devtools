@@ -25,6 +25,7 @@
   "scripts": {
     "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "test": "jest --passWithNoTests"
   },
@@ -43,6 +44,7 @@
     "@layerzerolabs/ua-devtools-evm-hardhat": "~0.0.1",
     "ink": "^3.2.0",
     "ink-gradient": "^2.0.0",
+    "ink-table": "^3.1.0",
     "react": "^17.0.2",
     "yoga-layout-prebuilt": "^1.10.0",
     "zod": "^3.22.4"

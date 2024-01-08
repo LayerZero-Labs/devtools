@@ -64,3 +64,14 @@ const to: OmniPoint = {
 
 const omniVector: OmniVector = { from, to };
 ```
+
+### Common utilities
+
+### isDeepEqual(a, b)
+
+Compares two objects by value, returning `true` if they match, `false` otherwise.
+
+```typescript
+isDeepEqual({ a: 1 }, { a: 1 }); // true
+isDeepEqual({ a: 1 }, { a: "1" }); // false
+```

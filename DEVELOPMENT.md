@@ -36,8 +36,8 @@ pnpm build
 # Lints the entire project
 pnpm lint
 
-# Tests the entire project
-pnpm test
+# Tests the entire project in a containerized environment
+pnpm test:ci
 
 # Runs the project in development mode
 pnpm dev
@@ -112,6 +112,12 @@ You also combine the environment variables:
 
 ```bash
 DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=--filter=ua-devtools-evm-hardhat-test DOCKER_COMPOSE_ARGS=--build pnpm test:local
+```
+
+You can also pass additional arguments to the individual `test` scripts this way. For example, if you're only interested in tests that match the pattern `wire.test` in `ua-devtools-evm-hardhat-test` package, you can run:
+
+```bash
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=ua-devtools-evm-hardhat-test -- wire.test" pnpm test:ci
 ```
 
 #### Container logs

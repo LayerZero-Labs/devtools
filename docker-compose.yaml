@@ -53,6 +53,7 @@ services:
     environment:
       - NETWORK_URL_BRITNEY=http://network-britney:8545
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
+      - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
