@@ -36,7 +36,7 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
  * @param {boolean | null | undefined} value
  * @returns {string}
  */
-export const printBoolean = (value: boolean | null | undefined): string => (value == null ? '∅' : value ? '✅' : '❌')
+export const printBoolean = (value: boolean | null | undefined): string => (value == null ? '∅' : value ? '✓' : '⤫')
 
 export const printZodErrors = (error: ZodError<unknown>): string => {
     // Here we will go through all the errors and prefix them with the name
