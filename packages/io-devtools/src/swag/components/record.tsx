@@ -1,14 +1,6 @@
 import { Box, Text } from "ink";
 import React from "react";
-
-export type PrimitiveValue =
-  | string
-  | number
-  | boolean
-  | bigint
-  | symbol
-  | null
-  | undefined;
+import type { PrimitiveValue } from "./types";
 
 export type RecordData = Record<string, PrimitiveValue>;
 
