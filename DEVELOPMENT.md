@@ -36,8 +36,8 @@ pnpm build
 # Lints the entire project
 pnpm lint
 
-# Tests the entire project
-pnpm test
+# Tests the entire project in a containerized environment
+pnpm test:ci
 
 # Runs the project in development mode
 pnpm dev
