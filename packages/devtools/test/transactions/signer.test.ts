@@ -15,7 +15,7 @@ describe('transactions/signer', () => {
             const signerFactory: OmniSignerFactory = () => ({ signAndSend, sign })
             const signAndSendTransactions = createSignAndSend(signerFactory)
 
-            expect(await signAndSendTransactions([])).toEqual([[], []])
+            expect(await signAndSendTransactions([])).toEqual([[], [], []])
 
             expect(signAndSend).not.toHaveBeenCalled()
             expect(sign).not.toHaveBeenCalled()
@@ -42,10 +42,11 @@ describe('transactions/signer', () => {
                     const signAndSendTransactions = createSignAndSend(signerFactory)
 
                     // Now we send all the transactions to the flow and observe the output
-                    const [successful, errors] = await signAndSendTransactions(transactions)
+                    const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
                     expect(successful).toEqual(transactions.map((transaction) => ({ transaction, receipt })))
                     expect(errors).toEqual([])
+                    expect(pending).toEqual([])
 
                     // We also check that the signer factory has been called with the eids
                     for (const transaction of transactions) {
@@ -100,10 +101,11 @@ describe('transactions/signer', () => {
 
                         // Now we send all the transactions to the flow and observe the output
                         const transactions = [...firstBatch, failedTransaction, ...secondBatch]
-                        const [successful, errors] = await signAndSendTransactions(transactions)
+                        const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
                         expect(successful).toEqual(firstBatch.map((transaction) => ({ transaction, receipt })))
-                        expect(errors).toEqual([{ point: failedTransaction.point, error }])
+                        expect(errors).toEqual([{ transaction: failedTransaction, error }])
+                        expect(pending).toEqual([failedTransaction, ...secondBatch])
 
                         // We also check that the signer factory has been called with the eids
                         expect(signerFactory).toHaveBeenCalledWith(failedTransaction.point.eid)
@@ -151,10 +153,11 @@ describe('transactions/signer', () => {
 
                         // Now we send all the transactions to the flow and observe the output
                         const transactions = [...firstBatch, failedTransaction, ...secondBatch]
-                        const [successful, errors] = await signAndSendTransactions(transactions)
+                        const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
                         expect(successful).toEqual(firstBatch.map((transaction) => ({ transaction, receipt })))
-                        expect(errors).toEqual([{ point: failedTransaction.point, error }])
+                        expect(errors).toEqual([{ transaction: failedTransaction, error }])
+                        expect(pending).toEqual([failedTransaction, ...secondBatch])
 
                         // We also check that the signer factory has been called with the eids
                         expect(signerFactory).toHaveBeenCalledWith(failedTransaction.point.eid)

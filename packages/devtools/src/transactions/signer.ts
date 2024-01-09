@@ -1,7 +1,15 @@
 import { createModuleLogger, pluralizeNoun, pluralizeOrdinal } from '@layerzerolabs/io-devtools'
-import type { OmniSignerFactory, OmniTransaction, OmniTransactionWithReceipt } from './types'
+import type { OmniSignerFactory, OmniTransaction, OmniTransactionWithError, OmniTransactionWithReceipt } from './types'
 import { formatOmniPoint } from '@/omnigraph/format'
-import type { OmniError } from '@/omnigraph/types'
+
+export type SignAndSendResult = [
+    // All the successful transactions
+    successful: OmniTransactionWithReceipt[],
+    // The failed transactions along with the errors
+    errors: OmniTransactionWithError[],
+    // All the transactions that have not been executed (including the failed ones)
+    pending: OmniTransaction[],
+]
 
 /**
  * Creates a sign & send utility for a list of transaction
@@ -14,14 +22,14 @@ export const createSignAndSend =
     async (
         transactions: OmniTransaction[],
         onProgress?: (result: OmniTransactionWithReceipt, results: OmniTransactionWithReceipt[]) => unknown
-    ): Promise<[successful: OmniTransactionWithReceipt[], errors: OmniError[]]> => {
+    ): Promise<SignAndSendResult> => {
         const logger = createModuleLogger('sign & send')
 
         // Put it here so that we don't need to type like seven toilet rolls of variable names
         const n = transactions.length
 
         // Just exit when there is nothing to sign
-        if (n === 0) return logger.debug(`No transactions to sign, exiting`), [[], []]
+        if (n === 0) return logger.debug(`No transactions to sign, exiting`), [[], [], []]
 
         // Tell the user how many we are signing
         logger.debug(`Signing ${n} ${pluralizeNoun(n, 'transaction')}`)
@@ -55,12 +63,12 @@ export const createSignAndSend =
             } catch (error) {
                 logger.debug(`Failed to process ${ordinal} transaction: ${error}`)
 
-                return [successful, [{ point: transaction.point, error }]]
+                return [successful, [{ transaction, error }], transactions.slice(index)]
             }
         }
 
         // Tell the inquisitive user what a good job we did
         logger.debug(`Successfully signed ${n} ${pluralizeNoun(n, 'transaction')}`)
 
-        return [successful, []]
+        return [successful, [], []]
     }
