@@ -28,7 +28,7 @@ import { createSignAndSend } from '@layerzerolabs/devtools'
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
 export const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
-export const ethPriceFeed = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'PriceFeed_Implementation' }
+export const ethPriceFeed = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'PriceFeed' }
 export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const ethExecutor = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'Executor' }
@@ -36,7 +36,7 @@ export const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN'
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
-export const avaxPriceFeed = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'PriceFeed_Implementation' }
+export const avaxPriceFeed = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'PriceFeed' }
 export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const avaxExecutor = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'Executor' }
