@@ -107,7 +107,7 @@ describe('omnigraph/coordinates', () => {
                 )
             })
 
-            it('should resolve when contract has been deployed', async () => {
+            it('should resolve when there is only one deployment for the contract', async () => {
                 await fc.assert(
                     fc.asyncProperty(evmAddressArbitrary, async (address) => {
                         const environmentFactory = createGetHreByEid(hre)
@@ -132,6 +132,44 @@ describe('omnigraph/coordinates', () => {
                             contract: expect.any(Contract),
                         })
                         expect(env.deployments.getOrNull).toHaveBeenCalledWith('MyContract')
+                    })
+                )
+            })
+
+            it('should merge ABIs when there are multiple deployments with the same address (proxy deployments)', async () => {
+                await fc.assert(
+                    fc.asyncProperty(evmAddressArbitrary, async (address) => {
+                        const environmentFactory = createGetHreByEid(hre)
+                        const contractFactory = createContractFactory(environmentFactory)
+
+                        const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+                        jest.spyOn(env.deployments, 'getDeploymentsFromAddress').mockResolvedValue([
+                            {
+                                address: makeZeroAddress(undefined),
+                                abi: [
+                                    { name: 'implementation', outputs: [], stateMutability: 'view', type: 'function' },
+                                ],
+                            },
+                            {
+                                address: makeZeroAddress(undefined),
+                                abi: [
+                                    { name: 'contractMethod', outputs: [], stateMutability: 'view', type: 'function' },
+                                ],
+                            },
+                        ])
+
+                        // Then check whether the factory will get it for us
+                        const omniContract = await contractFactory({
+                            eid: EndpointId.ETHEREUM_V2_MAINNET,
+                            address,
+                        })
+
+                        expect(omniContract).toEqual({
+                            eid: EndpointId.ETHEREUM_V2_MAINNET,
+                            contract: expect.any(Contract),
+                        })
+                        expect(omniContract.contract.implementation).toBeInstanceOf(Function)
+                        expect(omniContract.contract.contractMethod).toBeInstanceOf(Function)
                     })
                 )
             })

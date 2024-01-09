@@ -59,12 +59,12 @@ This property is required for a lot of the tooling to work - the link between ne
 
 ```typescript
 // By network name (as specified in hardhat config)
-import { getHreByNetworkName } from "@layerzerolabs/utils-evm-hardhat";
+import { getHreByNetworkName } from "@layerzerolabs/devtools-evm-hardhat";
 
 const environment = await getHreByNetworkName("avalanche-testnet");
 
 // By endpoint ID (as specified in hardhat config, using the eid property of a network)
-import { createGetHreByEid } from "@layerzerolabs/utils-evm-hardhat";
+import { createGetHreByEid } from "@layerzerolabs/devtools-evm-hardhat";
 
 // In this case we need to instantiate an environemnt factory
 const getEnvironment = createGetHreByEid();
@@ -79,7 +79,7 @@ const environment = await getNetworkRuntimeEnvironmentByEid(eid);
 
 ```typescript
 // By OmniPointHardhat
-import { createContractFactory } from "@layerzerolabs/utils-evm-hardhat";
+import { createContractFactory } from "@layerzerolabs/devtools-evm-hardhat";
 
 // In this case we need to instantiate a contract factory
 const createContract = createContractFactory();
@@ -97,7 +97,7 @@ const contract = await createContract({ eid: contractName: 'MyOApp' })
 
 ```typescript
 // By OmniPointHardhat
-import { createConnectedContractFactory } from "@layerzerolabs/utils-evm-hardhat";
+import { createConnectedContractFactory } from "@layerzerolabs/devtools-evm-hardhat";
 
 // In this case we need to instantiate a contract factory
 const createContract = createConnectedContractFactory();
