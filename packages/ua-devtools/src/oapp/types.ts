@@ -17,6 +17,14 @@ export interface IOApp extends IOmniSDK {
     getPeer(eid: EndpointId): Promise<Bytes32 | undefined>
     hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
+    getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string>
+    setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction>
+}
+
+export type EnforcedOptions = {
+    eid: EndpointId
+    msgType: number
+    options: string
 }
 
 export interface OAppReceiveLibraryConfig {
@@ -39,6 +47,12 @@ export interface OAppEdgeConfig {
     receiveLibraryTimeoutConfig?: Timeout
     sendConfig?: OAppSendConfig
     receiveConfig?: OAppReceiveConfig
+    enforcedOptions?: OAppEnforcedOptionConfig[]
+}
+
+export interface OAppEnforcedOptionConfig {
+    msgType: number
+    options: string
 }
 
 export interface OAppPeers {

@@ -1,4 +1,4 @@
-import type { IOApp } from '@layerzerolabs/ua-devtools'
+import type { IOApp, EnforcedOptions } from '@layerzerolabs/ua-devtools'
 import type { Bytes32, Address, OmniTransaction } from '@layerzerolabs/devtools'
 import {
     type OmniContract,
@@ -53,6 +53,15 @@ export class OApp extends OmniSDK implements IOApp {
 
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
+        return this.createTransaction(data)
+    }
+
+    async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
+        return await this.contract.contract.enforcedOptions(eid, msgType)
+    }
+
+    async setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
         return this.createTransaction(data)
     }
 }

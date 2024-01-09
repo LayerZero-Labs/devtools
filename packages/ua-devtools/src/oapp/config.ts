@@ -1,9 +1,11 @@
 import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OAppFactory, OAppOmniGraph } from './types'
+import { OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import type { EnforcedOptions } from '../../dist/index'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
@@ -15,6 +17,7 @@ export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, crea
         await configureReceiveLibraryTimeouts(graph, createSdk),
         await configureSendConfig(graph, createSdk),
         await configureReceiveConfig(graph, createSdk),
+        await configureEnforcedOptions(graph, createSdk),
     ])
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
@@ -183,6 +186,36 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
                 }
 
                 return [...transactions]
+            })
+        )
+    )
+
+export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                const transactions: OmniTransaction[] = []
+
+                if (config?.enforcedOptions) {
+                    let enforcedOptions: EnforcedOptions[] = []
+                    const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
+                    const oappSdk = await createSdk(from)
+                    for (const enforcedOption of enforcedOptionsConfig) {
+                        const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
+                        if (currentEnforcedOption != enforcedOption.options) {
+                            enforcedOptions.push({
+                                eid: to.eid,
+                                msgType: enforcedOption.msgType,
+                                options: enforcedOption.options,
+                            })
+                        }
+                    }
+                    if (enforcedOptions.length) {
+                        transactions.push(await oappSdk.setEnforcedOptions(enforcedOptions))
+                    }
+                }
+
+                return transactions
             })
         )
     )
