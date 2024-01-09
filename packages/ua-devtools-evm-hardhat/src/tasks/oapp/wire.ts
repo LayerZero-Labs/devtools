@@ -19,6 +19,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
+import { SignAndSendResult } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     oappConfig: string
@@ -26,7 +27,11 @@ interface TaskArgs {
     ci?: boolean
 }
 
-const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info', ci = false }) => {
+const action: ActionType<TaskArgs> = async ({
+    oappConfig: oappConfigPath,
+    logLevel = 'info',
+    ci = false,
+}): Promise<SignAndSendResult> => {
     printLogo()
 
     // We only want to be asking users for input if we are not in interactive mode
@@ -59,7 +64,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     if (transactions.length === 0) {
         logger.info(`The OApp is wired, no action is necessary`)
 
-        return []
+        return [[], [], []]
     }
 
     // Tell the user about the transactions
@@ -78,29 +83,47 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     if (previewTransactions) printRecords(transactions.map(formatOmniTransaction))
 
     // Now ask the user whether they want to go ahead with signing them
+    //
+    // If they don't, we'll just return the list of pending transactions
     const shouldSubmit = isInteractive
         ? await promptToContinue(`Would you like to submit the required transactions?`)
         : true
-    if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), undefined
+    if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), [[], [], transactions]
 
     // The last step is to execute those transactions
     //
     // For now we are only allowing sign & send using the accounts confgiured in hardhat config
     const signAndSend = createSignAndSend(createSignerFactory())
 
+    // We'll use this variable to store the transactions to be signed
+    //
+    // In case of an error, when a user decides to retry, we'll update this array
+    // with the transactions yet to be signed
+    let transactionsToSign = transactions
+
+    // We will run an infinite retry loop when signing the transactions
+    //
+    // This loop will be broken in these scenarios:
+    // - if all the transactions succeed
+    // - if some of the transactions fail
+    //      - in the interactive mode, if the user decides not to retry the failed transactions
+    //      - in the non-interactive mode
+    //
     // eslint-disable-next-line no-constant-condition
     while (true) {
         // Now we render a progressbar to monitor the task progress
-        const progressBar = render(createProgressBar({ before: 'Signing... ', after: ` 0/${transactions.length}` }))
+        const progressBar = render(
+            createProgressBar({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
+        )
 
         logger.verbose(`Sending the transactions`)
-        const [successful, errors] = await signAndSend(transactions, (result, results) => {
+        const [successful, errors, pendingTransactions] = await signAndSend(transactionsToSign, (result, results) => {
             // We'll keep updating the progressbar as we sign the transactions
             progressBar.rerender(
                 createProgressBar({
-                    progress: results.length / transactions.length,
+                    progress: results.length / transactionsToSign.length,
                     before: 'Signing... ',
-                    after: ` ${results.length}/${transactions.length}`,
+                    after: ` ${results.length}/${transactionsToSign.length}`,
                 })
             )
         })
@@ -114,7 +137,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
         logger.info(
             pluralizeNoun(
-                transactions.length,
+                successful.length,
                 `Successfully sent 1 transaction`,
                 `Successfully sent ${successful.length} transactions`
             )
@@ -124,23 +147,24 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         if (errors.length === 0) {
             logger.info(`${printBoolean(true)} Your OApp is now configured`)
 
-            return [successful, errors]
+            return [successful, errors, pendingTransactions]
         }
 
         // Now we bring the bad news to the user
         logger.error(
-            pluralizeNoun(
-                transactions.length,
-                `Failed to send 1 transaction`,
-                `Failed to send ${errors.length} transactions`
-            )
+            pluralizeNoun(errors.length, `Failed to send 1 transaction`, `Failed to send ${errors.length} transactions`)
         )
 
-        // FIXME Show errors along with the transactions
         const previewErrors = isInteractive
             ? await promptToContinue(`Would you like to preview the failed transactions?`)
             : true
-        if (previewErrors) printRecords(transactions.map(formatOmniTransaction))
+        if (previewErrors)
+            printRecords(
+                errors.map(({ error, transaction }) => ({
+                    error: String(error),
+                    ...formatOmniTransaction(transaction),
+                }))
+            )
 
         // We'll ask the user if they want to retry if we're in interactive mode
         //
@@ -149,8 +173,11 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         if (!retry) {
             logger.error(`${printBoolean(false)} Failed to configure the OApp`)
 
-            return [successful, errors]
+            return [successful, errors, pendingTransactions]
         }
+
+        // If we are retrying, we'll update the array of pendingTransactions with the failed transactions plus the pending transactions
+        transactionsToSign = pendingTransactions
     }
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
