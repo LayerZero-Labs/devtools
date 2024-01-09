@@ -8,7 +8,7 @@ import { Proxied } from "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
 contract TestProxy is Initializable, Proxied {
     function initialize() public proxied initializer {}
 
-    function contractMethod() public view returns (uint256 something) {
+    function contractMethod() public pure returns (uint256 something) {
         something = 100;
     }
 }
