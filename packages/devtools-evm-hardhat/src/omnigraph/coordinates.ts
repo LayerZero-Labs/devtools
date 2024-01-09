@@ -40,10 +40,18 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
 
         // And if we only have the address, we need to go get it from deployments by address
         if (address != null) {
-            const [deployment] = await env.deployments.getDeploymentsFromAddress(address)
-            assert(deployment != null, `Could not find a deployment for address '${address}'`)
+            // The deployments can contain multiple deployment files for the same address
+            //
+            // This happens (besides of course a case of switching RPC URLs without changing network names)
+            // when using proxies - hardhat-deploy will create multiple deployment files
+            // with complete and partial ABIs
+            //
+            // To handle this case we'll merge the ABIs to make sure we have all the methods available
+            const deployments = await env.deployments.getDeploymentsFromAddress(address)
+            assert(deployments.length > 0, `Could not find a deployment for address '${address}'`)
 
-            return omniDeploymentToContract({ eid, deployment })
+            const mergedAbis = deployments.flatMap((deployment) => deployment.abi)
+            return { eid, contract: new Contract(address, mergedAbis) }
         }
 
         assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat')
