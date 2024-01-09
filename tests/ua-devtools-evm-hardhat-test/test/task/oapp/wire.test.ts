@@ -4,6 +4,7 @@ import { relative, resolve } from 'path'
 import { TASK_LZ_WIRE_OAPP } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOAppFixture } from '../../__utils__/oapp'
 import { cwd } from 'process'
+import { JsonRpcSigner } from '@ethersproject/providers'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -121,9 +122,8 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
 
-            expect(result).toEqual([])
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
@@ -155,9 +155,108 @@ describe('task/oapp/wire', () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            const [successful, errors] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
 
-            expect(result).toEqual([])
+            const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expect.any(Object) }
+
+            expect(successful).toEqual([expectTransactionWithReceipt, expectTransactionWithReceipt])
+            expect(errors).toEqual([])
+        })
+
+        describe('if a transaction fails', () => {
+            let sendTransactionMock: jest.SpyInstance
+
+            beforeEach(() => {
+                sendTransactionMock = jest.spyOn(JsonRpcSigner.prototype, 'sendTransaction')
+            })
+
+            afterEach(() => {
+                sendTransactionMock.mockRestore()
+            })
+
+            it('should return a list of failed transactions in the CI mode', async () => {
+                const error = new Error('Oh god dammit')
+
+                // We want to make the fail
+                sendTransactionMock.mockRejectedValue(error)
+
+                const oappConfig = configPathFixture('valid.config.connected.js')
+                const [successful, errors] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+
+                expect(successful).toEqual([])
+                expect(errors).toEqual([
+                    {
+                        error,
+                        point: {
+                            address: expect.any(String),
+                            eid: expect.any(Number),
+                        },
+                    },
+                ])
+            })
+
+            it('should ask the user to retry if not in the CI mode', async () => {
+                const error = new Error('Oh god dammit')
+
+                // Mock the first sendTransaction call to reject, the rest should use the original implementation
+                //
+                // This way we simulate a situation in which the first call would fail but then the user retries, it would succeed
+                sendTransactionMock.mockRejectedValueOnce(error)
+
+                // In the non-CI mode we need to answer the prompts
+                promptToContinueMock
+                    .mockResolvedValueOnce(false) // We don't want to see the list of transactions
+                    .mockResolvedValueOnce(true) // We want to continue
+                    .mockResolvedValueOnce(false) // We don't want to see the list of failed transactions
+                    .mockResolvedValueOnce(true) // We want to retry
+
+                const oappConfig = configPathFixture('valid.config.connected.js')
+                const [successful, errors] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+
+                // Check that the user has been asked to retry
+                expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
+                expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to retry?`, true)
+
+                // After retrying, the signer should not fail anymore
+                const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expect.any(Object) }
+                expect(successful).toEqual([expectTransactionWithReceipt, expectTransactionWithReceipt])
+                expect(errors).toEqual([])
+            })
+
+            it('should not retry if the user decides not to if not in the CI mode', async () => {
+                const error = new Error('Oh god dammit')
+
+                // Mock the first sendTransaction call to reject, the rest should use the original implementation
+                //
+                // This way we simulate a situation in which the first call would fail but then the user retries, it would succeed
+                sendTransactionMock.mockRejectedValueOnce(error)
+
+                // In the non-CI mode we need to answer the prompts
+                promptToContinueMock
+                    .mockResolvedValueOnce(false) // We don't want to see the list of transactions
+                    .mockResolvedValueOnce(true) // We want to continue
+                    .mockResolvedValueOnce(false) // We don't want to see the list of failed transactions
+                    .mockResolvedValueOnce(false) // We don't want to retry
+
+                const oappConfig = configPathFixture('valid.config.connected.js')
+                const [successful, errors] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+
+                // Check that the user has been asked to retry
+                expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
+                expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to retry?`, true)
+
+                // Check that we got the failures back
+                expect(successful).toEqual([])
+                expect(errors).toEqual([
+                    {
+                        error,
+                        point: {
+                            address: expect.any(String),
+                            eid: expect.any(Number),
+                        },
+                    },
+                ])
+            })
         })
     })
 })

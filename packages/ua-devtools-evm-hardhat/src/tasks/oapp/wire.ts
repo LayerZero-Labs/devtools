@@ -88,39 +88,70 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     // For now we are only allowing sign & send using the accounts confgiured in hardhat config
     const signAndSend = createSignAndSend(createSignerFactory())
 
-    // Now we render a progressbar to monitor the task progress
-    const progressBar = render(createProgressBar({ before: 'Signing... ', after: ` 0/${transactions.length}` }))
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        // Now we render a progressbar to monitor the task progress
+        const progressBar = render(createProgressBar({ before: 'Signing... ', after: ` 0/${transactions.length}` }))
 
-    logger.verbose(`Sending the transactions`)
-    const results = await signAndSend(transactions, (result, results) => {
-        // We'll keep updating the progressbar as we sign the transactions
-        progressBar.rerender(
-            createProgressBar({
-                progress: results.length / transactions.length,
-                before: 'Signing... ',
-                after: ` ${results.length}/${transactions.length}`,
-            })
+        logger.verbose(`Sending the transactions`)
+        const [successful, errors] = await signAndSend(transactions, (result, results) => {
+            // We'll keep updating the progressbar as we sign the transactions
+            progressBar.rerender(
+                createProgressBar({
+                    progress: results.length / transactions.length,
+                    before: 'Signing... ',
+                    after: ` ${results.length}/${transactions.length}`,
+                })
+            )
+        })
+
+        // And finally we drop the progressbar and continue
+        progressBar.clear()
+
+        logger.verbose(`Sent the transactions`)
+        logger.debug(`Successfully sent the following transactions:\n\n${printJson(successful)}`)
+        logger.debug(`Failed to send the following transactions:\n\n${printJson(errors)}`)
+
+        logger.info(
+            pluralizeNoun(
+                transactions.length,
+                `Successfully sent 1 transaction`,
+                `Successfully sent ${successful.length} transactions`
+            )
         )
-    })
 
-    // And finally we drop the progressbar and continue
-    progressBar.clear()
+        // If there are no errors, we break out of the loop immediatelly
+        if (errors.length === 0) {
+            logger.info(`${printBoolean(true)} Your OApp is now configured`)
 
-    logger.verbose(`Sent the transactions`)
-    logger.debug(`Received the following output:\n\n${printJson(results)}`)
+            return [successful, errors]
+        }
 
-    // FIXME We need to check whether we got any errors and display those to the user
-    logger.info(
-        pluralizeNoun(
-            transactions.length,
-            `Successfully sent 1 transaction`,
-            `Successfully sent ${transactions.length} transactions`
+        // Now we bring the bad news to the user
+        logger.error(
+            pluralizeNoun(
+                transactions.length,
+                `Failed to send 1 transaction`,
+                `Failed to send ${errors.length} transactions`
+            )
         )
-    )
-    logger.info(`${printBoolean(true)} Your OApp is now configured`)
 
-    // FIXME We need to return the results
-    return []
+        // FIXME Show errors along with the transactions
+        const previewErrors = isInteractive
+            ? await promptToContinue(`Would you like to preview the failed transactions?`)
+            : true
+        if (previewErrors) printRecords(transactions.map(formatOmniTransaction))
+
+        // We'll ask the user if they want to retry if we're in interactive mode
+        //
+        // If they decide not to, we exit, if they want to retry we start the loop again
+        const retry = isInteractive ? await promptToContinue(`Would you like to retry?`, true) : false
+        if (!retry) {
+            logger.error(`${printBoolean(false)} Failed to configure the OApp`)
+
+            return [successful, errors]
+        }
+    }
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
