@@ -19,7 +19,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
-import type { SignAndSendResult } from '@layerzerolabs/devtools'
+import type { OmniTransactionWithError, OmniTransactionWithReceipt, SignAndSendResult } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     oappConfig: string
@@ -95,11 +95,10 @@ const action: ActionType<TaskArgs> = async ({
     // For now we are only allowing sign & send using the accounts confgiured in hardhat config
     const signAndSend = createSignAndSend(createSignerFactory())
 
-    // We'll use this variable to store the transactions to be signed
-    //
-    // In case of an error, when a user decides to retry, we'll update this array
-    // with the transactions yet to be signed
-    let transactionsToSign = transactions
+    // We'll use these variables to store the state of signing
+    let transactionsToSign: OmniTransaction[] = transactions
+    let successfulTransactions: OmniTransactionWithReceipt[] = []
+    let errors: OmniTransactionWithError[] = []
 
     // We will run an infinite retry loop when signing the transactions
     //
@@ -117,29 +116,45 @@ const action: ActionType<TaskArgs> = async ({
         )
 
         logger.verbose(`Sending the transactions`)
-        const [successful, errors, pendingTransactions] = await signAndSend(transactionsToSign, (result, results) => {
-            // We'll keep updating the progressbar as we sign the transactions
-            progressBar.rerender(
-                createProgressBar({
-                    progress: results.length / transactionsToSign.length,
-                    before: 'Signing... ',
-                    after: ` ${results.length}/${transactionsToSign.length}`,
-                })
-            )
-        })
+        const [successfulBatch, errorsBatch, pendingBatch] = await signAndSend(
+            transactionsToSign,
+            (result, results) => {
+                // We'll keep updating the progressbar as we sign the transactions
+                progressBar.rerender(
+                    createProgressBar({
+                        progress: results.length / transactionsToSign.length,
+                        before: 'Signing... ',
+                        after: ` ${results.length}/${transactionsToSign.length}`,
+                    })
+                )
+            }
+        )
 
         // And finally we drop the progressbar and continue
         progressBar.clear()
 
-        logger.verbose(`Sent the transactions`)
-        logger.debug(`Successfully sent the following transactions:\n\n${printJson(successful)}`)
-        logger.debug(`Failed to send the following transactions:\n\n${printJson(errors)}`)
+        // Now let's update the accumulators
+        //
+        // We'll append the successful transactions
+        successfulTransactions = [...successfulTransactions, ...successfulBatch]
+        // Overwrite the errrors
+        //
+        // We might in future return the error history but for now the last errors are okay
+        errors = errorsBatch
+        // And we update the array of transactions with the ones that did not make it through
+        transactionsToSign = pendingBatch
 
+        logger.verbose(`Sent the transactions`)
+        logger.debug(`Successfully sent the following transactions:\n\n${printJson(successfulBatch)}`)
+        logger.debug(`Failed to send the following transactions:\n\n${printJson(errorsBatch)}`)
+        logger.debug(`Did not send the following transactions:\n\n${printJson(pendingBatch)}`)
+
+        // Let the user know about the results of the batch
         logger.info(
             pluralizeNoun(
-                successful.length,
+                successfulBatch.length,
                 `Successfully sent 1 transaction`,
-                `Successfully sent ${successful.length} transactions`
+                `Successfully sent ${successfulBatch.length} transactions`
             )
         )
 
@@ -147,7 +162,7 @@ const action: ActionType<TaskArgs> = async ({
         if (errors.length === 0) {
             logger.info(`${printBoolean(true)} Your OApp is now configured`)
 
-            return [successful, errors, pendingTransactions]
+            break
         }
 
         // Now we bring the bad news to the user
@@ -173,12 +188,11 @@ const action: ActionType<TaskArgs> = async ({
         if (!retry) {
             logger.error(`${printBoolean(false)} Failed to configure the OApp`)
 
-            return [successful, errors, pendingTransactions]
+            break
         }
-
-        // If we are retrying, we'll update the array of pendingTransactions with the failed transactions plus the pending transactions
-        transactionsToSign = pendingTransactions
     }
+
+    return [successfulTransactions, errors, transactionsToSign]
 }
 task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
