@@ -8,7 +8,6 @@ import { configureOApp, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { getLibraryAddress } from '../__utils__/oapp'
 import { ethSendUln2_Opt2, ethReceiveUln2_Opt2, avaxSendUln2_Opt2, avaxReceiveUln2_Opt2 } from '../__utils__/endpoint'
-import { OmniPoint } from '@layerzerolabs/devtools'
 
 describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
@@ -196,7 +195,7 @@ describe('oapp/config', () => {
                 await avaxEndpointSdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxSendLibrary),
             ])
         })
-        it('should return all setPeer transactions and configureSendLibraries transactions', async () => {
+        it('should return all setPeer transactions and one configureSendLibraries transaction', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
 
