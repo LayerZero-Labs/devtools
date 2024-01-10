@@ -1,7 +1,7 @@
 import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
 import { relative, resolve } from 'path'
-import { TASK_LZ_WIRE_OAPP } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOAppFixture } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
@@ -43,11 +43,11 @@ describe('task/oapp/wire', () => {
         })
 
         it('should fail if the config file does not exist', async () => {
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: './does-not-exist.js' })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: './does-not-exist.js' })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a file', async () => {
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: __dirname })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: __dirname })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
@@ -55,31 +55,31 @@ describe('task/oapp/wire', () => {
 
             expect(isFile(readme)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig: readme })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: readme })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JSON file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.json')
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JS file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.js')
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with a malformed JS file (001)', async () => {
             const oappConfig = configPathFixture('invalid.config.001.js')
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with a misconfigured file (001)', async () => {
             const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
 
-            await expect(hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
     })
 
@@ -91,7 +91,7 @@ describe('task/oapp/wire', () => {
         it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -100,7 +100,7 @@ describe('task/oapp/wire', () => {
             const oappConfigAbsolute = configPathFixture('valid.config.empty.js')
             const oappConfig = relative(cwd(), oappConfigAbsolute)
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -108,7 +108,7 @@ describe('task/oapp/wire', () => {
         it('should work with typescript', async () => {
             const oappConfig = configPathFixture('valid.config.empty.ts')
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -118,7 +118,7 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, logLevel: 'debug' })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, logLevel: 'debug' })
 
             expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
@@ -128,7 +128,7 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+            const result = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
 
             expect(result).toEqual([[expectTransactionWithReceipt, expectTransactionWithReceipt], [], []])
             expect(promptToContinueMock).not.toHaveBeenCalled()
@@ -139,7 +139,7 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(true)
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
@@ -149,7 +149,7 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const [successful, errors, pending] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             expect(successful).toEqual([])
             expect(errors).toEqual([])
@@ -164,7 +164,7 @@ describe('task/oapp/wire', () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            const [successful, errors] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+            const [successful, errors] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
             const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expect.any(Object) }
 
@@ -190,7 +190,7 @@ describe('task/oapp/wire', () => {
                 sendTransactionMock.mockRejectedValue(error)
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
 
                 expect(errors).toEqual([
                     {
@@ -221,7 +221,7 @@ describe('task/oapp/wire', () => {
                     .mockResolvedValueOnce(true) // We want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
@@ -249,7 +249,7 @@ describe('task/oapp/wire', () => {
                     .mockResolvedValueOnce(false) // We don't want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
@@ -291,7 +291,7 @@ describe('task/oapp/wire', () => {
                     .mockResolvedValueOnce(true) // We want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)

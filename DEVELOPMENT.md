@@ -153,7 +153,7 @@ pnpm hardhat lz:test:oapp:deploy
 And execute `hardhat` tasks as usual:
 
 ```bash
-pnpm hardhat lz:oapp:getDefaultConfig
+pnpm hardhat lz:oapp:config:get:default
 ```
 
 If you are developing tasks, it's useful to build the code when it changes. To do this, run the following from the project root:

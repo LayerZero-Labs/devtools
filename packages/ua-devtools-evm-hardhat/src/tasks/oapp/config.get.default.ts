@@ -2,7 +2,7 @@ import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
-import { TASK_LZ_GET_DEFAULT_CONFIG } from '@/constants'
+import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 
 interface TaskArgs {
     networks: string
@@ -47,7 +47,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
 }
 
 task(
-    TASK_LZ_GET_DEFAULT_CONFIG,
+    TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
     'outputs the default Send and Receive Messaging Library versions and the default application config'
 )
     .addParam('networks', 'comma separated list of networks')

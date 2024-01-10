@@ -6,7 +6,7 @@ import {
 } from '../__utils__/endpoint'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
-import { TASK_LZ_GET_DEFAULT_CONFIG } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 
 describe('task: getDefaultConfig', () => {
@@ -17,7 +17,7 @@ describe('task: getDefaultConfig', () => {
 
     it('should return default configurations', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
-        const getDefaultConfigTask = await hre.run(TASK_LZ_GET_DEFAULT_CONFIG, { networks: networks.toString() })
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, { networks: networks.toString() })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {
             const localEid = getEidForNetworkName(localNetwork)
