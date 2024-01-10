@@ -18,7 +18,10 @@
     {
       "files": ["test/**"],
       "plugins": ["jest"],
-      "extends": ["plugin:jest/recommended"]
+      "extends": ["plugin:jest/recommended"],
+      "rules": {
+        "jest/no-disabled-tests": "error"
+      }
     }
   ],
   "parserOptions": {
