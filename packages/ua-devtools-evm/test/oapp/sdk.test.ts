@@ -50,7 +50,7 @@ describe('oapp/sdk', () => {
 
                         const sdk = new OApp(omniContract, endpointFactory)
 
-                        expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
+                        await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
                     }
                 )
             )

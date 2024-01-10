@@ -25,7 +25,9 @@ describe('errors/parser', () => {
         const assertFailed = async (promise: Promise<unknown>): Promise<unknown> =>
             promise.then(
                 (result) => {
-                    fail(`Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`)
+                    throw new Error(
+                        `Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`
+                    )
                 },
                 (error) => error
             )
@@ -147,7 +149,7 @@ describe('errors/parser', () => {
             )
         })
 
-        it('should parse a custom an error with an different arguments defined in more contracts coming from a nested contract', async () => {
+        it('should parse a custom an error defined in more contracts coming from a nested contract', async () => {
             const errorParser = createErrorParser()
 
             await fc.assert(
@@ -164,7 +166,7 @@ describe('errors/parser', () => {
             )
         })
 
-        it('should parse a custom an error with an different arguments defined in more contracts coming from a nested contract', async () => {
+        it('should parse a custom an error with different arguments defined in more contracts coming from a nested contract', async () => {
             const errorParser = createErrorParser()
 
             await fc.assert(

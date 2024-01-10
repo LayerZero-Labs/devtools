@@ -20,13 +20,14 @@ import {
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { setupDefaultEndpoint } from '../__utils__/endpoint'
 import { deployOmniCounterFixture } from '../__utils__/omnicounter'
+import assert from 'assert'
 import {
     getDefaultAvaxConfig,
     getDefaultEthConfig,
     OAppTestConfig,
     setUpConfig,
     setUpOmniGraphHardhat,
-} from '../oapp/config.test'
+} from '../__utils__/oapp'
 
 // The maximum value of an uint16.
 const MAX_UINT_16: number = 0xffff
@@ -108,7 +109,6 @@ describe('oapp/options', () => {
         avaxPoint = omniContractToPoint(await contractFactory(avaxOmniCounter))
         const avaxTestConfig: OAppTestConfig = await getDefaultAvaxConfig()
         const avaxOAppConfig: OAppEdgeConfig = await setUpConfig(avaxTestConfig)
-        const avaxSdk = await sdkFactory(avaxPoint)
 
         const config: OmniGraphHardhat<unknown, OAppEdgeConfig> = setUpOmniGraphHardhat(
             ethOmniCounter,
@@ -120,12 +120,9 @@ describe('oapp/options', () => {
         const builder = await OmniGraphBuilderHardhat.fromConfig(config)
         const transactions = await configureOAppPeers(builder.graph, sdkFactory)
         const signAndSend = createSignAndSend(createSignerFactory())
-        const [transactionReceipts, errors] = await signAndSend(transactions)
-        expect(transactionReceipts).toBeDefined()
-        expect(errors).toHaveLength(0)
+        const [_, errors] = await signAndSend(transactions)
 
-        expect(await ethSdk.hasPeer(avaxPoint.eid, avaxPoint.address)).toBe(true)
-        expect(await avaxSdk.hasPeer(ethPoint.eid, ethPoint.address)).toBe(true)
+        assert(errors.length === 0, 'Failed to configure the OApp')
     })
 
     // Helper function to perform OmniCounter.increment(...) and return the matching PacketSent logs.
@@ -166,7 +163,7 @@ describe('oapp/options', () => {
                     )
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
                 }
             ),
             { numRuns: 20 }
@@ -191,7 +188,7 @@ describe('oapp/options', () => {
                     )
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
                 }
             ),
             { numRuns: 20 }
@@ -211,7 +208,7 @@ describe('oapp/options', () => {
                     const options = Options.newOptions().addExecutorNativeDropOption(value.toString(), address)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
                 }
             ),
             { numRuns: 20 }
@@ -229,7 +226,7 @@ describe('oapp/options', () => {
                     const options = Options.newOptions().addExecutorOrderedExecutionOption()
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
                 }
             ),
             { numRuns: 10 }
@@ -271,7 +268,7 @@ describe('oapp/options', () => {
 
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase() === options.toHex().toLowerCase())
+                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
                     const packetOptions = Options.fromOptions(packetSentEvents[0]!.args.options.toLowerCase())
 
                     // check executorComposeOption
