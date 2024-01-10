@@ -18,6 +18,12 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 const promptToContinueMock = promptToContinue as jest.Mock
 
 describe('task/oapp/wire', () => {
+    // Helper matcher object that checks for OmniPoint objects
+    const expectOmniPoint = { address: expect.any(String), eid: expect.any(Number) }
+    // Helper matcher object that checks for OmniTransaction objects
+    const expectTransaction = { data: expect.any(String), point: expectOmniPoint }
+    const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expectTransaction }
+
     const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
     const configPathFixture = (fileName: string): string => {
         const path = resolve(CONFIGS_BASE_DIR, fileName)
@@ -122,8 +128,9 @@ describe('task/oapp/wire', () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
+            const result = await hre.run(TASK_LZ_WIRE_OAPP, { oappConfig, ci: true })
 
+            expect(result).toEqual([[expectTransactionWithReceipt, expectTransactionWithReceipt], [], []])
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
@@ -166,12 +173,6 @@ describe('task/oapp/wire', () => {
         })
 
         describe('if a transaction fails', () => {
-            // Helper matcher object that checks for OmniPoint objects
-            const expectOmniPoint = { address: expect.any(String), eid: expect.any(Number) }
-            // Helper matcher object that checks for OmniTransaction objects
-            const expectTransaction = { data: expect.any(String), point: expectOmniPoint }
-            const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expectTransaction }
-
             let sendTransactionMock: jest.SpyInstance
 
             beforeEach(() => {
@@ -271,9 +272,10 @@ describe('task/oapp/wire', () => {
             it('should not retry successful transactions', async () => {
                 const error = new Error('Oh god dammit')
 
-                // Mock the second sendTransaction call to reject
+                // Mock the second & third sendTransaction call to reject
                 //
-                // This way we simulate a situation in which the first call goes through, then the second call rejects
+                // This way we simulate a situation in which the first call goes through,
+                // then the second and third calls reject
                 sendTransactionMock
                     .mockImplementationOnce(sendTransactionMock.getMockImplementation()!)
                     .mockRejectedValueOnce(error)

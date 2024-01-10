@@ -19,7 +19,7 @@ import {
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
-import { SignAndSendResult } from '@layerzerolabs/devtools'
+import type { SignAndSendResult } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     oappConfig: string
