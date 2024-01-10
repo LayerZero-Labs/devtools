@@ -3,14 +3,14 @@ import {
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
     setupDefaultEndpoint,
-} from '../__utils__/endpoint'
+} from '../../__utils__/endpoint'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
 import { AddressZero } from '@ethersproject/constants'
-import { TASK_LZ_GET_OAPP_CONFIG } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { TASK_LZ_OAPP_CONFIG_GET } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 
-describe('task: getOAppConfig', () => {
+describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     beforeEach(async () => {
         await deployEndpointFixture()
         await setupDefaultEndpoint()
@@ -19,7 +19,7 @@ describe('task: getOAppConfig', () => {
     it('should return app default configurations when addresses are not oapps', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
         const addresses = new Array(networks.length).fill(AddressZero).toString()
-        const getDefaultConfigTask = await hre.run(TASK_LZ_GET_OAPP_CONFIG, {
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET, {
             networks: networks.toString(),
             addresses: addresses.toString(),
         })

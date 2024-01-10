@@ -1,6 +1,6 @@
 import { task, types } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { TASK_LZ_WIRE_OAPP } from '@/constants/tasks'
+import { TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
 import {
     createLogger,
     setDefaultLogLevel,
@@ -194,7 +194,7 @@ const action: ActionType<TaskArgs> = async ({
 
     return [successfulTransactions, errors, transactionsToSign]
 }
-task(TASK_LZ_WIRE_OAPP, 'Wire LayerZero OApp')
+task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
     .addParam(

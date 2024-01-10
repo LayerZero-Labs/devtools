@@ -1,4 +1,4 @@
 import './wire'
-import './checkWire'
-import './getDefaultConfig'
-import './getOAppConfig'
+import './config.check'
+import './config.get.default'
+import './config.get'

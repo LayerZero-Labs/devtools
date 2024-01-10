@@ -2,7 +2,7 @@ import { ActionType } from 'hardhat/types'
 import { task, types } from 'hardhat/config'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { printRecords } from '@layerzerolabs/io-devtools/swag'
-import { TASK_LZ_CHECK_WIRE_OAPP } from '@/constants/tasks'
+import { TASK_LZ_OAPP_CONFIG_CHECK } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
@@ -50,7 +50,7 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
 }
 
 task(
-    TASK_LZ_CHECK_WIRE_OAPP,
+    TASK_LZ_OAPP_CONFIG_CHECK,
     'outputs visual console table to show current state of oapp connections via configuration'
 )
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)

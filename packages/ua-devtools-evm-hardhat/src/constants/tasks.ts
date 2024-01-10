@@ -1,4 +1,4 @@
-export const TASK_LZ_WIRE_OAPP = 'lz:oapp:wire'
-export const TASK_LZ_GET_DEFAULT_CONFIG = 'lz:oapp:getDefaultConfig'
-export const TASK_LZ_GET_OAPP_CONFIG = 'lz:oapp:getOAppConfig'
-export const TASK_LZ_CHECK_WIRE_OAPP = 'lz:oapp:checkWire'
+export const TASK_LZ_OAPP_WIRE = 'lz:oapp:wire'
+export const TASK_LZ_OAPP_CONFIG_GET_DEFAULT = 'lz:oapp:config:get:default'
+export const TASK_LZ_OAPP_CONFIG_GET = 'lz:oapp:config:get'
+export const TASK_LZ_OAPP_CONFIG_CHECK = 'lz:oapp:config:check'
