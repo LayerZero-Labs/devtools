@@ -1,10 +1,9 @@
 import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
+import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
-import type { EnforcedOptions } from '../../dist/index'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
