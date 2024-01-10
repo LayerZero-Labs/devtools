@@ -104,7 +104,7 @@ describe('address', () => {
             expect(isZero(makeBytes32(AddressZero))).toBe(true)
         })
 
-        it('should return true with zero bytes32', () => {
+        it('should return true with zero bytes32 string', () => {
             expect(isZero('0x')).toBe(true)
         })
 

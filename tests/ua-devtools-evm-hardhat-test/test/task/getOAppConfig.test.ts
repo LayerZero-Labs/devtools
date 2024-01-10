@@ -45,8 +45,4 @@ describe('task: getOAppConfig', () => {
             }
         }
     })
-
-    // TODO - app specific configuration testing
-    // it('should return app specific configurations', async () => {
-    // })
 })
