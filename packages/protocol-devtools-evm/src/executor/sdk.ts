@@ -17,7 +17,7 @@ export class Executor extends OmniSDK implements IExecutor {
     }
 
     async setDstConfig(eid: EndpointId, value: ExecutorDstConfig): Promise<OmniTransaction> {
-        const data = this.contract.contract.interface.encodeFunctionData('setPrice', [
+        const data = this.contract.contract.interface.encodeFunctionData('setDstConfig', [
             [
                 {
                     dstEid: eid,
