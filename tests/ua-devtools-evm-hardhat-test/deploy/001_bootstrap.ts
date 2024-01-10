@@ -87,19 +87,6 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
             },
         },
     })
-    const priceFeedContract = new Contract(priceFeed.address, priceFeed.abi).connect(signer)
-    const setPriceResp: TransactionResponse = await priceFeedContract.setPrice([
-        {
-            eid: dstEid,
-            price: {
-                priceRatio: '100000000000000000000',
-                gasPriceInUnit: 1,
-                gasPerByte: 1,
-            },
-        },
-    ])
-    const setPriceReceipt = await setPriceResp.wait()
-    assert(setPriceReceipt?.status === 1)
 
     await deployments.delete('ExecutorFeeLib')
     const executorFeeLib = await deployments.deploy('ExecutorFeeLib', {

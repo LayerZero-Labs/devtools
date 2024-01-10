@@ -5,8 +5,8 @@ export type EndpointConfigurator = (graph: EndpointOmniGraph, createSdk: Endpoin
 
 export const configureEndpoint: EndpointConfigurator = async (graph, createSdk) =>
     flattenTransactions([
-        ...(await configureEndpointDefaultReceiveLibraries(graph, createSdk)),
-        ...(await configureEndpointDefaultSendLibraries(graph, createSdk)),
+        await configureEndpointDefaultReceiveLibraries(graph, createSdk),
+        await configureEndpointDefaultSendLibraries(graph, createSdk),
     ])
 
 export const configureEndpointDefaultReceiveLibraries: EndpointConfigurator = async (graph, createSdk) =>
