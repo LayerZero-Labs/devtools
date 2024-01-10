@@ -4,7 +4,7 @@ import { isFile } from '@layerzerolabs/io-devtools'
 import { deployOAppFixture } from '../../__utils__/oapp'
 import { TASK_LZ_OAPP_CONFIG_CHECK, TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-describe('task: checkWire', () => {
+describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
     const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
     const configPathFixture = (fileName: string): string => {
         const path = resolve(CONFIGS_BASE_DIR, fileName)

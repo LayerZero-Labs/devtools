@@ -211,3 +211,16 @@ If you encounter errors when running these tests, just set the environment varia
 ```bash
 CI=1 pnpm test
 ```
+
+#### Problems with snapshot updating
+
+If snapshots are used in a test that relies on filesystem paths, the situation becomes a bit complex. In long term, we should steer away from this approach as it makes updating snapshots a bit cumbersome.
+
+Should you need to update snapshots for this kind of tests, follow these steps:
+
+- Go to `docker-compose.yaml` and find the `volumes` section of the `tests` service
+- Uncomment the line that says `./tests:/app/tests` - this will link the contain & host directories where the snapshots are being written
+- Run the tests and pass a `-u` flag to `jest`
+  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="-- -u" pnpm test:ci` if you want to run all the tests
+  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=ua-devtools-evm-hardhat-test -- -u" pnpm test:ci` if you want to only run a specific test suite
+- Profit

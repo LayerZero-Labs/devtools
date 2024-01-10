@@ -17,7 +17,7 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 
 const promptToContinueMock = promptToContinue as jest.Mock
 
-describe('task/oapp/wire', () => {
+describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     // Helper matcher object that checks for OmniPoint objects
     const expectOmniPoint = { address: expect.any(String), eid: expect.any(Number) }
     // Helper matcher object that checks for OmniTransaction objects
