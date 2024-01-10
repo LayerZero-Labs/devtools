@@ -1,10 +1,8 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
 import { formatEid } from '@layerzerolabs/devtools'
 import { wrapEIP1193Provider } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import assert from 'assert'
-import { BigNumber, Contract } from 'ethers'
-import { parseEther } from 'ethers/lib/utils'
+import { Contract } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -29,13 +27,6 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
     const signer = wrapEIP1193Provider(network.provider).getSigner()
-
-    // TODO: move price configuration to a separate sdk and make bootstrap of the configuration optional
-    const dstEid = BigNumber.from(
-        network.config.eid === EndpointId.ETHEREUM_V2_MAINNET
-            ? EndpointId.AVALANCHE_V2_MAINNET
-            : EndpointId.ETHEREUM_V2_MAINNET
-    )
 
     await deployments.delete('EndpointV2')
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
@@ -136,23 +127,6 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         polledExecutorFeeLib?.toLowerCase() === executorFeeLib.address.toLowerCase(),
         'Executor worker fee lib not set correctly'
     )
-
-    const nativeCap = parseEther('0.25')
-    const baseGas = BigNumber.from(200000)
-    const setDstConfigResp: TransactionResponse = await executorContract.setDstConfig([
-        {
-            dstEid,
-            baseGas,
-            multiplierBps: BigNumber.from(0),
-            floorMarginUSD: BigNumber.from(0),
-            nativeCap,
-        },
-    ])
-    const setDstConfigReceipt: TransactionReceipt = await setDstConfigResp.wait()
-    assert(setDstConfigReceipt?.status === 1)
-    const polledDstConfig = await executorContract.dstConfig(dstEid)
-    assert(BigNumber.from(polledDstConfig[0]).eq(baseGas), 'Executor dst config baseGas not set correctly')
-    assert(BigNumber.from(polledDstConfig[3]).eq(nativeCap), 'Executor dst config nativeCap not set correctly')
 
     await deployments.delete('DVN')
     const dvn = await deployments.deploy('DVN', {

@@ -17,9 +17,13 @@ import {
     configurePriceFeed,
     PriceFeedEdgeConfig,
     PriceData,
+    ExecutorEdgeConfig,
+    ExecutorDstConfig,
+    configureExecutor,
 } from '@layerzerolabs/protocol-devtools'
 import {
     createEndpointFactory,
+    createExecutorFactory,
     createPriceFeedFactory,
     createUln302Factory,
 } from '@layerzerolabs/protocol-devtools-evm'
@@ -48,6 +52,13 @@ const defaultPriceData: PriceData = {
     priceRatio: '100000000000000000000',
     gasPriceInUnit: 1,
     gasPerByte: 1,
+}
+
+const defaultExecutorDstConfig: ExecutorDstConfig = {
+    baseGas: BigInt(200_000),
+    multiplierBps: BigInt(0),
+    floorMarginUSD: BigInt(0),
+    nativeCap: BigInt(250_000_000_000_000_000), // 0.25 ether
 }
 
 /**
@@ -113,6 +124,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const ulnSdkFactory = createUln302Factory(contractFactory)
     const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
     const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
+    const executorSdkFactory = createExecutorFactory(contractFactory)
 
     // For the graphs, we'll also need the pointers to the contracts
     const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))
@@ -126,6 +138,34 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
     const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
+
+    // This is the graph for Executor
+    const executorConfig: OmniGraphHardhat<unknown, ExecutorEdgeConfig> = {
+        contracts: [
+            {
+                contract: ethExecutor,
+            },
+            {
+                contract: avaxExecutor,
+            },
+        ],
+        connections: [
+            {
+                from: ethExecutor,
+                to: avaxExecutor,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: avaxExecutor,
+                to: ethExecutor,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+        ],
+    }
 
     // This is the graph for PriceFeed
     const priceFeedConfig: OmniGraphHardhat<unknown, PriceFeedEdgeConfig> = {
@@ -283,6 +323,9 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const builderPriceFeed = await OmniGraphBuilderHardhat.fromConfig(priceFeedConfig)
     const priceFeedTransactions = await configurePriceFeed(builderPriceFeed.graph, priceFeedSdkFactory)
 
+    const builderExecutor = await OmniGraphBuilderHardhat.fromConfig(executorConfig)
+    const executorTransactions = await configureExecutor(builderExecutor.graph, executorSdkFactory)
+
     const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
 
@@ -297,6 +340,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     const transactions = [
         ...priceFeedTransactions,
+        ...executorTransactions,
         ...sendUlnTransactions,
         ...receiveUlnTransactions,
         ...endpointTransactions,
