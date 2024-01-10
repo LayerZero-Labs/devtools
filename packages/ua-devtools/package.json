@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -30,11 +30,11 @@
     "test": "jest --passWithNoTests"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.0.1",
-    "@layerzerolabs/io-devtools": "~0.0.1",
+    "@layerzerolabs/devtools": "~0.0.2",
+    "@layerzerolabs/io-devtools": "~0.0.2",
     "@layerzerolabs/lz-definitions": "~2.0.7",
-    "@layerzerolabs/protocol-devtools": "~0.0.1",
-    "@layerzerolabs/test-devtools": "~0.0.1",
+    "@layerzerolabs/protocol-devtools": "~0.0.2",
+    "@layerzerolabs/test-devtools": "~0.0.2",
     "@types/jest": "^29.5.11",
     "fast-check": "^3.15.0",
     "jest": "^29.7.0",
@@ -46,10 +46,10 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.0.1",
-    "@layerzerolabs/io-devtools": "~0.0.1",
+    "@layerzerolabs/devtools": "~0.0.2",
+    "@layerzerolabs/io-devtools": "~0.0.2",
     "@layerzerolabs/lz-definitions": "~2.0.7",
-    "@layerzerolabs/protocol-devtools": "~0.0.1",
+    "@layerzerolabs/protocol-devtools": "~0.0.2",
     "zod": "^3.22.4"
   },
   "publishConfig": {
