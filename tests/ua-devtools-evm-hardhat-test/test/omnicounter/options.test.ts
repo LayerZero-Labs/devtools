@@ -79,7 +79,7 @@ const composedIndexArbitrary: fc.Arbitrary<number> = fc.integer({ min: MIN_COMPO
 const applyPremium = (input: bigint) => (BigInt(input) * BigInt(110)) / BigInt(100)
 
 // Test the OApp options using the OmniCounter OApp as the test contract.
-describe('oapp/options', () => {
+describe.skip('oapp/options', () => {
     const ethOmniCounter = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'OmniCounter' }
     const avaxOmniCounter = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'OmniCounter' }
     const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }

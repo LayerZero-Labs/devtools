@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpoint, Timeout } from '@layerzerolabs/protocol-devtools'
+import type { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Address,
     Bytes32,
@@ -10,7 +10,7 @@ import type {
     OmniTransaction,
     OmniVector,
 } from '@layerzerolabs/devtools'
-import type { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-utility-v2'
 
 export interface IOApp extends IOmniSDK {
     getEndpointSDK(): Promise<IEndpoint>
@@ -19,6 +19,7 @@ export interface IOApp extends IOmniSDK {
     setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
     getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string>
     setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction>
+    encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options
 }
 
 export type EnforcedOptions = {
@@ -50,10 +51,43 @@ export interface OAppEdgeConfig {
     enforcedOptions?: OAppEnforcedOptionConfig[]
 }
 
-export interface OAppEnforcedOptionConfig {
-    msgType: number
+interface BaseExecutorOption {
+    msgType: ExecutorOptionType
+}
+
+interface EndcodedOption extends BaseExecutorOption {
     options: string
 }
+
+interface ExecutorLzReceiveOption extends BaseExecutorOption {
+    msgType: ExecutorOptionType.LZ_RECEIVE
+    gas: string | number
+    value: string | number
+}
+
+interface ExecutorNativeDropOption extends BaseExecutorOption {
+    msgType: ExecutorOptionType.NATIVE_DROP
+    amount: string | number
+    receiver: string
+}
+
+interface ExecutorComposeOption extends BaseExecutorOption {
+    msgType: ExecutorOptionType.COMPOSE
+    index: number
+    gas: string | number
+    value: string | number
+}
+
+interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
+    msgType: ExecutorOptionType.ORDERED
+}
+
+export type OAppEnforcedOptionConfig =
+    | ExecutorLzReceiveOption
+    | ExecutorNativeDropOption
+    | ExecutorComposeOption
+    | ExecutorOrderedExecutionOption
+    | EndcodedOption
 
 export interface OAppPeers {
     vector: OmniVector

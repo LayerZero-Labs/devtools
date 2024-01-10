@@ -4,7 +4,6 @@ import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EnforcedOptions } from '../../dist/index'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
@@ -197,16 +196,20 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
                 const transactions: OmniTransaction[] = []
 
                 if (config?.enforcedOptions) {
-                    let enforcedOptions: EnforcedOptions[] = []
+                    const enforcedOptions: EnforcedOptions[] = []
                     const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
                     const oappSdk = await createSdk(from)
                     for (const enforcedOption of enforcedOptionsConfig) {
                         const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
-                        if (currentEnforcedOption != enforcedOption.options) {
+                        const encodedEnforcedOption = oappSdk
+                            .encodeEnforcedOptions(enforcedOption)
+                            .toHex()
+                            .toLowerCase()
+                        if (currentEnforcedOption !== encodedEnforcedOption) {
                             enforcedOptions.push({
                                 eid: to.eid,
                                 msgType: enforcedOption.msgType,
-                                options: enforcedOption.options,
+                                options: encodedEnforcedOption,
                             })
                         }
                     }
