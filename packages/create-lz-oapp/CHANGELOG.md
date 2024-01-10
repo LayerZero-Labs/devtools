@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.4
+
+### Patch Changes
+
+- 70646b4: Add missing dependencies
+
 ## 0.1.3
 
 ### Patch Changes

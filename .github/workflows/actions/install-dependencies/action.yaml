@@ -18,3 +18,8 @@ runs:
     - name: Install Dependencies
       shell: bash
       run: pnpm install --frozen-lockfile --offline
+
+    # Rebuild native bindings
+    - name: Rebuild NPM packages
+      shell: bash
+      run: pnpm rebuild --recursive
