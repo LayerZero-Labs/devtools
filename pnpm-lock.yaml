@@ -326,6 +326,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@ethersproject/abi':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/abstract-signer':
         specifier: ^5.7.0
         version: 5.7.0
@@ -935,7 +938,13 @@ importers:
       '@ethersproject/abstract-signer':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/bignumber':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/constants':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/contracts':
         specifier: ^5.7.0
         version: 5.7.0
       '@ethersproject/providers':
@@ -989,6 +998,9 @@ importers:
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~0.0.1
         version: link:../../packages/protocol-devtools-evm
+      '@layerzerolabs/test-devtools':
+        specifier: ~0.0.1
+        version: link:../test-devtools
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.0.1
         version: link:../../packages/toolbox-hardhat
