@@ -1,5 +1,5 @@
 import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OAppFactory, OAppOmniGraph } from './types'
+import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
@@ -15,6 +15,7 @@ export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, crea
         await configureReceiveLibraryTimeouts(graph, createSdk),
         await configureSendConfig(graph, createSdk),
         await configureReceiveConfig(graph, createSdk),
+        await configureEnforcedOptions(graph, createSdk),
     ])
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
@@ -183,6 +184,40 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
                 }
 
                 return [...transactions]
+            })
+        )
+    )
+
+export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                const transactions: OmniTransaction[] = []
+
+                if (config?.enforcedOptions) {
+                    const enforcedOptions: EnforcedOptions[] = []
+                    const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
+                    const oappSdk = await createSdk(from)
+                    for (const enforcedOption of enforcedOptionsConfig) {
+                        const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
+                        const encodedEnforcedOption = oappSdk
+                            .encodeEnforcedOptions(enforcedOption)
+                            .toHex()
+                            .toLowerCase()
+                        if (currentEnforcedOption !== encodedEnforcedOption) {
+                            enforcedOptions.push({
+                                eid: to.eid,
+                                msgType: enforcedOption.msgType,
+                                options: encodedEnforcedOption,
+                            })
+                        }
+                    }
+                    if (enforcedOptions.length) {
+                        transactions.push(await oappSdk.setEnforcedOptions(enforcedOptions))
+                    }
+                }
+
+                return transactions
             })
         )
     )

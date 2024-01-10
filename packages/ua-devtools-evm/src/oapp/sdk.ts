@@ -1,4 +1,4 @@
-import type { IOApp } from '@layerzerolabs/ua-devtools'
+import type { IOApp, EnforcedOptions, OAppEnforcedOptionConfig } from '@layerzerolabs/ua-devtools'
 import type { Bytes32, Address, OmniTransaction } from '@layerzerolabs/devtools'
 import {
     type OmniContract,
@@ -11,6 +11,7 @@ import {
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-utility-v2'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
@@ -54,5 +55,37 @@ export class OApp extends OmniSDK implements IOApp {
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
         return this.createTransaction(data)
+    }
+
+    async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
+        return await this.contract.contract.enforcedOptions(eid, msgType)
+    }
+
+    async setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
+        return this.createTransaction(data)
+    }
+
+    encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options {
+        if ('options' in enforcedOptionConfig) return Options.fromOptions(enforcedOptionConfig.options)
+
+        if (enforcedOptionConfig.msgType == ExecutorOptionType.LZ_RECEIVE) {
+            return Options.newOptions().addExecutorLzReceiveOption(enforcedOptionConfig.gas, enforcedOptionConfig.value)
+        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.NATIVE_DROP) {
+            return Options.newOptions().addExecutorNativeDropOption(
+                enforcedOptionConfig.amount,
+                enforcedOptionConfig.receiver
+            )
+        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.COMPOSE) {
+            return Options.newOptions().addExecutorComposeOption(
+                enforcedOptionConfig.index,
+                enforcedOptionConfig.gas,
+                enforcedOptionConfig.value
+            )
+        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.ORDERED) {
+            return Options.newOptions().addExecutorOrderedExecutionOption()
+        } else {
+            throw new Error(`Invalid ExecutorOptionType`)
+        }
     }
 }
