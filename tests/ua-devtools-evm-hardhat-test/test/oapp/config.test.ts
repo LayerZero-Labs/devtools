@@ -16,9 +16,6 @@ describe('oapp/config', () => {
     const contractFactory = createConnectedContractFactory()
     const oappSdkFactory = createOAppFactory(contractFactory)
 
-    // const ethContract = await contractFactory(ethPointHardhat)
-    // const avaxContract = await contractFactory(avaxPointHardhat)
-
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
         await deployOAppFixture()
@@ -178,16 +175,6 @@ describe('oapp/config', () => {
             // Now we configure the OApp
             const transactions = await configureOApp(graph, oappSdkFactory)
 
-            // {
-            //     const signerFactory = createSignerFactory()
-            //     // register new Send ULNs on ETH
-            //     const ethSigner = await signerFactory(ethContract.eid)
-            //     await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethSendLibrary))
-            //     // register new Send ULNs on AVAX
-            //     const avaxSigner = await signerFactory(avaxContract.eid)
-            //     await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxSendLibrary))
-            // }
-
             expect(transactions).toEqual([
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
@@ -236,9 +223,6 @@ describe('oapp/config', () => {
                 ],
             }
 
-            // Now we configure the OApp
-            const transactions = await configureOApp(graph, oappSdkFactory)
-
             {
                 const signerFactory = createSignerFactory()
                 // register new Send ULNs on ETH
@@ -249,11 +233,14 @@ describe('oapp/config', () => {
                 )
             }
 
-            expect(transactions).toEqual([
+            // Now we configure the OApp
+            const transactions = await configureOApp(graph, oappSdkFactory)
+            const expected = [
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
                 await avaxEndpointSdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxSendLibrary),
-            ])
+            ]
+            expect(transactions).toEqual(expected)
         })
     })
 
@@ -307,17 +294,6 @@ describe('oapp/config', () => {
 
             // Now we configure the OApp
             const transactions = await configureOApp(graph, oappSdkFactory)
-            // // TODO why is this passing without registerLibrary?
-            // {
-            //     const signerFactory = createSignerFactory()
-            //     // register new Send ULNs on ETH
-            //     const ethSigner = await signerFactory(ethContract.eid)
-            //     await ethSigner.signAndSend(await ethEndpointSdk.registerLibrary(ethReceiveLibrary))
-            //     // register new Send ULNs on AVAX
-            //     // const avaxSigner = await signerFactory(avaxContract.eid)
-            //     // await avaxSigner.signAndSend(await avaxEndpointSdk.registerLibrary(avaxReceiveLibrary))
-            // }
-
             expect(transactions).toEqual([
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
