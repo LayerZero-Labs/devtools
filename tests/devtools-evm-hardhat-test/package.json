@@ -18,7 +18,9 @@
   "devDependencies": {
     "@babel/core": "^7.23.7",
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.1",
@@ -36,6 +38,7 @@
     "@layerzerolabs/omnicounter-devtools-evm": "~0.0.1",
     "@layerzerolabs/protocol-devtools": "~0.0.1",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.1",
+    "@layerzerolabs/test-devtools": "~0.0.1",
     "@layerzerolabs/toolbox-hardhat": "~0.0.1",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@openzeppelin/contracts": "^4.9.5",

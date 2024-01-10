@@ -1,9 +1,9 @@
-import { OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
-import { IOmniSDK, OmniContract } from './types'
+import type { OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import type { IOmniSDK, OmniContract } from './types'
 import { omniContractToPoint } from './coordinates'
 import { createContractErrorParser } from '@/errors/parser'
-import { OmniContractErrorParser } from '@/errors/types'
-import { ContractError } from '..'
+import type { OmniContractErrorParser } from '@/errors/types'
+import type { ContractError } from '@/errors/errors'
 
 /**
  * Base class for all EVM SDKs, providing some common functionality
