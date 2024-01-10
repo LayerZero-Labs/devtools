@@ -51,7 +51,14 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
             assert(deployments.length > 0, `Could not find a deployment for address '${address}'`)
 
             const mergedAbis = deployments.flatMap((deployment) => deployment.abi)
-            return { eid, contract: new Contract(address, mergedAbis) }
+
+            // Even though duplicated fragments don't throw errors, they still pollute the interface with warning console.logs
+            // To prevent this, we'll run a simple deduplication algorithm - use JSON encoded values as hashes
+            const deduplicatedAbi = Object.values(
+                Object.fromEntries(mergedAbis.map((abi) => [JSON.stringify(abi), abi]))
+            )
+
+            return { eid, contract: new Contract(address, deduplicatedAbi) }
         }
 
         assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat')
