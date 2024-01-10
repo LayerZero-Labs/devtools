@@ -1,5 +1,5 @@
 import { BigNumberishBigintSchema } from '@layerzerolabs/devtools-evm'
-import { PriceData } from '@layerzerolabs/protocol-devtools'
+import type { PriceData } from '@layerzerolabs/protocol-devtools'
 import { PriceDataSchema as PriceDataSchemaBase } from '@layerzerolabs/protocol-devtools'
 import { z } from 'zod'
 
