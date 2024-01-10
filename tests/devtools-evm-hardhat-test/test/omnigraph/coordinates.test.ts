@@ -5,7 +5,6 @@ import {
     getEidForNetworkName,
     getHreByNetworkName,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import assert from 'assert'
 
 describe('omnigraph/coordinates', () => {
     describe('createContractFactory', () => {
@@ -13,24 +12,8 @@ describe('omnigraph/coordinates', () => {
             const env = await getHreByNetworkName('britney')
             const eid = getEidForNetworkName('britney')
 
-            // Get the deployer account
-            const [deployer] = await env.getUnnamedAccounts()
-            assert(deployer, 'Missing deployer account')
-
-            // Deploy the TestProxy contract
-            await env.deployments.deploy('TestProxy', {
-                from: deployer,
-                proxy: {
-                    owner: deployer,
-                    proxyContract: 'OptimizedTransparentProxy',
-                    execute: {
-                        init: {
-                            methodName: 'initialize',
-                            args: [],
-                        },
-                    },
-                },
-            })
+            // Deploy a fixture
+            await env.deployments.fixture(['TestProxy'])
 
             // Now we create a contract factory and observe that the resulting contract has all the contract methods
             const contractFactory = createContractFactory()
