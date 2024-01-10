@@ -183,7 +183,7 @@ describe('task/oapp/wire', () => {
                 sendTransactionMock.mockRestore()
             })
 
-            it.only('should return a list of failed transactions in the CI mode', async () => {
+            it('should return a list of failed transactions in the CI mode', async () => {
                 const error = new Error('Oh god dammit')
 
                 // We want to make the fail
