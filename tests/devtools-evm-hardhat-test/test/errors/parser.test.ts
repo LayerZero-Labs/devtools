@@ -3,11 +3,10 @@ import 'hardhat'
 import { BigNumber } from '@ethersproject/bignumber/lib/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { CustomError, UnknownError } from '@layerzerolabs/devtools-evm'
-import { createErrorParser, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectedContractFactory, createErrorParser } from '@layerzerolabs/devtools-evm-hardhat'
 import { OmniError } from '@layerzerolabs/devtools'
 import { pointArbitrary } from '@layerzerolabs/test-devtools'
 import { getHreByNetworkName, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
-import assert from 'assert'
 
 describe('errors/parser', () => {
     describe('createErrorParser', () => {
@@ -26,7 +25,9 @@ describe('errors/parser', () => {
         const assertFailed = async (promise: Promise<unknown>): Promise<unknown> =>
             promise.then(
                 (result) => {
-                    fail(`Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`)
+                    throw new Error(
+                        `Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`
+                    )
                 },
                 (error) => error
             )
@@ -35,18 +36,15 @@ describe('errors/parser', () => {
             // Get the environment
             const env = await getHreByNetworkName('britney')
             const eid = getEidForNetworkName('britney')
-            const { signer } = await createSignerFactory()(eid)
 
-            // Get the deployer account
-            const [deployer] = await env.getUnnamedAccounts()
-            assert(deployer, 'Missing deployer account')
+            // Deploy a fixture
+            await env.deployments.fixture(['Thrower'])
 
-            // Deploy the Thrower contract
-            const deployment = await env.deployments.deploy('Thrower', {
-                from: deployer,
-            })
+            // And get the contract
+            const contractFactory = createConnectedContractFactory()
+            const omniContract = await contractFactory({ contractName: 'Thrower', eid })
 
-            contract = new Contract(deployment.address, deployment.abi, signer)
+            contract = omniContract.contract
         })
 
         it('should parse a custom an error with no arguments coming from the contract itself', async () => {
@@ -151,7 +149,7 @@ describe('errors/parser', () => {
             )
         })
 
-        it('should parse a custom an error with an different arguments defined in more contracts coming from a nested contract', async () => {
+        it('should parse a custom an error defined in more contracts coming from a nested contract', async () => {
             const errorParser = createErrorParser()
 
             await fc.assert(
@@ -168,7 +166,7 @@ describe('errors/parser', () => {
             )
         })
 
-        it('should parse a custom an error with an different arguments defined in more contracts coming from a nested contract', async () => {
+        it('should parse a custom an error with different arguments defined in more contracts coming from a nested contract', async () => {
             const errorParser = createErrorParser()
 
             await fc.assert(

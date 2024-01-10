@@ -32,7 +32,9 @@ describe('errors/parser', () => {
         const assertFailed = async (promise: Promise<unknown>): Promise<unknown> =>
             promise.then(
                 (result) => {
-                    fail(`Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`)
+                    throw new Error(
+                        `Expected a promise to always reject but it resolved with ${JSON.stringify(result)}`
+                    )
                 },
                 (error) => error
             )
