@@ -765,6 +765,9 @@ importers:
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.7
         version: 2.0.7
+      '@layerzerolabs/lz-utility-v2':
+        specifier: ~2.0.7
+        version: 2.0.7
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.2
         version: link:../protocol-devtools
@@ -818,6 +821,9 @@ importers:
         specifier: ~0.0.2
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
+        specifier: ~2.0.7
+        version: 2.0.7
+      '@layerzerolabs/lz-utility-v2':
         specifier: ~2.0.7
         version: 2.0.7
       '@layerzerolabs/protocol-devtools':

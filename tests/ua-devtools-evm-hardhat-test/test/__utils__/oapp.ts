@@ -176,7 +176,7 @@ export const getDefaultAvaxConfig = async (): Promise<OAppTestConfig> => {
     }
 }
 
-const getLibraryAddress = async (library: OmniPointHardhat): Promise<string> => {
+export const getLibraryAddress = async (library: OmniPointHardhat): Promise<string> => {
     const contractFactory = createConnectedContractFactory()
     const { contract } = await contractFactory(library)
     return contract.address
