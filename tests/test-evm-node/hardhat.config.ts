@@ -13,6 +13,14 @@ const config: HardhatUserConfig = {
         hardhat: {
             accounts: {
                 mnemonic: MNEMONIC,
+                // We'll reserve 10 accounts per every test project
+                //
+                // When adding new E2E test projects, bumpt this number
+                // and set the initialIndex in your project's network config
+                // so that the accounts the projects uses do not overlap with other projects
+                //
+                // This will ensure that there are no nonce race conditions when running the tests in parallel
+                count: 20,
             },
         },
     },

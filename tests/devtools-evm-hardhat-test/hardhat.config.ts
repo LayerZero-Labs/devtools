@@ -25,6 +25,7 @@ const config: HardhatUserConfig = {
             url: process.env.NETWORK_URL_VENGABOYS ?? 'http://localhost:10001',
             accounts: {
                 mnemonic: MNEMONIC,
+                initialIndex: 0,
             },
         },
         britney: {
@@ -38,6 +39,7 @@ const config: HardhatUserConfig = {
             url: process.env.NETWORK_URL_BRITNEY ?? 'http://localhost:10002',
             accounts: {
                 mnemonic: MNEMONIC,
+                initialIndex: 0,
             },
         },
     },
