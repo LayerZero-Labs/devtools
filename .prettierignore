@@ -3,4 +3,4 @@
 .prettierignore
 .netrc
 *ignore
-pnpm-*.yaml
+pnpm-lock.yaml

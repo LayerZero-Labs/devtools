@@ -1,3 +1,5 @@
 .turbo
 dist
 node_modules
+*.md
+pnpm-lock.yaml
