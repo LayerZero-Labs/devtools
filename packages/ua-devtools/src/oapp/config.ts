@@ -102,6 +102,47 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
         )
     )
 
+export const configureSendAndReceiveConfig: OAppConfigurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                if (config?.sendConfig == null) return []
+                const setConfigParam: SetConfigParam[] = []
+                const oappSdk = await createSdk(from)
+                const endpointSdk = await oappSdk.getEndpointSDK()
+                const currentSendLibrary =
+                    config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
+                assert(
+                    currentSendLibrary !== undefined,
+                    'sendLibrary has not been set in your config and no default value exists'
+                )
+                const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
+                    from.address,
+                    currentSendLibrary,
+                    to.eid
+                )
+                if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
+                    setConfigParam.push(
+                        ...(await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
+                            { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
+                        ]))
+                    )
+                }
+                const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
+                if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
+                    setConfigParam.push(
+                        ...(await endpointSdk.getUlnConfigParams(currentSendLibrary, [
+                            { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                        ]))
+                    )
+                }
+
+                if (setConfigParam.length === 0) return []
+                return [await endpointSdk.setConfig(from.address, currentSendLibrary, setConfigParam)]
+            })
+        )
+    )
+
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
         await Promise.all(
