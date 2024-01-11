@@ -576,7 +576,6 @@ describe('oapp/config', () => {
             const avaxPoint = omniContractToPoint(avaxContract)
             const avaxOAppSdk = await oappSdkFactory(avaxPoint)
 
-            const avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
             const ethDvnAddress = await getLibraryAddress(ethDvn)
             const ethReceiveUlnDVNs: string[] = [ethDvnAddress]
 
