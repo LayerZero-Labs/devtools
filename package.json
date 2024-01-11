@@ -17,7 +17,10 @@
     "test:local": ". bin/env && $npm_execpath start && $npm_execpath test"
   },
   "lint-staged": {
-    "**/*": "pnpm prettier --write --ignore-unknown"
+    "**/*": [
+      "pnpm prettier --write --ignore-unknown",
+      "pnpm eslint --fix"
+    ]
   },
   "resolutions": {
     "rustbn.js": "^0.3.0"
