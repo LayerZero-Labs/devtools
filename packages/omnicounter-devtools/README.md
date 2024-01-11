@@ -4,20 +4,20 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/omnicounter-utils</h1>
+<h1 align="center">@layerzerolabs/omnicounter-devtools</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/omnicounter-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-devtools"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/omnicounter-devtools"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/omnicounter-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-devtools"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/omnicounter-devtools"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/omnicounter-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/omnicounter-devtools"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/omnicounter-devtools"/></a>
 </p>
 
 ## Installation
 
 ```sh
-$ npm install @layerzerolabs/omnicounter-utils
+$ npm install @layerzerolabs/omnicounter-devtools
 ```

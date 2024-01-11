@@ -4,16 +4,16 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/test-utils</h1>
+<h1 align="center">@layerzerolabs/test-devtools</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/test-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/test-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/test-devtools"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/test-devtools"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/test-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/test-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/test-devtools"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/test-devtools"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/test-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/test-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/test-devtools"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/test-devtools"/></a>
 </p>
 
 Collection of internal helpers for testing LayerZero packages
@@ -21,5 +21,5 @@ Collection of internal helpers for testing LayerZero packages
 ## Installation
 
 ```sh
-$ npm install @layerzerolabs/test-utils
+$ npm install @layerzerolabs/test-devtools
 ```

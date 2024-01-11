@@ -4,26 +4,26 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/utils</h1>
+<h1 align="center">@layerzerolabs/devtools</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/devtools"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/devtools"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/devtools"/></a>
 </p>
 
 ## Installation
 
 ```bash
-yarn add @layerzerolabs/utils
+yarn add @layerzerolabs/devtools
 
-pnpm add @layerzerolabs/utils
+pnpm add @layerzerolabs/devtools
 
-npm install @layerzerolabs/utils
+npm install @layerzerolabs/devtools
 ```
 
 ## API Documentation
@@ -36,7 +36,7 @@ Type that uniquely identifies a contract (a point) in an omnichain universe. It 
 
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
-import { OmniPoint } from "@layerzerolabs/utils";
+import { OmniPoint } from "@layerzerolabs/devtools";
 
 const omniPoint: OmniPoint = {
   eid: EndpointId.ETHEREUM_MAINNET,
@@ -50,7 +50,7 @@ Type that uniquely identifies a connection between two `OmniPoint`s, two contrac
 
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
-import { OmniVector } from "@layerzerolabs/utils";
+import { OmniVector } from "@layerzerolabs/devtools";
 
 const from: OmniPoint = {
   eid: EndpointId.ETHEREUM_MAINNET,

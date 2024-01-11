@@ -4,8 +4,8 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/utils-evm-test</h1>
+<h1 align="center">@layerzerolabs/devtools-evm-test</h1>
 
 ## Development
 
-This package provides integration tests for `@layerzerolabs/utils-evm` using `hardhat`.
+This package provides integration tests for `@layerzerolabs/devtools-evm` using `hardhat`.

@@ -4,16 +4,16 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/protocol-utils-evm</h1>
+<h1 align="center">@layerzerolabs/protocol-devtools-evm</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-utils-evm"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/protocol-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-devtools-evm"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/protocol-devtools-evm"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-utils-evm"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/protocol-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-devtools-evm"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/protocol-devtools-evm"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-utils-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/protocol-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/protocol-devtools-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/protocol-devtools-evm"/></a>
 </p>
 
 Utilities for LayerZero EVM protocol contracts.
@@ -21,13 +21,13 @@ Utilities for LayerZero EVM protocol contracts.
 ## Installation
 
 ```bash
-npm install --save @layerzerolabs/protocol-utils-evm
+npm install --save @layerzerolabs/protocol-devtools-evm
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-utils-evm
+pnpm install @layerzerolabs/protocol-devtools-evm
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-utils-evm
+pnpm install @layerzerolabs/protocol-devtools-evm
 ```

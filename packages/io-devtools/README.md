@@ -4,30 +4,30 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/io-utils</h1>
+<h1 align="center">@layerzerolabs/io-devtools</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/io-utils"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/io-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/io-devtools"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/io-devtools"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/io-utils"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/io-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/io-devtools"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/io-devtools"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/io-utils"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/io-utils"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/io-devtools"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/io-devtools"/></a>
 </p>
 
 ## Installation
 
 ```bash
-pnpm install @layerzerolabs/io-utils
+pnpm install @layerzerolabs/io-devtools
 ```
 
 ```bash
-pnpm install @layerzerolabs/io-utils
+pnpm install @layerzerolabs/io-devtools
 ```
 
 ```bash
-npm install @layerzerolabs/io-utils
+npm install @layerzerolabs/io-devtools
 ```
 
 ## API Documentation

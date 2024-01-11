@@ -4,36 +4,36 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/ua-utils-evm-hardhat</h1>
+<h1 align="center">@layerzerolabs/ua-devtools-evm-hardhat</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm-hardhat"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm-hardhat"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-devtools-evm-hardhat"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm-hardhat"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm-hardhat"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-devtools-evm-hardhat"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm-hardhat"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm-hardhat"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-devtools-evm-hardhat"/></a>
 </p>
 
 ## Installation
 
 ```sh
-$ npm install @layerzerolabs/ua-utils-evm-hardhat
+$ npm install @layerzerolabs/ua-devtools-evm-hardhat
 ```
 
 The plugin depends on [`@nomiclabs/hardhat-ethers`](https://www.npmjs.com/package/@nomiclabs/hardhat-ethers), so you need to import both plugins in your `hardhat.config.js`:
 
 ```js
 require("@nomiclabs/hardhat-ethers");
-require("@layerzerolabs/ua-utils-evm-hardhat");
+require("@layerzerolabs/ua-devtools-evm-hardhat");
 ```
 
 Or if you are using TypeScript, in your `hardhat.config.ts`:
 
 ```ts
 import "@nomiclabs/hardhat-ethers";
-import "@layerzerolabs/ua-utils-evm-hardhat";
+import "@layerzerolabs/ua-devtools-evm-hardhat";
 ```
 
 Make sure that network names in your `hardhat.config.js` match the following [naming convention](https://github.com/LayerZero-Labs/sdk/blob/main/packages/lz-sdk/src/enums/ChainKey.ts).
