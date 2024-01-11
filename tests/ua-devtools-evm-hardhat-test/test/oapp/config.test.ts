@@ -90,7 +90,6 @@ describe('oapp/config', () => {
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
             ])
         })
-
         it('should exclude setPeer transactions for peers that have been set', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
@@ -193,7 +192,6 @@ describe('oapp/config', () => {
                 await avaxEndpointSdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxSendLibrary),
             ])
         })
-
         it('should return all setPeer transactions and one configureSendLibraries transaction', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
@@ -312,7 +310,6 @@ describe('oapp/config', () => {
                 await avaxEndpointSdk.setReceiveLibrary(avaxPoint.address, ethPoint.eid, avaxReceiveLibrary, 0),
             ])
         })
-
         it('should return all setPeer transactions and one configureReceiveLibraries transaction', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
@@ -538,27 +535,29 @@ describe('oapp/config', () => {
             expect(transactions).toEqual([
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
-                await ethEndpointSdk.setExecutorConfig(ethPoint.address, ethSendLibrary, [
-                    {
-                        eid: avaxPoint.eid,
-                        executorConfig: {
-                            maxMessageSize: 99,
-                            executor: avaxExecutorAddress,
+                await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
+                    ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
                         },
-                    },
-                ]),
-                await ethEndpointSdk.setUlnConfig(ethPoint.address, ethSendLibrary, [
-                    {
-                        eid: avaxPoint.eid,
-                        ulnConfig: {
-                            confirmations: 42,
-                            requiredDVNs: ethSendUlnDVNs,
-                            optionalDVNs: ethSendUlnDVNs,
-                            optionalDVNThreshold: 0,
-                            requiredDVNCount: ethSendUlnDVNs.length,
-                            optionalDVNCount: ethSendUlnDVNs.length,
+                    ])),
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethSendLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            ulnConfig: {
+                                confirmations: 42,
+                                requiredDVNs: ethSendUlnDVNs,
+                                optionalDVNs: ethSendUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethSendUlnDVNs.length,
+                                optionalDVNCount: ethSendUlnDVNs.length,
+                            },
                         },
-                    },
+                    ])),
                 ]),
             ])
         })
@@ -637,6 +636,121 @@ describe('oapp/config', () => {
         })
     })
 
+    describe('configureSendConfig and configureReceiveConfig', () => {
+        it('should return all setPeer transactions and setConfig', async () => {
+            const ethContract = await contractFactory(ethPointHardhat)
+            const avaxContract = await contractFactory(avaxPointHardhat)
+
+            const ethPoint = omniContractToPoint(ethContract)
+            const ethOAppSdk = await oappSdkFactory(ethPoint)
+            const ethEndpointSdk = await ethOAppSdk.getEndpointSDK()
+
+            const avaxPoint = omniContractToPoint(avaxContract)
+            const avaxOAppSdk = await oappSdkFactory(avaxPoint)
+
+            const avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
+            const avaxDvnAddress = await getLibraryAddress(avaxDvn)
+            const ethSendUlnDVNs: string[] = [avaxDvnAddress]
+
+            const ethDvnAddress = await getLibraryAddress(ethDvn)
+            const ethReceiveUlnDVNs: string[] = [ethDvnAddress]
+
+            const ethSendLibrary = await getLibraryAddress(ethSendUln)
+            const ethReceiveLibrary = await getLibraryAddress(ethReceiveUln)
+
+            // This is the OApp config that we want to use against our contracts
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: ethPoint,
+                    },
+                    {
+                        point: avaxPoint,
+                    },
+                ],
+                connections: [
+                    {
+                        vector: { from: ethPoint, to: avaxPoint },
+                        config: {
+                            sendConfig: {
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: avaxExecutorAddress,
+                                },
+                                ulnConfig: {
+                                    confirmations: 42,
+                                    requiredDVNs: ethSendUlnDVNs,
+                                    optionalDVNs: ethSendUlnDVNs,
+                                    optionalDVNThreshold: 0,
+                                    requiredDVNCount: ethSendUlnDVNs.length,
+                                    optionalDVNCount: ethSendUlnDVNs.length,
+                                },
+                            },
+                            receiveConfig: {
+                                ulnConfig: {
+                                    confirmations: 42,
+                                    requiredDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNThreshold: 0,
+                                    requiredDVNCount: ethReceiveUlnDVNs.length,
+                                    optionalDVNCount: ethReceiveUlnDVNs.length,
+                                },
+                            },
+                        },
+                    },
+                    {
+                        vector: { from: avaxPoint, to: ethPoint },
+                        config: undefined,
+                    },
+                ],
+            }
+
+            // Now we configure the OApp
+            const transactions = await configureOApp(graph, oappSdkFactory)
+            expect(transactions).toEqual([
+                await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
+                await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
+                    ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
+                        },
+                    ])),
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethSendLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            ulnConfig: {
+                                confirmations: 42,
+                                requiredDVNs: ethSendUlnDVNs,
+                                optionalDVNs: ethSendUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethSendUlnDVNs.length,
+                                optionalDVNCount: ethSendUlnDVNs.length,
+                            },
+                        },
+                    ])),
+                ]),
+                await ethEndpointSdk.setUlnConfig(ethPoint.address, ethReceiveLibrary, [
+                    {
+                        eid: avaxPoint.eid,
+                        ulnConfig: {
+                            confirmations: 42,
+                            requiredDVNs: ethReceiveUlnDVNs,
+                            optionalDVNs: ethReceiveUlnDVNs,
+                            optionalDVNThreshold: 0,
+                            requiredDVNCount: ethReceiveUlnDVNs.length,
+                            optionalDVNCount: ethReceiveUlnDVNs.length,
+                        },
+                    },
+                ]),
+            ])
+        })
+    })
+
     describe('configureEnforcedOptions', () => {
         it('should return only setPeer transaction when enforcedOptions is empty', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
@@ -682,7 +796,6 @@ describe('oapp/config', () => {
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
             ])
         })
-
         it('should return setPeer and setEnforcedOptions transaction when enforcedOptions are set', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
