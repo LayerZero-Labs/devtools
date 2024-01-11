@@ -143,19 +143,17 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
     }
 
-    async setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
-        const uln = (await this.getUln302SDK(lib)) as Uln302
-        const setConfigParams: SetConfigParam[] = setUlnConfig.map(({ eid, ulnConfig }) => ({
-            eid,
-            configType: CONFIG_TYPE_ULN,
-            config: uln.encodeUlnConfig(ulnConfig),
-        }))
-
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParams])
+    async setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParam])
         return {
             ...this.createTransaction(data),
-            description: `Set UlnConfig Config for lib: ${lib}`,
+            description: `SetConfig for lib: ${lib}`,
         }
+    }
+
+    async setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
+        const setUlnConfigParams: SetConfigParam[] = await this.getUlnConfigParams(lib, setUlnConfig)
+        return await this.setConfig(oapp, lib, setUlnConfigParams)
     }
 
     async setExecutorConfig(
@@ -163,18 +161,8 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         lib: Address,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<OmniTransaction> {
-        const uln = (await this.getUln302SDK(lib)) as Uln302
-        const setConfigParams: SetConfigParam[] = setExecutorConfig.map(({ eid, executorConfig }) => ({
-            eid,
-            configType: CONFIG_TYPE_EXECUTOR,
-            config: uln.encodeExecutorConfig(executorConfig),
-        }))
-
-        const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParams])
-        return {
-            ...this.createTransaction(data),
-            description: `Set Executor Config for lib: ${lib}`,
-        }
+        const setExecutorConfigParams: SetConfigParam[] = await this.getExecutorConfigParams(lib, setExecutorConfig)
+        return await this.setConfig(oapp, lib, setExecutorConfigParams)
     }
 
     async getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
@@ -206,5 +194,26 @@ export class Endpoint extends OmniSDK implements IEndpoint {
             nativeFee: BigInt(nativeFee),
             lzTokenFee: BigInt(lzTokenFee),
         }
+    }
+
+    async getUlnConfigParams(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        return setUlnConfig.map(({ eid, ulnConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_ULN,
+            config: uln.encodeUlnConfig(ulnConfig),
+        }))
+    }
+
+    async getExecutorConfigParams(
+        lib: Address,
+        setExecutorConfig: Uln302SetExecutorConfig[]
+    ): Promise<SetConfigParam[]> {
+        const uln = (await this.getUln302SDK(lib)) as Uln302
+        return setExecutorConfig.map(({ eid, executorConfig }) => ({
+            eid,
+            configType: CONFIG_TYPE_EXECUTOR,
+            config: uln.encodeExecutorConfig(executorConfig),
+        }))
     }
 }

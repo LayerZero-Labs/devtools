@@ -49,6 +49,10 @@ export interface IEndpoint extends IOmniSDK {
     getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
     setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
 
+    getUlnConfigParams(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
+    getExecutorConfigParams(lib: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
+    setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
+
     quote(params: MessageParams, sender: Address): Promise<MessagingFee>
 }
 

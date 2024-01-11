@@ -2,7 +2,7 @@ import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtoo
 import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
-import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import { type SetConfigParam, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
@@ -90,7 +90,6 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
                 const timeout = await endpointSdk.getReceiveLibraryTimeout(from.address, to.eid)
 
                 if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) return []
-
                 return [
                     await endpointSdk.setReceiveLibraryTimeout(
                         from.address,
@@ -103,51 +102,84 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
         )
     )
 
-export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
+export const configureSendAndReceiveConfig: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                if (config?.sendConfig == null) return []
+                const setConfigParam: SetConfigParam[] = []
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
-
-                if (config?.sendConfig == null) return []
-
-                const transactions: OmniTransaction[] = []
-
                 const currentSendLibrary =
                     config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
                 assert(
                     currentSendLibrary !== undefined,
                     'sendLibrary has not been set in your config and no default value exists'
                 )
-
                 const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
                     from.address,
                     currentSendLibrary,
                     to.eid
                 )
-
-                // TODO Normalize the config values using a schema before comparing them
                 if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
-                    transactions.push(
-                        await endpointSdk.setExecutorConfig(from.address, currentSendLibrary, [
+                    setConfigParam.push(
+                        ...(await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
                             { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
-                        ])
+                        ]))
                     )
                 }
-
                 const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
-
-                // TODO Normalize the config values using a schema before comparing them
                 if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
-                    transactions.push(
-                        await endpointSdk.setUlnConfig(from.address, currentSendLibrary, [
+                    setConfigParam.push(
+                        ...(await endpointSdk.getUlnConfigParams(currentSendLibrary, [
                             { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
-                        ])
+                        ]))
                     )
                 }
 
-                return transactions
+                if (setConfigParam.length === 0) return []
+                return [await endpointSdk.setConfig(from.address, currentSendLibrary, setConfigParam)]
+            })
+        )
+    )
+
+export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                if (config?.sendConfig == null) return []
+                const setConfigParam: SetConfigParam[] = []
+                const oappSdk = await createSdk(from)
+                const endpointSdk = await oappSdk.getEndpointSDK()
+                const currentSendLibrary =
+                    config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
+                assert(
+                    currentSendLibrary !== undefined,
+                    'sendLibrary has not been set in your config and no default value exists'
+                )
+                const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
+                    from.address,
+                    currentSendLibrary,
+                    to.eid
+                )
+                if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
+                    setConfigParam.push(
+                        ...(await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
+                            { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
+                        ]))
+                    )
+                }
+                const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
+                if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
+                    setConfigParam.push(
+                        ...(await endpointSdk.getUlnConfigParams(currentSendLibrary, [
+                            { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                        ]))
+                    )
+                }
+
+                if (setConfigParam.length === 0) return []
+                return [await endpointSdk.setConfig(from.address, currentSendLibrary, setConfigParam)]
             })
         )
     )
@@ -156,34 +188,26 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+                if (config?.receiveConfig == null) return []
+
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
-                const transactions: OmniTransaction[] = []
-
-                if (config?.receiveConfig) {
-                    const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
-                        ? [config.receiveLibraryConfig?.receiveLibrary, false]
-                        : await endpointSdk.getReceiveLibrary(from.address, to.eid)
-                    assert(
-                        currentReceiveLibrary !== undefined,
-                        'receiveLibrary has not been set in your config and no default value exists'
-                    )
-
-                    const receiveUlnConfig: Uln302UlnConfig = <Uln302UlnConfig>(
-                        await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
-                    )
-
-                    // TODO Normalize the config values using a schema before comparing them
-                    if (!isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) {
-                        transactions.push(
-                            await endpointSdk.setUlnConfig(from.address, currentReceiveLibrary, [
-                                { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
-                            ])
-                        )
-                    }
-                }
-
-                return [...transactions]
+                const [currentReceiveLibrary] = config.receiveLibraryConfig?.receiveLibrary
+                    ? [config.receiveLibraryConfig?.receiveLibrary, false]
+                    : await endpointSdk.getReceiveLibrary(from.address, to.eid)
+                assert(
+                    currentReceiveLibrary !== undefined,
+                    'receiveLibrary has not been set in your config and no default value exists'
+                )
+                const receiveUlnConfig: Uln302UlnConfig = <Uln302UlnConfig>(
+                    await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
+                )
+                if (isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) return []
+                return [
+                    await endpointSdk.setUlnConfig(from.address, currentReceiveLibrary, [
+                        { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
+                    ]),
+                ]
             })
         )
     )
@@ -192,32 +216,25 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                const transactions: OmniTransaction[] = []
+                if (config?.enforcedOptions == null) return []
 
-                if (config?.enforcedOptions) {
-                    const enforcedOptions: EnforcedOptions[] = []
-                    const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
-                    const oappSdk = await createSdk(from)
-                    for (const enforcedOption of enforcedOptionsConfig) {
-                        const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
-                        const encodedEnforcedOption = oappSdk
-                            .encodeEnforcedOptions(enforcedOption)
-                            .toHex()
-                            .toLowerCase()
-                        if (currentEnforcedOption !== encodedEnforcedOption) {
-                            enforcedOptions.push({
-                                eid: to.eid,
-                                msgType: enforcedOption.msgType,
-                                options: encodedEnforcedOption,
-                            })
-                        }
-                    }
-                    if (enforcedOptions.length) {
-                        transactions.push(await oappSdk.setEnforcedOptions(enforcedOptions))
+                const enforcedOptions: EnforcedOptions[] = []
+                const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
+                const oappSdk = await createSdk(from)
+                for (const enforcedOption of enforcedOptionsConfig) {
+                    const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
+                    const encodedEnforcedOption = oappSdk.encodeEnforcedOptions(enforcedOption).toHex().toLowerCase()
+                    if (currentEnforcedOption !== encodedEnforcedOption) {
+                        enforcedOptions.push({
+                            eid: to.eid,
+                            msgType: enforcedOption.msgType,
+                            options: encodedEnforcedOption,
+                        })
                     }
                 }
 
-                return transactions
+                if (enforcedOptions.length === 0) return []
+                return [await oappSdk.setEnforcedOptions(enforcedOptions)]
             })
         )
     )
