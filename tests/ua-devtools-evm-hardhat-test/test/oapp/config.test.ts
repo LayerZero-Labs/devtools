@@ -1,6 +1,6 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployOAppFixture } from '../__utils__/oapp'
+import { deployOApp } from '../__utils__/oapp'
 import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -18,6 +18,7 @@ import {
     ethDvn,
     avaxDvn,
     ethSendUln,
+    deployEndpoint,
 } from '../__utils__/endpoint'
 
 describe('oapp/config', () => {
@@ -27,10 +28,14 @@ describe('oapp/config', () => {
     const contractFactory = createConnectedContractFactory()
     const oappSdkFactory = createOAppFactory(contractFactory)
 
+    beforeAll(async () => {
+        await deployEndpoint()
+        await setupDefaultEndpoint()
+    })
+
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
-        await deployOAppFixture()
-        await setupDefaultEndpoint()
+        await deployOApp()
     })
 
     describe('configureOApp', () => {

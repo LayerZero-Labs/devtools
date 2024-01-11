@@ -28,6 +28,5 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 }
 
 deploy.tags = ['OmniCounter']
-deploy.dependencies = ['Bootstrap']
 
 export default deploy

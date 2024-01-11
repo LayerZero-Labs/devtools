@@ -12,8 +12,8 @@ describe('omnigraph/coordinates', () => {
             const env = await getHreByNetworkName('britney')
             const eid = getEidForNetworkName('britney')
 
-            // Deploy a fixture
-            await env.deployments.fixture(['TestProxy'])
+            // Deploy the contract
+            await env.deployments.run(['TestProxy'])
 
             // Now we create a contract factory and observe that the resulting contract has all the contract methods
             const contractFactory = createContractFactory()

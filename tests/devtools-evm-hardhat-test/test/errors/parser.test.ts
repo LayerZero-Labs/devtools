@@ -37,8 +37,8 @@ describe('errors/parser', () => {
             const env = await getHreByNetworkName('britney')
             const eid = getEidForNetworkName('britney')
 
-            // Deploy a fixture
-            await env.deployments.fixture(['Thrower'])
+            // Deploy the contract
+            await env.deployments.run(['Thrower'])
 
             // And get the contract
             const contractFactory = createConnectedContractFactory()

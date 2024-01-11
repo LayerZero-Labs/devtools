@@ -1,5 +1,5 @@
 import {
-    deployEndpointFixture,
+    deployEndpoint,
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
     setupDefaultEndpoint,
@@ -11,7 +11,7 @@ import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
     beforeEach(async () => {
-        await deployEndpointFixture()
+        await deployEndpoint()
         await setupDefaultEndpoint()
     })
 

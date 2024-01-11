@@ -27,6 +27,5 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 }
 
 deploy.tags = ['OApp', 'DefaultOApp']
-deploy.dependencies = ['Bootstrap']
 
 export default deploy
