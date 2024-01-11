@@ -9,6 +9,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/devtools'
 import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
 import assert from 'assert'
+import memoize from 'micro-memoize'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
@@ -167,25 +168,79 @@ export const getNetworkNameForEid = (
     eid: EndpointId,
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
 ): string => {
-    const networkNames: string[] = []
+    // We are using getEidsByNetworkName to get the nice validation of network config
+    const eidsByNetworkName = getEidsByNetworkName(hre)
 
-    for (const [networkName, networkConfig] of Object.entries(hre.config.networks)) {
-        // This is basically just an extra condition that ensures that even if the user
-        // passes undefined / null despite the TypeScript telling them not to, they won't get a messed up return value
-        if (networkConfig.eid == null) continue
-
-        if (eid === networkConfig.eid) networkNames.push(networkName)
+    for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
+        if (networkEid === eid) return networkName
     }
 
-    // Here we error out of the user by accident specified the same eid for multiple networks
-    assert(
-        networkNames.length < 2,
-        `Multiple networks found with 'eid' set to ${eid} (${formatEid(eid)}): ${networkNames.join(', ')}`
-    )
-
     // Here we error out if there are no networks with this eid
-    const networkName = networkNames.at(0)
-    assert(networkName, `Could not find a network for eid ${eid} (${formatEid(eid)})`)
-
-    return networkName
+    assert(false, `Could not find a network for eid ${eid} (${formatEid(eid)})`)
 }
+
+/**
+ * Gets a record containing the mapping between network names and endpoint IDs.
+ * Will also return the network names for which the `eid` has not been defined
+ *
+ * Throws if there are multiple networks defined with the same `eid`
+ *
+ * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @returns {Record<string, EndpointId | undefined>}
+ */
+export const getEidsByNetworkName = memoize(
+    (hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()): Record<string, EndpointId | undefined> => {
+        // First we get the network name -> network config pairs
+        const networkEntries = Object.entries(hre.config.networks)
+        // And map the network config to an endpoint ID
+        const eidEntries = networkEntries.map(
+            ([networkName, networkConfig]) => [networkName, networkConfig.eid] as const
+        )
+        // Now we turn the entries back into a record
+        const eidsByNetworkName = Object.fromEntries(eidEntries)
+
+        // Now we check that the user has not configured the endpoint ID mapping incorrectly
+        // (i.e. there are more networks configured with the same endpoint ID)
+        //
+        // For this we'll drop all the networks whose endpoint IDs are not defined
+        const eidEntriesWithDefinedEid = eidEntries.filter(([_, eid]) => eid != null)
+        const definedEidsByNetworkName = Object.fromEntries(eidEntriesWithDefinedEid)
+
+        // Now we grab the sets of unique network names and endpoint IDs
+        const allDefinedEids = new Set(Object.values(definedEidsByNetworkName))
+        const allNetworkNames = new Set(Object.keys(definedEidsByNetworkName))
+
+        // If the number of unique networks matches the number of unique endpoint IDs, there are no duplicates
+        if (allDefinedEids.size === allNetworkNames.size) return eidsByNetworkName
+
+        // At this point the number of defined endpoint IDs can only be lower than
+        // the number of defined network names (since network names are taken from the keys
+        // of an object and endpoint IDs from its values)
+        //
+        // To let the user know whihc networks to fix, we need to grab all the ones that
+        // have been duplicated
+        //
+        // We are not claiming any efficiency of this algorithm as we don't expect any large numbers of networks
+        const duplicatedNetworkNames = Array.from(allDefinedEids)
+            // First we grab all the network names with this endpoint ID
+            .map((eid) =>
+                eidEntriesWithDefinedEid.flatMap(([networkName, definedEid]) =>
+                    eid === definedEid ? [networkName] : []
+                )
+            )
+            // Then we find all the network names listed more than once
+            .filter((networkNames) => networkNames.length > 1)
+
+        // Now we let the user know which network names have identical endpoint IDs
+        const messages = duplicatedNetworkNames
+            .map(
+                (networkNames) =>
+                    `- ${networkNames.join(', ')} have eid set to ${formatEid(eidsByNetworkName[networkNames[0]!]!)}`
+            )
+            .join('\n')
+
+        throw new Error(
+            `Found multiple networks configured with the same 'eid':\n\n${messages}\n\nPlease fix this in your hardhat config.`
+        )
+    }
+)

@@ -1,6 +1,12 @@
 import hre from 'hardhat'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
-import { createGetHreByEid, getEidForNetworkName, getNetworkNameForEid, getHreByNetworkName } from '@/runtime'
+import {
+    createGetHreByEid,
+    getEidForNetworkName,
+    getNetworkNameForEid,
+    getHreByNetworkName,
+    getEidsByNetworkName,
+} from '@/runtime'
 import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
@@ -115,7 +121,61 @@ describe('runtime', () => {
 
             expect(() =>
                 getNetworkNameForEid(EndpointId.APTOS_MAINNET, hre as unknown as HardhatRuntimeEnvironment)
-            ).toThrow(`Multiple networks found with 'eid' set to 108 (APTOS_MAINNET): one, two, three`)
+            ).toThrowErrorMatchingSnapshot()
+        })
+    })
+
+    describe('getEidsByNetworkName', () => {
+        it('should return undefined for networks that do not have eid defined', async () => {
+            const hre = {
+                config: {
+                    networks: {
+                        one: {
+                            eid: EndpointId.APTOS_MAINNET,
+                        },
+                        two: {
+                            eid: EndpointId.BASE_TESTNET,
+                        },
+                        three: {},
+                        four: {},
+                    },
+                },
+            }
+
+            expect(getEidsByNetworkName(hre as unknown as HardhatRuntimeEnvironment)).toEqual({
+                one: EndpointId.APTOS_MAINNET,
+                two: EndpointId.BASE_TESTNET,
+                three: undefined,
+                four: undefined,
+            })
+        })
+
+        it('should throw if there are more networks defined with the same eid', () => {
+            const hre = {
+                config: {
+                    networks: {
+                        one: {
+                            eid: EndpointId.APTOS_MAINNET,
+                        },
+                        two: {
+                            eid: EndpointId.APTOS_MAINNET,
+                        },
+                        three: {
+                            eid: EndpointId.APTOS_MAINNET,
+                        },
+                        four: {
+                            eid: EndpointId.BASE_TESTNET,
+                        },
+                        five: {
+                            eid: EndpointId.BASE_TESTNET,
+                        },
+                    },
+                },
+            }
+
+            expect(() =>
+                getEidsByNetworkName(hre as unknown as HardhatRuntimeEnvironment)
+            ).toThrowErrorMatchingSnapshot()
         })
     })
 })
