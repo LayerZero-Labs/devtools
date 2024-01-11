@@ -4,26 +4,26 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/utils-evm-hardhat</h1>
+<h1 align="center">@layerzerolabs/devtools-evm-hardhat</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools-evm-hardhat"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/devtools-evm-hardhat"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools-evm-hardhat"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/devtools-evm-hardhat"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/utils-evm-hardhat"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/utils-evm-hardhat"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/devtools-evm-hardhat"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/devtools-evm-hardhat"/></a>
 </p>
 
 ## Installation
 
 ```bash
-yarn add @layerzerolabs/utils-evm-hardhat
+yarn add @layerzerolabs/devtools-evm-hardhat
 
-pnpm add @layerzerolabs/utils-evm-hardhat
+pnpm add @layerzerolabs/devtools-evm-hardhat
 
-npm install @layerzerolabs/utils-evm-hardhat
+npm install @layerzerolabs/devtools-evm-hardhat
 ```
 
 ## API Documentation
@@ -36,7 +36,7 @@ Interface that represents an ethers.js contract connected to a particular endpoi
 
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
-import { OmniContract } from "@layerzerolabs/utils-evm";
+import { OmniContract } from "@layerzerolabs/devtools-evm";
 
 const omniContract: OmniContract = {
   eid: EndpointId.ETHEREUM_MAINNET,
@@ -50,8 +50,8 @@ Type that represents a function that can return an `OmniContract` based on an `O
 
 ```typescript
 import { EndpointId } from "@layerzerolabs/lz-definitions";
-import { OmniPoint } from "@layerzerolabs/utils";
-import { OmniContractFactory } from "@layerzerolabs/utils-evm";
+import { OmniPoint } from "@layerzerolabs/devtools";
+import { OmniContractFactory } from "@layerzerolabs/devtools-evm";
 
 declare const omniContractFactory: OmniContractFactory;
 

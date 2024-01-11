@@ -1,5 +1,5 @@
-# `@layerzerolabs/io-utils/swag`
+# `@layerzerolabs/io-devtools/swag`
 
-This directory is not included in the default bundle (`@layerzerolabs/io-utils`) because it introduces dependecies that are not required for the basic functionality and that would bloat the bundle size.
+This directory is not included in the default bundle (`@layerzerolabs/io-devtools`) because it introduces dependecies that are not required for the basic functionality and that would bloat the bundle size.
 
 If you need to use this module, you will need to include the `peerDependencies` that are listed as optional under `peerDependenciesMeta` in `package.json`

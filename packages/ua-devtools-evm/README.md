@@ -4,20 +4,20 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/ua-utils-evm</h1>
+<h1 align="center">@layerzerolabs/ua-devtools-evm</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/ua-devtools-evm"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/ua-devtools-evm"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-utils-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-utils-evm"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/ua-devtools-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/ua-devtools-evm"/></a>
 </p>
 
 ## Installation
 
 ```sh
-$ npm install @layerzerolabs/ua-utils-evm
+$ npm install @layerzerolabs/ua-devtools-evm
 ```
