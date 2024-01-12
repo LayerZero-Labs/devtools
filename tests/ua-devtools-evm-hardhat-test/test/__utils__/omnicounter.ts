@@ -7,7 +7,7 @@ export const deployOmniCounter = async () => {
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
-        eth.deployments.run('OmniCounter', { writeDeploymentsToFiles: true, resetMemory: false }),
-        avax.deployments.run('OmniCounter', { writeDeploymentsToFiles: true, resetMemory: false }),
+        eth.deployments.run('OmniCounter', { resetMemory: false }),
+        avax.deployments.run('OmniCounter', { resetMemory: false }),
     ])
 }

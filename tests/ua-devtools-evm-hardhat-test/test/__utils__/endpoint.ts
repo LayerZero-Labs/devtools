@@ -96,8 +96,8 @@ export const deployEndpoint = async () => {
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
-        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: true, resetMemory: false }),
-        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: true, resetMemory: false }),
+        eth.deployments.run('EndpointV2', { resetMemory: false }),
+        avax.deployments.run('EndpointV2', { resetMemory: false }),
     ])
 }
 
