@@ -92,8 +92,8 @@ describe('oapp/options', () => {
 
     beforeAll(async () => {
         await deployEndpoint()
-        await deployOmniCounter()
         await setupDefaultEndpoint()
+        await deployOmniCounter()
     })
 
     beforeEach(async () => {
