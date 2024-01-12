@@ -106,7 +106,7 @@ export const deployEndpoint = async (writeToFileSystem: boolean = false) => {
 /**
  * Helper function that wires the endpoint infrastructure.
  *
- * The contracts still need to be deployed (use deployEndpoint or deployEndpoint)
+ * The contracts still need to be deployed (use `deployEndpoint`)
  */
 export const setupDefaultEndpoint = async (): Promise<void> => {
     // This is the tooling we are going to need
