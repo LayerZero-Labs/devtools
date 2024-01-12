@@ -9,6 +9,11 @@ import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 
+jest.mock('../../../account.config.ts', () => ({
+    ...jest.requireActual('../../../account.config.ts').default,
+    initialIndex: 14,
+}))
+
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
     beforeEach(async () => {
         await deployEndpoint()

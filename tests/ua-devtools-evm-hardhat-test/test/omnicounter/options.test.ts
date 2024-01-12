@@ -79,6 +79,11 @@ const composedIndexArbitrary: fc.Arbitrary<number> = fc.integer({ min: MIN_COMPO
  */
 const applyPremium = (input: bigint) => (BigInt(input) * BigInt(110)) / BigInt(100)
 
+jest.mock('../../account.config.ts', () => ({
+    ...jest.requireActual('../../account.config.ts').default,
+    initialIndex: 16,
+}))
+
 // Test the OApp options using the OmniCounter OApp as the test contract.
 describe('oapp/options', () => {
     const ethOmniCounter = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'OmniCounter' }

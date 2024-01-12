@@ -7,7 +7,7 @@ import type { HardhatUserConfig } from 'hardhat/types'
 // using your own keyboard (using exposed networks)
 import './tasks'
 
-const MNEMONIC = process.env.MNEMONIC ?? ''
+import account from './account.config'
 
 /**
  * This is a dummy hardhat config that enables us to test
@@ -27,13 +27,7 @@ const config: HardhatUserConfig = {
             //
             // See root README.md for usage with exposed network
             url: process.env.NETWORK_URL_VENGABOYS ?? 'http://localhost:10001',
-            accounts: {
-                mnemonic: MNEMONIC,
-                // We'll offset the initial index for the accounts by 10
-                // for every test project so that the project can use 10 accounts
-                // without getting any nonce race conditions with other test runs
-                initialIndex: 10,
-            },
+            accounts: account,
         },
         britney: {
             eid: EndpointId.AVALANCHE_V2_MAINNET,
@@ -44,13 +38,7 @@ const config: HardhatUserConfig = {
             //
             // See root README.md for usage with exposed network
             url: process.env.NETWORK_URL_BRITNEY ?? 'http://localhost:10002',
-            accounts: {
-                mnemonic: MNEMONIC,
-                // We'll offset the initial index for the accounts by 10
-                // for every test project so that the project can use 10 accounts
-                // without getting any nonce race conditions with other test runs
-                initialIndex: 10,
-            },
+            accounts: account,
         },
     },
 }

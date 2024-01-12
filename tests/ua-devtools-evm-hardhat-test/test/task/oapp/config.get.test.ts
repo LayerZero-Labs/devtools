@@ -10,6 +10,11 @@ import { AddressZero } from '@ethersproject/constants'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 
+jest.mock('../../../account.config.ts', () => ({
+    ...jest.requireActual('../../../account.config.ts').default,
+    initialIndex: 13,
+}))
+
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     beforeEach(async () => {
         await deployEndpoint()

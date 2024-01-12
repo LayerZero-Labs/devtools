@@ -25,6 +25,11 @@ import {
     deployEndpoint,
 } from '../__utils__/endpoint'
 
+jest.mock('../../account.config.ts', () => ({
+    ...jest.requireActual('../../account.config.ts').default,
+    initialIndex: 17,
+}))
+
 describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }

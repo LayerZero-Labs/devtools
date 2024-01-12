@@ -7,6 +7,12 @@ import { deployOApp } from '../__utils__/oapp'
 import { deployEndpoint, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
+
+jest.mock('../../account.config.ts', () => ({
+    ...jest.requireActual('../../account.config.ts').default,
+    initialIndex: 18,
+}))
+
 describe('oapp/check', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }

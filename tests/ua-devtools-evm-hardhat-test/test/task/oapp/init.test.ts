@@ -11,6 +11,11 @@ jest.mock('@layerzerolabs/io-devtools', () => {
     }
 })
 
+jest.mock('../../../account.config.ts', () => ({
+    ...jest.requireActual('../../../account.config.ts').default,
+    initialIndex: 12,
+}))
+
 const promptToContinueMock = promptToContinue as jest.Mock
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {

@@ -5,6 +5,11 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deployEndpoint, getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
 import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
 
+jest.mock('../../account.config.ts', () => ({
+    ...jest.requireActual('../../account.config.ts').default,
+    initialIndex: 19,
+}))
+
 describe('endpoint/config', () => {
     const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
     const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
