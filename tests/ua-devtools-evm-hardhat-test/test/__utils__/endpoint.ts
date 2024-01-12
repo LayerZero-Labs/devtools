@@ -88,16 +88,18 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
- * Deploys the endpoint contracts. Useful for when deployment files need to be persisted
+ * Deploys the EndpointV2 contracts
+ *
+ * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
  */
-export const deployEndpoint = async () => {
+export const deployEndpoint = async (writeToFileSystem: boolean = false) => {
     const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
-        eth.deployments.run('EndpointV2', { resetMemory: false }),
-        avax.deployments.run('EndpointV2', { resetMemory: false }),
+        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
+        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
     ])
 }
 

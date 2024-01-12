@@ -16,9 +16,9 @@ import { deployOApp } from '../test/__utils__/oapp'
  */
 task('lz:test:oapp:deploy', 'Deploy the test OApp on a default EndpointV2 infrastructure', async () => {
     // This will deploy and wire up the endpoints
-    await deployEndpoint()
+    await deployEndpoint(true)
     await setupDefaultEndpoint()
 
     // Deploy the DefaultOApp
-    await deployOApp()
+    await deployOApp(true)
 })
