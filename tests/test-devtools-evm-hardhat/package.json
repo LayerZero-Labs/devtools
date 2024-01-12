@@ -1,0 +1,42 @@
+{
+  "name": "@layerzerolabs/test-devtools-evm-hardhat",
+  "version": "0.0.2",
+  "private": true,
+  "description": "Internal utilities for testing LayerZero packages",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "tests/test-devtools-evm-hardhat"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/index.*"
+  ],
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "hardhat": "^2.19.4",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "hardhat": "^2.19.4"
+  }
+}
