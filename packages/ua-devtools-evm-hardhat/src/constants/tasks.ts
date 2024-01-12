@@ -1,3 +1,5 @@
+export const TASK_LZ_ERRORS_LIST = 'lz:errors:list'
+
 export const TASK_LZ_OAPP_WIRE = 'lz:oapp:wire'
 export const TASK_LZ_OAPP_CONFIG_GET_DEFAULT = 'lz:oapp:config:get:default'
 export const TASK_LZ_OAPP_CONFIG_GET = 'lz:oapp:config:get'
