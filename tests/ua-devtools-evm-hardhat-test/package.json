@@ -19,6 +19,7 @@
     "@babel/core": "^7.23.7",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.2",
@@ -51,6 +52,7 @@
     "solidity-bytes-utils": "^0.8.1",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
     "typescript": "^5.3.3"
   }
 }

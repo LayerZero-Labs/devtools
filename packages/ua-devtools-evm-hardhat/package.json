@@ -39,8 +39,10 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.2",
+    "@layerzerolabs/devtools-evm": "~0.0.2",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.2",
     "@layerzerolabs/io-devtools": "~0.0.2",
     "@layerzerolabs/lz-definitions": "~2.0.7",
@@ -63,8 +65,10 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.2",
+    "@layerzerolabs/devtools-evm": "~0.0.2",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.2",
     "@layerzerolabs/io-devtools": "~0.0.2",
     "@layerzerolabs/lz-definitions": "~2.0.7",

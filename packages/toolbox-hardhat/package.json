@@ -30,6 +30,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.2",
     "@layerzerolabs/devtools-evm": "~0.0.2",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.2",
