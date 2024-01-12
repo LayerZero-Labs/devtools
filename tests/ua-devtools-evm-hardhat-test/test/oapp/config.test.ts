@@ -1,9 +1,13 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deployOApp } from '../__utils__/oapp'
-import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    OmniContractFactoryHardhat,
+    createConnectedContractFactory,
+    createSignerFactory,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOApp, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { configureOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { getLibraryAddress } from '../__utils__/oapp'
 import {
@@ -25,8 +29,8 @@ describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
 
-    const contractFactory = createConnectedContractFactory()
-    const oappSdkFactory = createOAppFactory(contractFactory)
+    let contractFactory: OmniContractFactoryHardhat
+    let oappSdkFactory: OAppFactory
 
     beforeAll(async () => {
         await deployEndpoint()
@@ -36,6 +40,9 @@ describe('oapp/config', () => {
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
         await deployOApp()
+
+        contractFactory = createConnectedContractFactory()
+        oappSdkFactory = createOAppFactory(contractFactory)
     })
 
     describe('configureOApp', () => {
@@ -44,11 +51,9 @@ describe('oapp/config', () => {
                 contracts: [],
                 connections: [],
             }
-            const contractFactory = createConnectedContractFactory()
-            const sdkFactory = createOAppFactory(contractFactory)
 
             // Now we configure the OApp
-            const transactions = await configureOApp(graph, sdkFactory)
+            const transactions = await configureOApp(graph, oappSdkFactory)
 
             expect(transactions).toEqual([])
         })
