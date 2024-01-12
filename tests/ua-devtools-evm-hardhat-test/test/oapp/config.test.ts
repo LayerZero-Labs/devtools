@@ -32,13 +32,10 @@ describe('oapp/config', () => {
     let contractFactory: OmniContractFactoryHardhat
     let oappSdkFactory: OAppFactory
 
-    beforeAll(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
-    })
-
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
+        await deployEndpoint()
+        await setupDefaultEndpoint()
         await deployOApp()
 
         contractFactory = createConnectedContractFactory()
