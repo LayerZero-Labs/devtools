@@ -1,4 +1,4 @@
-import { getDefaultRuntimeEnvironment } from '@/runtime'
+import { getAllArtifacts, isErrorFragment } from '@/artifacts'
 import { Contract } from '@ethersproject/contracts'
 import {
     createErrorParser as createErrorParserBase,
@@ -17,15 +17,11 @@ import {
 const createCombinedContractFactory =
     (): OmniContractFactory =>
     async ({ eid }) => {
-        // We're getting the artifacts so it does not really matter which environment we get them from
-        const env = getDefaultRuntimeEnvironment()
-
-        // We'll grab all the artifacts from the environment
-        const artifactNames = await env.artifacts.getAllFullyQualifiedNames()
-        const artifacts = artifactNames.map((name) => env.artifacts.readArtifactSync(name))
+        // We get all the available artifacts first
+        const artifacts = await getAllArtifacts()
 
         // Now we combine the ABIs and keep only the errors
-        const abi = artifacts.flatMap((artifact) => artifact.abi).filter(({ type }) => type === 'error')
+        const abi = artifacts.flatMap((artifact) => artifact.abi).filter(isErrorFragment)
 
         // Even though duplicated fragments don't throw errors, they still pollute the interface with warning console.logs
         // To prevent this, we'll run a simple deduplication algorithm - use JSON encoded values as hashes
