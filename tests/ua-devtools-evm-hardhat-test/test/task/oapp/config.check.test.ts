@@ -1,8 +1,9 @@
 import hre from 'hardhat'
 import { resolve } from 'path'
 import { isFile } from '@layerzerolabs/io-devtools'
-import { deployOAppFixture } from '../../__utils__/oapp'
+import { deployOApp } from '../../__utils__/oapp'
 import { TASK_LZ_OAPP_CONFIG_CHECK, TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
     const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
@@ -12,8 +13,13 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
         return path
     }
 
+    beforeAll(async () => {
+        await deployEndpoint()
+        await setupDefaultEndpoint()
+    })
+
     beforeEach(async () => {
-        await deployOAppFixture()
+        await deployOApp()
     })
 
     it('should show no chains are connected', async () => {

@@ -18,8 +18,8 @@ import {
     OmniGraphBuilderHardhat,
     OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { setupDefaultEndpoint } from '../__utils__/endpoint'
-import { deployOmniCounterFixture } from '../__utils__/omnicounter'
+import { deployEndpoint, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployOmniCounter } from '../__utils__/omnicounter'
 import assert from 'assert'
 import {
     getDefaultAvaxConfig,
@@ -91,8 +91,9 @@ describe('oapp/options', () => {
     let contractFactory: OmniContractFactoryHardhat
 
     beforeAll(async () => {
-        await deployOmniCounterFixture()
+        await deployEndpoint()
         await setupDefaultEndpoint()
+        await deployOmniCounter()
     })
 
     beforeEach(async () => {

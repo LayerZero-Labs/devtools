@@ -2,9 +2,10 @@ import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
 import { relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployOAppFixture } from '../../__utils__/oapp'
+import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
+import { deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -33,13 +34,18 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         return path
     }
 
+    beforeAll(async () => {
+        await deployEndpoint()
+        await setupDefaultEndpoint()
+    })
+
     beforeEach(async () => {
         promptToContinueMock.mockReset()
     })
 
     describe('with invalid configs', () => {
         beforeAll(async () => {
-            await deployOAppFixture()
+            await deployOApp()
         })
 
         it('should fail if the config file does not exist', async () => {
@@ -85,7 +91,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
     describe('with valid configs', () => {
         beforeEach(async () => {
-            await deployOAppFixture()
+            await deployOApp()
         })
 
         it('should exit if there is nothing to wire', async () => {

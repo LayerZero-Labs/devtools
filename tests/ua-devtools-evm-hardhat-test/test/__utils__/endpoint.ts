@@ -88,34 +88,25 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
- * Deploys an enpoint fixture. Useful for tests
+ * Deploys the EndpointV2 contracts
+ *
+ * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
  */
-export const deployEndpointFixture = async () => {
-    const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
-
-    await Promise.all([eth.deployments.fixture('EndpointV2'), avax.deployments.fixture('EndpointV2')])
-}
-
-/**
- * Deploys an enpoint fixture. Useful for when deployment files need to be persisted
- */
-export const deployEndpoint = async () => {
+export const deployEndpoint = async (writeToFileSystem: boolean = false) => {
     const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
 
     await Promise.all([
-        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: true }),
-        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: true }),
+        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
+        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
     ])
 }
 
 /**
  * Helper function that wires the endpoint infrastructure.
  *
- * The contracts still need to be deployed (use deployEndpoint or deployEndpointFixture)
+ * The contracts still need to be deployed (use `deployEndpoint`)
  */
 export const setupDefaultEndpoint = async (): Promise<void> => {
     // This is the tooling we are going to need
