@@ -1,0 +1,791 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`task lz:errors:list should print all matching errors if \`containing\` argument is not supplied 1`] = `
+[
+  [
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+  ],
+]
+`;
+
+exports[`task lz:errors:list should print all matching errors if \`containing\` argument is supplied 1`] = `
+[
+  [
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+  ],
+]
+`;
