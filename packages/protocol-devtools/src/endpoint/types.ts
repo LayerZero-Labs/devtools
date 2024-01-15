@@ -65,6 +65,43 @@ export interface SetConfigParam {
     config: string
 }
 
+export interface BaseConfig {
+    fromEid: EndpointId
+    fromOmniPoint: OmniPoint
+    oappAddress: string
+    setConfig: SetConfigParam[]
+}
+export interface SendConfig extends BaseConfig {
+    sendLibrary: string
+}
+
+export interface ReceiveConfig extends BaseConfig {
+    receiveLibrary: string
+}
+
+export interface SetConfigs {
+    fromEid?: SetConfigsEid
+}
+
+export interface SetConfigsEid {
+    library: SetConfigsLib
+}
+
+export interface SetConfigsLib {
+    oappAddress: string
+    fromOmniPoint: OmniPoint
+    config: SetConfigParam[]
+}
+// type SetConfigs = {
+//     [fromEid: string]: {
+//         [library: string]: {
+//             oappAddress: string,
+//             endpointSdk: IEndpoint
+//             config: SetConfigParam[]
+//         }
+//     };
+// };
+
 export interface MessageParams {
     dstEid: EndpointId
     receiver: Address

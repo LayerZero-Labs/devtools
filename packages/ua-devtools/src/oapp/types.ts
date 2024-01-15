@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Address,
     Bytes32,
@@ -50,6 +50,20 @@ export interface OAppEdgeConfig {
     receiveConfig?: OAppReceiveConfig
     enforcedOptions?: OAppEnforcedOptionConfig[]
 }
+
+// export interface SetConfigs {
+//     fromEid: {}
+// }
+//
+// export interface SetConfigs {
+//     library:
+// }
+
+// export interface SetConfigs  {
+//     [fromEid: string]: {
+//         [library: string]: SetConfigParam[]; // Assuming setConfig is an array of strings
+//     };
+// };
 
 interface BaseExecutorOption {
     msgType: ExecutorOptionType

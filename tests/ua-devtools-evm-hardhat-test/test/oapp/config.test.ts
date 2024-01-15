@@ -538,8 +538,7 @@ describe('oapp/config', () => {
 
             // Now we configure the OApp
             const transactions = await configureOApp(graph, oappSdkFactory)
-
-            expect(transactions).toEqual([
+            const expectedTransactions = [
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
                 await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
@@ -566,7 +565,12 @@ describe('oapp/config', () => {
                         },
                     ])),
                 ]),
-            ])
+            ]
+            console.log({
+                transactions: JSON.stringify(transactions),
+                expectedTransactions: JSON.stringify(expectedTransactions),
+            })
+            expect(transactions).toEqual(expectedTransactions)
         })
     })
 
@@ -626,18 +630,20 @@ describe('oapp/config', () => {
             expect(transactions).toEqual([
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
-                await ethEndpointSdk.setUlnConfig(ethPoint.address, ethReceiveLibrary, [
-                    {
-                        eid: avaxPoint.eid,
-                        ulnConfig: {
-                            confirmations: 42,
-                            requiredDVNs: ethReceiveUlnDVNs,
-                            optionalDVNs: ethReceiveUlnDVNs,
-                            optionalDVNThreshold: 0,
-                            requiredDVNCount: ethReceiveUlnDVNs.length,
-                            optionalDVNCount: ethReceiveUlnDVNs.length,
+                await ethEndpointSdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethReceiveLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            ulnConfig: {
+                                confirmations: 42,
+                                requiredDVNs: ethReceiveUlnDVNs,
+                                optionalDVNs: ethReceiveUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethReceiveUlnDVNs.length,
+                                optionalDVNCount: ethReceiveUlnDVNs.length,
+                            },
                         },
-                    },
+                    ])),
                 ]),
             ])
         })
@@ -741,18 +747,20 @@ describe('oapp/config', () => {
                         },
                     ])),
                 ]),
-                await ethEndpointSdk.setUlnConfig(ethPoint.address, ethReceiveLibrary, [
-                    {
-                        eid: avaxPoint.eid,
-                        ulnConfig: {
-                            confirmations: 42,
-                            requiredDVNs: ethReceiveUlnDVNs,
-                            optionalDVNs: ethReceiveUlnDVNs,
-                            optionalDVNThreshold: 0,
-                            requiredDVNCount: ethReceiveUlnDVNs.length,
-                            optionalDVNCount: ethReceiveUlnDVNs.length,
+                await ethEndpointSdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethReceiveLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            ulnConfig: {
+                                confirmations: 42,
+                                requiredDVNs: ethReceiveUlnDVNs,
+                                optionalDVNs: ethReceiveUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethReceiveUlnDVNs.length,
+                                optionalDVNCount: ethReceiveUlnDVNs.length,
+                            },
                         },
-                    },
+                    ])),
                 ]),
             ])
         })
