@@ -283,6 +283,9 @@ importers:
       '@layerzerolabs/devtools':
         specifier: ~0.0.2
         version: link:../devtools
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.0.2
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.7
         version: 2.0.7
