@@ -94,6 +94,7 @@ const basicDecoder = (data: string): ContractError[] => {
         if (reason === '') return [new PanicError(BigInt(0))]
 
         try {
+            // The codes should follow the docs here https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions
             const [decodedRawReason] = defaultAbiCoder.decode(['uint256'], `0x${reason}`)
             const decodedReason = BigNumberishBigintSchema.parse(decodedRawReason)
 

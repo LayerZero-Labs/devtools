@@ -77,6 +77,22 @@ describe('errors/parser', () => {
             )
         })
 
+        it('should parse assert/panic with code', async () => {
+            const errorParser = createErrorParser(omniContractFactory)
+
+            await fc.assert(
+                fc.asyncProperty(pointArbitrary, async (point) => {
+                    const error = await assertFailed(contract.throwWithAssertWithCode())
+                    const omniError: OmniError = { error, point }
+                    const parsedError = await errorParser(omniError)
+
+                    expect(parsedError.point).toEqual(point)
+                    expect(parsedError.error).toBeInstanceOf(PanicError)
+                    expect(parsedError.error.reason).toEqual(BigInt(18))
+                })
+            )
+        })
+
         it('should parse revert with arguments', async () => {
             const errorParser = createErrorParser(omniContractFactory)
 
