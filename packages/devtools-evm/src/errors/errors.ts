@@ -7,6 +7,7 @@ export class UnknownError extends ContractError<undefined> {
 
     constructor(message = 'Unknown contract error') {
         super(message)
+        this.name = 'UnknownError'
     }
 }
 
@@ -16,6 +17,7 @@ export class PanicError extends ContractError<bigint> {
         message: string = `Contract panicked with code ${reason}`
     ) {
         super(message)
+        this.name = 'PanicError'
     }
 }
 
@@ -25,6 +27,7 @@ export class RevertError extends ContractError<string> {
         message: string = `Contract reverted with reason '${reason}'`
     ) {
         super(message)
+        this.name = 'RevertError'
     }
 }
 
@@ -35,5 +38,6 @@ export class CustomError extends ContractError<string> {
         message: string = `Contract reverted with custom error '${reason}'`
     ) {
         super(message)
+        this.name = 'CustomError'
     }
 }
