@@ -14,7 +14,7 @@ import {
     avaxExecutor,
     avaxSendUln2_Opt2,
     avaxReceiveUln2_Opt2,
-    ethExecutor, bscDvn,
+    ethExecutor,
 } from './endpoint'
 
 export type OAppTestConfig = {
@@ -47,9 +47,9 @@ export const deployOApp = async (writeToFileSystem: boolean = false) => {
     const bsc = await environmentFactory(EndpointId.BSC_V2_MAINNET)
 
     await Promise.all([
-        eth.deployments.run('OApp', { writeDeploymentsToFiles: true, resetMemory: false  }),
-        avax.deployments.run('OApp', { writeDeploymentsToFiles: true, resetMemory: false  }),
-        bsc.deployments.run('OApp', { writeDeploymentsToFiles: true, resetMemory: false  }),
+        eth.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
+        avax.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
+        bsc.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
     ])
 }
 
@@ -62,7 +62,7 @@ export const deployOAppFixture = async () => {
     await Promise.all([
         eth.deployments.fixture('OApp'),
         avax.deployments.fixture('OApp'),
-        bsc.deployments.fixture('OApp')
+        bsc.deployments.fixture('OApp'),
     ])
 }
 
