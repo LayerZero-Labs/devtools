@@ -12,4 +12,5 @@ export const printRecord = (data: RecordData) =>
 export const printRecords = (data: RecordData[]) =>
   render(<RecordList data={data} />).unmount();
 
-export const printTable = (data: TableRow[]) => render(<Table data={data} />);
+export const printTable = (data: TableRow[]) =>
+  render(<Table data={data} />).unmount();
