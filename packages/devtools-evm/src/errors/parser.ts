@@ -90,13 +90,16 @@ const basicDecoder = (data: string): ContractError[] => {
     if (data.startsWith(PANIC_ERROR_PREFIX)) {
         const reason = data.slice(PANIC_ERROR_PREFIX.length)
 
+        // If the reason is empty, we'll assume the default 0 exit code
+        if (reason === '') return [new PanicError(BigInt(0))]
+
         try {
             const [decodedRawReason] = defaultAbiCoder.decode(['uint256'], `0x${reason}`)
             const decodedReason = BigNumberishBigintSchema.parse(decodedRawReason)
 
             return [new PanicError(decodedReason)]
         } catch {
-            return [new PanicError(BigInt(-1), `Reason unknown, ABI decoding failed. The raw reason was '0x${reason}'`)]
+            return [new PanicError(BigInt(0), `Reason unknown, ABI decoding failed. The raw reason was '0x${reason}'`)]
         }
     }
 
