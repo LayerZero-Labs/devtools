@@ -160,7 +160,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
             },
             {
                 contract: bscExecutor,
-            },
+            }
         ],
         connections: [
             {
@@ -236,7 +236,6 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     priceData: defaultPriceData,
                 },
             },
-
             {
                 from: avaxPriceFeed,
                 to: ethPriceFeed,
@@ -285,6 +284,15 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                 },
             },
             {
+                contract: ethSendUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, ethUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.BSC_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
                 contract: avaxSendUln,
                 config: {
                     defaultUlnConfigs: [
@@ -310,6 +318,33 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     ],
                 },
             },
+            {
+                contract: avaxSendUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.BSC_V2_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: bscSendUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.ETHEREUM_V2_MAINNET, getDefaultExecutorConfig(bscExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: bscSendUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.AVALANCHE_V2_MAINNET, getDefaultExecutorConfig(bscExecutorPoint.address)],
+                    ],
+                },
+            },
         ],
         connections: [],
     }
@@ -324,6 +359,13 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                         [EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig],
                         [EndpointId.BSC_V2_MAINNET, ethUlnConfig],
                     ],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: ethReceiveUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
@@ -347,6 +389,27 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     defaultExecutorConfigs: [],
                 },
             },
+            {
+                contract: avaxReceiveUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: bscReceiveUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: bscReceiveUln,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
         ],
         connections: [],
     }
@@ -362,6 +425,15 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     ],
                     defaultExecutorConfigs: [
                         [EndpointId.AVALANCHE_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                        [EndpointId.BSC_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: ethSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, ethUlnConfig]],
+                    defaultExecutorConfigs: [
                         [EndpointId.BSC_V2_MAINNET, getDefaultExecutorConfig(ethExecutorPoint.address)],
                     ],
                 },
@@ -392,6 +464,33 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     ],
                 },
             },
+            {
+                contract: avaxSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.BSC_V2_MAINNET, getDefaultExecutorConfig(avaxExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: bscSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.AVALANCHE_V2_MAINNET, getDefaultExecutorConfig(bscExecutorPoint.address)],
+                    ],
+                },
+            },
+            {
+                contract: bscSendUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [
+                        [EndpointId.ETHEREUM_V2_MAINNET, getDefaultExecutorConfig(bscExecutorPoint.address)],
+                    ],
+                },
+            },
         ],
         connections: [],
     }
@@ -406,6 +505,13 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                         [EndpointId.AVALANCHE_V2_MAINNET, ethUlnConfig],
                         [EndpointId.BSC_V2_MAINNET, ethUlnConfig],
                     ],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: ethReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, ethUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
@@ -426,6 +532,27 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                         [EndpointId.AVALANCHE_V2_MAINNET, bscUlnConfig],
                         [EndpointId.ETHEREUM_V2_MAINNET, bscUlnConfig],
                     ],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: avaxReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.BSC_V2_MAINNET, avaxUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: bscReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.AVALANCHE_V2_MAINNET, bscUlnConfig]],
+                    defaultExecutorConfigs: [],
+                },
+            },
+            {
+                contract: bscReceiveUln2_Opt2,
+                config: {
+                    defaultUlnConfigs: [[EndpointId.ETHEREUM_V2_MAINNET, bscUlnConfig]],
                     defaultExecutorConfigs: [],
                 },
             },
