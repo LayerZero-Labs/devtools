@@ -25,6 +25,11 @@ services:
       file: docker-compose.templates.yaml
       service: evm-node
 
+  network-tango:
+    extends:
+      file: docker-compose.templates.yaml
+      service: evm-node
+
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
   #                       The actual tests
@@ -38,6 +43,8 @@ services:
       network-vengaboys:
         condition: service_healthy
       network-britney:
+        condition: service_healthy
+      network-tango:
         condition: service_healthy
     logging:
       driver: none
@@ -53,6 +60,7 @@ services:
     environment:
       - NETWORK_URL_BRITNEY=http://network-britney:8545
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
+      - NETWORK_URL_TANGO=http://network-tango:8545
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo

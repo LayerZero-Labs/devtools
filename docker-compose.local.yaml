@@ -22,3 +22,7 @@ services:
   network-britney:
     ports:
       - "10002:8545"
+
+  network-tango:
+    ports:
+      - "10003:8545"
