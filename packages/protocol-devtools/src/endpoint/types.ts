@@ -87,8 +87,6 @@ export interface EndpointEdgeConfig {
     defaultReceiveLibrary: Address
     defaultReceiveLibraryGracePeriod?: number
     defaultSendLibrary: Address
-    registerReceiveLibrary?: boolean
-    registerSendLibrary?: boolean
 }
 
 export type EndpointOmniGraph = OmniGraph<unknown, EndpointEdgeConfig>
