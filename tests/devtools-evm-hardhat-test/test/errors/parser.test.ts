@@ -4,8 +4,6 @@ import { BigNumber } from '@ethersproject/bignumber/lib/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { CustomError, UnknownError } from '@layerzerolabs/devtools-evm'
 import { createConnectedContractFactory, createErrorParser } from '@layerzerolabs/devtools-evm-hardhat'
-import { OmniError } from '@layerzerolabs/devtools'
-import { pointArbitrary } from '@layerzerolabs/test-devtools'
 import { getHreByNetworkName, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 
 describe('errors/parser', () => {
@@ -48,160 +46,100 @@ describe('errors/parser', () => {
         })
 
         it('should parse a custom an error with no arguments coming from the contract itself', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
+            const error = await assertFailed(contract.throwWithCustomErrorAndNoArguments())
+            const parsedError = await errorParser(error)
 
-            await fc.assert(
-                fc.asyncProperty(pointArbitrary, async (point) => {
-                    const error = await assertFailed(contract.throwWithCustomErrorAndNoArguments())
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
-
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CustomErrorWithNoArguments')
-                    expect((parsedError.error as CustomError).args).toEqual([])
-                })
-            )
+            expect(parsedError).toEqual(new CustomError('CustomErrorWithNoArguments', []))
         })
 
         it('should parse a custom an error with an argument coming from the contract itself', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
 
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.string(), async (point, arg) => {
+                fc.asyncProperty(fc.string(), async (arg) => {
                     const error = await assertFailed(contract.throwWithCustomErrorAndArgument(arg))
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
+                    const parsedError = await errorParser(error)
 
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CustomErrorWithAnArgument')
-                    expect((parsedError.error as CustomError).args).toEqual([arg])
+                    expect(parsedError).toEqual(new CustomError('CustomErrorWithAnArgument', [arg]))
                 })
             )
         })
 
         it('should parse a custom an error with no arguments coming from a nested contract', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
+            const error = await assertFailed(contract.throwNestedWithCustomErrorAndNoArguments())
+            const parsedError = await errorParser(error)
 
-            await fc.assert(
-                fc.asyncProperty(pointArbitrary, async (point) => {
-                    const error = await assertFailed(contract.throwNestedWithCustomErrorAndNoArguments())
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
-
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('NestedCustomErrorWithNoArguments')
-                    expect((parsedError.error as CustomError).args).toEqual([])
-                })
-            )
+            expect(parsedError).toEqual(new CustomError('NestedCustomErrorWithNoArguments', []))
         })
 
         it('should parse a custom an error with an argument coming from a nested contract', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
 
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.string(), async (point, arg) => {
+                fc.asyncProperty(fc.string(), async (arg) => {
                     const error = await assertFailed(contract.throwNestedWithCustomErrorAndArgument(arg))
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
+                    const parsedError = await errorParser(error)
 
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('NestedCustomErrorWithAnArgument')
-                    expect((parsedError.error as CustomError).args).toEqual([arg])
+                    expect(parsedError).toEqual(new CustomError('NestedCustomErrorWithAnArgument', [arg]))
                 })
             )
         })
 
         it('should parse a custom an error with no arguments defined in more contracts coming from the contract itself', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
+            const error = await assertFailed(contract.throwWithCommonErrorAndNoArguments())
+            const parsedError = await errorParser(error)
 
-            await fc.assert(
-                fc.asyncProperty(pointArbitrary, async (point) => {
-                    const error = await assertFailed(contract.throwWithCommonErrorAndNoArguments())
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
-
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CommonErrorWithNoArguments')
-                    expect((parsedError.error as CustomError).args).toEqual([])
-                })
-            )
+            expect(parsedError).toEqual(new CustomError('CommonErrorWithNoArguments', []))
         })
 
         it('should parse a custom an error with an different arguments defined in more contracts coming from the contract itself', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
 
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.string(), async (point, arg) => {
+                fc.asyncProperty(fc.string(), async (arg) => {
                     const error = await assertFailed(contract.throwWithCommonErrorAndArgument(arg))
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
+                    const parsedError = await errorParser(error)
 
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CommonErrorWithAnArgument')
-                    expect((parsedError.error as CustomError).args).toEqual([arg])
+                    expect(parsedError).toEqual(new CustomError('CommonErrorWithAnArgument', [arg]))
                 })
             )
         })
 
         it('should parse a custom an error defined in more contracts coming from a nested contract', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
+            const error = await assertFailed(contract.throwNestedWithCommonErrorAndNoArguments())
+            const parsedError = await errorParser(error)
 
-            await fc.assert(
-                fc.asyncProperty(pointArbitrary, async (point) => {
-                    const error = await assertFailed(contract.throwNestedWithCommonErrorAndNoArguments())
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
-
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CommonErrorWithNoArguments')
-                    expect((parsedError.error as CustomError).args).toEqual([])
-                })
-            )
+            expect(parsedError).toEqual(new CustomError('CommonErrorWithNoArguments', []))
         })
 
         it('should parse a custom an error with different arguments defined in more contracts coming from a nested contract', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
 
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.integer({ min: 0 }), async (point, arg) => {
+                fc.asyncProperty(fc.integer({ min: 0 }), async (arg) => {
                     const error = await assertFailed(contract.throwNestedWithCommonErrorAndArgument(arg))
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
+                    const parsedError = await errorParser(error)
 
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(CustomError)
-                    expect(parsedError.error.reason).toEqual('CommonErrorWithAnArgument')
-                    expect((parsedError.error as CustomError).args).toEqual([BigNumber.from(arg)])
+                    expect(parsedError).toEqual(new CustomError('CommonErrorWithAnArgument', [BigNumber.from(arg)]))
                 })
             )
         })
 
         it('should never reject', async () => {
-            const errorParser = createErrorParser()
+            const errorParser = await createErrorParser()
 
             await fc.assert(
-                fc.asyncProperty(pointArbitrary, fc.anything(), async (point, error) => {
-                    const omniError: OmniError = { error, point }
-                    const parsedError = await errorParser(omniError)
+                fc.asyncProperty(fc.anything(), async (error) => {
+                    const parsedError = await errorParser(error)
 
-                    expect(parsedError.point).toEqual(point)
-                    expect(parsedError.error).toBeInstanceOf(UnknownError)
-                    expect(parsedError.error.reason).toBeUndefined()
-                    expect(parsedError.error.message).toMatch(/Unknown error: /)
-                }),
-                // Test case for when toString method of the error is not defined
-                {
-                    seed: 223418789,
-                    path: '40:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:1:77:77',
-                    endOnFailure: true,
-                }
+                    expect(parsedError).toBeInstanceOf(UnknownError)
+                    expect(parsedError.reason).toBeUndefined()
+                    expect(parsedError.message).toMatch(/Unknown error: /)
+                })
             )
         })
     })
