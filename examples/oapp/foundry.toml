@@ -1,0 +1,19 @@
+[profile.default]
+src = 'contracts'
+out = 'out'
+test = 'test/foundry'
+cache_path = 'cache'
+libs = ['node_modules', 'lib', '../../node_modules']
+
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+
+remappings = [
+    '@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/',
+    '@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/',
+    'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
+    'hardhat-deploy/=node_modules/hardhat-deploy/',
+    '@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/',
+    '@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/',
+    '@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/',
+    '@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/'
+]
