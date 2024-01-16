@@ -4,7 +4,7 @@ import fc from 'fast-check'
 import 'hardhat'
 import { TransactionReceipt } from '@ethersproject/providers'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { Options } from '@layerzerolabs/lz-utility-v2'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IncrementType } from '@layerzerolabs/omnicounter-devtools'
 import { createOmniCounterFactory, OmniCounter } from '@layerzerolabs/omnicounter-devtools-evm'
 import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
@@ -277,21 +277,21 @@ describe('oapp/options', () => {
                     expect(packetComposeOptions).toHaveLength(1)
                     const packetComposeOption = packetComposeOptions[0]!
                     expect(packetComposeOption.index).toEqual(index)
-                    expect(packetComposeOption.gas.toBigInt()).toEqual(gasLimit * BigInt(2))
+                    expect(packetComposeOption.gas).toEqual(gasLimit * BigInt(2))
                     // compose options with same index are summed (in this specific case, just multiplied by 2)
-                    expect(packetComposeOption.value.toBigInt()).toEqual(value * BigInt(2))
+                    expect(packetComposeOption.value).toEqual(value * BigInt(2))
 
                     // check executorLzReceiveOption
                     const packetLzReceiveOption = packetOptions.decodeExecutorLzReceiveOption()
                     expect(packetLzReceiveOption).toBeDefined()
-                    expect(packetLzReceiveOption!.gas.toBigInt()).toEqual(gasLimit)
-                    expect(packetLzReceiveOption!.value.toBigInt()).toEqual(value)
+                    expect(packetLzReceiveOption!.gas).toEqual(gasLimit)
+                    expect(packetLzReceiveOption!.value).toEqual(value)
 
                     // check executorNativeDropOption
                     const packetNativeDropOptions = packetOptions.decodeExecutorNativeDropOption()
                     expect(packetNativeDropOptions).toHaveLength(1)
                     const packetNativeDropOption = packetNativeDropOptions[0]!
-                    expect(packetNativeDropOption.amount.toBigInt()).toEqual(value)
+                    expect(packetNativeDropOption.amount).toEqual(value)
                     expect(packetNativeDropOption.receiver.toLowerCase()).toEqual(makeBytes32(address).toLowerCase())
                 }
             )
