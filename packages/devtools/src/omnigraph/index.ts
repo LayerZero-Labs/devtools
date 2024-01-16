@@ -1,5 +1,6 @@
 export * from './builder'
 export * from './coordinates'
+export * from './data-structures'
 export * from './format'
 export * from './schema'
 export * from './types'
