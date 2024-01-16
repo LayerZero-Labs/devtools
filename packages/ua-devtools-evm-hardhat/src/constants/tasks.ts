@@ -1,3 +1,4 @@
+export const TASK_LZ_ERRORS_DECODE = 'lz:errors:decode'
 export const TASK_LZ_ERRORS_LIST = 'lz:errors:list'
 
 export const TASK_LZ_OAPP_WIRE = 'lz:oapp:wire'

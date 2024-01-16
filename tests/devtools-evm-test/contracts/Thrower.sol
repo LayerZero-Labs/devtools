@@ -9,6 +9,15 @@ contract Thrower {
         assert(0 == 1);
     }
 
+    function throwWithAssertWithCode() external pure returns (uint256 impossible) {
+        uint256 numerator = 5;
+        uint256 denominator = 0;
+
+        // Should panic with code 0x12 according to
+        // https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions
+        impossible = numerator / denominator;
+    }
+
     // For some reason in hardhat node this function does not revert
     function throwWithRevertAndNoArguments() external pure {
         revert();

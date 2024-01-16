@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`task lz:errors:decode should print CustomError details 1`] = `
+[
+  {
+    "Error": "CustomError: Contract reverted with custom error. Error UnsupportedEid()",
+    "Type": "Custom error",
+  },
+]
+`;
+
+exports[`task lz:errors:decode should print PanicError details 1`] = `
+[
+  {
+    "Error": "PanicError: Contract panicked (assert() has been called). Error code 6",
+    "Type": "Panic error",
+  },
+]
+`;
+
+exports[`task lz:errors:decode should print RevertError details 1`] = `
+[
+  {
+    "Error": "RevertError: Contract reverted. Error reason 'my bad'",
+    "Type": "Revert error",
+  },
+]
+`;
