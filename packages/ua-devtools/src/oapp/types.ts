@@ -10,7 +10,7 @@ import type {
     OmniTransaction,
     OmniVector,
 } from '@layerzerolabs/devtools'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-utility-v2'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export interface IOApp extends IOmniSDK {
     getEndpointSDK(): Promise<IEndpoint>

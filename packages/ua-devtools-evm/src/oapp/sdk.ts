@@ -11,7 +11,7 @@ import {
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-utility-v2'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
