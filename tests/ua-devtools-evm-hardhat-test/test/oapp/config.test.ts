@@ -11,18 +11,20 @@ import { configureOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-dev
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { getLibraryAddress } from '../__utils__/oapp'
 import {
-    avaxReceiveUln,
-    ethReceiveUln,
     setupDefaultEndpoint,
-    ethSendUln2_Opt2,
-    ethReceiveUln2_Opt2,
-    avaxSendUln2_Opt2,
-    avaxReceiveUln2_Opt2,
     avaxExecutor,
-    ethDvn,
     avaxDvn,
     ethSendUln,
     deployEndpoint,
+    bscExecutor,
+    bscDvn,
+    ethSendUln2_Opt2,
+    avaxSendUln2_Opt2,
+    ethReceiveUln2_Opt2,
+    avaxReceiveUln2_Opt2,
+    ethReceiveUln,
+    avaxReceiveUln,
+    ethDvn,
 } from '../__utils__/endpoint'
 
 describe('oapp/config', () => {
@@ -485,6 +487,7 @@ describe('oapp/config', () => {
         it('should return all setPeer transactions and configureSendConfig transactions', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
+            const bscContract = await contractFactory(avaxPointHardhat)
 
             const ethPoint = omniContractToPoint(ethContract)
             const ethOAppSdk = await oappSdkFactory(ethPoint)
@@ -492,11 +495,16 @@ describe('oapp/config', () => {
 
             const avaxPoint = omniContractToPoint(avaxContract)
             const avaxOAppSdk = await oappSdkFactory(avaxPoint)
-
             const avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
             const avaxDvnAddress = await getLibraryAddress(avaxDvn)
-            const ethSendUlnDVNs: string[] = [avaxDvnAddress]
 
+            const bscPoint = omniContractToPoint(bscContract)
+            const bscOAppSdk = await oappSdkFactory(bscPoint)
+            const bscExecutorAddress = await getLibraryAddress(bscExecutor)
+            const bscDvnAddress = await getLibraryAddress(bscDvn)
+
+            const ethToAvaxSendUlnDVNs: string[] = [avaxDvnAddress]
+            const ethToBscSendUlnDVNs: string[] = [bscDvnAddress]
             const ethSendLibrary = await getLibraryAddress(ethSendUln)
 
             // This is the OApp config that we want to use against our contracts
@@ -507,6 +515,9 @@ describe('oapp/config', () => {
                     },
                     {
                         point: avaxPoint,
+                    },
+                    {
+                        point: bscPoint,
                     },
                 ],
                 connections: [
@@ -520,17 +531,48 @@ describe('oapp/config', () => {
                                 },
                                 ulnConfig: {
                                     confirmations: 42,
-                                    requiredDVNs: ethSendUlnDVNs,
-                                    optionalDVNs: ethSendUlnDVNs,
+                                    requiredDVNs: ethToAvaxSendUlnDVNs,
+                                    optionalDVNs: ethToAvaxSendUlnDVNs,
                                     optionalDVNThreshold: 0,
-                                    requiredDVNCount: ethSendUlnDVNs.length,
-                                    optionalDVNCount: ethSendUlnDVNs.length,
+                                    requiredDVNCount: ethToAvaxSendUlnDVNs.length,
+                                    optionalDVNCount: ethToAvaxSendUlnDVNs.length,
+                                },
+                            },
+                        },
+                    },
+                    {
+                        vector: { from: ethPoint, to: bscPoint },
+                        config: {
+                            sendConfig: {
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: bscExecutorAddress,
+                                },
+                                ulnConfig: {
+                                    confirmations: 42,
+                                    requiredDVNs: ethToBscSendUlnDVNs,
+                                    optionalDVNs: ethToBscSendUlnDVNs,
+                                    optionalDVNThreshold: 0,
+                                    requiredDVNCount: ethToBscSendUlnDVNs.length,
+                                    optionalDVNCount: ethToBscSendUlnDVNs.length,
                                 },
                             },
                         },
                     },
                     {
                         vector: { from: avaxPoint, to: ethPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: avaxPoint, to: bscPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: bscPoint, to: ethPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: bscPoint, to: avaxPoint },
                         config: undefined,
                     },
                 ],
@@ -540,7 +582,11 @@ describe('oapp/config', () => {
             const transactions = await configureOApp(graph, oappSdkFactory)
             const expectedTransactions = [
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
+                await ethOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                await avaxOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
+                await bscOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                await bscOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
                     ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
                         {
@@ -556,11 +602,33 @@ describe('oapp/config', () => {
                             eid: avaxPoint.eid,
                             ulnConfig: {
                                 confirmations: 42,
-                                requiredDVNs: ethSendUlnDVNs,
-                                optionalDVNs: ethSendUlnDVNs,
+                                requiredDVNs: ethToAvaxSendUlnDVNs,
+                                optionalDVNs: ethToAvaxSendUlnDVNs,
                                 optionalDVNThreshold: 0,
-                                requiredDVNCount: ethSendUlnDVNs.length,
-                                optionalDVNCount: ethSendUlnDVNs.length,
+                                requiredDVNCount: ethToAvaxSendUlnDVNs.length,
+                                optionalDVNCount: ethToAvaxSendUlnDVNs.length,
+                            },
+                        },
+                    ])),
+                    ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
+                        {
+                            eid: bscPoint.eid,
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: bscExecutorAddress,
+                            },
+                        },
+                    ])),
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethSendLibrary, [
+                        {
+                            eid: avaxPoint.eid,
+                            ulnConfig: {
+                                confirmations: 42,
+                                requiredDVNs: ethToBscSendUlnDVNs,
+                                optionalDVNs: ethToBscSendUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethToBscSendUlnDVNs.length,
+                                optionalDVNCount: ethToBscSendUlnDVNs.length,
                             },
                         },
                     ])),

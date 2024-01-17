@@ -51,20 +51,6 @@ export interface OAppEdgeConfig {
     enforcedOptions?: OAppEnforcedOptionConfig[]
 }
 
-// export interface SetConfigs {
-//     fromEid: {}
-// }
-//
-// export interface SetConfigs {
-//     library:
-// }
-
-// export interface SetConfigs  {
-//     [fromEid: string]: {
-//         [library: string]: SetConfigParam[]; // Assuming setConfig is an array of strings
-//     };
-// };
-
 interface BaseExecutorOption {
     msgType: ExecutorOptionType
 }
