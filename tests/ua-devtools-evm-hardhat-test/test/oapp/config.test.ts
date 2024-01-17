@@ -30,6 +30,7 @@ import {
 describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
+    const bscPointHardhat = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DefaultOApp' }
 
     let contractFactory: OmniContractFactoryHardhat
     let oappSdkFactory: OAppFactory
@@ -487,7 +488,7 @@ describe('oapp/config', () => {
         it('should return all setPeer transactions and configureSendConfig transactions', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
-            const bscContract = await contractFactory(avaxPointHardhat)
+            const bscContract = await contractFactory(bscPointHardhat)
 
             const ethPoint = omniContractToPoint(ethContract)
             const ethOAppSdk = await oappSdkFactory(ethPoint)
@@ -621,7 +622,7 @@ describe('oapp/config', () => {
                     ])),
                     ...(await ethEndpointSdk.getUlnConfigParams(ethSendLibrary, [
                         {
-                            eid: avaxPoint.eid,
+                            eid: bscPoint.eid,
                             ulnConfig: {
                                 confirmations: 42,
                                 requiredDVNs: ethToBscSendUlnDVNs,
@@ -646,6 +647,7 @@ describe('oapp/config', () => {
         it('should return all setPeer transactions and configureReceiveConfig transactions', async () => {
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
+            const bscContract = await contractFactory(bscPointHardhat)
 
             const ethPoint = omniContractToPoint(ethContract)
             const ethOAppSdk = await oappSdkFactory(ethPoint)
@@ -653,6 +655,9 @@ describe('oapp/config', () => {
 
             const avaxPoint = omniContractToPoint(avaxContract)
             const avaxOAppSdk = await oappSdkFactory(avaxPoint)
+
+            const bscPoint = omniContractToPoint(bscContract)
+            const bscOAppSdk = await oappSdkFactory(bscPoint)
 
             const ethDvnAddress = await getLibraryAddress(ethDvn)
             const ethReceiveUlnDVNs: string[] = [ethDvnAddress]
@@ -667,6 +672,9 @@ describe('oapp/config', () => {
                     },
                     {
                         point: avaxPoint,
+                    },
+                    {
+                        point: bscPoint,
                     },
                 ],
                 connections: [
@@ -686,7 +694,34 @@ describe('oapp/config', () => {
                         },
                     },
                     {
+                        vector: { from: ethPoint, to: bscPoint },
+                        config: {
+                            receiveConfig: {
+                                ulnConfig: {
+                                    confirmations: 24,
+                                    requiredDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNThreshold: 0,
+                                    requiredDVNCount: ethReceiveUlnDVNs.length,
+                                    optionalDVNCount: ethReceiveUlnDVNs.length,
+                                },
+                            },
+                        },
+                    },
+                    {
                         vector: { from: avaxPoint, to: ethPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: avaxPoint, to: bscPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: bscPoint, to: ethPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: bscPoint, to: avaxPoint },
                         config: undefined,
                     },
                 ],
@@ -694,10 +729,13 @@ describe('oapp/config', () => {
 
             // Now we configure the OApp
             const transactions = await configureOApp(graph, oappSdkFactory)
-
-            expect(transactions).toEqual([
+            const expectedTransactions = [
                 await ethOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
+                await ethOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
                 await avaxOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                await avaxOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
+                await bscOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                await bscOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
                 await ethEndpointSdk.setConfig(ethPoint.address, ethReceiveLibrary, [
                     ...(await ethEndpointSdk.getUlnConfigParams(ethReceiveLibrary, [
                         {
@@ -712,8 +750,26 @@ describe('oapp/config', () => {
                             },
                         },
                     ])),
+                    ...(await ethEndpointSdk.getUlnConfigParams(ethReceiveLibrary, [
+                        {
+                            eid: bscPoint.eid,
+                            ulnConfig: {
+                                confirmations: 24,
+                                requiredDVNs: ethReceiveUlnDVNs,
+                                optionalDVNs: ethReceiveUlnDVNs,
+                                optionalDVNThreshold: 0,
+                                requiredDVNCount: ethReceiveUlnDVNs.length,
+                                optionalDVNCount: ethReceiveUlnDVNs.length,
+                            },
+                        },
+                    ])),
                 ]),
-            ])
+            ]
+            console.log({
+                transactions: JSON.stringify(transactions),
+                expectedTransactions: JSON.stringify(expectedTransactions),
+            })
+            expect(transactions).toEqual(expectedTransactions)
         })
     })
 
