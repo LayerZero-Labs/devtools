@@ -1,11 +1,33 @@
-export abstract class HashMap<K, V> implements Map<K, V> {
-    #keys: Map<string, K> = new Map()
+export type Hash = string | number | boolean | bigint
 
-    #values: Map<string, V> = new Map()
+export type HashFunction<T, H extends Hash = Hash> = (value: T) => H
 
-    #entries: Map<string, [K, V]> = new Map()
+/**
+ * Data structure similar to the default ES6 Map
+ * with one crucial difference - it requires a hash function
+ * which allows it to store values not by reference, but by value
+ *
+ * The implementation is quite naive as it uses three additional maps
+ * to be able to easily implement the ES6 Map interface. This comes at a small
+ * storage price which, in our environment, is perfectly negligible.
+ *
+ * The interface matches the interface of Map with one syntactic sugar added:
+ * the getOrElse method that prevents us from having to do null checks on get.
+ */
+export abstract class AbstractMap<K, V> implements Map<K, V> {
+    #keys: Map<Hash, K> = new Map()
 
-    protected abstract serializeKey(key: K): string
+    #values: Map<Hash, V> = new Map()
+
+    #entries: Map<Hash, [K, V]> = new Map()
+
+    protected abstract hash(key: K): Hash
+
+    constructor(entries: [K, V][] = []) {
+        for (const [key, value] of entries) {
+            this.set(key, value)
+        }
+    }
 
     clear(): void {
         this.#keys.clear()
@@ -14,7 +36,7 @@ export abstract class HashMap<K, V> implements Map<K, V> {
     }
 
     delete(key: K): boolean {
-        const serialized = this.serializeKey(key)
+        const serialized = this.hash(key)
 
         return this.#keys.delete(serialized), this.#values.delete(serialized), this.#entries.delete(serialized)
     }
@@ -26,17 +48,26 @@ export abstract class HashMap<K, V> implements Map<K, V> {
     }
 
     get(key: K): V | undefined {
-        return this.#values.get(this.serializeKey(key))
+        return this.#values.get(this.hash(key))
+    }
+
+    getOrElse(key: K, orElse: () => V): V {
+        return this.has(key) ? (this.get(key) as V) : orElse()
     }
 
     has(key: K): boolean {
-        return this.#keys.has(this.serializeKey(key))
+        return this.#keys.has(this.hash(key))
     }
 
     set(key: K, value: V): this {
-        const serialized = this.serializeKey(key)
+        const serialized = this.hash(key)
 
-        return this.#keys.set(serialized, key), this.#values.set(serialized, value), this
+        return (
+            this.#keys.set(serialized, key),
+            this.#values.set(serialized, value),
+            this.#entries.set(serialized, [key, value]),
+            this
+        )
     }
 
     get size(): number {

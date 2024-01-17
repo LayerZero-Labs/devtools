@@ -2,7 +2,7 @@ import assert from 'assert'
 import { arePointsEqual, isVectorPossible } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 import { formatOmniPoint, formatOmniVector } from './format'
-import { OmniPointMap, OmniVectorMap } from './data-structures'
+import { OmniPointMap, OmniVectorMap } from './map'
 
 export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
     /**
