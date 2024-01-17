@@ -44,13 +44,13 @@ export const configureEndpointDefaultReceiveLibraries: EndpointConfigurator = as
                 // If the library is already set as default, do nothing
                 if (config.defaultReceiveLibrary === address) return []
 
-                return flattenTransactions([
+                return [
                     await sdk.setDefaultReceiveLibrary(
                         to.eid,
                         config.defaultReceiveLibrary,
                         config.defaultReceiveLibraryGracePeriod
                     ),
-                ])
+                ]
             })
         )
     )
@@ -65,14 +65,7 @@ export const configureEndpointDefaultSendLibraries: EndpointConfigurator = async
                 // If the library is already set as default, do nothing
                 if (config.defaultSendLibrary === address) return []
 
-                // We need to check whether the library has been registered before we set is as default
-                const isRegistered = await sdk.isRegisteredLibrary(config.defaultSendLibrary)
-
-                return flattenTransactions([
-                    // We only want to register the library if it has not been registered yet
-                    isRegistered ? undefined : await sdk.registerLibrary(config.defaultSendLibrary),
-                    await sdk.setDefaultSendLibrary(to.eid, config.defaultSendLibrary),
-                ])
+                return [await sdk.setDefaultSendLibrary(to.eid, config.defaultSendLibrary)]
             })
         )
     )
