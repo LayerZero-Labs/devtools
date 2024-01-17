@@ -1,5 +1,6 @@
 import {
     createConnectedContractFactory,
+    createErrorParser,
     createGetHreByEid,
     createSignerFactory,
     OmniGraphBuilderHardhat,
@@ -339,9 +340,13 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
         ...receiveUlnTransactions_Opt2,
     ]
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [successful, errors] = await signAndSend(transactions)
-    if (errors.length !== 0) {
-        throw new Error(`Failed to deploy endpoint: ${errors}`)
-    }
+    const [_, errors] = await signAndSend(transactions)
+    if (errors.length === 0) return
+
+    const errorParser = createErrorParser()
+    const parsedErrors = await Promise.all(
+        errors.map(({ error, transaction: { point } }) => errorParser({ error, point }))
+    )
+
+    throw new Error(`Endpoint deployment failed:\n\n${parsedErrors.map(({ error }) => error).join('\n')}`)
 }
