@@ -250,6 +250,18 @@ exports[`omnigraph/format formatEid should format 10233 correctly 1`] = `"BERA_T
 
 exports[`omnigraph/format formatEid should format 10234 correctly 1`] = `"VENN_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10235 correctly 1`] = `"RARIBLE_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10236 correctly 1`] = `"GUNZILLA_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10237 correctly 1`] = `"XCHAIN_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10238 correctly 1`] = `"RC1_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10239 correctly 1`] = `"ETHERLINK_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10240 correctly 1`] = `"KIWI2_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20102 correctly 1`] = `"BSC_SANDBOX"`;
@@ -503,6 +515,18 @@ exports[`omnigraph/format formatEid should format 40232 correctly 1`] = `"OPTSEP
 exports[`omnigraph/format formatEid should format 40233 correctly 1`] = `"BERA_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40234 correctly 1`] = `"VENN_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40235 correctly 1`] = `"RARIBLE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40236 correctly 1`] = `"GUNZILLA_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40237 correctly 1`] = `"XCHAIN_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40238 correctly 1`] = `"RC1_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40239 correctly 1`] = `"ETHERLINK_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40240 correctly 1`] = `"KIWI2_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 50102 correctly 1`] = `"BSC_V2_SANDBOX"`;
 

@@ -1,7 +1,8 @@
 import assert from 'assert'
-import { arePointsEqual, isVectorPossible, serializePoint, serializeVector } from './coordinates'
+import { arePointsEqual, isVectorPossible } from './coordinates'
 import type { OmniEdge, OmniGraph, OmniNode, OmniPoint, OmniVector } from './types'
 import { formatOmniPoint, formatOmniVector } from './format'
+import { OmniPointMap, OmniVectorMap } from './map'
 
 export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
     /**
@@ -18,9 +19,9 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
             .addEdges(...graph.connections)
     }
 
-    #nodes: Map<string, OmniNode<TNodeConfig>> = new Map()
+    #nodes: OmniPointMap<OmniNode<TNodeConfig>> = new OmniPointMap()
 
-    #edges: Map<string, OmniEdge<TEdgeConfig>> = new Map()
+    #edges: OmniVectorMap<OmniEdge<TEdgeConfig>> = new OmniVectorMap()
 
     #assertCanAddEdge(edge: OmniEdge<TEdgeConfig>): void {
         const label = formatOmniVector(edge.vector)
@@ -41,7 +42,7 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
     // `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 
     addNodes(...nodes: OmniNode<TNodeConfig>[]): this {
-        return nodes.forEach((node) => this.#nodes.set(serializePoint(node.point), node)), this
+        return nodes.forEach((node) => this.#nodes.set(node.point, node)), this
     }
 
     addEdges(...edges: OmniEdge<TEdgeConfig>[]): this {
@@ -51,7 +52,7 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
                 this.#assertCanAddEdge(edge)
 
                 // Only then we add it
-                this.#edges.set(serializeVector(edge.vector), edge)
+                this.#edges.set(edge.vector, edge)
             }),
             this
         )
@@ -62,13 +63,13 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
             // First we remove all edges between this node and any other nodes
             [...this.getEdgesFrom(point)].forEach((edge) => this.removeEdgeAt(edge.vector)),
             // Only then we remove the node itself
-            this.#nodes.delete(serializePoint(point)),
+            this.#nodes.delete(point),
             this
         )
     }
 
     removeEdgeAt(vector: OmniVector): this {
-        return this.#edges.delete(serializeVector(vector)), this
+        return this.#edges.delete(vector), this
     }
 
     //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -82,11 +83,11 @@ export class OmniGraphBuilder<TNodeConfig = unknown, TEdgeConfig = unknown> {
     // `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 
     getNodeAt(point: OmniPoint): OmniNode<TNodeConfig> | undefined {
-        return this.#nodes.get(serializePoint(point))
+        return this.#nodes.get(point)
     }
 
     getEdgeAt(vector: OmniVector): OmniEdge<TEdgeConfig> | undefined {
-        return this.#edges.get(serializeVector(vector))
+        return this.#edges.get(vector)
     }
 
     getEdgesFrom(point: OmniPoint): OmniEdge<TEdgeConfig>[] {
