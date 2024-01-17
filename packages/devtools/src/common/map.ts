@@ -23,7 +23,7 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
 
     protected abstract hash(key: K): Hash
 
-    constructor(entries: [K, V][] = []) {
+    constructor(entries: Iterable<[K, V]> = []) {
         for (const [key, value] of entries) {
             this.set(key, value)
         }
