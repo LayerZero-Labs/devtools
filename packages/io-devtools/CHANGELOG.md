@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.0.3
+
+### Patch Changes
+
+- 5077bf1: Unmount the component when using printTable
+
 ## 0.0.2
 
 ### Patch Changes

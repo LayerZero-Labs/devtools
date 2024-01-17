@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.4
+
+### Patch Changes
+
+- 2183cfc: Add lz:errors:list task
+
 ## 0.0.3
 
 ### Patch Changes
