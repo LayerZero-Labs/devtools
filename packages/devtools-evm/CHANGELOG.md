@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm
 
+## 0.0.3
+
+### Patch Changes
+
+- 5077bf1: Adjust the custom error messages - add better stringification
+- Updated dependencies [5077bf1]
+  - @layerzerolabs/io-devtools@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

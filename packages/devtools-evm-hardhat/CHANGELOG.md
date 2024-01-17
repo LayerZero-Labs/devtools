@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.0.3
+
+### Patch Changes
+
+- 2183cfc: Add lz:errors:list task
+- 2183cfc: Add getAllArtifacts helper
+- fe1542e: Add getEidsByNetworkName utility
+- Updated dependencies [5077bf1]
+- Updated dependencies [5077bf1]
+  - @layerzerolabs/io-devtools@0.0.3
+  - @layerzerolabs/devtools-evm@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.3
+
+### Patch Changes
+
+- 1471c1f: Add lz:errors:decode task
+- 2183cfc: Add lz:errors:list task
+- Updated dependencies [1471c1f]
+- Updated dependencies [5077bf1]
+- Updated dependencies [2183cfc]
+- Updated dependencies [2183cfc]
+- Updated dependencies [5077bf1]
+- Updated dependencies [fe1542e]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.0.3
+  - @layerzerolabs/io-devtools@0.0.3
+  - @layerzerolabs/protocol-devtools-evm@0.0.3
+  - @layerzerolabs/devtools-evm-hardhat@0.0.3
+  - @layerzerolabs/devtools-evm@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes
