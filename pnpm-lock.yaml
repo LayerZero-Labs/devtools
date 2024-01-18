@@ -563,7 +563,7 @@ importers:
   packages/protocol-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.0.2
+        specifier: ~0.0.3
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.11
