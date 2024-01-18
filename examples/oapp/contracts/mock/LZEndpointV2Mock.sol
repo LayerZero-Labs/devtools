@@ -120,15 +120,15 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
 
         // Mock the process of receiving msg on dst chain
         // Mock the executor paying the dstNativeAddr the amount of extra native token
-        (uint128 dstNativeAmt, bytes32 dstNativeAddr) = ExecutorOptions.decodeNativeDropOption(_params.options);
-        if (dstNativeAmt > 0) {
-            (bool success, ) = dstNativeAddr.bytes32ToAddress().call{ value: dstNativeAmt }("");
-            if (!success) {
-                emit ValueTransferFailed(dstNativeAddr.bytes32ToAddress(), dstNativeAmt);
-            }
-        }
+        // (uint128 dstNativeAmt, bytes32 dstNativeAddr) = ExecutorOptions.decodeNativeDropOption(_params.options);
+        // if (dstNativeAmt > 0) {
+        //     (bool success, ) = dstNativeAddr.bytes32ToAddress().call{ value: dstNativeAmt }("");
+        //     if (!success) {
+        //         emit ValueTransferFailed(dstNativeAddr.bytes32ToAddress(), dstNativeAmt);
+        //     }
+        // }
 
-        (uint128 gas, ) = ExecutorOptions.decodeLzReceiveOption(_params.options);
+        // (uint128 gas, ) = ExecutorOptions.decodeLzReceiveOption(_params.options);
 
         Origin memory origin = Origin({
             srcEid: packet.srcEid,
@@ -144,7 +144,7 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
             packet.receiver.bytes32ToAddress(),
             payloadHash,
             packet.message,
-            gas,
+            200000,
             packet.guid
         );
     }

@@ -19,16 +19,30 @@ describe('MyOApp', function () {
         await this.LzEndpointV2Mock.setDestLzEndpoint(this.myOAppB.address, this.LzEndpointV2Mock.address)
 
         await this.myOAppA.setPeer(this.eid, ethers.utils.zeroPad(this.myOAppB.address, 32))
-        await this.myOAppB.setPeer(this.eid, ethers.utils.zeroPad(this.myOAppB.address, 32))
+        await this.myOAppB.setPeer(this.eid, ethers.utils.zeroPad(this.myOAppA.address, 32))
     })
 
     it('send a message to each destination OApp', async function () {
         expect(await this.myOAppA.data()).to.equal('Nothing received yet.')
         expect(await this.myOAppB.data()).to.equal('Nothing received yet.')
 
-        await this.myOAppA.send(this.eid, 'Test message.', '0x00030100110100000000000000000000000000030d40', {
-            value: ethers.utils.parseEther('0.5'),
-        })
+        let fee = 0
+        ;[fee] = await this.myOAppA.quote(
+            this.eid,
+            'Nothing received yet.',
+            `0x0100210100000000000000000000000000030d4000000000000000000000000000000000`,
+            false
+        )
+        console.log(fee)
+
+        await this.myOAppA.send(
+            this.eid,
+            'Test message.',
+            '0x0100210100000000000000000000000000030d4000000000000000000000000000000000',
+            {
+                value: ethers.utils.parseEther('0.5'),
+            }
+        )
         expect(await this.myOAppA.data()).to.equal('Nothing received yet.')
         expect(await this.myOAppB.data()).to.equal('Test message.')
 
