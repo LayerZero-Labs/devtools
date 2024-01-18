@@ -10,7 +10,7 @@
     "logs": "docker compose logs -f",
     "prepare": "husky install",
     "release:publish": "$npm_execpath changeset publish",
-    "release:version": "$npm_execpath changeset version && $npm_execpath install --fix-lockfile --lockfile-only --offline",
+    "release:version": "$npm_execpath changeset version && $npm_execpath install --lockfile-only --prefer-offline --ignore-scripts",
     "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys --wait $DOCKER_COMPOSE_ARGS",
     "stop": "docker compose down",
     "pretest": "$npm_execpath build",
