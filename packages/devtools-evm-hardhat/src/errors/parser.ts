@@ -9,9 +9,7 @@ import pMemoize from 'p-memoize'
  * Helper function that combines all the available ABIs into a one giant
  * interface (only containing the error fragments) used for error decoding.
  *
- * TODO This function is not memoized at the moment, if the performance turns out to be a bottleneck we can memoize
- *
- * @returns {OmniContractFactory}
+ * @returns {OmniContract}
  */
 const createCombinedContract = pMemoize(async (): Promise<OmniContract> => {
     // We get all the available artifacts first
