@@ -22,6 +22,8 @@ const createCombinedContract = pMemoize(async (): Promise<OmniContract> => {
     // To prevent this, we'll run a simple deduplication algorithm - use JSON encoded values as hashes
     const deduplicatedAbi = Object.values(Object.fromEntries(abi.map((abi) => [JSON.stringify(abi), abi])))
 
+    // FIXME Since we are creating an endpoint-agnostic, completely fictional contract,
+    // we just make up and eid for it. Once the underlying logic is refactored, this should be gone
     return { eid: -1 as EndpointId, contract: new Contract(makeZeroAddress(), deduplicatedAbi) }
 })
 
