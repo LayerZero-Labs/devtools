@@ -3,6 +3,6 @@ src = 'contracts'
 out = 'out'
 test = 'test/foundry'
 cache_path = 'cache'
-libs = ['node_modules', '../lib']
+libs = ['node_modules', 'node_modules/@layerzerolabs/toolbox-foundry/lib']
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
