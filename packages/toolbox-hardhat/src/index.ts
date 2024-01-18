@@ -1,15 +1,23 @@
 import { extendConfig } from 'hardhat/config'
-import { withLayerZeroArtifacts, withLayerZeroDeployments } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    createErrorParser,
+    withLayerZeroArtifacts,
+    withLayerZeroDeployments,
+} from '@layerzerolabs/devtools-evm-hardhat'
 
 // Here we extend the HardhatUserConfig types & import all the LayerZero tasks
 import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
 import '@layerzerolabs/ua-devtools-evm-hardhat/tasks'
+import { OmniSDK } from '@layerzerolabs/devtools-evm'
 
 // Here we create our two config extenders, two curried functions
 // that accept hardhat user config and return a hardhat user config with external
 // artifacts and deployments configured
 const withDeployments = withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v2')
 const withArtifacts = withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v2')
+
+// Register a hardhat-specific error parser factory on the OmniSDK
+OmniSDK.registerErrorParserFactory(createErrorParser)
 
 extendConfig((config, userConfig) => {
     // To stay on the safe side we'll only use the external configuration

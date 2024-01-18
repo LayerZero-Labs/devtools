@@ -1,26 +1,8 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
-import type { OmniContract, OmniContractFactory } from '@/omnigraph/types'
-import type { OmniError } from '@layerzerolabs/devtools'
 import { ContractError, CustomError, UnknownError, PanicError, RevertError } from './errors'
 import { BigNumberishBigintSchema } from '../schema'
 import type { Contract } from '@ethersproject/contracts'
-import type { OmniContractErrorParser } from './types'
-
-/**
- * Creates an asynchronous error parser for EVM contract errors.
- *
- * This parser is capable of turning `unknown` `OmniError` instances to typed ones
- *
- * @param contractFactory `OmniContractFactory`
- *
- * @returns `(omniError: OmniError<unknown>): Promise<OmniError<ContractError>>` `OmniError` parser
- */
-export const createErrorParser =
-    (contractFactory: OmniContractFactory) =>
-    async ({ error, point }: OmniError<unknown>): Promise<OmniError<ContractError>> => ({
-        point,
-        error: createContractErrorParser(await contractFactory(point))(error),
-    })
+import type { OmniContractErrorParserFactory } from './types'
 
 /**
  * Creates an error parser based on a specific `OmniContract`
@@ -28,17 +10,15 @@ export const createErrorParser =
  * This call will never fail and will always return an instance of `ContractError`
  *
  * @param {OmniContract | null | undefined} contract
- * @returns {ContractError}
+ * @returns {OmniContractErrorParser}
  */
-export const createContractErrorParser =
-    (contract: OmniContract | null | undefined): OmniContractErrorParser =>
-    (error) =>
-        // First we'll try to decode a contract error if we have a contract
-        (contract ? parseContractError(error, contract.contract) : null) ??
-        // Then we'll try decoding a generic one
-        parseGenericError(error) ??
-        // The we throw a generic one
-        new UnknownError(`Unknown error: ${toStringSafe(error)}`)
+export const createContractErrorParser: OmniContractErrorParserFactory = (contract) => (error) =>
+    // First we'll try to decode a contract error if we have a contract
+    (contract ? parseContractError(error, contract.contract) : null) ??
+    // Then we'll try decoding a generic one
+    parseGenericError(error) ??
+    // The we throw a generic one
+    new UnknownError(`Unknown error: ${toStringSafe(error)}`)
 
 export const parseContractError = (error: unknown, contract: Contract): ContractError | undefined => {
     // If the error already is a ContractError, we'll continue

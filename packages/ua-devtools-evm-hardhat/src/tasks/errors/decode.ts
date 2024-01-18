@@ -3,9 +3,7 @@ import { task, types } from 'hardhat/config'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_ERRORS_DECODE } from '@/constants/tasks'
 import { createErrorParser } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OmniPoint } from '@layerzerolabs/devtools'
-import { RevertError, makeZeroAddress } from '@layerzerolabs/devtools-evm'
+import { RevertError } from '@layerzerolabs/devtools-evm'
 import { printLogo, printRecord } from '@layerzerolabs/io-devtools/swag'
 import { CustomError } from '@layerzerolabs/devtools-evm'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
@@ -39,11 +37,10 @@ export const action: ActionType<TaskArgs> = async ({ hash, logLevel = 'info' }, 
     //
     // Since this parser in its natural habitat needs an OmniPoint
     // (it is used to parse OmniErrors), we need to create a mock OmniPoint
-    const errorParser = createErrorParser()
-    const point: OmniPoint = { address: makeZeroAddress(), eid: -1 as EndpointId }
+    const errorParser = await createErrorParser()
 
     // Now we decode all the data we received on the CLI
-    const { error } = await errorParser({ error: { data: hash }, point })
+    const error = errorParser({ data: hash })
 
     logger.verbose(`Got an error: ${error}`)
 

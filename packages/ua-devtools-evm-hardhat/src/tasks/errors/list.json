@@ -1,0 +1,487 @@
+[
+  {
+    "Error": "InvalidDVNIdx()",
+    "Contract": "DVNOptions",
+    "Encoded": "0xa8384fc1"
+  },
+  {
+    "Error": "InvalidDVNOptions(uint256)",
+    "Contract": "DVNOptions",
+    "Encoded": "0x9af41d33"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OApp",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "OApp",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OApp",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "NotEnoughNative(uint256)",
+    "Contract": "OApp",
+    "Encoded": "0x9f704120"
+  },
+  {
+    "Error": "OnlyEndpoint(address)",
+    "Contract": "OApp",
+    "Encoded": "0x91ac5e4f"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OApp",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OAppCore",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OAppCore",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OAppCore",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OAppReceiver",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OAppReceiver",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "OnlyEndpoint(address)",
+    "Contract": "OAppReceiver",
+    "Encoded": "0x91ac5e4f"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OAppReceiver",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OAppSender",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "OAppSender",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OAppSender",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "NotEnoughNative(uint256)",
+    "Contract": "OAppSender",
+    "Encoded": "0x9f704120"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OAppSender",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "InvalidOptionType(uint16)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x3a51740d"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OmniCounter",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "NotEnoughNative(uint256)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x9f704120"
+  },
+  {
+    "Error": "OnlyEndpoint(address)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x91ac5e4f"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OmniCounter",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "OnlySelf()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x14d4a4e8"
+  },
+  {
+    "Error": "SimulationResult(bytes)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x8351eea7"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "IOAppCore",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "IOAppCore",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "IOAppCore",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidOptions(bytes)",
+    "Contract": "IOAppOptionsType3",
+    "Encoded": "0x9a6d49cd"
+  },
+  {
+    "Error": "InvalidOptions(bytes)",
+    "Contract": "OAppOptionsType3",
+    "Encoded": "0x9a6d49cd"
+  },
+  {
+    "Error": "InvalidOptionType(uint16)",
+    "Contract": "OptionsBuilder",
+    "Encoded": "0x3a51740d"
+  },
+  {
+    "Error": "InvalidSize(uint256,uint256)",
+    "Contract": "OptionsBuilder",
+    "Encoded": "0x3256c04c"
+  },
+  {
+    "Error": "OnlySelf()",
+    "Contract": "OAppPreCrimeSimulator",
+    "Encoded": "0x14d4a4e8"
+  },
+  {
+    "Error": "SimulationResult(bytes)",
+    "Contract": "OAppPreCrimeSimulator",
+    "Encoded": "0x8351eea7"
+  },
+  {
+    "Error": "OnlySelf()",
+    "Contract": "IOAppPreCrimeSimulator",
+    "Encoded": "0x14d4a4e8"
+  },
+  {
+    "Error": "SimulationResult(bytes)",
+    "Contract": "IOAppPreCrimeSimulator",
+    "Encoded": "0x8351eea7"
+  },
+  {
+    "Error": "CrimeFound(bytes)",
+    "Contract": "IPreCrime",
+    "Encoded": "0x19159757"
+  },
+  {
+    "Error": "InvalidSimulationResult(uint32,bytes)",
+    "Contract": "IPreCrime",
+    "Encoded": "0x572e17ee"
+  },
+  {
+    "Error": "OnlyOffChain()",
+    "Contract": "IPreCrime",
+    "Encoded": "0x9cbfe066"
+  },
+  {
+    "Error": "PacketOversize(uint256,uint256)",
+    "Contract": "IPreCrime",
+    "Encoded": "0x9db08605"
+  },
+  {
+    "Error": "PacketUnsorted()",
+    "Contract": "IPreCrime",
+    "Encoded": "0x50823c85"
+  },
+  {
+    "Error": "SimulationFailed(bytes)",
+    "Contract": "IPreCrime",
+    "Encoded": "0x614cbd8a"
+  },
+  {
+    "Error": "SimulationResultNotFound(uint32)",
+    "Contract": "IPreCrime",
+    "Encoded": "0x01992f2a"
+  },
+  {
+    "Error": "AlreadyRegistered()",
+    "Contract": "Errors",
+    "Encoded": "0x3a81d6fc"
+  },
+  {
+    "Error": "ComposeExists()",
+    "Contract": "Errors",
+    "Encoded": "0x895fdbee"
+  },
+  {
+    "Error": "ComposeNotFound(bytes32,bytes32)",
+    "Contract": "Errors",
+    "Encoded": "0x9e3e0583"
+  },
+  {
+    "Error": "DefaultReceiveLibUnavailable()",
+    "Contract": "Errors",
+    "Encoded": "0xfbc6a95a"
+  },
+  {
+    "Error": "DefaultSendLibUnavailable()",
+    "Contract": "Errors",
+    "Encoded": "0xb6f3253d"
+  },
+  {
+    "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    "Contract": "Errors",
+    "Encoded": "0xe273c847"
+  },
+  {
+    "Error": "InvalidAddress()",
+    "Contract": "Errors",
+    "Encoded": "0xe6c4247b"
+  },
+  {
+    "Error": "InvalidAmount(uint256,uint256)",
+    "Contract": "Errors",
+    "Encoded": "0x7c83fcf0"
+  },
+  {
+    "Error": "InvalidArgument()",
+    "Contract": "Errors",
+    "Encoded": "0xa9cb9e0d"
+  },
+  {
+    "Error": "InvalidExpiry()",
+    "Contract": "Errors",
+    "Encoded": "0xd36c8500"
+  },
+  {
+    "Error": "InvalidNonce(uint64)",
+    "Contract": "Errors",
+    "Encoded": "0x5c33785a"
+  },
+  {
+    "Error": "InvalidPayloadHash()",
+    "Contract": "Errors",
+    "Encoded": "0xa84ab60d"
+  },
+  {
+    "Error": "InvalidReceiveLibrary()",
+    "Contract": "Errors",
+    "Encoded": "0x82ceb50e"
+  },
+  {
+    "Error": "InvalidSizeForAddress()",
+    "Contract": "Errors",
+    "Encoded": "0x59baef1d"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "Errors",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NotImplemented()",
+    "Contract": "Errors",
+    "Encoded": "0xd6234725"
+  },
+  {
+    "Error": "OnlyAltToken()",
+    "Contract": "Errors",
+    "Encoded": "0x1ebf1709"
+  },
+  {
+    "Error": "OnlyNonDefaultLib()",
+    "Contract": "Errors",
+    "Encoded": "0x78142dd2"
+  },
+  {
+    "Error": "OnlyReceiveLib()",
+    "Contract": "Errors",
+    "Encoded": "0x78653622"
+  },
+  {
+    "Error": "OnlyRegisteredLib()",
+    "Contract": "Errors",
+    "Encoded": "0x8cd5e2c6"
+  },
+  {
+    "Error": "OnlyRegisteredOrDefaultLib()",
+    "Contract": "Errors",
+    "Encoded": "0x4fb58e15"
+  },
+  {
+    "Error": "OnlySendLib()",
+    "Contract": "Errors",
+    "Encoded": "0x3885d603"
+  },
+  {
+    "Error": "PathNotInitializable()",
+    "Contract": "Errors",
+    "Encoded": "0x098c20b5"
+  },
+  {
+    "Error": "PathNotVerifiable()",
+    "Contract": "Errors",
+    "Encoded": "0x2923b32a"
+  },
+  {
+    "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    "Contract": "Errors",
+    "Encoded": "0xe4bb0ca1"
+  },
+  {
+    "Error": "SameValue()",
+    "Contract": "Errors",
+    "Encoded": "0xc23f6ccb"
+  },
+  {
+    "Error": "SendReentrancy()",
+    "Contract": "Errors",
+    "Encoded": "0x9633fed3"
+  },
+  {
+    "Error": "Unauthorized()",
+    "Contract": "Errors",
+    "Encoded": "0x82b42900"
+  },
+  {
+    "Error": "UnsupportedEid()",
+    "Contract": "Errors",
+    "Encoded": "0x9153304b"
+  },
+  {
+    "Error": "UnsupportedInterface()",
+    "Contract": "Errors",
+    "Encoded": "0x63aaf066"
+  },
+  {
+    "Error": "ZeroLzTokenFee()",
+    "Contract": "Errors",
+    "Encoded": "0xe8016043"
+  },
+  {
+    "Error": "InvalidLzComposeOption()",
+    "Contract": "ExecutorOptions",
+    "Encoded": "0x071673fe"
+  },
+  {
+    "Error": "InvalidLzReceiveOption()",
+    "Contract": "ExecutorOptions",
+    "Encoded": "0xd03c9969"
+  },
+  {
+    "Error": "InvalidNativeDropOption()",
+    "Contract": "ExecutorOptions",
+    "Encoded": "0xde48d299"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "DefaultOApp",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "InvalidOptions(bytes)",
+    "Contract": "DefaultOApp",
+    "Encoded": "0x9a6d49cd"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "DefaultOApp",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "DefaultOApp",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "NotEnoughNative(uint256)",
+    "Contract": "DefaultOApp",
+    "Encoded": "0x9f704120"
+  },
+  {
+    "Error": "OnlyEndpoint(address)",
+    "Contract": "DefaultOApp",
+    "Encoded": "0x91ac5e4f"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "DefaultOApp",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "InvalidEndpointCall()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x0fbdec0a"
+  },
+  {
+    "Error": "InvalidOptionType(uint16)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x3a51740d"
+  },
+  {
+    "Error": "LzTokenUnavailable()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x5373352a"
+  },
+  {
+    "Error": "NoPeer(uint32)",
+    "Contract": "OmniCounter",
+    "Encoded": "0xf6ff4fb7"
+  },
+  {
+    "Error": "NotEnoughNative(uint256)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x9f704120"
+  },
+  {
+    "Error": "OnlyEndpoint(address)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x91ac5e4f"
+  },
+  {
+    "Error": "OnlyPeer(uint32,bytes32)",
+    "Contract": "OmniCounter",
+    "Encoded": "0xc26bebcc"
+  },
+  {
+    "Error": "OnlySelf()",
+    "Contract": "OmniCounter",
+    "Encoded": "0x14d4a4e8"
+  },
+  {
+    "Error": "SimulationResult(bytes)",
+    "Contract": "OmniCounter",
+    "Encoded": "0x8351eea7"
+  }
+]

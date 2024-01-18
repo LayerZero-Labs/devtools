@@ -343,10 +343,10 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const [_, errors] = await signAndSend(transactions)
     if (errors.length === 0) return
 
-    const errorParser = createErrorParser()
+    const errorParser = await createErrorParser()
     const parsedErrors = await Promise.all(
         errors.map(({ error, transaction: { point } }) => errorParser({ error, point }))
     )
 
-    throw new Error(`Endpoint deployment failed:\n\n${parsedErrors.map(({ error }) => error).join('\n')}`)
+    throw new Error(`Endpoint deployment failed:\n\n${parsedErrors.join('\n')}`)
 }
