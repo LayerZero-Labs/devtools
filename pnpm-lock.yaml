@@ -69,84 +69,6 @@ importers:
         specifier: 1.11.0
         version: 1.11.0
 
-  examples/oapp:
-    devDependencies:
-      '@babel/core':
-        specifier: ^7.23.7
-        version: 7.23.7
-      '@layerzerolabs/eslint-config-next':
-        specifier: ^2.0.7
-        version: 2.0.11(typescript@5.3.3)
-      '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.7
-        version: 2.0.12
-      '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.7
-        version: 2.0.11(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@2.0.11)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.1)
-      '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.7
-        version: 2.0.11(@layerzerolabs/lz-evm-messagelib-v2@2.0.11)(@layerzerolabs/lz-evm-protocol-v2@2.0.11)(@layerzerolabs/lz-evm-v1-0.7@2.0.11)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.1)
-      '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.7
-        version: 2.0.11(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.1)
-      '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ~2.0.7
-        version: 2.0.11(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
-      '@layerzerolabs/prettier-config-next':
-        specifier: ^2.0.7
-        version: 2.0.11
-      '@layerzerolabs/solhint-config':
-        specifier: ^2.0.7
-        version: 2.0.11(typescript@5.3.3)
-      '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.0.1
-        version: link:../../packages/toolbox-foundry
-      '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.3
-        version: link:../../packages/toolbox-hardhat
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.4)
-      '@nomiclabs/hardhat-ethers':
-        specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.4)
-      '@openzeppelin/contracts':
-        specifier: ^4.9.5
-        version: 4.9.5
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^4.9.5
-        version: 4.9.5
-      '@rushstack/eslint-patch':
-        specifier: ^1.6.1
-        version: 1.6.1
-      ethers:
-        specifier: ^5.7.0
-        version: 5.7.2
-      hardhat:
-        specifier: ^2.19.4
-        version: 2.19.4(ts-node@10.9.2)(typescript@5.3.3)
-      hardhat-contract-sizer:
-        specifier: ^2.10.0
-        version: 2.10.0(hardhat@2.19.4)
-      hardhat-deploy:
-        specifier: ^0.11.45
-        version: 0.11.45
-      prettier:
-        specifier: ^3.1.1
-        version: 3.1.1
-      solhint:
-        specifier: ^4.0.0
-        version: 4.0.0(typescript@5.3.3)
-      solidity-bytes-utils:
-        specifier: ^0.8.1
-        version: 0.8.1(@babel/core@7.23.7)
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
-
   examples/oft:
     devDependencies:
       '@babel/core':
@@ -170,6 +92,9 @@ importers:
       '@layerzerolabs/solhint-config':
         specifier: ^2.0.11
         version: 2.0.11(typescript@5.3.3)
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.0.1
+        version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.0.3
         version: link:../../packages/toolbox-hardhat
