@@ -53,19 +53,6 @@ export const deployOApp = async (writeToFileSystem: boolean = false) => {
     ])
 }
 
-export const deployOAppFixture = async () => {
-    const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
-    const bsc = await environmentFactory(EndpointId.BSC_V2_MAINNET)
-
-    await Promise.all([
-        eth.deployments.fixture('OApp'),
-        avax.deployments.fixture('OApp'),
-        bsc.deployments.fixture('OApp'),
-    ])
-}
-
 export const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeConfig> => {
     return {
         sendLibrary: testConfig.sendLibrary,
