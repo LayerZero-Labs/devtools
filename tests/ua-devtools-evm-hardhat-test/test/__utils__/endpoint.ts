@@ -55,7 +55,6 @@ export const bscSendUln2_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 
 export const bscExecutor = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'Executor' }
 export const bscDvn = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN' }
 
-
 export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
 
 const defaultPriceData: PriceData = {
@@ -149,7 +148,6 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
     const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
     const bscUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(bscDvnPoint.address)
-
 
     // This is the graph for Executor
     const executorConfig: OmniGraphHardhat<unknown, ExecutorEdgeConfig> = {
@@ -267,7 +265,6 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                     priceData: defaultPriceData,
                 },
             },
-
         ],
     }
 
