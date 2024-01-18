@@ -44,10 +44,12 @@ export const deployOApp = async (writeToFileSystem: boolean = false) => {
     const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
+    const bsc = await environmentFactory(EndpointId.BSC_V2_MAINNET)
 
     await Promise.all([
         eth.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
         avax.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
+        bsc.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
     ])
 }
 
