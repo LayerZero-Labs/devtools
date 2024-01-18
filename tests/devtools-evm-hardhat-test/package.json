@@ -39,7 +39,7 @@
     "@layerzerolabs/protocol-devtools": "~0.0.2",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.2",
     "@layerzerolabs/test-devtools": "~0.0.2",
-    "@layerzerolabs/toolbox-hardhat": "~0.0.2",
+    "@layerzerolabs/toolbox-hardhat": "~0.0.3",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
