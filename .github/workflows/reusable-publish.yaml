@@ -55,8 +55,8 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
-          version: pnpm changeset version && pnpm install --fix-lockfile --lockfile-only --offline
-          publish: pnpm changeset publish
+          version: pnpm release:version
+          publish: pnpm release:publish
           title: "🚀 Version packages"
 
         env:

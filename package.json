@@ -9,6 +9,8 @@
     "lint": "$npm_execpath turbo run lint",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
+    "release:publish": "$npm_execpath changeset publish",
+    "release:version": "$npm_execpath changeset version && $npm_execpath install --fix-lockfile --lockfile-only --offline",
     "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys --wait $DOCKER_COMPOSE_ARGS",
     "stop": "docker compose down",
     "pretest": "$npm_execpath build",
