@@ -1,54 +1,66 @@
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
-describe('MyOApp', function () {
-    beforeEach(async function () {
-        this.eid = 123
-        const signers = await ethers.getSigners()
-        this.owner = signers[0]
-        console.log(this.owner.address)
+describe('MyOApp Test', function () {
+    // Constant representing a mock Endpoint ID for testing purposes
+    const eidA = 1
+    const eidB = 2
+    // Declaration of variables to be used in the test suite
+    let MyOApp, LZEndpointV2Mock, ownerA, ownerB, myOAppA, myOAppB, mockEndpointA, mockEndpointB
 
-        const LayerZeroEndpointMock = await ethers.getContractFactory('LZEndpointV2Mock')
-        this.LzEndpointV2Mock = await LayerZeroEndpointMock.deploy(this.eid)
-
-        const MyOApp = await ethers.getContractFactory('MyOApp')
-        this.myOAppA = await MyOApp.deploy(this.LzEndpointV2Mock.address, this.owner.address)
-        this.myOAppB = await MyOApp.deploy(this.LzEndpointV2Mock.address, this.owner.address)
-
-        await this.LzEndpointV2Mock.setDestLzEndpoint(this.myOAppA.address, this.LzEndpointV2Mock.address)
-        await this.LzEndpointV2Mock.setDestLzEndpoint(this.myOAppB.address, this.LzEndpointV2Mock.address)
-
-        await this.myOAppA.setPeer(this.eid, ethers.utils.zeroPad(this.myOAppB.address, 32))
-        await this.myOAppB.setPeer(this.eid, ethers.utils.zeroPad(this.myOAppA.address, 32))
+    // Before hook for setup that runs once before all tests in the block
+    before(async function () {
+        // Contract factories for MyOApp and LZEndpointV2Mock are created
+        MyOApp = await ethers.getContractFactory('MyOApp')
+        LZEndpointV2Mock = await ethers.getContractFactory('LZEndpointV2Mock')
+        // Fetching the first signer (account) from Hardhat's local Ethereum network
+        ;[ownerA, ownerB] = await ethers.getSigners()
     })
 
-    it('send a message to each destination OApp', async function () {
-        expect(await this.myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await this.myOAppB.data()).to.equal('Nothing received yet.')
+    // beforeEach hook for setup that runs before each test in the block
+    beforeEach(async function () {
+        // Deploying a mock LZEndpoint with the given Endpoint ID
+        mockEndpointA = await LZEndpointV2Mock.deploy(eidA)
+        mockEndpointB = await LZEndpointV2Mock.deploy(eidB)
 
-        let fee = 0
-        ;[fee] = await this.myOAppA.quote(
-            this.eid,
+        // Deploying two instances of MyOApp contract and linking them to the mock LZEndpoint
+        myOAppA = await MyOApp.deploy(mockEndpointA.address, ownerA.address)
+        myOAppB = await MyOApp.deploy(mockEndpointB.address, ownerB.address)
+
+        // Setting destination endpoints in the LZEndpoint mock for each MyOApp instance
+        await mockEndpointA.setDestLzEndpoint(myOAppB.address, mockEndpointB.address)
+        await mockEndpointB.setDestLzEndpoint(myOAppA.address, mockEndpointA.address)
+
+        // Setting each MyOApp instance as a peer of the other
+        await myOAppA.connect(ownerA).setPeer(eidB, ethers.utils.zeroPad(myOAppB.address, 32))
+        await myOAppB.connect(ownerB).setPeer(eidA, ethers.utils.zeroPad(myOAppA.address, 32))
+    })
+
+    // A test case to verify message sending functionality
+    it('send a message to each destination OApp', async function () {
+        // Assert initial state of data in both MyOApp instances
+        expect(await myOAppA.data()).to.equal('Nothing received yet.')
+        expect(await myOAppB.data()).to.equal('Nothing received yet.')
+
+        // Define native fee and quote for the message send operation
+        let nativeFee = 0
+        ;[nativeFee] = await myOAppA.quote(
+            eidB,
             'Nothing received yet.',
-            `0x0100210100000000000000000000000000030d4000000000000000000000000000000000`,
+            '0x0100210100000000000000000000000000030d4000000000000000000000000000000000',
             false
         )
-        console.log(fee)
 
-        await this.myOAppA.send(
-            this.eid,
+        // Execute send operation from myOAppA
+        await myOAppA.send(
+            eidB,
             'Test message.',
             '0x0100210100000000000000000000000000030d4000000000000000000000000000000000',
-            {
-                value: ethers.utils.parseEther('0.5'),
-            }
+            { value: nativeFee.toString() }
         )
-        expect(await this.myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await this.myOAppB.data()).to.equal('Test message.')
 
-        /*await this.myOAppB.send(this.eid, { value: ethers.utils.parseEther("0.5") });
-        expect(await this.myOAppA.data()).to.equal("Test message.");
-        expect(await this.myOAppB.data()).to.equal("Test message.");
-        */
+        // Assert the resulting state of data in both MyOApp instances
+        expect(await myOAppA.data()).to.equal('Nothing received yet.')
+        expect(await myOAppB.data()).to.equal('Test message.')
     })
 })
