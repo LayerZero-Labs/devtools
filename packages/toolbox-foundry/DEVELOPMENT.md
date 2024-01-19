@@ -6,6 +6,24 @@
 
 <h1 align="center">Development</h1>
 
+## Building
+
+This package requires `make` CLI utility to be available. Make sure that `make` is available by running:
+
+```bash
+make --help
+```
+
+On MacOS, `make` is installed as a aprt of the XCode developer tools. On unix operating systems, `make` can be installed by adding the `build-essential` package:
+
+```bash
+# On Debian
+apt-get install build-essential
+
+# On Apline
+apk add --no-cache make
+```
+
 ## Adding libraries
 
 To install a new library to be included with this package, please follow these steps:
