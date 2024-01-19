@@ -16,9 +16,9 @@ node_modules:
 	# We copy the contracts from solidity-bytes-utils
 	# 
 	# FIXME Due to a weird discrepancy between foundry compilation step
-	# and forge test, we need to provide the contracts in both src and src/contracts
+	# and forge test, we need to provide the contracts in both src and contracts directories
 	cp -R node_modules/solidity-bytes-utils/contracts lib/solidity-bytes-utils/src
-	cp -R node_modules/solidity-bytes-utils/contracts lib/solidity-bytes-utils/src/contracts
+	cp -R node_modules/solidity-bytes-utils/contracts lib/solidity-bytes-utils
 	
 	# We also want to make sure to include the license & package.json
 	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE lib/solidity-bytes-utils
