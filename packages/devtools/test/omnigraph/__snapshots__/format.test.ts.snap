@@ -110,6 +110,10 @@ exports[`omnigraph/format formatEid should format 218 correctly 1`] = `"PGN_MAIN
 
 exports[`omnigraph/format formatEid should format 230 correctly 1`] = `"SHIMMER_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 234 correctly 1`] = `"BB1_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 235 correctly 1`] = `"RARIBLE_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10106 correctly 1`] = `"AVALANCHE_TESTNET"`;
@@ -262,6 +266,8 @@ exports[`omnigraph/format formatEid should format 10239 correctly 1`] = `"ETHERL
 
 exports[`omnigraph/format formatEid should format 10240 correctly 1`] = `"KIWI2_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10241 correctly 1`] = `"KIWI2_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20102 correctly 1`] = `"BSC_SANDBOX"`;
@@ -381,6 +387,10 @@ exports[`omnigraph/format formatEid should format 30217 correctly 1`] = `"MANTA_
 exports[`omnigraph/format formatEid should format 30218 correctly 1`] = `"PGN_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30230 correctly 1`] = `"SHIMMER_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30234 correctly 1`] = `"BB1_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30235 correctly 1`] = `"RARIBLE_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 40102 correctly 1`] = `"BSC_V2_TESTNET"`;
 
@@ -527,6 +537,8 @@ exports[`omnigraph/format formatEid should format 40238 correctly 1`] = `"RC1_V2
 exports[`omnigraph/format formatEid should format 40239 correctly 1`] = `"ETHERLINK_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40240 correctly 1`] = `"KIWI2_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40241 correctly 1`] = `"KIWI2_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 50102 correctly 1`] = `"BSC_V2_SANDBOX"`;
 
