@@ -12,8 +12,5 @@ artifacts
 # foundry test compilation files
 out
 
-# foundry std lib
-/lib
-
 # pnpm
 pnpm-error.log
