@@ -23,7 +23,9 @@ describe('common/map', () => {
         const valueArbitrary = fc.anything()
 
         describe.each(testCases)(`for %s`, (_, keyArbitrary, hash) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             class TestMap extends AbstractMap<any, any> {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 protected override hash(key: any) {
                     return hash(key)
                 }
