@@ -1,15 +1,11 @@
-import { before } from 'mocha'
+import { before, beforeEach, describe } from 'mocha'
 
-describe.skip('OFT: ', function () {
+describe('OApp: ', function () {
     before(async function () {
         //TODO
     })
 
     beforeEach(async function () {
-        //TODO
-    })
-
-    it('OFT send', async function () {
         //TODO
     })
 })

@@ -194,6 +194,9 @@ importers:
       '@rushstack/eslint-patch':
         specifier: ^1.6.1
         version: 1.6.1
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.6
       ethers:
         specifier: ^5.7.0
         version: 5.7.2
@@ -206,6 +209,9 @@ importers:
       hardhat-deploy:
         specifier: ^0.11.45
         version: 0.11.45
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
       prettier:
         specifier: ^3.1.1
         version: 3.1.1
