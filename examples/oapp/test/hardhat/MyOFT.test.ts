@@ -1,3 +1,5 @@
+import {Options} from "@layerzerolabs/lz-v2-utilities";
+
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
@@ -48,7 +50,7 @@ describe('MyOFT Test', function () {
         const sendParam = [eidB, ethers.utils.zeroPad(ownerB.address, 32), tokensToSend, tokensToSend]
 
         // Defining extra message execution options for the send operation
-        const options = '0x0100210100000000000000000000000000030d4000000000000000000000000000000000'
+        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
 
         // Fetching the native fee for the token send operation
         const [nativeFee] = await myOFTA.quoteSend(sendParam, options, false, `0x`, `0x`)

@@ -1,3 +1,5 @@
+import {Options} from "@layerzerolabs/lz-v2-utilities";
+
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
 
@@ -41,13 +43,14 @@ describe('MyOApp Test', function () {
         // Assert initial state of data in both MyOApp instances
         expect(await myOAppA.data()).to.equal('Nothing received yet.')
         expect(await myOAppB.data()).to.equal('Nothing received yet.')
+        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
 
         // Define native fee and quote for the message send operation
         let nativeFee = 0
         ;[nativeFee] = await myOAppA.quote(
             eidB,
             'Nothing received yet.',
-            '0x0100210100000000000000000000000000030d4000000000000000000000000000000000',
+            options,
             false
         )
 
@@ -55,7 +58,7 @@ describe('MyOApp Test', function () {
         await myOAppA.send(
             eidB,
             'Test message.',
-            '0x0100210100000000000000000000000000030d4000000000000000000000000000000000',
+            options,
             { value: nativeFee.toString() }
         )
 
