@@ -37,7 +37,6 @@ const deploy: DeployFunction = async (hre) => {
             deployer, // owner
         ],
         log: true,
-        waitConfirmations: 3,
         skipIfAlreadyDeployed: false,
     })
 
