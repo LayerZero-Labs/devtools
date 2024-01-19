@@ -38,6 +38,7 @@
     "hardhat-deploy": "^0.11.45",
     "prettier": "^3.1.1",
     "solhint": "^4.0.0",
+    "solidity-bytes-utils": "^0.8.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
