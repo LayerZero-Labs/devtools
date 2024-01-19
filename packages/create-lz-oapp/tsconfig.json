@@ -8,9 +8,9 @@
     "resolveJsonModule": false,
     "types": ["jest", "node"],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+    },
   },
   "files": ["./types/tiged.d.ts"],
-  "include": ["src", "test", "types"]
+  "include": ["src", "test", "types"],
 }
