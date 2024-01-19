@@ -61,6 +61,6 @@ contract MyOApp is OApp {
         address _executor,
         bytes calldata _extraData
     ) internal override {
-        data = abi.decode(payload, (string)); // your logic here
+        data = abi.decode(payload, (string));
     }
 }
