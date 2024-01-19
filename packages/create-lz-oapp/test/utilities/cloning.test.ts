@@ -2,7 +2,7 @@ import { createExampleGitURL } from '@/utilities/cloning'
 
 describe('utilities/cloning', () => {
     describe('createExampleGitURL', () => {
-        const REPO_URL = 'git@github.com:LayerZero-Labs/lz-utils'
+        const REPO_URL = 'git@github.com:LayerZero-Labs/devtools'
 
         it('should return the repository field if directory and ref are not specified', () => {
             expect(createExampleGitURL({ repository: REPO_URL, id: 'dummy', label: 'Dummy' })).toEqual(REPO_URL)

@@ -20,6 +20,29 @@ The code is arranged into:
 
 ## Development
 
+### Getting the source code
+
+This repository contains several git submodules. To clone the repository, please follow these steps:
+
+```bash
+# 1. Clone the repository
+
+# Using HTTPS
+git clone https://github.com/LayerZero-Labs/devtools.git
+
+# Using SSH
+git clone git@github.com:LayerZero-Labs/devtools.git
+
+# 2. Install submodules
+
+git submodules init
+git submodules update
+```
+
+### Setting up the environment
+
+This repository uses `pnpm` as its package manager and has a requirement on the minimum `node` version used. If using `nvm`, please run the following to setup the enviornment:
+
 ```bash
 # or nvm install if nvm use fails
 nvm use
@@ -29,7 +52,11 @@ corepack enable
 
 # Install project dependencies
 pnpm install
+```
 
+### Making changes
+
+```bash
 # Build the entire project
 pnpm build
 

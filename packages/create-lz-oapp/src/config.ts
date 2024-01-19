@@ -4,7 +4,7 @@ import type { Example, PackageManager } from '@/types'
  * To enable example development in a custom repository
  * we open the repository URL field to be taken from the environment
  */
-const repository = process.env['LAYERZERO_EXAMPLES_REPOSITORY_URL'] || 'git@github.com:LayerZero-Labs/lz-utils'
+const repository = process.env['LAYERZERO_EXAMPLES_REPOSITORY_URL'] || 'git@github.com:LayerZero-Labs/devtools'
 
 /**
  * To enable example development in a custom branch,

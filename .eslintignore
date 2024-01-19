@@ -3,4 +3,5 @@ dist
 node_modules
 *.md
 *.sol
+*.toml
 pnpm-lock.yaml
