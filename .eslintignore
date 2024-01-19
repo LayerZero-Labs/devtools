@@ -4,4 +4,5 @@ node_modules
 *.md
 *.sol
 *.toml
+Makefile
 pnpm-lock.yaml
