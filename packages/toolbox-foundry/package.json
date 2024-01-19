@@ -17,9 +17,7 @@
     "!lib/forge-std/.gitignore",
     "!lib/forge-std/.gitmodules"
   ],
-  "scripts": {
-    "lib:forge-std": "forge install foundry-rs/forge-std --no-commit"
-  },
+  "scripts": {},
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^29.5.11",
