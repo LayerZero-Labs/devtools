@@ -9,7 +9,6 @@
     "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "prepare": "forge install foundry-rs/forge-std --no-git",
     "test": "forge test"
   },
   "devDependencies": {
@@ -22,7 +21,8 @@
     "@layerzerolabs/lz-evm-v1-0.7": "~2.0.7",
     "@layerzerolabs/prettier-config-next": "^2.0.7",
     "@layerzerolabs/solhint-config": "^2.0.7",
-    "@layerzerolabs/toolbox-hardhat": "~0.0.2",
+    "@layerzerolabs/toolbox-foundry": "~0.0.1",
+    "@layerzerolabs/toolbox-hardhat": "~0.0.3",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^4.9.5",
