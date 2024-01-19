@@ -42,10 +42,10 @@ describe('filesystem/filesystem', () => {
             await expect(importDefault(fileName)).resolves.toMatchSnapshot()
         })
 
-        it('should not work with an JS/ESM file', async () => {
+        it('should work with a JS/ESM file', async () => {
             const fileName = configPathFixture('object.esm.js')
 
-            await expect(importDefault(fileName)).rejects.toMatchSnapshot()
+            await expect(importDefault(fileName)).resolves.toMatchSnapshot()
         })
 
         it('should work with a TS/CJS file', async () => {

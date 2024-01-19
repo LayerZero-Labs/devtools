@@ -22,7 +22,7 @@ exports[`stdio/printer printRecord should return a list of items with indices fo
 ├───┼──────────────────┤
 │ 6 │ Symbol(oh hello) │
 ├───┼──────────────────┤
-│ 7 │ () => { }        │
+│ 7 │ ()=>{}           │
 └───┴──────────────────┘"
 `;
 
@@ -42,7 +42,7 @@ exports[`stdio/printer printRecord should return a list of items with indices fo
 ├───────────┼──────────────────┤
 │ symbol    │ Symbol(oh hello) │
 ├───────────┼──────────────────┤
-│ function  │ () => { }        │
+│ function  │ ()=>{}           │
 └───────────┴──────────────────┘"
 `;
 
@@ -64,7 +64,7 @@ exports[`stdio/printer printRecord should return a list of items with indices wi
 ├───┼──────────────────┤
 │ 6 │ Symbol(oh hello) │
 ├───┼──────────────────┤
-│ 7 │ () => { }        │
+│ 7 │ ()=>{}           │
 └───┴──────────────────┘"
 `;
 
@@ -86,7 +86,7 @@ exports[`stdio/printer printRecord should return a list of items with indices wi
 ├───────────┼──────────────────┤
 │ symbol    │ Symbol(oh hello) │
 ├───────────┼──────────────────┤
-│ function  │ () => { }        │
+│ function  │ ()=>{}           │
 └───────────┴──────────────────┘"
 `;
 
@@ -106,7 +106,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 ├──────────────┼──────────────────────────────────┤
 │ symbol       │ Symbol(oh hello)                 │
 ├──────────────┼──────────────────────────────────┤
-│ function     │ () => { }                        │
+│ function     │ ()=>{}                           │
 ├──────────────┼──────────────────────────────────┤
 │ nestedArray  │ ┌───┬──────────────────┐         │
 │              │ │ 0 │ something        │         │
@@ -123,7 +123,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │              │ ├───┼──────────────────┤         │
 │              │ │ 6 │ Symbol(oh hello) │         │
 │              │ ├───┼──────────────────┤         │
-│              │ │ 7 │ () => { }        │         │
+│              │ │ 7 │ ()=>{}           │         │
 │              │ └───┴──────────────────┘         │
 ├──────────────┼──────────────────────────────────┤
 │ nestedObject │ ┌───────────┬──────────────────┐ │
@@ -141,7 +141,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │              │ ├───────────┼──────────────────┤ │
 │              │ │ symbol    │ Symbol(oh hello) │ │
 │              │ ├───────────┼──────────────────┤ │
-│              │ │ function  │ () => { }        │ │
+│              │ │ function  │ ()=>{}           │ │
 │              │ └───────────┴──────────────────┘ │
 └──────────────┴──────────────────────────────────┘"
 `;
@@ -162,7 +162,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 ├───┼──────────────────────────────────┤
 │ 6 │ Symbol(oh hello)                 │
 ├───┼──────────────────────────────────┤
-│ 7 │ () => { }                        │
+│ 7 │ ()=>{}                           │
 ├───┼──────────────────────────────────┤
 │ 8 │ ┌───┬──────────────────┐         │
 │   │ │ 0 │ something        │         │
@@ -179,7 +179,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │   │ ├───┼──────────────────┤         │
 │   │ │ 6 │ Symbol(oh hello) │         │
 │   │ ├───┼──────────────────┤         │
-│   │ │ 7 │ () => { }        │         │
+│   │ │ 7 │ ()=>{}           │         │
 │   │ └───┴──────────────────┘         │
 ├───┼──────────────────────────────────┤
 │ 9 │ ┌───────────┬──────────────────┐ │
@@ -197,7 +197,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │   │ ├───────────┼──────────────────┤ │
 │   │ │ symbol    │ Symbol(oh hello) │ │
 │   │ ├───────────┼──────────────────┤ │
-│   │ │ function  │ () => { }        │ │
+│   │ │ function  │ ()=>{}           │ │
 │   │ └───────────┴──────────────────┘ │
 └───┴──────────────────────────────────┘"
 `;
