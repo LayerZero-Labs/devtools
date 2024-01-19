@@ -164,7 +164,18 @@ describe('oapp/options', () => {
                     )
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
+                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
+                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+
+                    // test decoding
+                    const packetOptions = Options.fromOptions(rawPacketOptions)
+                    const decodedExecutorLzReceiveOption = packetOptions.decodeExecutorLzReceiveOption()
+                    expect(decodedExecutorLzReceiveOption).toBeDefined()
+                    expect(decodedExecutorLzReceiveOption?.gas).toEqual(gasLimit)
+                    expect(decodedExecutorLzReceiveOption?.value).toEqual(value)
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
             { numRuns: 20 }
@@ -189,7 +200,20 @@ describe('oapp/options', () => {
                     )
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
+                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
+                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+
+                    // test decoding
+                    const packetOptions = Options.fromOptions(rawPacketOptions)
+                    const decodedExecutorComposeOption = packetOptions.decodeExecutorComposeOption()
+                    expect(decodedExecutorComposeOption).toBeDefined()
+                    expect(decodedExecutorComposeOption).toHaveLength(1)
+                    expect(decodedExecutorComposeOption?.[0]?.index).toEqual(index)
+                    expect(decodedExecutorComposeOption?.[0]?.gas).toEqual(gasLimit)
+                    expect(decodedExecutorComposeOption?.[0]?.value).toEqual(value)
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
             { numRuns: 20 }
@@ -209,7 +233,21 @@ describe('oapp/options', () => {
                     const options = Options.newOptions().addExecutorNativeDropOption(value.toString(), address)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
+                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
+                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+
+                    // test decoding
+                    const packetOptions = Options.fromOptions(rawPacketOptions)
+                    const decodedExecutorNativeDropOption = packetOptions.decodeExecutorNativeDropOption()
+                    expect(decodedExecutorNativeDropOption).toBeDefined()
+                    expect(decodedExecutorNativeDropOption).toHaveLength(1)
+                    expect(decodedExecutorNativeDropOption?.[0]?.amount).toEqual(value)
+                    expect(decodedExecutorNativeDropOption?.[0]?.receiver.toLowerCase()).toEqual(
+                        makeBytes32(address).toLowerCase()
+                    )
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
+                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
             { numRuns: 20 }
@@ -227,7 +265,15 @@ describe('oapp/options', () => {
                     const options = Options.newOptions().addExecutorOrderedExecutionOption()
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
+                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
+                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+
+                    // test decoding
+                    const packetOptions = Options.fromOptions(rawPacketOptions)
+                    expect(packetOptions.decodeExecutorOrderedExecutionOption()).toBe(true)
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
+                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
                 }
             ),
             { numRuns: 10 }
@@ -296,5 +342,15 @@ describe('oapp/options', () => {
                 }
             )
         )
+    })
+
+    // regression test to ensure Options builder does not overflow when decoding very large gasLimit/value
+    it('should not encounter numerical overflow during decoding', () => {
+        expect(
+            Options.newOptions().addExecutorLzReceiveOption(MAX_GAS_LIMIT).decodeExecutorLzReceiveOption()!.gas
+        ).toEqual(MAX_GAS_LIMIT)
+        expect(
+            Options.newOptions().addExecutorLzReceiveOption(0, MAX_UINT_128).decodeExecutorLzReceiveOption()!.value
+        ).toEqual(MAX_GAS_LIMIT)
     })
 })
