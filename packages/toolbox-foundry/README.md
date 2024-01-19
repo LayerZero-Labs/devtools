@@ -26,7 +26,7 @@ To use `@layerzerolabs/toolbox-foundry` you will need to point to it in your `fo
 
 ```toml
 libs = [
-  'node_modules/@layerzerolabs/toolbox-foundry/lib'
+  'node_modules/@layerzerolabs/toolbox-foundry/lib',
   # Any other library folders you need, e.g.
   'node_modules'
 ]
