@@ -1,4 +1,4 @@
-import { MessageParams, MessagingFee } from '@layerzerolabs/protocol-devtools'
+import { MessageParams, MessagingFee, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import type {
     IEndpoint,
@@ -87,7 +87,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
-        return await this.contract.contract.defaultReceiveLibraryTimeout(eid)
+        return TimeoutSchema.parse(await this.contract.contract.defaultReceiveLibraryTimeout(eid))
     }
 
     async setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
@@ -140,7 +140,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout> {
-        return await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
+        return TimeoutSchema.parse(await this.contract.contract.receiveLibraryTimeout(receiver, srcEid))
     }
 
     async setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
