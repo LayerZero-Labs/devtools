@@ -44,3 +44,5 @@ This package comes with support for `forge-std` out of the box so you can start 
 import "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
 ```
+
+The supporting packages for `@layerzerolabs/` dependencies are also included - namely `solidity-bytes-utils`.

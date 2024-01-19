@@ -8,5 +8,4 @@ libs = ['node_modules', 'node_modules/@layerzerolabs/toolbox-foundry/lib']
 remappings = [
     '@layerzerolabs/=node_modules/@layerzerolabs',
     '@openzeppelin/=node_modules/@openzeppelin/',
-    'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
 ]
