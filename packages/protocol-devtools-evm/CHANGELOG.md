@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.0.4
+
+### Patch Changes
+
+- 983a141: Pass Timeout from Endpoint through a schema to remove BigNumbers
+
 ## 0.0.3
 
 ### Patch Changes
