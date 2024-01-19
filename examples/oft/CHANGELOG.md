@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.0.3
+
+### Patch Changes
+
+- 73b37d0: Include solidity-bytes-utils in toolbox-foundry
+
 ## 0.0.2
 
 ### Patch Changes
