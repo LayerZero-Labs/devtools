@@ -758,9 +758,6 @@ importers:
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
-      esbuild-plugin-copy:
-        specifier: ^2.1.1
-        version: 2.1.1(esbuild@0.19.11)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
@@ -6073,18 +6070,6 @@ packages:
     dependencies:
       d: 1.0.1
       ext: 1.7.0
-    dev: true
-
-  /esbuild-plugin-copy@2.1.1(esbuild@0.19.11):
-    resolution: {integrity: sha512-Bk66jpevTcV8KMFzZI1P7MZKZ+uDcrZm2G2egZ2jNIvVnivDpodZI+/KnpL3Jnap0PBdIHU7HwFGB8r+vV5CVw==}
-    peerDependencies:
-      esbuild: '>= 0.14.0'
-    dependencies:
-      chalk: 4.1.2
-      chokidar: 3.5.3
-      esbuild: 0.19.11
-      fs-extra: 10.1.0
-      globby: 11.1.0
     dev: true
 
   /esbuild@0.19.11:
