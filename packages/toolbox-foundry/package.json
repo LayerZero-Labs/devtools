@@ -17,7 +17,10 @@
     "!lib/forge-std/.gitignore",
     "!lib/forge-std/.gitmodules"
   ],
-  "scripts": {},
+  "scripts": {
+    "build": "make lib",
+    "clean": "rm -rf lib"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^29.5.11",
