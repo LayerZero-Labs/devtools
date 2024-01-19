@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "make lib",
-    "clean": "rm -rf lib"
+    "clean": "make clean"
   },
   "dependencies": {},
   "devDependencies": {
