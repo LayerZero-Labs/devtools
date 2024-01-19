@@ -4,12 +4,16 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "compile": "$npm_execpath hardhat compile",
+    "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat",
+    "compile:forge": "forge build",
+    "compile:hardhat": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath lint:js && $npm_execpath lint:sol",
     "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "$npm_execpath hardhat test --parallel"
+    "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
+    "test:forge": "forge test",
+    "test:hardhat": "$npm_execpath hardhat test"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
