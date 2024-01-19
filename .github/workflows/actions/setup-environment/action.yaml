@@ -14,3 +14,6 @@ runs:
       with:
         node-version-file: ".nvmrc"
         cache: "pnpm"
+
+    - name: Setup Foundry
+      uses: foundry-rs/foundry-toolchain@v1

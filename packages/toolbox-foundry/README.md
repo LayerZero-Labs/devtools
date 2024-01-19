@@ -26,7 +26,7 @@ To use `@layerzerolabs/toolbox-foundry` you will need to point to it in your `fo
 
 ```toml
 libs = [
-  'node_modules/@layerzerolabs/toolbox-foundry/lib'
+  'node_modules/@layerzerolabs/toolbox-foundry/lib',
   # Any other library folders you need, e.g.
   'node_modules'
 ]
@@ -44,3 +44,5 @@ This package comes with support for `forge-std` out of the box so you can start 
 import "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
 ```
+
+The supporting packages for `@layerzerolabs/` dependencies are also included - namely `solidity-bytes-utils`.
