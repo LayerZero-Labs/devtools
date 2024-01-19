@@ -45,7 +45,7 @@
     "@types/ink-gradient": "^2.0.4",
     "@types/jest": "^29.5.11",
     "@types/prompts": "^2.4.9",
-    "@types/react": "^17.0.74",
+    "@types/react": "^17.0.75",
     "fast-check": "^3.15.0",
     "ink": "^3.2.0",
     "ink-gradient": "^2.0.0",

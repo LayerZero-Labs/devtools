@@ -29,11 +29,11 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.0.2",
-    "@layerzerolabs/io-devtools": "~0.0.2",
-    "@layerzerolabs/lz-definitions": "~2.0.11",
+    "@layerzerolabs/devtools": "~0.0.3",
+    "@layerzerolabs/io-devtools": "~0.0.3",
+    "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/lz-v2-utilities": "~2.0.11",
-    "@layerzerolabs/protocol-devtools": "~0.0.2",
+    "@layerzerolabs/protocol-devtools": "~0.0.3",
     "@layerzerolabs/test-devtools": "~0.0.2",
     "@types/jest": "^29.5.11",
     "fast-check": "^3.15.0",
