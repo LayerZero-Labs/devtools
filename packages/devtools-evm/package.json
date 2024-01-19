@@ -46,7 +46,7 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.0.2",
+    "@layerzerolabs/devtools": "~0.0.3",
     "@layerzerolabs/io-devtools": "~0.0.3",
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/test-devtools": "~0.0.2",
