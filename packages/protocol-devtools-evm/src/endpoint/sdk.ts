@@ -86,10 +86,6 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
-        return TimeoutSchema.parse(await this.contract.contract.defaultReceiveLibraryTimeout(eid))
-    }
-
     async setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setSendLibrary', [oapp, eid, newLib])
 
@@ -118,6 +114,18 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
+    async getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout> {
+        const timeout = await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
+
+        return TimeoutSchema.parse({ ...timeout })
+    }
+
+    async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
+        const timeout = await this.contract.contract.defaultReceiveLibraryTimeout(eid)
+
+        return TimeoutSchema.parse({ ...timeout })
+    }
+
     async setReceiveLibraryTimeout(
         oapp: Address,
         eid: EndpointId,
@@ -137,10 +145,6 @@ export class Endpoint extends OmniSDK implements IEndpoint {
                 eid
             )} to ${lib} with expiration period ${expiry}`,
         }
-    }
-
-    async getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout> {
-        return TimeoutSchema.parse(await this.contract.contract.receiveLibraryTimeout(receiver, srcEid))
     }
 
     async setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
