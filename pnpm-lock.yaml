@@ -148,7 +148,7 @@ importers:
         version: 0.8.1(@babel/core@7.23.7)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -223,7 +223,7 @@ importers:
         version: 0.8.1(@babel/core@7.23.7)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -237,6 +237,12 @@ importers:
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.2
         version: link:../io-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -285,15 +291,12 @@ importers:
       tiged:
         specifier: ^2.12.5
         version: 2.12.5
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -312,6 +315,12 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.2
         version: link:../../tests/test-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -324,18 +333,15 @@ importers:
       jest-extended:
         specifier: ^4.0.2
         version: 4.0.2(jest@29.7.0)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -385,6 +391,12 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.2
         version: link:../../tests/test-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -394,18 +406,15 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -461,6 +470,12 @@ importers:
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
         version: 2.2.3(ethers@5.7.2)(hardhat@2.19.4)
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -479,18 +494,15 @@ importers:
       sinon:
         specifier: ^17.0.1
         version: 17.0.1
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -513,6 +525,12 @@ importers:
         specifier: ^1.9.6
         version: 1.10.0
     devDependencies:
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/ink-gradient':
         specifier: ^2.0.4
         version: 2.0.4
@@ -543,18 +561,15 @@ importers:
       react:
         specifier: ^17.0.2
         version: 17.0.2
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -573,24 +588,27 @@ importers:
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.2
         version: link:../protocol-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -628,24 +646,27 @@ importers:
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.0.2
         version: link:../ua-devtools-evm
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -664,6 +685,12 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.2
         version: link:../../tests/test-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -673,18 +700,15 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -737,6 +761,12 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.2
         version: link:../../tests/test-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -746,18 +776,15 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -767,6 +794,12 @@ importers:
 
   packages/toolbox-foundry:
     devDependencies:
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -776,15 +809,12 @@ importers:
       solidity-bytes-utils:
         specifier: ^0.8.1
         version: 0.8.1(@babel/core@7.23.7)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -852,6 +882,12 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -867,15 +903,12 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -900,6 +933,12 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.2
         version: link:../../tests/test-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -909,18 +948,15 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -964,6 +1000,12 @@ importers:
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.2
         version: link:../ua-devtools
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -973,18 +1015,15 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1034,6 +1073,12 @@ importers:
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.0.2
         version: link:../ua-devtools-evm
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -1055,15 +1100,12 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ^8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1154,6 +1196,12 @@ importers:
       '@openzeppelin/contracts-upgradeable':
         specifier: ^4.9.5
         version: 4.9.5
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -1175,12 +1223,9 @@ importers:
       solidity-bytes-utils:
         specifier: ^0.8.1
         version: 0.8.1(@babel/core@7.23.7)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1220,6 +1265,12 @@ importers:
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
         version: 2.2.3(ethers@5.7.2)(hardhat@2.19.4)
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -1235,12 +1286,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1255,13 +1303,13 @@ importers:
         version: 3.15.0
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1273,13 +1321,13 @@ importers:
         version: 2.19.4(ts-node@10.9.2)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1291,7 +1339,7 @@ importers:
         version: 2.19.4(ts-node@10.9.2)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -1382,6 +1430,12 @@ importers:
       '@openzeppelin/contracts':
         specifier: ^4.9.5
         version: 4.9.5
+      '@swc/core':
+        specifier: ^1.3.104
+        version: 1.3.104
+      '@swc/jest':
+        specifier: ^0.2.30
+        version: 0.2.30(@swc/core@1.3.104)
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.11
@@ -1403,12 +1457,9 @@ importers:
       solidity-bytes-utils:
         specifier: ^0.8.1
         version: 0.8.1(@babel/core@7.23.7)
-      ts-jest:
-        specifier: ^29.1.1
-        version: 29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -2753,6 +2804,13 @@ packages:
       - ts-node
     dev: true
 
+  /@jest/create-cache-key-function@29.7.0:
+    resolution: {integrity: sha512-4QqS3LY5PBmTRHj9sAg1HLoPzqAI0uOX6wI/TRqHIcOxlFidy6YEmCQJk6FSZjNLGCeubDMfmkWL+qaLKhSGQA==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    dependencies:
+      '@jest/types': 29.6.3
+    dev: true
+
   /@jest/environment@29.7.0:
     resolution: {integrity: sha512-aQIfHDq33ExsN4jP1NWGXhxgQ/wixs60gDiKO+XVMd8Mn0NWPWgc34ZQDTb2jKaUWQ7MuwoitXAsN2XVXNMpAw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3775,6 +3833,127 @@ packages:
   /@solidity-parser/parser@0.17.0:
     resolution: {integrity: sha512-Nko8R0/kUo391jsEHHxrGM07QFdnPGvlmox4rmH0kNiNAashItAilhy4Mv4pK5gQmW5f4sXAF58fwJbmlkGcVw==}
     dev: true
+
+  /@swc/core-darwin-arm64@1.3.104:
+    resolution: {integrity: sha512-rCnVj8x3kn6s914Adddu+zROHUn6mUEMkNKUckofs3W9OthNlZXJA3C5bS2MMTRFXCWamJ0Zmh6INFpz+f4Tfg==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-darwin-x64@1.3.104:
+    resolution: {integrity: sha512-LBCWGTYkn1UjyxrmcLS3vZgtCDVhwxsQMV7jz5duc7Gas8SRWh6ZYqvUkjlXMDX1yx0uvzHrkaRw445+zDRj7Q==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-linux-arm-gnueabihf@1.3.104:
+    resolution: {integrity: sha512-iFbsWcx0TKHWnFBNCuUstYqRtfkyBx7FKv5To1Hx14EMuvvoCD/qUoJEiNfDQN5n/xU9g5xq4RdbjEWCFLhAbA==}
+    engines: {node: '>=10'}
+    cpu: [arm]
+    os: [linux]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-linux-arm64-gnu@1.3.104:
+    resolution: {integrity: sha512-1BIIp+nUPrRHHaJ35YJqrwXPwYSITp5robqqjyTwoKGw2kq0x+A964kpWul6v0d7A9Ial8fyH4m13eSWBodD2A==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-linux-arm64-musl@1.3.104:
+    resolution: {integrity: sha512-IyDNkzpKwvLqmRwTW+s8f8OsOSSj1N6juZKbvNHpZRfWZkz3T70q3vJlDBWQwy8z8cm7ckd7YUT3eKcSBPPowg==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-linux-x64-gnu@1.3.104:
+    resolution: {integrity: sha512-MfX/wiRdTjE5uXHTDnaX69xI4UBfxIhcxbVlMj//N+7AX/G2pl2UFityfVMU2HpM12BRckrCxVI8F/Zy3DZkYQ==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-linux-x64-musl@1.3.104:
+    resolution: {integrity: sha512-5yeILaxA31gGEmquErO8yxlq1xu0XVt+fz5mbbKXKZMRRILxYxNzAGb5mzV41r0oHz6Vhv4AXX/WMCmeWl+HkQ==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-win32-arm64-msvc@1.3.104:
+    resolution: {integrity: sha512-rwcImsYnWDWGmeESG0XdGGOql5s3cG5wA8C4hHHKdH76zamPfDKKQFBsjmoNi0f1IsxaI9AJPeOmD4bAhT1ZoQ==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [win32]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-win32-ia32-msvc@1.3.104:
+    resolution: {integrity: sha512-ICDA+CJLYC7NkePnrbh/MvXwDQfy3rZSFgrVdrqRosv9DKHdFjYDnA9++7ozjrIdFdBrFW2NR7pyUcidlwhNzA==}
+    engines: {node: '>=10'}
+    cpu: [ia32]
+    os: [win32]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core-win32-x64-msvc@1.3.104:
+    resolution: {integrity: sha512-fZJ1Ju62U4lMZVU+nHxLkFNcu0hG5Y0Yj/5zjrlbuX5N8J5eDndWAFsVnQhxRTZqKhZB53pvWRQs5FItSDqgXg==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [win32]
+    requiresBuild: true
+    optional: true
+
+  /@swc/core@1.3.104:
+    resolution: {integrity: sha512-9LWH/qzR/Pmyco+XwPiPfz59T1sryI7o5dmqb593MfCkaX5Fzl9KhwQTI47i21/bXYuCdfa9ySZuVkzXMirYxA==}
+    engines: {node: '>=10'}
+    requiresBuild: true
+    peerDependencies:
+      '@swc/helpers': ^0.5.0
+    peerDependenciesMeta:
+      '@swc/helpers':
+        optional: true
+    dependencies:
+      '@swc/counter': 0.1.2
+      '@swc/types': 0.1.5
+    optionalDependencies:
+      '@swc/core-darwin-arm64': 1.3.104
+      '@swc/core-darwin-x64': 1.3.104
+      '@swc/core-linux-arm-gnueabihf': 1.3.104
+      '@swc/core-linux-arm64-gnu': 1.3.104
+      '@swc/core-linux-arm64-musl': 1.3.104
+      '@swc/core-linux-x64-gnu': 1.3.104
+      '@swc/core-linux-x64-musl': 1.3.104
+      '@swc/core-win32-arm64-msvc': 1.3.104
+      '@swc/core-win32-ia32-msvc': 1.3.104
+      '@swc/core-win32-x64-msvc': 1.3.104
+
+  /@swc/counter@0.1.2:
+    resolution: {integrity: sha512-9F4ys4C74eSTEUNndnER3VJ15oru2NumfQxS8geE+f3eB5xvfxpWyqE5XlVnxb/R14uoXi6SLbBwwiDSkv+XEw==}
+
+  /@swc/jest@0.2.30(@swc/core@1.3.104):
+    resolution: {integrity: sha512-80KKC6GYvgrpX1/7yKsRbu88V6OAJIcMGzOLCt0pPSg1nEwJg/lLAodVy2hCD8OcYApmY5gSwD4SnwgA5Y7Q7A==}
+    engines: {npm: '>= 7.0.0'}
+    peerDependencies:
+      '@swc/core': '*'
+    dependencies:
+      '@jest/create-cache-key-function': 29.7.0
+      '@swc/core': 1.3.104
+      jsonc-parser: 3.2.0
+    dev: true
+
+  /@swc/types@0.1.5:
+    resolution: {integrity: sha512-myfUej5naTBWnqOCc/MdVOLVjXUXtIA+NpDrDBKJtLLg2shUjBu3cZmB/85RyitKc55+lUUyl7oRfLOvkr2hsw==}
 
   /@szmarczak/http-timer@4.0.6:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
@@ -4935,13 +5114,6 @@ packages:
       electron-to-chromium: 1.4.620
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
-    dev: true
-
-  /bs-logger@0.2.6:
-    resolution: {integrity: sha512-pd8DCoxmbgc7hyPKOvxtqNcjYoOsABPQdcCUjGp3d42VR2CX1ORhk2A87oqqu5R1kk+76nsxZupkmyd+MVtCog==}
-    engines: {node: '>= 6'}
-    dependencies:
-      fast-json-stable-stringify: 2.1.0
     dev: true
 
   /bs58@4.0.1:
@@ -7750,7 +7922,7 @@ packages:
       solc: 0.7.3(debug@4.3.4)
       source-map-support: 0.5.21
       stacktrace-parser: 0.1.10
-      ts-node: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       tsort: 0.0.1
       typescript: 5.3.3
       undici: 5.28.2
@@ -8617,7 +8789,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -9053,6 +9225,10 @@ packages:
     hasBin: true
     dev: true
 
+  /jsonc-parser@3.2.0:
+    resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
+    dev: true
+
   /jsonfile@2.4.0:
     resolution: {integrity: sha512-PKllAqbgLgxHaj8TElYymKCAgrASebJrWpTnEkOaTowt23VKXXN0sUeriJ+eh7y6ufb/CC5ap11pz71/cM0hUw==}
     optionalDependencies:
@@ -9313,10 +9489,6 @@ packages:
 
   /lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
-
-  /lodash.memoize@4.1.2:
-    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
-    dev: true
 
   /lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -10348,7 +10520,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.0.0
-      ts-node: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3)
       yaml: 2.3.4
     dev: true
 
@@ -11843,42 +12015,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-jest@29.1.1(@babel/core@7.23.7)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    hasBin: true
-    peerDependencies:
-      '@babel/core': '>=7.0.0-beta.0 <8'
-      '@jest/types': ^29.0.0
-      babel-jest: ^29.0.0
-      esbuild: '*'
-      jest: ^29.0.0
-      typescript: '>=4.3 <6'
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-      '@jest/types':
-        optional: true
-      babel-jest:
-        optional: true
-      esbuild:
-        optional: true
-    dependencies:
-      '@babel/core': 7.23.7
-      bs-logger: 0.2.6
-      esbuild: 0.19.11
-      fast-json-stable-stringify: 2.1.0
-      jest: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      jest-util: 29.7.0
-      json5: 2.2.3
-      lodash.memoize: 4.1.2
-      make-error: 1.3.6
-      semver: 7.5.4
-      typescript: 5.3.3
-      yargs-parser: 21.1.1
-    dev: true
-
-  /ts-node@10.9.2(@types/node@18.18.14)(typescript@5.3.3):
+  /ts-node@10.9.2(@swc/core@1.3.104)(@types/node@18.18.14)(typescript@5.3.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -11893,6 +12030,7 @@ packages:
         optional: true
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
+      '@swc/core': 1.3.104
       '@tsconfig/node10': 1.0.9
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
@@ -11927,7 +12065,7 @@ packages:
   /tsort@0.0.1:
     resolution: {integrity: sha512-Tyrf5mxF8Ofs1tNoxA13lFeZ2Zrbd6cKbuH3V+MQ5sb6DtBj5FjrXVsRWT8YvNAQTqNoz66dz1WsbigI22aEnw==}
 
-  /tsup@8.0.1(ts-node@10.9.2)(typescript@5.3.3):
+  /tsup@8.0.1(@swc/core@1.3.104)(ts-node@10.9.2)(typescript@5.3.3):
     resolution: {integrity: sha512-hvW7gUSG96j53ZTSlT4j/KL0q1Q2l6TqGBFc6/mu/L46IoNWqLLUzLRLP1R8Q7xrJTmkDxxDoojV5uCVs1sVOg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -11946,6 +12084,7 @@ packages:
       typescript:
         optional: true
     dependencies:
+      '@swc/core': 1.3.104
       bundle-require: 4.0.2(esbuild@0.19.11)
       cac: 6.7.14
       chokidar: 3.5.3

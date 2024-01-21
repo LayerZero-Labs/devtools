@@ -2,11 +2,15 @@
 
 exports[`filesystem/filesystem importDefault should not work with a non-JS compatible file 1`] = `[SyntaxError: Invalid or unexpected token]`;
 
-exports[`filesystem/filesystem importDefault should not work with an JS/ESM file 1`] = `[SyntaxError: Unexpected token 'export']`;
-
 exports[`filesystem/filesystem importDefault should not work with an empty JSON file 1`] = `[SyntaxError: Unexpected end of JSON input]`;
 
 exports[`filesystem/filesystem importDefault should work with a JS/CJS file 1`] = `
+{
+  "i am": "an object",
+}
+`;
+
+exports[`filesystem/filesystem importDefault should work with a JS/ESM file 1`] = `
 {
   "i am": "an object",
 }
