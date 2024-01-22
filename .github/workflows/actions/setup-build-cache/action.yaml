@@ -27,3 +27,15 @@ runs:
         restore-keys: |
           ${{ runner.os }}-hardhat-${{ github.ref_name }}-
           ${{ runner.os }}-hardhat-
+
+    # Cache foundry compilers
+    #
+    # This step will speed up workflow runs that use hardhat compilation
+    - name: Cache foundry compilers
+      uses: actions/cache@v3
+      with:
+        path: ~/.svm
+        key: ${{ runner.os }}-foundry-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-foundry-${{ github.ref_name }}-
+          ${{ runner.os }}-foundry-

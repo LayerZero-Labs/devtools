@@ -23,9 +23,12 @@ ARG NODE_VERSION=20.10.0
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM node:$NODE_VERSION as base
 
+# We'll preinstall some solc versions
+ARG SOLC_VERSION=0.8.22
+
 # We'll need a mock NPM_TOKEN to execute any pnpm commands
 ENV NPM_TOKEN=
-ENV PATH "/root/.foundry/bin:$PATH"
+ENV PATH "/root/.foundry/bin:/root/.cargo/bin:$PATH"
 
 # Update the system packages
 RUN apt-get update
@@ -35,9 +38,21 @@ RUN apt-get install -y \
     # Get the json utilities
     jq
 
+# Install rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
+
+# Install SVM, solidity version manager
+RUN cargo install svm-rs
+
+# Preinstall solc version
+# 
+# We do this to avoid a parallel installation problem when running in github action
+# See https://github.com/foundry-rs/foundry/issues/4736 for more information
+RUN svm install $SOLC_VERSION
 
 # Enable corepack, new node package manager manager
 # 
@@ -47,6 +62,8 @@ RUN corepack enable
 # Output versions
 RUN node -v
 RUN pnpm -v
+RUN cargo --version
+RUN rustc --version
 RUN git --version
 RUN forge --version
 RUN anvil --version
