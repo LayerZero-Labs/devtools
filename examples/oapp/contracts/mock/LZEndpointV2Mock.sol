@@ -28,11 +28,7 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
     using SafeCast for uint256;
     using CalldataBytesLib for bytes;
 
-    uint8 internal constant _NOT_ENTERED = 1;
-    uint8 internal constant _ENTERED = 2;
-
     uint32 public immutable eid;
-
     mapping(address => address) public lzEndpointLookup;
 
     mapping(address receiver => mapping(uint32 srcEid => mapping(bytes32 sender => uint64 nonce)))
@@ -41,13 +37,10 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         public inboundPayloadHash;
     mapping(address sender => mapping(uint32 dstEid => mapping(bytes32 receiver => uint64 nonce))) public outboundNonce;
 
-    // msgToDeliver = [srcChainId][path]
-    mapping(uint32 => mapping(address => QueuedPayload[])) public msgsToDeliver;
-
     RelayerFeeConfig public relayerFeeConfig;
     ProtocolFeeConfig protocolFeeConfig;
-
     uint256 public verifierFee;
+
     struct ProtocolFeeConfig {
         uint256 zroFee;
         uint256 nativeBP;
@@ -61,17 +54,8 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         uint64 gasPerByte;
     }
 
-    struct QueuedPayload {
-        address dstAddress;
-        uint64 nonce;
-        bytes payload;
-    }
-
-    struct NativeDrop {
-        uint128 amount;
-        bytes32 receiver;
-    }
-
+    uint8 internal constant _NOT_ENTERED = 1;
+    uint8 internal constant _ENTERED = 2;
     uint8 internal _receive_entered_state = 1;
     modifier receiveNonReentrant() {
         require(_receive_entered_state == _NOT_ENTERED, "LayerZeroMock: no receive reentrancy");
@@ -84,7 +68,6 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
 
     constructor(uint32 _eid) {
         eid = _eid;
-
         // init config
         relayerFeeConfig = RelayerFeeConfig({
             dstPriceRatio: 1e10, // 1:1, same chain, same native coin
@@ -130,10 +113,12 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
             require(success, "LayerZeroMock: failed to refund");
         }
 
+        uint256 totalGas;
+        uint256 dstAmount;
+        (totalGas, dstAmount) = executeNativeAirDropAndReturnLzGas(_params.options);
+
         // TODO fix
-        // 1) extract dstGas from options and pass into receivePayload (currently still hardcoded)
-        // 2) pay all Native drops (currently not doing)
-        // 3) call composed calls with correct gas
+        // composed calls with correct gas
 
         Origin memory origin = Origin({
             srcEid: packet.srcEid,
@@ -144,12 +129,13 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         bytes memory payload = PacketV1Codec.encodePayload(packet);
         bytes32 payloadHash = keccak256(payload);
 
-        LZEndpointV2Mock(lzEndpoint).receivePayload(
+        LZEndpointV2Mock(lzEndpoint).receivePayload{ value: dstAmount }(
             origin,
             packet.receiver.bytes32ToAddress(),
             payloadHash,
             packet.message,
-            200000,
+            totalGas,
+            dstAmount,
             packet.guid
         );
     }
@@ -159,13 +145,26 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         address _receiver,
         bytes32 _payloadHash,
         bytes calldata _message,
-        uint128 _gas,
+        uint256 _gas,
+        uint256 _msgValue,
         bytes32 _guid
-    ) external receiveNonReentrant {
+    ) external payable receiveNonReentrant {
         inboundPayloadHash[_receiver][_origin.srcEid][_origin.sender][_origin.nonce] = _payloadHash;
-        try ILayerZeroReceiver(_receiver).lzReceive{ gas: _gas }(_origin, _guid, _message, address(0), "") {} catch (
-            bytes memory /*reason*/
-        ) {}
+        if (_msgValue > 0) {
+            try
+                ILayerZeroReceiver(_receiver).lzReceive{ value: _msgValue, gas: _gas }(
+                    _origin,
+                    _guid,
+                    _message,
+                    address(0),
+                    ""
+                )
+            {} catch (bytes memory /*reason*/) {}
+        } else {
+            try
+                ILayerZeroReceiver(_receiver).lzReceive{ gas: _gas }(_origin, _guid, _message, address(0), "")
+            {} catch (bytes memory /*reason*/) {}
+        }
     }
 
     function getExecutorFee(uint256 _payloadSize, bytes calldata _options) public view returns (uint256) {
@@ -566,4 +565,42 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
     }
 
     function verify(Origin calldata /*origin*/, address /*_receiver*/, bytes32 /*_payloadHash*/) external {}
+
+    // Helper Functions
+    function executeNativeAirDropAndReturnLzGas(
+        bytes calldata _options
+    ) public returns (uint256 totalGas, uint256 dstAmount) {
+        (bytes memory executorOpts, ) = decode(_options);
+        return this._executeNativeAirDropAndReturnLzGas(executorOpts);
+    }
+
+    function _executeNativeAirDropAndReturnLzGas(
+        bytes calldata _options
+    ) public returns (uint256 totalGas, uint256 dstAmount) {
+        if (_options.length == 0) {
+            revert IExecutorFeeLib.NoOptions();
+        }
+
+        uint256 cursor = 0;
+        while (cursor < _options.length) {
+            (uint8 optionType, bytes calldata option, uint256 newCursor) = _options.nextExecutorOption(cursor);
+            cursor = newCursor;
+
+            if (optionType == ExecutorOptions.OPTION_TYPE_LZRECEIVE) {
+                (uint128 gas, uint128 value) = ExecutorOptions.decodeLzReceiveOption(option);
+                totalGas += gas;
+                dstAmount += value;
+            } else if (optionType == ExecutorOptions.OPTION_TYPE_NATIVE_DROP) {
+                (uint128 nativeDropAmount, bytes32 receiver) = ExecutorOptions.decodeNativeDropOption(option);
+                (bool success, ) = receiver.bytes32ToAddress().call{ value: nativeDropAmount }("");
+                if (!success) {
+                    emit ValueTransferFailed(receiver.bytes32ToAddress(), nativeDropAmount);
+                }
+            } else {
+                revert IExecutorFeeLib.UnsupportedOptionType(optionType);
+            }
+        }
+
+        if (cursor != _options.length) revert IExecutorFeeLib.InvalidExecutorOptions(cursor);
+    }
 }
