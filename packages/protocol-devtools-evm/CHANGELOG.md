@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- af8cc25: Update dependencies
+- Updated dependencies [af8cc25]
+  - @layerzerolabs/protocol-devtools@0.0.4
+  - @layerzerolabs/devtools-evm@0.0.4
+  - @layerzerolabs/io-devtools@0.0.4
+  - @layerzerolabs/devtools@0.0.4
+
 ## 0.0.4
 
 ### Patch Changes

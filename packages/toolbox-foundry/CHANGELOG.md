@@ -1,5 +1,12 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.0.3
+
+### Patch Changes
+
+- f855e5d: Fix build
+- af8cc25: Update dependencies
+
 ## 0.0.2
 
 ### Patch Changes

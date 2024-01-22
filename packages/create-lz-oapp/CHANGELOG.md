@@ -1,5 +1,12 @@
 # create-lz-oapp
 
+## 0.1.5
+
+### Patch Changes
+
+- af8cc25: Update dependencies
+- 8597ba3: Remove unwanted files from cloned examples
+
 ## 0.1.4
 
 ### Patch Changes
