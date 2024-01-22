@@ -10,22 +10,42 @@ lib: clean node_modules git_submodules
 # This target will get all the libraries from node_modules
 # and copy them to the lib/ directory
 node_modules:
-	# First we create the parent directory
-	mkdir -p lib/solidity-bytes-utils/src
+	# First we make sure the target directory exists
+	mkdir -p lib/solidity-bytes-utils
 
-	# We copy the contracts from solidity-bytes-utils
-	# 
-	# FIXME Due to a weird discrepancy between foundry compilation step
-	# and forge test, we need to provide the contracts in both src and contracts directories
-	cp -R node_modules/solidity-bytes-utils/contracts lib/solidity-bytes-utils/src
-	cp -R node_modules/solidity-bytes-utils/contracts lib/solidity-bytes-utils
-	
-	# We also want to make sure to include the license & package.json
-	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE lib/solidity-bytes-utils
+	# We copy the contracts
+	cp -R node_modules/solidity-bytes-utils/contracts/ lib/solidity-bytes-utils/
+
+	# And we include the licenses & package.json
+	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE* lib/solidity-bytes-utils
 
 # This target will get all the git submodules installed in src/ directory
 # and copy them to lib/ directory
 # 
 # At this point we only have submodules in src/ so we can just copy everything
 git_submodules:
-	cp -R src/* lib
+	# 
+	# ds-test
+	# 
+
+	# First we make sure the target directory exists
+	mkdir -p lib/ds-test
+
+	# We copy the contracts
+	cp -R src/ds-test/src/ lib/ds-test/
+
+	# And we include the licenses & package.json
+	cp src/ds-test/package.json src/ds-test/LICENSE lib/ds-test/
+
+	# 
+	# forge-std
+	# 
+	
+	# First we make sure the target directory exists
+	mkdir -p lib/forge-std
+	
+	# We copy the contracts
+	cp -R src/forge-std/src/ lib/forge-std/
+
+	# And we include the licenses & package.json
+	cp src/forge-std/package.json src/forge-std/LICENSE* lib/forge-std/
