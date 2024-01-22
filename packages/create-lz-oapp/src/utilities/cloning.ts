@@ -1,5 +1,6 @@
 import { Config, Example } from '@/types'
 import { rm } from 'fs/promises'
+import { resolve } from 'path'
 import tiged from 'tiged'
 
 /**
@@ -27,7 +28,11 @@ export const cloneExample = async ({ example, destination }: Config) => {
     })
 
     try {
-        return await emitter.clone(destination)
+        // First we clone the whole proejct
+        await emitter.clone(destination)
+
+        // Then we cleanup what we don't want to be included
+        await cleanupExample(destination)
     } catch (error: unknown) {
         try {
             // Let's make sure to clean up after us
@@ -60,6 +65,27 @@ export const cloneExample = async ({ example, destination }: Config) => {
         }
 
         throw new CloningError()
+    }
+}
+
+// List of files to be removed after the cloning is done
+const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json']
+
+/**
+ * Helper utility that removes the files we don't want to include in the final project
+ * after the cloning is done
+ *
+ * @param {string} destination The directory containing the cloned project
+ */
+const cleanupExample = async (destination: string) => {
+    for (const fileName of IGNORED_FILES) {
+        const filePath = resolve(destination, fileName)
+
+        try {
+            await rm(filePath, { force: true })
+        } catch {
+            // If the cleanup fails let's just do nothing for now
+        }
     }
 }
 
