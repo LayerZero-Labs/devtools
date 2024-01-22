@@ -264,8 +264,6 @@ exports[`omnigraph/format formatEid should format 10238 correctly 1`] = `"RC1_TE
 
 exports[`omnigraph/format formatEid should format 10239 correctly 1`] = `"ETHERLINK_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 10240 correctly 1`] = `"KIWI2_TESTNET"`;
-
 exports[`omnigraph/format formatEid should format 10241 correctly 1`] = `"KIWI2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -535,8 +533,6 @@ exports[`omnigraph/format formatEid should format 40237 correctly 1`] = `"XCHAIN
 exports[`omnigraph/format formatEid should format 40238 correctly 1`] = `"RC1_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40239 correctly 1`] = `"ETHERLINK_V2_TESTNET"`;
-
-exports[`omnigraph/format formatEid should format 40240 correctly 1`] = `"KIWI2_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40241 correctly 1`] = `"KIWI2_V2_TESTNET"`;
 
