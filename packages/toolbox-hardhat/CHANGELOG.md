@@ -1,5 +1,21 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.4
+
+### Patch Changes
+
+- af8cc25: Update dependencies
+- Updated dependencies [af8cc25]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.0.4
+  - @layerzerolabs/protocol-devtools-evm@0.0.5
+  - @layerzerolabs/devtools-evm-hardhat@0.0.4
+  - @layerzerolabs/protocol-devtools@0.0.4
+  - @layerzerolabs/ua-devtools-evm@0.0.3
+  - @layerzerolabs/devtools-evm@0.0.4
+  - @layerzerolabs/io-devtools@0.0.4
+  - @layerzerolabs/ua-devtools@0.0.3
+  - @layerzerolabs/devtools@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes

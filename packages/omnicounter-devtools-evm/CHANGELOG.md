@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.0.3
+
+### Patch Changes
+
+- af8cc25: Update dependencies
+- Updated dependencies [af8cc25]
+  - @layerzerolabs/protocol-devtools-evm@0.0.5
+  - @layerzerolabs/omnicounter-devtools@0.0.3
+  - @layerzerolabs/protocol-devtools@0.0.4
+  - @layerzerolabs/ua-devtools-evm@0.0.3
+  - @layerzerolabs/devtools-evm@0.0.4
+  - @layerzerolabs/ua-devtools@0.0.3
+  - @layerzerolabs/devtools@0.0.4
+
 ## 0.0.2
 
 ### Patch Changes

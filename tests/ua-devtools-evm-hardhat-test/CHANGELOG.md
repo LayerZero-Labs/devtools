@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.5
+
+### Patch Changes
+
+- af8cc25: Update dependencies
+
 ## 0.0.4
 
 ### Patch Changes
