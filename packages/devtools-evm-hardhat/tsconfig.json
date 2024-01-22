@@ -6,7 +6,7 @@
     "module": "commonjs",
     "types": ["node", "jest"],
     "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+      "@/*": ["./src/*"],
+    },
+  },
 }
