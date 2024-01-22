@@ -4,7 +4,15 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
+</p>
+
 <h1 align="center">OFT Example</h1>
+
+<p align="center">
+  <a href="https://docs.layerzero.network/contracts/oft" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/contracts/endpoint-addresses" style="color: #a77dff">Endpoint Addresses</a>
+</p>
 
 <p align="center">Template project for getting started with LayerZero's <code>OFT</code> contract development.</p>
 
