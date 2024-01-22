@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "pipeline": {
+    "compile": {
+      "dependsOn": ["@layerzerolabs/oapp-example#compile"],
+      "description": "We include this dependency to make sure that the compilation is executed in series to avoid race conditions with solc compilers in foundry"
+    }
+  }
+}
