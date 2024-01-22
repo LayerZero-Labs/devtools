@@ -18,7 +18,7 @@ import { WorkerOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/Sen
 import { IExecutorFeeLib } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol";
 import { DVNOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol";
 import { UlnOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol";
-import {CalldataBytesLib} from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol";
+import { CalldataBytesLib } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol";
 
 contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
     using ExecutorOptions for bytes;
@@ -47,10 +47,10 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
     RelayerFeeConfig public relayerFeeConfig;
     ProtocolFeeConfig protocolFeeConfig;
 
-    uint public verifierFee;
+    uint256 public verifierFee;
     struct ProtocolFeeConfig {
-        uint zroFee;
-        uint nativeBP;
+        uint256 zroFee;
+        uint256 nativeBP;
     }
 
     struct RelayerFeeConfig {
@@ -80,7 +80,7 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         _receive_entered_state = _NOT_ENTERED;
     }
 
-    event ValueTransferFailed(address indexed to, uint indexed quantity);
+    event ValueTransferFailed(address indexed to, uint256 indexed quantity);
 
     constructor(uint32 _eid) {
         eid = _eid;
@@ -124,7 +124,7 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         require(msg.value >= receipt.fee.nativeFee, "LayerZeroMock: not enough native for fees");
 
         // refund if they send too much
-        uint amount = msg.value - receipt.fee.nativeFee;
+        uint256 amount = msg.value - receipt.fee.nativeFee;
         if (amount > 0) {
             (bool success, ) = _refundAddress.call{ value: amount }("");
             require(success, "LayerZeroMock: failed to refund");
@@ -168,22 +168,22 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         ) {}
     }
 
-    function getExecutorFee(uint _payloadSize, bytes calldata _options) public view returns (uint) {
+    function getExecutorFee(uint256 _payloadSize, bytes calldata _options) public view returns (uint256) {
         uint256 nativeFee;
         // 2) get Executor fee
         //  a) decodeLzReceiveOption
         //  b) decodeNativeDropOption
         //  c) decodeLzComposeOption
         (uint256 totalDstAmount, uint256 totalGas) = _decodeExecutorOptions(_options);
-        uint remoteGasTotal = relayerFeeConfig.dstGasPriceInWei * (relayerFeeConfig.baseGas + totalGas);
+        uint256 remoteGasTotal = relayerFeeConfig.dstGasPriceInWei * (relayerFeeConfig.baseGas + totalGas);
         nativeFee += totalDstAmount + remoteGasTotal;
 
         // tokenConversionRate = dstPrice / localPrice
         // basePrice = totalRemoteToken * tokenConversionRate
-        uint basePrice = (nativeFee * relayerFeeConfig.dstPriceRatio) / 10 ** 10;
+        uint256 basePrice = (nativeFee * relayerFeeConfig.dstPriceRatio) / 10 ** 10;
 
         // pricePerByte = (dstGasPriceInWei * gasPerBytes) * tokenConversionRate
-        uint pricePerByte = ((relayerFeeConfig.dstGasPriceInWei *
+        uint256 pricePerByte = ((relayerFeeConfig.dstGasPriceInWei *
             relayerFeeConfig.gasPerByte *
             relayerFeeConfig.dstPriceRatio) / 10 ** 10) * _payloadSize;
 
@@ -194,20 +194,20 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         MessagingParams calldata _params,
         address /*_sender*/
     ) internal view returns (MessagingFee memory messagingFee) {
-        (bytes memory executorOptions,) = splitOptions(_params.options);
+        (bytes memory executorOptions, ) = splitOptions(_params.options);
 
         // 2) get Executor fee
-        uint executorFee = this.getExecutorFee(_params.message.length, executorOptions);
+        uint256 executorFee = this.getExecutorFee(_params.message.length, executorOptions);
 
         // 1) get Verifier fee
         // 3) get Treasury fee
-        uint treasuryAndVerifierFee = _getTreasuryAndVerifierFees(executorFee, verifierFee);
+        uint256 treasuryAndVerifierFee = _getTreasuryAndVerifierFees(executorFee, verifierFee);
 
         messagingFee.lzTokenFee = 0;
         messagingFee.nativeFee = executorFee + treasuryAndVerifierFee;
     }
 
-    function _getTreasuryAndVerifierFees(uint _executorFee, uint _verifierFee) internal view returns (uint) {
+    function _getTreasuryAndVerifierFees(uint256 _executorFee, uint256 _verifierFee) internal view returns (uint256) {
         return ((_executorFee + _verifierFee) * protocolFeeConfig.nativeBP) / 10000;
     }
 
@@ -285,8 +285,8 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
                 uint256 start = cursor;
                 uint8 lastWorkerId; // worker_id starts from 1, so 0 is an invalid worker_id
 
-            // heuristic: we assume that the options are mostly EXECUTOR options only
-            // checking the workerID can reduce gas usage for most cases
+                // heuristic: we assume that the options are mostly EXECUTOR options only
+                // checking the workerID can reduce gas usage for most cases
                 while (cursor < _options.length) {
                     uint8 workerId = uint8(bytes1(_options[cursor:cursor + 1]));
                     if (workerId == 0) revert UlnOptions.InvalidWorkerId(0);
@@ -317,11 +317,11 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
                     cursor += size + 2;
                 }
 
-            // the options length must be the same as the cursor at the end
+                // the options length must be the same as the cursor at the end
                 if (cursor != _options.length) revert UlnOptions.InvalidWorkerOptions(cursor);
 
-            // if we have reached the end of the options and the options are not empty
-            // we need to process the last worker's options
+                // if we have reached the end of the options and the options are not empty
+                // we need to process the last worker's options
                 if (_options.length > 2) {
                     bytes calldata op = _options[start:cursor];
                     (executorOptions, dvnOptions) = _insertWorkerOptions(executorOptions, dvnOptions, lastWorkerId, op);

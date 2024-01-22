@@ -1,4 +1,4 @@
-import {Options} from "@layerzerolabs/lz-v2-utilities";
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')

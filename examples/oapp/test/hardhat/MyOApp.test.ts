@@ -1,4 +1,4 @@
-import {Options} from "@layerzerolabs/lz-v2-utilities";
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 const { expect } = require('chai')
 const { ethers } = require('hardhat')
@@ -47,20 +47,10 @@ describe('MyOApp Test', function () {
 
         // Define native fee and quote for the message send operation
         let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(
-            eidB,
-            'Nothing received yet.',
-            options,
-            false
-        )
+        ;[nativeFee] = await myOAppA.quote(eidB, 'Nothing received yet.', options, false)
 
         // Execute send operation from myOAppA
-        await myOAppA.send(
-            eidB,
-            'Test message.',
-            options,
-            { value: nativeFee.toString() }
-        )
+        await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
 
         // Assert the resulting state of data in both MyOApp instances
         expect(await myOAppA.data()).to.equal('Nothing received yet.')
