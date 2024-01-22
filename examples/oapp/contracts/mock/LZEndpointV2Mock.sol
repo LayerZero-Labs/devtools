@@ -130,22 +130,10 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
             require(success, "LayerZeroMock: failed to refund");
         }
 
-//        (bytes memory executorOptions,) = splitOptions(_params.options);
-//
-        // TODO fix me
-//         (NativeDrop[] memory nativeDropArray, uint totalNative) = this.getNativeDrop(executorOptions);
-//         if (totalNative > 0) {
-//             uint256 length = nativeDropArray.length;
-//             for (uint256 i = 0; i < length; i++) {
-//                 NativeDrop memory nativeDrop = nativeDropArray[i];
-//                 (bool success, ) = nativeDrop.receiver.bytes32ToAddress().call{ value: nativeDrop.amount }("");
-//                 if (!success) {
-//                     emit ValueTransferFailed(nativeDrop.receiver.bytes32ToAddress(), nativeDrop.amount);
-//                 }
-//             }
-//         }
-        // TODO fix me
-//        (uint128 gas, uint128 value) = this.getLzReceiveGas(executorOptions);
+        // TODO fix
+        // 1) extract dstGas from options and pass into receivePayload (currently still hardcoded)
+        // 2) pay all Native drops (currently not doing)
+        // 3) call composed calls with correct gas
 
         Origin memory origin = Origin({
             srcEid: packet.srcEid,
@@ -218,7 +206,6 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         messagingFee.lzTokenFee = 0;
         messagingFee.nativeFee = executorFee + treasuryAndVerifierFee;
     }
-
 
     function _getTreasuryAndVerifierFees(uint _executorFee, uint _verifierFee) internal view returns (uint) {
         return ((_executorFee + _verifierFee) * protocolFeeConfig.nativeBP) / 10000;
@@ -421,50 +408,6 @@ contract LZEndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
             revert UlnOptions.UnsupportedOptionType(_optionType);
         }
     }
-
-//    uint128 amount;
-//    bytes32 receiver;
-    // TODO fix me
-//    function getNativeDrop(
-//        bytes calldata _options
-//    ) public view returns (NativeDrop[] memory nativeDropArray, uint totalNative) {
-////        NativeDrop[] memory dynamicArray;
-//        uint256 cursor = 0;
-//
-//        while (cursor < _options.length) {
-//            (uint8 optionType, bytes calldata option, uint256 newCursor) = _options.nextExecutorOption(cursor);
-//            cursor = newCursor;
-//
-//            if (optionType == ExecutorOptions.OPTION_TYPE_NATIVE_DROP) {
-//                (uint128 nativeDropAmount, bytes32 receiver) = ExecutorOptions.decodeNativeDropOption(option);
-//                NativeDrop memory nativeDrop = NativeDrop(nativeDropAmount, receiver);
-//                nativeDropArray.push(nativeDrop);
-//                totalNative += nativeDropAmount;
-//            }
-//        }
-//
-//        if (cursor != _options.length) revert IExecutorFeeLib.InvalidExecutorOptions(cursor);
-//        if (totalNative > relayerFeeConfig.dstNativeAmtCap)
-//            revert IExecutorFeeLib.NativeAmountExceedsCap(totalNative, relayerFeeConfig.dstNativeAmtCap);
-//    }
-//
-//    function getLzReceiveGas(
-//        bytes calldata _options
-//    ) public pure returns (uint128 totalGas, uint128 dstAmount) {
-//        uint256 cursor = 0;
-//
-//        while (cursor < _options.length) {
-//            (uint8 optionType, bytes calldata option, uint256 newCursor) = _options.nextExecutorOption(cursor);
-//            cursor = newCursor;
-//
-//            if (optionType == ExecutorOptions.OPTION_TYPE_LZRECEIVE) {
-//                (uint128 gas, uint128 value) = ExecutorOptions.decodeLzReceiveOption(option);
-//
-//                dstAmount += value;
-//                totalGas += gas;
-//            }
-//        }
-//    }
 
     // NOT IMPLEMENTING
     function burn(address _oapp, uint32 _srcEid, bytes32 _sender, uint64 _nonce, bytes32 _payloadHash) external {}
