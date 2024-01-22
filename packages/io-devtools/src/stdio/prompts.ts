@@ -95,11 +95,6 @@ export const promptToSelectMultiple = async <TValue>(
         warn: disabledHint,
         min,
         max,
-        validate: () => {
-            console.log('validating')
-
-            return true
-        },
     })
 
     return value
