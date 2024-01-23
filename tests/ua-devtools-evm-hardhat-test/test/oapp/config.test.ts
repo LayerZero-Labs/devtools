@@ -385,19 +385,6 @@ describe('oapp/config', () => {
                             expiryEthBlock
                         ),
                     ])
-                    //
-                    // const signerFactory = createSignerFactory()
-                    // const ethSigner = await signerFactory(ethContract.eid)
-                    // const ethTransaction =
-                    //     await ethEndpointSdk.setReceiveLibraryTimeout(
-                    //     ethPoint.address,
-                    //     avaxPoint.eid,
-                    //     ethDefaultReceiveLibrary,
-                    //     expiryEthBlock
-                    // )
-                    // const ethResponse = await ethSigner.signAndSend(ethTransaction)
-                    // const ethReceipt = await ethResponse.wait()
-                    // console.log({ ethReceipt })
                 }
 
                 // Now we configure the OApp
@@ -410,8 +397,6 @@ describe('oapp/config', () => {
                         expiryAvaxBlock
                     ),
                 ]
-                // console.log({ transactions: JSON.stringify(transactions) })
-                // console.log({ expectedTransactions: JSON.stringify(expectedTransactions) })
                 expect(transactions).toEqual(expectedTransactions)
             })
         })
@@ -474,12 +459,10 @@ describe('oapp/config', () => {
                                             executor: avaxExecutorAddress,
                                         },
                                         ulnConfig: {
-                                            confirmations: 42,
+                                            confirmations: BigInt(42),
                                             requiredDVNs: ethToAvaxSendUlnDVNs,
                                             optionalDVNs: ethToAvaxSendUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethToAvaxSendUlnDVNs.length,
-                                            optionalDVNCount: ethToAvaxSendUlnDVNs.length,
                                         },
                                     },
                                 },
@@ -493,12 +476,10 @@ describe('oapp/config', () => {
                                             executor: bscExecutorAddress,
                                         },
                                         ulnConfig: {
-                                            confirmations: 42,
+                                            confirmations: BigInt(42),
                                             requiredDVNs: ethToBscSendUlnDVNs,
                                             optionalDVNs: ethToBscSendUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethToBscSendUlnDVNs.length,
-                                            optionalDVNCount: ethToBscSendUlnDVNs.length,
                                         },
                                     },
                                 },
@@ -540,12 +521,10 @@ describe('oapp/config', () => {
                                 {
                                     eid: avaxPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethToAvaxSendUlnDVNs,
                                         optionalDVNs: ethToAvaxSendUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethToAvaxSendUlnDVNs.length,
-                                        optionalDVNCount: ethToAvaxSendUlnDVNs.length,
                                     },
                                 },
                             ])),
@@ -562,12 +541,10 @@ describe('oapp/config', () => {
                                 {
                                     eid: bscPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethToBscSendUlnDVNs,
                                         optionalDVNs: ethToBscSendUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethToBscSendUlnDVNs.length,
-                                        optionalDVNCount: ethToBscSendUlnDVNs.length,
                                     },
                                 },
                             ])),
@@ -593,12 +570,10 @@ describe('oapp/config', () => {
                                     {
                                         eid: bscPoint.eid,
                                         ulnConfig: {
-                                            confirmations: 42,
+                                            confirmations: BigInt(42),
                                             requiredDVNs: ethToBscSendUlnDVNs,
                                             optionalDVNs: ethToBscSendUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethToBscSendUlnDVNs.length,
-                                            optionalDVNCount: ethToBscSendUlnDVNs.length,
                                         },
                                     },
                                 ])),
@@ -623,19 +598,15 @@ describe('oapp/config', () => {
                                 {
                                     eid: avaxPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethToAvaxSendUlnDVNs,
                                         optionalDVNs: ethToAvaxSendUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethToAvaxSendUlnDVNs.length,
-                                        optionalDVNCount: ethToAvaxSendUlnDVNs.length,
                                     },
                                 },
                             ])),
                         ]),
                     ]
-                    // console.log({ transactions: JSON.stringify(transactions) })
-                    // console.log({ expectedTransactions: JSON.stringify(expectedTransactions) })
                     expect(transactions).toEqual(expectedTransactions)
                 })
             })
@@ -664,12 +635,10 @@ describe('oapp/config', () => {
                                 config: {
                                     receiveConfig: {
                                         ulnConfig: {
-                                            confirmations: 42,
+                                            confirmations: BigInt(42),
                                             requiredDVNs: ethReceiveUlnDVNs,
                                             optionalDVNs: ethReceiveUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethReceiveUlnDVNs.length,
-                                            optionalDVNCount: ethReceiveUlnDVNs.length,
                                         },
                                     },
                                 },
@@ -679,12 +648,10 @@ describe('oapp/config', () => {
                                 config: {
                                     receiveConfig: {
                                         ulnConfig: {
-                                            confirmations: 24,
+                                            confirmations: BigInt(24),
                                             requiredDVNs: ethReceiveUlnDVNs,
                                             optionalDVNs: ethReceiveUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethReceiveUlnDVNs.length,
-                                            optionalDVNCount: ethReceiveUlnDVNs.length,
                                         },
                                     },
                                 },
@@ -718,12 +685,10 @@ describe('oapp/config', () => {
                                 {
                                     eid: avaxPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethReceiveUlnDVNs,
                                         optionalDVNs: ethReceiveUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethReceiveUlnDVNs.length,
-                                        optionalDVNCount: ethReceiveUlnDVNs.length,
                                     },
                                 },
                             ])),
@@ -731,12 +696,10 @@ describe('oapp/config', () => {
                                 {
                                     eid: bscPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 24,
+                                        confirmations: BigInt(24),
                                         requiredDVNs: ethReceiveUlnDVNs,
                                         optionalDVNs: ethReceiveUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethReceiveUlnDVNs.length,
-                                        optionalDVNCount: ethReceiveUlnDVNs.length,
                                     },
                                 },
                             ])),
@@ -753,12 +716,10 @@ describe('oapp/config', () => {
                                     {
                                         eid: avaxPoint.eid,
                                         ulnConfig: {
-                                            confirmations: 42,
+                                            confirmations: BigInt(42),
                                             requiredDVNs: ethReceiveUlnDVNs,
                                             optionalDVNs: ethReceiveUlnDVNs,
                                             optionalDVNThreshold: 1,
-                                            requiredDVNCount: ethReceiveUlnDVNs.length,
-                                            optionalDVNCount: ethReceiveUlnDVNs.length,
                                         },
                                     },
                                 ])),
@@ -774,19 +735,15 @@ describe('oapp/config', () => {
                                 {
                                     eid: bscPoint.eid,
                                     ulnConfig: {
-                                        confirmations: 24,
+                                        confirmations: BigInt(24),
                                         requiredDVNs: ethReceiveUlnDVNs,
                                         optionalDVNs: ethReceiveUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethReceiveUlnDVNs.length,
-                                        optionalDVNCount: ethReceiveUlnDVNs.length,
                                     },
                                 },
                             ])),
                         ]),
                     ]
-                    // console.log({ transactions: JSON.stringify(transactions) })
-                    // console.log({ expectedTransactions: JSON.stringify(expectedTransactions) })
                     expect(transactions).toEqual(expectedTransactions)
                 })
             })
@@ -824,22 +781,18 @@ describe('oapp/config', () => {
                                         executor: avaxExecutorAddress,
                                     },
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethSendUlnDVNs,
                                         optionalDVNs: ethSendUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethSendUlnDVNs.length,
-                                        optionalDVNCount: ethSendUlnDVNs.length,
                                     },
                                 },
                                 receiveConfig: {
                                     ulnConfig: {
-                                        confirmations: 42,
+                                        confirmations: BigInt(42),
                                         requiredDVNs: ethReceiveUlnDVNs,
                                         optionalDVNs: ethReceiveUlnDVNs,
                                         optionalDVNThreshold: 1,
-                                        requiredDVNCount: ethReceiveUlnDVNs.length,
-                                        optionalDVNCount: ethReceiveUlnDVNs.length,
                                     },
                                 },
                             },
@@ -868,12 +821,10 @@ describe('oapp/config', () => {
                             {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
-                                    confirmations: 42,
+                                    confirmations: BigInt(42),
                                     requiredDVNs: ethSendUlnDVNs,
                                     optionalDVNs: ethSendUlnDVNs,
                                     optionalDVNThreshold: 1,
-                                    requiredDVNCount: ethSendUlnDVNs.length,
-                                    optionalDVNCount: ethSendUlnDVNs.length,
                                 },
                             },
                         ])),
@@ -883,12 +834,10 @@ describe('oapp/config', () => {
                             {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
-                                    confirmations: 42,
+                                    confirmations: BigInt(42),
                                     requiredDVNs: ethReceiveUlnDVNs,
                                     optionalDVNs: ethReceiveUlnDVNs,
                                     optionalDVNThreshold: 1,
-                                    requiredDVNCount: ethReceiveUlnDVNs.length,
-                                    optionalDVNCount: ethReceiveUlnDVNs.length,
                                 },
                             },
                         ])),
