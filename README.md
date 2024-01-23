@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://layerzero.network">
-    <img alt="LayerZero" style="max-width: 500px" src="https://layerzero.network/static/logo.svg"/>
+    <img alt="LayerZero" style="width: 50%" src="https://layerzero.network/static/logo.svg"/>
   </a>
 </p>
 
