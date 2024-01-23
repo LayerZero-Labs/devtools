@@ -40,12 +40,14 @@
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "hardhat": "^2.19.4",
+    "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "hardhat": "^2.19.4"
+    "hardhat": "^2.19.4",
+    "solidity-bytes-utils": "^0.8.2"
   }
 }
