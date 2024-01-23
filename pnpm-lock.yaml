@@ -875,6 +875,9 @@ importers:
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~0.0.5
         version: link:../protocol-devtools-evm
+      '@layerzerolabs/test-devtools-evm-hardhat':
+        specifier: ~0.0.3
+        version: link:../../tests/test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.3
         version: link:../ua-devtools
@@ -906,9 +909,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.0.3
-        version: link:../../tests/test-devtools-evm-hardhat
       '@swc/core':
         specifier: ^1.3.105
         version: 1.3.105
