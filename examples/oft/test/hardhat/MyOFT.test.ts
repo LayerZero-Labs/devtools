@@ -63,7 +63,7 @@ describe('MyOFT Test', function () {
     })
 
     // A test case to verify token transfer functionality
-    it('sends a token from A address to B address via each OFT', async function () {
+    it('should send a token from A address to B address via each OFT', async function () {
         // Minting an initial amount of tokens to ownerA's address in the myOFTA contract
         const initialAmount = ethers.utils.parseEther('100')
         await myOFTA.mint(ownerA.address, initialAmount)

@@ -63,7 +63,7 @@ describe('MyOApp Test', function () {
     })
 
     // A test case to verify message sending functionality
-    it('send a message to each destination OApp', async function () {
+    it('should send a message to each destination OApp', async function () {
         // Assert initial state of data in both MyOApp instances
         expect(await myOAppA.data()).to.equal('Nothing received yet.')
         expect(await myOAppB.data()).to.equal('Nothing received yet.')
