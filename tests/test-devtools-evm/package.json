@@ -1,0 +1,39 @@
+{
+  "name": "@layerzerolabs/test-devtools-evm",
+  "version": "0.0.1",
+  "description": "Helpers for testing LayerZero EVM contracts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/test-devtools-evm"
+  },
+  "license": "MIT",
+  "files": [
+    "contracts/"
+  ],
+  "scripts": {
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-v1-0.7": "~2.0.14",
+    "@openzeppelin/contracts": "^4.9.5",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5",
+    "@types/node": "~18.18.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.7",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.7",
+    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.7",
+    "@layerzerolabs/lz-evm-v1-0.7": "~2.0.7",
+    "@openzeppelin/contracts": "^4.9.5",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

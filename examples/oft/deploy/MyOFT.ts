@@ -1,7 +1,6 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-// TODO declare your contract name here
-const contractName = 'YourOFT'
+const contractName = 'MyOFT'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre

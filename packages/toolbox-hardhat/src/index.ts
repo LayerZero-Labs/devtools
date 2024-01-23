@@ -14,7 +14,7 @@ import { OmniSDK } from '@layerzerolabs/devtools-evm'
 // that accept hardhat user config and return a hardhat user config with external
 // artifacts and deployments configured
 const withDeployments = withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v2')
-const withArtifacts = withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v2')
+const withArtifacts = withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v2', '@layerzerolabs/test-devtools-evm')
 
 // Register a hardhat-specific error parser factory on the OmniSDK
 OmniSDK.registerErrorParserFactory(createErrorParser)
