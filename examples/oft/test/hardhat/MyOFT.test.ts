@@ -1,30 +1,53 @@
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
+import { expect } from 'chai'
+import { Contract, ContractFactory } from 'ethers'
+import { deployments, ethers } from 'hardhat'
+
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
-const { expect } = require('chai')
-const { ethers } = require('hardhat')
-
-// Describe block defines a test suite for the MyOFT contract
 describe('MyOFT Test', function () {
-    // A constant representing a mock Endpoint ID for testing purposes
+    // Constant representing a mock Endpoint ID for testing purposes
     const eidA = 1
     const eidB = 2
     // Declaration of variables to be used in the test suite
-    let MyOFT, LZEndpointV2Mock, ownerA, ownerB, myOFTA, myOFTB, mockEndpointA, mockEndpointB
+    let MyOFT: ContractFactory
+    let EndpointV2Mock: ContractFactory
+    let ownerA: SignerWithAddress
+    let ownerB: SignerWithAddress
+    let endpointOwner: SignerWithAddress
+    let myOFTA: Contract
+    let myOFTB: Contract
+    let mockEndpointA: Contract
+    let mockEndpointB: Contract
 
     // Before hook for setup that runs once before all tests in the block
     before(async function () {
-        // Contract factories for MyOFT and LZEndpointV2Mock are created
+        // Contract factory for our tested contract
         MyOFT = await ethers.getContractFactory('MyOFT')
-        LZEndpointV2Mock = await ethers.getContractFactory('EndpointV2Mock')
-        // Fetching the first two signers (accounts) from Hardhat's local Ethereum network
-        ;[ownerA, ownerB] = await ethers.getSigners()
+
+        // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
+        const signers = await ethers.getSigners()
+
+        ownerA = signers.at(0)!
+        ownerB = signers.at(1)!
+        endpointOwner = signers.at(2)!
+
+        // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
+        // and its artifacts are connected as external artifacts to this project
+        //
+        // Unfortunately, hardhat itself does not yet provide a way of connecting external artifacts
+        // so we rely on hardhat-deploy to create a ContractFactory for EndpointV2Mock
+        //
+        // See https://github.com/NomicFoundation/hardhat/issues/1040
+        const EndpointV2MockArtifact = await deployments.getArtifact('EndpointV2Mock')
+        EndpointV2Mock = new ContractFactory(EndpointV2MockArtifact.abi, EndpointV2MockArtifact.bytecode, endpointOwner)
     })
 
     // beforeEach hook for setup that runs before each test in the block
     beforeEach(async function () {
         // Deploying a mock LZEndpoint with the given Endpoint ID
-        mockEndpointA = await LZEndpointV2Mock.deploy(eidA)
-        mockEndpointB = await LZEndpointV2Mock.deploy(eidB)
+        mockEndpointA = await EndpointV2Mock.deploy(eidA)
+        mockEndpointB = await EndpointV2Mock.deploy(eidB)
 
         // Deploying two instances of MyOFT contract with different identifiers and linking them to the mock LZEndpoint
         myOFTA = await MyOFT.deploy('aOFT', 'aOFT', mockEndpointA.address, ownerA.address)
@@ -40,7 +63,7 @@ describe('MyOFT Test', function () {
     })
 
     // A test case to verify token transfer functionality
-    it('sends a token from A address to B address via each OFT', async function () {
+    it('should send a token from A address to B address via each OFT', async function () {
         // Minting an initial amount of tokens to ownerA's address in the myOFTA contract
         const initialAmount = ethers.utils.parseEther('100')
         await myOFTA.mint(ownerA.address, initialAmount)
