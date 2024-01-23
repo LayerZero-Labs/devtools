@@ -2,7 +2,7 @@
   "name": "@layerzerolabs/test-devtools-evm-hardhat",
   "version": "0.0.3",
   "private": true,
-  "description": "Utilities for testing LayerZero packages",
+  "description": "Helpers for testing LayerZero EVM contracts using hardhat",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
