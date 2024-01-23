@@ -14,7 +14,7 @@ import {
     avaxExecutor,
     avaxSendUln2_Opt2,
     avaxReceiveUln2_Opt2,
-    ethExecutor, bscDvn,
+    ethExecutor,
 } from './endpoint'
 
 export type OAppTestConfig = {
