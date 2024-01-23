@@ -24,8 +24,13 @@ describe('MyOFT Test', function () {
     before(async function () {
         // Contract factory for our tested contract
         MyOFT = await ethers.getContractFactory('MyOFT')
-        // Fetching the first two signers (accounts) from Hardhat's local Ethereum network
-        ;[ownerA, ownerB, endpointOwner] = await ethers.getSigners()
+
+        // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
+        const signers = await ethers.getSigners()
+
+        ownerA = signers.at(0)!
+        ownerB = signers.at(1)!
+        endpointOwner = signers.at(2)!
 
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
