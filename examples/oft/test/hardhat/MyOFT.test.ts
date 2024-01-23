@@ -15,7 +15,7 @@ describe('MyOFT Test', function () {
     before(async function () {
         // Contract factories for MyOFT and LZEndpointV2Mock are created
         MyOFT = await ethers.getContractFactory('MyOFT')
-        LZEndpointV2Mock = await ethers.getContractFactory('LZEndpointV2Mock')
+        LZEndpointV2Mock = await ethers.getContractFactory('EndpointV2Mock')
         // Fetching the first two signers (accounts) from Hardhat's local Ethereum network
         ;[ownerA, ownerB] = await ethers.getSigners()
     })

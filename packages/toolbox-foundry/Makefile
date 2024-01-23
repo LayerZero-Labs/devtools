@@ -23,19 +23,6 @@ node_modules:
 	# And we include the licenses & package.json
 	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE* lib/solidity-bytes-utils
 
-	#
-	# layerzerolabs/test-devtools-evm
-	#
-
-	# First we make sure the target directory exists
-	mkdir -p lib/lz-std
-
-	# We copy the contracts
-	cp -R node_modules/@layerzerolabs/test-devtools-evm/contracts/ lib/lz-std/
-
-	# And we include the licenses & package.json
-	cp node_modules/@layerzerolabs/test-devtools-evm/package.json node_modules/solidity-bytes-utils/LICENSE* lib/lz-std
-
 # This target will get all the git submodules installed in src/ directory
 # and copy them to lib/ directory
 # 

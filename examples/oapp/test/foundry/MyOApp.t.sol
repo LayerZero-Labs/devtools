@@ -7,7 +7,7 @@ import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/lib
 import { MessagingFee } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol";
 import { MyOApp } from "../../contracts/MyOApp.sol";
-import { TestHelper } from "lz-std/TestHelper.sol";
+import { TestHelper } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelper.sol";
 
 import "forge-std/console.sol";
 

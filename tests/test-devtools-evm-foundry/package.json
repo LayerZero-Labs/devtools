@@ -1,11 +1,11 @@
 {
-  "name": "@layerzerolabs/test-devtools-evm",
+  "name": "@layerzerolabs/test-devtools-evm-foundry",
   "version": "0.0.1",
-  "description": "Helpers for testing LayerZero EVM contracts",
+  "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/test-devtools-evm"
+    "directory": "packages/test-devtools-evm-foundry"
   },
   "license": "MIT",
   "files": [

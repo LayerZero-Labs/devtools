@@ -4,8 +4,8 @@ pragma solidity ^0.8.22;
 import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
 import { MyOFT } from "../../contracts/MyOFT.sol";
 import { SendParam, MessagingFee, MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/OFTCore.sol";
-import { OFTComposerMock } from "lz-std/mocks/OFTComposerMock.sol";
-import { OFTInspectorMock, IOAppMsgInspector } from "lz-std/mocks/OFTInspectorMock.sol";
+import { OFTComposerMock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/OFTComposerMock.sol";
+import { OFTInspectorMock, IOAppMsgInspector } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/OFTInspectorMock.sol";
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
 
 import { OFTMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/libs/OFTMsgCodec.sol";
@@ -14,7 +14,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/
 import { IOFT, SendParam, OFTReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-import { TestHelper } from "lz-std/TestHelper.sol";
+import { TestHelper } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelper.sol";
 
 contract MyOFTTest is TestHelper {
     using OptionsBuilder for bytes;
