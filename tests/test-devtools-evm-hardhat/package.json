@@ -2,7 +2,7 @@
   "name": "@layerzerolabs/test-devtools-evm-hardhat",
   "version": "0.0.3",
   "private": true,
-  "description": "Internal utilities for testing LayerZero packages",
+  "description": "Utilities for testing LayerZero packages",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
@@ -14,7 +14,8 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

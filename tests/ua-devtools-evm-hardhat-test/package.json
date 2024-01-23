@@ -38,6 +38,7 @@
     "@layerzerolabs/omnicounter-devtools-evm": "~0.0.3",
     "@layerzerolabs/protocol-devtools": "~0.0.4",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.5",
+    "@layerzerolabs/test-devtools-evm-hardhat": "~0.0.3",
     "@layerzerolabs/toolbox-hardhat": "~0.0.4",
     "@layerzerolabs/ua-devtools": "~0.0.3",
     "@layerzerolabs/ua-devtools-evm": "~0.0.3",

@@ -40,6 +40,7 @@
     "@layerzerolabs/protocol-devtools": "~0.0.4",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.5",
     "@layerzerolabs/test-devtools": "~0.0.3",
+    "@layerzerolabs/test-devtools-evm-hardhat": "~0.0.3",
     "@layerzerolabs/toolbox-hardhat": "~0.0.4",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
