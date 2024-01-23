@@ -10,6 +10,10 @@ lib: clean node_modules git_submodules
 # This target will get all the libraries from node_modules
 # and copy them to the lib/ directory
 node_modules:
+	#
+	# solidity-bytes-utils
+	#
+
 	# First we make sure the target directory exists
 	mkdir -p lib/solidity-bytes-utils
 
@@ -24,9 +28,9 @@ node_modules:
 # 
 # At this point we only have submodules in src/ so we can just copy everything
 git_submodules:
-	# 
+	#
 	# ds-test
-	# 
+	#
 
 	# First we make sure the target directory exists
 	mkdir -p lib/ds-test

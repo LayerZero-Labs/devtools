@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules"],
-  "include": ["deploy", "tasks", "hardhat.config.ts"],
+  "include": ["deploy", "test", "tasks", "hardhat.config.ts"],
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",

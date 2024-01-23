@@ -2,7 +2,7 @@
   "name": "@layerzerolabs/test-devtools-evm-hardhat",
   "version": "0.0.3",
   "private": true,
-  "description": "Internal utilities for testing LayerZero packages",
+  "description": "Helpers for testing LayerZero EVM contracts using hardhat",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
@@ -14,29 +14,41 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
+    "artifacts/contracts/",
+    "contracts/",
     "dist/index.*"
   ],
   "scripts": {
     "prebuild": "tsc -noEmit",
     "build": "$npm_execpath tsup",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf artifacts cache dist",
+    "compile": "$npx_execpath hardhat compile",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.14",
+    "@layerzerolabs/lz-evm-v1-0.7": "~2.0.14",
+    "@openzeppelin/contracts": "^4.9.5",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "hardhat": "^2.19.4",
+    "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "hardhat": "^2.19.4"
+    "hardhat": "^2.19.4",
+    "solidity-bytes-utils": "^0.8.2"
   }
 }
