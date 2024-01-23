@@ -125,9 +125,15 @@ importers:
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
         version: 1.7.0
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.11
       '@types/mocha':
         specifier: ^10.0.6
         version: 10.0.6
+      chai:
+        specifier: ^4.4.1
+        version: 4.4.1
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -4013,6 +4019,10 @@ packages:
     resolution: {integrity: sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==}
     dependencies:
       '@types/node': 18.18.14
+
+  /@types/chai@4.3.11:
+    resolution: {integrity: sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==}
+    dev: true
 
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
