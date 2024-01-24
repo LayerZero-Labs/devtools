@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools
 
+## 0.0.4
+
+### Patch Changes
+
+- 2e8a49e: Updated OApp config to combine setConfig transactions
+- Updated dependencies [ed450c4]
+  - @layerzerolabs/io-devtools@0.0.5
+
 ## 0.0.3
 
 ### Patch Changes

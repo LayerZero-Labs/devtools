@@ -961,7 +961,7 @@ importers:
         specifier: ~0.0.4
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -1482,7 +1482,7 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -1524,7 +1524,7 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.0.3
+        specifier: ~0.0.4
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.0.3
