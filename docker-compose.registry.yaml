@@ -76,7 +76,7 @@ services:
     # we'll default them to our repository and and empty ref
     environment:
       - LAYERZERO_EXAMPLES_REPOSITORY_URL=git@github.com:${GITHUB_REPOSITORY:-LayerZero-Labs/devtools}
-      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${GITHUB_REF}
+      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${GITHUB_REF_NAME}
     working_dir: /app
     command:
       - /bin/bash
@@ -84,7 +84,7 @@ services:
       - |
         pnpm config set registry http://npm-registry:4873/
 
-        /app/lib/bashunit ./tests-user --verbose
+        /app/lib/bats-core/bin/bats ./tests-user
     volumes:
       - ./ssh/known_hosts:/root/.ssh/known_hosts
       - ./lib:/app/lib

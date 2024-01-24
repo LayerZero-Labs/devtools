@@ -4,3 +4,12 @@
 [submodule "toolbox-foundry/ds-test"]
 	path = packages/toolbox-foundry/src/ds-test
 	url = https://github.com/dapphub/ds-test
+[submodule "bats-core"]
+	path = lib/bats-core
+	url = https://github.com/bats-core/bats-core.git
+[submodule "bats-support"]
+	path = lib/bats-support
+	url = https://github.com/bats-core/bats-support.git
+[submodule "bats-assert"]
+	path = lib/bats-assert
+	url = https://github.com/bats-core/bats-assert.git
