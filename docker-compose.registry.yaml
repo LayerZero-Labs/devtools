@@ -67,13 +67,26 @@ services:
     depends_on:
       publish:
         condition: service_completed_successfully
+    # create-lz-oapp allows us to specify the repository/ref we pull the examples from
+    # 
+    # In order to test the version on this branch in github actions,
+    # we'll set these based on the default variables github gives us
+    # 
+    # If these are not provided, for example if running on a local machine,
+    # we'll default them to our repository and and empty ref
+    environment:
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=git@github.com:${GITHUB_REPOSITORY:-LayerZero-Labs/devtools}
+      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${GITHUB_REF}
+    working_dir: /app
     command:
       - /bin/bash
       - -c
       - |
         pnpm config set registry http://npm-registry:4873/
-        
-        ./tests-user/create-lz-oapp.sh
+
+        /app/lib/bashunit ./tests-user --verbose
     volumes:
-      - ./tests-user:/tests-user
+      - ./ssh/known_hosts:/root/.ssh/known_hosts
+      - ./lib:/app/lib
+      - ./tests-user:/app/tests-user
 
