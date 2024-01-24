@@ -1,0 +1,88 @@
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#       Configuration of a local NPM registry for testing
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+
+storage: /verdaccio/storage/data
+plugins: /verdaccio/plugins
+
+# https://verdaccio.org/docs/webui
+web:
+  title: LayerZero.NPM
+  darkMode: true
+  showThemeSwitch: false
+  favicon: https://layerzero.network/favicon-32x32.png
+  primary_color: "#a77dff"
+
+# https://verdaccio.org/docs/configuration#authentication
+auth:
+  htpasswd:
+    file: /verdaccio/storage/htpasswd
+    algorithm: bcrypt
+    max_users: 1000
+
+# https://verdaccio.org/docs/configuration#uplinks
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+    # We pass the NPM_TOKEN to the upstream repository in case we want to access any private packages
+    # 
+    # TODO As soon as all the packages are public, we can remove this
+    auth:
+      type: bearer
+      token_env: true
+
+# https://verdaccio.org/docs/protect-your-dependencies/
+# https://verdaccio.org/docs/configuration#packages
+packages:
+  # 
+  # We will not proxy the packages from this repo
+  # 
+  # Since we want to proxy some of the NPM packages,
+  # we cannot just use a pattern like "@layerzerolabs/*"
+  # 
+
+  # We will not proxy any *devtools* packages
+  "@layerzerolabs/**devtools**": &local-package-rules
+    access: $all
+
+    # allow all known users to publish/publish packages
+    publish: $authenticated
+    unpublish: $authenticated
+
+  # We will not proxy any toolbox* packages
+  "@layerzerolabs/toolbox-**": *local-package-rules
+
+  # And we will not proxy create-lz-oapp
+  "create-lz-oapp": *local-package-rules
+
+  # The rest of the packages we'll prxy to the public NPM repo
+  "**":
+    access: $all
+
+    # allow all known users to publish/publish packages
+    publish: $authenticated
+    unpublish: $authenticated
+
+    # if package is not available locally, proxy requests to 'npmjs' registry
+    proxy: npmjs
+
+# https://verdaccio.org/docs/configuration#server
+server:
+  keepAliveTimeout: 60
+
+# https://verdaccio.org/docs/configuration#offline-publish
+publish:
+  allow_offline: true
+
+middlewares:
+  audit:
+    enabled: true
+
+# https://verdaccio.org/docs/logger
+log: { type: stdout, format: pretty, level: http }
