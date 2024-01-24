@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.7
+
+### Patch Changes
+
+- 2e8a49e: Updated OApp config to combine setConfig transactions
+
 ## 0.0.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.0.5
+
+### Patch Changes
+
+- ed450c4: Add promptToSelectOne and promptToSelectMultiple utilities
+
 ## 0.0.4
 
 ### Patch Changes
