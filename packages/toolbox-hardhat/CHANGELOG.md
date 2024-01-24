@@ -1,5 +1,14 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.5
+
+### Patch Changes
+
+- 1e375c9: Adding EVM testing abilities for hardhat and foundry
+- Updated dependencies [1e375c9]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.0.4
+  - @layerzerolabs/devtools-evm-hardhat@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes

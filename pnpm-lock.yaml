@@ -102,13 +102,13 @@ importers:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.3.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~0.0.1
+        specifier: ~0.0.2
         version: link:../../tests/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.0.3
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -198,13 +198,13 @@ importers:
         specifier: ^2.0.14
         version: 2.0.14(typescript@5.3.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~0.0.1
+        specifier: ~0.0.2
         version: link:../../tests/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.0.3
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -501,7 +501,7 @@ importers:
         specifier: ~0.0.3
         version: link:../../tests/test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.0.3
+        specifier: ~0.0.4
         version: link:../../tests/test-devtools-evm-hardhat
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
@@ -867,7 +867,7 @@ importers:
         specifier: ~0.0.4
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.4
@@ -891,7 +891,7 @@ importers:
         specifier: ~0.0.5
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.0.3
+        specifier: ~0.0.4
         version: link:../../tests/test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.3
@@ -1188,7 +1188,7 @@ importers:
         specifier: ~0.0.4
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.4
@@ -1230,10 +1230,10 @@ importers:
         specifier: ~0.0.3
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.0.3
+        specifier: ~0.0.4
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1479,7 +1479,7 @@ importers:
         specifier: ~0.0.4
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.4
@@ -1518,10 +1518,10 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.0.3
+        specifier: ~0.0.4
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.3
