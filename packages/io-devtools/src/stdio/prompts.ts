@@ -42,3 +42,60 @@ export const promptToContinue = async (
 
     return value
 }
+
+export interface PromptOption<TValue> {
+    title: string
+    description?: string
+    disabled?: boolean
+    selected?: boolean
+    value?: TValue
+}
+
+interface SelectProps<TValue> {
+    options: PromptOption<TValue>[]
+    /**
+     * A message displayed to the user if they focus on a disabled value
+     */
+    disabledHint?: string
+}
+
+export const promptToSelectOne = async <TValue>(message: string, { options }: SelectProps<TValue>): Promise<TValue> => {
+    const { value } = await prompts({
+        type: 'select',
+        name: 'value',
+        message,
+        choices: options,
+        onState: handlePromptState,
+    })
+
+    return value
+}
+
+interface MultiSelectProps<TValue> extends SelectProps<TValue> {
+    /**
+     * Minimum number of options to select
+     */
+    min?: number
+    /**
+     * Maximum number of options to select
+     */
+    max?: number
+}
+
+export const promptToSelectMultiple = async <TValue>(
+    message: string,
+    { options, disabledHint, min, max }: MultiSelectProps<TValue>
+): Promise<TValue[]> => {
+    const { value } = await prompts({
+        type: 'autocompleteMultiselect',
+        name: 'value',
+        message,
+        choices: options,
+        onState: handlePromptState,
+        warn: disabledHint,
+        min,
+        max,
+    })
+
+    return value
+}
