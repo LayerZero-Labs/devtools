@@ -7,7 +7,7 @@ docker-*.yaml
 .gitignore
 
 # CI/CD files
-.changeset
+.changeset/*.md
 .github
 .husky
 .turbo
