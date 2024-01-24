@@ -53,7 +53,6 @@ services:
       - /bin/bash
       - -c
       - |
-        pnpm logout --registry http://npm-registry:4873/
         pnpx npm-cli-adduser --username user --password password --email user@gmail.com --registry http://npm-registry:4873/
         pnpm config set registry http://npm-registry:4873/
         pnpm build
@@ -78,6 +77,7 @@ services:
       - |
         pnpm config set registry http://npm-registry:4873/
         
-        echo "Checking version of create-lz-oapp"
-        npx --yes create-lz-oapp --version
+        ./tests-user/create-lz-oapp.sh
+    volumes:
+      - ./tests-user:/tests-user
 
