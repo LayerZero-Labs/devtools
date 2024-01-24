@@ -7,9 +7,21 @@ import { Setup } from "@/components/setup";
 import { promptToContinue } from "@layerzerolabs/io-devtools";
 import { printLogo } from "@layerzerolabs/io-devtools/swag";
 
+interface Args {
+  version?: boolean;
+}
+
 new Command("create-lz-oapp")
   .description("Create LayerZero OApp with one command")
-  .action(async () => {
+  .option("-v,--version", "Output version information", false)
+  .action(async ({ version }: Args) => {
+    // If the user only asked for a version, we'll print that out and exit
+    if (version === true) {
+      const pkg = await import("../package.json");
+
+      return console.log(pkg.version);
+    }
+
     printLogo();
 
     // First we get the config from the user
