@@ -13,6 +13,8 @@ export interface Example {
 }
 
 export interface PackageManager {
-    command: string
+    id: string
+    executable: string
+    args: string[]
     label: string
 }
