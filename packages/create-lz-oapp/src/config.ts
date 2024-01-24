@@ -1,4 +1,5 @@
 import type { Example, PackageManager } from '@/types'
+import { isPackageManagerAvailable } from './utilities/installation'
 
 /**
  * To enable example development in a custom repository
@@ -34,19 +35,29 @@ export const EXAMPLES: Example[] = [
 
 export const PACKAGE_MANAGERS: PackageManager[] = [
     {
-        command: 'npm',
+        id: 'npm',
+        executable: 'npm',
+        args: ['install', '--legacy-peer-deps'],
         label: 'npm',
     },
     {
-        command: 'yarn',
+        id: 'yarn',
+        executable: 'yarn',
+        args: ['install'],
         label: 'yarn',
     },
     {
-        command: 'pnpm',
+        id: 'pnpm',
+        executable: 'pnpm',
+        args: ['install'],
         label: 'pnpm',
     },
     {
-        command: 'bun',
+        id: 'bun',
+        executable: 'bun',
+        args: ['install'],
         label: 'bun',
     },
 ]
+
+export const AVAILABLE_PACKAGE_MANAGERS = PACKAGE_MANAGERS.filter(isPackageManagerAvailable)
