@@ -55,8 +55,13 @@ packages:
     access: $all
 
     # allow all known users to publish/publish packages
-    publish: $authenticated
-    unpublish: $authenticated
+    # 
+    # this does not mean that anyone can publish to NPM
+    # (in fact verdaccio will not publish to NPM ever),
+    # this just means we don't need to be authenticated to the local registry 
+    # in order to publish packages
+    publish: $all
+    unpublish: $all
 
   # We will not proxy any toolbox* packages
   "@layerzerolabs/toolbox-**": *local-package-rules

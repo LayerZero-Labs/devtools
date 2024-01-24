@@ -43,18 +43,19 @@ services:
       service: project
     depends_on:
       - npm-registry
-    # Here we authenticate ourselves to the local repository
-    # (using npm-cli-adduser after a lot of trying to just pipe some
-    # arguments to pnpm adduser via stdin)
+    # Here we build and publish all the packages locally,
+    # including any pending changesets.
     # 
-    # We then build and publish all the packages as they are,
-    # then apply all the versioning changesets and publish the changes
+    # Even though we enabled anonymous publishing in verdaccio,
+    # we need to specify some sort of an auth token 
+    # since we are trying to publish scoped packages. This can be anything,
+    # any non-empty string will do
     command:
       - /bin/bash
       - -c
       - |
-        pnpx npm-cli-adduser --username user --password password --email user@gmail.com --registry http://npm-registry:4873/
         pnpm config set registry http://npm-registry:4873/
+        pnpm config set //npm-registry:4873/:_authToken MOCK_TOKEN
         pnpm build
         pnpm release:version
         pnpm release:publish
