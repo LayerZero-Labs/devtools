@@ -15,9 +15,12 @@ plugins: /verdaccio/plugins
 web:
   title: LayerZero.NPM
   darkMode: true
+  showFooter: false
+  showSettings: false
   showThemeSwitch: false
   favicon: https://layerzero.network/favicon-32x32.png
   primary_color: "#a77dff"
+  logo: https://avatars.githubusercontent.com/u/90789833?s=200&v=4
 
 # https://verdaccio.org/docs/configuration#authentication
 auth:
