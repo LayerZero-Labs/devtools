@@ -102,6 +102,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
     )
 
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
+    // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
     const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
@@ -126,6 +127,8 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
                 { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
             ])
+
+            // Updates map with new configs for that OApp and Send Library
             const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
             const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
             setConfigsByEndpointAndLibrary.set(
@@ -138,6 +141,8 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
                 { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
             ])
+
+            // Updates map with new configs for that OApp and Send Library
             const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
             const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
             setConfigsByEndpointAndLibrary.set(
@@ -147,10 +152,12 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
         }
     }
 
+    // This function iterates over the map (OApp -> SendLibrary -> SetConfigParam[]) to execute setConfig
     return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
 }
 
 export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) => {
+    // This function builds a map to find all SetConfigParam[] to execute for a given OApp and ReceiveLibrary
     const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
@@ -172,6 +179,8 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
                 { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
             ])
+
+            // Updates map with new configs for that OApp and Receive Library
             const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
             const existingSetConfigs = setConfigsByLibrary.get(currentReceiveLibrary) ?? []
             setConfigsByEndpointAndLibrary.set(
@@ -181,6 +190,7 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
         }
     }
 
+    // This function iterates over the map (OApp -> ReceiveLibrary -> SetConfigParam[]) to execute setConfig
     return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
 }
 
