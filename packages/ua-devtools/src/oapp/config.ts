@@ -1,13 +1,13 @@
-import { flattenTransactions, OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
+import { Address, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
 import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
-import { SetConfigs, SetConfigParam, Uln302ExecutorConfig } from '@layerzerolabs/protocol-devtools'
+import { SetConfigParam, Uln302ExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
-export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) => {
-    return flattenTransactions([
+export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
+    flattenTransactions([
         await configureOAppPeers(graph, createSdk),
         await configureSendLibraries(graph, createSdk),
         await configureReceiveLibraries(graph, createSdk),
@@ -16,7 +16,6 @@ export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, crea
         await configureReceiveConfig(graph, createSdk),
         await configureEnforcedOptions(graph, createSdk),
     ])
-}
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('OApp')
@@ -103,7 +102,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
     )
 
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
-    const setConfigs: SetConfigs = {}
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
         config,
@@ -124,25 +123,35 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
         const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
 
         if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
-            const setExecutorConfig: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
+            const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
                 { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
             ])
-            addConfig(setConfigs, from, currentSendLibrary, setExecutorConfig)
+            const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
+            const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
+            setConfigsByEndpointAndLibrary.set(
+                from,
+                setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+            )
         }
 
         if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
-            const setUlnConfig: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
+            const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
                 { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
             ])
-            addConfig(setConfigs, from, currentSendLibrary, setUlnConfig)
+            const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
+            const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
+            setConfigsByEndpointAndLibrary.set(
+                from,
+                setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+            )
         }
     }
 
-    return buildOmniTransactions(setConfigs, createSdk)
+    return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
 }
 
 export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) => {
-    const setConfigs: SetConfigs = {}
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
         config,
@@ -160,14 +169,19 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
         const receiveUlnConfig = await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
 
         if (!isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) {
-            const setUlnConfig: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
+            const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
                 { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
             ])
-            addConfig(setConfigs, from, currentReceiveLibrary, setUlnConfig)
+            const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
+            const existingSetConfigs = setConfigsByLibrary.get(currentReceiveLibrary) ?? []
+            setConfigsByEndpointAndLibrary.set(
+                from,
+                setConfigsByLibrary.set(currentReceiveLibrary, [...existingSetConfigs, ...newSetConfigs])
+            )
         }
     }
 
-    return buildOmniTransactions(setConfigs, createSdk)
+    return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
 }
 
 export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) =>
@@ -175,7 +189,6 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
                 if (config?.enforcedOptions == null) return []
-
                 const enforcedOptions: EnforcedOptions[] = []
                 const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
                 const oappSdk = await createSdk(from)
@@ -190,42 +203,22 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
                         })
                     }
                 }
-
                 if (enforcedOptions.length === 0) return []
                 return [await oappSdk.setEnforcedOptions(enforcedOptions)]
             })
         )
     )
 
-const addConfig = (setConfigs: SetConfigs, from: OmniPoint, library: string, config: SetConfigParam[]) => {
-    if (!setConfigs[from.eid]) {
-        setConfigs[from.eid] = {}
-    }
-
-    if (!setConfigs[from.eid][library]) {
-        setConfigs[from.eid][library] = {
-            oappAddress: from.address,
-            fromOmniPoint: from,
-            config: [],
-        }
-    }
-
-    setConfigs[from.eid][library].config.push(...config)
-}
-
-const buildOmniTransactions = async (setConfigs: SetConfigs, createSdk: OAppFactory): Promise<OmniTransaction[]> => {
+const buildOmniTransactions = async (
+    setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>>,
+    createSdk: OAppFactory
+): Promise<OmniTransaction[]> => {
     const omniTransaction: OmniTransaction[] = []
-    for (const fromId of Object.keys(setConfigs)) {
-        const innerObject = setConfigs?.[fromId]
-        if (!innerObject) continue
-        for (const library of Object.keys(innerObject)) {
-            const setConfigParam = innerObject[library]
-            if (!setConfigParam) continue
-            const oappSdk = await createSdk(setConfigParam.fromOmniPoint)
-            const endpointSdk = await oappSdk.getEndpointSDK()
-            omniTransaction.push(
-                await endpointSdk.setConfig(setConfigParam.oappAddress, library, setConfigParam.config)
-            )
+    for (const [from, configsByLibrary] of setConfigsByEndpointAndLibrary) {
+        const oapp = await createSdk(from)
+        const endpoint = await oapp.getEndpointSDK()
+        for (const [library, setConfigParams] of configsByLibrary) {
+            omniTransaction.push(await endpoint.setConfig(from.address, library, setConfigParams))
         }
     }
     return omniTransaction

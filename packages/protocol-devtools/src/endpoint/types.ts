@@ -65,20 +65,6 @@ export interface SetConfigParam {
     config: string
 }
 
-export interface SetConfigs {
-    fromEid?: SetConfigsEid
-}
-
-export interface SetConfigsEid {
-    library: SetConfigsLib
-}
-
-export interface SetConfigsLib {
-    oappAddress: string
-    fromOmniPoint: OmniPoint
-    config: SetConfigParam[]
-}
-
 export interface MessageParams {
     dstEid: EndpointId
     receiver: Address
