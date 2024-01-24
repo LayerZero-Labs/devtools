@@ -1,17 +1,17 @@
-import { EXAMPLES, PACKAGE_MANAGERS } from '@/config'
-import prompts from 'prompts'
-import { isPackageManagerAvailable } from './installation'
+import { EXAMPLES, AVAILABLE_PACKAGE_MANAGERS } from '@/config'
+import prompts, { type Choice } from 'prompts'
 import { handlePromptState, isDirectory } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
+import type { Config } from '@/types'
 
-export const promptForConfig = () =>
-    prompts([
+export const promptForConfig = (config: Partial<Config> = {}): Promise<Config> => {
+    return prompts([
         {
             onState: handlePromptState,
             type: 'text',
             name: 'destination',
             message: 'Where do you want to start your project?',
-            initial: './my-lz-oapp',
+            initial: config.destination ?? './my-lz-oapp',
             validate: (path: string) => (isDirectory(path) ? `Directory '${resolve(path)}' already exists` : true),
         },
         {
@@ -19,16 +19,35 @@ export const promptForConfig = () =>
             type: 'select',
             name: 'example',
             message: 'Which example would you like to use as a starting point?',
-            choices: EXAMPLES.map((example) => ({ title: example.label, value: example })),
+            choices: EXAMPLES.map((example) => ({
+                title: example.label,
+                value: example,
+                selected: example.id === config.example?.id,
+            })).sort(sortBySelected),
         },
         {
             onState: handlePromptState,
             type: 'select',
             name: 'packageManager',
-            choices: PACKAGE_MANAGERS.filter(isPackageManagerAvailable).map((packageManager) => ({
+            choices: AVAILABLE_PACKAGE_MANAGERS.map((packageManager) => ({
                 title: packageManager.label,
                 value: packageManager,
-            })),
+                selected: packageManager.id === config.packageManager?.id,
+            })).sort(sortBySelected),
             message: 'What package manager would you like to use in your project?',
         },
     ])
+}
+
+/**
+ * prompts has a weird issue where even if the selected property is set
+ * on a particular choice, it will not preselect it - instead, the first choice will be selected.
+ *
+ * To remedy this, we'll sort the choices and put the selected one first,
+ * mimicking the behavior of preselection
+ *
+ * @param {Choice} a
+ * @param {Choice} b
+ * @returns {number}
+ */
+const sortBySelected = (a: Choice, b: Choice): number => Number(b.selected) - Number(a.selected)
