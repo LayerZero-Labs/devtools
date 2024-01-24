@@ -100,6 +100,11 @@ jobs:
 
       - name: Test
         run: pnpm test:user
+        # Since we're running the E2E tests in docker, we'll need to reinstall
+        # the node modules. This is a temporary solution to bridge us between
+        # non-containerized and containerized development
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
