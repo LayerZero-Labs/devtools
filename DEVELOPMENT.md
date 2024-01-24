@@ -77,7 +77,7 @@ This project is built using `turborepo`. The above commands are just aliases to 
 pnpm dev --filter=create-lz-oapp...
 ```
 
-### Running tests
+### Running unit & integration tests
 
 There are two options when it comes to running tests:
 
@@ -196,6 +196,60 @@ pnpm stop
 ```
 
 **Don't forget that the state of the local networks disappears after they are stopped and any deployment files created in one session will be invalid in the next one.**
+
+### Running E2E (user) tests
+
+E2E tests simulate user environment by publishing packages to a local NPM registry. They focus on ensuring that the examples we provide in this repository will work on user machines without interference of things such as:
+
+- Presence of code that is not published to NPM
+- Presence of NPM modules that are not included in package ependencies
+
+The user testing suite can be run as follows:
+
+```bash
+pnpm test:user
+```
+
+This will spin up a local NPM registry (available on [localhost:4873](http://localhost:4873) for debugging purposes), publish all packages locally and run the test suite.
+
+#### Using local NPM registry
+
+The local NPM registry can also be used to simulate arbitrary user flows without needing to link or publish packages to NPM. To do this, follow these steps:
+
+```bash
+# 1. Start the local registry and publish local packages
+pnpm registry:publish
+
+# 1B. Monitor the progress of publishing
+pnpm registry:logs
+
+# 2. Set your NPM registry to http://localhost:4873
+pnpm config set registry http://localhost:4873/
+
+# 3. Verify that the registry has been set
+pnpm config get registry
+
+# 4. Install the local packages in your project
+pnpm i
+
+# 4B. Package managers such as pnpm can cache dependencies
+#     so you might need to clear the module cache
+pnpm store prune
+```
+
+After this, your project is ready to use the local packages.
+
+Once done, the registry can be stopped by running:
+
+```bash
+pnpm registry:stop
+```
+
+Don't forget to reset the `registry` NPM configuration once done:
+
+```bash
+pnpm config set registry https://registry.npmjs.org/
+```
 
 ### Troubleshooting
 

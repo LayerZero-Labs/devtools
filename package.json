@@ -9,6 +9,10 @@
     "lint": "$npm_execpath turbo run lint",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
+    "registry:logs": "docker compose -f docker-compose.registry.yaml logs -f",
+    "registry:publish": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS publish",
+    "registry:start": "docker compose -f docker-compose.registry.yaml up npm-registry --wait $DOCKER_COMPOSE_ARGS",
+    "registry:stop": "docker compose -f docker-compose.registry.yaml down",
     "release:publish": "$npm_execpath changeset publish",
     "release:version": "$npm_execpath changeset version && $npm_execpath install --lockfile-only --prefer-offline --ignore-scripts",
     "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys network-tango --wait $DOCKER_COMPOSE_ARGS",
@@ -16,7 +20,8 @@
     "pretest": "$npm_execpath build",
     "test": "$npm_execpath turbo run test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS",
     "test:ci": "docker compose run --build --rm $DOCKER_COMPOSE_ARGS tests",
-    "test:local": ". bin/env && $npm_execpath start && $npm_execpath test"
+    "test:local": ". bin/env && $npm_execpath start && $npm_execpath test",
+    "test:user": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS tests"
   },
   "lint-staged": {
     "**/*": [
