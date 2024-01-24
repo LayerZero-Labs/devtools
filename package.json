@@ -9,6 +9,7 @@
     "lint": "$npm_execpath turbo run lint",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
+    "registry:logs": "docker compose -f docker-compose.registry.yaml logs -f",
     "registry:publish": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS publish",
     "registry:start": "docker compose -f docker-compose.registry.yaml up npm-registry --wait $DOCKER_COMPOSE_ARGS",
     "registry:stop": "docker compose -f docker-compose.registry.yaml down",
