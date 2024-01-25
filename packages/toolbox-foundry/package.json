@@ -9,13 +9,7 @@
   },
   "license": "MIT",
   "files": [
-    "lib",
-    "!lib/ds-test/.github",
-    "!lib/ds-test/.gitignore",
-    "!lib/ds-test/demo",
-    "!lib/forge-std/.github",
-    "!lib/forge-std/.gitignore",
-    "!lib/forge-std/.gitmodules"
+    "lib"
   ],
   "scripts": {
     "build": "make lib",
