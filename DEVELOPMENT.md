@@ -35,8 +35,7 @@ git clone git@github.com:LayerZero-Labs/devtools.git
 
 # 2. Install submodules
 
-git submodules init
-git submodules update
+git submodule update --init
 ```
 
 ### Setting up the environment
@@ -168,7 +167,7 @@ pnpm start
 Once the networks are running, you can go to the `ua-devtools-evm-hardhat-test` package:
 
 ```bash
-cd packages/ua-devtools-hardhat-test
+cd tests/ua-devtools-evm-hardhat-test
 ```
 
 Setup the default `EndpointV2` and `DefaultOApp`:
