@@ -7,8 +7,8 @@ PROJECTS_DIRECTORY=
 # similar to beforeAll() in jest
 setup() {
     # Load bats-assert and bats-support
-    load "./lib/bats-support/load.bash"
-    load "./lib/bats-assert/load.bash"
+    load "../lib/bats-support/load.bash"
+    load "../lib/bats-assert/load.bash"
 
     # For debugging purposes, we'll output the environment variables 
     # that influence the behavior of create-lz-oapp
@@ -33,6 +33,8 @@ teardown() {
     run npx --yes create-lz-oapp --ci --example oft
 
     assert_failure
+    assert_output --partial "Missing argument: --destination must be specified in CI mode"
+    assert [ ! -d $DESTINATION ]
 }
 
 @test "should fail if --example is missing in CI mode" {
@@ -41,6 +43,7 @@ teardown() {
     run npx --yes create-lz-oapp --ci --destination $DESTINATION
 
     assert_failure
+    assert_output --partial "Missing argument: --example must be specified in CI mode"
     assert [ ! -d $DESTINATION ]
 }
 
@@ -59,6 +62,7 @@ teardown() {
     run npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
 
     assert_failure
+    assert_output --partial "Package manager wroom not found"
     assert [ ! -d $DESTINATION ]
 }
 
@@ -73,7 +77,7 @@ teardown() {
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     pnpm compile
@@ -83,7 +87,7 @@ teardown() {
 @test "should work with pnpm & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
-    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     pnpm compile
@@ -93,7 +97,7 @@ teardown() {
 @test "should work with yarn & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
+    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
 
     yarn compile
@@ -103,7 +107,7 @@ teardown() {
 @test "should work with yarn & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
-    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
 
     yarn compile
@@ -113,7 +117,7 @@ teardown() {
 @test "should work with npm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
+    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
 
     npm run compile
@@ -123,7 +127,7 @@ teardown() {
 @test "should work with npm & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
-    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
 
     npm run compile

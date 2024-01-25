@@ -93,7 +93,7 @@ services:
       - |
         pnpm config set registry http://npm-registry:4873/
 
-        /app/tests-user/lib/bats-core/bin/bats ./tests-user/tests
+        /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
       # If we want to clone from github.com, we'll need its public keys added to our SSH config
       # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
