@@ -1,12 +1,11 @@
 {
   "name": "@layerzerolabs/test-devtools",
   "version": "0.0.3",
-  "private": true,
   "description": "Internal utilities for testing LayerZero packages",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "tests/test-devtools"
+    "directory": "packages/test-devtools"
   },
   "license": "MIT",
   "exports": {
@@ -39,5 +38,8 @@
   "peerDependencies": {
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "fast-check": "^3.14.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
