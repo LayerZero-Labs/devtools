@@ -211,6 +211,10 @@ pnpm test:user
 
 This will spin up a local NPM registry (available on [localhost:4873](http://localhost:4873) for debugging purposes), publish all packages locally and run the test suite.
 
+The tests themselves are written using [BATS - _Bash Automated Testing System_](https://github.com/bats-core/bats-core) ([Tutorial & more docs here](https://bats-core.readthedocs.io/en/stable/)).
+
+The test suites can be found under `./tests-user/tests` directory.
+
 #### Using local NPM registry
 
 The local NPM registry can also be used to simulate arbitrary user flows without needing to link or publish packages to NPM. To do this, follow these steps:
