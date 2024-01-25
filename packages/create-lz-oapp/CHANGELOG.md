@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.6
+
+### Patch Changes
+
+- bdbc09a: Add --version flag
+
 ## 0.1.5
 
 ### Patch Changes
