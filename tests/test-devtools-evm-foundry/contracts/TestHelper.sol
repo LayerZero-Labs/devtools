@@ -8,6 +8,7 @@ import { DoubleEndedQueue } from "@openzeppelin/contracts/utils/structs/DoubleEn
 import { UlnConfig, SetDefaultUlnConfigParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 import { SetDefaultExecutorConfigParam, ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
 import { ReceiveUln302 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln302/ReceiveUln302.sol";
+import { IDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol";
 import { DVN, ExecuteParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/dvn/DVN.sol";
 import { DVNFeeLib } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/dvn/DVNFeeLib.sol";
 import { IExecutor } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol";
@@ -137,9 +138,9 @@ contract TestHelper is Test, OptionsHelper {
                     dvn.setWorkerFeeLib(address(dvnLib));
                 }
 
-                //todo: setDstGas
                 uint32 endpointNum = _endpointNum;
                 IExecutor.DstConfigParam[] memory dstConfigParams = new IExecutor.DstConfigParam[](endpointNum);
+                IDVN.DstConfigParam[] memory dvnConfigParams = new IDVN.DstConfigParam[](endpointNum);
                 for (uint8 j = 0; j < endpointNum; j++) {
                     if (i == j) continue;
                     uint32 dstEid = j + 1;
@@ -192,6 +193,14 @@ contract TestHelper is Test, OptionsHelper {
                         nativeCap: executorValueCap
                     });
 
+                    // dvn config
+                    dvnConfigParams[j] = IDVN.DstConfigParam({
+                        dstEid: dstEid,
+                        gas: 5000,
+                        multiplierBps: 10000,
+                        floorMarginUSD: 1e10
+                    });
+
                     uint128 denominator = priceFeed.getPriceRatioDenominator();
                     ILayerZeroPriceFeed.UpdatePrice[] memory prices = new ILayerZeroPriceFeed.UpdatePrice[](1);
                     prices[0] = ILayerZeroPriceFeed.UpdatePrice(
@@ -201,6 +210,7 @@ contract TestHelper is Test, OptionsHelper {
                     priceFeed.setPrice(prices);
                 }
                 executor.setDstConfig(dstConfigParams);
+                dvn.setDstConfig(dvnConfigParams);
             } else if (_libraryType == LibraryType.SimpleMessageLib) {
                 SimpleMessageLibMock messageLib = new SimpleMessageLibMock(payable(this), address(endpointList[i]));
                 endpointList[i].registerLibrary(address(messageLib));
