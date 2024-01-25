@@ -1,3 +1,5 @@
+
+
 # We'll setup an empty testing directory for this script and store its location in this variable
 PROJECTS_DIRECTORY=
 
@@ -5,8 +7,8 @@ PROJECTS_DIRECTORY=
 # similar to beforeAll() in jest
 setup() {
     # Load bats-assert and bats-support
-    load "../lib/bats-support/load.bash"
-    load "../lib/bats-assert/load.bash"
+    load "./lib/bats-support/load.bash"
+    load "./lib/bats-assert/load.bash"
 
     # For debugging purposes, we'll output the environment variables 
     # that influence the behavior of create-lz-oapp
