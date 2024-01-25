@@ -4,5 +4,6 @@ node_modules
 *.md
 *.sol
 *.toml
+*.yaml
+Dockerfile
 Makefile
-pnpm-lock.yaml
