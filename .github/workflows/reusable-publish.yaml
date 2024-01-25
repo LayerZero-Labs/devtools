@@ -33,8 +33,6 @@ jobs:
 
       - name: Install dependencies
         uses: ./.github/workflows/actions/install-dependencies
-        with:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache

@@ -17,18 +17,6 @@ services:
   project:
     build:
       context: .
-      args:
-        # In order not to embed the NPM_TOKEN to the image, we'll pass it as an build argument
-        #
-        # This works in conjunction with the adjacent Dockerfile that:
-        #
-        # - interpolates .npmrc with this argument
-        # - installs the depenendencies
-        # - deletes the interpolated file
-        #
-        # This all needs to be done within one layer so that there is no way of reverse engineering
-        # the Dockerfile and getting the NPM_TOKEN out
-        NPM_TOKEN: $NPM_TOKEN
     # We'll provide a single testing MNEMONIC for the project so that the test EVM nodes
     # account are in sync with the hardhat accounts
     environment:

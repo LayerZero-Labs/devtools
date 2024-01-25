@@ -19,11 +19,6 @@ services:
     image: verdaccio/verdaccio
     ports:
       - "4873:4873"
-    # This works in conjunction with the auth setting in uplinks section of verdaccio config
-    # 
-    # We need this to support download of any provate packages we might need
-    environment:
-      - NPM_TOKEN=${NPM_TOKEN}
     healthcheck:
       interval: 2s
       retries: 10
