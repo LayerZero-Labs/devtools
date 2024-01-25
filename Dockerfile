@@ -23,6 +23,8 @@ ARG NODE_VERSION=20.10.0
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM node:$NODE_VERSION as base
 
+# We'll add an empty NPM_TOKEN to suppress any warnings
+ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
 
 # Update the system packages
