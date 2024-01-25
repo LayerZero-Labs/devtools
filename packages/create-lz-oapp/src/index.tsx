@@ -77,7 +77,7 @@ function ensureConfigForCIMode({
 }: Partial<Config>): Config {
   if (destination == null) {
     render(
-      <DefaultErrorMessage error="Destination must be specified in CI mode" />,
+      <DefaultErrorMessage error="Missing argument: --destination must be specified in CI mode" />,
     ).unmount();
 
     process.exit(1);
@@ -85,7 +85,7 @@ function ensureConfigForCIMode({
 
   if (example == null) {
     render(
-      <DefaultErrorMessage error="Example must be specified in CI mode" />,
+      <DefaultErrorMessage error="Missing argument: --example must be specified in CI mode" />,
     ).unmount();
 
     process.exit(1);
@@ -93,7 +93,7 @@ function ensureConfigForCIMode({
 
   if (packageManager == null) {
     render(
-      <DefaultErrorMessage error="Package manager must be specified in CI mode" />,
+      <DefaultErrorMessage error="Missing argument: --package-manager must be specified in CI mode" />,
     ).unmount();
 
     process.exit(1);
