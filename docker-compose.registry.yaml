@@ -84,9 +84,13 @@ services:
       - |
         pnpm config set registry http://npm-registry:4873/
 
-        /app/lib/bats-core/bin/bats ./tests-user
+        /app/tests-user/lib/bats-core/bin/bats ./tests-user
     volumes:
-      - ./ssh/known_hosts:/root/.ssh/known_hosts
-      - ./lib:/app/lib
+      # If we want to clone from github.com, we'll need its public keys added to our SSH config
+      # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
+      # 
+      # See more here https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+      - ./tests-user/ssh/known_hosts:/root/.ssh/known_hosts
+      # The testing library and test suites
       - ./tests-user:/app/tests-user
 
