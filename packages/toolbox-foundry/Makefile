@@ -36,7 +36,15 @@ git_submodules:
 	mkdir -p lib/ds-test
 
 	# We copy the contracts
-	cp -R src/ds-test/src/ lib/ds-test/
+	# 
+	# The . at the end is important since GNU and BSD
+	# have a different implementation of the cp command
+	# 
+	# Without the ., the command has different behavior on BSD (local, macOSX) and GNU (remote, CI/CD):
+	# 
+	# - on BSD, it will copy the contents of src folder into ds-test
+	# - on GNU, it will copy the src folder into ds-test
+	cp -R src/ds-test/src/. lib/ds-test/.
 
 	# And we include the licenses & package.json
 	cp src/ds-test/package.json src/ds-test/LICENSE lib/ds-test/
@@ -49,7 +57,7 @@ git_submodules:
 	mkdir -p lib/forge-std
 	
 	# We copy the contracts
-	cp -R src/forge-std/src/ lib/forge-std/
+	cp -R src/forge-std/src/. lib/forge-std/.
 
 	# And we include the licenses & package.json
 	cp src/forge-std/package.json src/forge-std/LICENSE* lib/forge-std/
