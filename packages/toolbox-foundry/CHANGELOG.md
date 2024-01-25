@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.0.4
+
+### Patch Changes
+
+- 0fad088: Fix inconsistent build behavior on GNU and BSD systems
+
 ## 0.0.3
 
 ### Patch Changes
