@@ -1,9 +1,5 @@
 name: Install project dependencies
 description: Install everything we need to build this repo
-inputs:
-  NPM_TOKEN:
-    description: "NPM_TOKEN that grants permissions to private @layerzerolabs packages"
-    required: true
 runs:
   using: "composite"
   steps:
@@ -11,8 +7,6 @@ runs:
     - name: Fetch Dependencies
       shell: bash
       run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
-      env:
-        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
 
     # Install the dependencies and run the post-install scripts
     - name: Install Dependencies
