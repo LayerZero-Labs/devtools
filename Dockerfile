@@ -29,11 +29,6 @@ ENV PATH "/root/.foundry/bin:$PATH"
 
 # Update the system packages
 RUN apt-get update
-RUN apt-get install -y \
-    # Get the envsubst command (see below)
-    gettext-base \
-    # Get the json utilities
-    jq
 
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
