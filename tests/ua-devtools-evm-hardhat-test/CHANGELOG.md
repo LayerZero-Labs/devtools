@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.8
+
+### Patch Changes
+
+- 2e73851: Feature flag the lz:oapp:config:init task
+
 ## 0.0.7
 
 ### Patch Changes

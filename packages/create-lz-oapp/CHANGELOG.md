@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.7
+
+### Patch Changes
+
+- a18bb0d: Add ability run in CI (non-interactive) mode
+
 ## 0.1.6
 
 ### Patch Changes
