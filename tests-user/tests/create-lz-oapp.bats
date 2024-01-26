@@ -24,8 +24,7 @@ teardown() {
 }
 
 @test "should output version" {
-    run npx --yes create-lz-oapp --version
-
+    npx --yes create-lz-oapp --version
     assert_success
 }
 
@@ -76,9 +75,9 @@ teardown() {
 @test "should fail if --package-manager is not valid in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
+    npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
     assert_failure
-    assert_output --regexp "Package manager wroom not found"
+    assert_output --partial "wroom not found"
     assert [ ! -d $DESTINATION ]
 }
 
@@ -86,7 +85,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    assert_success
+
     cd "$DESTINATION"
 
     pnpm compile
@@ -97,7 +98,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
-    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    assert_success
+
     cd "$DESTINATION"
 
     pnpm compile
@@ -108,7 +111,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
+    assert_success
+
     cd "$DESTINATION"
 
     yarn compile
@@ -119,7 +124,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
-    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
+    assert_success
+
     cd "$DESTINATION"
 
     yarn compile
@@ -130,7 +137,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
-    run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
+    assert_success
+
     cd "$DESTINATION"
 
     npm run compile
@@ -141,7 +150,9 @@ teardown() {
     skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
-    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
+    assert_success
+
     cd "$DESTINATION"
 
     npm run compile
