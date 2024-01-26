@@ -38,8 +38,15 @@ describe(`task ${TASK_LZ_ERRORS_LIST}`, () => {
         expect(printTableMock.mock.calls[0]).toMatchSnapshot()
     })
 
-    it('should print all matching errors if `containing` argument is supplied', async () => {
-        await hre.run(TASK_LZ_ERRORS_LIST, { containing: '' })
+    it('should print all errors with matching name if `containing` argument is supplied', async () => {
+        await hre.run(TASK_LZ_ERRORS_LIST, { containing: 'Invalid' })
+
+        expect(printTableMock).toHaveBeenCalledTimes(1)
+        expect(printTableMock.mock.calls[0]).toMatchSnapshot()
+    })
+
+    it('should print all errors with matching signature if `containing` argument is supplied', async () => {
+        await hre.run(TASK_LZ_ERRORS_LIST, { containing: '0x81da67ee' })
 
         expect(printTableMock).toHaveBeenCalledTimes(1)
         expect(printTableMock.mock.calls[0]).toMatchSnapshot()
