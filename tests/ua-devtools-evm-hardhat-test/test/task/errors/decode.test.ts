@@ -60,4 +60,12 @@ describe(`task ${TASK_LZ_ERRORS_DECODE}`, () => {
         expect(printRecordMock).toHaveBeenCalledTimes(1)
         expect(printRecordMock.mock.calls[0]).toMatchSnapshot()
     })
+
+    it.each(['0x3a81d6fc', '0x81da67ee'])('should print CustomError details if the error is %s', async (hash) => {
+        const result = await hre.run(TASK_LZ_ERRORS_DECODE, { hash })
+
+        expect(result).toBeInstanceOf(CustomError)
+        expect(printRecordMock).toHaveBeenCalledTimes(1)
+        expect(printRecordMock.mock.calls[0]).toMatchSnapshot()
+    })
 })
