@@ -29,7 +29,10 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/hash": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.4",
     "@layerzerolabs/devtools-evm": "~0.0.4",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.6",
