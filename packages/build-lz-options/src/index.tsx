@@ -1,5 +1,5 @@
 import { makeBytes32 } from "@layerzerolabs/devtools-evm";
-import { optionsType1, optionsType2 } from "@layerzerolabs/lz-utility-v2";
+import { optionsType1, optionsType2 } from "@layerzerolabs/lz-v2-utilities";
 import React from "react";
 import { render } from "ink";
 import { Command } from "commander";

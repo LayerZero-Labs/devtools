@@ -1,5 +1,5 @@
 import type { OptionType } from '@/types'
-import { ExecutorOptionType, WorkerId } from '@layerzerolabs/lz-utility-v2'
+import { ExecutorOptionType, WorkerId } from '@layerzerolabs/lz-v2-utilities'
 
 /**
  * Supported Option Types.
