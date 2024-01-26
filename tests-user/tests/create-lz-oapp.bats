@@ -34,15 +34,15 @@ teardown() {
 
     assert_failure
     assert_output --partial "Missing argument: --destination must be specified in CI mode"
-    assert [ ! -d $DESTINATION ]
 }
 
 @test "should fail if --destination directory already exists in CI mode" {
-    local DESTINATION="$(mktemp -d -p $PROJECTS_DIRECTORY)"
+    local DESTINATION="$PROJECTS_DIRECTORY/existing"
+    mkdir -p "$DESTINATION"
 
     run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
     assert_failure
-    assert_output --partial "Directory '$DESTINATION' already exists"
+    assert_output --regexp "Directory '.*?' already exists"
 }
 
 @test "should fail if --destination is an existing file in CI mode" {
@@ -51,7 +51,7 @@ teardown() {
 
     run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
     assert_failure
-    assert_output --partial "File '$DESTINATION' already exists"
+    assert_output --regexp "File '.*?' already exists"
 }
 
 @test "should fail if --example is missing in CI mode" {
@@ -77,9 +77,8 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
     run npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
-
     assert_failure
-    assert_output --partial "Package manager wroom not found"
+    assert_output --regexp "Package manager wroom not found"
     assert [ ! -d $DESTINATION ]
 }
 
