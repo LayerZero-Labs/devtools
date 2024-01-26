@@ -1,5 +1,20 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.7
+
+### Patch Changes
+
+- 8931fb2: Add debug logging to SDKs
+- 4318721: Add signature to the output of lz:errors:list task
+- Updated dependencies [8931fb2]
+- Updated dependencies [4318721]
+- Updated dependencies [4318721]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.0.6
+  - @layerzerolabs/protocol-devtools-evm@0.0.6
+  - @layerzerolabs/ua-devtools-evm@0.0.4
+  - @layerzerolabs/devtools-evm@0.0.5
+  - @layerzerolabs/devtools-evm-hardhat@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
