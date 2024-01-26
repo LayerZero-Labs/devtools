@@ -1175,6 +1175,9 @@ importers:
       '@layerzerolabs/devtools-evm':
         specifier: ~0.0.4
         version: link:../devtools-evm
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.0.5
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
         version: 2.0.14

@@ -1,14 +1,19 @@
 import { ActionType } from 'hardhat/types'
-import { task } from 'hardhat/config'
+import { task, types } from 'hardhat/config'
 import { printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
+import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 interface TaskArgs {
+    logLevel?: string
     networks: string
 }
 
 export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
+    // We'll set the global logging level to get as much info as needed
+    setDefaultLogLevel(taskArgs.logLevel ?? 'info')
+
     const networks = new Set(taskArgs.networks.split(','))
     const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
@@ -48,7 +53,8 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs) => {
 
 task(
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
-    'outputs the default Send and Receive Messaging Library versions and the default application config'
+    'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addParam('networks', 'comma separated list of networks')
+    .addParam('networks', 'comma separated list of networks', undefined, types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
     .setAction(getDefaultConfig)

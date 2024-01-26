@@ -37,6 +37,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.4",
     "@layerzerolabs/devtools-evm": "~0.0.4",
+    "@layerzerolabs/io-devtools": "~0.0.5",
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/lz-v2-utilities": "~2.0.14",
     "@layerzerolabs/protocol-devtools": "~0.0.4",
@@ -55,7 +56,11 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@ethersproject/constants": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
+    "@layerzerolabs/devtools": "~0.0.4",
     "@layerzerolabs/devtools-evm": "~0.0.4",
+    "@layerzerolabs/io-devtools": "~0.0.5",
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/lz-v2-utilities": "~2.0.14",
     "@layerzerolabs/protocol-devtools": "~0.0.4",

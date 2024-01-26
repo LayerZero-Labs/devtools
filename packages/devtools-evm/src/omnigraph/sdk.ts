@@ -4,6 +4,8 @@ import { omniContractToPoint } from './coordinates'
 import { createContractErrorParser } from '@/errors/parser'
 import type { OmniContractErrorParser, OmniContractErrorParserFactory } from '@/errors/types'
 import type { ContractError } from '@/errors/errors'
+import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
+import { formatOmniContract } from './format'
 
 /**
  * Base class for all EVM SDKs, providing some common functionality
@@ -40,7 +42,12 @@ export abstract class OmniSDK implements IOmniSDK {
         return this.#errorParserFactory(contract)
     }
 
-    constructor(public readonly contract: OmniContract) {}
+    constructor(
+        public readonly contract: OmniContract,
+        protected readonly logger: Logger = createModuleLogger(
+            `EVM SDK ${new.target.name} @ ${formatOmniContract(contract)}`
+        )
+    ) {}
 
     get point(): OmniPoint {
         return omniContractToPoint(this.contract)
