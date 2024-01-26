@@ -35,13 +35,13 @@ const isValidBigInt = (str: string, max: bigint, min: bigint = BigInt(0)): boole
  * @param {bigint} max defaults to MAX_UINT_128
  * @param {bigint} min defaults to BigInt(0)
  */
-const promptForBigInt = (
-    name: string,
+const promptForBigInt = <T extends string = string>(
+    name: T,
     message: string,
     initial: bigint = DEFAULT_INITIAL_TEXT_NUMBER,
     max: bigint = MAX_UINT_128,
     min: bigint = BigInt(0)
-): PromptObject<string> => {
+): PromptObject<T> => {
     // wrapper around prompts to handle bigint using string serialization
     return {
         onState: handlePromptState,
@@ -67,9 +67,9 @@ export const promptForOptionType = () =>
         },
     ])
 
-const promptForGasLimit: PromptObject<string> = promptForBigInt('gasLimit', 'What gas limit do you want to set?')
+const promptForGasLimit: PromptObject<'gasLimit'> = promptForBigInt('gasLimit', 'What gas limit do you want to set?')
 
-const promptForNativeDropAmount: PromptObject<string> = promptForBigInt(
+const promptForNativeDropAmount: PromptObject<'nativeDropAmount'> = promptForBigInt(
     'nativeDropAmount',
     'What native gas drop do you want to set?'
 )
@@ -77,7 +77,7 @@ const promptForNativeDropAmount: PromptObject<string> = promptForBigInt(
 /**
  * Prompt for verifier / executor index.
  */
-const promptForIndex: PromptObject<string> = {
+const promptForIndex: PromptObject<'index'> = {
     onState: handlePromptState,
     type: 'number',
     name: 'index',
@@ -87,7 +87,7 @@ const promptForIndex: PromptObject<string> = {
     max: MAX_UINT_8,
 }
 
-const promptForNativeDropAddress: PromptObject<string> = {
+const promptForNativeDropAddress: PromptObject<'nativeDropAddress'> = {
     onState: handlePromptState,
     type: 'text',
     name: 'nativeDropAddress',
@@ -136,6 +136,7 @@ const promptExecutorComposeOption = async (options: Options): Promise<Options> =
         promptForGasLimit,
         promptForNativeDropAmount,
     ])
+
     return options.addExecutorComposeOption(index, gasLimit, nativeDropAmount)
 }
 
@@ -169,17 +170,13 @@ const promptVerifierPrecrimeOption = async (options: Options): Promise<Options> 
 /**
  * Helper function to prompt for OptionType.TYPE_1.
  */
-export const promptForOptionType1 = () => prompts([promptForGasLimit]) as never as Promise<OptionType1Summary>
+export const promptForOptionType1 = (): Promise<OptionType1Summary> => prompts(promptForGasLimit)
 
 /**
  * Helper function to prompt for OptionType.TYPE_2.
  */
 export const promptForOptionType2 = (): Promise<OptionType2Summary> =>
-    prompts([
-        promptForGasLimit,
-        promptForNativeDropAmount,
-        promptForNativeDropAddress,
-    ]) as never as Promise<OptionType2Summary>
+    prompts([promptForGasLimit, promptForNativeDropAmount, promptForNativeDropAddress])
 
 const determineWorkerType = async (options: Options): Promise<Options> => {
     const workerType = await promptForWorkerType()
