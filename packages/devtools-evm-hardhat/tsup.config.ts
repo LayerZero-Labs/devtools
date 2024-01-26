@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig([
     {
-        entry: ['src/index.ts', 'src/type-extensions.ts'],
+        entry: ['src/index.ts', 'src/type-extensions.ts', 'src/tasks/index.ts'],
         outDir: './dist',
         clean: true,
         dts: true,

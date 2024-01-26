@@ -2,6 +2,9 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import 'hardhat-deploy'
 import { HardhatUserConfig } from 'hardhat/types'
 
+// We import the locally defined tasks
+import './src/tasks'
+
 /**
  * This is a dummy hardhat config that enables us to test
  * hardhat functionality without mocking too much
