@@ -22,7 +22,16 @@ services:
     healthcheck:
       interval: 2s
       retries: 10
-      test: ["CMD", "wget", "--output-document", "--tries=1", "--no-verbose", "--spider", "http://0.0.0.0:4873/-/ping"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--output-document",
+          "--tries=1",
+          "--no-verbose",
+          "--spider",
+          "http://0.0.0.0:4873/-/ping",
+        ]
     stop_grace_period: 120s
     volumes:
       - ./verdaccio.yaml:/verdaccio/conf/config.yaml
@@ -40,9 +49,9 @@ services:
       - npm-registry
     # Here we build and publish all the packages locally,
     # including any pending changesets.
-    # 
+    #
     # Even though we enabled anonymous publishing in verdaccio,
-    # we need to specify some sort of an auth token 
+    # we need to specify some sort of an auth token
     # since we are trying to publish scoped packages. This can be anything,
     # any non-empty string will do
     command:
@@ -67,13 +76,29 @@ services:
     depends_on:
       publish:
         condition: service_completed_successfully
+    # create-lz-oapp allows us to specify the repository/ref we pull the examples from
+    #
+    # In order to test the version on this branch in github actions,
+    # we'll set these based on the default variables github gives us
+    #
+    # If these are not provided, for example if running on a local machine,
+    # we'll default them to our repository and and empty ref
+    environment:
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=git@github.com:${GITHUB_REPOSITORY:-LayerZero-Labs/devtools}
+      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${GITHUB_REF_NAME}
+    working_dir: /app
     command:
       - /bin/bash
       - -c
       - |
         pnpm config set registry http://npm-registry:4873/
-        
-        ./tests-user/create-lz-oapp.sh
-    volumes:
-      - ./tests-user:/tests-user
 
+        /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
+    volumes:
+      # If we want to clone from github.com, we'll need its public keys added to our SSH config
+      # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
+      #
+      # See more here https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+      - ./tests-user/ssh/known_hosts:/root/.ssh/known_hosts
+      # The testing library and test suites
+      - ./tests-user:/app/tests-user

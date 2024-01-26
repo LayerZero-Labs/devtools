@@ -7,7 +7,7 @@ export const installDependencies = (config: Config) =>
         /**
          * Spawn the installation process.
          */
-        const child = spawn(config.packageManager.command, ['install'], {
+        const child = spawn(config.packageManager.executable, config.packageManager.args, {
             cwd: config.destination,
             env: {
                 ...process.env,
@@ -30,5 +30,5 @@ export const installDependencies = (config: Config) =>
         })
     })
 
-export const isPackageManagerAvailable = ({ command }: PackageManager): boolean =>
-    !!which.sync(command, { nothrow: true })
+export const isPackageManagerAvailable = ({ executable }: PackageManager): boolean =>
+    !!which.sync(executable, { nothrow: true })
