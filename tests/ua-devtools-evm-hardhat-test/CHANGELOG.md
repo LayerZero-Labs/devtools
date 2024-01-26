@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.9
+
+### Patch Changes
+
+- 56706ff: Add a feature-flagged lz:deploy hasrhat task
+
 ## 0.0.8
 
 ### Patch Changes
