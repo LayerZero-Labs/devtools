@@ -6,17 +6,17 @@ import { ExecutorOptionType, WorkerId } from '@layerzerolabs/lz-utility-v2'
  */
 export const OPTION_TYPES: OptionType[] = [
     {
-        // TODO: use OptionType.TYPE_1 once exported from lz-utility-v2
+        // TODO: use OptionType.TYPE_1 once exported from lz-v2-utility
         id: '1',
         label: '1: gas for remote execution',
     },
     {
-        // TODO: use OptionType.TYPE_2 once exported from lz-utility-v2
+        // TODO: use OptionType.TYPE_2 once exported from lz-v2-utility
         id: '2',
         label: '2: gas for remote execution and native drop',
     },
     {
-        // TODO: use OptionType.TYPE_3 once exported from lz-utility-v2
+        // TODO: use OptionType.TYPE_3 once exported from lz-v2-utility
         id: '3',
         label: '3: options builder (EndpointV2 only)',
     },

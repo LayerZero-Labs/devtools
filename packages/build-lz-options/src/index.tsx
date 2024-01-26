@@ -1,3 +1,5 @@
+import { makeBytes32 } from "@layerzerolabs/devtools-evm";
+import { optionsType1, optionsType2 } from "@layerzerolabs/lz-utility-v2";
 import React from "react";
 import { render } from "ink";
 import { Command } from "commander";
@@ -12,11 +14,7 @@ import {
   Option1Summary,
   Option2Summary,
 } from "@/components/config";
-import {
-  OutputOptionsType1,
-  OutputOptionsType2,
-  OutputOptionsType3,
-} from "@/components/outputOptions";
+import { OutputOptions } from "@/components/outputOptions";
 import { printLogo } from "@layerzerolabs/io-devtools/swag";
 
 new Command("build-lz-options")
@@ -24,9 +22,10 @@ new Command("build-lz-options")
   .action(async () => {
     printLogo();
 
-    // First we get the config from the user
     const config = await promptForOptionType();
     render(<ConfigSummary value={config} />).unmount();
+
+    let output: string = "";
 
     switch (config.type.id) {
       case "1": {
@@ -38,13 +37,7 @@ new Command("build-lz-options")
             }}
           />,
         ).unmount();
-        render(
-          <OutputOptionsType1
-            props={{
-              gasLimit: options.gasLimit,
-            }}
-          />,
-        );
+        output = optionsType1(options.gasLimit);
         break;
       }
       case "2": {
@@ -58,27 +51,19 @@ new Command("build-lz-options")
             }}
           />,
         ).unmount();
-        render(
-          <OutputOptionsType2
-            props={{
-              gasLimit: options.gasLimit,
-              nativeDropAmount: options.nativeDropAmount,
-              nativeDropAddress: options.nativeDropAddress,
-            }}
-          />,
+        output = optionsType2(
+          options.gasLimit,
+          options.nativeDropAmount,
+          makeBytes32(options.nativeDropAddress),
         );
         break;
       }
       case "3": {
         const options = await promptForOptionType3();
-        render(
-          <OutputOptionsType3
-            props={{
-              output: options.toHex(),
-            }}
-          />,
-        );
+        output = options.toHex();
+        break;
       }
     }
+    render(<OutputOptions props={{ hex: output }} />);
   })
   .parseAsync();

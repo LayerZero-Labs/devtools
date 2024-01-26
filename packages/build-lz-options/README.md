@@ -18,7 +18,7 @@
 
 ## Create LayerZero OApp Options <img alt="Static Badge" src="https://img.shields.io/badge/status-work_in_progress-yellow">
 
-The easiest way to get started with LayerZero smart contract development. This CLI tool enables you to quickly start building on top of LayerZero omnichain interoperability protocol. To get started, use the following command:
+This package provides a convenient way to build and serialize Options for LayerZero OApps.
 
 ```bash
 npx build-lz-options@latest

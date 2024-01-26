@@ -1,12 +1,15 @@
 import { EXECUTOR_OPTION_TYPE, OPTION_TYPES, WORKER_TYPE } from '@/config'
-import { OptionType1, OptionType2 } from '@/types'
+import { OptionType1Summary, OptionType2Summary } from '@/types'
 import { makeBytes32 } from '@layerzerolabs/devtools-evm'
 import { ExecutorOptionType, Options, WorkerId } from '@layerzerolabs/lz-utility-v2'
 import prompts, { PromptObject } from 'prompts'
 import { handlePromptState, promptToContinue } from '@layerzerolabs/io-devtools'
 
+// Max value of a Uint128 using a BigInt container.
 const MAX_UINT_128 = BigInt(2) ** BigInt(128) - BigInt(1)
+// Max value of a Uint8 using a number container.
 const MAX_UINT_8 = 0xffff
+// Default initial text number.
 const DEFAULT_INITIAL_TEXT_NUMBER = BigInt('200000')
 
 /**
@@ -140,23 +143,22 @@ const promptForExecutorOption = async (options: Options): Promise<Options> => {
     const executorOptionType = await promptForExecutorOptionType()
     switch (executorOptionType.type?.id) {
         case ExecutorOptionType.LZ_RECEIVE: {
-            options = await promptExecutorLzReceiveOption(options)
-            break
+            return promptExecutorLzReceiveOption(options)
         }
         case ExecutorOptionType.NATIVE_DROP: {
-            options = await promptExecutorNativeDropOption(options)
-            break
+            return await promptExecutorNativeDropOption(options)
         }
         case ExecutorOptionType.COMPOSE: {
-            options = await promptExecutorComposeOption(options)
-            break
+            return await promptExecutorComposeOption(options)
         }
         case ExecutorOptionType.ORDERED: {
-            options = options.addExecutorOrderedExecutionOption()
-            break
+            return options.addExecutorOrderedExecutionOption()
+        }
+        default: {
+            // unreachable in normal operations
+            throw new Error(`Unsupported executor option type: ${executorOptionType.type?.id}`)
         }
     }
-    return options
 }
 
 const promptVerifierPrecrimeOption = async (options: Options): Promise<Options> => {
@@ -167,13 +169,33 @@ const promptVerifierPrecrimeOption = async (options: Options): Promise<Options> 
 /**
  * Helper function to prompt for OptionType.TYPE_1.
  */
-export const promptForOptionType1 = () => prompts([promptForGasLimit]) as never as Promise<OptionType1>
+export const promptForOptionType1 = () => prompts([promptForGasLimit]) as never as Promise<OptionType1Summary>
 
 /**
  * Helper function to prompt for OptionType.TYPE_2.
  */
-export const promptForOptionType2 = (): Promise<OptionType2> =>
-    prompts([promptForGasLimit, promptForNativeDropAmount, promptForNativeDropAddress]) as never as Promise<OptionType2>
+export const promptForOptionType2 = (): Promise<OptionType2Summary> =>
+    prompts([
+        promptForGasLimit,
+        promptForNativeDropAmount,
+        promptForNativeDropAddress,
+    ]) as never as Promise<OptionType2Summary>
+
+const determineWorkerType = async (options: Options): Promise<Options> => {
+    const workerType = await promptForWorkerType()
+    switch (workerType.type?.id) {
+        case WorkerId.EXECUTOR: {
+            return promptForExecutorOption(options)
+        }
+        case WorkerId.VERIFIER: {
+            return promptVerifierPrecrimeOption(options)
+        }
+        default: {
+            // unreachable in normal operations
+            throw new Error(`Unsupported worker type: ${workerType.type?.id}`)
+        }
+    }
+}
 
 /**
  * Helper function to prompt for OptionType.TYPE_3.
@@ -181,17 +203,7 @@ export const promptForOptionType2 = (): Promise<OptionType2> =>
 export const promptForOptionType3 = async (): Promise<Options> => {
     let options = Options.newOptions()
     do {
-        const workerType = await promptForWorkerType()
-        switch (workerType.type.id) {
-            case WorkerId.EXECUTOR: {
-                options = await promptForExecutorOption(options)
-                break
-            }
-            case WorkerId.VERIFIER: {
-                options = await promptVerifierPrecrimeOption(options)
-                break
-            }
-        }
+        options = await determineWorkerType(options)
     } while (await promptToContinue())
     return options
 }

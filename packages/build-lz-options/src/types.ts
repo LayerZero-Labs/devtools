@@ -1,21 +1,36 @@
-export interface OptionConfig {
-    type: OptionType
-}
-
+/**
+ * Used to render OptionType input from the user.
+ */
 export interface OptionType {
     id: string
     label: string
 }
 
-export interface OptionType1 {
+/**
+ * Input OptionType selection.
+ */
+export interface OptionTypeInput {
+    type: OptionType
+}
+
+/**
+ * The result of building an Option.
+ */
+export interface OptionOutput {
+    hex: string
+}
+
+/**
+ * Summary of OptionType.TYPE_1.
+ */
+export interface OptionType1Summary {
     gasLimit: string
 }
 
-export interface OptionType2 extends OptionType1 {
+/**
+ * Summary of OptionType.TYPE_2.
+ */
+export interface OptionType2Summary extends OptionType1Summary {
     nativeDropAmount: string
     nativeDropAddress: string
-}
-
-export interface OptionType3 {
-    output: string
 }

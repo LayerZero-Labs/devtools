@@ -1,17 +1,21 @@
 import React from "react";
 import { Box, Text } from "ink";
-import { OptionType1, OptionConfig, OptionType2 } from "@/types";
+import {
+  OptionType1Summary,
+  OptionTypeInput,
+  OptionType2Summary,
+} from "@/types";
 
 interface Props {
-  value: OptionConfig;
+  value: OptionTypeInput;
 }
 
 interface OptionType1Props {
-  props: OptionType1;
+  props: OptionType1Summary;
 }
 
 interface OptionType2Props extends OptionType1Props {
-  props: OptionType2;
+  props: OptionType2Summary;
 }
 
 export const ConfigSummary: React.FC<Props> = ({ value }) => {
@@ -39,7 +43,11 @@ export const Option2Summary: React.FC<OptionType2Props> = ({ props }) => {
     <Box flexDirection="column" marginTop={1} marginBottom={1}>
       <Text>
         Gas Limit: <Text bold>{props.gasLimit}</Text>
+      </Text>
+      <Text>
         Native Drop Amount: <Text bold>{props.nativeDropAmount}</Text>
+      </Text>
+      <Text>
         Native Drop Address: <Text bold>{props.nativeDropAddress}</Text>
       </Text>
     </Box>
