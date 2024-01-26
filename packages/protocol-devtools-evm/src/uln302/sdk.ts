@@ -8,6 +8,10 @@ import { printRecord } from '@layerzerolabs/io-devtools'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
+        )
+
         const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure

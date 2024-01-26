@@ -1,5 +1,5 @@
 import type { IOApp, EnforcedOptions, OAppEnforcedOptionConfig } from '@layerzerolabs/ua-devtools'
-import type { Bytes32, Address, OmniTransaction } from '@layerzerolabs/devtools'
+import { type Bytes32, type Address, type OmniTransaction, formatEid } from '@layerzerolabs/devtools'
 import {
     type OmniContract,
     ignoreZero,
@@ -11,6 +11,7 @@ import {
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export class OApp extends OmniSDK implements IOApp {
@@ -22,6 +23,8 @@ export class OApp extends OmniSDK implements IOApp {
     }
 
     async getEndpointSDK(): Promise<IEndpoint> {
+        this.logger.debug(`Getting EndpointV2 SDK`)
+
         let address: string
 
         // First we'll need the endpoint address from the contract
@@ -41,10 +44,14 @@ export class OApp extends OmniSDK implements IOApp {
             )
         }
 
+        this.logger.debug(`Got EndpointV2 address: ${address}`)
+
         return await this.endpointFactory({ address, eid: this.contract.eid })
     }
 
     async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
+        this.logger.debug(`Getting peer for eid ${eid} (${formatEid(eid)})`)
+
         return ignoreZero(await this.contract.contract.peers(eid))
     }
 
@@ -53,15 +60,21 @@ export class OApp extends OmniSDK implements IOApp {
     }
 
     async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
+        this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`)
+
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
         return this.createTransaction(data)
     }
 
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
+        this.logger.debug(`Getting enforced options for eid ${eid} (${formatEid(eid)}) and message type ${msgType}`)
+
         return await this.contract.contract.enforcedOptions(eid, msgType)
     }
 
     async setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction> {
+        this.logger.debug(`Setting enforced options to ${printJson(enforcedOptions)}`)
+
         const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
         return this.createTransaction(data)
     }
