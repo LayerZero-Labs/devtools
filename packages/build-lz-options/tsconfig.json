@@ -6,7 +6,7 @@
     "jsx": "react",
     "lib": ["dom", "dom.Iterable", "es2022"],
     "resolveJsonModule": false,
-    "types": ["jest", "node"],
+    "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],
     },
