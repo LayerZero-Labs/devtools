@@ -9,7 +9,6 @@ interface OptionOutputProps {
 /**
  * Render the options output to the user.
  * @param {OptionOutputProps} props
- * @constructor
  */
 export const OutputOptions: React.FC<OptionOutputProps> = ({
   props,

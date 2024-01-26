@@ -16,9 +16,11 @@ import {
 } from "@/components/config";
 import { OutputOptions } from "@/components/outputOptions";
 import { printLogo } from "@layerzerolabs/io-devtools/swag";
+import { version } from "../package.json";
 
 new Command("build-lz-options")
   .description("Create LayerZero OApp options with one command")
+  .version(version)
   .action(async () => {
     printLogo();
 

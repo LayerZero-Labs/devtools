@@ -143,22 +143,17 @@ const promptExecutorComposeOption = async (options: Options): Promise<Options> =
 const promptForExecutorOption = async (options: Options): Promise<Options> => {
     const executorOptionType = await promptForExecutorOptionType()
     switch (executorOptionType.type?.id) {
-        case ExecutorOptionType.LZ_RECEIVE: {
+        case ExecutorOptionType.LZ_RECEIVE:
             return promptExecutorLzReceiveOption(options)
-        }
-        case ExecutorOptionType.NATIVE_DROP: {
+        case ExecutorOptionType.NATIVE_DROP:
             return await promptExecutorNativeDropOption(options)
-        }
-        case ExecutorOptionType.COMPOSE: {
+        case ExecutorOptionType.COMPOSE:
             return await promptExecutorComposeOption(options)
-        }
-        case ExecutorOptionType.ORDERED: {
+        case ExecutorOptionType.ORDERED:
             return options.addExecutorOrderedExecutionOption()
-        }
-        default: {
+        default:
             // unreachable in normal operations
             throw new Error(`Unsupported executor option type: ${executorOptionType.type?.id}`)
-        }
     }
 }
 
@@ -181,16 +176,13 @@ export const promptForOptionType2 = (): Promise<OptionType2Summary> =>
 const determineWorkerType = async (options: Options): Promise<Options> => {
     const workerType = await promptForWorkerType()
     switch (workerType.type?.id) {
-        case WorkerId.EXECUTOR: {
+        case WorkerId.EXECUTOR:
             return promptForExecutorOption(options)
-        }
-        case WorkerId.VERIFIER: {
+        case WorkerId.VERIFIER:
             return promptVerifierPrecrimeOption(options)
-        }
-        default: {
+        default:
             // unreachable in normal operations
             throw new Error(`Unsupported worker type: ${workerType.type?.id}`)
-        }
     }
 }
 

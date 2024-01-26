@@ -14,7 +14,7 @@ interface OptionType1Props {
   props: OptionType1Summary;
 }
 
-interface OptionType2Props extends OptionType1Props {
+interface OptionType2Props {
   props: OptionType2Summary;
 }
 
