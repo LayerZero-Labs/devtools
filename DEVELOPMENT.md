@@ -32,13 +32,14 @@ This repository contains several git submodules. To clone the repository, please
 # 1. Clone the repository
 
 # Using HTTPS
-git clone https://github.com/LayerZero-Labs/devtools.git
+git clone --recurse-submodules https://github.com/LayerZero-Labs/devtools.git
 
 # Using SSH
-git clone git@github.com:LayerZero-Labs/devtools.git
+git clone --recurse-submodules git@github.com:LayerZero-Labs/devtools.git
 
-# 2. Install submodules
+# 1A. Install submodules
 
+# If you cloned the repository without the --recurse-submodules flag, you can install the required submodules by running
 git submodule update --init
 ```
 
