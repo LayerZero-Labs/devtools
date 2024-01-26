@@ -13,7 +13,7 @@
     "clean": "rm -rf artifacts cache deployments",
     "compile": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest --runInBand --forceExit"
+    "test": "jest --ci --runInBand --forceExit"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",

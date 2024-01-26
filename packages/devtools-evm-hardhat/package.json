@@ -33,7 +33,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest --forceExit"
+    "test": "jest --ci --forceExit"
   },
   "dependencies": {
     "micro-memoize": "~4.1.2",

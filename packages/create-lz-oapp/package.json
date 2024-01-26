@@ -26,7 +26,7 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "start": "./cli.js",
-    "test": "jest"
+    "test": "jest --ci"
   },
   "dependencies": {
     "yoga-layout-prebuilt": "^1.10.0"

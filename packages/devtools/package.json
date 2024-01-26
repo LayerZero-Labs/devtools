@@ -27,7 +27,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest --forceExit"
+    "test": "jest --ci --forceExit"
   },
   "devDependencies": {
     "@layerzerolabs/io-devtools": "~0.0.4",
