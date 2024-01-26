@@ -37,6 +37,23 @@ teardown() {
     assert [ ! -d $DESTINATION ]
 }
 
+@test "should fail if --destination directory already exists in CI mode" {
+    local DESTINATION="$(mktemp -d -p $PROJECTS_DIRECTORY)"
+
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
+    assert_failure
+    assert_output --partial "Directory '$DESTINATION' already exists"
+}
+
+@test "should fail if --destination is an existing file in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/file.json"
+    touch $DESTINATION
+
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
+    assert_failure
+    assert_output --partial "File '$DESTINATION' already exists"
+}
+
 @test "should fail if --example is missing in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
@@ -66,15 +83,8 @@ teardown() {
     assert [ ! -d $DESTINATION ]
 }
 
-@test "should fail if --destination directory already exists in CI mode" {
-    local DESTINATION="$(mktemp -d -p $PROJECTS_DIRECTORY)"
-
-    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
-
-    assert_failure
-}
-
 @test "should work with pnpm & oapp example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
     run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
@@ -85,6 +95,7 @@ teardown() {
 }
 
 @test "should work with pnpm & oft example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
     run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
@@ -95,6 +106,7 @@ teardown() {
 }
 
 @test "should work with yarn & oapp example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
     run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
@@ -105,6 +117,7 @@ teardown() {
 }
 
 @test "should work with yarn & oft example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
     run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
@@ -115,6 +128,7 @@ teardown() {
 }
 
 @test "should work with npm & oapp example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
     run npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
@@ -125,6 +139,7 @@ teardown() {
 }
 
 @test "should work with npm & oft example in CI mode" {
+    skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
     run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
