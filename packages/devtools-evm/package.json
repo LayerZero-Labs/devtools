@@ -32,7 +32,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest"
+    "test": "jest --ci"
   },
   "dependencies": {
     "p-memoize": "~4.0.4"

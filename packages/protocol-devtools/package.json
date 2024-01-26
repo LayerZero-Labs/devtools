@@ -28,7 +28,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest"
+    "test": "jest --ci"
   },
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.0.4",

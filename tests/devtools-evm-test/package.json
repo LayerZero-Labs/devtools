@@ -13,7 +13,7 @@
     "clean": "rm -rf artifacts cache",
     "compile": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "test": "jest"
+    "test": "jest --ci"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
