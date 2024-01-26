@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- 8931fb2: Add debug logging to SDKs
+
 ## 0.0.4
 
 ### Patch Changes

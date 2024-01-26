@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.10
+
+### Patch Changes
+
+- 4318721: Fix an issue where transient artifacts would not be included in error parsing
+- 4318721: Add signature to the output of lz:errors:list task
+
 ## 0.0.9
 
 ### Patch Changes
