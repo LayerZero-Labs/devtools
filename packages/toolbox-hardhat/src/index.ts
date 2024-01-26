@@ -7,6 +7,7 @@ import {
 
 // Here we extend the HardhatUserConfig types & import all the LayerZero tasks
 import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
+import '@layerzerolabs/devtools-evm-hardhat/tasks'
 import '@layerzerolabs/ua-devtools-evm-hardhat/tasks'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 

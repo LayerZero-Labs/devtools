@@ -14,6 +14,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
     },
+    "./tasks": {
+      "types": "./dist/tasks/index.d.ts",
+      "require": "./dist/tasks/index.js",
+      "import": "./dist/tasks/index.mjs"
+    },
     "./*": {
       "types": "./dist/*.d.ts",
       "require": "./dist/*.js",
@@ -25,6 +30,7 @@
   "types": "./dist/index.d.ts",
   "files": [
     "dist",
+    "tasks",
     "type-extensions"
   ],
   "scripts": {
