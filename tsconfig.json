@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "target": "es2018",
     "module": "esnext",
     "lib": ["es2021", "dom"],
@@ -30,6 +31,6 @@
     "resolveJsonModule": true,
     "types": ["node"],
     "skipLibCheck": true,
-    "stripInternal": true
-  }
+    "stripInternal": true,
+  },
 }
