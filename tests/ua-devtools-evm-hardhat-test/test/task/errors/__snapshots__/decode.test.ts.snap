@@ -9,6 +9,24 @@ exports[`task lz:errors:decode should print CustomError details 1`] = `
 ]
 `;
 
+exports[`task lz:errors:decode should print CustomError details if the error is 0x3a81d6fc 1`] = `
+[
+  {
+    "Error": "CustomError: Contract reverted with custom error. Error AlreadyRegistered()",
+    "Type": "Custom error",
+  },
+]
+`;
+
+exports[`task lz:errors:decode should print CustomError details if the error is 0x81da67ee 1`] = `
+[
+  {
+    "Error": "CustomError: Contract reverted with custom error. Error InvalidOptionalDVNThreshold()",
+    "Type": "Custom error",
+  },
+]
+`;
+
 exports[`task lz:errors:decode should print PanicError details 1`] = `
 [
   {
