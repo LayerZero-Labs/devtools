@@ -1,6 +1,6 @@
 import { EXAMPLES, AVAILABLE_PACKAGE_MANAGERS } from '@/config'
 import prompts, { type Choice } from 'prompts'
-import { handlePromptState, isDirectory } from '@layerzerolabs/io-devtools'
+import { handlePromptState, isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 import type { Config } from '@/types'
 
@@ -12,7 +12,12 @@ export const promptForConfig = (config: Partial<Config> = {}): Promise<Config> =
             name: 'destination',
             message: 'Where do you want to start your project?',
             initial: config.destination ?? './my-lz-oapp',
-            validate: (path: string) => (isDirectory(path) ? `Directory '${resolve(path)}' already exists` : true),
+            validate: (path: string) =>
+                isDirectory(path)
+                    ? `Directory '${resolve(path)}' already exists`
+                    : isFile(path)
+                      ? `File '${resolve(path)}' already exists`
+                      : true,
         },
         {
             onState: handlePromptState,

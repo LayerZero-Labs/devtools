@@ -1,6 +1,6 @@
 import { InvalidOptionArgumentError, Option } from 'commander'
 import { AVAILABLE_PACKAGE_MANAGERS, EXAMPLES } from './config'
-import { isDirectory } from '@layerzerolabs/io-devtools'
+import { isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 
 export const packageManagerOption = new Option('-p,--package-manager <name>', 'Node package manager to use')
@@ -28,6 +28,10 @@ export const exampleOption = new Option('-e,--example <name>', 'Example project'
 export const destinationOption = new Option('-d,--destination <path>', 'Project directory').argParser((destination) => {
     if (isDirectory(destination)) {
         throw new InvalidOptionArgumentError(`Directory '${resolve(destination)}' already exists`)
+    }
+
+    if (isFile(destination)) {
+        throw new InvalidOptionArgumentError(`File '${resolve(destination)}' already exists`)
     }
 
     return destination
