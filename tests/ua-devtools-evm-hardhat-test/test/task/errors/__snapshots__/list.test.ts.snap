@@ -391,6 +391,2298 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OmniCounter",
       "Error": "SimulationResult(bytes)",
     },
+    {
+      "Contract": "EndpointV2",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "MessageLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "MessagingChannel",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "MessagingChannel",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "MessagingComposer",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "MessagingComposer",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "InsufficientFee(uint256,uint256)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "OnlyPriceUpdater()",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "UnknownL2Eid(uint32)",
+    },
+    {
+      "Contract": "ReceiveLibBaseE2",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "CannotWithdrawAltToken()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "NotTreasury()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "LzTokenNotEnabled()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "InsufficientFee(uint256,uint256)",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "OnlyPriceUpdater()",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "UnknownL2Eid(uint32)",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "BlockedMessageLib",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "InvalidEndpoint(address,address)",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "LzTokenIsAddressZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "OnlyWhitelistCaller()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "ToIsAddressZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppMsgInspector",
+      "Error": "InspectionFailed(bytes,bytes)",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "IOFT",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "IOFT",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "Executed()",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "DuplicatedHash(bytes32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InstructionExpired()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidRole(bytes32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidSignatures()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidTarget(address)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidVid(uint32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlySigner()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "QuorumIsZero()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "StateAlreadySet(address,bool)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "UnorderedSigners()",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "OnlySigner()",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "QuorumIsZero()",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "StateAlreadySet(address,bool)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "UnorderedSigners()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidRouter(address)",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "NotApprovedByGateway()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IDVNFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "AddressSizeConfig",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "AddressSizeConfig",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "OnlyExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfigType(uint256)",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "OnlyExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfigType(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "OnlyOnSending()",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "OnlySendLibrary()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "NonceContractMock",
+      "Error": "OnlySendLibrary()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfigType(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "CannotWithdrawAltToken()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfigType(uint32)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "NotTreasury()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ProxyAdmin",
+      "Error": "AdminCallFailed()",
+    },
+    {
+      "Contract": "ProxyAdmin",
+      "Error": "ImplementationCallFailed()",
+    },
+    {
+      "Contract": "TransparentUpgradeableProxy",
+      "Error": "AdminAccessDenied()",
+    },
+    {
+      "Contract": "MessageLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
   ],
 ]
 `;
@@ -785,6 +3077,2298 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     {
       "Contract": "OmniCounter",
       "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Executor",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "MessageLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "MessagingChannel",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "MessagingChannel",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "MessagingComposer",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "MessagingComposer",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "InsufficientFee(uint256,uint256)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "OnlyPriceUpdater()",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "PriceFeed",
+      "Error": "UnknownL2Eid(uint32)",
+    },
+    {
+      "Contract": "ReceiveLibBaseE2",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "CannotWithdrawAltToken()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "NotTreasury()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "LzTokenNotEnabled()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Treasury",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Worker",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "InsufficientFee(uint256,uint256)",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "OnlyPriceUpdater()",
+    },
+    {
+      "Contract": "ILayerZeroPriceFeed",
+      "Error": "UnknownL2Eid(uint32)",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "BlockedMessageLib",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "InvalidEndpoint(address,address)",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "LzTokenIsAddressZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "OnlyWhitelistCaller()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "ToIsAddressZero()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppMsgInspector",
+      "Error": "InspectionFailed(bytes,bytes)",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidOptions(bytes)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "NotEnoughNative(uint256)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "IOFT",
+      "Error": "InvalidLocalDecimals()",
+    },
+    {
+      "Contract": "IOFT",
+      "Error": "SlippageExceeded(uint256,uint256)",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "IOAppPreCrimeSimulator",
+      "Error": "SimulationResult(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "CrimeFound(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "OnlyOffChain()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketOversize(uint256,uint256)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "PacketUnsorted()",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationFailed(bytes)",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "SimulationResultNotFound(uint32)",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "Executed()",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "LzExecutor",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "DuplicatedHash(bytes32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InstructionExpired()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidRole(bytes32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidSignatures()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidTarget(address)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidVid(uint32)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlySelf()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "OnlySigner()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "QuorumIsZero()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "StateAlreadySet(address,bool)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "UnorderedSigners()",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "OnlySigner()",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "QuorumIsZero()",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "StateAlreadySet(address,bool)",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "UnorderedSigners()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidRouter(address)",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "NotApprovedByGateway()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "VersionMismatch()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IDVN",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IDVNFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "AddressSizeConfig",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "AddressSizeConfig",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "OnlyExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfigType(uint256)",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "OnlyExecutor()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "AddressSizeAlreadySet()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddressSize()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfigType(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "OnlyOnSending()",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "OnlySendLibrary()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InsufficientMsgValue()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidPath()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidSender()",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "LzTokenPaymentAddressMustBeSender()",
+    },
+    {
+      "Contract": "NonceContractMock",
+      "Error": "OnlySendLibrary()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfigType(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidEid()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketHeader()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketVersion()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "Verifying()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "AtLeastOneDVN()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "CannotWithdrawAltToken()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfigType(uint32)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfirmations()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNCount()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidRequiredDVNCount()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "NotTreasury()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "Unsorted()",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "UnsupportedEid(uint32)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "WorkerUpgradeable",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ProxyAdmin",
+      "Error": "AdminCallFailed()",
+    },
+    {
+      "Contract": "ProxyAdmin",
+      "Error": "ImplementationCallFailed()",
+    },
+    {
+      "Contract": "TransparentUpgradeableProxy",
+      "Error": "AdminAccessDenied()",
+    },
+    {
+      "Contract": "MessageLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "OnlyEndpoint()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "TransferFailed()",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "ZeroMessageSize()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IExecutor",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "NotAllowed()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "OnlyMessageLib()",
+    },
+    {
+      "Contract": "IWorker",
+      "Error": "RoleRenouncingDisabled()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "UnsupportedOptionType(uint16)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyEndpoint(address)",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "NoPeer(uint32)",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "OnlyPeer(uint32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "AlreadyRegistered()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeExists()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ComposeNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultReceiveLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "DefaultSendLibUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "NotImplemented()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyAltToken()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyNonDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyReceiveLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlyRegisteredOrDefaultLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "OnlySendLib()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotInitializable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PathNotVerifiable()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "PayloadHashNotFound(bytes32,bytes32)",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SameValue()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "Unauthorized()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedEid()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "UnsupportedInterface()",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "ZeroLzTokenFee()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "ToAddressIsZero()",
+    },
+    {
+      "Contract": "Transfer",
+      "Error": "TransferNativeFailed(address,uint256)",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidExecutorOptions(uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType1Option()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType2Option()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzComposeOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzReceiveOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidNativeDropOption()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerId(uint8)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerOptions(uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "LzTokenUnavailable()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "NativeAmountExceedsCap(uint256,uint256)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "NoOptions()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "SendReentrancy()",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "UnsupportedOptionType(uint8)",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "UnsupportedOptionType(uint16)",
     },
   ],
 ]
