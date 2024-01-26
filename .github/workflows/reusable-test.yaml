@@ -89,6 +89,9 @@ jobs:
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/install-dependencies
+
       - name: Test
         run: pnpm test:user
 
