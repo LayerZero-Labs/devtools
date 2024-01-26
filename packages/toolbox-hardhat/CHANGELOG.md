@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.6
+
+### Patch Changes
+
+- 56706ff: Add a feature-flagged lz:deploy hasrhat task
+- Updated dependencies [56706ff]
+  - @layerzerolabs/devtools-evm-hardhat@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
