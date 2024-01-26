@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.0.4
+
+### Patch Changes
+
+- 2e73851: Feature flag the lz:oapp:config:init task
+
 ## 0.0.3
 
 ### Patch Changes
