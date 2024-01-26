@@ -1,5374 +1,4481 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`task lz:errors:list should print all errors with matching name if \`containing\` argument is supplied 1`] = `
+[
+  [
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+      "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
+    },
+    {
+      "Contract": "EndpointV2",
+      "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
+    },
+    {
+      "Contract": "EndpointV2Alt",
+      "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
+    },
+    {
+      "Contract": "MessageLibManager",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "MessagingChannel",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendLibBaseE2",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
+    },
+    {
+      "Contract": "SimpleMessageLib",
+      "Error": "InvalidEndpoint(address,address)",
+      "Signature": "0x87a64839",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "OmniCounterPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "IOAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "OptionsBuilder",
+      "Error": "InvalidSize(uint256,uint256)",
+      "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
+    },
+    {
+      "Contract": "OFT",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
+    },
+    {
+      "Contract": "OFTAdapter",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "IOFT",
+      "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
+    },
+    {
+      "Contract": "PreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "PreCrimeE1",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "IPreCrime",
+      "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
+    },
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidRole(bytes32)",
+      "Signature": "0x125a2bb7",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidSignatures()",
+      "Signature": "0x274cf401",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidTarget(address)",
+      "Signature": "0xd08525e9",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "InvalidVid(uint32)",
+      "Signature": "0xa100763c",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
+    },
+    {
+      "Contract": "CCIPDVNAdapter",
+      "Error": "InvalidRouter(address)",
+      "Signature": "0xd7f73334",
+    },
+    {
+      "Contract": "DVNAdapterBase",
+      "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "AxelarDVNAdapter",
+      "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
+    },
+    {
+      "Contract": "AddressSizeConfig",
+      "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
+    },
+    {
+      "Contract": "ReceiveLibBaseE1",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfigType(uint256)",
+      "Signature": "0x961a995f",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
+    },
+    {
+      "Contract": "SendLibBaseE1",
+      "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfigType(uint256)",
+      "Signature": "0x961a995f",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
+    },
+    {
+      "Contract": "TreasuryFeeHandler",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
+    },
+    {
+      "Contract": "IMessageLibE1",
+      "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfigType(uint32)",
+      "Signature": "0x3018cc2b",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfigType(uint32)",
+      "Signature": "0x3018cc2b",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
+    },
+    {
+      "Contract": "SendLibBase",
+      "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
+    },
+    {
+      "Contract": "DVNOptions",
+      "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
+    },
+    {
+      "Contract": "UlnOptions",
+      "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
+    },
+    {
+      "Contract": "Errors",
+      "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
+    },
+  ],
+]
+`;
+
+exports[`task lz:errors:list should print all errors with matching signature if \`containing\` argument is supplied 1`] = `
+[
+  [
+    {
+      "Contract": "ReceiveUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "UlnBase",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "ReceiveUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUln301",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
+    },
+  ],
+]
+`;
+
 exports[`task lz:errors:list should print all matching errors if \`containing\` argument is not supplied 1`] = `
 [
   [
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
     },
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OApp",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OApp",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OApp",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OApp",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OApp",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppSender",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppSender",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OAppSender",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppSender",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OAppSender",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
     },
     {
       "Contract": "OmniCounter",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OmniCounter",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "IOAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "IOAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "IOAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "IOAppOptionsType3",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OAppOptionsType3",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OptionsBuilder",
       "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
     },
     {
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
+      "Signature": "0x3256c04c",
     },
     {
       "Contract": "OAppPreCrimeSimulator",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OAppPreCrimeSimulator",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "IOAppPreCrimeSimulator",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "IOAppPreCrimeSimulator",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "IPreCrime",
       "Error": "CrimeFound(bytes)",
+      "Signature": "0x19159757",
     },
     {
       "Contract": "IPreCrime",
       "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
     },
     {
       "Contract": "IPreCrime",
       "Error": "OnlyOffChain()",
+      "Signature": "0x9cbfe066",
     },
     {
       "Contract": "IPreCrime",
       "Error": "PacketOversize(uint256,uint256)",
+      "Signature": "0x9db08605",
     },
     {
       "Contract": "IPreCrime",
       "Error": "PacketUnsorted()",
+      "Signature": "0x50823c85",
     },
     {
       "Contract": "IPreCrime",
       "Error": "SimulationFailed(bytes)",
+      "Signature": "0x614cbd8a",
     },
     {
       "Contract": "IPreCrime",
       "Error": "SimulationResultNotFound(uint32)",
+      "Signature": "0x01992f2a",
     },
     {
       "Contract": "Errors",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "Errors",
       "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+      "Signature": "0xe273c847",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
     },
     {
       "Contract": "Errors",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "Errors",
       "Error": "NotImplemented()",
+      "Signature": "0xd6234725",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyAltToken()",
+      "Signature": "0x1ebf1709",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "Errors",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotInitializable()",
+      "Signature": "0x098c20b5",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotVerifiable()",
+      "Signature": "0x2923b32a",
     },
     {
       "Contract": "Errors",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "Errors",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "Errors",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "Errors",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "Errors",
       "Error": "ZeroLzTokenFee()",
+      "Signature": "0xe8016043",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "DefaultOApp",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
     },
     {
       "Contract": "OmniCounter",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OmniCounter",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "EndpointV2",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "EndpointV2",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "EndpointV2",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "EndpointV2",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "EndpointV2",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "EndpointV2",
       "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+      "Signature": "0xe273c847",
     },
     {
       "Contract": "EndpointV2",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "EndpointV2",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "EndpointV2",
       "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
     },
     {
       "Contract": "EndpointV2",
       "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
     },
     {
       "Contract": "EndpointV2",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "EndpointV2",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "EndpointV2",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "EndpointV2",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "EndpointV2",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "EndpointV2",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "EndpointV2",
       "Error": "PathNotInitializable()",
+      "Signature": "0x098c20b5",
     },
     {
       "Contract": "EndpointV2",
       "Error": "PathNotVerifiable()",
+      "Signature": "0x2923b32a",
     },
     {
       "Contract": "EndpointV2",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "EndpointV2",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "EndpointV2",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "EndpointV2",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "EndpointV2",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "EndpointV2",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "EndpointV2",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "EndpointV2",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "EndpointV2",
       "Error": "ZeroLzTokenFee()",
+      "Signature": "0xe8016043",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+      "Signature": "0xe273c847",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlyAltToken()",
+      "Signature": "0x1ebf1709",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "PathNotInitializable()",
+      "Signature": "0x098c20b5",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "PathNotVerifiable()",
+      "Signature": "0x2923b32a",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "EndpointV2Alt",
       "Error": "ZeroLzTokenFee()",
+      "Signature": "0xe8016043",
     },
     {
       "Contract": "Executor",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "Executor",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "Executor",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "Executor",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "Executor",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "NativeAmountExceedsCap(uint256,uint256)",
+      "Signature": "0xf5cd7a35",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "NoOptions()",
+      "Signature": "0x148c679d",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "ExecutorFeeLib",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "MessageLibBase",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "MessageLibManager",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "MessagingChannel",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "MessagingChannel",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "MessagingComposer",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "MessagingComposer",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "PriceFeed",
       "Error": "InsufficientFee(uint256,uint256)",
+      "Signature": "0xa458261b",
     },
     {
       "Contract": "PriceFeed",
       "Error": "OnlyPriceUpdater()",
+      "Signature": "0xa5138d71",
     },
     {
       "Contract": "PriceFeed",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "PriceFeed",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "PriceFeed",
       "Error": "UnknownL2Eid(uint32)",
+      "Signature": "0x8d2da580",
     },
     {
       "Contract": "ReceiveLibBaseE2",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendLibBase",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBase",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendLibBase",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "CannotWithdrawAltToken()",
+      "Signature": "0x08d198d3",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "NotTreasury()",
+      "Signature": "0xb90cdbb1",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "SendLibBaseE2",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "Treasury",
       "Error": "LzTokenNotEnabled()",
+      "Signature": "0xd22af88c",
     },
     {
       "Contract": "Treasury",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "Treasury",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "Worker",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "Worker",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "Worker",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "Worker",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "Worker",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "IExecutor",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "IExecutor",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "IExecutor",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "NativeAmountExceedsCap(uint256,uint256)",
+      "Signature": "0xf5cd7a35",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "NoOptions()",
+      "Signature": "0x148c679d",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "ILayerZeroPriceFeed",
       "Error": "InsufficientFee(uint256,uint256)",
+      "Signature": "0xa458261b",
     },
     {
       "Contract": "ILayerZeroPriceFeed",
       "Error": "OnlyPriceUpdater()",
+      "Signature": "0xa5138d71",
     },
     {
       "Contract": "ILayerZeroPriceFeed",
       "Error": "UnknownL2Eid(uint32)",
+      "Signature": "0x8d2da580",
     },
     {
       "Contract": "IWorker",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "IWorker",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "IWorker",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "Errors",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "Errors",
       "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+      "Signature": "0xe273c847",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
     },
     {
       "Contract": "Errors",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "Errors",
       "Error": "NotImplemented()",
+      "Signature": "0xd6234725",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyAltToken()",
+      "Signature": "0x1ebf1709",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "Errors",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotInitializable()",
+      "Signature": "0x098c20b5",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotVerifiable()",
+      "Signature": "0x2923b32a",
     },
     {
       "Contract": "Errors",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "Errors",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "Errors",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "Errors",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "Errors",
       "Error": "ZeroLzTokenFee()",
+      "Signature": "0xe8016043",
     },
     {
       "Contract": "Transfer",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "Transfer",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "BlockedMessageLib",
       "Error": "NotImplemented()",
+      "Signature": "0xd6234725",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "InvalidEndpoint(address,address)",
+      "Signature": "0x87a64839",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "LzTokenIsAddressZero()",
+      "Signature": "0x54c1781b",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "NotImplemented()",
+      "Signature": "0xd6234725",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "OnlyWhitelistCaller()",
+      "Signature": "0x70b216ec",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "ToIsAddressZero()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzComposeOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzReceiveOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidNativeDropOption()",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidOptionType(uint16)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "CrimeFound(bytes)",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "OnlyOffChain()",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "PacketOversize(uint256,uint256)",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "PacketUnsorted()",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "SimulationFailed(bytes)",
-    },
-    {
-      "Contract": "OmniCounterPreCrime",
-      "Error": "SimulationResultNotFound(uint32)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "IOAppMsgInspector",
-      "Error": "InspectionFailed(bytes,bytes)",
-    },
-    {
-      "Contract": "IOAppOptionsType3",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OAppOptionsType3",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidOptionType(uint16)",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidSize(uint256,uint256)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "InvalidLocalDecimals()",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "OFT",
-      "Error": "SlippageExceeded(uint256,uint256)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "InvalidLocalDecimals()",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "OFTAdapter",
-      "Error": "SlippageExceeded(uint256,uint256)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "InvalidLocalDecimals()",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "OFTCore",
-      "Error": "SlippageExceeded(uint256,uint256)",
-    },
-    {
-      "Contract": "IOFT",
-      "Error": "InvalidLocalDecimals()",
-    },
-    {
-      "Contract": "IOFT",
-      "Error": "SlippageExceeded(uint256,uint256)",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "CrimeFound(bytes)",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "OnlyOffChain()",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "PacketOversize(uint256,uint256)",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "PacketUnsorted()",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "SimulationFailed(bytes)",
-    },
-    {
-      "Contract": "PreCrime",
-      "Error": "SimulationResultNotFound(uint32)",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "CrimeFound(bytes)",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "OnlyOffChain()",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "PacketOversize(uint256,uint256)",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "PacketUnsorted()",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "SimulationFailed(bytes)",
-    },
-    {
-      "Contract": "PreCrimeE1",
-      "Error": "SimulationResultNotFound(uint32)",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "CrimeFound(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "OnlyOffChain()",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketOversize(uint256,uint256)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketUnsorted()",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationFailed(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationResultNotFound(uint32)",
-    },
-    {
-      "Contract": "LzExecutor",
-      "Error": "Executed()",
-    },
-    {
-      "Contract": "LzExecutor",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "LzExecutor",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "LzExecutor",
-      "Error": "Verifying()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidEid()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidPacketHeader()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidPacketVersion()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "ReceiveUlnBase",
-      "Error": "Verifying()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "SendUlnBase",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "UlnBase",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "DuplicatedHash(bytes32)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "InstructionExpired()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "InvalidRole(bytes32)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "InvalidSignatures()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "InvalidTarget(address)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "InvalidVid(uint32)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "OnlySigner()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "QuorumIsZero()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "StateAlreadySet(address,bool)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "DVN",
-      "Error": "UnorderedSigners()",
-    },
-    {
-      "Contract": "DVNFeeLib",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "DVNFeeLib",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "DVNFeeLib",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "DVNFeeLib",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "MultiSig",
-      "Error": "OnlySigner()",
-    },
-    {
-      "Contract": "MultiSig",
-      "Error": "QuorumIsZero()",
-    },
-    {
-      "Contract": "MultiSig",
-      "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
-    },
-    {
-      "Contract": "MultiSig",
-      "Error": "StateAlreadySet(address,bool)",
-    },
-    {
-      "Contract": "MultiSig",
-      "Error": "UnorderedSigners()",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "InvalidPayloadSize()",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "InvalidRouter(address)",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "CCIPDVNAdapter",
-      "Error": "VersionMismatch()",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "InvalidPayloadSize()",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "DVNAdapterBase",
-      "Error": "VersionMismatch()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "InvalidPayloadSize()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "NotApprovedByGateway()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "AxelarDVNAdapter",
-      "Error": "VersionMismatch()",
-    },
-    {
-      "Contract": "IDVN",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "IDVN",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "IDVN",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "IDVNFeeLib",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNIdx()",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidLegacyType1Option()",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidLegacyType2Option()",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidWorkerId(uint8)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidWorkerOptions(uint256)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "UnsupportedOptionType(uint16)",
-    },
-    {
-      "Contract": "AddressSizeConfig",
-      "Error": "AddressSizeAlreadySet()",
-    },
-    {
-      "Contract": "AddressSizeConfig",
-      "Error": "InvalidAddressSize()",
-    },
-    {
-      "Contract": "ReceiveLibBaseE1",
-      "Error": "AddressSizeAlreadySet()",
-    },
-    {
-      "Contract": "ReceiveLibBaseE1",
-      "Error": "InvalidAddressSize()",
-    },
-    {
-      "Contract": "ReceiveLibBaseE1",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "ReceiveLibBaseE1",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "ReceiveLibBaseE1",
-      "Error": "OnlyExecutor()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "AddressSizeAlreadySet()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidAddressSize()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidConfigType(uint256)",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidEid()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidPacketHeader()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidPacketVersion()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidSizeForAddress()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "OnlyExecutor()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "ReceiveUln301",
-      "Error": "Verifying()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "AddressSizeAlreadySet()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InsufficientMsgValue()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidAddressSize()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidPath()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "InvalidSender()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "LzTokenPaymentAddressMustBeSender()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE1",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "AddressSizeAlreadySet()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InsufficientMsgValue()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidAddressSize()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidConfigType(uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidDVNIdx()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidLegacyType1Option()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidLegacyType2Option()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidPath()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidSender()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidWorkerId(uint8)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "InvalidWorkerOptions(uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "LzTokenPaymentAddressMustBeSender()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "UnsupportedOptionType(uint16)",
-    },
-    {
-      "Contract": "SendUln301",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "TreasuryFeeHandler",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "TreasuryFeeHandler",
-      "Error": "OnlyOnSending()",
-    },
-    {
-      "Contract": "TreasuryFeeHandler",
-      "Error": "OnlySendLibrary()",
-    },
-    {
-      "Contract": "IMessageLibE1",
-      "Error": "InsufficientMsgValue()",
-    },
-    {
-      "Contract": "IMessageLibE1",
-      "Error": "InvalidPath()",
-    },
-    {
-      "Contract": "IMessageLibE1",
-      "Error": "InvalidSender()",
-    },
-    {
-      "Contract": "IMessageLibE1",
-      "Error": "LzTokenPaymentAddressMustBeSender()",
-    },
-    {
-      "Contract": "NonceContractMock",
-      "Error": "OnlySendLibrary()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidConfigType(uint32)",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidEid()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidPacketHeader()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidPacketVersion()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "Verifying()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "AtLeastOneDVN()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "CannotWithdrawAltToken()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidConfigType(uint32)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidConfirmations()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidDVNIdx()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidLegacyType1Option()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidLegacyType2Option()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidOptionalDVNCount()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidOptionalDVNThreshold()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidRequiredDVNCount()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidWorkerId(uint8)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidWorkerOptions(uint256)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "NotTreasury()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "Unsorted()",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "UnsupportedEid(uint32)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "UnsupportedOptionType(uint16)",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "WorkerUpgradeable",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "WorkerUpgradeable",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "WorkerUpgradeable",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "WorkerUpgradeable",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "WorkerUpgradeable",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "ProxyAdmin",
-      "Error": "AdminCallFailed()",
-    },
-    {
-      "Contract": "ProxyAdmin",
-      "Error": "ImplementationCallFailed()",
-    },
-    {
-      "Contract": "TransparentUpgradeableProxy",
-      "Error": "AdminAccessDenied()",
-    },
-    {
-      "Contract": "MessageLibBase",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "InvalidExecutorOptions(uint256)",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "NativeAmountExceedsCap(uint256,uint256)",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "NoOptions()",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNIdx()",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidLegacyType1Option()",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidLegacyType2Option()",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidWorkerId(uint8)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "InvalidWorkerOptions(uint256)",
-    },
-    {
-      "Contract": "UlnOptions",
-      "Error": "UnsupportedOptionType(uint16)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidArgument()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidPayloadHash()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidReceiveLibrary()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidSizeForAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "NotImplemented()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyAltToken()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotInitializable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotVerifiable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ZeroLzTokenFee()",
-    },
-    {
-      "Contract": "Transfer",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "Transfer",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzComposeOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzReceiveOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidNativeDropOption()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidExecutorOptions(uint256)",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidLegacyType1Option()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidLegacyType2Option()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidLzComposeOption()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidLzReceiveOption()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidNativeDropOption()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidWorkerId(uint8)",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "InvalidWorkerOptions(uint256)",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "NativeAmountExceedsCap(uint256,uint256)",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "NoOptions()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "EndpointV2Mock",
-      "Error": "UnsupportedOptionType(uint16)",
-    },
-  ],
-]
-`;
-
-exports[`task lz:errors:list should print all matching errors if \`containing\` argument is supplied 1`] = `
-[
-  [
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNIdx()",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "InvalidDVNOptions(uint256)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OApp",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OAppReceiver",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OAppSender",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidOptionType(uint16)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "IOAppCore",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "IOAppOptionsType3",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OAppOptionsType3",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidOptionType(uint16)",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidSize(uint256,uint256)",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "CrimeFound(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "OnlyOffChain()",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketOversize(uint256,uint256)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketUnsorted()",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationFailed(bytes)",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationResultNotFound(uint32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidArgument()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidPayloadHash()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidReceiveLibrary()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidSizeForAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "NotImplemented()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyAltToken()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotInitializable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotVerifiable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ZeroLzTokenFee()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzComposeOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidLzReceiveOption()",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "InvalidNativeDropOption()",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "InvalidOptions(bytes)",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "DefaultOApp",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidEndpointCall()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidOptionType(uint16)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NoPeer(uint32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NotEnoughNative(uint256)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyEndpoint(address)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyPeer(uint32,bytes32)",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlySelf()",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SimulationResult(bytes)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "InvalidPayloadHash()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "InvalidReceiveLibrary()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "PathNotInitializable()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "PathNotVerifiable()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "EndpointV2",
-      "Error": "ZeroLzTokenFee()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InvalidArgument()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InvalidPayloadHash()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "InvalidReceiveLibrary()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlyAltToken()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "PathNotInitializable()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "PathNotVerifiable()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "EndpointV2Alt",
-      "Error": "ZeroLzTokenFee()",
-    },
-    {
-      "Contract": "Executor",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "Executor",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "Executor",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "Executor",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "Executor",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "InvalidExecutorOptions(uint256)",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "InvalidLzComposeOption()",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "InvalidLzReceiveOption()",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "InvalidNativeDropOption()",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "NativeAmountExceedsCap(uint256,uint256)",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "NoOptions()",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "ExecutorFeeLib",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "MessageLibBase",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "MessageLibManager",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "MessagingChannel",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "MessagingChannel",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "MessagingComposer",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "MessagingComposer",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "PriceFeed",
-      "Error": "InsufficientFee(uint256,uint256)",
-    },
-    {
-      "Contract": "PriceFeed",
-      "Error": "OnlyPriceUpdater()",
-    },
-    {
-      "Contract": "PriceFeed",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "PriceFeed",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "PriceFeed",
-      "Error": "UnknownL2Eid(uint32)",
-    },
-    {
-      "Contract": "ReceiveLibBaseE2",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendLibBase",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "CannotWithdrawAltToken()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "InvalidExecutor()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "InvalidMessageSize(uint256,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "NotTreasury()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "TransferFailed()",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "SendLibBaseE2",
-      "Error": "ZeroMessageSize()",
-    },
-    {
-      "Contract": "Treasury",
-      "Error": "LzTokenNotEnabled()",
-    },
-    {
-      "Contract": "Treasury",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "Treasury",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "Worker",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "Worker",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "Worker",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "Worker",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "Worker",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "IExecutor",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "InvalidExecutorOptions(uint256)",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "NativeAmountExceedsCap(uint256,uint256)",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "NoOptions()",
-    },
-    {
-      "Contract": "IExecutorFeeLib",
-      "Error": "UnsupportedOptionType(uint8)",
-    },
-    {
-      "Contract": "ILayerZeroPriceFeed",
-      "Error": "InsufficientFee(uint256,uint256)",
-    },
-    {
-      "Contract": "ILayerZeroPriceFeed",
-      "Error": "OnlyPriceUpdater()",
-    },
-    {
-      "Contract": "ILayerZeroPriceFeed",
-      "Error": "UnknownL2Eid(uint32)",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "NotAllowed()",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "OnlyMessageLib()",
-    },
-    {
-      "Contract": "IWorker",
-      "Error": "RoleRenouncingDisabled()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "AlreadyRegistered()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeExists()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultReceiveLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultSendLibUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAmount(uint256,uint256)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidArgument()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidExpiry()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidNonce(uint64)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidPayloadHash()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidReceiveLibrary()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidSizeForAddress()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "LzTokenUnavailable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "NotImplemented()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyAltToken()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyNonDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyReceiveLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlySendLib()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotInitializable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotVerifiable()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SameValue()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SendReentrancy()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "Unauthorized()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedEid()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedInterface()",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ZeroLzTokenFee()",
-    },
-    {
-      "Contract": "Transfer",
-      "Error": "ToAddressIsZero()",
-    },
-    {
-      "Contract": "Transfer",
-      "Error": "TransferNativeFailed(address,uint256)",
-    },
-    {
-      "Contract": "BlockedMessageLib",
-      "Error": "NotImplemented()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "InvalidEndpoint(address,address)",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "LzTokenIsAddressZero()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "NotImplemented()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "OnlyEndpoint()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "OnlyWhitelistCaller()",
-    },
-    {
-      "Contract": "SimpleMessageLib",
-      "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "ToIsAddressZero()",
+      "Signature": "0x3d3496e1",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SimpleMessageLib",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
     },
     {
       "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OApp",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OApp",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OApp",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OApp",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OApp",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppSender",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppSender",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OAppSender",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppSender",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OAppSender",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
     },
     {
       "Contract": "OmniCounter",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OmniCounter",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OmniCounter",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OmniCounter",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "CrimeFound(bytes)",
+      "Signature": "0x19159757",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "OnlyOffChain()",
+      "Signature": "0x9cbfe066",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "PacketOversize(uint256,uint256)",
+      "Signature": "0x9db08605",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "PacketUnsorted()",
+      "Signature": "0x50823c85",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "SimulationFailed(bytes)",
+      "Signature": "0x614cbd8a",
     },
     {
       "Contract": "OmniCounterPreCrime",
       "Error": "SimulationResultNotFound(uint32)",
+      "Signature": "0x01992f2a",
     },
     {
       "Contract": "IOAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "IOAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "IOAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "IOAppMsgInspector",
       "Error": "InspectionFailed(bytes,bytes)",
+      "Signature": "0x7b43b439",
     },
     {
       "Contract": "IOAppOptionsType3",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OAppOptionsType3",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OptionsBuilder",
       "Error": "InvalidOptionType(uint16)",
+      "Signature": "0x3a51740d",
     },
     {
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
+      "Signature": "0x3256c04c",
     },
     {
       "Contract": "OFT",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OFT",
       "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
     },
     {
       "Contract": "OFT",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OFT",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OFT",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OFT",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OFT",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OFT",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OFT",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OFT",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "OFT",
       "Error": "SlippageExceeded(uint256,uint256)",
+      "Signature": "0x71c4efed",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "OFTAdapter",
       "Error": "SlippageExceeded(uint256,uint256)",
+      "Signature": "0x71c4efed",
     },
     {
       "Contract": "OFTCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OFTCore",
       "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
     },
     {
       "Contract": "OFTCore",
       "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
     },
     {
       "Contract": "OFTCore",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "OFTCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OFTCore",
       "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
     },
     {
       "Contract": "OFTCore",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OFTCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OFTCore",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OFTCore",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "OFTCore",
       "Error": "SlippageExceeded(uint256,uint256)",
+      "Signature": "0x71c4efed",
     },
     {
       "Contract": "IOFT",
       "Error": "InvalidLocalDecimals()",
+      "Signature": "0x1e9714b0",
     },
     {
       "Contract": "IOFT",
       "Error": "SlippageExceeded(uint256,uint256)",
+      "Signature": "0x71c4efed",
     },
     {
       "Contract": "OAppPreCrimeSimulator",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "OAppPreCrimeSimulator",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "PreCrime",
       "Error": "CrimeFound(bytes)",
+      "Signature": "0x19159757",
     },
     {
       "Contract": "PreCrime",
       "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
     },
     {
       "Contract": "PreCrime",
       "Error": "OnlyOffChain()",
+      "Signature": "0x9cbfe066",
     },
     {
       "Contract": "PreCrime",
       "Error": "PacketOversize(uint256,uint256)",
+      "Signature": "0x9db08605",
     },
     {
       "Contract": "PreCrime",
       "Error": "PacketUnsorted()",
+      "Signature": "0x50823c85",
     },
     {
       "Contract": "PreCrime",
       "Error": "SimulationFailed(bytes)",
+      "Signature": "0x614cbd8a",
     },
     {
       "Contract": "PreCrime",
       "Error": "SimulationResultNotFound(uint32)",
+      "Signature": "0x01992f2a",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "CrimeFound(bytes)",
+      "Signature": "0x19159757",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "OnlyOffChain()",
+      "Signature": "0x9cbfe066",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "PacketOversize(uint256,uint256)",
+      "Signature": "0x9db08605",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "PacketUnsorted()",
+      "Signature": "0x50823c85",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "SimulationFailed(bytes)",
+      "Signature": "0x614cbd8a",
     },
     {
       "Contract": "PreCrimeE1",
       "Error": "SimulationResultNotFound(uint32)",
+      "Signature": "0x01992f2a",
     },
     {
       "Contract": "IOAppPreCrimeSimulator",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "IOAppPreCrimeSimulator",
       "Error": "SimulationResult(bytes)",
+      "Signature": "0x8351eea7",
     },
     {
       "Contract": "IPreCrime",
       "Error": "CrimeFound(bytes)",
+      "Signature": "0x19159757",
     },
     {
       "Contract": "IPreCrime",
       "Error": "InvalidSimulationResult(uint32,bytes)",
+      "Signature": "0x572e17ee",
     },
     {
       "Contract": "IPreCrime",
       "Error": "OnlyOffChain()",
+      "Signature": "0x9cbfe066",
     },
     {
       "Contract": "IPreCrime",
       "Error": "PacketOversize(uint256,uint256)",
+      "Signature": "0x9db08605",
     },
     {
       "Contract": "IPreCrime",
       "Error": "PacketUnsorted()",
+      "Signature": "0x50823c85",
     },
     {
       "Contract": "IPreCrime",
       "Error": "SimulationFailed(bytes)",
+      "Signature": "0x614cbd8a",
     },
     {
       "Contract": "IPreCrime",
       "Error": "SimulationResultNotFound(uint32)",
+      "Signature": "0x01992f2a",
     },
     {
       "Contract": "LzExecutor",
       "Error": "Executed()",
+      "Signature": "0x68f46c45",
     },
     {
       "Contract": "LzExecutor",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "LzExecutor",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "LzExecutor",
       "Error": "Verifying()",
+      "Signature": "0x692c93cb",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "ReceiveUlnBase",
       "Error": "Verifying()",
+      "Signature": "0x692c93cb",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "SendUlnBase",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "UlnBase",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "UlnBase",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "UlnBase",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "UlnBase",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "UlnBase",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "UlnBase",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "UlnBase",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "DVN",
       "Error": "DuplicatedHash(bytes32)",
+      "Signature": "0x90ada7a7",
     },
     {
       "Contract": "DVN",
       "Error": "InstructionExpired()",
+      "Signature": "0x4a88c125",
     },
     {
       "Contract": "DVN",
       "Error": "InvalidRole(bytes32)",
+      "Signature": "0x125a2bb7",
     },
     {
       "Contract": "DVN",
       "Error": "InvalidSignatures()",
+      "Signature": "0x274cf401",
     },
     {
       "Contract": "DVN",
       "Error": "InvalidTarget(address)",
+      "Signature": "0xd08525e9",
     },
     {
       "Contract": "DVN",
       "Error": "InvalidVid(uint32)",
+      "Signature": "0xa100763c",
     },
     {
       "Contract": "DVN",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "DVN",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "DVN",
       "Error": "OnlySelf()",
+      "Signature": "0x14d4a4e8",
     },
     {
       "Contract": "DVN",
       "Error": "OnlySigner()",
+      "Signature": "0x813daa50",
     },
     {
       "Contract": "DVN",
       "Error": "QuorumIsZero()",
+      "Signature": "0x8923b8ef",
     },
     {
       "Contract": "DVN",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "DVN",
       "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+      "Signature": "0x8626e1a9",
     },
     {
       "Contract": "DVN",
       "Error": "StateAlreadySet(address,bool)",
+      "Signature": "0xd61afe6e",
     },
     {
       "Contract": "DVN",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "DVN",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "DVN",
       "Error": "UnorderedSigners()",
+      "Signature": "0x0721857b",
     },
     {
       "Contract": "DVNFeeLib",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "DVNFeeLib",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "DVNFeeLib",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "DVNFeeLib",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "MultiSig",
       "Error": "OnlySigner()",
+      "Signature": "0x813daa50",
     },
     {
       "Contract": "MultiSig",
       "Error": "QuorumIsZero()",
+      "Signature": "0x8923b8ef",
     },
     {
       "Contract": "MultiSig",
       "Error": "SignersSizeIsLessThanQuorum(uint64,uint64)",
+      "Signature": "0x8626e1a9",
     },
     {
       "Contract": "MultiSig",
       "Error": "StateAlreadySet(address,bool)",
+      "Signature": "0xd61afe6e",
     },
     {
       "Contract": "MultiSig",
       "Error": "UnorderedSigners()",
+      "Signature": "0x0721857b",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "InvalidRouter(address)",
+      "Signature": "0xd7f73334",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "CCIPDVNAdapter",
       "Error": "VersionMismatch()",
+      "Signature": "0x714f5513",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "DVNAdapterBase",
       "Error": "VersionMismatch()",
+      "Signature": "0x714f5513",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "InvalidPayloadSize()",
+      "Signature": "0xfbdf7954",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "NotApprovedByGateway()",
+      "Signature": "0x500c44b4",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "AxelarDVNAdapter",
       "Error": "VersionMismatch()",
+      "Signature": "0x714f5513",
     },
     {
       "Contract": "IDVN",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "IDVN",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "IDVN",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "IDVNFeeLib",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
     },
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
     },
     {
       "Contract": "UlnOptions",
       "Error": "UnsupportedOptionType(uint16)",
+      "Signature": "0x51458e6f",
     },
     {
       "Contract": "AddressSizeConfig",
       "Error": "AddressSizeAlreadySet()",
+      "Signature": "0x831ad0ad",
     },
     {
       "Contract": "AddressSizeConfig",
       "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
     },
     {
       "Contract": "ReceiveLibBaseE1",
       "Error": "AddressSizeAlreadySet()",
+      "Signature": "0x831ad0ad",
     },
     {
       "Contract": "ReceiveLibBaseE1",
       "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
     },
     {
       "Contract": "ReceiveLibBaseE1",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "ReceiveLibBaseE1",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "ReceiveLibBaseE1",
       "Error": "OnlyExecutor()",
+      "Signature": "0x7fb6be02",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "AddressSizeAlreadySet()",
+      "Signature": "0x831ad0ad",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidConfigType(uint256)",
+      "Signature": "0x961a995f",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "OnlyExecutor()",
+      "Signature": "0x7fb6be02",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "ReceiveUln301",
       "Error": "Verifying()",
+      "Signature": "0x692c93cb",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "AddressSizeAlreadySet()",
+      "Signature": "0x831ad0ad",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InsufficientMsgValue()",
+      "Signature": "0x78f38f76",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "LzTokenPaymentAddressMustBeSender()",
+      "Signature": "0x64316b48",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "SendLibBaseE1",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "SendUln301",
       "Error": "AddressSizeAlreadySet()",
+      "Signature": "0x831ad0ad",
     },
     {
       "Contract": "SendUln301",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "SendUln301",
       "Error": "InsufficientMsgValue()",
+      "Signature": "0x78f38f76",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidAddressSize()",
+      "Signature": "0xbcfcf59e",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidConfigType(uint256)",
+      "Signature": "0x961a995f",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
     },
     {
       "Contract": "SendUln301",
       "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
     },
     {
       "Contract": "SendUln301",
       "Error": "LzTokenPaymentAddressMustBeSender()",
+      "Signature": "0x64316b48",
     },
     {
       "Contract": "SendUln301",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendUln301",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "SendUln301",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendUln301",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "SendUln301",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "SendUln301",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "SendUln301",
       "Error": "UnsupportedOptionType(uint16)",
+      "Signature": "0x51458e6f",
     },
     {
       "Contract": "SendUln301",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "TreasuryFeeHandler",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "TreasuryFeeHandler",
       "Error": "OnlyOnSending()",
+      "Signature": "0x0a98f1a7",
     },
     {
       "Contract": "TreasuryFeeHandler",
       "Error": "OnlySendLibrary()",
+      "Signature": "0x94cfb9e7",
     },
     {
       "Contract": "IMessageLibE1",
       "Error": "InsufficientMsgValue()",
+      "Signature": "0x78f38f76",
     },
     {
       "Contract": "IMessageLibE1",
       "Error": "InvalidPath()",
+      "Signature": "0x20db8267",
     },
     {
       "Contract": "IMessageLibE1",
       "Error": "InvalidSender()",
+      "Signature": "0xddb5de5e",
     },
     {
       "Contract": "IMessageLibE1",
       "Error": "LzTokenPaymentAddressMustBeSender()",
+      "Signature": "0x64316b48",
     },
     {
       "Contract": "NonceContractMock",
       "Error": "OnlySendLibrary()",
+      "Signature": "0x94cfb9e7",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidConfigType(uint32)",
+      "Signature": "0x3018cc2b",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidEid()",
+      "Signature": "0x9a61cd26",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidPacketHeader()",
+      "Signature": "0x0666bafd",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidPacketVersion()",
+      "Signature": "0x28fac066",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "ReceiveUln302",
       "Error": "Verifying()",
+      "Signature": "0x692c93cb",
     },
     {
       "Contract": "SendUln302",
       "Error": "AtLeastOneDVN()",
+      "Signature": "0x7e36c284",
     },
     {
       "Contract": "SendUln302",
       "Error": "CannotWithdrawAltToken()",
+      "Signature": "0x08d198d3",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidConfigType(uint32)",
+      "Signature": "0x3018cc2b",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidConfirmations()",
+      "Signature": "0x8f6ae8f8",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidOptionalDVNCount()",
+      "Signature": "0x05f7ab62",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidOptionalDVNThreshold()",
+      "Signature": "0x81da67ee",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidRequiredDVNCount()",
+      "Signature": "0x1b668041",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
     },
     {
       "Contract": "SendUln302",
       "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
     },
     {
       "Contract": "SendUln302",
       "Error": "NotTreasury()",
+      "Signature": "0xb90cdbb1",
     },
     {
       "Contract": "SendUln302",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendUln302",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "SendUln302",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendUln302",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "SendUln302",
       "Error": "Unsorted()",
+      "Signature": "0xa228a30b",
     },
     {
       "Contract": "SendUln302",
       "Error": "UnsupportedEid(uint32)",
+      "Signature": "0x2146a07a",
     },
     {
       "Contract": "SendUln302",
       "Error": "UnsupportedOptionType(uint16)",
+      "Signature": "0x51458e6f",
     },
     {
       "Contract": "SendUln302",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "WorkerUpgradeable",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "WorkerUpgradeable",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "WorkerUpgradeable",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "WorkerUpgradeable",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "WorkerUpgradeable",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "ProxyAdmin",
       "Error": "AdminCallFailed()",
+      "Signature": "0x1545a425",
     },
     {
       "Contract": "ProxyAdmin",
       "Error": "ImplementationCallFailed()",
+      "Signature": "0x6bce18d7",
     },
     {
       "Contract": "TransparentUpgradeableProxy",
       "Error": "AdminAccessDenied()",
+      "Signature": "0xf0d4b23e",
     },
     {
       "Contract": "MessageLibBase",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidExecutor()",
+      "Signature": "0x710c9497",
     },
     {
       "Contract": "SendLibBase",
       "Error": "InvalidMessageSize(uint256,uint256)",
+      "Signature": "0xf001cc65",
     },
     {
       "Contract": "SendLibBase",
       "Error": "OnlyEndpoint()",
+      "Signature": "0x7eb966c8",
     },
     {
       "Contract": "SendLibBase",
       "Error": "TransferFailed()",
+      "Signature": "0x90b8ec18",
     },
     {
       "Contract": "SendLibBase",
       "Error": "ZeroMessageSize()",
+      "Signature": "0x8e2f797b",
     },
     {
       "Contract": "IExecutor",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "IExecutor",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "IExecutor",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "NativeAmountExceedsCap(uint256,uint256)",
+      "Signature": "0xf5cd7a35",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "NoOptions()",
+      "Signature": "0x148c679d",
     },
     {
       "Contract": "IExecutorFeeLib",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "IWorker",
       "Error": "NotAllowed()",
+      "Signature": "0x3d693ada",
     },
     {
       "Contract": "IWorker",
       "Error": "OnlyMessageLib()",
+      "Signature": "0x42cbfad1",
     },
     {
       "Contract": "IWorker",
       "Error": "RoleRenouncingDisabled()",
+      "Signature": "0xcebd140e",
     },
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNIdx()",
+      "Signature": "0xa8384fc1",
     },
     {
       "Contract": "DVNOptions",
       "Error": "InvalidDVNOptions(uint256)",
+      "Signature": "0x9af41d33",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
     },
     {
       "Contract": "UlnOptions",
       "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
     },
     {
       "Contract": "UlnOptions",
       "Error": "UnsupportedOptionType(uint16)",
+      "Signature": "0x51458e6f",
     },
     {
       "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
     },
     {
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "IOAppCore",
       "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "IOAppCore",
       "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
     },
     {
       "Contract": "IOAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
     },
     {
       "Contract": "Errors",
       "Error": "AlreadyRegistered()",
+      "Signature": "0x3a81d6fc",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeExists()",
+      "Signature": "0x895fdbee",
     },
     {
       "Contract": "Errors",
       "Error": "ComposeNotFound(bytes32,bytes32)",
+      "Signature": "0x9e3e0583",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultReceiveLibUnavailable()",
+      "Signature": "0xfbc6a95a",
     },
     {
       "Contract": "Errors",
       "Error": "DefaultSendLibUnavailable()",
+      "Signature": "0xb6f3253d",
     },
     {
       "Contract": "Errors",
       "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
+      "Signature": "0xe273c847",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAddress()",
+      "Signature": "0xe6c4247b",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidAmount(uint256,uint256)",
+      "Signature": "0x7c83fcf0",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidArgument()",
+      "Signature": "0xa9cb9e0d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidExpiry()",
+      "Signature": "0xd36c8500",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidNonce(uint64)",
+      "Signature": "0x5c33785a",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidPayloadHash()",
+      "Signature": "0xa84ab60d",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidReceiveLibrary()",
+      "Signature": "0x82ceb50e",
     },
     {
       "Contract": "Errors",
       "Error": "InvalidSizeForAddress()",
+      "Signature": "0x59baef1d",
     },
     {
       "Contract": "Errors",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "Errors",
       "Error": "NotImplemented()",
+      "Signature": "0xd6234725",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyAltToken()",
+      "Signature": "0x1ebf1709",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyNonDefaultLib()",
+      "Signature": "0x78142dd2",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyReceiveLib()",
+      "Signature": "0x78653622",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredLib()",
+      "Signature": "0x8cd5e2c6",
     },
     {
       "Contract": "Errors",
       "Error": "OnlyRegisteredOrDefaultLib()",
+      "Signature": "0x4fb58e15",
     },
     {
       "Contract": "Errors",
       "Error": "OnlySendLib()",
+      "Signature": "0x3885d603",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotInitializable()",
+      "Signature": "0x098c20b5",
     },
     {
       "Contract": "Errors",
       "Error": "PathNotVerifiable()",
+      "Signature": "0x2923b32a",
     },
     {
       "Contract": "Errors",
       "Error": "PayloadHashNotFound(bytes32,bytes32)",
+      "Signature": "0xe4bb0ca1",
     },
     {
       "Contract": "Errors",
       "Error": "SameValue()",
+      "Signature": "0xc23f6ccb",
     },
     {
       "Contract": "Errors",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "Errors",
       "Error": "Unauthorized()",
+      "Signature": "0x82b42900",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedEid()",
+      "Signature": "0x9153304b",
     },
     {
       "Contract": "Errors",
       "Error": "UnsupportedInterface()",
+      "Signature": "0x63aaf066",
     },
     {
       "Contract": "Errors",
       "Error": "ZeroLzTokenFee()",
+      "Signature": "0xe8016043",
     },
     {
       "Contract": "Transfer",
       "Error": "ToAddressIsZero()",
+      "Signature": "0x32fa6a1d",
     },
     {
       "Contract": "Transfer",
       "Error": "TransferNativeFailed(address,uint256)",
+      "Signature": "0x2c024f92",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
     },
     {
       "Contract": "ExecutorOptions",
       "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidExecutorOptions(uint256)",
+      "Signature": "0xb61964ac",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidLegacyType1Option()",
+      "Signature": "0x9bebe0e7",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidLegacyType2Option()",
+      "Signature": "0x2b2e8c38",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidLzComposeOption()",
+      "Signature": "0x071673fe",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidLzReceiveOption()",
+      "Signature": "0xd03c9969",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidNativeDropOption()",
+      "Signature": "0xde48d299",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidWorkerId(uint8)",
+      "Signature": "0xe3faa655",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "InvalidWorkerOptions(uint256)",
+      "Signature": "0x0df85b31",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "NativeAmountExceedsCap(uint256,uint256)",
+      "Signature": "0xf5cd7a35",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "NoOptions()",
+      "Signature": "0x148c679d",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "SendReentrancy()",
+      "Signature": "0x9633fed3",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "UnsupportedOptionType(uint8)",
+      "Signature": "0x3d6c5c70",
     },
     {
       "Contract": "EndpointV2Mock",
       "Error": "UnsupportedOptionType(uint16)",
+      "Signature": "0x51458e6f",
     },
   ],
 ]
