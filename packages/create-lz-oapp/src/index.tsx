@@ -61,7 +61,23 @@ new Command("create-lz-oapp")
     // And wait for it to exit
     await setup.waitUntilExit();
   })
+  .configureOutput({
+    outputError: handleError,
+  })
   .parseAsync();
+
+/**
+ * Helper utility for pretty printing any erros we might encounter
+ *
+ * @param {unknown} error
+ */
+function handleError(error: unknown) {
+  if (error instanceof Error) {
+    render(<DefaultErrorMessage error={error} />).unmount();
+  } else {
+    render(<DefaultErrorMessage error={String(error)} />).unmount();
+  }
+}
 
 /**
  * Helper utility that will ensure that all the required CLI arguments
