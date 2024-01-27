@@ -36,19 +36,57 @@ export interface IEndpoint extends IOmniSDK {
     getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout>
 
     setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address): Promise<OmniTransaction>
-    isDefaultSendLibrary(sender: Address, dstEid: EndpointId): Promise<boolean>
+
+    /**
+     * Returns the default send library for a given OApp and a destination
+     * endpoint ID.
+     *
+     * This function will not throw if passed a zero address.
+     *
+     * @param {Address | Bytes32} sender Address of the OApp
+     * @param {EndpointId} dstEid Destination endpoint ID
+     */
+    isDefaultSendLibrary(sender: Bytes32 | Address, dstEid: EndpointId): Promise<boolean>
     setReceiveLibrary(oapp: Address, eid: EndpointId, newLib: Address, gracePeriod: number): Promise<OmniTransaction>
     setReceiveLibraryTimeout(oapp: Address, eid: EndpointId, newLib: Address, expiry: number): Promise<OmniTransaction>
 
-    getExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
-    getAppExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
+    getExecutorConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
+
+    /**
+     * Gets the executor config for a given OApp, library and a destination
+     * endpoint ID.
+     *
+     * This function will not take the default executor config into account
+     * as opposed to `getExecutorConfig`
+     *
+     * @see {@link getExecutorConfig}
+     *
+     * @param {Bytes32 | Address} oapp OApp address
+     * @param {Bytes32 | Address} lib Library address
+     * @param {EndpointId} eid Endpoint ID
+     */
+    getAppExecutorConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
     setExecutorConfig(
-        oapp: Address,
-        lib: Address,
+        oapp: Bytes32 | Address,
+        lib: Bytes32 | Address,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<OmniTransaction>
 
     getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
+
+    /**
+     * Gets the ULN config for a given OApp, library and a destination
+     * endpoint ID.
+     *
+     * This function will not take the default executor config into account
+     * as opposed to `getUlnConfig`
+     *
+     * @see {@link getUlnConfig}
+     *
+     * @param {Bytes32 | Address} oapp OApp address
+     * @param {Bytes32 | Address} lib Library address
+     * @param {EndpointId} eid Endpoint ID
+     */
     getAppUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
     setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
 
