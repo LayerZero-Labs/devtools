@@ -16,13 +16,14 @@ docker-*.yaml
 *ignore
 
 # Dependencies & deployments
-node_modules
-deployments
+**/node_modules
 
 # Build files & cache
-artifacts
-dist
-cache
+**/deployments
+**/dist
+**/artifacts
+**/cache
+**/out
 
 # Metadata
 *.md

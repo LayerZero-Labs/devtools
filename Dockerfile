@@ -71,8 +71,6 @@ RUN \
     #  Mount pnpm store
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Fetch dependencies to the pnpm store based on the lockfile
-    # 
-    # We will also skip the package scripts since in this operation the NPM_TOKEN is available
     pnpm fetch --prefer-offline --frozen-lockfile
 
 COPY . .
