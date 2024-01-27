@@ -116,13 +116,13 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             currentSendLibrary !== undefined,
             'sendLibrary has not been set in your config and no default value exists'
         )
-        const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getExecutorConfig(
+        const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getAppExecutorConfig(
             from.address,
             currentSendLibrary,
             to.eid
         )
-        const sendUlnConfig = await endpointSdk.getUlnConfig(from.address, currentSendLibrary, to.eid)
 
+        const sendUlnConfig = await endpointSdk.getAppUlnConfig(from.address, currentSendLibrary, to.eid)
         if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
                 { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
@@ -173,7 +173,7 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
             currentReceiveLibrary !== undefined,
             'receiveLibrary has not been set in your config and no default value exists'
         )
-        const receiveUlnConfig = await endpointSdk.getUlnConfig(from.address, currentReceiveLibrary, to.eid)
+        const receiveUlnConfig = await endpointSdk.getAppUlnConfig(from.address, currentReceiveLibrary, to.eid)
 
         if (!isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) {
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
