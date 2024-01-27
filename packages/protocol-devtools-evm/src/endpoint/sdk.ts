@@ -89,6 +89,14 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
     }
 
+    async isDefaultSendLibrary(sender: Address, dstEid: EndpointId): Promise<boolean> {
+        this.logger.debug(
+            `Checking if send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender} is the Default`
+        )
+
+        return await this.contract.contract.isDefaultSendLibrary(sender, dstEid)
+    }
+
     async setDefaultSendLibrary(eid: EndpointId, lib: Address | null | undefined): Promise<OmniTransaction> {
         this.logger.debug(`Setting default send library for eid ${eid} (${formatEid(eid)}) and address ${lib}`)
 
@@ -223,11 +231,29 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await uln.getExecutorConfig(eid, oapp)
     }
 
+    async getAppExecutorConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+        this.logger.debug(
+            `Getting executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+        )
+
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getAppExecutorConfig(eid, oapp)
+    }
+
     async getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`)
 
         const uln = await this.getUln302SDK(lib)
         return await uln.getUlnConfig(eid, oapp)
+    }
+
+    async getAppUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting App ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+        )
+
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getAppUlnConfig(eid, oapp)
     }
 
     isRegisteredLibrary(lib: Address): Promise<boolean> {

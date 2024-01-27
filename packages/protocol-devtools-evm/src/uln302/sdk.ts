@@ -13,7 +13,19 @@ export class Uln302 extends OmniSDK implements IUln302 {
         )
 
         const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
+        // Now we convert the ethers-specific object into the common structure
+        //
+        // Here we need to spread the config into an object because what ethers gives us
+        // is actually an array with extra properties
+        return Uln302UlnConfigSchema.parse({ ...config })
+    }
 
+    async getAppUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
+        )
+
+        const config = await this.contract.contract.getAppUlnConfig(makeZeroAddress(address), eid)
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
@@ -23,6 +35,16 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
     async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
+
+        // Now we convert the ethers-specific object into the common structure
+        //
+        // Here we need to spread the config into an object because what ethers gives us
+        // is actually an array with extra properties
+        return Uln302ExecutorConfigSchema.parse({ ...config })
+    }
+
+    async getAppExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
+        const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
