@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@layerzerolabs/prettier-config-next": "^2.0.18",
+    "@layerzerolabs/prettier-config-next": "^2.0.23",
     "@types/node": "~18.18.14",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",

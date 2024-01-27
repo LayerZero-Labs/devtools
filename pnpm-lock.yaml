@@ -15,8 +15,8 @@ importers:
         specifier: ^2.27.1
         version: 2.27.1
       '@layerzerolabs/prettier-config-next':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
@@ -75,32 +75,32 @@ importers:
         specifier: ^7.23.7
         version: 7.23.7
       '@layerzerolabs/eslint-config-next':
-        specifier: ^2.0.18
-        version: 2.0.18(typescript@5.3.3)
+        specifier: ^2.0.23
+        version: 2.0.23(typescript@5.3.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/prettier-config-next':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@layerzerolabs/solhint-config':
-        specifier: ^2.0.18
-        version: 2.0.18(typescript@5.3.3)
+        specifier: ^2.0.23
+        version: 2.0.23(typescript@5.3.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~0.0.3
         version: link:../../packages/test-devtools-evm-foundry
@@ -160,7 +160,7 @@ importers:
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -171,32 +171,32 @@ importers:
         specifier: ^7.23.7
         version: 7.23.7
       '@layerzerolabs/eslint-config-next':
-        specifier: ^2.0.18
-        version: 2.0.18(typescript@5.3.3)
+        specifier: ^2.0.23
+        version: 2.0.23(typescript@5.3.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/prettier-config-next':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@layerzerolabs/solhint-config':
-        specifier: ^2.0.18
-        version: 2.0.18(typescript@5.3.3)
+        specifier: ^2.0.23
+        version: 2.0.23(typescript@5.3.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~0.0.3
         version: link:../../packages/test-devtools-evm-foundry
@@ -256,7 +256,7 @@ importers:
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -274,8 +274,8 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@types/prompts':
         specifier: ^2.4.9
         version: 2.4.9
@@ -305,7 +305,7 @@ importers:
         version: 17.0.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.3.105)(ts-node@10.9.2)(typescript@5.3.3)
@@ -366,7 +366,7 @@ importers:
         version: 4.0.3(ink@3.2.0)(react@17.0.2)
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -378,7 +378,7 @@ importers:
         version: 2.12.5
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.3.105)(ts-node@10.9.2)(typescript@5.3.3)
@@ -395,8 +395,8 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.4
         version: link:../test-devtools
@@ -414,13 +414,13 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       jest-extended:
         specifier: ^4.0.2
         version: 4.0.2(jest@29.7.0)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -471,8 +471,8 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.4
         version: link:../test-devtools
@@ -490,10 +490,10 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -544,11 +544,11 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.4
         version: link:../test-devtools
@@ -578,13 +578,13 @@ importers:
         version: 0.11.45
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       sinon:
         specifier: ^17.0.1
         version: 17.0.1
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -645,13 +645,13 @@ importers:
         version: 3.1.0(ink@3.2.0)(react@17.0.2)
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       react:
         specifier: ^17.0.2
         version: 17.0.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -671,8 +671,8 @@ importers:
         specifier: ~0.0.4
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -687,10 +687,10 @@ importers:
         version: 29.5.11
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -717,8 +717,8 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~0.0.3
         version: link:../omnicounter-devtools
@@ -745,10 +745,10 @@ importers:
         version: 29.5.11
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -768,8 +768,8 @@ importers:
         specifier: ~0.0.4
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.4
         version: link:../test-devtools
@@ -787,10 +787,10 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -838,11 +838,11 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -863,10 +863,10 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -883,14 +883,14 @@ importers:
   packages/test-devtools:
     devDependencies:
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       fast-check:
         specifier: ^3.15.0
         version: 3.15.0
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -904,17 +904,17 @@ importers:
   packages/test-devtools-evm-foundry:
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts':
         specifier: ^4.9.5
         version: 4.9.5
@@ -926,7 +926,7 @@ importers:
         version: 18.18.14
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@18.18.14)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -934,17 +934,17 @@ importers:
   packages/test-devtools-evm-hardhat:
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts':
         specifier: ^4.9.5
         version: 4.9.5
@@ -959,7 +959,7 @@ importers:
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -983,13 +983,13 @@ importers:
         version: 29.5.11
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.3.105)(ts-node@10.9.2)(typescript@5.3.3)
@@ -1024,17 +1024,17 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -1095,10 +1095,10 @@ importers:
         version: 0.11.45
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.3.105)(ts-node@10.9.2)(typescript@5.3.3)
@@ -1115,11 +1115,11 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -1140,10 +1140,10 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -1179,11 +1179,11 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -1210,10 +1210,10 @@ importers:
         version: 3.15.0
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -1258,11 +1258,11 @@ importers:
         specifier: ~0.0.5
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.0.4
         version: link:../protocol-devtools
@@ -1301,10 +1301,10 @@ importers:
         version: 0.11.45
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ^8.0.1
         version: 8.0.1(@swc/core@1.3.105)(ts-node@10.9.2)(typescript@5.3.3)
@@ -1354,26 +1354,26 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~0.0.3
         version: link:../../packages/omnicounter-devtools
@@ -1430,13 +1430,13 @@ importers:
         version: 0.11.45
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1465,8 +1465,8 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.4
         version: link:../../packages/test-devtools
@@ -1496,10 +1496,10 @@ importers:
         version: 2.19.4(ts-node@10.9.2)(typescript@5.3.3)
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1511,7 +1511,7 @@ importers:
         version: 2.19.4(ts-node@10.9.2)(typescript@5.3.3)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -1555,26 +1555,26 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ~2.0.18
-        version: 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+        specifier: ~2.0.23
+        version: 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ~2.0.18
-        version: 2.0.18
+        specifier: ~2.0.23
+        version: 2.0.23
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~0.0.3
         version: link:../../packages/omnicounter-devtools
@@ -1634,13 +1634,13 @@ importers:
         version: 0.11.45
       jest:
         specifier: ^29.7.0
-        version: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+        version: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tslib:
         specifier: ~2.6.2
         version: 2.6.2
@@ -1982,6 +1982,13 @@ packages:
 
   /@babel/runtime@7.23.8:
     resolution: {integrity: sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: true
+
+  /@babel/runtime@7.23.9:
+    resolution: {integrity: sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -3161,8 +3168,8 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@layerzerolabs/eslint-config-next@2.0.18(typescript@5.3.3):
-    resolution: {integrity: sha512-UWwlMKl5Z0H2YKcCZYnGz0JcAU7PZwmbs04nzaUPHnEw56EhWFeGHdFOWPZaswKRgE+t2zSxfm01brBdU4XcVg==}
+  /@layerzerolabs/eslint-config-next@2.0.23(typescript@5.3.3):
+    resolution: {integrity: sha512-6UQnrm7OHB1oAAFXBC6jroIrPT/ilA0+tjVZCBIZMDYiaMxFtDwSDaxgoDg78t/wp8aoesJb4KM35dB+xca9WA==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 6.19.1(@typescript-eslint/parser@6.19.1)(eslint@8.56.0)(typescript@5.3.3)
       '@typescript-eslint/parser': 6.19.1(eslint@8.56.0)(typescript@5.3.3)
@@ -3182,20 +3189,20 @@ packages:
       - typescript
     dev: true
 
-  /@layerzerolabs/lz-definitions@2.0.18:
-    resolution: {integrity: sha512-JpUJUkjcFsbM6rQyihSLu2/tqTX63ubZvotKdjg9IhIH9LXAcvMplZ75JA50uaBdTa09bIw74Ra8ddeUSbzdGA==}
+  /@layerzerolabs/lz-definitions@2.0.23:
+    resolution: {integrity: sha512-sImfsAOeBSiJbr2i+08Ovp83q+rZ+m7zLVBTfTq85k41atsgYZgXAkfGdRWkwoe0cVDMqUakk/pQyAg1UGF+qg==}
     dependencies:
       tiny-invariant: 1.3.1
 
-  /@layerzerolabs/lz-evm-messagelib-v2@2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-bfItPUUKtVaPIsF3aEo5WeGpYCBQ3uJtlGiLbdcCPllxJvnjTteGrrm1WLNpSGIDKZuS0ckWO/Ibej6XznwrwQ==}
+  /@layerzerolabs/lz-evm-messagelib-v2@2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-SaCsCRBlbke8+9H4KBq1sCsIJ3SM3VGhkRiiVSiWy0TBBnd1g5Rk5EBfoPYMW6p/N6m2+RLdg80iVjF7M6J3JA==}
     peerDependencies:
       '@arbitrum/nitro-contracts': ^1.1.0
       '@axelar-network/axelar-gmp-sdk-solidity': ^5.6.3
       '@chainlink/contracts-ccip': ^0.7.6
       '@eth-optimism/contracts': ^0.6.0
-      '@layerzerolabs/lz-evm-protocol-v2': ^2.0.18
-      '@layerzerolabs/lz-evm-v1-0.7': ^2.0.18
+      '@layerzerolabs/lz-evm-protocol-v2': ^2.0.23
+      '@layerzerolabs/lz-evm-v1-0.7': ^2.0.23
       '@openzeppelin/contracts': ^4.8.1
       '@openzeppelin/contracts-upgradeable': ^4.8.1
       hardhat-deploy: ^0.11.44
@@ -3205,36 +3212,36 @@ packages:
       '@axelar-network/axelar-gmp-sdk-solidity': 5.6.4
       '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
       '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+      '@layerzerolabs/lz-evm-protocol-v2': 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.11.45
       solidity-bytes-utils: 0.8.2
     dev: true
 
-  /@layerzerolabs/lz-evm-oapp-v2@2.0.18(@layerzerolabs/lz-evm-messagelib-v2@2.0.18)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-ZYnH55yijI+fMBt4oTLHjrJrAkI54Q1vvkl+pugeidDOzo+vWGN00dyajJEOyfaXdlReTiUAIRUVEMtj/KUktg==}
+  /@layerzerolabs/lz-evm-oapp-v2@2.0.23(@layerzerolabs/lz-evm-messagelib-v2@2.0.23)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-+gEgCjOw6ePvwFhU6jR+2Ap2T8KV0R02V0V583812LTiF83JoAlsEFsd+4+Ts7hTfjcOHcjt/MQR61G9HCFw+A==}
     peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^2.0.18
-      '@layerzerolabs/lz-evm-protocol-v2': ^2.0.18
-      '@layerzerolabs/lz-evm-v1-0.7': ^2.0.18
+      '@layerzerolabs/lz-evm-messagelib-v2': ^2.0.23
+      '@layerzerolabs/lz-evm-protocol-v2': ^2.0.23
+      '@layerzerolabs/lz-evm-v1-0.7': ^2.0.23
       '@openzeppelin/contracts': ^4.8.1
       '@openzeppelin/contracts-upgradeable': ^4.8.1
       hardhat-deploy: ^0.11.44
       solidity-bytes-utils: ^0.8.0
     dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 2.0.18(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.18)(@layerzerolabs/lz-evm-v1-0.7@2.0.18)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
+      '@layerzerolabs/lz-evm-messagelib-v2': 2.0.23(@arbitrum/nitro-contracts@1.1.0)(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.0.23)(@layerzerolabs/lz-evm-v1-0.7@2.0.23)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.11.45
       solidity-bytes-utils: 0.8.2
     dev: true
 
-  /@layerzerolabs/lz-evm-protocol-v2@2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-nj4BHwkFOu+ogL61Fk+qfWXT//KZDeqhe8I0G8tlVrvRm6plyAba9XZmhnf+6YquLJkYpya4GDKpoKfPoRFaLA==}
+  /@layerzerolabs/lz-evm-protocol-v2@2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2):
+    resolution: {integrity: sha512-scc9xZ5CHIhrNhkUVPDFGgD38eWcM2w1a9fzK0ez6c6giJbavuzJT2kSly0l5BINeZRiQ9viYcxvUavMBWI7xA==}
     peerDependencies:
       '@openzeppelin/contracts': ^4.8.1
       '@openzeppelin/contracts-upgradeable': ^4.8.1
@@ -3247,8 +3254,8 @@ packages:
       solidity-bytes-utils: 0.8.2
     dev: true
 
-  /@layerzerolabs/lz-evm-sdk-v1@2.0.18:
-    resolution: {integrity: sha512-aIa5YWRhvldGoxc9YlK4iDwCkFI1+Y7jB3wsW73d/IORY8eguWLBJ6sGaX6niCCFZm8x0GLSFJtipD++WfSdBA==}
+  /@layerzerolabs/lz-evm-sdk-v1@2.0.23:
+    resolution: {integrity: sha512-swXqXTXC5ELUnnNFxaeLe+VV3AyW4VY5sqiBf5Hka/CZp9wRmhC2Al3LN6anrMPPUAR60i+b7F+kupGXJGHL2w==}
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/providers': 5.7.2
@@ -3257,16 +3264,16 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/lz-evm-sdk-v2@2.0.18:
-    resolution: {integrity: sha512-3tNQ0Gzs7OISrXucnNxKH7VOkgv6/WrgHL0yu7qKnyZbSDCQ45Pfkxn5U8QBp27fBNQan/NY4eoqOUu42XdMhQ==}
+  /@layerzerolabs/lz-evm-sdk-v2@2.0.23:
+    resolution: {integrity: sha512-AnvWttFLhcwKc1807T60xmZgQr0tb7yysuese+nnAYD1oHgxcqlh58jYqnriN15cK88Ep9aTRMpwAZOwEuDP5w==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/lz-evm-v1-0.7@2.0.18(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45):
-    resolution: {integrity: sha512-x8vbDCjpw21H1qAiI55Ti6VixVWzaLnYObpH53tg9tgBtvI5pBZPmBEphb11QvfONZeWltOI+ydx3zqpwDwE+Q==}
+  /@layerzerolabs/lz-evm-v1-0.7@2.0.23(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45):
+    resolution: {integrity: sha512-j+Blh0IPAtGJEIvdT8eltSo1/n2MYn+A1V678qsTRC2qTQaLdXqoJU/nv9Ke1la4DnRqQFf1YS0iHmolHpfEjg==}
     peerDependencies:
       '@openzeppelin/contracts': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0
       '@openzeppelin/contracts-upgradeable': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0
@@ -3277,10 +3284,10 @@ packages:
       hardhat-deploy: 0.11.45
     dev: true
 
-  /@layerzerolabs/lz-v2-utilities@2.0.18:
-    resolution: {integrity: sha512-vPH7UYjH8Pj0oHiTyGCeOva2YuWdY0Nex7bL/yv7oTzCvKUqEqNhhbNBGGfMotfz+HA0COL/UfyX0GRGpsqG2g==}
+  /@layerzerolabs/lz-v2-utilities@2.0.23:
+    resolution: {integrity: sha512-3q9n6fVuboPhc5H7/EsVFpYzPulnGkXUlJhqt7XkC48mhx6d5+Qgr9AD92zmDjyV74WCLbbjzuWZ8lyinhgcJg==}
     dependencies:
-      '@layerzerolabs/lz-evm-sdk-v2': 2.0.18
+      '@layerzerolabs/lz-evm-sdk-v2': 2.0.23
       '@solana/web3.js': 1.89.1
       ethers: 5.7.2
       tiny-invariant: 1.3.1
@@ -3289,16 +3296,16 @@ packages:
       - encoding
       - utf-8-validate
 
-  /@layerzerolabs/prettier-config-next@2.0.18:
-    resolution: {integrity: sha512-rtG2FSk98zW8/MBOQsR3UHKKYLZUbU06XryzKh3S/CVKlHPvWDKbyc7QGqIzyCW6ZcfaLPeoTBsr2EyMBy21Vw==}
+  /@layerzerolabs/prettier-config-next@2.0.23:
+    resolution: {integrity: sha512-BH1RkAXwp+zmmMvPPLg2eEcbKbdcobWzo36IookQeR/1xo2kFiG51WdHpDN7ig3IpStoqx5rTfhQjkkl5bxiKw==}
     dependencies:
       prettier: 3.2.4
       prettier-plugin-packagejson: 2.4.9(prettier@3.2.4)
       prettier-plugin-solidity: 1.3.1(prettier@3.2.4)
     dev: true
 
-  /@layerzerolabs/solhint-config@2.0.18(typescript@5.3.3):
-    resolution: {integrity: sha512-X+0WRYITD0+vApApfd1EWCVGoJxmiXCdNsG9POuP3VgdZIs4N6cvUiIQq8uiDsoLh+wdfrGYSAoAFHdN/fjwJQ==}
+  /@layerzerolabs/solhint-config@2.0.23(typescript@5.3.3):
+    resolution: {integrity: sha512-HdKObIZXsFGjLzL9ayfMhuhx8VSSSNVFciH4Q8E71Cx+HaOTsMQwiVzy/gltPrXGgm3KglnVGxIB3/h+4bwIZw==}
     dependencies:
       solhint: 4.1.1(typescript@5.3.3)
     transitivePeerDependencies:
@@ -3949,7 +3956,7 @@ packages:
   /@solana/web3.js@1.89.1:
     resolution: {integrity: sha512-t9TTLtPQxtQB3SAf/5E8xPXfVDsC6WGOsgKY02l2cbe0HLymT7ynE8Hu48Lk5qynHCquj6nhISfEHcjMkYpu/A==}
     dependencies:
-      '@babel/runtime': 7.23.8
+      '@babel/runtime': 7.23.9
       '@noble/curves': 1.3.0
       '@noble/hashes': 1.3.3
       '@solana/buffer-layout': 4.0.1
@@ -4251,11 +4258,6 @@ packages:
       undici-types: 5.26.5
     dev: true
 
-  /@types/node@20.11.7:
-    resolution: {integrity: sha512-GPmeN1C3XAyV5uybAf4cMLWT9fDWcmQhZVtMFu7OR32WjrqGG+Wnk2V1d0bmtUyE/Zy1QJ9BxyiTih9z8Oks8A==}
-    dependencies:
-      undici-types: 5.26.5
-
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
@@ -4338,7 +4340,7 @@ packages:
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
     requiresBuild: true
     dependencies:
-      '@types/node': 20.11.7
+      '@types/node': 18.18.14
     dev: true
     optional: true
 
@@ -5618,7 +5620,7 @@ packages:
       safe-buffer: 5.2.1
       sha.js: 2.4.11
 
-  /create-jest@29.7.0(@types/node@20.11.7)(ts-node@10.9.2):
+  /create-jest@29.7.0(@types/node@18.18.14)(ts-node@10.9.2):
     resolution: {integrity: sha512-Adz2bdH0Vq3F53KEMJOoftQFutWCukm6J24wbPWRO4k1kMY7gS7ds/uoJkNuV8wDCtWWnuwGcJwpWcih+zEW1Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -5627,7 +5629,7 @@ packages:
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+      jest-config: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -7420,7 +7422,7 @@ packages:
       solc: 0.7.3(debug@4.3.4)
       source-map-support: 0.5.21
       stacktrace-parser: 0.1.10
-      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       tsort: 0.0.1
       typescript: 5.3.3
       undici: 5.28.2
@@ -8175,7 +8177,7 @@ packages:
       - supports-color
     dev: true
 
-  /jest-cli@29.7.0(@types/node@20.11.7)(ts-node@10.9.2):
+  /jest-cli@29.7.0(@types/node@18.18.14)(ts-node@10.9.2):
     resolution: {integrity: sha512-OVVobw2IubN/GSYsxETi+gOe7Ka59EFMR/twOU3Jb2GnKKeMGJB5SGUUrEz3SFVmJASUdZUzy83sLNNQ2gZslg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -8189,10 +8191,10 @@ packages:
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+      create-jest: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       exit: 0.1.2
       import-local: 3.1.0
-      jest-config: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+      jest-config: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -8238,48 +8240,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
-    transitivePeerDependencies:
-      - babel-plugin-macros
-      - supports-color
-    dev: true
-
-  /jest-config@29.7.0(@types/node@20.11.7)(ts-node@10.9.2):
-    resolution: {integrity: sha512-uXbpfeQ7R6TZBqI3/TxCU4q4ttk3u0PJeC+E0zbfSoSjq6bJ7buBPxzQPL0ifrkY4DNu4JUdk0ImlBUYi840eQ==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      '@types/node': '*'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      ts-node:
-        optional: true
-    dependencies:
-      '@babel/core': 7.23.7
-      '@jest/test-sequencer': 29.7.0
-      '@jest/types': 29.6.3
-      '@types/node': 20.11.7
-      babel-jest: 29.7.0(@babel/core@7.23.7)
-      chalk: 4.1.2
-      ci-info: 3.9.0
-      deepmerge: 4.3.1
-      glob: 7.2.3
-      graceful-fs: 4.2.11
-      jest-circus: 29.7.0
-      jest-environment-node: 29.7.0
-      jest-get-type: 29.6.3
-      jest-regex-util: 29.6.3
-      jest-resolve: 29.7.0
-      jest-runner: 29.7.0
-      jest-util: 29.7.0
-      jest-validate: 29.7.0
-      micromatch: 4.0.5
-      parse-json: 5.2.0
-      pretty-format: 29.7.0
-      slash: 3.0.0
-      strip-json-comments: 3.1.1
-      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -8334,7 +8295,7 @@ packages:
       jest:
         optional: true
     dependencies:
-      jest: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+      jest: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       jest-diff: 29.7.0
       jest-get-type: 29.6.3
     dev: true
@@ -8582,7 +8543,7 @@ packages:
       supports-color: 8.1.1
     dev: true
 
-  /jest@29.7.0(@types/node@20.11.7)(ts-node@10.9.2):
+  /jest@29.7.0(@types/node@18.18.14)(ts-node@10.9.2):
     resolution: {integrity: sha512-NIy3oAFp9shda19hy4HK0HRTWKtPJmGdnvywu01nOqNC2vZg+Z+fvJDxpMQA88eb2I9EcafcdjYgsDthnYTvGw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -8595,7 +8556,7 @@ packages:
       '@jest/core': 29.7.0(ts-node@10.9.2)
       '@jest/types': 29.6.3
       import-local: 3.1.0
-      jest-cli: 29.7.0(@types/node@20.11.7)(ts-node@10.9.2)
+      jest-cli: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -9801,7 +9762,7 @@ packages:
         optional: true
     dependencies:
       lilconfig: 3.0.0
-      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3)
+      ts-node: 10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3)
       yaml: 2.3.4
     dev: true
 
@@ -10271,7 +10232,7 @@ packages:
   /rpc-websockets@7.9.0:
     resolution: {integrity: sha512-DwKewQz1IUA5wfLvgM8wDpPRcr+nWSxuFxx5CbrI2z/MyyZ4nXLM86TvIA+cI1ZAdqC8JIBR1mZR55dzaLU+Hw==}
     dependencies:
-      '@babel/runtime': 7.23.8
+      '@babel/runtime': 7.23.9
       eventemitter3: 4.0.7
       uuid: 8.3.2
       ws: 8.16.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -11099,7 +11060,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-node@10.9.2(@swc/core@1.3.105)(@types/node@20.11.7)(typescript@5.3.3):
+  /ts-node@10.9.2(@swc/core@1.3.105)(@types/node@18.18.14)(typescript@5.3.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -11119,36 +11080,6 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.11.7
-      acorn: 8.11.3
-      acorn-walk: 8.3.2
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.3.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-
-  /ts-node@10.9.2(@types/node@18.18.14)(typescript@5.3.3):
-    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
-    hasBin: true
-    peerDependencies:
-      '@swc/core': '>=1.2.50'
-      '@swc/wasm': '>=1.2.50'
-      '@types/node': '*'
-      typescript: '>=2.7'
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      '@swc/wasm':
-        optional: true
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
       '@types/node': 18.18.14
       acorn: 8.11.3
       acorn-walk: 8.3.2
@@ -11159,7 +11090,6 @@ packages:
       typescript: 5.3.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
 
   /tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
