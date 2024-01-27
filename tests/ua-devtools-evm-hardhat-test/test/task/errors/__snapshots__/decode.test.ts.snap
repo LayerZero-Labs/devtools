@@ -9,19 +9,19 @@ exports[`task lz:errors:decode should print CustomError details 1`] = `
 ]
 `;
 
-exports[`task lz:errors:decode should print CustomError details if the error is 0x3a81d6fc 1`] = `
+exports[`task lz:errors:decode should print CustomError details if the error is 0x751cb20f 1`] = `
 [
   {
-    "Error": "CustomError: Contract reverted with custom error. Error AlreadyRegistered()",
+    "Error": "CustomError: Contract reverted with custom error. Error LZ_PathNotInitializable()",
     "Type": "Custom error",
   },
 ]
 `;
 
-exports[`task lz:errors:decode should print CustomError details if the error is 0x81da67ee 1`] = `
+exports[`task lz:errors:decode should print CustomError details if the error is 0xc3a1858e 1`] = `
 [
   {
-    "Error": "CustomError: Contract reverted with custom error. Error InvalidOptionalDVNThreshold()",
+    "Error": "CustomError: Contract reverted with custom error. Error Executor_InvalidNativeDropOption()",
     "Type": "Custom error",
   },
 ]

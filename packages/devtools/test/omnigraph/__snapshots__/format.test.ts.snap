@@ -270,6 +270,8 @@ exports[`omnigraph/format formatEid should format 10242 correctly 1`] = `"JOC_TE
 
 exports[`omnigraph/format formatEid should format 10243 correctly 1`] = `"BLAST_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10244 correctly 1`] = `"TRON_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20102 correctly 1`] = `"BSC_SANDBOX"`;
@@ -282,13 +284,15 @@ exports[`omnigraph/format formatEid should format 20121 correctly 1`] = `"ETHERE
 
 exports[`omnigraph/format formatEid should format 20132 correctly 1`] = `"OPTIMISM_SANDBOX"`;
 
+exports[`omnigraph/format formatEid should format 20231 correctly 1`] = `"ARBITRUM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20244 correctly 1`] = `"TRON_SANDBOX"`;
+
 exports[`omnigraph/format formatEid should format 30101 correctly 1`] = `"ETHEREUM_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30102 correctly 1`] = `"BSC_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30106 correctly 1`] = `"AVALANCHE_V2_MAINNET"`;
-
-exports[`omnigraph/format formatEid should format 30108 correctly 1`] = `"APTOS_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30109 correctly 1`] = `"POLYGON_V2_MAINNET"`;
 
@@ -339,8 +343,6 @@ exports[`omnigraph/format formatEid should format 30161 correctly 1`] = `"SEPOLI
 exports[`omnigraph/format formatEid should format 30165 correctly 1`] = `"ZKSYNC_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30167 correctly 1`] = `"MOONRIVER_V2_MAINNET"`;
-
-exports[`omnigraph/format formatEid should format 30168 correctly 1`] = `"SOLANA_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30173 correctly 1`] = `"TENET_V2_MAINNET"`;
 
@@ -449,8 +451,6 @@ exports[`omnigraph/format formatEid should format 40162 correctly 1`] = `"DOS_V2
 exports[`omnigraph/format formatEid should format 40164 correctly 1`] = `"SHRAPNEL_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40165 correctly 1`] = `"ZKSYNC_V2_TESTNET"`;
-
-exports[`omnigraph/format formatEid should format 40168 correctly 1`] = `"SOLANA_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40170 correctly 1`] = `"SCROLL_V2_TESTNET"`;
 
