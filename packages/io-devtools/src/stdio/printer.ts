@@ -30,6 +30,41 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
     return table.push(...headers, ...rows), table.toString()
 }
 
+export const printOAppConfig = <TRecord extends object>(records: TRecord[]): string => {
+    const table = new Table({
+        head: ['', 'Custom OApp Config', 'Default OApp Config', 'Actual OApp Config'],
+        wordWrap: true,
+        wrapOnWordBoundary: false,
+        style: { head: ['reset'] },
+    })
+
+    const rows: HorizontalTableRow[] = []
+    records.forEach((obj, index) => {
+        Object.entries(obj).forEach(([key, value]) => {
+            const findRow = rows.find((row) => row[0] === key)
+            if (findRow) {
+                // Update existing row with value for this object
+                if (typeof value !== 'object') {
+                    findRow[index + 1] = String(value)
+                } else {
+                    findRow[index + 1] = printRecord(value)
+                }
+            } else {
+                // Create a new row for the key and values
+                const newRow = [key, ...Array(records.length).fill('')]
+                if (typeof value !== 'object') {
+                    newRow[index + 1] = String(value)
+                } else {
+                    newRow[index + 1] = printRecord(value)
+                }
+                rows.push(newRow)
+            }
+        })
+    })
+
+    return table.push(...rows), table.toString()
+}
+
 /**
  * Helper utility for printing out boolean values
  *
