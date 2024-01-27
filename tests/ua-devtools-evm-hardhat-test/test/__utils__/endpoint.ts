@@ -38,6 +38,8 @@ export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contra
 export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const ethExecutor = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'Executor' }
 export const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN' }
+export const ethDvn_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN_Opt2' }
+export const ethDvn_Opt3 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN_Opt3' }
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
@@ -46,6 +48,8 @@ export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, cont
 export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const avaxExecutor = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'Executor' }
 export const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
+export const avaxDvn_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN_Opt2' }
+export const avaxDvn_Opt3 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN_Opt3' }
 export const bscEndpoint = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'EndpointV2' }
 export const bscReceiveUln = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const bscSendUln = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'SendUln302' }
@@ -54,6 +58,8 @@ export const bscReceiveUln2_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractNam
 export const bscSendUln2_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'SendUln302_Opt2' }
 export const bscExecutor = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'Executor' }
 export const bscDvn = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN' }
+export const bscDvn_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN_Opt2' }
+export const bscDvn_Opt3 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN_Opt3' }
 
 export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
 
