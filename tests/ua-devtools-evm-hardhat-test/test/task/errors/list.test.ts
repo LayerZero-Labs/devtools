@@ -46,7 +46,7 @@ describe(`task ${TASK_LZ_ERRORS_LIST}`, () => {
     })
 
     it('should print all errors with matching signature if `containing` argument is supplied', async () => {
-        await hre.run(TASK_LZ_ERRORS_LIST, { containing: '0x81da67ee' })
+        await hre.run(TASK_LZ_ERRORS_LIST, { containing: '0xc3a1858e' })
 
         expect(printTableMock).toHaveBeenCalledTimes(1)
         expect(printTableMock.mock.calls[0]).toMatchSnapshot()

@@ -1116,39 +1116,29 @@ exports[`task lz:errors:list should print all errors with matching signature if 
 [
   [
     {
-      "Contract": "ReceiveUlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
-      "Contract": "SendUlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
+      "Contract": "ExecutorFeeLib",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
-      "Contract": "UlnBase",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
-      "Contract": "ReceiveUln301",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
-      "Contract": "SendUln301",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
-    },
-    {
-      "Contract": "ReceiveUln302",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
-    },
-    {
-      "Contract": "SendUln302",
-      "Error": "InvalidOptionalDVNThreshold()",
-      "Signature": "0x81da67ee",
+      "Contract": "EndpointV2Mock",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
   ],
 ]
