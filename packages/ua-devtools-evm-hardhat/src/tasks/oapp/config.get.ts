@@ -1,6 +1,6 @@
 import { ActionType } from 'hardhat/types'
 import { task, types } from 'hardhat/config'
-import { printRecord } from '@layerzerolabs/io-devtools'
+import { printCrossTable } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
@@ -26,30 +26,70 @@ export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
-            const receiveConfig = await getReceiveConfig(localNetworkName, remoteNetworkName, addresses[index])
-            const sendConfig = await getSendConfig(localNetworkName, remoteNetworkName, addresses[index])
+            // OApp User Set Config
+            const receiveCustomConfig = await getReceiveConfig(
+                localNetworkName,
+                remoteNetworkName,
+                addresses[index],
+                true
+            )
+            const sendCustomConfig = await getSendConfig(localNetworkName, remoteNetworkName, addresses[index], true)
+            const [sendCustomLibrary, sendCustomUlnConfig, sendCustomExecutorConfig] = sendCustomConfig ?? []
+            const [receiveCustomLibrary, receiveCustomUlnConfig] = receiveCustomConfig ?? []
 
-            const [sendLibrary, sendUlnConfig, sendExecutorConfig] = sendConfig ?? []
-            const [receiveLibrary, receiveUlnConfig] = receiveConfig ?? []
+            // Default Config
+            const receiveDefaultConfig = await getReceiveConfig(localNetworkName, remoteNetworkName)
+            const sendDefaultConfig = await getSendConfig(localNetworkName, remoteNetworkName)
+            const [sendDefaultLibrary, sendDefaultUlnConfig, sendDefaultExecutorConfig] = sendDefaultConfig ?? []
+            const [receiveDefaultLibrary, receiveDefaultUlnConfig] = receiveDefaultConfig ?? []
+
+            // OApp Config
+            const receiveOAppConfig = await getReceiveConfig(localNetworkName, remoteNetworkName, addresses[index])
+            const sendOAppConfig = await getSendConfig(localNetworkName, remoteNetworkName, addresses[index])
+            const [sendOAppLibrary, sendOAppUlnConfig, sendOAppExecutorConfig] = sendOAppConfig ?? []
+            const [receiveOAppLibrary, receiveOAppUlnConfig] = receiveOAppConfig ?? []
 
             configs[localNetworkName]![remoteNetworkName] = {
-                defaultSendLibrary: sendLibrary,
-                defaultReceiveLibrary: receiveLibrary,
-                sendUlnConfig,
-                sendExecutorConfig,
-                receiveUlnConfig,
+                defaultSendLibrary: sendOAppLibrary,
+                defaultReceiveLibrary: receiveOAppLibrary,
+                sendUlnConfig: sendOAppUlnConfig,
+                sendExecutorConfig: sendOAppExecutorConfig,
+                receiveUlnConfig: receiveOAppUlnConfig,
             }
 
             console.log(
-                printRecord({
-                    localNetworkName,
-                    remoteNetworkName,
-                    sendLibrary,
-                    receiveLibrary,
-                    sendUlnConfig,
-                    sendExecutorConfig,
-                    receiveUlnConfig,
-                })
+                printCrossTable(
+                    [
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendCustomLibrary,
+                            receiveLibrary: receiveCustomLibrary,
+                            sendUlnConfig: sendCustomUlnConfig,
+                            sendExecutorConfig: sendCustomExecutorConfig,
+                            receiveUlnConfig: receiveCustomUlnConfig,
+                        },
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendDefaultLibrary,
+                            receiveLibrary: receiveDefaultLibrary,
+                            sendUlnConfig: sendDefaultUlnConfig,
+                            sendExecutorConfig: sendDefaultExecutorConfig,
+                            receiveUlnConfig: receiveDefaultUlnConfig,
+                        },
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendOAppLibrary,
+                            receiveLibrary: receiveOAppLibrary,
+                            sendUlnConfig: sendOAppUlnConfig,
+                            sendExecutorConfig: sendOAppExecutorConfig,
+                            receiveUlnConfig: receiveOAppUlnConfig,
+                        },
+                    ],
+                    ['', 'Custom OApp Config', 'Default OApp Config', 'Active OApp Config']
+                )
             )
         }
     }
