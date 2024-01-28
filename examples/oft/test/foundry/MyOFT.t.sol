@@ -70,15 +70,23 @@ contract MyOFTTest is TestHelper {
 
     function test_send_oft() public {
         uint256 tokensToSend = 1 ether;
-        SendParam memory sendParam = SendParam(bEid, addressToBytes32(userB), tokensToSend, tokensToSend);
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
-        MessagingFee memory fee = aOFT.quoteSend(sendParam, options, false, "", "");
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(userB),
+            tokensToSend,
+            tokensToSend,
+            options,
+            "",
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(userB), initialBalance);
 
         vm.prank(userA);
-        aOFT.send{ value: fee.nativeFee }(sendParam, options, fee, payable(address(this)), "", "");
+        aOFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
         verifyPackets(bEid, addressToBytes32(address(bOFT)));
 
         assertEq(aOFT.balanceOf(userA), initialBalance - tokensToSend);
@@ -90,13 +98,21 @@ contract MyOFTTest is TestHelper {
 
         OFTComposerMock composer = new OFTComposerMock();
 
-        SendParam memory sendParam = SendParam(bEid, addressToBytes32(address(composer)), tokensToSend, tokensToSend);
         bytes memory options = OptionsBuilder
             .newOptions()
             .addExecutorLzReceiveOption(200000, 0)
             .addExecutorLzComposeOption(0, 500000, 0);
         bytes memory composeMsg = hex"1234";
-        MessagingFee memory fee = aOFT.quoteSend(sendParam, options, false, composeMsg, "");
+        SendParam memory sendParam = SendParam(
+            bEid,
+            addressToBytes32(address(composer)),
+            tokensToSend,
+            tokensToSend,
+            options,
+            composeMsg,
+            ""
+        );
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(address(composer)), 0);
@@ -104,11 +120,8 @@ contract MyOFTTest is TestHelper {
         vm.prank(userA);
         (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: fee.nativeFee }(
             sendParam,
-            options,
             fee,
-            payable(address(this)),
-            composeMsg,
-            ""
+            payable(address(this))
         );
         verifyPackets(bEid, addressToBytes32(address(bOFT)));
 
@@ -121,7 +134,7 @@ contract MyOFTTest is TestHelper {
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             msgReceipt.nonce,
             aEid,
-            oftReceipt.amountCreditLD,
+            oftReceipt.amountReceivedLD,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
         this.lzCompose(dstEid_, from_, options_, guid_, to_, composerMsg_);
@@ -216,13 +229,21 @@ contract MyOFTTest is TestHelper {
         uint256 amountToSendLD = 1.23456789 ether;
         uint256 minAmountToCreditLD = aOFT.removeDust(amountToSendLD);
 
-        // params for buildMsgAndOptions
-        SendParam memory sendParam = SendParam(dstEid, to, amountToSendLD, minAmountToCreditLD);
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         bytes memory composeMsg = hex"1234";
+        // params for buildMsgAndOptions
+        SendParam memory sendParam = SendParam(
+            dstEid,
+            to,
+            amountToSendLD,
+            minAmountToCreditLD,
+            extraOptions,
+            composeMsg,
+            ""
+        );
         uint256 amountToCreditLD = minAmountToCreditLD;
 
-        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, extraOptions, composeMsg, amountToCreditLD);
+        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
 
         (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
             message
@@ -242,12 +263,20 @@ contract MyOFTTest is TestHelper {
         uint256 minAmountToCreditLD = aOFT.removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
-        SendParam memory sendParam = SendParam(dstEid, to, amountToSendLD, minAmountToCreditLD);
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         bytes memory composeMsg = "";
+        SendParam memory sendParam = SendParam(
+            dstEid,
+            to,
+            amountToSendLD,
+            minAmountToCreditLD,
+            extraOptions,
+            composeMsg,
+            ""
+        );
         uint256 amountToCreditLD = minAmountToCreditLD;
 
-        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, extraOptions, composeMsg, amountToCreditLD);
+        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
 
         (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
             message
