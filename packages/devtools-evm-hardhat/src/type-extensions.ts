@@ -43,13 +43,6 @@ declare module 'hardhat/types/config' {
         layerZero?: LayerZeroHardhatUserConfig
     }
 
-    interface HardhatConfig {
-        /**
-         * LayerZero advanced configuration
-         */
-        layerZero?: LayerZeroHardhatUserConfig
-    }
-
     interface LayerZeroHardhatUserConfig {
         /**
          * Defines the names of @layerzerolabs packages
