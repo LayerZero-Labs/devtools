@@ -14,6 +14,11 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
  * hardhat functionality without mocking too much
  */
 const config: HardhatUserConfig = {
+    layerZero: {
+        // Since we are deploying our own protocol contracts,
+        // we'll skip the external deployment imports
+        deploymentSourcePackages: [],
+    },
     solidity: {
         version: '0.8.22',
     },
