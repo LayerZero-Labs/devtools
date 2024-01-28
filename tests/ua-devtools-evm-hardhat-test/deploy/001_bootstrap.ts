@@ -141,6 +141,34 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         ],
     })
 
+    await deployments.delete('DVN_Opt2')
+    const dvn_Opt2 = await deployments.deploy('DVN_Opt2', {
+        contract: 'DVN',
+        from: deployer,
+        args: [
+            network.config.eid, // vid
+            [sendUln302.address], // messageLibs
+            priceFeed.address, // priceFeed
+            [deployer], // signers
+            1, // quorum
+            [deployer], // admins
+        ],
+    })
+
+    await deployments.delete('DVN_Opt3')
+    const dvn_Opt3 = await deployments.deploy('DVN_Opt3', {
+        contract: 'DVN',
+        from: deployer,
+        args: [
+            network.config.eid, // vid
+            [sendUln302.address], // messageLibs
+            priceFeed.address, // priceFeed
+            [deployer], // signers
+            1, // quorum
+            [deployer], // admins
+        ],
+    })
+
     await deployments.delete('DVNFeeLib')
     const dvnFeeLib = await deployments.deploy('DVNFeeLib', {
         from: deployer,
@@ -165,6 +193,8 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         Executor: executor.address,
         ExecutorFeeLib: executorFeeLib.address,
         DVN: dvn.address,
+        DVN_Opt2: dvn_Opt2.address,
+        DVN_Opt3: dvn_Opt3.address,
         DVNFeeLib: dvnFeeLib.address,
     })
 }
