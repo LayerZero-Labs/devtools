@@ -71,7 +71,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
     decodeExecutorConfig(executorConfigBytes: string): Uln302ExecutorConfig {
         const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult(
-            'getAppExecutorConfig',
+            'getExecutorConfig',
             executorConfigBytes
         )
 
@@ -79,20 +79,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
     }
 
     encodeExecutorConfig(config: Uln302ExecutorConfig): string {
-        const encoded = this.contract.contract.interface.encodeFunctionResult('getAppExecutorConfig', [config])
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getExecutorConfig', [config])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }
 
     decodeUlnConfig(ulnConfigBytes: string): Uln302UlnConfig {
-        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getAppUlnConfig', ulnConfigBytes)
+        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getUlnConfig', ulnConfigBytes)
 
         return Uln302UlnConfigSchema.parse({ ...rtnConfig })
     }
 
     encodeUlnConfig(config: Uln302UlnConfig): string {
         const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
-        const encoded = this.contract.contract.interface.encodeFunctionResult('getAppUlnConfig', [serializedConfig])
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getUlnConfig', [serializedConfig])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }
