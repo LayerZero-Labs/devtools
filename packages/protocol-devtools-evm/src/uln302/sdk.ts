@@ -1,7 +1,7 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
-import { makeZeroAddress, OmniSDK } from '@layerzerolabs/devtools-evm'
+import { isZero, makeZeroAddress, OmniSDK } from '@layerzerolabs/devtools-evm'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
 import assert from 'assert'
 import { printRecord } from '@layerzerolabs/io-devtools'
@@ -13,7 +13,23 @@ export class Uln302 extends OmniSDK implements IUln302 {
         )
 
         const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
+        // Now we convert the ethers-specific object into the common structure
+        //
+        // Here we need to spread the config into an object because what ethers gives us
+        // is actually an array with extra properties
+        return Uln302UlnConfigSchema.parse({ ...config })
+    }
 
+    async getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
+        )
+
+        if (isZero(address)) {
+            this.logger.warning(`Passed in OApp address is zero. This will request the default config.`)
+        }
+
+        const config = await this.contract.contract.getAppUlnConfig(makeZeroAddress(address), eid)
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
@@ -23,6 +39,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
     async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
+
+        // Now we convert the ethers-specific object into the common structure
+        //
+        // Here we need to spread the config into an object because what ethers gives us
+        // is actually an array with extra properties
+        return Uln302ExecutorConfigSchema.parse({ ...config })
+    }
+
+    async getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig> {
+        const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
+
+        if (isZero(address)) {
+            this.logger.warning(`Passed in OApp address is zero. This will request the default config.`)
+        }
 
         // Now we convert the ethers-specific object into the common structure
         //
