@@ -51,8 +51,8 @@ contract MyOFT is OFT {
 
     function buildMsgAndOptions(
         SendParam calldata _sendParam,
-        uint256 _amountLD
+        uint256 _amountToCreditLD
     ) public view returns (bytes memory message, bytes memory options) {
-        return _buildMsgAndOptions(_sendParam, _amountLD);
+        return _buildMsgAndOptions(_sendParam, _amountToCreditLD);
     }
 }
