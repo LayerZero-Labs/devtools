@@ -1,14 +1,14 @@
 import hre from 'hardhat'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_ERRORS_LIST } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { printTable } from '@layerzerolabs/io-devtools/swag'
+import { printVerticalTable } from '@layerzerolabs/io-devtools/swag'
 
 jest.mock('@layerzerolabs/io-devtools/swag', () => ({
-    printTable: jest.fn(),
+    printVerticalTable: jest.fn(),
     printLogo: jest.fn(),
 }))
 
-const printTableMock = printTable as jest.Mock
+const printTableMock = printVerticalTable as jest.Mock
 const runMock = jest.spyOn(hre, 'run')
 
 describe(`task ${TASK_LZ_ERRORS_LIST}`, () => {
