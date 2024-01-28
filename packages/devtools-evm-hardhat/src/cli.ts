@@ -18,23 +18,36 @@ const CommaSeparatedValuesSchema = z.string().transform((value) =>
 )
 
 /**
- * Hardhat CLI type for a comma separated list of network names
+ * Hardhat CLI type for a comma separated list of arbitrary strings
  */
-const networks: CLIArgumentType<[networkName: string, eid: EndpointId | undefined][]> = {
-    name: 'networks',
+const csv: CLIArgumentType<string[]> = {
+    name: 'csv',
     parse(name: string, value: string) {
         const result = CommaSeparatedValuesSchema.safeParse(value)
         if (!result.success) {
             throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
                 value,
                 name: name,
-                type: 'networks',
+                type: 'csv',
             })
         }
 
-        const networkNames = result.data
+        return result.data
+    },
+    validate() {},
+}
+
+export type NetworkAndEndpointId = [networkName: string, eid: EndpointId | undefined]
+
+/**
+ * Hardhat CLI type for a comma separated list of network names
+ */
+const networks: CLIArgumentType<NetworkAndEndpointId[]> = {
+    name: 'networks',
+    parse(name: string, value: string) {
+        const networkNames = csv.parse(name, value)
         const allDefinedNetworks = getEidsByNetworkName()
-        const networks: [string, EndpointId | undefined][] = networkNames.map((networkName) => {
+        const networks = networkNames.map((networkName): NetworkAndEndpointId => {
             if (networkName in allDefinedNetworks) return [networkName, allDefinedNetworks[networkName]]
 
             throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
@@ -49,4 +62,4 @@ const networks: CLIArgumentType<[networkName: string, eid: EndpointId | undefine
     validate() {},
 }
 
-export const types = { networks, ...builtInTypes }
+export const types = { csv, networks, ...builtInTypes }
