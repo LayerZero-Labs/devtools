@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.11
+
+### Patch Changes
+
+- 72873ef: JSDoc for Endpoint & Uln302 SDKs
+
 ## 0.0.10
 
 ### Patch Changes

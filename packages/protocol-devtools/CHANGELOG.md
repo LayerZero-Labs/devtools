@@ -1,5 +1,12 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.0.5
+
+### Patch Changes
+
+- 72873ef: Adding getAppExecutorConfig and getAppUlnConfig to endpoint & uln sdks
+- 72873ef: JSDoc for Endpoint & Uln302 SDKs
+
 ## 0.0.4
 
 ### Patch Changes

@@ -844,7 +844,7 @@ importers:
         specifier: ~2.0.14
         version: 2.0.14
       '@layerzerolabs/protocol-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.3
@@ -1121,7 +1121,7 @@ importers:
         specifier: ~2.0.14
         version: 2.0.14
       '@layerzerolabs/protocol-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.0.3
@@ -1582,10 +1582,10 @@ importers:
         specifier: ~0.0.3
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.0.6
+        specifier: ~0.0.7
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.0.4
@@ -1594,7 +1594,7 @@ importers:
         specifier: ~0.0.7
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.0.4
