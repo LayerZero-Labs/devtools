@@ -15,10 +15,10 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.23",
-    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.23",
-    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.23",
-    "@layerzerolabs/lz-evm-v1-0.7": "~2.0.23",
+    "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.24",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.24",
+    "@layerzerolabs/lz-evm-protocol-v2": "~2.0.24",
+    "@layerzerolabs/lz-evm-v1-0.7": "~2.0.24",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "@types/node": "~18.18.14",
