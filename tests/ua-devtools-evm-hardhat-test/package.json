@@ -29,7 +29,7 @@
     "@layerzerolabs/io-devtools": "~0.0.6",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.25",
-    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.25",
+    "@layerzerolabs/lz-evm-oapp-v2": "~2.0.26-rc.1",
     "@layerzerolabs/lz-evm-protocol-v2": "~2.0.25",
     "@layerzerolabs/lz-evm-sdk-v1": "~2.0.25",
     "@layerzerolabs/lz-evm-sdk-v2": "~2.0.25",
