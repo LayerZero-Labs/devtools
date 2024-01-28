@@ -2,12 +2,61 @@ import type { Address, OmniGraph, Factory, OmniTransaction, IOmniSDK, OmniPoint 
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IUln302 extends IOmniSDK {
+    /**
+     * Gets the ULN config for a given endpoint ID and an address.
+     *
+     * If there is no executor config specified, this function will return the default
+     * config set for this library and EndpointID
+     *
+     * @see {@link getAppUlnConfig}
+     *
+     * @param {EndpointId} eid Endpoint ID
+     * @param {Bytes32 | Address} address
+     */
     getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig>
+
+    /**
+     * Gets the ULN config for a given endpoint ID and an address.
+     *
+     * This function will not take the default executor config into account
+     * as opposed to `getUlnConfig`
+     *
+     * @see {@link getUlnConfig}
+     *
+     * @param {EndpointId} eid Endpoint ID
+     * @param {Bytes32 | Address} address
+     */
     getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig>
-    getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
-    getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig>
-    setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
+
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
+
+    /**
+     * Gets the Executor config for a given endpoint ID and an address.
+     *
+     * If there is no executor config specified, this function will return the default
+     * config set for this library and EndpointID
+     *
+     * @see {@link getAppExecutorConfig}
+     *
+     * @param {EndpointId} eid Endpoint ID
+     * @param {Bytes32 | Address | null} address
+     */
+    getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
+
+    /**
+     * Gets the Executor config for a given endpoint ID and an address.
+     *
+     * This function will not take the default executor config into account
+     * as opposed to `getUlnConfig`
+     *
+     * @see {@link getExecutorConfig}
+     *
+     * @param {EndpointId} eid Endpoint ID
+     * @param {Bytes32 | Address} address
+     */
+    getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig>
+
+    setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
 }
 
 export interface Uln302ExecutorConfig {
