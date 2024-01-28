@@ -1,12 +1,13 @@
-import { task, types } from 'hardhat/config'
+import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_DEPLOY } from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { type NetworkAndEndpointId, types } from '@/cli'
 
 interface TaskArgs {
-    networks?: string
+    networks?: NetworkAndEndpointId[]
     logLevel?: string
     ci?: boolean
 }
@@ -40,7 +41,7 @@ if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY) {
             'networks',
             'List of comma-separated networks. If not provided, all networks will be deployed',
             undefined,
-            types.string,
+            types.networks,
             true
         )
         .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
