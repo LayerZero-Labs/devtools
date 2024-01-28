@@ -1,22 +1,24 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { printRecord } from '@layerzerolabs/io-devtools'
+import { createLogger, printJson, printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
+import {getEidForNetworkName, getEidsByNetworkName} from '@layerzerolabs/devtools-evm-hardhat'
+import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
 interface TaskArgs {
     logLevel?: string
     networks?: string[]
+    json?: boolean
 }
 
 export const getDefaultConfig: ActionType<TaskArgs> = async (
-    { logLevel = 'info', networks: networksArgument },
-    hre
+    { logLevel = 'info', networks: networksArgument }, hre,
 ) => {
     // We'll set the global logging level to get as much info as needed
-    setDefaultLogLevel(logLevel)
+    setDefaultLogLevel(logLevel ?? 'info')
+    const logger = createLogger()
 
     const networks =
         networksArgument ??
@@ -34,6 +36,33 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (
             const [sendLibrary, sendUlnConfig, sendExecutorConfig] = sendConfig ?? []
             const [receiveLibrary, receiveUlnConfig] = receiveConfig ?? []
 
+            if (sendLibrary == null) {
+                logger.warn(
+                    `SendLibrary is undefined for pathway ${localNetworkName}(${getEidForNetworkName(localNetworkName)}) -> ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)})`
+                )
+                continue
+            } else if (receiveLibrary == null) {
+                logger.warn(
+                    `ReceiveLibrary is undefined for pathway ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)}) -> ${localNetworkName}(${getEidForNetworkName(localNetworkName)})`
+                )
+                continue
+            } else if (sendUlnConfig == null) {
+                logger.warn(
+                    `Send Uln Config is undefined for pathway ${localNetworkName}(${getEidForNetworkName(localNetworkName)}) -> ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)})`
+                )
+                continue
+            } else if (sendExecutorConfig == null) {
+                logger.warn(
+                    `Send Executor Config is undefined for pathway $${localNetworkName}(${getEidForNetworkName(localNetworkName)}) -> ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)})`
+                )
+                continue
+            } else if (receiveUlnConfig == null) {
+                logger.warn(
+                    `Receive Uln Config is undefined for pathway ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)}) -> ${localNetworkName}(${getEidForNetworkName(localNetworkName)})`
+                )
+                continue
+            }
+
             configs[localNetworkName]![remoteNetworkName] = {
                 defaultSendLibrary: sendLibrary,
                 defaultReceiveLibrary: receiveLibrary,
@@ -42,17 +71,39 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (
                 receiveUlnConfig,
             }
 
-            console.log(
-                printRecord({
-                    localNetworkName,
-                    remoteNetworkName,
-                    sendLibrary,
-                    receiveLibrary,
-                    sendUlnConfig,
-                    sendExecutorConfig,
-                    receiveUlnConfig,
-                })
-            )
+            if (taskArgs.json) {
+                const config: OAppEdgeConfig = {
+                    sendLibrary: sendLibrary,
+                    receiveLibraryConfig: {
+                        receiveLibrary,
+                        gracePeriod: 0,
+                    },
+                    sendConfig: {
+                        executorConfig: sendExecutorConfig,
+                        ulnConfig: sendUlnConfig,
+                    },
+                    receiveConfig: {
+                        ulnConfig: receiveUlnConfig,
+                    },
+                }
+
+                console.log(
+                    `${localNetworkName}(${getEidForNetworkName(localNetworkName)}) -> ${remoteNetworkName}(${getEidForNetworkName(remoteNetworkName)})\n`,
+                    printJson(config)
+                )
+            } else {
+                console.log(
+                    printRecord({
+                        localNetworkName,
+                        remoteNetworkName,
+                        sendLibrary,
+                        receiveLibrary,
+                        sendUlnConfig,
+                        sendExecutorConfig,
+                        receiveUlnConfig,
+                    })
+                )
+            }
         }
     }
     return configs
@@ -64,4 +115,5 @@ task(
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addOptionalParam('json', 'print default json to use in you LayerZero OApp config', false, types.boolean)
     .setAction(getDefaultConfig)
