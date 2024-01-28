@@ -6,7 +6,7 @@ import { getAllArtifacts } from '@layerzerolabs/devtools-evm-hardhat'
 import { Fragment } from '@ethersproject/abi'
 import { hexDataSlice } from '@ethersproject/bytes'
 import { id } from '@ethersproject/hash'
-import { printLogo, printTable } from '@layerzerolabs/io-devtools/swag'
+import { printLogo, printVerticalTable } from '@layerzerolabs/io-devtools/swag'
 import { isErrorFragment } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
@@ -73,7 +73,7 @@ export const action: ActionType<TaskArgs> = async (
         return logger.warn(`No errors found, exiting`), undefined
     }
 
-    printTable(rows)
+    printVerticalTable(rows)
 }
 
 task(TASK_LZ_ERRORS_LIST, 'List all custom errors from your project')
