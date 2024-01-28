@@ -18,10 +18,10 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
 
     it('should return app default configurations when addresses are not oapps', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
-        const addresses = new Array(networks.length).fill(AddressZero).toString()
+        const addresses = new Array(networks.length).fill(AddressZero)
         const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET, {
-            networks: networks.toString(),
-            addresses: addresses.toString(),
+            networks,
+            addresses,
         })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {

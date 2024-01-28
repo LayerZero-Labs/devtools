@@ -1,8 +1,8 @@
 import { ActionType } from 'hardhat/types'
-import { task, types } from 'hardhat/config'
+import { task } from 'hardhat/config'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_ERRORS_LIST } from '@/constants/tasks'
-import { getAllArtifacts } from '@layerzerolabs/devtools-evm-hardhat'
+import { getAllArtifacts, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { Fragment } from '@ethersproject/abi'
 import { hexDataSlice } from '@ethersproject/bytes'
 import { id } from '@ethersproject/hash'
@@ -78,6 +78,6 @@ export const action: ActionType<TaskArgs> = async (
 
 task(TASK_LZ_ERRORS_LIST, 'List all custom errors from your project')
     .addParam('containing', 'Only show custom errors containing a string', '', types.string)
-    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('showSourcePath', 'Show contract source path')
     .setAction(action)
