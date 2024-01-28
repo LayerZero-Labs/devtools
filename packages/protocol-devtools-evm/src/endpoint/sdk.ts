@@ -228,7 +228,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
 
     async getExecutorConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
         this.logger.debug(
-            `Getting executor config or default for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+            `Getting executor config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
 
         const uln = await this.getUln302SDK(lib)
@@ -245,9 +245,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async getUlnConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
-        this.logger.debug(
-            `Getting ULN config or default for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
-        )
+        this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`)
 
         const uln = await this.getUln302SDK(lib)
         return await uln.getUlnConfig(eid, oapp)
