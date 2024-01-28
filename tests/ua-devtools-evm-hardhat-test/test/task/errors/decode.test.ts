@@ -22,7 +22,7 @@ describe(`task ${TASK_LZ_ERRORS_DECODE}`, () => {
         await hre.run(TASK_LZ_ERRORS_DECODE, { hash: '' })
 
         // For some reason even though we did not specify any arguments to the compile task,
-        // jest still sees some aarguments being passed so we need to pass those to make this expect work
+        // jest still sees some arguments being passed so we need to pass those to make this expect work
         expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
     })
 
