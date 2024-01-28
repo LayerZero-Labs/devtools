@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools
 
+## 0.0.5
+
+### Patch Changes
+
+- 72873ef: JSDoc for Endpoint & Uln302 SDKs
+- Updated dependencies [72873ef]
+- Updated dependencies [72873ef]
+  - @layerzerolabs/protocol-devtools@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes
