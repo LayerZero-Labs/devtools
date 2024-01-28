@@ -5,11 +5,11 @@ import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { type NetworkAndEndpointId, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
-    networks: NetworkAndEndpointId[]
+    networks: string[]
     addresses: string[]
 }
 
@@ -20,10 +20,10 @@ export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', n
     assert(networks.length === addresses.length, 'Passed in networks must match length of passed in addresses.')
     const configs: Record<string, Record<string, unknown>> = {}
 
-    for (const [index, [localNetworkName]] of networks.entries()) {
+    for (const [index, localNetworkName] of networks.entries()) {
         configs[localNetworkName] = {}
 
-        for (const [remoteNetworkName] of networks) {
+        for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
             // OApp User Set Config

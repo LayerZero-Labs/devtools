@@ -20,8 +20,8 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
         const addresses = new Array(networks.length).fill(AddressZero).toString()
         const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET, {
-            networks: networks.toString(),
-            addresses: addresses.toString(),
+            networks,
+            addresses,
         })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {

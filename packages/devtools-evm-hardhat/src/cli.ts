@@ -1,5 +1,4 @@
 import { types as builtInTypes } from 'hardhat/config'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatError } from 'hardhat/internal/core/errors'
 import { ERRORS } from 'hardhat/internal/core/errors-list'
 import { CLIArgumentType } from 'hardhat/types'
@@ -37,18 +36,16 @@ const csv: CLIArgumentType<string[]> = {
     validate() {},
 }
 
-export type NetworkAndEndpointId = [networkName: string, eid: EndpointId | undefined]
-
 /**
  * Hardhat CLI type for a comma separated list of network names
  */
-const networks: CLIArgumentType<NetworkAndEndpointId[]> = {
+const networks: CLIArgumentType<string[]> = {
     name: 'networks',
     parse(name: string, value: string) {
         const networkNames = csv.parse(name, value)
         const allDefinedNetworks = getEidsByNetworkName()
-        const networks = networkNames.map((networkName): NetworkAndEndpointId => {
-            if (networkName in allDefinedNetworks) return [networkName, allDefinedNetworks[networkName]]
+        const networks = networkNames.map((networkName) => {
+            if (networkName in allDefinedNetworks) return networkName
 
             throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
                 value: networkName,

@@ -17,7 +17,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
 
     it('should return default configurations', async () => {
         const networks = Object.keys(hre.userConfig.networks ?? {})
-        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, { networks: networks.toString() })
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, { networks })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {
             const localEid = getEidForNetworkName(localNetwork)

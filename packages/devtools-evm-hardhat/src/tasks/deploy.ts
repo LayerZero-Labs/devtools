@@ -4,10 +4,10 @@ import { TASK_LZ_DEPLOY } from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { type NetworkAndEndpointId, types } from '@/cli'
+import { types } from '@/cli'
 
 interface TaskArgs {
-    networks?: NetworkAndEndpointId[]
+    networks?: string[]
     logLevel?: string
     ci?: boolean
 }

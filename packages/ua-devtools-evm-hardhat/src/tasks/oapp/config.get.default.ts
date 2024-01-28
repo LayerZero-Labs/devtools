@@ -4,11 +4,11 @@ import { printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { type NetworkAndEndpointId, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
-    networks: NetworkAndEndpointId[]
+    networks: string[]
 }
 
 export const getDefaultConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', networks }) => {
@@ -17,10 +17,10 @@ export const getDefaultConfig: ActionType<TaskArgs> = async ({ logLevel = 'info'
 
     const configs: Record<string, Record<string, unknown>> = {}
 
-    for (const [localNetworkName] of networks) {
+    for (const localNetworkName of networks) {
         configs[localNetworkName] = {}
 
-        for (const [remoteNetworkName] of networks) {
+        for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
             const receiveConfig = await getReceiveConfig(localNetworkName, remoteNetworkName)
