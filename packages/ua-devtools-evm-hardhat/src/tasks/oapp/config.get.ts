@@ -102,5 +102,5 @@ task(
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.networks)
     .addParam('addresses', 'Comma-separated list of addresses', undefined, types.csv)
-    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(getOAppConfig)

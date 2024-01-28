@@ -1,8 +1,8 @@
 import { ActionType } from 'hardhat/types'
-import { task, types } from 'hardhat/config'
+import { task } from 'hardhat/config'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_ERRORS_DECODE } from '@/constants/tasks'
-import { createErrorParser } from '@layerzerolabs/devtools-evm-hardhat'
+import { createErrorParser, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { RevertError } from '@layerzerolabs/devtools-evm'
 import { printLogo, printRecord } from '@layerzerolabs/io-devtools/swag'
 import { CustomError } from '@layerzerolabs/devtools-evm'
@@ -80,5 +80,5 @@ export const action: ActionType<TaskArgs> = async ({ hash, logLevel = 'info' }, 
 
 task(TASK_LZ_ERRORS_DECODE, 'Decodes custom error data based')
     .addPositionalParam('hash', 'Encoded contract error hash (including the 0x prefix)', undefined, types.string, false)
-    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(action)

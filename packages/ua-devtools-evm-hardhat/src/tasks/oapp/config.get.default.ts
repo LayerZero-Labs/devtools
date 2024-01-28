@@ -58,5 +58,5 @@ task(
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
     .addParam('networks', 'comma separated list of networks', undefined, types.networks)
-    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(getDefaultConfig)

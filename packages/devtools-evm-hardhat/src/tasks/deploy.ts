@@ -44,7 +44,7 @@ if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY) {
             types.networks,
             true
         )
-        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
         .addParam(
             'ci',
             'Continuous integration (non-interactive) mode. Will not ask for any input from the user',

@@ -1,10 +1,10 @@
-import { task, types } from 'hardhat/config'
+import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_OAPP_CONFIG_INIT } from '@/constants/tasks'
 import { formatEid } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { createLogger, pluralizeNoun, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { getEidsByNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import { getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { promptToSelectMultiple } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraphHardhat } from '@/oapp'
 
@@ -93,7 +93,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise
 if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT) {
     task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file')
         .addParam('oappConfig', 'Path to the new LayerZero OApp config', './layerzero.config', types.string)
-        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
+        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
         .addParam(
             'ci',
             'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
