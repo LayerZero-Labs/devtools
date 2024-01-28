@@ -67,8 +67,8 @@ describe('endpoint/config', () => {
             const ethSendUlnSdk = await sdkFactory(ethSendUlnPoint)
             const avaxSendUlnSdk = await sdkFactory(avaxSendUlnPoint)
 
-            const ethConfig = await ethSendUlnSdk.getUlnConfig(avaxSendUlnPoint.eid, avaxSendUlnPoint.address)
-            const avaxConfig = await avaxSendUlnSdk.getUlnConfig(ethSendUlnPoint.eid, ethSendUlnPoint.address)
+            const ethConfig = await ethSendUlnSdk.getAppUlnConfig(avaxSendUlnPoint.eid, avaxSendUlnPoint.address)
+            const avaxConfig = await avaxSendUlnSdk.getAppUlnConfig(ethSendUlnPoint.eid, ethSendUlnPoint.address)
 
             const ethDvnPoint = omniContractToPoint(await connectedContractFactory(ethDvn))
             const avaxDvnPoint = omniContractToPoint(await connectedContractFactory(avaxDvn))

@@ -7,12 +7,12 @@ import assert from 'assert'
 import { printRecord } from '@layerzerolabs/io-devtools'
 
 export class Uln302 extends OmniSDK implements IUln302 {
-    async getUlnConfigOrDefault(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
+    async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
         )
 
-        const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
+        const config = await this.contract.contract.getAppUlnConfig(makeZeroAddress(address), eid)
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
@@ -20,7 +20,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302UlnConfigSchema.parse({ ...config })
     }
 
-    async getUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig> {
+    async getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
         )
@@ -37,11 +37,8 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302UlnConfigSchema.parse({ ...config })
     }
 
-    async getExecutorConfigOrDefault(
-        eid: EndpointId,
-        address?: Address | null | undefined
-    ): Promise<Uln302ExecutorConfig> {
-        const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
+    async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
+        const config = await this.contract.contract.getAppExecutorConfig(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
@@ -50,7 +47,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302ExecutorConfigSchema.parse({ ...config })
     }
 
-    async getExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig> {
+    async getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
 
         if (isZero(address)) {
@@ -74,7 +71,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
     decodeExecutorConfig(executorConfigBytes: string): Uln302ExecutorConfig {
         const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult(
-            'getExecutorConfig',
+            'getAppExecutorConfig',
             executorConfigBytes
         )
 
@@ -82,20 +79,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
     }
 
     encodeExecutorConfig(config: Uln302ExecutorConfig): string {
-        const encoded = this.contract.contract.interface.encodeFunctionResult('getExecutorConfig', [config])
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getAppExecutorConfig', [config])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }
 
     decodeUlnConfig(ulnConfigBytes: string): Uln302UlnConfig {
-        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getUlnConfig', ulnConfigBytes)
+        const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getAppUlnConfig', ulnConfigBytes)
 
         return Uln302UlnConfigSchema.parse({ ...rtnConfig })
     }
 
     encodeUlnConfig(config: Uln302UlnConfig): string {
         const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
-        const encoded = this.contract.contract.interface.encodeFunctionResult('getUlnConfig', [serializedConfig])
+        const encoded = this.contract.contract.interface.encodeFunctionResult('getAppUlnConfig', [serializedConfig])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }

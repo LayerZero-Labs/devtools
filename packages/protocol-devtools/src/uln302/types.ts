@@ -8,25 +8,25 @@ export interface IUln302 extends IOmniSDK {
      * If there is no executor config specified, this function will return the default
      * config set for this library and EndpointID
      *
-     * @see {@link getUlnConfig}
+     * @see {@link getAppUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
      * @param {Bytes32 | Address} address
      */
-    getUlnConfigOrDefault(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig>
+    getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig>
 
     /**
      * Gets the ULN config for a given endpoint ID and an address.
      *
      * This function will not take the default executor config into account
-     * as opposed to `getUlnConfigOrDefault`
+     * as opposed to `getUlnConfig`
      *
-     * @see {@link getUlnConfigOrDefault}
+     * @see {@link getUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
      * @param {Bytes32 | Address} address
      */
-    getUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig>
+    getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig>
 
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
 
@@ -36,25 +36,25 @@ export interface IUln302 extends IOmniSDK {
      * If there is no executor config specified, this function will return the default
      * config set for this library and EndpointID
      *
-     * @see {@link getExecutorConfig}
+     * @see {@link getAppExecutorConfig}
      *
      * @param {EndpointId} eid Endpoint ID
      * @param {Bytes32 | Address | null} address
      */
-    getExecutorConfigOrDefault(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
+    getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
 
     /**
      * Gets the Executor config for a given endpoint ID and an address.
      *
      * This function will not take the default executor config into account
-     * as opposed to `getUlnConfigOrDefault`
+     * as opposed to `getUlnConfig`
      *
-     * @see {@link getExecutorConfigOrDefault}
+     * @see {@link getExecutorConfig}
      *
      * @param {EndpointId} eid Endpoint ID
      * @param {Bytes32 | Address} address
      */
-    getExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig>
+    getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig>
 
     setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
 }
