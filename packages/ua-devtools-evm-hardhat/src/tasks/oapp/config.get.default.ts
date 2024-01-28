@@ -4,6 +4,7 @@ import { printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import { getEidsByNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
@@ -17,7 +18,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (taskArgs, hre) => {
     if (taskArgs?.networks != null) {
         networks = new Set(taskArgs.networks.split(','))
     } else {
-        networks = Object.keys(hre.userConfig.networks ?? {})
+        networks = Object.keys(getEidsByNetworkName(hre)).filter((key) => getEidsByNetworkName(hre)[key] !== undefined)
     }
     const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
