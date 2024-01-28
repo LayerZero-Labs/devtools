@@ -26,7 +26,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         )
 
         if (isZero(address)) {
-            this.logger.warning(`Passed in OApp address is zero. This will request the default config.`)
+            this.logger.warn(`Passed in OApp address is zero. This will request the default config.`)
         }
 
         const config = await this.contract.contract.getAppUlnConfig(makeZeroAddress(address), eid)
@@ -51,7 +51,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
 
         if (isZero(address)) {
-            this.logger.warning(`Passed in OApp address is zero. This will request the default config.`)
+            this.logger.warn(`Passed in OApp address is zero. This will request the default config.`)
         }
 
         // Now we convert the ethers-specific object into the common structure
