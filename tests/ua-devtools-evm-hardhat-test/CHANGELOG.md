@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.12
+
+### Patch Changes
+
+- 565b646: Allow project packages to specify the external artifacts and deployments in their hardhat config
+- 2b36ed9: Rafactor some of the printers in io-devtools
+
 ## 0.0.11
 
 ### Patch Changes

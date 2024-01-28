@@ -1,5 +1,19 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.8
+
+### Patch Changes
+
+- 565b646: Allow project packages to specify the external artifacts and deployments in their hardhat config
+- Updated dependencies [565b646]
+- Updated dependencies [2b36ed9]
+- Updated dependencies [2b36ed9]
+- Updated dependencies [2b36ed9]
+  - @layerzerolabs/devtools-evm-hardhat@0.0.8
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.0.7
+  - @layerzerolabs/io-devtools@0.0.6
+  - @layerzerolabs/protocol-devtools-evm@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes
