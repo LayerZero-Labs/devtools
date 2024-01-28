@@ -23,7 +23,7 @@ describe('MyOFT Test', function () {
     // Before hook for setup that runs once before all tests in the block
     before(async function () {
         // Contract factory for our tested contract
-        MyOFT = await ethers.getContractFactory('MyOFT')
+        MyOFT = await ethers.getContractFactory('OFTMock')
 
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
@@ -70,16 +70,25 @@ describe('MyOFT Test', function () {
 
         // Defining the amount of tokens to send and constructing the parameters for the send operation
         const tokensToSend = ethers.utils.parseEther('1')
-        const sendParam = [eidB, ethers.utils.zeroPad(ownerB.address, 32), tokensToSend, tokensToSend]
 
         // Defining extra message execution options for the send operation
         const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
 
+        const sendParam = [
+            eidB,
+            ethers.utils.zeroPad(ownerB.address, 32),
+            tokensToSend,
+            tokensToSend,
+            options,
+            '0x',
+            '0x',
+        ]
+
         // Fetching the native fee for the token send operation
-        const [nativeFee] = await myOFTA.quoteSend(sendParam, options, false, `0x`, `0x`)
+        const [nativeFee] = await myOFTA.quoteSend(sendParam, false)
 
         // Executing the send operation from myOFTA contract
-        await myOFTA.send(sendParam, options, [nativeFee, 0], ownerA.address, '0x', '0x', { value: nativeFee })
+        await myOFTA.send(sendParam, [nativeFee, 0], ownerA.address, { value: nativeFee })
 
         // Fetching the final token balances of ownerA and ownerB
         const finalBalanceA = await myOFTA.balanceOf(ownerA.address)
