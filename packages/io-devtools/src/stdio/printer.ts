@@ -68,7 +68,7 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
  * @param {string[]} [header]
  * @returns {string}
  */
-export const printVerticalTable = <TRecord extends Record<string | number, unknown>>(
+export const printCrossTable = <TRecord extends Record<string | number, unknown>>(
     records: TRecord[],
     header?: string[]
 ): string => {

@@ -1,6 +1,6 @@
 import { ActionType } from 'hardhat/types'
 import { task, types } from 'hardhat/config'
-import { printVerticalTable } from '@layerzerolabs/io-devtools'
+import { printCrossTable } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
@@ -58,7 +58,7 @@ export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
             }
 
             console.log(
-                printVerticalTable(
+                printCrossTable(
                     [
                         {
                             localNetworkName,
