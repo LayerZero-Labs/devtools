@@ -1,4 +1,4 @@
-import { extendConfig, extendEnvironment } from 'hardhat/config'
+import { extendConfig } from 'hardhat/config'
 import {
     createErrorParser,
     withLayerZeroArtifacts,
@@ -45,8 +45,4 @@ extendConfig((config, userConfig) => {
     if (external != null) {
         Object.assign(config, { external })
     }
-})
-
-extendEnvironment((_hre) => {
-    console.log('Extending environment')
 })
