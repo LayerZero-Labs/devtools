@@ -100,7 +100,7 @@ task(
     TASK_LZ_OAPP_CONFIG_GET,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addParam('networks', 'comma separated list of networks', undefined, types.string)
-    .addParam('addresses', 'comma separated list of addresses', undefined, types.string)
+    .addParam('networks', 'Comma-separated list of networks', undefined, types.networks)
+    .addParam('addresses', 'Comma-separated list of addresses', undefined, types.csv)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
     .setAction(getOAppConfig)
