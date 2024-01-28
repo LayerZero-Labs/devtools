@@ -16,27 +16,23 @@ describe('hardhat/config', () => {
                 await expect(hre.deployments.get('EndpointV2')).rejects.toThrow('No deployment found for: EndpointV2')
             })
 
-            // TODO Uncoment after upgrading to 2.0.25
-            //
-            // it('should load external deployments if set to undefined', async () => {
-            //     const hre = getTestHre({
-            //         network: 'vengaboys',
-            //         config: configFixture('hardhat.config.with-undefined-external-deployments.ts'),
-            //     })
+            it('should load external deployments if set to undefined', async () => {
+                const hre = getTestHre({
+                    network: 'vengaboys',
+                    config: configFixture('hardhat.config.with-undefined-external-deployments.ts'),
+                })
 
-            //     await expect(hre.deployments.get('EndpointV2')).resolves.not.toBeUndefined()
-            // })
+                await expect(hre.deployments.get('EndpointV2')).resolves.not.toBeUndefined()
+            })
 
-            // TODO Uncoment after upgrading to 2.0.25
-            //
-            // it('should load external deployments if set to specific packages', async () => {
-            //     const hre = getTestHre({
-            //         network: 'vengaboys',
-            //         config: configFixture('hardhat.config.with-specified-external-deployments.ts'),
-            //     })
+            it('should load external deployments if set to specific packages', async () => {
+                const hre = getTestHre({
+                    network: 'vengaboys',
+                    config: configFixture('hardhat.config.with-specified-external-deployments.ts'),
+                })
 
-            //     await expect(hre.deployments.get('EndpointV2')).resolves.not.toBeUndefined()
-            // })
+                await expect(hre.deployments.get('EndpointV2')).resolves.not.toBeUndefined()
+            })
         })
 
         describe('artifactSourcePackages', () => {
