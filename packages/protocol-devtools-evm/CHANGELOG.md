@@ -1,5 +1,15 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.0.8
+
+### Patch Changes
+
+- 2b36ed9: Rafactor some of the printers in io-devtools
+- 2b36ed9: Use warn method instead of warning on a logger
+- Updated dependencies [2b36ed9]
+- Updated dependencies [2b36ed9]
+  - @layerzerolabs/io-devtools@0.0.6
+
 ## 0.0.7
 
 ### Patch Changes

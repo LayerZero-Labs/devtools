@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-evm",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Utilities for LayerZero EVM protocol contracts",
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.0.4",
     "@layerzerolabs/devtools-evm": "~0.0.5",
-    "@layerzerolabs/io-devtools": "~0.0.4",
+    "@layerzerolabs/io-devtools": "~0.0.6",
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/lz-evm-sdk-v2": "~2.0.14",
     "@layerzerolabs/protocol-devtools": "~0.0.5",
@@ -71,7 +71,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.4",
     "@layerzerolabs/devtools-evm": "~0.0.5",
-    "@layerzerolabs/io-devtools": "~0.0.4",
+    "@layerzerolabs/io-devtools": "~0.0.6",
     "@layerzerolabs/lz-definitions": "~2.0.14",
     "@layerzerolabs/protocol-devtools": "~0.0.5",
     "zod": "^3.22.4"

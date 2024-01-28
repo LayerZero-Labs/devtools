@@ -1,5 +1,12 @@
 # @layerzerolabs/io-devtools
 
+## 0.0.6
+
+### Patch Changes
+
+- 2b36ed9: Updating Table for Get OApp Config Task
+- 2b36ed9: Rafactor some of the printers in io-devtools
+
 ## 0.0.5
 
 ### Patch Changes

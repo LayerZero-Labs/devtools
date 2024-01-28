@@ -541,7 +541,7 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.6
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -835,7 +835,7 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.6
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -1018,10 +1018,10 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.6
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^2.0.14
@@ -1039,7 +1039,7 @@ importers:
         specifier: ~0.0.4
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.0.6
+        specifier: ~0.0.8
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.0.4
@@ -1051,7 +1051,7 @@ importers:
         specifier: ~0.0.4
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.0.6
+        specifier: ~0.0.7
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -1252,10 +1252,10 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.4
+        specifier: ~0.0.6
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -1267,7 +1267,7 @@ importers:
         specifier: ~0.0.4
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.0.6
+        specifier: ~0.0.8
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.3
@@ -1549,10 +1549,10 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.0.5
+        specifier: ~0.0.6
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.0.14
@@ -1585,13 +1585,13 @@ importers:
         specifier: ~0.0.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.0.4
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~0.0.5
@@ -1600,7 +1600,7 @@ importers:
         specifier: ~0.0.4
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.0.6
+        specifier: ~0.0.7
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
