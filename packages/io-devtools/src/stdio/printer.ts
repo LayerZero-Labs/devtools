@@ -34,8 +34,6 @@ export const printJson = (obj: unknown, pretty = true): string =>
 const printValue = (value: unknown): string => {
     switch (true) {
         case value == null:
-            return ''
-
         case value instanceof Date:
         case typeof value !== 'object':
             return String(value)
