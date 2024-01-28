@@ -30,9 +30,9 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
     return table.push(...headers, ...rows), table.toString()
 }
 
-export const printOAppConfig = <TRecord extends object>(records: TRecord[]): string => {
+export const printRecords = <TRecord extends object>(records: TRecord[], header?: string[]): string => {
     const table = new Table({
-        head: ['', 'Custom OApp Config', 'Default OApp Config', 'Actual OApp Config'],
+        head: header != undefined ? header : [],
         wordWrap: true,
         wrapOnWordBoundary: false,
         style: { head: ['reset'] },

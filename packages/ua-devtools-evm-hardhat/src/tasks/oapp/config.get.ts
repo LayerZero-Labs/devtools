@@ -1,6 +1,6 @@
 import { ActionType } from 'hardhat/types'
 import { task, types } from 'hardhat/config'
-import { printOAppConfig } from '@layerzerolabs/io-devtools'
+import { printRecords } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
@@ -58,35 +58,38 @@ export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
             }
 
             console.log(
-                printOAppConfig([
-                    {
-                        localNetworkName,
-                        remoteNetworkName,
-                        sendLibrary: sendCustomLibrary,
-                        receiveLibrary: receiveCustomLibrary,
-                        sendUlnConfig: sendCustomUlnConfig,
-                        sendExecutorConfig: sendCustomExecutorConfig,
-                        receiveUlnConfig: receiveCustomUlnConfig,
-                    },
-                    {
-                        localNetworkName,
-                        remoteNetworkName,
-                        sendLibrary: sendDefaultLibrary,
-                        receiveLibrary: receiveDefaultLibrary,
-                        sendUlnConfig: sendDefaultUlnConfig,
-                        sendExecutorConfig: sendDefaultExecutorConfig,
-                        receiveUlnConfig: receiveDefaultUlnConfig,
-                    },
-                    {
-                        localNetworkName,
-                        remoteNetworkName,
-                        sendLibrary: sendOAppLibrary,
-                        receiveLibrary: receiveOAppLibrary,
-                        sendUlnConfig: sendOAppUlnConfig,
-                        sendExecutorConfig: sendOAppExecutorConfig,
-                        receiveUlnConfig: receiveOAppUlnConfig,
-                    },
-                ])
+                printRecords(
+                    [
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendCustomLibrary,
+                            receiveLibrary: receiveCustomLibrary,
+                            sendUlnConfig: sendCustomUlnConfig,
+                            sendExecutorConfig: sendCustomExecutorConfig,
+                            receiveUlnConfig: receiveCustomUlnConfig,
+                        },
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendDefaultLibrary,
+                            receiveLibrary: receiveDefaultLibrary,
+                            sendUlnConfig: sendDefaultUlnConfig,
+                            sendExecutorConfig: sendDefaultExecutorConfig,
+                            receiveUlnConfig: receiveDefaultUlnConfig,
+                        },
+                        {
+                            localNetworkName,
+                            remoteNetworkName,
+                            sendLibrary: sendOAppLibrary,
+                            receiveLibrary: receiveOAppLibrary,
+                            sendUlnConfig: sendOAppUlnConfig,
+                            sendExecutorConfig: sendOAppExecutorConfig,
+                            receiveUlnConfig: receiveOAppUlnConfig,
+                        },
+                    ],
+                    ['', 'Custom OApp Config', 'Default OApp Config', 'Active OApp Config']
+                )
             )
         }
     }
