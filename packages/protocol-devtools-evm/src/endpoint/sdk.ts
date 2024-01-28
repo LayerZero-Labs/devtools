@@ -226,38 +226,44 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.setConfig(oapp, lib, setExecutorConfigParams)
     }
 
+    async getExecutorConfigOrDefault(
+        oapp: Bytes32 | Address,
+        lib: Address,
+        eid: EndpointId
+    ): Promise<Uln302ExecutorConfig> {
+        this.logger.debug(
+            `Getting executor config or default for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+        )
+
+        const uln = await this.getUln302SDK(lib)
+        return await uln.getExecutorConfigOrDefault(eid, oapp)
+    }
+
     async getExecutorConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
         this.logger.debug(
-            `Getting executor config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+            `Getting executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
 
         const uln = await this.getUln302SDK(lib)
         return await uln.getExecutorConfig(eid, oapp)
     }
 
-    async getAppExecutorConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+    async getUlnConfigOrDefault(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(
-            `Getting executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
+            `Getting ULN config or default for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
 
         const uln = await this.getUln302SDK(lib)
-        return await uln.getAppExecutorConfig(eid, oapp)
+        return await uln.getUlnConfigOrDefault(eid, oapp)
     }
 
     async getUlnConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
-        this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`)
-
-        const uln = await this.getUln302SDK(lib)
-        return await uln.getUlnConfig(eid, oapp)
-    }
-
-    async getAppUlnConfig(oapp: Bytes32 | Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting App ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
 
         const uln = await this.getUln302SDK(lib)
-        return await uln.getAppUlnConfig(eid, oapp)
+        return await uln.getUlnConfig(eid, oapp)
     }
 
     isRegisteredLibrary(lib: Address): Promise<boolean> {

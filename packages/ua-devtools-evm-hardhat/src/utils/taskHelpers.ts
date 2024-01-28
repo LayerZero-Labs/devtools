@@ -33,8 +33,8 @@ export async function getSendConfig(
     if (sendLibrary == null) return undefined
 
     const localSendUlnSDK = await localEndpointSDK.getUln302SDK(sendLibrary)
-    const sendUlnConfig = await localSendUlnSDK.getUlnConfig(remoteEid)
-    const sendExecutorConfig = await localSendUlnSDK.getExecutorConfig(remoteEid)
+    const sendUlnConfig = await localSendUlnSDK.getUlnConfigOrDefault(remoteEid)
+    const sendExecutorConfig = await localSendUlnSDK.getExecutorConfigOrDefault(remoteEid)
 
     return [sendLibrary, sendUlnConfig, sendExecutorConfig]
 }
@@ -68,7 +68,7 @@ export async function getReceiveConfig(
 
     const localReceiveUlnSDK = await localEndpointSDK.getUln302SDK(receiveLibrary)
 
-    const receiveUlnConfig = await localReceiveUlnSDK.getUlnConfig(remoteEid)
+    const receiveUlnConfig = await localReceiveUlnSDK.getUlnConfigOrDefault(remoteEid)
     return [receiveLibrary, receiveUlnConfig, receiveLibraryTimeout]
 }
 

@@ -7,7 +7,7 @@ import assert from 'assert'
 import { printRecord } from '@layerzerolabs/io-devtools'
 
 export class Uln302 extends OmniSDK implements IUln302 {
-    async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
+    async getUlnConfigOrDefault(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
         )
@@ -20,7 +20,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302UlnConfigSchema.parse({ ...config })
     }
 
-    async getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig> {
+    async getUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
         )
@@ -37,7 +37,10 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302UlnConfigSchema.parse({ ...config })
     }
 
-    async getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig> {
+    async getExecutorConfigOrDefault(
+        eid: EndpointId,
+        address?: Address | null | undefined
+    ): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
@@ -47,7 +50,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302ExecutorConfigSchema.parse({ ...config })
     }
 
-    async getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig> {
+    async getExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
 
         if (isZero(address)) {
