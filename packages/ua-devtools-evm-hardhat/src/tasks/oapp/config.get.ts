@@ -1,12 +1,12 @@
 import { ActionType } from 'hardhat/types'
-import { task, types } from 'hardhat/config'
+import { task } from 'hardhat/config'
 import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig, validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
-import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
+import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
@@ -112,5 +112,6 @@ task(
     TASK_LZ_OAPP_CONFIG_GET,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .setAction(getOAppConfig)
