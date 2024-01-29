@@ -2,9 +2,12 @@ import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
 
 import './tasks/'
+
+const MNEMONIC = process.env.MNEMONIC ?? ''
 
 const config: HardhatUserConfig = {
     solidity: {
@@ -20,7 +23,29 @@ const config: HardhatUserConfig = {
             },
         ],
     },
-
+    networks: {
+        sepolia: {
+            eid: EndpointId.ETHEREUM_V2_TESTNET,
+            url: process.env.NETWORK_URL_ETHEREUM_SEPOLIA ?? 'https://rpc.sepolia.org/',
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
+        },
+        fuji: {
+            eid: EndpointId.AVALANCHE_V2_TESTNET,
+            url: process.env.NETWORK_URL_AVALANCHE_FUJI ?? 'https://api.avax-test.network/',
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
+        },
+        mumbai: {
+            eid: EndpointId.POLYGON_V2_TESTNET,
+            url: process.env.NETWORK_URL_POLYGON_MUMBAI ?? 'https://rpc-mumbai.matic.today',
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
+        },
+    },
     namedAccounts: {
         deployer: {
             default: 0, // wallet address of index[0], of the mnemonic in .env
