@@ -43,6 +43,35 @@ export const promptToContinue = async (
     return value
 }
 
+/**
+ * Validation function for prompts (sync or async)
+ *
+ * Should return true if validation passed, false or an error message
+ * if validation failed
+ */
+type PromptValidator<TValue extends string> = (value: TValue) => string | boolean | Promise<string | boolean>
+
+interface TextProps {
+    defaultValue?: string
+    validate?: PromptValidator<string>
+}
+
+export const promptForText = async (
+    message: string = 'Do you want to continue?',
+    { defaultValue, validate }: TextProps = {}
+) => {
+    const { value } = await prompts({
+        type: 'text',
+        name: 'value',
+        message,
+        onState: handlePromptState,
+        validate,
+        initial: defaultValue,
+    })
+
+    return value
+}
+
 export interface PromptOption<TValue> {
     title: string
     description?: string
