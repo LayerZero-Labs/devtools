@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- 016c37a: Add descriptions to OApp SDK transactions
+
 ## 0.0.4
 
 ### Patch Changes
