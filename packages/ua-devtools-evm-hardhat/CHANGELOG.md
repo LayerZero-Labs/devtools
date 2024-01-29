@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.0.10
+
+### Patch Changes
+
+- 790542f: Adding optional json argument to get default config task
+- Updated dependencies [81d7eee]
+  - @layerzerolabs/io-devtools@0.0.7
+
 ## 0.0.9
 
 ### Patch Changes

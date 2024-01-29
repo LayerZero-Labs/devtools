@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.0.7
+
+### Patch Changes
+
+- 81d7eee: Add promptForText utility
+
 ## 0.0.6
 
 ### Patch Changes
