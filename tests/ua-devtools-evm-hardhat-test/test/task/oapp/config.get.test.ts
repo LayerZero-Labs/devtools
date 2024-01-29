@@ -23,9 +23,6 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     beforeEach(async () => {
         await deployEndpoint()
         await setupDefaultEndpoint()
-    })
-
-    beforeEach(async () => {
         await deployOApp()
     })
 
