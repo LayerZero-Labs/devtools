@@ -10,6 +10,8 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     configureEndpoint,
+    DVNDstConfig,
+    DVNEdgeConfig,
     EndpointEdgeConfig,
     Uln302NodeConfig,
     Uln302ExecutorConfig,
@@ -21,8 +23,10 @@ import {
     ExecutorEdgeConfig,
     ExecutorDstConfig,
     configureExecutor,
+    configureDVN,
 } from '@layerzerolabs/protocol-devtools'
 import {
+    createDVNFactory,
     createEndpointFactory,
     createExecutorFactory,
     createPriceFeedFactory,
@@ -74,6 +78,12 @@ const defaultExecutorDstConfig: ExecutorDstConfig = {
     multiplierBps: BigInt(0),
     floorMarginUSD: BigInt(0),
     nativeCap: BigInt(250_000_000_000_000_000), // 0.25 ether
+}
+
+const defaultDVNDstConfig: DVNDstConfig = {
+    gas: BigInt(200_000),
+    multiplierBps: BigInt(0),
+    floorMarginUSD: BigInt(0),
 }
 
 /**
@@ -133,6 +143,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
     const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
     const executorSdkFactory = createExecutorFactory(contractFactory)
+    const dvnSdkFactory = createDVNFactory(contractFactory)
 
     // For the graphs, we'll also need the pointers to the contracts
     const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))
@@ -215,7 +226,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     }
 
     // This is the graph for DVN
-    const dvnConfig: OmniGraphHardhat<unknown, ExecutorEdgeConfig> = {
+    const dvnConfig: OmniGraphHardhat<unknown, DVNEdgeConfig> = {
         contracts: [
             {
                 contract: ethDvn,
@@ -232,42 +243,42 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
                 from: ethDvn,
                 to: avaxDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
             {
                 from: ethDvn,
                 to: bscDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
             {
                 from: avaxDvn,
                 to: ethDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
             {
                 from: avaxDvn,
                 to: bscDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
             {
                 from: bscDvn,
                 to: ethDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
             {
                 from: bscDvn,
                 to: avaxDvn,
                 config: {
-                    dstConfig: defaultExecutorDstConfig,
+                    dstConfig: defaultDVNDstConfig,
                 },
             },
         ],
@@ -574,7 +585,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const executorTransactions = await configureExecutor(builderExecutor.graph, executorSdkFactory)
 
     const builderDvn = await OmniGraphBuilderHardhat.fromConfig(dvnConfig)
-    const dvnTransactions = await configureExecutor(builderDvn.graph, executorSdkFactory)
+    const dvnTransactions = await configureDVN(builderDvn.graph, dvnSdkFactory)
 
     const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
