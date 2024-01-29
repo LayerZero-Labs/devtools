@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.8
+
+### Patch Changes
+
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+
 ## 0.1.7
 
 ### Patch Changes
