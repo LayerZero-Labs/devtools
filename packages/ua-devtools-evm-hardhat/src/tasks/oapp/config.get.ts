@@ -10,28 +10,22 @@ import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
-    networks?: string
-    addresses?: string
-    oappConfig?: string
+    oappConfig: string
 }
 
-export const getOAppConfig: ActionType<TaskArgs> = async (taskArgs) => {
+export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) => {
     // We'll set the global logging level to get as much info as needed
-    setDefaultLogLevel(taskArgs.logLevel ?? 'info')
+    setDefaultLogLevel(logLevel)
 
-    let networks: string[] = []
-    let addresses: string[] = []
-    if (taskArgs?.networks != null && taskArgs?.addresses != null) {
-        networks = taskArgs.networks.split(',')
-        addresses = taskArgs.addresses.split(',')
-    } else if (taskArgs.oappConfig != null) {
-        const logger = createLogger()
-        const graph: OAppOmniGraph = await validateAndTransformOappConfig(taskArgs.oappConfig, logger)
-        graph.contracts.forEach((contract) => {
-            networks.push(getNetworkNameForEid(contract.point.eid))
-            addresses.push(contract.point.address)
-        })
-    }
+    const networks: string[] = []
+    const addresses: string[] = []
+    const logger = createLogger()
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfig, logger)
+    graph.contracts.forEach((contract) => {
+        networks.push(getNetworkNameForEid(contract.point.eid))
+        addresses.push(contract.point.address)
+    })
+
     assert(
         networks.length != 0,
         'Please provide a valid list of networks & addresses or a path to your LayerZero OApp config.'
@@ -118,7 +112,5 @@ task(
     TASK_LZ_OAPP_CONFIG_GET,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addOptionalParam('networks', 'comma separated list of networks', undefined, types.string)
-    .addOptionalParam('addresses', 'comma separated list of addresses')
-    .addOptionalParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .setAction(getOAppConfig)
