@@ -118,10 +118,11 @@ task(
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addOptionalParam(
+    .addParam(
         'json',
         'Print result as JSON that can be used directly in your LayerZero OApp config',
         false,
-        types.boolean
+        types.boolean,
+        true
     )
     .setAction(getDefaultConfig)
