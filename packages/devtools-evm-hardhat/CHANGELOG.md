@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.0.9
+
+### Patch Changes
+
+- e5a9f35: Add hardhat CLI argument parsers for networks and for general CSV values
+
 ## 0.0.8
 
 ### Patch Changes
