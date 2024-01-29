@@ -2,11 +2,12 @@
 
 pragma solidity ^0.8.22;
 
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OApp, MessagingFee, Origin } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol";
 
 contract MyOApp is OApp {
-    constructor(address _endpoint, address _owner) OApp(_endpoint, _owner) {}
+    constructor(address _endpoint, address _delegate) OApp(_endpoint, _delegate) Ownable(_delegate) {}
 
     string public data = "Nothing received yet.";
 
@@ -46,20 +47,22 @@ contract MyOApp is OApp {
 
     /**
      * @dev Internal function override to handle incoming messages from another chain.
-     * @param _origin A struct containing information about the message sender.
-     * @param _guid A unique global packet identifier for the message.
+     * @dev _origin A struct containing information about the message sender.
+     * @dev _guid A unique global packet identifier for the message.
      * @param payload The encoded message payload being received.
-     * @param _executor The address of the Executor responsible for processing the message.
-     * @param _extraData Arbitrary data appended by the Executor to the message.
+     *
+     * @dev The following params are unused in the current implementation of the OApp.
+     * @dev _executor The address of the Executor responsible for processing the message.
+     * @dev _extraData Arbitrary data appended by the Executor to the message.
      *
      * Decodes the received payload and processes it as per the business logic defined in the function.
      */
     function _lzReceive(
-        Origin calldata _origin,
-        bytes32 _guid,
+        Origin calldata /*_origin*/,
+        bytes32 /*_guid*/,
         bytes calldata payload,
-        address _executor,
-        bytes calldata _extraData
+        address /*_executor*/,
+        bytes calldata /*_extraData*/
     ) internal override {
         data = abi.decode(payload, (string));
     }

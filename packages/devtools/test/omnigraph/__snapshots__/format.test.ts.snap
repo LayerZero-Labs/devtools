@@ -266,6 +266,12 @@ exports[`omnigraph/format formatEid should format 10239 correctly 1`] = `"ETHERL
 
 exports[`omnigraph/format formatEid should format 10241 correctly 1`] = `"KIWI2_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10242 correctly 1`] = `"JOC_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10243 correctly 1`] = `"BLAST_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10244 correctly 1`] = `"TRON_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20102 correctly 1`] = `"BSC_SANDBOX"`;
@@ -276,13 +282,17 @@ exports[`omnigraph/format formatEid should format 20109 correctly 1`] = `"POLYGO
 
 exports[`omnigraph/format formatEid should format 20121 correctly 1`] = `"ETHEREUM_SANDBOX"`;
 
+exports[`omnigraph/format formatEid should format 20132 correctly 1`] = `"OPTIMISM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20231 correctly 1`] = `"ARBITRUM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20244 correctly 1`] = `"TRON_SANDBOX"`;
+
 exports[`omnigraph/format formatEid should format 30101 correctly 1`] = `"ETHEREUM_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30102 correctly 1`] = `"BSC_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30106 correctly 1`] = `"AVALANCHE_V2_MAINNET"`;
-
-exports[`omnigraph/format formatEid should format 30108 correctly 1`] = `"APTOS_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30109 correctly 1`] = `"POLYGON_V2_MAINNET"`;
 
@@ -333,8 +343,6 @@ exports[`omnigraph/format formatEid should format 30161 correctly 1`] = `"SEPOLI
 exports[`omnigraph/format formatEid should format 30165 correctly 1`] = `"ZKSYNC_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30167 correctly 1`] = `"MOONRIVER_V2_MAINNET"`;
-
-exports[`omnigraph/format formatEid should format 30168 correctly 1`] = `"SOLANA_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30173 correctly 1`] = `"TENET_V2_MAINNET"`;
 
@@ -444,8 +452,6 @@ exports[`omnigraph/format formatEid should format 40164 correctly 1`] = `"SHRAPN
 
 exports[`omnigraph/format formatEid should format 40165 correctly 1`] = `"ZKSYNC_V2_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 40168 correctly 1`] = `"SOLANA_V2_TESTNET"`;
-
 exports[`omnigraph/format formatEid should format 40170 correctly 1`] = `"SCROLL_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40171 correctly 1`] = `"CATHAY_V2_TESTNET"`;
@@ -536,6 +542,10 @@ exports[`omnigraph/format formatEid should format 40239 correctly 1`] = `"ETHERL
 
 exports[`omnigraph/format formatEid should format 40241 correctly 1`] = `"KIWI2_V2_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 40242 correctly 1`] = `"JOC_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40243 correctly 1`] = `"BLAST_V2_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 50102 correctly 1`] = `"BSC_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50106 correctly 1`] = `"AVALANCHE_V2_SANDBOX"`;
@@ -543,5 +553,7 @@ exports[`omnigraph/format formatEid should format 50106 correctly 1`] = `"AVALAN
 exports[`omnigraph/format formatEid should format 50109 correctly 1`] = `"POLYGON_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50121 correctly 1`] = `"ETHEREUM_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50132 correctly 1`] = `"OPTIMISM_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50168 correctly 1`] = `"SOLANA_V2_SANDBOX"`;

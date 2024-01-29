@@ -22,7 +22,7 @@ describe(`task ${TASK_LZ_ERRORS_DECODE}`, () => {
         await hre.run(TASK_LZ_ERRORS_DECODE, { hash: '' })
 
         // For some reason even though we did not specify any arguments to the compile task,
-        // jest still sees some aarguments being passed so we need to pass those to make this expect work
+        // jest still sees some arguments being passed so we need to pass those to make this expect work
         expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
     })
 
@@ -54,14 +54,14 @@ describe(`task ${TASK_LZ_ERRORS_DECODE}`, () => {
     })
 
     it('should print CustomError details', async () => {
-        const result = await hre.run(TASK_LZ_ERRORS_DECODE, { hash: '0x9153304b' })
+        const result = await hre.run(TASK_LZ_ERRORS_DECODE, { hash: '0x447516e1' })
 
         expect(result).toBeInstanceOf(CustomError)
         expect(printRecordMock).toHaveBeenCalledTimes(1)
         expect(printRecordMock.mock.calls[0]).toMatchSnapshot()
     })
 
-    it.each(['0x3a81d6fc', '0x81da67ee'])('should print CustomError details if the error is %s', async (hash) => {
+    it.each(['0x645f0f4f', '0x0dc652a8'])('should print CustomError details if the error is %s', async (hash) => {
         const result = await hre.run(TASK_LZ_ERRORS_DECODE, { hash })
 
         expect(result).toBeInstanceOf(CustomError)

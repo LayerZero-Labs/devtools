@@ -158,7 +158,7 @@ By default, `jest` will run in [CI mode](https://jestjs.io/docs/cli#--ci). This 
 To update the snapshots, you will need to run the tests in local mode (so that the new snapshots are written to your filesystem) and pass the [`--updateSnapshot`](https://jestjs.io/docs/cli#--updatesnapshot) CLI flag to `jest`:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="-- --updateSnapshot" pnpm test:local
+DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshot" pnpm test:local
 ```
 
 If you encounter any errors coming from existing snapshots that have to do with output formatting (i.e. difference in colored/uncolored output), see the [troubleshooting section below](#troubleshooting--updating-snapshots)
@@ -321,7 +321,31 @@ Should you need to update snapshots for this kind of tests, follow these steps:
 
 - Go to `docker-compose.yaml` and find the `volumes` section of the `tests` service
 - Uncomment the line that says `./tests:/app/tests` - this will link the contain & host directories where the snapshots are being written
-- Run the tests and pass a `-u` flag to `jest`
-  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="-- -u" pnpm test:ci` if you want to run all the tests
-  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=ua-devtools-evm-hardhat-test -- -u" pnpm test:ci` if you want to only run a specific test suite
+- Run the tests and pass an `--updateSnapshot` flag to `jest`
+  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshots" pnpm test:ci` if you want to run all the tests
+  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=ua-devtools-evm-hardhat-test -- --updateSnapshot" pnpm test:ci` if you want to only run a specific test suite
 - Profit
+
+### Problems compiling with `forge`
+
+If running into issues when compiling or running tests using `forge`, make sure you're on a version newer than `01-05-2023`.
+
+To check your version, run:
+
+```bash
+forge --version
+```
+
+To update to the newest version using `foundryup`:
+
+```bash
+foundryup
+```
+
+### Problems with failing deployments in `pnpm test:local`
+
+If running into issues with failing deployment transactions when running the test in the local mode, make sure to clean all the `deployments` directories that you might have left over from running any arbitrary tasks using `hardhat`:
+
+```bash
+pnpm clean
+```

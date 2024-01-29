@@ -1,3 +1,5 @@
+/// <reference types="jest-extended" />
+
 import { makeBytes32, OmniSignerEVM, parseLogsWithName } from '@layerzerolabs/devtools-evm'
 import { parseEther } from 'ethers/lib/utils'
 import fc from 'fast-check'
@@ -42,7 +44,7 @@ const DEFAULT_MIN_NATIVE_DROP: bigint = BigInt(0)
 const DEFAULT_MAX_NATIVE_DROP: bigint = parseEther('0.25').toBigInt()
 
 // The minimum gasLimit for an Option.
-const MIN_GAS_LIMIT = BigInt(0)
+const MIN_GAS_LIMIT = BigInt(1)
 
 // The maximum gasLimit for an Option.
 const MAX_GAS_LIMIT = MAX_UINT_128
@@ -94,9 +96,7 @@ describe('oapp/options', () => {
         await deployEndpoint()
         await setupDefaultEndpoint()
         await deployOmniCounter()
-    })
 
-    beforeEach(async () => {
         contractFactory = createConnectedContractFactory()
         const sdkFactory = createOmniCounterFactory(contractFactory)
         const signerFactory = createSignerFactory()
@@ -157,24 +157,28 @@ describe('oapp/options', () => {
 
                 // Test the generation and submission of arbitrary LZ_RECEIVE Options.  The transaction should succeed,
                 // and the options from the transaction receipt logs should match the generated input.
-                async (type: number, gasLimit: bigint, value: bigint) => {
-                    const options = Options.newOptions().addExecutorLzReceiveOption(
-                        gasLimit.toString(),
-                        value.toString()
-                    )
+                async (type, gasLimit, nativeDrop) => {
+                    const options = Options.newOptions().addExecutorLzReceiveOption(gasLimit, nativeDrop)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
-                    expect(packetSentEvents).toHaveLength(1)
-                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
-                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+                    expect(packetSentEvents).toEqual([
+                        expect.objectContaining({
+                            args: expect.objectContaining({
+                                options: expect.toEqualCaseInsensitive(options.toHex()),
+                            }),
+                        }),
+                    ])
+                    const rawPacketOptions = packetSentEvents[0]!.args.options
+                    expect(rawPacketOptions).toEqualCaseInsensitive(options.toHex())
 
                     // test decoding
                     const packetOptions = Options.fromOptions(rawPacketOptions)
                     const decodedExecutorLzReceiveOption = packetOptions.decodeExecutorLzReceiveOption()
-                    expect(decodedExecutorLzReceiveOption).toBeDefined()
-                    expect(decodedExecutorLzReceiveOption?.gas).toEqual(gasLimit)
-                    expect(decodedExecutorLzReceiveOption?.value).toEqual(value)
-                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
-                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
+                    expect(decodedExecutorLzReceiveOption).toEqual({
+                        gas: gasLimit,
+                        value: nativeDrop,
+                    })
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toEqual([])
+                    expect(packetOptions.decodeExecutorComposeOption()).toEqual([])
                     expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
@@ -192,27 +196,37 @@ describe('oapp/options', () => {
 
                 // Test the generation and submission of arbitrary COMPOSE Options.  The transaction should succeed, and
                 // the options from the transaction receipt logs should match the generated input.
-                async (type: number, index: number, gasLimit: bigint, value: bigint) => {
-                    const options = Options.newOptions().addExecutorComposeOption(
-                        index,
-                        gasLimit.toString(),
-                        value.toString()
-                    )
+                async (type, index, gasLimit, nativeDrop) => {
+                    const options = Options.newOptions()
+                        .addExecutorComposeOption(index, gasLimit, nativeDrop)
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
+                        .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
-                    expect(packetSentEvents).toHaveLength(1)
-                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
-                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+                    expect(packetSentEvents).toEqual([
+                        expect.objectContaining({
+                            args: expect.objectContaining({
+                                options: expect.toEqualCaseInsensitive(options.toHex()),
+                            }),
+                        }),
+                    ])
+                    const rawPacketOptions = packetSentEvents[0]!.args.options
+                    expect(rawPacketOptions).toEqualCaseInsensitive(options.toHex())
 
                     // test decoding
                     const packetOptions = Options.fromOptions(rawPacketOptions)
-                    const decodedExecutorComposeOption = packetOptions.decodeExecutorComposeOption()
-                    expect(decodedExecutorComposeOption).toBeDefined()
-                    expect(decodedExecutorComposeOption).toHaveLength(1)
-                    expect(decodedExecutorComposeOption?.[0]?.index).toEqual(index)
-                    expect(decodedExecutorComposeOption?.[0]?.gas).toEqual(gasLimit)
-                    expect(decodedExecutorComposeOption?.[0]?.value).toEqual(value)
-                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
-                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
+                    const decodedExecutorComposeOptions = packetOptions.decodeExecutorComposeOption()
+                    expect(decodedExecutorComposeOptions).toEqual([
+                        {
+                            index,
+                            gas: gasLimit,
+                            value: nativeDrop,
+                        },
+                    ])
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toEqual({
+                        gas: MIN_GAS_LIMIT,
+                        value: BigInt(0),
+                    })
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toEqual([])
                     expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
@@ -229,24 +243,36 @@ describe('oapp/options', () => {
 
                 // Test the generation and submission of arbitrary NATIVE_DROP Options.  The transaction should succeed,
                 // and the options from the transaction receipt logs should match the generated input.
-                async (type: number, value: bigint) => {
-                    const options = Options.newOptions().addExecutorNativeDropOption(value.toString(), address)
+                async (type, nativeDrop) => {
+                    const options = Options.newOptions()
+                        .addExecutorNativeDropOption(nativeDrop, address)
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
+                        .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
-                    expect(packetSentEvents).toHaveLength(1)
-                    const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
-                    expect(rawPacketOptions).toBe(options.toHex().toLowerCase())
+                    expect(packetSentEvents).toEqual([
+                        expect.objectContaining({
+                            args: expect.objectContaining({
+                                options: expect.toEqualCaseInsensitive(options.toHex()),
+                            }),
+                        }),
+                    ])
+                    const rawPacketOptions = packetSentEvents[0]!.args.options
+                    expect(rawPacketOptions).toEqualCaseInsensitive(options.toHex())
 
                     // test decoding
                     const packetOptions = Options.fromOptions(rawPacketOptions)
-                    const decodedExecutorNativeDropOption = packetOptions.decodeExecutorNativeDropOption()
-                    expect(decodedExecutorNativeDropOption).toBeDefined()
-                    expect(decodedExecutorNativeDropOption).toHaveLength(1)
-                    expect(decodedExecutorNativeDropOption?.[0]?.amount).toEqual(value)
-                    expect(decodedExecutorNativeDropOption?.[0]?.receiver.toLowerCase()).toEqual(
-                        makeBytes32(address).toLowerCase()
-                    )
-                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
-                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
+                    const decodedExecutorNativeDropOptions = packetOptions.decodeExecutorNativeDropOption()
+                    expect(decodedExecutorNativeDropOptions).toEqual([
+                        {
+                            amount: nativeDrop,
+                            receiver: expect.toEqualCaseInsensitive(makeBytes32(address)),
+                        },
+                    ])
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toEqual({
+                        gas: MIN_GAS_LIMIT,
+                        value: BigInt(0),
+                    })
+                    expect(packetOptions.decodeExecutorComposeOption()).toEqual([])
                     expect(packetOptions.decodeExecutorOrderedExecutionOption()).toEqual(false)
                 }
             ),
@@ -262,7 +288,10 @@ describe('oapp/options', () => {
                 // Test the generation and submission of arbitrary ORDERED Options.  The transaction should succeed, and the
                 // options from the transaction receipt logs should match the generated input.
                 async (type) => {
-                    const options = Options.newOptions().addExecutorOrderedExecutionOption()
+                    const options = Options.newOptions()
+                        .addExecutorOrderedExecutionOption()
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
+                        .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
                     const rawPacketOptions = packetSentEvents[0]!.args.options.toLowerCase()
@@ -271,9 +300,12 @@ describe('oapp/options', () => {
                     // test decoding
                     const packetOptions = Options.fromOptions(rawPacketOptions)
                     expect(packetOptions.decodeExecutorOrderedExecutionOption()).toBe(true)
-                    expect(packetOptions.decodeExecutorLzReceiveOption()).toBeUndefined()
-                    expect(packetOptions.decodeExecutorComposeOption()).toHaveLength(0)
-                    expect(packetOptions.decodeExecutorNativeDropOption()).toHaveLength(0)
+                    expect(packetOptions.decodeExecutorLzReceiveOption()).toEqual({
+                        gas: MIN_GAS_LIMIT,
+                        value: BigInt(0),
+                    })
+                    expect(packetOptions.decodeExecutorComposeOption()).toEqual([])
+                    expect(packetOptions.decodeExecutorNativeDropOption()).toEqual([])
                 }
             ),
             { numRuns: 10 }
@@ -304,41 +336,49 @@ describe('oapp/options', () => {
                 // Test the generation of multiple Options in a single Packet.  The transaction should succeed.  Options
                 // should be decoded to match inputs.  gasLimit and nativeDrop should be summed for Packets that have
                 // multiple COMPOSE options for the same index.
-                async (type: number, index: number, gasLimit: bigint, value: bigint) => {
-                    const gasLimitStr = gasLimit.toString()
-                    const valueStr = value.toString()
+                async (type, index, gasLimit, stackedValue) => {
                     const options = Options.newOptions()
-                        .addExecutorComposeOption(index, gasLimitStr, valueStr)
-                        .addExecutorLzReceiveOption(gasLimitStr, valueStr)
-                        .addExecutorNativeDropOption(valueStr, address)
-                        .addExecutorComposeOption(index, gasLimitStr, valueStr) // Repeat executor compose option to make sure values/gasLimits are summed
+                        .addExecutorComposeOption(index, gasLimit, stackedValue)
+                        .addExecutorLzReceiveOption(gasLimit, stackedValue)
+                        .addExecutorNativeDropOption(stackedValue, address)
+                        .addExecutorComposeOption(index, gasLimit, stackedValue) // Repeat executor compose option to make sure values/gasLimits are summed
 
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
-                    expect(packetSentEvents).toHaveLength(1)
-                    expect(packetSentEvents[0]!.args.options.toLowerCase()).toBe(options.toHex().toLowerCase())
-                    const packetOptions = Options.fromOptions(packetSentEvents[0]!.args.options.toLowerCase())
+                    expect(packetSentEvents).toEqual([
+                        expect.objectContaining({
+                            args: expect.objectContaining({
+                                options: expect.toEqualCaseInsensitive(options.toHex()),
+                            }),
+                        }),
+                    ])
+                    const packetOptions = Options.fromOptions(packetSentEvents[0]!.args.options)
 
                     // check executorComposeOption
                     const packetComposeOptions = packetOptions.decodeExecutorComposeOption()
-                    expect(packetComposeOptions).toHaveLength(1)
-                    const packetComposeOption = packetComposeOptions[0]!
-                    expect(packetComposeOption.index).toEqual(index)
-                    expect(packetComposeOption.gas).toEqual(gasLimit * BigInt(2))
-                    // compose options with same index are summed (in this specific case, just multiplied by 2)
-                    expect(packetComposeOption.value).toEqual(value * BigInt(2))
+                    expect(packetComposeOptions).toEqual([
+                        {
+                            index,
+                            gas: gasLimit * BigInt(2),
+                            // compose options with same index are summed (in this specific case, just multiplied by 2)
+                            value: stackedValue * BigInt(2),
+                        },
+                    ])
 
                     // check executorLzReceiveOption
                     const packetLzReceiveOption = packetOptions.decodeExecutorLzReceiveOption()
-                    expect(packetLzReceiveOption).toBeDefined()
-                    expect(packetLzReceiveOption!.gas).toEqual(gasLimit)
-                    expect(packetLzReceiveOption!.value).toEqual(value)
+                    expect(packetLzReceiveOption).toEqual({
+                        gas: gasLimit,
+                        value: stackedValue,
+                    })
 
                     // check executorNativeDropOption
                     const packetNativeDropOptions = packetOptions.decodeExecutorNativeDropOption()
-                    expect(packetNativeDropOptions).toHaveLength(1)
-                    const packetNativeDropOption = packetNativeDropOptions[0]!
-                    expect(packetNativeDropOption.amount).toEqual(value)
-                    expect(packetNativeDropOption.receiver.toLowerCase()).toEqual(makeBytes32(address).toLowerCase())
+                    expect(packetNativeDropOptions).toEqual([
+                        {
+                            amount: stackedValue,
+                            receiver: expect.toEqualCaseInsensitive(makeBytes32(address)),
+                        },
+                    ])
                 }
             )
         )
