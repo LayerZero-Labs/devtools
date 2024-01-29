@@ -39,8 +39,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # We'll run the build in series to avoid race conditions
+      # when compiling hardhat projects in monorepo setups
       - name: Build
-        run: pnpm build
+        run: pnpm build --concurrency=1
 
   test:
     name: Test
