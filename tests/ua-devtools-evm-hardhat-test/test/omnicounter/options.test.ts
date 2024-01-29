@@ -201,6 +201,7 @@ describe('oapp/options', () => {
                 async (type, index, gasLimit, nativeDrop) => {
                     const options = Options.newOptions()
                         .addExecutorComposeOption(index, gasLimit, nativeDrop)
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
                         .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toEqual([
@@ -247,6 +248,7 @@ describe('oapp/options', () => {
                 async (type, nativeDrop) => {
                     const options = Options.newOptions()
                         .addExecutorNativeDropOption(nativeDrop, address)
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
                         .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toEqual([
@@ -290,6 +292,7 @@ describe('oapp/options', () => {
                 async (type) => {
                     const options = Options.newOptions()
                         .addExecutorOrderedExecutionOption()
+                        // We also need to add a lzReceive option to avoid Executor_ZeroLzReceiveGasProvided error
                         .addExecutorLzReceiveOption(MIN_GAS_LIMIT)
                     const packetSentEvents = await incrementAndReturnLogs(type, options)
                     expect(packetSentEvents).toHaveLength(1)
