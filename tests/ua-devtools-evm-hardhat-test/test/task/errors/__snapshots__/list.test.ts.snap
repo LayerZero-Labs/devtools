@@ -15,8 +15,23 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppCore",
@@ -24,9 +39,29 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x0fbdec0a",
     },
     {
+      "Contract": "OAppCore",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
       "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppSender",
@@ -34,14 +69,34 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x0fbdec0a",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OAppSender",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "InvalidOptionType(uint16)",
       "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "IOAppCore",
@@ -59,6 +114,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x9a6d49cd",
     },
     {
+      "Contract": "OAppOptionsType3",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
       "Contract": "OptionsBuilder",
       "Error": "InvalidOptionType(uint16)",
       "Signature": "0x3a51740d",
@@ -67,6 +127,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
       "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
     },
     {
       "Contract": "IPreCrime",
@@ -84,46 +149,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x18456c9b",
     },
     {
-      "Contract": "Errors",
-      "Error": "InvalidAddress()",
-      "Signature": "0xe6c4247b",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAmount(uint256,uint256)",
-      "Signature": "0x7c83fcf0",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidArgument()",
-      "Signature": "0xa9cb9e0d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidExpiry()",
-      "Signature": "0xd36c8500",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidNonce(uint64)",
-      "Signature": "0x5c33785a",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidPayloadHash()",
-      "Signature": "0xa84ab60d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidReceiveLibrary()",
-      "Signature": "0x82ceb50e",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidSizeForAddress()",
-      "Signature": "0x59baef1d",
-    },
-    {
       "Contract": "ExecutorOptions",
       "Error": "Executor_InvalidLzComposeOption()",
       "Signature": "0x8b4aa70b",
@@ -139,6 +164,16 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0xc3a1858e",
     },
     {
+      "Contract": "Ownable",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
       "Contract": "DefaultOApp",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
@@ -149,6 +184,16 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x9a6d49cd",
     },
     {
+      "Contract": "DefaultOApp",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
       "Contract": "OmniCounter",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
@@ -157,6 +202,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OmniCounter",
       "Error": "InvalidOptionType(uint16)",
       "Signature": "0x3a51740d",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
     },
     {
       "Contract": "EndpointV2",
@@ -330,8 +380,18 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppCore",
@@ -340,13 +400,28 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppSender",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppSender",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OmniCounter",
@@ -362,6 +437,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OmniCounterPreCrime",
       "Error": "InvalidSimulationResult(uint32,bytes)",
       "Signature": "0x572e17ee",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "IOAppCore",
@@ -390,6 +470,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OFT",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OFT",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -405,6 +490,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OFTAdapter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OFTAdapter",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -417,6 +507,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OFTAdapter",
       "Error": "InvalidOptions(bytes)",
       "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OFTCore",
@@ -1000,13 +1095,28 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
     {
       "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppReceiver",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "IOAppCore",
@@ -1116,29 +1226,39 @@ exports[`task lz:errors:list should print all errors with matching signature if 
 [
   [
     {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
+      "Contract": "ReceiveUlnBase",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
     },
     {
-      "Contract": "ExecutorFeeLib",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
+      "Contract": "SendUlnBase",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
     },
     {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
+      "Contract": "UlnBase",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
     },
     {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
+      "Contract": "ReceiveUln301",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
     },
     {
-      "Contract": "EndpointV2Mock",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
+      "Contract": "SendUln301",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
+    },
+    {
+      "Contract": "ReceiveUln302",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
+    },
+    {
+      "Contract": "SendUln302",
+      "Error": "LZ_ULN_Unsorted()",
+      "Signature": "0x447516e1",
     },
   ],
 ]
@@ -1159,6 +1279,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -1188,6 +1313,21 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0xc26bebcc",
     },
     {
+      "Contract": "OApp",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OApp",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
       "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
@@ -1201,6 +1341,21 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppCore",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppReceiver",
@@ -1221,6 +1376,21 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppSender",
@@ -1248,49 +1418,104 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0xc26bebcc",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OAppSender",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "AddressEmptyCode(address)",
+      "Signature": "0x9996b315",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "AddressInsufficientBalance(address)",
+      "Signature": "0xcd786059",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "FailedInnerCall()",
+      "Signature": "0x1425ea42",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "InvalidOptionType(uint16)",
       "Signature": "0x3a51740d",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "LzTokenUnavailable()",
       "Signature": "0x5373352a",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "NoPeer(uint32)",
       "Signature": "0xf6ff4fb7",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "NotEnoughNative(uint256)",
       "Signature": "0x9f704120",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "OnlyEndpoint(address)",
       "Signature": "0x91ac5e4f",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
       "Error": "OnlySelf()",
       "Signature": "0x14d4a4e8",
     },
     {
-      "Contract": "OmniCounter",
+      "Contract": "OmniCounterAbstract",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
+      "Signature": "0x6dfcc650",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
+      "Error": "SafeERC20FailedOperation(address)",
+      "Signature": "0x5274afe7",
+    },
+    {
+      "Contract": "OmniCounterAbstract",
       "Error": "SimulationResult(bytes)",
       "Signature": "0x8351eea7",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "IOAppCore",
@@ -1318,6 +1543,16 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x9a6d49cd",
     },
     {
+      "Contract": "OAppOptionsType3",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppOptionsType3",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
       "Contract": "OptionsBuilder",
       "Error": "InvalidOptionType(uint16)",
       "Signature": "0x3a51740d",
@@ -1331,6 +1566,16 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppPreCrimeSimulator",
       "Error": "OnlySelf()",
       "Signature": "0x14d4a4e8",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppPreCrimeSimulator",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
     },
     {
       "Contract": "OAppPreCrimeSimulator",
@@ -1393,161 +1638,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x18456c9b",
     },
     {
-      "Contract": "Errors",
-      "Error": "AlreadyRegistered()",
-      "Signature": "0x3a81d6fc",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeExists()",
-      "Signature": "0x895fdbee",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ComposeNotFound(bytes32,bytes32)",
-      "Signature": "0x9e3e0583",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultReceiveLibUnavailable()",
-      "Signature": "0xfbc6a95a",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "DefaultSendLibUnavailable()",
-      "Signature": "0xb6f3253d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InsufficientFee(uint256,uint256,uint256,uint256)",
-      "Signature": "0xe273c847",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAddress()",
-      "Signature": "0xe6c4247b",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidAmount(uint256,uint256)",
-      "Signature": "0x7c83fcf0",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidArgument()",
-      "Signature": "0xa9cb9e0d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidExpiry()",
-      "Signature": "0xd36c8500",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidNonce(uint64)",
-      "Signature": "0x5c33785a",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidPayloadHash()",
-      "Signature": "0xa84ab60d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidReceiveLibrary()",
-      "Signature": "0x82ceb50e",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "InvalidSizeForAddress()",
-      "Signature": "0x59baef1d",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "LzTokenUnavailable()",
-      "Signature": "0x5373352a",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "NotImplemented()",
-      "Signature": "0xd6234725",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyAltToken()",
-      "Signature": "0x1ebf1709",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyNonDefaultLib()",
-      "Signature": "0x78142dd2",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyReceiveLib()",
-      "Signature": "0x78653622",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredLib()",
-      "Signature": "0x8cd5e2c6",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlyRegisteredOrDefaultLib()",
-      "Signature": "0x4fb58e15",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "OnlySendLib()",
-      "Signature": "0x3885d603",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotInitializable()",
-      "Signature": "0x098c20b5",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PathNotVerifiable()",
-      "Signature": "0x2923b32a",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "PayloadHashNotFound(bytes32,bytes32)",
-      "Signature": "0xe4bb0ca1",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SameValue()",
-      "Signature": "0xc23f6ccb",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "SendReentrancy()",
-      "Signature": "0x9633fed3",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "Unauthorized()",
-      "Signature": "0x82b42900",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedEid()",
-      "Signature": "0x9153304b",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "UnsupportedInterface()",
-      "Signature": "0x63aaf066",
-    },
-    {
-      "Contract": "Errors",
-      "Error": "ZeroLzTokenFee()",
-      "Signature": "0xe8016043",
-    },
-    {
       "Contract": "ExecutorOptions",
       "Error": "Executor_InvalidLzComposeOption()",
       "Signature": "0x8b4aa70b",
@@ -1561,6 +1651,66 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "ExecutorOptions",
       "Error": "Executor_InvalidNativeDropOption()",
       "Signature": "0xc3a1858e",
+    },
+    {
+      "Contract": "Ownable",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "Ownable",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "SafeERC20",
+      "Error": "SafeERC20FailedDecreaseAllowance(address,uint256,uint256)",
+      "Signature": "0xe570110f",
+    },
+    {
+      "Contract": "SafeERC20",
+      "Error": "SafeERC20FailedOperation(address)",
+      "Signature": "0x5274afe7",
+    },
+    {
+      "Contract": "Address",
+      "Error": "AddressEmptyCode(address)",
+      "Signature": "0x9996b315",
+    },
+    {
+      "Contract": "Address",
+      "Error": "AddressInsufficientBalance(address)",
+      "Signature": "0xcd786059",
+    },
+    {
+      "Contract": "Address",
+      "Error": "FailedInnerCall()",
+      "Signature": "0x1425ea42",
+    },
+    {
+      "Contract": "SafeCast",
+      "Error": "SafeCastOverflowedIntDowncast(uint8,int256)",
+      "Signature": "0x327269a7",
+    },
+    {
+      "Contract": "SafeCast",
+      "Error": "SafeCastOverflowedIntToUint(int256)",
+      "Signature": "0xa8ce4432",
+    },
+    {
+      "Contract": "SafeCast",
+      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
+      "Signature": "0x6dfcc650",
+    },
+    {
+      "Contract": "SafeCast",
+      "Error": "SafeCastOverflowedUintToInt(uint256)",
+      "Signature": "0x24775e06",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "DefaultOApp",
@@ -1596,6 +1746,36 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "DefaultOApp",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "DefaultOApp",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "AddressEmptyCode(address)",
+      "Signature": "0x9996b315",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "AddressInsufficientBalance(address)",
+      "Signature": "0xcd786059",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "FailedInnerCall()",
+      "Signature": "0x1425ea42",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OmniCounter",
@@ -1636,6 +1816,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OmniCounter",
       "Error": "OnlySelf()",
       "Signature": "0x14d4a4e8",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
+      "Signature": "0x6dfcc650",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "SafeERC20FailedOperation(address)",
+      "Signature": "0x5274afe7",
     },
     {
       "Contract": "OmniCounter",
@@ -2539,6 +2739,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OApp",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OApp",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -2569,6 +2774,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -2581,6 +2791,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppReceiver",
@@ -2601,6 +2816,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppSender",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppSender",
@@ -2626,6 +2846,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppSender",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OmniCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OmniCounter",
@@ -2709,6 +2934,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "IOAppCore",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -2749,6 +2979,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OFT",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OFT",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -2804,6 +3039,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OFTAdapter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OFTAdapter",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -2856,6 +3096,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OFTAdapter",
       "Error": "SlippageExceeded(uint256,uint256)",
       "Signature": "0x71c4efed",
+    },
+    {
+      "Contract": "OFTCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OFTCore",
@@ -4599,6 +4844,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppCore",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
     },
@@ -4611,6 +4861,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppCore",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppReceiver",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "OAppReceiver",
@@ -4631,6 +4886,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppReceiver",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "IOAppCore",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
     },
     {
       "Contract": "IOAppCore",
