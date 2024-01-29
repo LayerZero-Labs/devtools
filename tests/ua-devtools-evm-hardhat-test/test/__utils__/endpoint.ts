@@ -214,6 +214,65 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
         ],
     }
 
+    // This is the graph for DVN
+    const dvnConfig: OmniGraphHardhat<unknown, ExecutorEdgeConfig> = {
+        contracts: [
+            {
+                contract: ethDvn,
+            },
+            {
+                contract: avaxDvn,
+            },
+            {
+                contract: bscDvn,
+            },
+        ],
+        connections: [
+            {
+                from: ethDvn,
+                to: avaxDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: ethDvn,
+                to: bscDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: avaxDvn,
+                to: ethDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: avaxDvn,
+                to: bscDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: bscDvn,
+                to: ethDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+            {
+                from: bscDvn,
+                to: avaxDvn,
+                config: {
+                    dstConfig: defaultExecutorDstConfig,
+                },
+            },
+        ],
+    }
+
     // This is the graph for PriceFeed
     const priceFeedConfig: OmniGraphHardhat<unknown, PriceFeedEdgeConfig> = {
         contracts: [
@@ -514,6 +573,9 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     const builderExecutor = await OmniGraphBuilderHardhat.fromConfig(executorConfig)
     const executorTransactions = await configureExecutor(builderExecutor.graph, executorSdkFactory)
 
+    const builderDvn = await OmniGraphBuilderHardhat.fromConfig(dvnConfig)
+    const dvnTransactions = await configureExecutor(builderDvn.graph, executorSdkFactory)
+
     const builderSendUln = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig)
     const sendUlnTransactions = await configureUln302(builderSendUln.graph, ulnSdkFactory)
 
@@ -528,6 +590,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     const transactions = [
         ...priceFeedTransactions,
+        ...dvnTransactions,
         ...executorTransactions,
         ...sendUlnTransactions,
         ...receiveUlnTransactions,
