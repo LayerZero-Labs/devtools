@@ -37,6 +37,12 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
+      # We'll run a separate compilation task in series
+      # to work around concurrency issues when compiling hardhat
+      # projects in monorepo setups
+      - name: Compile
+        run: pnpm compile -- --concurrency=1
+
       - name: Build
         run: pnpm build
         env:
