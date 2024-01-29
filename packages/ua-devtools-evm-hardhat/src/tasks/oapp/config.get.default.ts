@@ -62,6 +62,6 @@ task(
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.string)
-    .addOptionalParam('networks', 'comma separated list of networks', undefined, types.networks)
+    .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(getDefaultConfig)
