@@ -96,9 +96,7 @@ describe('oapp/options', () => {
         await deployEndpoint()
         await setupDefaultEndpoint()
         await deployOmniCounter()
-    })
 
-    beforeEach(async () => {
         contractFactory = createConnectedContractFactory()
         const sdkFactory = createOmniCounterFactory(contractFactory)
         const signerFactory = createSignerFactory()
