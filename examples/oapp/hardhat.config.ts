@@ -4,8 +4,6 @@ import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
 import { HardhatUserConfig } from 'hardhat/types'
 
-import './tasks/'
-
 const config: HardhatUserConfig = {
     solidity: {
         compilers: [
