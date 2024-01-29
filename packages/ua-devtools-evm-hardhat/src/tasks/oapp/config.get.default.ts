@@ -4,7 +4,7 @@ import { createLogger, printJson, printRecord } from '@layerzerolabs/io-devtools
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import {getEidForNetworkName, getEidsByNetworkName} from '@layerzerolabs/devtools-evm-hardhat'
+import { getEidForNetworkName, getEidsByNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
 interface TaskArgs {
@@ -14,10 +14,11 @@ interface TaskArgs {
 }
 
 export const getDefaultConfig: ActionType<TaskArgs> = async (
-    { logLevel = 'info', networks: networksArgument }, hre,
+    { logLevel = 'info', networks: networksArgument, json },
+    hre
 ) => {
     // We'll set the global logging level to get as much info as needed
-    setDefaultLogLevel(logLevel ?? 'info')
+    setDefaultLogLevel(logLevel)
     const logger = createLogger()
 
     const networks =
@@ -73,7 +74,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (
                 receiveUlnConfig,
             }
 
-            if (taskArgs.json) {
+            if (json) {
                 const config: OAppEdgeConfig = {
                     sendLibrary: sendLibrary,
                     receiveLibraryConfig: {
@@ -117,5 +118,10 @@ task(
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addOptionalParam('json', 'Print result as JSON that can be used directly in your LayerZero OApp config', false, types.boolean)
+    .addOptionalParam(
+        'json',
+        'Print result as JSON that can be used directly in your LayerZero OApp config',
+        false,
+        types.boolean
+    )
     .setAction(getDefaultConfig)
