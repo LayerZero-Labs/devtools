@@ -41,7 +41,7 @@ jobs:
       # to work around concurrency issues when compiling hardhat
       # projects in monorepo setups
       - name: Compile
-        run: pnpm compile -- --concurrency=1
+        run: pnpm compile --concurrency=1
 
       - name: Build
         run: pnpm build
