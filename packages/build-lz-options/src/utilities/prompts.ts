@@ -1,6 +1,6 @@
 import { EXECUTOR_OPTION_TYPE, OPTION_TYPES, WORKER_TYPE } from '@/config'
 import { OptionType1Summary, OptionType2Summary } from '@/types'
-import { makeBytes32 } from '@layerzerolabs/devtools-evm'
+import { makeBytes32 } from '@layerzerolabs/devtools'
 import { ExecutorOptionType, Options, WorkerId } from '@layerzerolabs/lz-v2-utilities'
 import prompts, { PromptObject } from 'prompts'
 import { handlePromptState, promptToContinue } from '@layerzerolabs/io-devtools'

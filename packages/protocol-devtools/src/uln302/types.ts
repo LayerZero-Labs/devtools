@@ -1,4 +1,4 @@
-import type { Address, OmniGraph, Factory, OmniTransaction, IOmniSDK, OmniPoint } from '@layerzerolabs/devtools'
+import type { OmniAddress, OmniGraph, Factory, OmniTransaction, IOmniSDK, OmniPoint } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IUln302 extends IOmniSDK {
@@ -11,9 +11,9 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getAppUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {Bytes32 | Address} address
+     * @param {PossiblyBytes} address
      */
-    getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig>
+    getUlnConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302UlnConfig>
 
     /**
      * Gets the ULN config for a given endpoint ID and an address.
@@ -24,9 +24,9 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {Bytes32 | Address} address
+     * @param {PossiblyBytes} address
      */
-    getAppUlnConfig(eid: EndpointId, address: Address): Promise<Uln302UlnConfig>
+    getAppUlnConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302UlnConfig>
 
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
 
@@ -39,9 +39,9 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getAppExecutorConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {Bytes32 | Address | null} address
+     * @param {PossiblyBytes | null} address
      */
-    getExecutorConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302ExecutorConfig>
+    getExecutorConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302ExecutorConfig>
 
     /**
      * Gets the Executor config for a given endpoint ID and an address.
@@ -52,9 +52,9 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getExecutorConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {Bytes32 | Address} address
+     * @param {PossiblyBytes} address
      */
-    getAppExecutorConfig(eid: EndpointId, address: Address): Promise<Uln302ExecutorConfig>
+    getAppExecutorConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302ExecutorConfig>
 
     setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
 }

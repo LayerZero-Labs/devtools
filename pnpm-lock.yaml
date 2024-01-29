@@ -261,6 +261,9 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
     devDependencies:
+      '@layerzerolabs/devtools':
+        specifier: ~0.0.1
+        version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.0.6
         version: link:../devtools-evm
@@ -385,6 +388,12 @@ importers:
 
   packages/devtools:
     devDependencies:
+      '@ethersproject/bytes':
+        specifier: ~5.7.0
+        version: 5.7.0
+      '@ethersproject/constants':
+        specifier: ~5.7.0
+        version: 5.7.0
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.5
         version: link:../io-devtools
@@ -444,9 +453,6 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@ethersproject/bignumber':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/bytes':
         specifier: ^5.7.0
         version: 5.7.0
       '@ethersproject/constants':
@@ -6773,6 +6779,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}

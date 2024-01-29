@@ -30,6 +30,8 @@
     "test": "jest --ci --forceExit"
   },
   "devDependencies": {
+    "@ethersproject/bytes": "~5.7.0",
+    "@ethersproject/constants": "~5.7.0",
     "@layerzerolabs/io-devtools": "~0.0.5",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "@layerzerolabs/test-devtools": "~0.0.5",
@@ -46,6 +48,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@ethersproject/bytes": "~5.7.0",
     "@layerzerolabs/io-devtools": "~0.0.4",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "zod": "^3.22.4"
