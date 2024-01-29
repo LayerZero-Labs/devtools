@@ -8,6 +8,17 @@ import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devt
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
+import { printJson } from '@layerzerolabs/io-devtools'
+import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
+
+jest.mock('@layerzerolabs/io-devtools', () => {
+    const original = jest.requireActual('@layerzerolabs/io-devtools')
+
+    return {
+        ...original,
+        printJson: jest.fn(),
+    }
+})
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
     beforeEach(async () => {
@@ -15,8 +26,8 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
         await setupDefaultEndpoint()
     })
 
-    it('should return default configurations', async () => {
-        const networks = Object.keys(hre.userConfig.networks ?? {})
+    it('should return default configurations with passed in networks param', async () => {
+        const networks = ['vengaboys', 'britney', 'tango']
         const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, { networks })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {
@@ -41,9 +52,12 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
         }
     })
 
-    it('should return default configurations with no input', async () => {
-        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, {})
-        const networks = Object.keys(hre.userConfig.networks ?? {})
+    it('should print out default config in json form', async () => {
+        const networks = ['vengaboys', 'britney', 'tango']
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, {
+            networks,
+            json: true,
+        })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {
             const localEid = getEidForNetworkName(localNetwork)
@@ -63,6 +77,21 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
                 expect(defaultConfig.sendExecutorConfig).toEqual(getDefaultExecutorConfig(executorPoint.address))
                 expect(defaultConfig.sendUlnConfig).toEqual(getDefaultUlnConfig(dvnPoint.address))
                 expect(defaultConfig.receiveUlnConfig).toEqual(getDefaultUlnConfig(dvnPoint.address))
+                const config: OAppEdgeConfig = {
+                    sendLibrary: defaultConfig.defaultSendLibrary,
+                    receiveLibraryConfig: {
+                        receiveLibrary: defaultConfig.defaultReceiveLibrary,
+                        gracePeriod: 0,
+                    },
+                    sendConfig: {
+                        executorConfig: defaultConfig.sendExecutorConfig,
+                        ulnConfig: defaultConfig.sendUlnConfig,
+                    },
+                    receiveConfig: {
+                        ulnConfig: defaultConfig.receiveUlnConfig,
+                    },
+                }
+                expect(printJson).toHaveBeenCalledWith(config)
             }
         }
     })
