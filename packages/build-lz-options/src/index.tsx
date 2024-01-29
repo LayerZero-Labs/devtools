@@ -19,7 +19,7 @@ import { printLogo } from "@layerzerolabs/io-devtools/swag";
 import { version } from "../package.json";
 
 new Command("build-lz-options")
-  .description("Create LayerZero OApp options with one command")
+  .description("Build Options for LayerZero OApps")
   .version(version)
   .action(async () => {
     printLogo();
