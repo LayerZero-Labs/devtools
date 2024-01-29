@@ -63,7 +63,10 @@ export class OApp extends OmniSDK implements IOApp {
         this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
-        return this.createTransaction(data)
+        return {
+            ...this.createTransaction(data),
+            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`,
+        }
     }
 
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
@@ -76,7 +79,10 @@ export class OApp extends OmniSDK implements IOApp {
         this.logger.debug(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
-        return this.createTransaction(data)
+        return {
+            ...this.createTransaction(data),
+            description: `Setting enforced options to ${printJson(enforcedOptions)}`,
+        }
     }
 
     encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options {

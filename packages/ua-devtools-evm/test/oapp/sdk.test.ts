@@ -4,6 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { OApp } from '@/oapp/sdk'
 import { OmniContract, isZero, makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { makeBytes32 } from '@layerzerolabs/devtools-evm'
+import { formatEid } from '@layerzerolabs/devtools'
 
 describe('oapp/sdk', () => {
     const nullishAddressArbitrary = fc.constantFrom(null, undefined, makeZeroAddress(), makeBytes32(makeZeroAddress()))
@@ -217,6 +218,7 @@ describe('oapp/sdk', () => {
 
                         expect(transaction).toEqual({
                             data,
+                            description: `Setting peer for eid ${peerEid} (${formatEid(peerEid)}) to address ${makeBytes32(peerAddress)}`,
                             point: {
                                 eid: omniContract.eid,
                                 address: omniContract.contract.address,
