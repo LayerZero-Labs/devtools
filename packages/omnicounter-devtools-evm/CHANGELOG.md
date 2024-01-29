@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.0.4
+
+### Patch Changes
+
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+- Updated dependencies [0877186]
+  - @layerzerolabs/protocol-devtools-evm@0.0.9
+  - @layerzerolabs/omnicounter-devtools@0.0.4
+  - @layerzerolabs/protocol-devtools@0.0.6
+  - @layerzerolabs/ua-devtools-evm@0.0.6
+  - @layerzerolabs/devtools-evm@0.0.6
+  - @layerzerolabs/ua-devtools@0.0.6
+  - @layerzerolabs/devtools@0.0.5
+
 ## 0.0.3
 
 ### Patch Changes

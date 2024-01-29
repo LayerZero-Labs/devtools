@@ -1,5 +1,20 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.0.9
+
+### Patch Changes
+
+- 9b75fe1: Adding optional params to getDefaultConfig and getOAppConfig tasks
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+- Updated dependencies [0877186]
+  - @layerzerolabs/protocol-devtools-evm@0.0.9
+  - @layerzerolabs/devtools-evm-hardhat@0.0.10
+  - @layerzerolabs/protocol-devtools@0.0.6
+  - @layerzerolabs/ua-devtools-evm@0.0.6
+  - @layerzerolabs/devtools-evm@0.0.6
+  - @layerzerolabs/ua-devtools@0.0.6
+  - @layerzerolabs/devtools@0.0.5
+
 ## 0.0.8
 
 ### Patch Changes
