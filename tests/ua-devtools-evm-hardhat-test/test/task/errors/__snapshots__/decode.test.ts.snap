@@ -3,25 +3,25 @@
 exports[`task lz:errors:decode should print CustomError details 1`] = `
 [
   {
-    "Error": "CustomError: Contract reverted with custom error. Error UnsupportedEid()",
+    "Error": "CustomError: Contract reverted with custom error. Error LZ_ULN_Unsorted()",
     "Type": "Custom error",
   },
 ]
 `;
 
-exports[`task lz:errors:decode should print CustomError details if the error is 0x751cb20f 1`] = `
+exports[`task lz:errors:decode should print CustomError details if the error is 0x0dc652a8 1`] = `
 [
   {
-    "Error": "CustomError: Contract reverted with custom error. Error LZ_PathNotInitializable()",
+    "Error": "CustomError: Contract reverted with custom error. Error LZ_ULN_InvalidLegacyType1Option()",
     "Type": "Custom error",
   },
 ]
 `;
 
-exports[`task lz:errors:decode should print CustomError details if the error is 0xc3a1858e 1`] = `
+exports[`task lz:errors:decode should print CustomError details if the error is 0x645f0f4f 1`] = `
 [
   {
-    "Error": "CustomError: Contract reverted with custom error. Error Executor_InvalidNativeDropOption()",
+    "Error": "CustomError: Contract reverted with custom error. Error LZ_MessageLib_InsufficientMsgValue()",
     "Type": "Custom error",
   },
 ]
