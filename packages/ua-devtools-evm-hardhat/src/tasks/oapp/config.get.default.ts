@@ -4,7 +4,7 @@ import { createLogger, printJson, printRecord } from '@layerzerolabs/io-devtools
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { getEidForNetworkName, getEidsByNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import { getEidForNetworkName, getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
 interface TaskArgs {
