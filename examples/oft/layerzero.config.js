@@ -30,11 +30,9 @@ module.exports = {
     ],
     connections: [
         {
-          from: fujiContract,
-          to: sepoliaContract,
-          config: {
-  
-          },
+            from: fujiContract,
+            to: sepoliaContract,
+            config: {},
         },
         {
             from: fujiContract,
