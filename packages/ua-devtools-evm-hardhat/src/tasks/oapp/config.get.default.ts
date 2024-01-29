@@ -4,22 +4,27 @@ import { printRecord } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
-    networks: string[]
+    networks?: string[]
 }
 
-export const getDefaultConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', networks }) => {
+export const getDefaultConfig: ActionType<TaskArgs> = async (
+    { logLevel = 'info', networks: networksArgument },
+    hre
+) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
-    const configs: Record<string, Record<string, unknown>> = {}
+    const networks =
+        networksArgument ??
+        Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
 
+    const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
         configs[localNetworkName] = {}
-
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
@@ -57,6 +62,6 @@ task(
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addParam('networks', 'comma separated list of networks', undefined, types.networks)
+    .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(getDefaultConfig)
