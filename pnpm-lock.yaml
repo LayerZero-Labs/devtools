@@ -261,6 +261,9 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
     devDependencies:
+      '@ethersproject/address':
+        specifier: ~5.7.0
+        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.0.6
         version: link:../devtools
@@ -530,6 +533,9 @@ importers:
         version: 5.7.0
       '@ethersproject/abstract-signer':
         specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/address':
+        specifier: ~5.7.0
         version: 5.7.0
       '@ethersproject/contracts':
         specifier: ^5.7.0
@@ -1007,6 +1013,9 @@ importers:
     dependencies:
       '@ethersproject/abi':
         specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/address':
+        specifier: ~5.7.0
         version: 5.7.0
       '@ethersproject/bytes':
         specifier: ^5.7.0
@@ -1535,6 +1544,9 @@ importers:
         version: 5.7.0
       '@ethersproject/abstract-signer':
         specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/address':
+        specifier: ~5.7.0
         version: 5.7.0
       '@ethersproject/constants':
         specifier: ^5.7.0
@@ -6785,6 +6797,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}

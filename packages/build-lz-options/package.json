@@ -32,6 +32,7 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
+    "@ethersproject/address": "~5.7.0",
     "@layerzerolabs/devtools": "~0.0.6",
     "@layerzerolabs/devtools-evm": "~0.0.7",
     "@layerzerolabs/io-devtools": "~0.0.5",
