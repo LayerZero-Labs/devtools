@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.0.5
+
+### Patch Changes
+
+- fac1c06: Add addChecksum utility
+
 ## 0.0.4
 
 ### Patch Changes

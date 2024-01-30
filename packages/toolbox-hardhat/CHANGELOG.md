@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.0.10
+
+### Patch Changes
+
+- fac1c06: Add addChecksum utility
+- Updated dependencies [fac1c06]
+  - @layerzerolabs/devtools-evm@0.0.8
+
 ## 0.0.9
 
 ### Patch Changes
