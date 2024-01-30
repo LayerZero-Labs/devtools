@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.0.8
+
+### Patch Changes
+
+- fac1c06: Add addChecksum utility
+
 ## 0.0.7
 
 ### Patch Changes

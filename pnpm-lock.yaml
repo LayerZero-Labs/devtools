@@ -268,7 +268,7 @@ importers:
         specifier: ~0.0.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.0.7
+        specifier: ~0.0.8
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.0.5
@@ -1027,7 +1027,7 @@ importers:
         specifier: ~0.0.5
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.0.6
+        specifier: ~0.0.8
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~0.0.10
@@ -6794,7 +6794,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
