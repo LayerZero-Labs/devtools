@@ -1,7 +1,7 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { OmniAddress, formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
-import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
+import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema } from './schema'
 import assert from 'assert'
 import { printRecord } from '@layerzerolabs/io-devtools'
 import { isZero } from '@layerzerolabs/devtools'
@@ -92,14 +92,14 @@ export class Uln302 extends OmniSDK implements IUln302 {
     }
 
     encodeUlnConfig(config: Uln302UlnConfig): string {
-        const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
+        const serializedConfig = this.serializeUlnConfig(config)
         const encoded = this.contract.contract.interface.encodeFunctionResult('getUlnConfig', [serializedConfig])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }
 
     async setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction> {
-        const serializedConfig = Uln302UlnConfigInputSchema.parse(config)
+        const serializedConfig = this.serializeUlnConfig(config)
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
             [
                 {
@@ -112,6 +112,23 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return {
             ...this.createTransaction(data),
             description: `Setting default ULN config for ${formatEid(eid)}: ${printRecord(serializedConfig)}`,
+        }
+    }
+
+    /**
+     * Prepares the ULN config to be sent to the contract
+     *
+     * This involves adding two properties that are required by the EVM
+     * contracts (for optimization purposes) but don't need to be present
+     * in our configuration.
+     *
+     * @param {Uln302UlnConfig} config
+     */
+    protected serializeUlnConfig(config: Uln302UlnConfig) {
+        return {
+            ...config,
+            requiredDVNCount: config.requiredDVNs.length,
+            optionalDVNCount: config.optionalDVNs.length,
         }
     }
 }

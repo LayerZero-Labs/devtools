@@ -20,12 +20,3 @@ export const Uln302UlnConfigSchema = Uln302UlnConfigSchemaBase.extend({
 export const Uln302ExecutorConfigSchema = Uln302ExecutorConfigSchemaBase.extend({
     maxMessageSize: BigNumberishNumberSchema,
 }) satisfies z.ZodSchema<Uln302ExecutorConfig, z.ZodTypeDef, Uln302ExecutorConfigInput>
-
-/**
- * Schema for parsing a common UlnConfig into a ethers-specific format
- */
-export const Uln302UlnConfigInputSchema = Uln302UlnConfigSchema.transform((config) => ({
-    ...config,
-    requiredDVNCount: config.requiredDVNs.length,
-    optionalDVNCount: config.optionalDVNs.length,
-}))
