@@ -2,7 +2,9 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { z } from 'zod'
 import type { OmniPoint, OmniNode, OmniVector, OmniEdge, OmniGraph } from './types'
 
-export const UIntSchema = z.coerce.number().nonnegative().int()
+export const UIntBigIntSchema = z.coerce.bigint().nonnegative()
+
+export const UIntNumberSchema = z.coerce.number().nonnegative().int()
 
 export const AddressSchema = z.string()
 

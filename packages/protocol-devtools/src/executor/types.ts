@@ -7,10 +7,10 @@ export interface IExecutor extends IOmniSDK {
 }
 
 export interface ExecutorDstConfig {
-    baseGas: bigint | string | number
-    multiplierBps: bigint | string | number
-    floorMarginUSD: bigint | string | number
-    nativeCap: bigint | string | number
+    baseGas: bigint
+    multiplierBps: bigint
+    floorMarginUSD: bigint
+    nativeCap: bigint
 }
 
 export interface ExecutorEdgeConfig {

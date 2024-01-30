@@ -79,7 +79,7 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (
                     sendLibrary: sendLibrary,
                     receiveLibraryConfig: {
                         receiveLibrary,
-                        gracePeriod: 0,
+                        gracePeriod: BigInt(0),
                     },
                     sendConfig: {
                         executorConfig: sendExecutorConfig,

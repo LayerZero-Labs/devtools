@@ -81,7 +81,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
                     sendLibrary: defaultConfig.defaultSendLibrary,
                     receiveLibraryConfig: {
                         receiveLibrary: defaultConfig.defaultReceiveLibrary,
-                        gracePeriod: 0,
+                        gracePeriod: BigInt(0),
                     },
                     sendConfig: {
                         executorConfig: defaultConfig.sendExecutorConfig,

@@ -65,12 +65,10 @@ export interface Uln302ExecutorConfig {
 }
 
 export interface Uln302UlnConfig {
-    confirmations: bigint | string | number
+    confirmations: bigint
     optionalDVNThreshold: number
     requiredDVNs: string[]
     optionalDVNs: string[]
-    requiredDVNCount?: number
-    optionalDVNCount?: number
 }
 
 export interface Uln302NodeConfig {

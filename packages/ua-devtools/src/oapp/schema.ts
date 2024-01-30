@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { AddressSchema, UIntSchema } from '@layerzerolabs/devtools'
+import { AddressSchema, UIntBigIntSchema } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import {
     OAppEdgeConfig,
@@ -10,7 +10,7 @@ import {
 } from './types'
 
 export const OAppReceiveLibraryConfigSchema = z.object({
-    gracePeriod: UIntSchema,
+    gracePeriod: UIntBigIntSchema,
     receiveLibrary: AddressSchema,
 }) satisfies z.ZodSchema<OAppReceiveLibraryConfig, z.ZodTypeDef, unknown>
 

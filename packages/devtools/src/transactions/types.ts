@@ -5,8 +5,8 @@ export interface OmniTransaction {
     point: OmniPoint
     data: string
     description?: string
-    gasLimit?: string | bigint | number
-    value?: string | bigint | number
+    gasLimit?: bigint
+    value?: bigint
 }
 
 export interface OmniTransactionWithResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {

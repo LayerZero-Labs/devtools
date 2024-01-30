@@ -73,7 +73,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     async setDefaultReceiveLibrary(
         eid: EndpointId,
         lib: Address | null | undefined,
-        gracePeriod: number = 0
+        gracePeriod: bigint = BigInt(0)
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting default receive library for eid ${eid} (${formatEid(eid)}) and address ${lib} with grace perriod of ${gracePeriod}`
@@ -140,7 +140,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         oapp: Address,
         eid: EndpointId,
         newLib: Address | null | undefined,
-        gracePeriod: number
+        gracePeriod: bigint
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to address ${newLib} with a grace period of ${gracePeriod}`
@@ -181,7 +181,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         oapp: Address,
         eid: EndpointId,
         lib: Address | null | undefined,
-        expiry: number
+        expiry: bigint
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting receive library timeout for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to address ${makeZeroAddress(lib)} with expiration period ${expiry}`

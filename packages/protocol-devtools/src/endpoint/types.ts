@@ -18,7 +18,7 @@ export interface IEndpoint extends IOmniSDK {
     setDefaultReceiveLibrary(
         eid: EndpointId,
         lib: Address | null | undefined,
-        gracePeriod?: number
+        gracePeriod?: bigint
     ): Promise<OmniTransaction>
 
     getDefaultSendLibrary(eid: EndpointId): Promise<Address | undefined>
@@ -48,8 +48,8 @@ export interface IEndpoint extends IOmniSDK {
      * @param {EndpointId} dstEid Destination endpoint ID
      */
     isDefaultSendLibrary(sender: PossiblyBytes, dstEid: EndpointId): Promise<boolean>
-    setReceiveLibrary(oapp: Address, eid: EndpointId, newLib: Address, gracePeriod: number): Promise<OmniTransaction>
-    setReceiveLibraryTimeout(oapp: Address, eid: EndpointId, newLib: Address, expiry: number): Promise<OmniTransaction>
+    setReceiveLibrary(oapp: Address, eid: EndpointId, newLib: Address, gracePeriod: bigint): Promise<OmniTransaction>
+    setReceiveLibraryTimeout(oapp: Address, eid: EndpointId, newLib: Address, expiry: bigint): Promise<OmniTransaction>
 
     /**
      * Gets the executor config for a given OApp, library and a destination
@@ -148,12 +148,12 @@ export interface MessagingFee {
 
 export interface Timeout {
     lib: string
-    expiry: number
+    expiry: bigint
 }
 
 export interface EndpointEdgeConfig {
     defaultReceiveLibrary: Address
-    defaultReceiveLibraryGracePeriod?: number
+    defaultReceiveLibraryGracePeriod?: bigint
     defaultSendLibrary: Address
 }
 

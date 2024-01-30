@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { BigNumberishBigintSchema, BigNumberishNumberSchema, BigNumberishSchema } from '@/schema'
+import { BigNumberishBigIntSchema, BigNumberishNumberSchema, BigNumberishSchema } from '@/schema'
 
 describe('schema', () => {
     const bigIntArbitrary = fc.bigInt()
@@ -26,11 +26,11 @@ describe('schema', () => {
         })
     })
 
-    describe('BigNumberishBigintSchema', () => {
+    describe('BigNumberishBigIntSchema', () => {
         it('should parse BigNumberish into a bigint', () => {
             fc.assert(
                 fc.property(bigNumberishArbitrary, (bigNumberish) => {
-                    const parsed = BigNumberishBigintSchema.parse(bigNumberish)
+                    const parsed = BigNumberishBigIntSchema.parse(bigNumberish)
 
                     expect(typeof parsed).toBe('bigint')
                     expect(BigNumber.from(parsed)).toEqual(BigNumber.from(bigNumberish))

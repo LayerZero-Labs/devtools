@@ -7,9 +7,9 @@ export interface IPriceFeed extends IOmniSDK {
 }
 
 export interface PriceData {
-    priceRatio: bigint | string | number
-    gasPriceInUnit: bigint | string | number
-    gasPerByte: bigint | string | number
+    priceRatio: bigint
+    gasPriceInUnit: bigint
+    gasPerByte: bigint
 }
 
 export interface PriceFeedEdgeConfig {
