@@ -15,6 +15,8 @@ import {
     setupDefaultEndpoint,
     avaxExecutor,
     avaxDvn,
+    avaxDvn_Opt2,
+    avaxDvn_Opt3,
     ethSendUln,
     deployEndpoint,
     bscExecutor,
@@ -626,7 +628,7 @@ describe('oapp/config', () => {
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
-                it('should return one configureSendConfig transactions', async () => {
+                it('should return one configureSendConfig transaction', async () => {
                     const [_, errors] = await signAndSend([
                         await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
                             ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
@@ -680,6 +682,142 @@ describe('oapp/config', () => {
                         ]),
                     ]
                     expect(transactions).toEqual(expectedTransactions)
+                })
+
+                it('should not take the order of requiredDVNs into account', async () => {
+                    const requiredDVNs = await Promise.all([
+                        getLibraryAddress(avaxDvn),
+                        getLibraryAddress(avaxDvn_Opt2),
+                        getLibraryAddress(avaxDvn_Opt3),
+                    ])
+
+                    const config = {
+                        sendConfig: {
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
+                            ulnConfig: {
+                                confirmations: BigInt(42),
+                                requiredDVNs,
+                                optionalDVNs: [],
+                                optionalDVNThreshold: 0,
+                            },
+                        },
+                    }
+
+                    const graph: OAppOmniGraph = {
+                        contracts: [
+                            {
+                                point: ethPoint,
+                            },
+                            {
+                                point: avaxPoint,
+                            },
+                        ],
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config,
+                            },
+                        ],
+                    }
+
+                    // First we configure the OApp with the original graph
+                    const [_, errors] = await signAndSend(await configureOApp(graph, oappSdkFactory))
+                    expect(errors).toEqual([])
+
+                    // Now we change the order of the DVNs
+                    const changedGraph: OAppOmniGraph = {
+                        ...graph,
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config: {
+                                    ...config,
+                                    sendConfig: {
+                                        ...config.sendConfig,
+                                        ulnConfig: {
+                                            ...config.sendConfig.ulnConfig,
+                                            requiredDVNs: requiredDVNs.reverse(),
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+
+                    // And this change should result in no change in the OApp
+                    const transactions = await configureOApp(changedGraph, oappSdkFactory)
+                    expect(transactions).toEqual([])
+                })
+
+                it('should not take the order of optionalDVNs into account', async () => {
+                    const optionalDVNs = await Promise.all([
+                        getLibraryAddress(avaxDvn),
+                        getLibraryAddress(avaxDvn_Opt2),
+                        getLibraryAddress(avaxDvn_Opt3),
+                    ])
+
+                    const config = {
+                        sendConfig: {
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
+                            ulnConfig: {
+                                confirmations: BigInt(42),
+                                requiredDVNs: [],
+                                optionalDVNs,
+                                optionalDVNThreshold: 3,
+                            },
+                        },
+                    }
+
+                    const graph: OAppOmniGraph = {
+                        contracts: [
+                            {
+                                point: ethPoint,
+                            },
+                            {
+                                point: avaxPoint,
+                            },
+                        ],
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config,
+                            },
+                        ],
+                    }
+
+                    // First we configure the OApp with the original graph
+                    const [_, errors] = await signAndSend(await configureOApp(graph, oappSdkFactory))
+                    expect(errors).toEqual([])
+
+                    // Now we change the order of the DVNs
+                    const changedGraph: OAppOmniGraph = {
+                        ...graph,
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config: {
+                                    ...config,
+                                    sendConfig: {
+                                        ...config.sendConfig,
+                                        ulnConfig: {
+                                            ...config.sendConfig.ulnConfig,
+                                            optionalDVNs: optionalDVNs.reverse(),
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+
+                    // And this change should result in no change in the OApp
+                    const transactions = await configureOApp(changedGraph, oappSdkFactory)
+                    expect(transactions).toEqual([])
                 })
 
                 afterEach(async () => {
