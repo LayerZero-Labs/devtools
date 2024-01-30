@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.15
+
+### Patch Changes
+
+- 26e7509: Adding in get executor config task
+
 ## 0.0.14
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.0.10
+
+### Patch Changes
+
+- 8789236: Move bytes utilities to devtools
+- 9b4256a: Clean up schemas; Add WithLooseBigInts generic mapped type
+- Updated dependencies [8789236]
+- Updated dependencies [9b4256a]
+  - @layerzerolabs/protocol-devtools@0.0.7
+  - @layerzerolabs/devtools-evm@0.0.7
+  - @layerzerolabs/devtools@0.0.6
+
 ## 0.0.9
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- 8789236: Move bytes utilities to devtools
+- Updated dependencies [8789236]
+- Updated dependencies [9b4256a]
+  - @layerzerolabs/protocol-devtools-evm@0.0.10
+  - @layerzerolabs/protocol-devtools@0.0.7
+  - @layerzerolabs/ua-devtools-evm@0.0.7
+  - @layerzerolabs/devtools-evm@0.0.7
+  - @layerzerolabs/ua-devtools@0.0.7
+  - @layerzerolabs/devtools@0.0.6
+
 ## 0.0.4
 
 ### Patch Changes
