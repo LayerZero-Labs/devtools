@@ -1,6 +1,6 @@
 {
   "name": "build-lz-options",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Build LayerZero options with one command",
   "keywords": [
     "LayerZero",
@@ -32,8 +32,8 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.0.1",
-    "@layerzerolabs/devtools-evm": "~0.0.6",
+    "@layerzerolabs/devtools": "~0.0.6",
+    "@layerzerolabs/devtools-evm": "~0.0.7",
     "@layerzerolabs/io-devtools": "~0.0.5",
     "@layerzerolabs/lz-v2-utilities": "~2.0.25",
     "@types/prompts": "^2.4.9",

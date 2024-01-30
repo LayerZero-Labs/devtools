@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.0.6
+
+### Patch Changes
+
+- 8789236: Move bytes utilities to devtools
+- 9b4256a: Clean up schemas; Add WithLooseBigInts generic mapped type
+
 ## 0.0.5
 
 ### Patch Changes
