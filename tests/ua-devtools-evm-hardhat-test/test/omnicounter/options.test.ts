@@ -1,6 +1,6 @@
 /// <reference types="jest-extended" />
 
-import { makeBytes32, OmniSignerEVM, parseLogsWithName } from '@layerzerolabs/devtools-evm'
+import { OmniSignerEVM, parseLogsWithName } from '@layerzerolabs/devtools-evm'
 import { parseEther } from 'ethers/lib/utils'
 import fc from 'fast-check'
 import 'hardhat'
@@ -11,7 +11,7 @@ import { IncrementType } from '@layerzerolabs/omnicounter-devtools'
 import { createOmniCounterFactory, OmniCounter } from '@layerzerolabs/omnicounter-devtools-evm'
 import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { configureOAppPeers, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
-import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import { createSignAndSend, makeBytes32, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     createConnectedContractFactory,

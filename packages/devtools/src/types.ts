@@ -4,6 +4,14 @@ export type Address = string
 
 export type Bytes32 = string
 
+export type Bytes = string
+
+export type PossiblyBigInt = string | number | bigint
+
+export type OmniAddress = Bytes32 | Address
+
+export type PossiblyBytes = Bytes | Bytes32 | Address
+
 /**
  * Generic type for a hybrid (sync / async) factory
  * that generates an instance of `TOutput` based on arguments of type `TInput`

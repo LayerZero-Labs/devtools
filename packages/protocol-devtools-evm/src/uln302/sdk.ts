@@ -1,10 +1,11 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { Address, formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
-import { isZero, makeZeroAddress, OmniSDK } from '@layerzerolabs/devtools-evm'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigInputSchema, Uln302UlnConfigSchema } from './schema'
 import assert from 'assert'
 import { printRecord } from '@layerzerolabs/io-devtools'
+import { isZero } from '@layerzerolabs/devtools'
+import { OmniSDK, makeZeroAddress } from '@layerzerolabs/devtools-evm'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     async getUlnConfig(eid: EndpointId, address?: Address | null | undefined): Promise<Uln302UlnConfig> {

@@ -1,13 +1,15 @@
 import type { IOApp, EnforcedOptions, OAppEnforcedOptionConfig } from '@layerzerolabs/ua-devtools'
-import { type Bytes32, type Address, type OmniTransaction, formatEid } from '@layerzerolabs/devtools'
 import {
-    type OmniContract,
+    type Bytes32,
+    type OmniAddress,
+    type OmniTransaction,
+    formatEid,
+    isZero,
+    areBytes32Equal,
     ignoreZero,
     makeBytes32,
-    areBytes32Equal,
-    isZero,
-    formatOmniContract,
-} from '@layerzerolabs/devtools-evm'
+} from '@layerzerolabs/devtools'
+import { type OmniContract, formatOmniContract } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
@@ -55,11 +57,11 @@ export class OApp extends OmniSDK implements IOApp {
         return ignoreZero(await this.contract.contract.peers(eid))
     }
 
-    async hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean> {
+    async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
         return areBytes32Equal(await this.getPeer(eid), address)
     }
 
-    async setPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<OmniTransaction> {
+    async setPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<OmniTransaction> {
         this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])

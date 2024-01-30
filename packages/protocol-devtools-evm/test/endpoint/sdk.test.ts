@@ -1,8 +1,9 @@
 import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import type { Contract } from '@ethersproject/contracts'
-import { isZero, makeBytes32, makeZeroAddress, type OmniContract } from '@layerzerolabs/devtools-evm'
+import { makeZeroAddress, type OmniContract } from '@layerzerolabs/devtools-evm'
 import { Endpoint } from '@/endpoint'
+import { isZero, makeBytes32 } from '@layerzerolabs/devtools'
 
 describe('endpoint/sdk', () => {
     describe('getUln302SDK', () => {

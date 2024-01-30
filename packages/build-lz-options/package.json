@@ -32,6 +32,7 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
+    "@layerzerolabs/devtools": "~0.0.1",
     "@layerzerolabs/devtools-evm": "~0.0.6",
     "@layerzerolabs/io-devtools": "~0.0.5",
     "@layerzerolabs/lz-v2-utilities": "~2.0.25",
