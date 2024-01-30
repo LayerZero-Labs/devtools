@@ -534,9 +534,6 @@ importers:
       '@ethersproject/abstract-signer':
         specifier: ^5.7.0
         version: 5.7.0
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
       '@ethersproject/contracts':
         specifier: ^5.7.0
         version: 5.7.0
