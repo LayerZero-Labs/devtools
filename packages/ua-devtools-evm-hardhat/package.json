@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm-hardhat",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Hardhat utilities for working with LayerZero EVM contracts",
   "repository": {
     "type": "git",
@@ -45,7 +45,7 @@
     "@layerzerolabs/devtools": "~0.0.5",
     "@layerzerolabs/devtools-evm": "~0.0.6",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.10",
-    "@layerzerolabs/io-devtools": "~0.0.6",
+    "@layerzerolabs/io-devtools": "~0.0.7",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "@layerzerolabs/lz-evm-messagelib-v2": "~2.0.25",
     "@layerzerolabs/protocol-devtools": "~0.0.6",
@@ -74,7 +74,7 @@
     "@layerzerolabs/devtools": "~0.0.5",
     "@layerzerolabs/devtools-evm": "~0.0.6",
     "@layerzerolabs/devtools-evm-hardhat": "~0.0.10",
-    "@layerzerolabs/io-devtools": "~0.0.6",
+    "@layerzerolabs/io-devtools": "~0.0.7",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "@layerzerolabs/protocol-devtools": "~0.0.6",
     "@layerzerolabs/protocol-devtools-evm": "~0.0.9",

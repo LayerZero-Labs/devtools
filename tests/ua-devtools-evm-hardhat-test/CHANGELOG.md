@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.14
+
+### Patch Changes
+
+- 790542f: Adding optional json argument to get default config task
+
 ## 0.0.13
 
 ### Patch Changes
