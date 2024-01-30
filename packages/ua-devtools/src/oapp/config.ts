@@ -1,4 +1,4 @@
-import { Address, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniAddress, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
 import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
@@ -103,7 +103,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
 
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
     // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
         config,
@@ -158,7 +158,7 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
 
 export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) => {
     // This function builds a map to find all SetConfigParam[] to execute for a given OApp and ReceiveLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
         config,
@@ -220,7 +220,7 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
     )
 
 const buildOmniTransactions = async (
-    setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>>,
+    setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
     createSdk: OAppFactory
 ): Promise<OmniTransaction[]> => {
     const omniTransaction: OmniTransaction[] = []

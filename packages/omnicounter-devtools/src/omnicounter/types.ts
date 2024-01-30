@@ -1,4 +1,4 @@
-import { Address, OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniAddress, OmniTransaction } from '@layerzerolabs/devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { MessagingFee } from '@layerzerolabs/protocol-devtools'
 
@@ -16,5 +16,10 @@ export enum IncrementType {
 }
 
 export interface IOmniCounter {
-    increment(eid: EndpointId, type: IncrementType, options: Uint8Array, receiver: Address): Promise<IncrementOutput>
+    increment(
+        eid: EndpointId,
+        type: IncrementType,
+        options: Uint8Array,
+        receiver: OmniAddress
+    ): Promise<IncrementOutput>
 }

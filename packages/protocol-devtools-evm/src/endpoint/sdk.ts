@@ -11,7 +11,6 @@ import type {
 } from '@layerzerolabs/protocol-devtools'
 import {
     formatEid,
-    type Address,
     type OmniAddress,
     type OmniTransaction,
     formatOmniPoint,
@@ -36,7 +35,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         super(contract)
     }
 
-    async getUln302SDK(address: Address): Promise<IUln302> {
+    async getUln302SDK(address: OmniAddress): Promise<IUln302> {
         this.logger.debug(`Getting Uln302 SDK for address ${address}`)
 
         assert(
@@ -49,22 +48,22 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.uln302Factory({ eid: this.point.eid, address })
     }
 
-    async getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined> {
+    async getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default receive library for eid ${eid} (${formatEid(eid)})`)
 
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
 
-    async getSendLibrary(sender: Address, dstEid: EndpointId): Promise<Address | undefined> {
+    async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`)
 
         return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
     }
 
     async getReceiveLibrary(
-        receiver: Address,
+        receiver: OmniAddress,
         srcEid: EndpointId
-    ): Promise<[address: Address | undefined, isDefault: boolean]> {
+    ): Promise<[address: OmniAddress | undefined, isDefault: boolean]> {
         this.logger.debug(`Getting receive library for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`)
 
         return await this.contract.contract.getReceiveLibrary(receiver, srcEid)
@@ -72,8 +71,8 @@ export class Endpoint extends OmniSDK implements IEndpoint {
 
     async setDefaultReceiveLibrary(
         eid: EndpointId,
-        lib: Address | null | undefined,
-        gracePeriod: number = 0
+        lib: OmniAddress | null | undefined,
+        gracePeriod: bigint = BigInt(0)
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting default receive library for eid ${eid} (${formatEid(eid)}) and address ${lib} with grace perriod of ${gracePeriod}`
@@ -91,7 +90,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async getDefaultSendLibrary(eid: EndpointId): Promise<Address | undefined> {
+    async getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default send library for eid ${eid} (${formatEid(eid)})`)
 
         return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
@@ -109,7 +108,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.contract.contract.isDefaultSendLibrary(sender, dstEid)
     }
 
-    async setDefaultSendLibrary(eid: EndpointId, lib: Address | null | undefined): Promise<OmniTransaction> {
+    async setDefaultSendLibrary(eid: EndpointId, lib: OmniAddress | null | undefined): Promise<OmniTransaction> {
         this.logger.debug(`Setting default send library for eid ${eid} (${formatEid(eid)}) and address ${lib}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultSendLibrary', [
@@ -123,7 +122,11 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address | null | undefined): Promise<OmniTransaction> {
+    async setSendLibrary(
+        oapp: OmniAddress,
+        eid: EndpointId,
+        newLib: OmniAddress | null | undefined
+    ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to address ${newLib}`
         )
@@ -137,10 +140,10 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async setReceiveLibrary(
-        oapp: Address,
+        oapp: OmniAddress,
         eid: EndpointId,
-        newLib: Address | null | undefined,
-        gracePeriod: number
+        newLib: OmniAddress | null | undefined,
+        gracePeriod: bigint
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to address ${newLib} with a grace period of ${gracePeriod}`
@@ -159,7 +162,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout> {
+    async getReceiveLibraryTimeout(receiver: OmniAddress, srcEid: EndpointId): Promise<Timeout> {
         this.logger.debug(
             `Getting receive library timeout for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`
         )
@@ -178,10 +181,10 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async setReceiveLibraryTimeout(
-        oapp: Address,
+        oapp: OmniAddress,
         eid: EndpointId,
-        lib: Address | null | undefined,
-        expiry: number
+        lib: OmniAddress | null | undefined,
+        expiry: bigint
     ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting receive library timeout for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to address ${makeZeroAddress(lib)} with expiration period ${expiry}`
@@ -202,7 +205,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
+    async setConfig(oapp: OmniAddress, lib: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
         this.logger.debug(`Setting config for OApp ${oapp} to address ${lib} with config ${printJson(setConfigParam)}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, lib, setConfigParam])
@@ -212,7 +215,11 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction> {
+    async setUlnConfig(
+        oapp: OmniAddress,
+        lib: OmniAddress,
+        setUlnConfig: Uln302SetUlnConfig[]
+    ): Promise<OmniTransaction> {
         this.logger.debug(
             `Setting ULN config for OApp ${oapp} to address ${lib} with config ${printJson(setUlnConfig)}`
         )
@@ -222,8 +229,8 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async setExecutorConfig(
-        oapp: Address,
-        lib: Address,
+        oapp: OmniAddress,
+        lib: OmniAddress,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<OmniTransaction> {
         this.logger.debug(
@@ -234,7 +241,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await this.setConfig(oapp, lib, setExecutorConfigParams)
     }
 
-    async getExecutorConfig(oapp: OmniAddress, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+    async getExecutorConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig> {
         this.logger.debug(
             `Getting executor config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
@@ -243,7 +250,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await uln.getExecutorConfig(eid, oapp)
     }
 
-    async getAppExecutorConfig(oapp: OmniAddress, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig> {
+    async getAppExecutorConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig> {
         this.logger.debug(
             `Getting executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
@@ -252,14 +259,14 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await uln.getAppExecutorConfig(eid, oapp)
     }
 
-    async getUlnConfig(oapp: OmniAddress, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
+    async getUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`)
 
         const uln = await this.getUln302SDK(lib)
         return await uln.getUlnConfig(eid, oapp)
     }
 
-    async getAppUlnConfig(oapp: OmniAddress, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig> {
+    async getAppUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting App ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and address ${lib}`
         )
@@ -268,11 +275,11 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         return await uln.getAppUlnConfig(eid, oapp)
     }
 
-    isRegisteredLibrary(lib: Address): Promise<boolean> {
+    isRegisteredLibrary(lib: OmniAddress): Promise<boolean> {
         return this.contract.contract.isRegisteredLibrary(lib)
     }
 
-    async registerLibrary(lib: Address): Promise<OmniTransaction> {
+    async registerLibrary(lib: OmniAddress): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('registerLibrary', [lib])
 
         return {
@@ -281,7 +288,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    public async quote(params: MessageParams, sender: Address): Promise<MessagingFee> {
+    public async quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee> {
         const { nativeFee, lzTokenFee } = await this.contract.contract.quote(params, sender)
         return {
             nativeFee: BigInt(nativeFee),
@@ -289,7 +296,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
         }
     }
 
-    async getUlnConfigParams(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
+    async getUlnConfigParams(lib: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
         const uln = (await this.getUln302SDK(lib)) as Uln302
         return setUlnConfig.map(({ eid, ulnConfig }) => ({
             eid,
@@ -299,7 +306,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     async getExecutorConfigParams(
-        lib: Address,
+        lib: OmniAddress,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<SetConfigParam[]> {
         const uln = (await this.getUln302SDK(lib)) as Uln302

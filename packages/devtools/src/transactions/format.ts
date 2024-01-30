@@ -5,7 +5,7 @@ export const formatOmniTransaction = (
     transaction: OmniTransaction
 ): Record<string, string | number | bigint | undefined> => ({
     Endpoint: formatEid(transaction.point.eid),
-    Address: transaction.point.address,
+    OmniAddress: transaction.point.address,
     Description: transaction.description,
     Data: transaction.data,
     Value: transaction.value,

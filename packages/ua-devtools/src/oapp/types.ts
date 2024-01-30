@@ -29,7 +29,7 @@ export type EnforcedOptions = {
 
 export interface OAppReceiveLibraryConfig {
     receiveLibrary: string
-    gracePeriod: number
+    gracePeriod: bigint
 }
 
 export interface OAppSendConfig {

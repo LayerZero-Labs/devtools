@@ -1,16 +1,16 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
-export type Address = string
-
 export type Bytes32 = string
+
+export type Bytes20 = string
 
 export type Bytes = string
 
 export type PossiblyBigInt = string | number | bigint
 
-export type OmniAddress = Bytes32 | Address
+export type OmniAddress = Bytes32 | Bytes20
 
-export type PossiblyBytes = Bytes | Bytes32 | Address
+export type PossiblyBytes = Bytes | Bytes32 | Bytes20
 
 /**
  * Generic type for a hybrid (sync / async) factory
