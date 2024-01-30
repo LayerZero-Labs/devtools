@@ -1,21 +1,21 @@
 import type { OptionTypeOption } from '@/types'
-import { ExecutorOptionType, OptionType as UtilitiesOptionType, WorkerId } from '@layerzerolabs/lz-v2-utilities'
+import { ExecutorOptionType, OptionType, WorkerId } from '@layerzerolabs/lz-v2-utilities'
 
 /**
  * Supported Option Types.
  */
 export const OPTION_TYPES: OptionTypeOption[] = [
     {
-        id: UtilitiesOptionType.TYPE_1,
-        label: `${UtilitiesOptionType.TYPE_1}: gas for remote execution`,
+        id: OptionType.TYPE_1,
+        label: `${OptionType.TYPE_1}: gas for remote execution`,
     },
     {
-        id: UtilitiesOptionType.TYPE_2,
-        label: `${UtilitiesOptionType.TYPE_2}: gas for remote execution and native drop`,
+        id: OptionType.TYPE_2,
+        label: `${OptionType.TYPE_2}: gas for remote execution and native drop`,
     },
     {
-        id: UtilitiesOptionType.TYPE_3,
-        label: `${UtilitiesOptionType.TYPE_3}: options builder (EndpointV2 only)`,
+        id: OptionType.TYPE_3,
+        label: `${OptionType.TYPE_3}: options builder (EndpointV2 only)`,
     },
 ]
 
