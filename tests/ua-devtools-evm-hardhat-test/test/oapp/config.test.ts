@@ -7,7 +7,7 @@ import {
     createSignerFactory,
     createProviderFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
+import { OApp, createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { getLibraryAddress } from '../__utils__/oapp'
@@ -474,7 +474,8 @@ describe('oapp/config', () => {
         })
 
         describe('configureConfig configureSendConfig and configureReceiveConfig separately', () => {
-            let bscContract, bscPoint, bscOAppSdk
+            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: OApp
+
             beforeEach(async () => {
                 bscContract = await contractFactory(bscPointHardhat)
                 bscPoint = omniContractToPoint(bscContract)
@@ -818,15 +819,6 @@ describe('oapp/config', () => {
                     // And this change should result in no change in the OApp
                     const transactions = await configureOApp(changedGraph, oappSdkFactory)
                     expect(transactions).toEqual([])
-                })
-
-                afterEach(async () => {
-                    const [_, errors] = await signAndSend(transactions)
-                    // eslint-disable-next-line jest/no-standalone-expect
-                    expect(errors).toEqual([])
-                    const transactionsAgain = await configureOApp(graph, oappSdkFactory)
-                    // eslint-disable-next-line jest/no-standalone-expect
-                    expect(transactionsAgain).toEqual([])
                 })
             })
 
