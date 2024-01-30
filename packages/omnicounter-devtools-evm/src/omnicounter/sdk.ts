@@ -2,7 +2,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { IncrementOutput, IncrementType, IOmniCounter } from '@layerzerolabs/omnicounter-devtools'
 import { EndpointFactory } from '@layerzerolabs/protocol-devtools'
 import { OApp } from '@layerzerolabs/ua-devtools-evm'
-import { type Address, makeBytes32 } from '@layerzerolabs/devtools'
+import { type OmniAddress, makeBytes32 } from '@layerzerolabs/devtools'
 import { OmniContract } from '@layerzerolabs/devtools-evm'
 
 export class OmniCounter extends OApp implements IOmniCounter {
@@ -17,7 +17,7 @@ export class OmniCounter extends OApp implements IOmniCounter {
         eid: EndpointId,
         type: IncrementType,
         options: Uint8Array,
-        receiver: Address
+        receiver: OmniAddress
     ): Promise<IncrementOutput> {
         const data = this.contract.contract.interface.encodeFunctionData('increment', [eid, type, options])
         const endpointSdk = await super.getEndpointSDK()

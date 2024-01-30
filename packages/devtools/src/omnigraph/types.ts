@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { Address, WithOptionals } from '@/types'
+import type { OmniAddress, WithOptionals } from '@/types'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
@@ -7,7 +7,7 @@ import type { Address, WithOptionals } from '@/types'
  * In layman terms this is a contract deployed on a particular network (represented by an endpoint).
  */
 export type OmniPoint = WithEid<{
-    address: Address
+    address: OmniAddress
 }>
 
 /**

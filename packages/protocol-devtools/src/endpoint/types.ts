@@ -1,5 +1,5 @@
 import type {
-    Address,
+    OmniAddress,
     Factory,
     OmniGraph,
     OmniPoint,
@@ -12,31 +12,31 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@/uln302/types'
 
 export interface IEndpoint extends IOmniSDK {
-    getUln302SDK(address: Address): Promise<IUln302>
+    getUln302SDK(address: OmniAddress): Promise<IUln302>
 
-    getDefaultReceiveLibrary(eid: EndpointId): Promise<Address | undefined>
+    getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
     setDefaultReceiveLibrary(
         eid: EndpointId,
-        lib: Address | null | undefined,
+        lib: OmniAddress | null | undefined,
         gracePeriod?: bigint
     ): Promise<OmniTransaction>
 
-    getDefaultSendLibrary(eid: EndpointId): Promise<Address | undefined>
-    setDefaultSendLibrary(eid: EndpointId, lib: Address | null | undefined): Promise<OmniTransaction>
+    getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
+    setDefaultSendLibrary(eid: EndpointId, lib: OmniAddress | null | undefined): Promise<OmniTransaction>
 
-    isRegisteredLibrary(lib: Address): Promise<boolean>
-    registerLibrary(lib: Address): Promise<OmniTransaction>
+    isRegisteredLibrary(lib: OmniAddress): Promise<boolean>
+    registerLibrary(lib: OmniAddress): Promise<OmniTransaction>
 
-    getSendLibrary(sender: Address, dstEid: EndpointId): Promise<Address | undefined>
+    getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined>
     getReceiveLibrary(
-        receiver: Address,
+        receiver: OmniAddress,
         srcEid: EndpointId
     ): Promise<[address: Bytes32 | undefined, isDefault: boolean]>
 
     getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout>
-    getReceiveLibraryTimeout(receiver: Address, srcEid: EndpointId): Promise<Timeout>
+    getReceiveLibraryTimeout(receiver: OmniAddress, srcEid: EndpointId): Promise<Timeout>
 
-    setSendLibrary(oapp: Address, eid: EndpointId, newLib: Address): Promise<OmniTransaction>
+    setSendLibrary(oapp: OmniAddress, eid: EndpointId, newLib: OmniAddress): Promise<OmniTransaction>
 
     /**
      * Returns the default send library for a given OApp and a destination
@@ -44,12 +44,22 @@ export interface IEndpoint extends IOmniSDK {
      *
      * This function will not throw if passed a zero address.
      *
-     * @param {Address | Bytes32} sender Address of the OApp
+     * @param {OmniAddress | Bytes32} sender OmniAddress of the OApp
      * @param {EndpointId} dstEid Destination endpoint ID
      */
     isDefaultSendLibrary(sender: PossiblyBytes, dstEid: EndpointId): Promise<boolean>
-    setReceiveLibrary(oapp: Address, eid: EndpointId, newLib: Address, gracePeriod: bigint): Promise<OmniTransaction>
-    setReceiveLibraryTimeout(oapp: Address, eid: EndpointId, newLib: Address, expiry: bigint): Promise<OmniTransaction>
+    setReceiveLibrary(
+        oapp: OmniAddress,
+        eid: EndpointId,
+        newLib: OmniAddress,
+        gracePeriod: bigint
+    ): Promise<OmniTransaction>
+    setReceiveLibraryTimeout(
+        oapp: OmniAddress,
+        eid: EndpointId,
+        newLib: OmniAddress,
+        expiry: bigint
+    ): Promise<OmniTransaction>
 
     /**
      * Gets the executor config for a given OApp, library and a destination
@@ -64,7 +74,7 @@ export interface IEndpoint extends IOmniSDK {
      * @param {PossiblyBytes} lib Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getExecutorConfig(oapp: PossiblyBytes, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
+    getExecutorConfig(oapp: PossiblyBytes, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
 
     /**
      * Gets the executor config for a given OApp, library and a destination
@@ -79,7 +89,7 @@ export interface IEndpoint extends IOmniSDK {
      * @param {PossiblyBytes} lib Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getAppExecutorConfig(oapp: PossiblyBytes, lib: Address, eid: EndpointId): Promise<Uln302ExecutorConfig>
+    getAppExecutorConfig(oapp: PossiblyBytes, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
     setExecutorConfig(
         oapp: PossiblyBytes,
         lib: PossiblyBytes,
@@ -99,7 +109,7 @@ export interface IEndpoint extends IOmniSDK {
      * @param {PossiblyBytes} lib Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
+    getUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
 
     /**
      * Gets the ULN config for a given OApp, library and a destination
@@ -114,14 +124,14 @@ export interface IEndpoint extends IOmniSDK {
      * @param {PossiblyBytes} lib Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getAppUlnConfig(oapp: Address, lib: Address, eid: EndpointId): Promise<Uln302UlnConfig>
-    setUlnConfig(oapp: Address, lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
+    getAppUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
+    setUlnConfig(oapp: OmniAddress, lib: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
 
-    getUlnConfigParams(lib: Address, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
-    getExecutorConfigParams(lib: Address, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
-    setConfig(oapp: Address, lib: Address, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
+    getUlnConfigParams(lib: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
+    getExecutorConfigParams(lib: OmniAddress, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
+    setConfig(oapp: OmniAddress, lib: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
 
-    quote(params: MessageParams, sender: Address): Promise<MessagingFee>
+    quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee>
 }
 
 export type Uln302SetExecutorConfig = { eid: EndpointId; executorConfig: Uln302ExecutorConfig }
@@ -135,7 +145,7 @@ export interface SetConfigParam {
 
 export interface MessageParams {
     dstEid: EndpointId
-    receiver: Address
+    receiver: OmniAddress
     message: string | Uint8Array
     options: string | Uint8Array
     payInLzToken: boolean
@@ -152,9 +162,9 @@ export interface Timeout {
 }
 
 export interface EndpointEdgeConfig {
-    defaultReceiveLibrary: Address
+    defaultReceiveLibrary: OmniAddress
     defaultReceiveLibraryGracePeriod?: bigint
-    defaultSendLibrary: Address
+    defaultSendLibrary: OmniAddress
 }
 
 export type EndpointOmniGraph = OmniGraph<unknown, EndpointEdgeConfig>

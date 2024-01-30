@@ -1,4 +1,4 @@
-import { Address } from '@layerzerolabs/devtools'
+import { OmniAddress } from '@layerzerolabs/devtools'
 import { ExecutorDstConfig, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     createConnectedContractFactory,
@@ -15,9 +15,9 @@ import { Logger } from '@layerzerolabs/io-devtools'
 export async function getSendConfig(
     localNetworkName: string,
     remoteNetworkName: string,
-    address?: Address,
+    address?: OmniAddress,
     custom: boolean = false
-): Promise<[Address, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
+): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -81,9 +81,9 @@ export async function getSendConfig(
 export async function getReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
-    address?: Address,
+    address?: OmniAddress,
     custom: boolean = false
-): Promise<[Address, Uln302UlnConfig, Timeout] | undefined> {
+): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
