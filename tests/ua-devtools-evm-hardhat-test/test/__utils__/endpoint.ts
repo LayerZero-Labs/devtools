@@ -73,7 +73,7 @@ const defaultPriceData: PriceData = {
     gasPerByte: 1,
 }
 
-const defaultExecutorDstConfig: ExecutorDstConfig = {
+export const defaultExecutorDstConfig: ExecutorDstConfig = {
     baseGas: BigInt(200_000),
     multiplierBps: BigInt(0),
     floorMarginUSD: BigInt(0),
