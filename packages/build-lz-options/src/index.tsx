@@ -34,7 +34,7 @@ new Command("build-lz-options")
     let output: string = "";
 
     switch (config.type.id) {
-      case UtilitiesOptionType.TYPE_1.toString(): {
+      case UtilitiesOptionType.TYPE_1: {
         const options = await promptForOptionType1();
         render(
           <Option1Summary
@@ -46,7 +46,7 @@ new Command("build-lz-options")
         output = optionsType1(options.gasLimit);
         break;
       }
-      case UtilitiesOptionType.TYPE_2.toString(): {
+      case UtilitiesOptionType.TYPE_2: {
         const options = await promptForOptionType2();
         render(
           <Option2Summary
@@ -64,7 +64,7 @@ new Command("build-lz-options")
         );
         break;
       }
-      case UtilitiesOptionType.TYPE_3.toString(): {
+      case UtilitiesOptionType.TYPE_3: {
         const options = await promptForOptionType3();
         output = options.toHex();
         break;

@@ -1,8 +1,10 @@
+import { OptionType } from '@layerzerolabs/lz-v2-utilities'
+
 /**
  * Used to render OptionType input from the user.
  */
-export interface OptionType {
-    id: string
+export interface OptionTypeOption {
+    id: OptionType
     label: string
 }
 
@@ -10,7 +12,7 @@ export interface OptionType {
  * Input OptionType selection.
  */
 export interface OptionTypeInput {
-    type: OptionType
+    type: OptionTypeOption
 }
 
 /**
