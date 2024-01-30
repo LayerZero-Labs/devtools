@@ -1,5 +1,9 @@
 import { makeBytes32 } from "@layerzerolabs/devtools";
-import { optionsType1, optionsType2 } from "@layerzerolabs/lz-v2-utilities";
+import {
+  optionsType1,
+  optionsType2,
+  OptionType as UtilitiesOptionType,
+} from "@layerzerolabs/lz-v2-utilities";
 import React from "react";
 import { render } from "ink";
 import { Command } from "commander";
@@ -30,7 +34,7 @@ new Command("build-lz-options")
     let output: string = "";
 
     switch (config.type.id) {
-      case "1": {
+      case UtilitiesOptionType.TYPE_1.toString(): {
         const options = await promptForOptionType1();
         render(
           <Option1Summary
@@ -42,7 +46,7 @@ new Command("build-lz-options")
         output = optionsType1(options.gasLimit);
         break;
       }
-      case "2": {
+      case UtilitiesOptionType.TYPE_2.toString(): {
         const options = await promptForOptionType2();
         render(
           <Option2Summary
@@ -60,7 +64,7 @@ new Command("build-lz-options")
         );
         break;
       }
-      case "3": {
+      case UtilitiesOptionType.TYPE_3.toString(): {
         const options = await promptForOptionType3();
         output = options.toHex();
         break;
