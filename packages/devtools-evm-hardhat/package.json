@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-hardhat",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Hardhat utilities for LayerZero EVM projects",
   "repository": {
     "type": "git",
