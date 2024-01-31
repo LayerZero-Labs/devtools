@@ -3,7 +3,6 @@ import { HardhatError } from 'hardhat/internal/core/errors'
 import { ERRORS } from 'hardhat/internal/core/errors-list'
 import type { CLIArgumentType } from 'hardhat/types'
 import { z } from 'zod'
-import { getEidsByNetworkName } from './runtime'
 import { LogLevel } from '@layerzerolabs/io-devtools'
 
 /**
@@ -40,29 +39,6 @@ const csv: CLIArgumentType<string[]> = {
 }
 
 /**
- * Hardhat CLI type for a comma separated list of network names
- */
-const networks: CLIArgumentType<string[]> = {
-    name: 'networks',
-    parse(name: string, value: string) {
-        const networkNames = csv.parse(name, value)
-        const allDefinedNetworks = getEidsByNetworkName()
-        const networks = networkNames.map((networkName) => {
-            if (networkName in allDefinedNetworks) return networkName
-
-            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
-                value: networkName,
-                name: name,
-                type: 'network',
-            })
-        })
-
-        return networks
-    },
-    validate() {},
-}
-
-/**
  * Hardhat CLI type for a log level argument
  *
  * @see {@link LogLevel}
@@ -84,4 +60,4 @@ const logLevel: CLIArgumentType<LogLevel> = {
     validate() {},
 }
 
-export const types = { csv, networks, logLevel, ...builtInTypes }
+export const types = { csv, logLevel, ...builtInTypes }

@@ -4,7 +4,7 @@ import { printRecord } from '@layerzerolabs/io-devtools'
 import { getExecutorDstConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_EXECUTOR } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { assertDefinedNetworks, getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
@@ -18,9 +18,11 @@ export const getExecutorConfig: ActionType<TaskArgs> = async (
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
-    const networks =
-        networksArgument ??
-        Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
+    const networks = networksArgument
+        ? // Here we need to check whether the networks have been defined in hardhat config
+          assertDefinedNetworks(networksArgument)
+        : //  But here a=we are taking them from hardhat config so no assertion is necessary
+          Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
 
     const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
@@ -47,6 +49,6 @@ task(
     TASK_LZ_OAPP_CONFIG_GET_EXECUTOR,
     'Outputs the Executors destination configurations including the native max cap amount '
 )
-    .addParam('networks', 'Comma-separated list of networks', undefined, types.networks, true)
+    .addParam('networks', 'Comma-separated list of networks', undefined, types.csv, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(getExecutorConfig)
