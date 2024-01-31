@@ -3,3 +3,6 @@ cache/
 dist/
 node_modules/
 out/
+*.log
+*ignore
+*.yaml
