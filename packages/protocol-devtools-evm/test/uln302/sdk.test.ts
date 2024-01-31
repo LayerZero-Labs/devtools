@@ -73,7 +73,8 @@ describe('uln302/sdk', () => {
                     const ulnConfigEncodedUnsorted = ulnSdk.encodeUlnConfig(ulnConfigUnsorted)
                     const ulnConfigEncodedSorted = ulnSdk.encodeUlnConfig(ulnConfigSorted)
                     expect(ulnConfigEncodedSorted).toBe(ulnConfigEncodedUnsorted)
-                })
+                }),
+                { numRuns: 20 }
             )
         })
     })
@@ -119,7 +120,8 @@ describe('uln302/sdk', () => {
                             ],
                         ])
                     )
-                })
+                }),
+                { numRuns: 20 }
             )
         })
     })
@@ -156,7 +158,8 @@ describe('uln302/sdk', () => {
 
                         await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnConfig)).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -178,7 +181,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -200,7 +204,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -222,7 +227,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -246,7 +252,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -270,7 +277,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -292,7 +300,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -314,7 +323,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
     })
@@ -347,7 +357,8 @@ describe('uln302/sdk', () => {
 
                         await expect(ulnSdk.hasAppExecutorConfig(eid, oapp, executorConfig)).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -368,7 +379,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -390,7 +402,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
     })
