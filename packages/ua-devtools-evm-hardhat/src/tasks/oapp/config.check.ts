@@ -57,7 +57,7 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
                  */
                 return {
                     ...tableRow,
-                    [column.networkName]: printBoolean(connection?.hasPeer ?? false),
+                    [column.networkName]: printBoolean(connection?.hasPeer),
                 }
             }, {})
             /**
@@ -66,7 +66,12 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
             return connectionsForCurrentRow
         })
 
-        console.log(printCrossTable(peerNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)]))
+        console.log(
+            printCrossTable(peerNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)]),
+            `\n\t${printBoolean(true)} - Connected\n`,
+            `\t${printBoolean(false)} - Not Connected\n`,
+            `\t${printBoolean(undefined)} - Ignored`
+        )
 
         return peers
     } catch (error) {

@@ -5,12 +5,18 @@ exports[`task lz:oapp:config:check should show all chains are connected after ru
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ⤫       │ ✓         │ ✓     │
+│ britney   │ ∅       │ ✓         │ ✓     │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ⤫         │ ✓     │
+│ vengaboys │ ✓       │ ∅         │ ✓     │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ✓       │ ✓         │ ⤫     │
+│ tango     │ ✓       │ ✓         │ ∅     │
 └───────────┴─────────┴───────────┴───────┘",
+  "
+	✓ - Connected
+",
+  "	⤫ - Not Connected
+",
+  "	∅ - Ignored",
 ]
 `;
 
@@ -19,10 +25,16 @@ exports[`task lz:oapp:config:check should show all chains are connected after ru
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │
 ├───────────┼─────────┼───────────┤
-│ britney   │ ⤫       │ ✓         │
+│ britney   │ ∅       │ ✓         │
 ├───────────┼─────────┼───────────┤
-│ vengaboys │ ✓       │ ⤫         │
+│ vengaboys │ ✓       │ ∅         │
 └───────────┴─────────┴───────────┘",
+  "
+	✓ - Connected
+",
+  "	⤫ - Not Connected
+",
+  "	∅ - Ignored",
 ]
 `;
 
@@ -31,12 +43,18 @@ exports[`task lz:oapp:config:check should show all chains are connected expect o
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ⤫       │ ✓         │ ✓     │
+│ britney   │ ∅       │ ✓         │ ✓     │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ⤫         │ ✓     │
+│ vengaboys │ ✓       │ ∅         │ ✓     │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ⤫       │ ✓         │ ⤫     │
+│ tango     │ ∅       │ ✓         │ ∅     │
 └───────────┴─────────┴───────────┴───────┘",
+  "
+	✓ - Connected
+",
+  "	⤫ - Not Connected
+",
+  "	∅ - Ignored",
 ]
 `;
 
@@ -45,12 +63,18 @@ exports[`task lz:oapp:config:check should show all chains are not connected expe
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ⤫       │ ⤫         │ ⤫     │
+│ britney   │ ∅       │ ∅         │ ∅     │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ⤫         │ ⤫     │
+│ vengaboys │ ✓       │ ∅         │ ∅     │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ⤫       │ ⤫         │ ⤫     │
+│ tango     │ ∅       │ ∅         │ ∅     │
 └───────────┴─────────┴───────────┴───────┘",
+  "
+	✓ - Connected
+",
+  "	⤫ - Not Connected
+",
+  "	∅ - Ignored",
 ]
 `;
 
@@ -59,9 +83,15 @@ exports[`task lz:oapp:config:check should show no chains are connected with two 
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │
 ├───────────┼─────────┼───────────┤
-│ britney   │ ⤫       │ ⤫         │
+│ britney   │ ∅       │ ⤫         │
 ├───────────┼─────────┼───────────┤
-│ vengaboys │ ⤫       │ ⤫         │
+│ vengaboys │ ⤫       │ ∅         │
 └───────────┴─────────┴───────────┘",
+  "
+	✓ - Connected
+",
+  "	⤫ - Not Connected
+",
+  "	∅ - Ignored",
 ]
 `;
