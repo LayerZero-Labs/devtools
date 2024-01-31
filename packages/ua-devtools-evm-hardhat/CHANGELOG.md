@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.0.12
+
+### Patch Changes
+
+- 17c8a23: Fix problems with --networks hardhat CLI argument parser
+- Updated dependencies [17c8a23]
+  - @layerzerolabs/devtools-evm-hardhat@0.0.11
+
 ## 0.0.11
 
 ### Patch Changes
