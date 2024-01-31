@@ -20,12 +20,6 @@ describe('uln302/sdk', () => {
         ulnSdk = new Uln302(omniContract)
     })
 
-    afterEach(() => {
-        contract = undefined!
-        omniContract = undefined!
-        ulnSdk = undefined!
-    })
-
     describe('encodeExecutorConfig', () => {
         it('should encode and decode the Uln302ExecutorConfig', async () => {
             const executorConfig: Uln302ExecutorConfig = { executor: AddressZero, maxMessageSize: 100 }
