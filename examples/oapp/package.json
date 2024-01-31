@@ -5,14 +5,14 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out",
-    "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat",
+    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
     "compile:forge": "forge build",
     "compile:hardhat": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath lint:js && $npm_execpath lint:sol",
     "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
+    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
     "test:forge": "forge test",
     "test:hardhat": "$npm_execpath hardhat test"
   },
