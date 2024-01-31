@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`task lz:oapp:config:check should show all chains are connected after running wire with three networks 1`] = `
+[
+  "┌───────────┬─────────┬───────────┬───────┐
+│ from → to │ britney │ vengaboys │ tango │
+├───────────┼─────────┼───────────┼───────┤
+│ britney   │ ⤫       │ ✓         │ ✓     │
+├───────────┼─────────┼───────────┼───────┤
+│ vengaboys │ ✓       │ ⤫         │ ✓     │
+├───────────┼─────────┼───────────┼───────┤
+│ tango     │ ✓       │ ✓         │ ⤫     │
+└───────────┴─────────┴───────────┴───────┘",
+]
+`;
+
+exports[`task lz:oapp:config:check should show all chains are connected after running wire with two networks 1`] = `
+[
+  "┌───────────┬─────────┬───────────┐
+│ from → to │ britney │ vengaboys │
+├───────────┼─────────┼───────────┤
+│ britney   │ ⤫       │ ✓         │
+├───────────┼─────────┼───────────┤
+│ vengaboys │ ✓       │ ⤫         │
+└───────────┴─────────┴───────────┘",
+]
+`;
+
+exports[`task lz:oapp:config:check should show all chains are connected expect one after running wire with three networks 1`] = `
+[
+  "┌───────────┬─────────┬───────────┬───────┐
+│ from → to │ britney │ vengaboys │ tango │
+├───────────┼─────────┼───────────┼───────┤
+│ britney   │ ⤫       │ ✓         │ ✓     │
+├───────────┼─────────┼───────────┼───────┤
+│ vengaboys │ ✓       │ ⤫         │ ✓     │
+├───────────┼─────────┼───────────┼───────┤
+│ tango     │ ⤫       │ ✓         │ ⤫     │
+└───────────┴─────────┴───────────┴───────┘",
+]
+`;
+
+exports[`task lz:oapp:config:check should show all chains are not connected expect one after running wire with three networks 1`] = `
+[
+  "┌───────────┬─────────┬───────────┬───────┐
+│ from → to │ britney │ vengaboys │ tango │
+├───────────┼─────────┼───────────┼───────┤
+│ britney   │ ⤫       │ ⤫         │ ⤫     │
+├───────────┼─────────┼───────────┼───────┤
+│ vengaboys │ ✓       │ ⤫         │ ⤫     │
+├───────────┼─────────┼───────────┼───────┤
+│ tango     │ ⤫       │ ⤫         │ ⤫     │
+└───────────┴─────────┴───────────┴───────┘",
+]
+`;
+
+exports[`task lz:oapp:config:check should show no chains are connected with two networks 1`] = `
+[
+  "┌───────────┬─────────┬───────────┐
+│ from → to │ britney │ vengaboys │
+├───────────┼─────────┼───────────┤
+│ britney   │ ⤫       │ ⤫         │
+├───────────┼─────────┼───────────┤
+│ vengaboys │ ⤫       │ ⤫         │
+└───────────┴─────────┴───────────┘",
+]
+`;
