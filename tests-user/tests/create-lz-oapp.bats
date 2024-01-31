@@ -3,8 +3,8 @@
 # We'll setup an empty testing directory for this script and store its location in this variable
 PROJECTS_DIRECTORY=
 
-# This will be run at the start of this testing suite,
-# similar to beforeAll() in jest
+# This will be run at the start every test,
+# similar to beforeEach() in jest
 setup() {
     # Load bats-assert and bats-support
     load "../lib/bats-support/load.bash"
