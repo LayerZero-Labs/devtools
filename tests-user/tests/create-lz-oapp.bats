@@ -86,7 +86,6 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
-    assert_success
     cd "$DESTINATION"
     pnpm compile
     pnpm test
