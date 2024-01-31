@@ -33,11 +33,5 @@
       "outputs": []
     }
   },
-  "globalDependencies": ["tsconfig.json"],
-
-  "globalPassThroughEnv": [
-    "MNEMONIC",
-    "LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY",
-    "LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT"
-  ]
+  "globalDependencies": ["tsconfig.json"]
 }
