@@ -26,6 +26,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "prepare": "$npm_execpath rebuild bigint-buffer",
     "start": "./cli.js"
   },
   "dependencies": {
