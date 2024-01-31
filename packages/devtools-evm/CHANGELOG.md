@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools-evm
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/io-devtools@0.1.0
+  - @layerzerolabs/devtools@0.1.0
+
 ## 0.0.8
 
 ### Patch Changes
