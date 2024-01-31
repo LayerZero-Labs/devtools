@@ -1,10 +1,9 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import type {
-    Address,
-    Bytes32,
     Factory,
     IOmniSDK,
+    OmniAddress,
     OmniGraph,
     OmniPoint,
     OmniTransaction,
@@ -14,9 +13,9 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export interface IOApp extends IOmniSDK {
     getEndpointSDK(): Promise<IEndpoint>
-    getPeer(eid: EndpointId): Promise<Bytes32 | undefined>
-    hasPeer(eid: EndpointId, address: Bytes32 | Address | null | undefined): Promise<boolean>
-    setPeer(eid: EndpointId, peer: Bytes32 | Address | null | undefined): Promise<OmniTransaction>
+    getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
+    hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
+    setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>
     getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string>
     setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction>
     encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options
@@ -30,7 +29,7 @@ export type EnforcedOptions = {
 
 export interface OAppReceiveLibraryConfig {
     receiveLibrary: string
-    gracePeriod: number
+    gracePeriod: bigint
 }
 
 export interface OAppSendConfig {

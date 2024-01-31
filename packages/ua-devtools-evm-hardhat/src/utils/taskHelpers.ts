@@ -1,12 +1,12 @@
-import { Address } from '@layerzerolabs/devtools'
-import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import { OmniAddress } from '@layerzerolabs/devtools'
+import { ExecutorDstConfig, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     createConnectedContractFactory,
     getEidForNetworkName,
     OmniGraphBuilderHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
-import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
+import { createEndpointFactory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { resolve } from 'path'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -15,9 +15,9 @@ import { Logger } from '@layerzerolabs/io-devtools'
 export async function getSendConfig(
     localNetworkName: string,
     remoteNetworkName: string,
-    address?: Address,
+    address?: OmniAddress,
     custom: boolean = false
-): Promise<[Address, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
+): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -81,9 +81,9 @@ export async function getSendConfig(
 export async function getReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
-    address?: Address,
+    address?: OmniAddress,
     custom: boolean = false
-): Promise<[Address, Uln302UlnConfig, Timeout] | undefined> {
+): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
@@ -144,6 +144,18 @@ export async function getReceiveConfig(
         : await localReceiveUlnSDK.getUlnConfig(remoteEid, address)
 
     return [receiveLibrary, receiveUlnConfig, receiveLibraryTimeout]
+}
+
+export async function getExecutorDstConfig(
+    localNetworkName: string,
+    remoteNetworkName: string
+): Promise<ExecutorDstConfig | undefined> {
+    const localEid = getEidForNetworkName(localNetworkName)
+    const remoteEid = getEidForNetworkName(remoteNetworkName)
+    const contractFactory = createConnectedContractFactory()
+    const executorFactory = createExecutorFactory(contractFactory)
+    const localExecutorSDK = await executorFactory({ eid: localEid, contractName: 'Executor' })
+    return await localExecutorSDK.getDstConfig(remoteEid)
 }
 
 export async function validateAndTransformOappConfig(oappConfigPath: string, logger: Logger): Promise<OAppOmniGraph> {

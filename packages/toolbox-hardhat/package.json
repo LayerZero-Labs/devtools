@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-hardhat",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "One-stop-shop for developing LayerZero applications using hardhat",
   "repository": {
     "type": "git",
@@ -30,23 +30,24 @@
   },
   "dependencies": {
     "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/address": "~5.7.0",
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.0.4",
-    "@layerzerolabs/devtools-evm": "~0.0.5",
-    "@layerzerolabs/devtools-evm-hardhat": "~0.0.8",
-    "@layerzerolabs/io-devtools": "~0.0.6",
+    "@layerzerolabs/devtools": "~0.1.0",
+    "@layerzerolabs/devtools-evm": "~0.1.0",
+    "@layerzerolabs/devtools-evm-hardhat": "~0.1.0",
+    "@layerzerolabs/io-devtools": "~0.1.0",
     "@layerzerolabs/lz-definitions": "^2.0.25",
     "@layerzerolabs/lz-evm-sdk-v1": "^2.0.25",
     "@layerzerolabs/lz-evm-sdk-v2": "^2.0.25",
     "@layerzerolabs/lz-v2-utilities": "~2.0.25",
-    "@layerzerolabs/protocol-devtools": "~0.0.4",
-    "@layerzerolabs/protocol-devtools-evm": "~0.0.8",
-    "@layerzerolabs/test-devtools-evm-hardhat": "~0.0.4",
-    "@layerzerolabs/ua-devtools": "~0.0.4",
-    "@layerzerolabs/ua-devtools-evm": "~0.0.4",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "~0.0.7",
+    "@layerzerolabs/protocol-devtools": "~0.1.0",
+    "@layerzerolabs/protocol-devtools-evm": "~0.1.0",
+    "@layerzerolabs/test-devtools-evm-hardhat": "~0.1.0",
+    "@layerzerolabs/ua-devtools": "~0.1.0",
+    "@layerzerolabs/ua-devtools-evm": "~0.1.0",
+    "@layerzerolabs/ua-devtools-evm-hardhat": "~0.1.0",
     "ink": "^3.2.0",
     "ink-gradient": "^2.0.0",
     "ink-table": "^3.1.0",
@@ -73,6 +74,6 @@
     "hardhat-deploy": "^0.11.45"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

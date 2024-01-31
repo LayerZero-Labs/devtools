@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { BigNumberishBigintSchema, BigNumberishNumberSchema } from '@layerzerolabs/devtools-evm'
+import { BigNumberishBigIntSchema, BigNumberishNumberSchema } from '@layerzerolabs/devtools-evm'
 import {
     Uln302UlnConfigSchema as Uln302UlnConfigSchemaBase,
     Uln302ExecutorConfigSchema as Uln302ExecutorConfigSchemaBase,
@@ -11,7 +11,7 @@ import type { Uln302ExecutorConfigInput, Uln302UlnConfigInput } from './types'
  * Schema for parsing an ethers-specific UlnConfig into a common format
  */
 export const Uln302UlnConfigSchema = Uln302UlnConfigSchemaBase.extend({
-    confirmations: BigNumberishBigintSchema,
+    confirmations: BigNumberishBigIntSchema,
 }) satisfies z.ZodSchema<Uln302UlnConfig, z.ZodTypeDef, Uln302UlnConfigInput>
 
 /**
@@ -20,13 +20,3 @@ export const Uln302UlnConfigSchema = Uln302UlnConfigSchemaBase.extend({
 export const Uln302ExecutorConfigSchema = Uln302ExecutorConfigSchemaBase.extend({
     maxMessageSize: BigNumberishNumberSchema,
 }) satisfies z.ZodSchema<Uln302ExecutorConfig, z.ZodTypeDef, Uln302ExecutorConfigInput>
-
-/**
- * Schema for parsing a common UlnConfig into a ethers-specific format
- */
-export const Uln302UlnConfigInputSchema = Uln302UlnConfigSchema.transform((config) => ({
-    ...config,
-    confirmations: String(config.confirmations),
-    requiredDVNCount: config.requiredDVNs.length,
-    optionalDVNCount: config.optionalDVNs.length,
-}))

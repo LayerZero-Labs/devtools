@@ -1,5 +1,26 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/protocol-devtools@0.1.0
+  - @layerzerolabs/devtools@0.1.0
+
+## 0.0.4
+
+### Patch Changes
+
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+- Updated dependencies [0877186]
+  - @layerzerolabs/protocol-devtools@0.0.6
+  - @layerzerolabs/devtools@0.0.5
+
 ## 0.0.3
 
 ### Patch Changes

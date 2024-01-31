@@ -1,5 +1,50 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.1.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.1.0
+  - @layerzerolabs/protocol-devtools-evm@0.1.0
+  - @layerzerolabs/devtools-evm-hardhat@0.1.0
+  - @layerzerolabs/protocol-devtools@0.1.0
+  - @layerzerolabs/ua-devtools-evm@0.1.0
+  - @layerzerolabs/devtools-evm@0.1.0
+  - @layerzerolabs/io-devtools@0.1.0
+  - @layerzerolabs/ua-devtools@0.1.0
+  - @layerzerolabs/devtools@0.1.0
+
+## 0.0.10
+
+### Patch Changes
+
+- fac1c06: Add addChecksum utility
+- Updated dependencies [fac1c06]
+  - @layerzerolabs/devtools-evm@0.0.8
+
+## 0.0.9
+
+### Patch Changes
+
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+- Updated dependencies [9b75fe1]
+- Updated dependencies [0877186]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.0.9
+  - @layerzerolabs/test-devtools-evm-hardhat@0.0.5
+  - @layerzerolabs/protocol-devtools-evm@0.0.9
+  - @layerzerolabs/devtools-evm-hardhat@0.0.10
+  - @layerzerolabs/protocol-devtools@0.0.6
+  - @layerzerolabs/ua-devtools-evm@0.0.6
+  - @layerzerolabs/devtools-evm@0.0.6
+  - @layerzerolabs/ua-devtools@0.0.6
+  - @layerzerolabs/devtools@0.0.5
+
 ## 0.0.8
 
 ### Patch Changes

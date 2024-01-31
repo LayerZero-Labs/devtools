@@ -1,5 +1,29 @@
 # @layerzerolabs/devtools
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/io-devtools@0.1.0
+
+## 0.0.6
+
+### Patch Changes
+
+- 8789236: Move bytes utilities to devtools
+- 9b4256a: Clean up schemas; Add WithLooseBigInts generic mapped type
+
+## 0.0.5
+
+### Patch Changes
+
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+
 ## 0.0.4
 
 ### Patch Changes

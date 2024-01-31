@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-foundry",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
@@ -34,6 +34,6 @@
     "@openzeppelin/contracts-upgradeable": "^4.9.5"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

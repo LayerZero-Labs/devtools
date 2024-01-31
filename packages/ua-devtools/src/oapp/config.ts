@@ -1,8 +1,8 @@
-import { Address, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniAddress, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
 import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
-import { SetConfigParam, Uln302ExecutorConfig } from '@layerzerolabs/protocol-devtools'
+import { SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
@@ -103,7 +103,8 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
 
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
     // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
+
     for (const {
         vector: { from, to },
         config,
@@ -116,14 +117,19 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             currentSendLibrary !== undefined,
             'sendLibrary has not been set in your config and no default value exists'
         )
-        const sendExecutorConfig: Uln302ExecutorConfig = await endpointSdk.getAppExecutorConfig(
+
+        // We ask the endpoint SDK whether this config has already been applied
+        //
+        // We need to ask not for the final config formed of the default config and the app config,
+        // we only need to check the app config
+        const hasExecutorConfig = await endpointSdk.hasAppExecutorConfig(
             from.address,
             currentSendLibrary,
-            to.eid
+            to.eid,
+            config.sendConfig.executorConfig
         )
 
-        const sendUlnConfig = await endpointSdk.getAppUlnConfig(from.address, currentSendLibrary, to.eid)
-        if (!isDeepEqual(sendExecutorConfig, config.sendConfig.executorConfig)) {
+        if (!hasExecutorConfig) {
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
                 { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
             ])
@@ -137,7 +143,18 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
             )
         }
 
-        if (!isDeepEqual(sendUlnConfig, config.sendConfig.ulnConfig)) {
+        // We ask the endpoint SDK whether this config has already been applied
+        //
+        // We need to ask not for the final config formed of the default config and the app config,
+        // we only need to check the app config
+        const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
+            from.address,
+            currentSendLibrary,
+            to.eid,
+            config.sendConfig.ulnConfig
+        )
+
+        if (!hasUlnConfig) {
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
                 { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
             ])
@@ -158,7 +175,7 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
 
 export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) => {
     // This function builds a map to find all SetConfigParam[] to execute for a given OApp and ReceiveLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>> = new OmniPointMap()
+    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
     for (const {
         vector: { from, to },
         config,
@@ -173,9 +190,19 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
             currentReceiveLibrary !== undefined,
             'receiveLibrary has not been set in your config and no default value exists'
         )
-        const receiveUlnConfig = await endpointSdk.getAppUlnConfig(from.address, currentReceiveLibrary, to.eid)
 
-        if (!isDeepEqual(receiveUlnConfig, config.receiveConfig.ulnConfig)) {
+        // We ask the endpoint SDK whether this config has already been applied
+        //
+        // We need to ask not for the final config formed of the default config and the app config,
+        // we only need to check the app config
+        const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
+            from.address,
+            currentReceiveLibrary,
+            to.eid,
+            config.receiveConfig.ulnConfig
+        )
+
+        if (!hasUlnConfig) {
             const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
                 { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
             ])
@@ -220,7 +247,7 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
     )
 
 const buildOmniTransactions = async (
-    setConfigsByEndpointAndLibrary: OmniPointMap<Map<Address, SetConfigParam[]>>,
+    setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
     createSdk: OAppFactory
 ): Promise<OmniTransaction[]> => {
     const omniTransaction: OmniTransaction[] = []

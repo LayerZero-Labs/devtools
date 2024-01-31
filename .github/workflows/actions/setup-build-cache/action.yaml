@@ -8,7 +8,7 @@ runs:
     # This step will speed up workflow runs that don't touch the whole codebase
     # (or the ones that don't touch the codebase at all)
     - name: Cache turbo build setup
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: node_modules/.cache/turbo
         key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
@@ -20,7 +20,7 @@ runs:
     #
     # This step will speed up workflow runs that use hardhat compilation
     - name: Cache hardhat compilers
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: .cache/hardhat
         key: ${{ runner.os }}-hardhat-${{ github.ref_name }}-${{ github.sha }}

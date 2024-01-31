@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import type { PriceData } from './types'
-import { UIntSchema } from '@layerzerolabs/devtools'
+import { UIntBigIntSchema } from '@layerzerolabs/devtools'
 
 export const PriceDataSchema = z.object({
-    priceRatio: UIntSchema,
-    gasPriceInUnit: UIntSchema,
-    gasPerByte: UIntSchema,
+    priceRatio: UIntBigIntSchema,
+    gasPriceInUnit: UIntBigIntSchema,
+    gasPerByte: UIntBigIntSchema,
 }) satisfies z.ZodSchema<PriceData, z.ZodTypeDef, unknown>

@@ -2,8 +2,8 @@ import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { Contract } from '@ethersproject/contracts'
 import { OApp } from '@/oapp/sdk'
-import { OmniContract, isZero, makeZeroAddress } from '@layerzerolabs/devtools-evm'
-import { makeBytes32 } from '@layerzerolabs/devtools-evm'
+import { OmniContract, makeZeroAddress } from '@layerzerolabs/devtools-evm'
+import { isZero, makeBytes32 } from '@layerzerolabs/devtools'
 import { formatEid } from '@layerzerolabs/devtools'
 
 describe('oapp/sdk', () => {

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-hardhat",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Helpers for testing LayerZero EVM contracts using hardhat",
   "repository": {
     "type": "git",
@@ -51,6 +51,6 @@
     "solidity-bytes-utils": "^0.8.2"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

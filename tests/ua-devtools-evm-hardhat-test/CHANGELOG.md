@@ -1,5 +1,30 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.16
+
+### Patch Changes
+
+- 17c8a23: Fix problems with --networks hardhat CLI argument parser
+
+## 0.0.15
+
+### Patch Changes
+
+- 26e7509: Adding in get executor config task
+
+## 0.0.14
+
+### Patch Changes
+
+- 790542f: Adding optional json argument to get default config task
+
+## 0.0.13
+
+### Patch Changes
+
+- 9b75fe1: Adding optional params to getDefaultConfig and getOAppConfig tasks
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+
 ## 0.0.12
 
 ### Patch Changes

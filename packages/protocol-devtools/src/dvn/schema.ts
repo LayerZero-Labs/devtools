@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import type { DVNDstConfig } from './types'
-import { UIntSchema } from '@layerzerolabs/devtools'
+import { UIntBigIntSchema } from '@layerzerolabs/devtools'
 
 export const DVNDstConfigSchema = z.object({
-    gas: UIntSchema,
-    multiplierBps: UIntSchema,
-    floorMarginUSD: UIntSchema,
+    gas: UIntBigIntSchema,
+    multiplierBps: UIntBigIntSchema,
+    floorMarginUSD: UIntBigIntSchema,
 }) satisfies z.ZodSchema<DVNDstConfig, z.ZodTypeDef, unknown>

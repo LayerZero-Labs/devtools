@@ -1,5 +1,6 @@
 import './wire'
 import './config.check'
 import './config.get.default'
+import './config.get.executor'
 import './config.get'
 import './config.init'

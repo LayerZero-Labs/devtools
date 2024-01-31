@@ -68,12 +68,12 @@ export const bscDvn_Opt3 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN_
 export const MAX_MESSAGE_SIZE = 10000 // match on-chain value
 
 const defaultPriceData: PriceData = {
-    priceRatio: '100000000000000000000',
-    gasPriceInUnit: 1,
-    gasPerByte: 1,
+    priceRatio: BigInt('100000000000000000000'),
+    gasPriceInUnit: BigInt(1),
+    gasPerByte: BigInt(1),
 }
 
-const defaultExecutorDstConfig: ExecutorDstConfig = {
+export const defaultExecutorDstConfig: ExecutorDstConfig = {
     baseGas: BigInt(200_000),
     multiplierBps: BigInt(0),
     floorMarginUSD: BigInt(0),

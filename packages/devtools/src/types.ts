@@ -1,8 +1,16 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
-export type Address = string
-
 export type Bytes32 = string
+
+export type Bytes20 = string
+
+export type Bytes = string
+
+export type PossiblyBigInt = string | number | bigint
+
+export type OmniAddress = Bytes32 | Bytes20
+
+export type PossiblyBytes = Bytes | Bytes32 | Bytes20
 
 /**
  * Generic type for a hybrid (sync / async) factory
@@ -48,3 +56,34 @@ type GetMandatoryKeys<T> = {
  * into optional properties
  */
 export type WithOptionals<T> = Partial<T> & Pick<T, GetMandatoryKeys<T>>
+
+/**
+ * Helper type for loosening the user configuration types
+ * when it comes to `bigint`s.
+ *
+ * It will recursively replace all the `bigint` types,
+ * preserving the types structure, with `PossiblyBigInt` type.
+ *
+ * ```
+ * interface Config {
+ *   values: bigint[]
+ * }
+ *
+ * type UserConfig = WithLooseBigInts<Config>
+ *
+ * const userConfig: UserConfig = {
+ *   values: ["124", 124, BigInt(124)]
+ * }
+ * ```
+ */
+export type WithLooseBigInts<T> = T extends bigint
+    ? PossiblyBigInt
+    : T extends Set<bigint>
+      ? Set<PossiblyBigInt>
+      : T extends Map<infer K, infer V>
+        ? Map<WithLooseBigInts<K>, WithLooseBigInts<V>>
+        : T extends { [K in keyof T]: T[K] }
+          ? { [K in keyof T]: WithLooseBigInts<T[K]> }
+          : T extends Promise<infer V>
+            ? Promise<WithLooseBigInts<V>>
+            : T

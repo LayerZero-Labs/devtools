@@ -7,9 +7,9 @@ export interface IDVN extends IOmniSDK {
 }
 
 export interface DVNDstConfig {
-    gas: bigint | string | number
-    multiplierBps: bigint | string | number
-    floorMarginUSD: bigint | string | number
+    gas: bigint
+    multiplierBps: bigint
+    floorMarginUSD: bigint
 }
 
 export interface DVNEdgeConfig {

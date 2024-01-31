@@ -6,8 +6,6 @@ import { HardhatUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import './tasks/'
-
 const MNEMONIC = process.env.MNEMONIC ?? ''
 
 const config: HardhatUserConfig = {

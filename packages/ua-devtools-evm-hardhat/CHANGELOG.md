@@ -1,5 +1,68 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/protocol-devtools-evm@0.1.0
+  - @layerzerolabs/devtools-evm-hardhat@0.1.0
+  - @layerzerolabs/protocol-devtools@0.1.0
+  - @layerzerolabs/ua-devtools-evm@0.1.0
+  - @layerzerolabs/devtools-evm@0.1.0
+  - @layerzerolabs/io-devtools@0.1.0
+  - @layerzerolabs/ua-devtools@0.1.0
+  - @layerzerolabs/devtools@0.1.0
+
+## 0.0.12
+
+### Patch Changes
+
+- 17c8a23: Fix problems with --networks hardhat CLI argument parser
+- Updated dependencies [17c8a23]
+  - @layerzerolabs/devtools-evm-hardhat@0.0.11
+
+## 0.0.11
+
+### Patch Changes
+
+- 26e7509: Adding in get executor config task
+- Updated dependencies [8789236]
+- Updated dependencies [9b4256a]
+  - @layerzerolabs/protocol-devtools-evm@0.0.10
+  - @layerzerolabs/protocol-devtools@0.0.7
+  - @layerzerolabs/ua-devtools-evm@0.0.7
+  - @layerzerolabs/devtools-evm@0.0.7
+  - @layerzerolabs/ua-devtools@0.0.7
+  - @layerzerolabs/devtools@0.0.6
+
+## 0.0.10
+
+### Patch Changes
+
+- 790542f: Adding optional json argument to get default config task
+- Updated dependencies [81d7eee]
+  - @layerzerolabs/io-devtools@0.0.7
+
+## 0.0.9
+
+### Patch Changes
+
+- 9b75fe1: Adding optional params to getDefaultConfig and getOAppConfig tasks
+- 0877186: Update @layerzerolabs dependencies to 2.0.25 and 2.0.26-rc1
+- Updated dependencies [0877186]
+  - @layerzerolabs/protocol-devtools-evm@0.0.9
+  - @layerzerolabs/devtools-evm-hardhat@0.0.10
+  - @layerzerolabs/protocol-devtools@0.0.6
+  - @layerzerolabs/ua-devtools-evm@0.0.6
+  - @layerzerolabs/devtools-evm@0.0.6
+  - @layerzerolabs/ua-devtools@0.0.6
+  - @layerzerolabs/devtools@0.0.5
+
 ## 0.0.8
 
 ### Patch Changes

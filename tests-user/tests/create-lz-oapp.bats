@@ -83,62 +83,67 @@ teardown() {
 }
 
 @test "should work with pnpm & oapp example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
-    assert_success
     cd "$DESTINATION"
     pnpm compile
     pnpm test
+    pnpm lint
+    pnpm lint:fix
 }
 
 @test "should work with pnpm & oft example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
     npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
+    pnpm lint
+    pnpm lint:fix
 }
 
 @test "should work with yarn & oapp example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
+    yarn lint
+    yarn lint:fix
 }
 
 @test "should work with yarn & oft example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
     npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
+    yarn lint
+    yarn lint:fix
 }
 
 @test "should work with npm & oapp example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
+    npm run lint
+    npm run lint:fix
 }
 
 @test "should work with npm & oft example in CI mode" {
-    skip
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
     npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
+    npm run lint
+    npm run lint:fix
 }

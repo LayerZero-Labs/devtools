@@ -1,28 +1,40 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { printCrossTable } from '@layerzerolabs/io-devtools'
-import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
+import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
+import { getReceiveConfig, getSendConfig, validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 
 interface TaskArgs {
     logLevel?: string
-    networks: string[]
-    addresses: string[]
+    oappConfig: string
 }
 
-export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', networks, addresses }) => {
+export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
+    const networks: string[] = []
+    const addresses: string[] = []
+    const logger = createLogger()
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfig, logger)
+    graph.contracts.forEach((contract) => {
+        networks.push(getNetworkNameForEid(contract.point.eid))
+        addresses.push(contract.point.address)
+    })
+
+    assert(
+        networks.length != 0,
+        'Please provide a valid list of networks & addresses or a path to your LayerZero OApp config.'
+    )
     assert(networks.length === addresses.length, 'Passed in networks must match length of passed in addresses.')
     const configs: Record<string, Record<string, unknown>> = {}
 
     for (const [index, localNetworkName] of networks.entries()) {
         configs[localNetworkName] = {}
-
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) continue
 
@@ -100,7 +112,6 @@ task(
     TASK_LZ_OAPP_CONFIG_GET,
     'Outputs the default Send and Receive Messaging Library versions and the default application config'
 )
-    .addParam('networks', 'Comma-separated list of networks', undefined, types.networks)
-    .addParam('addresses', 'Comma-separated list of addresses', undefined, types.csv)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
     .setAction(getOAppConfig)

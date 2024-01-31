@@ -64,7 +64,7 @@ export const cloneExample = async ({ example, destination }: Config) => {
             }
         }
 
-        throw new CloningError()
+        throw new CloningError(`Unknown error: ${error}`)
     }
 }
 
