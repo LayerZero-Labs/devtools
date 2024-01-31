@@ -89,6 +89,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
+    pnpm lint
+    pnpm lint:fix
 }
 
 @test "should work with pnpm & oft example in CI mode" {
@@ -98,6 +100,8 @@ teardown() {
     cd "$DESTINATION"
     pnpm compile
     pnpm test
+    pnpm lint
+    pnpm lint:fix
 }
 
 @test "should work with yarn & oapp example in CI mode" {
@@ -107,6 +111,8 @@ teardown() {
     cd "$DESTINATION"
     yarn compile
     yarn test
+    yarn lint
+    yarn lint:fix
 }
 
 @test "should work with yarn & oft example in CI mode" {
@@ -116,6 +122,8 @@ teardown() {
     cd "$DESTINATION"
     yarn compile
     yarn test
+    yarn lint
+    yarn lint:fix
 }
 
 @test "should work with npm & oapp example in CI mode" {
@@ -125,6 +133,8 @@ teardown() {
     cd "$DESTINATION"
     npm run compile
     npm run test
+    npm run lint
+    npm run lint:fix
 }
 
 @test "should work with npm & oft example in CI mode" {
@@ -134,4 +144,6 @@ teardown() {
     cd "$DESTINATION"
     npm run compile
     npm run test
+    npm run lint
+    npm run lint:fix
 }
