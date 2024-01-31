@@ -10,6 +10,8 @@ import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
+import { spawnSync } from 'child_process'
+import { cleanAllDeployments } from '../../__utils__/common'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -21,13 +23,21 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 })
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
+    const networks = ['vengaboys', 'britney', 'tango']
+
     beforeEach(async () => {
-        await deployEndpoint()
+        // We'll deploy the endpoint and save the deployments to the filesystem
+        // since we want to be able to tun the task using spawnSync
+        await deployEndpoint(true)
         await setupDefaultEndpoint()
     })
 
+    afterAll(async () => {
+        // We'll be good citizens and clean the endpoint deployments
+        await cleanAllDeployments()
+    })
+
     it('should return default configurations with passed in networks param', async () => {
-        const networks = ['vengaboys', 'britney', 'tango']
         const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, { networks })
         const contractFactory = createContractFactory()
         for (const localNetwork of networks) {
@@ -53,7 +63,6 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
     })
 
     it('should print out default config in json form', async () => {
-        const networks = ['vengaboys', 'britney', 'tango']
         const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, {
             networks,
             json: true,
@@ -94,5 +103,17 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
                 expect(printJson).toHaveBeenCalledWith(config)
             }
         }
+    })
+
+    it(`should fail if not defined networks have been passed`, async () => {
+        const result = spawnSync('npx', ['hardhat', TASK_LZ_OAPP_CONFIG_GET_DEFAULT, '--networks', 'whatever,yomama'])
+
+        expect(result.status).toBe(1)
+    })
+
+    it(`should not fail if defined networks have been passed`, async () => {
+        const result = spawnSync('npx', ['hardhat', TASK_LZ_OAPP_CONFIG_GET_DEFAULT, `--networks`, networks.join(',')])
+
+        expect(result.status).toBe(0)
     })
 })

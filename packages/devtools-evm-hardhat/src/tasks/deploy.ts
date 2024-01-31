@@ -5,6 +5,7 @@ import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { types } from '@/cli'
+import { assertDefinedNetworks } from '@/internal/assertions'
 
 interface TaskArgs {
     networks?: string[]
@@ -18,6 +19,9 @@ const action: ActionType<TaskArgs> = async ({
     ci = false,
 }): Promise<void> => {
     printLogo()
+
+    // Make sure to check that the networks are defined
+    assertDefinedNetworks(networksArgument ?? [])
 
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
@@ -41,7 +45,7 @@ if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY) {
             'networks',
             'List of comma-separated networks. If not provided, all networks will be deployed',
             undefined,
-            types.networks,
+            types.csv,
             true
         )
         .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
