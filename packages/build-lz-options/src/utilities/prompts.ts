@@ -193,6 +193,6 @@ export const promptForOptionType3 = async (): Promise<Options> => {
     let options = Options.newOptions()
     do {
         options = await determineWorkerType(options)
-    } while (await promptToContinue())
+    } while (await promptToContinue('Would you like to add another option?'))
     return options
 }
