@@ -6,3 +6,5 @@ out/
 *.log
 *ignore
 *.yaml
+*.lock
+package-lock.json
