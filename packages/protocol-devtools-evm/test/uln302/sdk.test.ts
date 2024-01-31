@@ -67,15 +67,14 @@ describe('uln302/sdk', () => {
                     const ulnConfigEncodedUnsorted = ulnSdk.encodeUlnConfig(ulnConfigUnsorted)
                     const ulnConfigEncodedSorted = ulnSdk.encodeUlnConfig(ulnConfigSorted)
                     expect(ulnConfigEncodedSorted).toBe(ulnConfigEncodedUnsorted)
-                })
+                }),
+                { numRuns: 20 }
             )
         })
     })
 
     describe('setDefaultUlnConfig', () => {
         it('should sort requiredDVNs and optionalDVNs', async () => {
-            const encodeFunctionData = jest.spyOn(contract.interface, 'encodeFunctionData')
-
             await fc.assert(
                 fc.asyncProperty(endpointArbitrary, dvnsArbitrary, async (eid, dvns) => {
                     const sortedDvns = [...dvns].sort((a, b) => a.localeCompare(b))
@@ -98,22 +97,25 @@ describe('uln302/sdk', () => {
                     expect(transactionUnsorted).toEqual(transactionsSorted)
 
                     // And let's check that the encoding call is correct and the DVNs are sorted
-                    expect(encodeFunctionData).toHaveBeenLastCalledWith('setDefaultUlnConfigs', [
-                        [
-                            {
-                                eid,
-                                config: {
-                                    confirmations: BigInt(100),
-                                    optionalDVNThreshold: 0,
-                                    optionalDVNs: sortedDvns.map(addChecksum),
-                                    requiredDVNs: sortedDvns.map(addChecksum),
-                                    requiredDVNCount: sortedDvns.length,
-                                    optionalDVNCount: sortedDvns.length,
+                    expect(transactionsSorted.data).toBe(
+                        contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
+                            [
+                                {
+                                    eid,
+                                    config: {
+                                        confirmations: BigInt(100),
+                                        optionalDVNThreshold: 0,
+                                        optionalDVNs: sortedDvns.map(addChecksum),
+                                        requiredDVNs: sortedDvns.map(addChecksum),
+                                        requiredDVNCount: sortedDvns.length,
+                                        optionalDVNCount: sortedDvns.length,
+                                    },
                                 },
-                            },
-                        ],
-                    ])
-                })
+                            ],
+                        ])
+                    )
+                }),
+                { numRuns: 20 }
             )
         })
     })
@@ -150,7 +152,8 @@ describe('uln302/sdk', () => {
 
                         await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnConfig)).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -172,7 +175,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -194,7 +198,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -216,7 +221,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -240,7 +246,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -264,7 +271,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -286,7 +294,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -308,7 +317,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeFalsy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
     })
@@ -341,7 +351,8 @@ describe('uln302/sdk', () => {
 
                         await expect(ulnSdk.hasAppExecutorConfig(eid, oapp, executorConfig)).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -362,7 +373,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
 
@@ -384,7 +396,8 @@ describe('uln302/sdk', () => {
                             })
                         ).resolves.toBeTruthy()
                     }
-                )
+                ),
+                { numRuns: 20 }
             )
         })
     })

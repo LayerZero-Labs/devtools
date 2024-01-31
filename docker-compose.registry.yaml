@@ -84,8 +84,8 @@ services:
     # If these are not provided, for example if running on a local machine,
     # we'll default them to our repository and and empty ref
     environment:
-      - LAYERZERO_EXAMPLES_REPOSITORY_URL=https://github.com/${GITHUB_REPOSITORY:-LayerZero-Labs/devtools}.git
-      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${GITHUB_REF_NAME}
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL}
+      - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
     working_dir: /app
     command:
       - /bin/bash
@@ -93,8 +93,8 @@ services:
       - |
         pnpm config set registry http://npm-registry:4873/
 
-        echo "create-lz-oapp:repository   $LAYERZERO_EXAMPLES_REPOSITORY_URL"
-        echo "create-lz-oapp:ref          $LAYERZERO_EXAMPLES_REPOSITORY_REF"
+        echo "create-lz-oapp:repository   ${LAYERZERO_EXAMPLES_REPOSITORY_URL}"
+        echo "create-lz-oapp:ref          ${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
 
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
