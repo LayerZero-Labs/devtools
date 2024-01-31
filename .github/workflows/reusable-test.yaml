@@ -81,7 +81,7 @@ jobs:
 
   test-user:
     name: User test
-    runs-on: ubuntu-latest-m
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
