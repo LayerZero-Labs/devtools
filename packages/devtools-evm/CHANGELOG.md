@@ -1,6 +1,6 @@
 # @layerzerolabs/devtools-evm
 
-## 1.0.0
+## 0.1.0
 
 ### Minor Changes
 
@@ -10,7 +10,7 @@
 
 - Updated dependencies [120adf1]
   - @layerzerolabs/io-devtools@0.1.0
-  - @layerzerolabs/devtools@1.0.0
+  - @layerzerolabs/devtools@0.1.0
 
 ## 0.0.8
 
