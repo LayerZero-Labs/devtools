@@ -1,6 +1,6 @@
-# This will be run at the start of this testing suite,
-# similar to beforeAll() in jest
-setup_file() {
+# This will be run at the start every test,
+# similar to beforeEach() in jest
+setup() {
     # Load bats-assert and bats-support
     load "../lib/bats-support/load.bash"
     load "../lib/bats-assert/load.bash"
