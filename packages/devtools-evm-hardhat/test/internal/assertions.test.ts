@@ -41,7 +41,7 @@ describe('internal/assertions', () => {
                 fc.property(definedNetworksSetArbitrary, fc.string(), (networks, network) => {
                     fc.pre(!definedNetworks.includes(network))
 
-                    expect(() => assertDefinedNetworks(networks.add(network))).not.toThrow()
+                    expect(() => assertDefinedNetworks(networks.add(network))).toThrow()
                 })
             )
         })
