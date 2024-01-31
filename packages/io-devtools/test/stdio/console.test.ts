@@ -36,8 +36,17 @@ describe('stdio/console', () => {
                 expect(consoleMock).not.toHaveBeenCalled()
             })
 
-            it('should restore the original method if the call does not throw', async () => {
-                await withMutedConsole(() => console[methodName].apply(console, ['invisible harry potter']))
+            it('should restore the original method if the call returns', async () => {
+                await expect(withMutedConsole(() => 'tis but a scratch')).resolves.toBe('tis but a scratch')
+
+                console[methodName].apply(console, ['visible harry potter'])
+
+                expect(consoleMock).toHaveBeenCalledTimes(1)
+                expect(consoleMock).toHaveBeenCalledWith('visible harry potter')
+            })
+
+            it('should restore the original method if the call resolves', async () => {
+                await expect(withMutedConsole(async () => 'tis but a scratch')).resolves.toBe('tis but a scratch')
 
                 console[methodName].apply(console, ['visible harry potter'])
 
