@@ -29,7 +29,7 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.0.25",
+    "@layerzerolabs/lz-definitions": "~2.1.2",
     "fast-check": "^3.15.0",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
@@ -37,7 +37,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.0.25",
+    "@layerzerolabs/lz-definitions": "~2.1.2",
     "fast-check": "^3.14.0"
   },
   "publishConfig": {
