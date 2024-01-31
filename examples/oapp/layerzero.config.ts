@@ -15,7 +15,7 @@ const mumbaiContract = {
     contractName: 'MyOApp',
 }
 
-module.exports = {
+export default {
     contracts: [
         {
             contract: fujiContract,
@@ -43,7 +43,7 @@ module.exports = {
                         optionalDVNs: [
                             '0xe9dCF5771a48f8DC70337303AbB84032F8F5bE3E',
                             '0x0AD50201807B615a71a39c775089C9261A667780',
-                        ].sort(),
+                        ],
                         optionalDVNThreshold: 2,
                     },
                 },
@@ -54,7 +54,7 @@ module.exports = {
                         optionalDVNs: [
                             '0x3Eb0093E079EF3F3FC58C41e13FF46c55dcb5D0a',
                             '0x0AD50201807B615a71a39c775089C9261A667780',
-                        ].sort(),
+                        ],
                         optionalDVNThreshold: 2,
                     },
                 },

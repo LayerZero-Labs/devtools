@@ -1,22 +1,22 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { EndpointId } = require('@layerzerolabs/lz-definitions');
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 const sepoliaContract = {
     eid: EndpointId.ETHEREUM_V2_TESTNET,
     contractName: 'MyOFT',
-};
+}
 
 const fujiContract = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
     contractName: 'MyOFT',
-};
+}
 
 const mumbaiContract = {
     eid: EndpointId.POLYGON_V2_TESTNET,
     contractName: 'MyOFT',
-};
+}
 
-module.exports = {
+export default {
     contracts: [
         {
             contract: fujiContract,
@@ -55,4 +55,4 @@ module.exports = {
             to: fujiContract,
         },
     ],
-};
+}
