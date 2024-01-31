@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
 ## 0.0.4
 
 ### Patch Changes

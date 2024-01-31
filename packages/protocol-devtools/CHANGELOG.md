@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.0.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/devtools@1.0.0
+
 ## 0.0.7
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.9
+
+### Patch Changes
+
+- 7aaf750: Update repository URL
+
 ## 0.1.8
 
 ### Patch Changes

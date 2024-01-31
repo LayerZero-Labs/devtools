@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Core utilities for working with LayerZero on-chain infrastructure",
   "repository": {
     "type": "git",
@@ -32,9 +32,9 @@
   "devDependencies": {
     "@ethersproject/bytes": "~5.7.0",
     "@ethersproject/constants": "~5.7.0",
-    "@layerzerolabs/io-devtools": "~0.0.5",
+    "@layerzerolabs/io-devtools": "~0.1.0",
     "@layerzerolabs/lz-definitions": "~2.0.25",
-    "@layerzerolabs/test-devtools": "~0.0.5",
+    "@layerzerolabs/test-devtools": "~0.1.0",
     "@swc/core": "^1.3.105",
     "@swc/jest": "^0.2.31",
     "@types/jest": "^29.5.11",
@@ -49,7 +49,7 @@
   },
   "peerDependencies": {
     "@ethersproject/bytes": "~5.7.0",
-    "@layerzerolabs/io-devtools": "~0.0.4",
+    "@layerzerolabs/io-devtools": "~0.1.0",
     "@layerzerolabs/lz-definitions": "~2.0.25",
     "zod": "^3.22.4"
   },

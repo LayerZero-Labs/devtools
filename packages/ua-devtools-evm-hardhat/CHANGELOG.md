@@ -1,5 +1,23 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 1.0.0
+
+### Minor Changes
+
+- 120adf1: Make packages public
+
+### Patch Changes
+
+- Updated dependencies [120adf1]
+  - @layerzerolabs/protocol-devtools-evm@1.0.0
+  - @layerzerolabs/devtools-evm-hardhat@1.0.0
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/ua-devtools-evm@1.0.0
+  - @layerzerolabs/devtools-evm@1.0.0
+  - @layerzerolabs/io-devtools@0.1.0
+  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/devtools@1.0.0
+
 ## 0.0.12
 
 ### Patch Changes
