@@ -1,3 +1,4 @@
+import 'hardhat'
 import { assertDefinedNetworks } from '@/internal'
 import fc from 'fast-check'
 
