@@ -96,6 +96,9 @@ jobs:
 
       - name: Test
         run: pnpm test:user
+        env:
+          LAYERZERO_EXAMPLES_REPOSITORY_URL: "https://github.com/${GITHUB_REPOSITORY}.git"
+          LAYERZERO_EXAMPLES_REPOSITORY_REF: ${GITHUB_REF_NAME}
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
