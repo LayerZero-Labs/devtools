@@ -44,10 +44,10 @@ pnpm compile:hardhat
 Or adjust the `package.json` to for example remove `forge` build:
 
 ```diff
-- "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat",
+- "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
 - "compile:forge": "forge build",
-- "compile:hardhat": "$npm_execpath hardhat compile",
-+ "compile": "$npm_execpath hardhat compile"
+- "compile:hardhat": "hardhat compile",
++ "compile": "hardhat compile"
 ```
 
 #### Running tests

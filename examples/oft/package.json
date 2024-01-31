@@ -4,16 +4,17 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat",
+    "clean": "rm -rf artifacts cache out",
+    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
     "compile:forge": "forge build",
-    "compile:hardhat": "$npm_execpath hardhat compile",
-    "lint": "$npm_execpath lint:js && $npm_execpath lint:sol",
-    "lint:fix": "$npm_execpath prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
-    "lint:js": "$npm_execpath eslint '**/*.js' && $npm_execpath prettier --check .",
+    "compile:hardhat": "hardhat compile",
+    "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
+    "lint:fix": "eslint --fix '**/*.js' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
+    "lint:js": "eslint '**/*.js' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
-    "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
+    "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat",
     "test:forge": "forge test",
-    "test:hardhat": "$npm_execpath hardhat test"
+    "test:hardhat": "hardhat test"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
