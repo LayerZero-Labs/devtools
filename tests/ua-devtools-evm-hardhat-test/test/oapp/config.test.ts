@@ -7,7 +7,7 @@ import {
     createSignerFactory,
     createProviderFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
+import { OApp, createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { getLibraryAddress } from '../__utils__/oapp'
@@ -15,6 +15,8 @@ import {
     setupDefaultEndpoint,
     avaxExecutor,
     avaxDvn,
+    avaxDvn_Opt2,
+    avaxDvn_Opt3,
     ethSendUln,
     deployEndpoint,
     bscExecutor,
@@ -472,7 +474,8 @@ describe('oapp/config', () => {
         })
 
         describe('configureConfig configureSendConfig and configureReceiveConfig separately', () => {
-            let bscContract, bscPoint, bscOAppSdk
+            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: OApp
+
             beforeEach(async () => {
                 bscContract = await contractFactory(bscPointHardhat)
                 bscPoint = omniContractToPoint(bscContract)
@@ -626,7 +629,7 @@ describe('oapp/config', () => {
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
-                it('should return one configureSendConfig transactions', async () => {
+                it('should return one configureSendConfig transaction', async () => {
                     const [_, errors] = await signAndSend([
                         await ethEndpointSdk.setConfig(ethPoint.address, ethSendLibrary, [
                             ...(await ethEndpointSdk.getExecutorConfigParams(ethSendLibrary, [
@@ -682,13 +685,140 @@ describe('oapp/config', () => {
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
-                afterEach(async () => {
-                    const [_, errors] = await signAndSend(transactions)
-                    // eslint-disable-next-line jest/no-standalone-expect
+                it('should not take the order of requiredDVNs into account', async () => {
+                    const requiredDVNs = await Promise.all([
+                        getLibraryAddress(avaxDvn),
+                        getLibraryAddress(avaxDvn_Opt2),
+                        getLibraryAddress(avaxDvn_Opt3),
+                    ])
+
+                    const config = {
+                        sendConfig: {
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
+                            ulnConfig: {
+                                confirmations: BigInt(42),
+                                requiredDVNs,
+                                optionalDVNs: [],
+                                optionalDVNThreshold: 0,
+                            },
+                        },
+                    }
+
+                    const graph: OAppOmniGraph = {
+                        contracts: [
+                            {
+                                point: ethPoint,
+                            },
+                            {
+                                point: avaxPoint,
+                            },
+                        ],
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config,
+                            },
+                        ],
+                    }
+
+                    // First we configure the OApp with the original graph
+                    const [_, errors] = await signAndSend(await configureOApp(graph, oappSdkFactory))
                     expect(errors).toEqual([])
-                    const transactionsAgain = await configureOApp(graph, oappSdkFactory)
-                    // eslint-disable-next-line jest/no-standalone-expect
-                    expect(transactionsAgain).toEqual([])
+
+                    // Now we change the order of the DVNs
+                    const changedGraph: OAppOmniGraph = {
+                        ...graph,
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config: {
+                                    ...config,
+                                    sendConfig: {
+                                        ...config.sendConfig,
+                                        ulnConfig: {
+                                            ...config.sendConfig.ulnConfig,
+                                            requiredDVNs: requiredDVNs.reverse(),
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+
+                    // And this change should result in no change in the OApp
+                    const transactions = await configureOApp(changedGraph, oappSdkFactory)
+                    expect(transactions).toEqual([])
+                })
+
+                it('should not take the order of optionalDVNs into account', async () => {
+                    const optionalDVNs = await Promise.all([
+                        getLibraryAddress(avaxDvn),
+                        getLibraryAddress(avaxDvn_Opt2),
+                        getLibraryAddress(avaxDvn_Opt3),
+                    ])
+
+                    const config = {
+                        sendConfig: {
+                            executorConfig: {
+                                maxMessageSize: 99,
+                                executor: avaxExecutorAddress,
+                            },
+                            ulnConfig: {
+                                confirmations: BigInt(42),
+                                requiredDVNs: [],
+                                optionalDVNs,
+                                optionalDVNThreshold: 3,
+                            },
+                        },
+                    }
+
+                    const graph: OAppOmniGraph = {
+                        contracts: [
+                            {
+                                point: ethPoint,
+                            },
+                            {
+                                point: avaxPoint,
+                            },
+                        ],
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config,
+                            },
+                        ],
+                    }
+
+                    // First we configure the OApp with the original graph
+                    const [_, errors] = await signAndSend(await configureOApp(graph, oappSdkFactory))
+                    expect(errors).toEqual([])
+
+                    // Now we change the order of the DVNs
+                    const changedGraph: OAppOmniGraph = {
+                        ...graph,
+                        connections: [
+                            {
+                                vector: { from: ethPoint, to: avaxPoint },
+                                config: {
+                                    ...config,
+                                    sendConfig: {
+                                        ...config.sendConfig,
+                                        ulnConfig: {
+                                            ...config.sendConfig.ulnConfig,
+                                            optionalDVNs: optionalDVNs.reverse(),
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+
+                    // And this change should result in no change in the OApp
+                    const transactions = await configureOApp(changedGraph, oappSdkFactory)
+                    expect(transactions).toEqual([])
                 })
             })
 

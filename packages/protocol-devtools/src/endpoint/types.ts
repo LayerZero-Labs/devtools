@@ -17,15 +17,15 @@ export interface IEndpoint extends IOmniSDK {
     getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
     setDefaultReceiveLibrary(
         eid: EndpointId,
-        lib: OmniAddress | null | undefined,
+        uln: OmniAddress | null | undefined,
         gracePeriod?: bigint
     ): Promise<OmniTransaction>
 
     getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
-    setDefaultSendLibrary(eid: EndpointId, lib: OmniAddress | null | undefined): Promise<OmniTransaction>
+    setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction>
 
-    isRegisteredLibrary(lib: OmniAddress): Promise<boolean>
-    registerLibrary(lib: OmniAddress): Promise<OmniTransaction>
+    isRegisteredLibrary(uln: OmniAddress): Promise<boolean>
+    registerLibrary(uln: OmniAddress): Promise<OmniTransaction>
 
     getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined>
     getReceiveLibrary(
@@ -36,7 +36,7 @@ export interface IEndpoint extends IOmniSDK {
     getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout>
     getReceiveLibraryTimeout(receiver: OmniAddress, srcEid: EndpointId): Promise<Timeout>
 
-    setSendLibrary(oapp: OmniAddress, eid: EndpointId, newLib: OmniAddress): Promise<OmniTransaction>
+    setSendLibrary(oapp: OmniAddress, eid: EndpointId, uln: OmniAddress): Promise<OmniTransaction>
 
     /**
      * Returns the default send library for a given OApp and a destination
@@ -51,13 +51,13 @@ export interface IEndpoint extends IOmniSDK {
     setReceiveLibrary(
         oapp: OmniAddress,
         eid: EndpointId,
-        newLib: OmniAddress,
+        uln: OmniAddress,
         gracePeriod: bigint
     ): Promise<OmniTransaction>
     setReceiveLibraryTimeout(
         oapp: OmniAddress,
         eid: EndpointId,
-        newLib: OmniAddress,
+        uln: OmniAddress,
         expiry: bigint
     ): Promise<OmniTransaction>
 
@@ -71,10 +71,10 @@ export interface IEndpoint extends IOmniSDK {
      * @see {@link getAppExecutorConfig}
      *
      * @param {PossiblyBytes} oapp OApp address
-     * @param {PossiblyBytes} lib Library address
+     * @param {PossiblyBytes} uln Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getExecutorConfig(oapp: PossiblyBytes, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
+    getExecutorConfig(oapp: PossiblyBytes, uln: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
 
     /**
      * Gets the executor config for a given OApp, library and a destination
@@ -86,13 +86,36 @@ export interface IEndpoint extends IOmniSDK {
      * @see {@link getExecutorConfig}
      *
      * @param {PossiblyBytes} oapp OApp address
-     * @param {PossiblyBytes} lib Library address
+     * @param {PossiblyBytes} uln Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getAppExecutorConfig(oapp: PossiblyBytes, lib: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
+    getAppExecutorConfig(oapp: PossiblyBytes, uln: OmniAddress, eid: EndpointId): Promise<Uln302ExecutorConfig>
+
+    /**
+     * Checks whether a given `config` is set explicitly for a given OApp
+     * on a particular ULN
+     *
+     * This method makes it easy to take the specifics of a particular VM implementation
+     * into account when checking for differences in Executor configuration.
+     *
+     * @see {@link IUln302.hasAppExecutorConfig}
+     *
+     * @param {OmniAddress} oapp
+     * @param {OmniAddress} uln
+     * @param {EndpointId} eid
+     * @param {Uln302ExecutorConfig} config
+     * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
+     */
+    hasAppExecutorConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        eid: EndpointId,
+        config: Uln302ExecutorConfig
+    ): Promise<boolean>
+
     setExecutorConfig(
         oapp: PossiblyBytes,
-        lib: PossiblyBytes,
+        uln: PossiblyBytes,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<OmniTransaction>
 
@@ -106,10 +129,10 @@ export interface IEndpoint extends IOmniSDK {
      * @see {@link getAppUlnConfig}
      *
      * @param {PossiblyBytes} oapp OApp address
-     * @param {PossiblyBytes} lib Library address
+     * @param {PossiblyBytes} uln Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
+    getUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
 
     /**
      * Gets the ULN config for a given OApp, library and a destination
@@ -121,21 +144,43 @@ export interface IEndpoint extends IOmniSDK {
      * @see {@link getUlnConfig}
      *
      * @param {PossiblyBytes} oapp OApp address
-     * @param {PossiblyBytes} lib Library address
+     * @param {PossiblyBytes} uln Library address
      * @param {EndpointId} eid Endpoint ID
      */
-    getAppUlnConfig(oapp: OmniAddress, lib: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
-    setUlnConfig(oapp: OmniAddress, lib: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
+    getAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig>
 
-    getUlnConfigParams(lib: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
-    getExecutorConfigParams(lib: OmniAddress, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
-    setConfig(oapp: OmniAddress, lib: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
+    /**
+     * Checks whether a given `config` is set explicitly for a given OApp
+     * on a particular ULN
+     *
+     * @see {@link IUln302.hasAppUlnConfig}
+     *
+     * @param {OmniAddress} oapp
+     * @param {OmniAddress} uln
+     * @param {EndpointId} eid
+     * @param {Uln302UlnConfig} config
+     * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
+     */
+    hasAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId, config: Uln302UlnConfig): Promise<boolean>
+
+    setUlnConfig(oapp: OmniAddress, uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
+
+    getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
+    getExecutorConfigParams(uln: OmniAddress, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
+    setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
 
     quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee>
 }
 
-export type Uln302SetExecutorConfig = { eid: EndpointId; executorConfig: Uln302ExecutorConfig }
-export type Uln302SetUlnConfig = { eid: EndpointId; ulnConfig: Uln302UlnConfig }
+export interface Uln302SetExecutorConfig {
+    eid: EndpointId
+    executorConfig: Uln302ExecutorConfig
+}
+
+export interface Uln302SetUlnConfig {
+    eid: EndpointId
+    ulnConfig: Uln302UlnConfig
+}
 
 export interface SetConfigParam {
     eid: EndpointId

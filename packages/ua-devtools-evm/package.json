@@ -33,6 +33,7 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
+    "@ethersproject/address": "~5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.0.6",

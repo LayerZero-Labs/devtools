@@ -28,6 +28,19 @@ export interface IUln302 extends IOmniSDK {
      */
     getAppUlnConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302UlnConfig>
 
+    /**
+     * Checks whether a given `config` is set explicitly on a given OApp.
+     *
+     * This method makes it easy to take the specifics of a particular VM implementation
+     * into account when checking for differences in ULN configuration.
+     *
+     * @param {EndpointId} eid
+     * @param {OmniAddress} oapp
+     * @param {Uln302UlnConfig} config
+     * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
+     */
+    hasAppUlnConfig(eid: EndpointId, oapp: OmniAddress, config: Uln302UlnConfig): Promise<boolean>
+
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
 
     /**
@@ -55,6 +68,19 @@ export interface IUln302 extends IOmniSDK {
      * @param {PossiblyBytes} address
      */
     getAppExecutorConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302ExecutorConfig>
+
+    /**
+     * Checks whether a given `config` is set explicitly on a given OApp.
+     *
+     * This method makes it easy to take the specifics of a particular VM implementation
+     * into account when checking for differences in Executor configuration.
+     *
+     * @param {EndpointId} eid
+     * @param {OmniAddress} oapp
+     * @param {Uln302ExecutorConfig} config
+     * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
+     */
+    hasAppExecutorConfig(eid: EndpointId, oapp: OmniAddress, config: Uln302ExecutorConfig): Promise<boolean>
 
     setDefaultExecutorConfig(eid: EndpointId, config: Uln302ExecutorConfig): Promise<OmniTransaction>
 }
