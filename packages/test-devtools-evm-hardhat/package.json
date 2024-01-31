@@ -51,6 +51,6 @@
     "solidity-bytes-utils": "^0.8.2"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

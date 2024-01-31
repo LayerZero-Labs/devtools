@@ -41,6 +41,6 @@
     "fast-check": "^3.14.0"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

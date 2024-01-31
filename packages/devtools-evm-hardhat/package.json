@@ -88,6 +88,6 @@
     "hardhat-deploy": "^0.11.45"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
