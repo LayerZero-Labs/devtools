@@ -34,6 +34,6 @@
     "@openzeppelin/contracts-upgradeable": "^4.9.5"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }
