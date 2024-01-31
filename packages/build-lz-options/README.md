@@ -4,16 +4,16 @@
   </a>
 </p>
 
-<h1 align="center">build-lz-oapp</h1>
+<h1 align="center">build-lz-options</h1>
 
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/build-lz-oapp"><img alt="NPM Version" src="https://img.shields.io/npm/v/build-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/build-lz-options"><img alt="NPM Version" src="https://img.shields.io/npm/v/build-lz-options"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/build-lz-oapp"><img alt="Downloads" src="https://img.shields.io/npm/dm/build-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/build-lz-options"><img alt="Downloads" src="https://img.shields.io/npm/dm/build-lz-options"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/build-lz-oapp"><img alt="NPM License" src="https://img.shields.io/npm/l/build-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/build-lz-options"><img alt="NPM License" src="https://img.shields.io/npm/l/build-lz-options"/></a>
 </p>
 
 ## Create LayerZero OApp Options <img alt="Static Badge" src="https://img.shields.io/badge/status-work_in_progress-yellow">
