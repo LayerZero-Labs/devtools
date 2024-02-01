@@ -1,7 +1,6 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { printRecords } from '@layerzerolabs/io-devtools/swag'
+import { createLogger, printBoolean, printCrossTable, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { TASK_LZ_OAPP_CONFIG_CHECK } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -10,7 +9,7 @@ import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
-import { printBoolean } from '@layerzerolabs/io-devtools'
+import { areVectorsEqual } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     oappConfig: string
@@ -27,6 +26,14 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
     const logger = createLogger()
     const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
 
+    // need points for OApp Peer Matrix
+    const points = graph.contracts
+        .map(({ point }) => point)
+        .map((point) => ({
+            ...point,
+            networkName: getNetworkNameForEid(point.eid),
+        }))
+
     // At this point we are ready read data from the OApp
     logger.verbose(`Reading peers from OApps`)
     const contractFactory = createConnectedContractFactory()
@@ -34,14 +41,37 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
 
     try {
         const peers = await checkOAppPeers(graph, oAppFactory)
+        const peerNetworkMatrix = points.map((row) => {
+            /**
+             * for each point in the network (referred to as 'row'), create a row in the matrix
+             */
+            const connectionsForCurrentRow = points.reduce((tableRow, column) => {
+                /**
+                 * find a peer with a vector matching the connection from 'column' to 'row'
+                 */
+                const connection = peers.find((peer) => {
+                    return areVectorsEqual(peer.vector, { from: column, to: row })
+                })
+                /**
+                 * update the row with a key-value pair indicating the connection status for the current column
+                 */
+                return {
+                    ...tableRow,
+                    [column.networkName]: printBoolean(connection?.hasPeer),
+                }
+            }, {})
+            /**
+             * return the row representing connections for the current 'row'
+             */
+            return connectionsForCurrentRow
+        })
 
-        const formattedPeers = peers.map((peer) => ({
-            'From network': getNetworkNameForEid(peer.vector.from.eid),
-            'To network': getNetworkNameForEid(peer.vector.to.eid),
-            Connected: printBoolean(peer.hasPeer),
-        }))
-
-        printRecords(formattedPeers)
+        console.log(
+            printCrossTable(peerNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)]),
+            `\n\t${printBoolean(true)} - Connected\n`,
+            `\t${printBoolean(false)} - Not Connected\n`,
+            `\t${printBoolean(undefined)} - Ignored`
+        )
 
         return peers
     } catch (error) {

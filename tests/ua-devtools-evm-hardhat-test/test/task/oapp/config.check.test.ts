@@ -22,26 +22,42 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
         await deployOApp()
     })
 
-    it('should show no chains are connected', async () => {
+    it('should show no chains are connected with two networks', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
         const oappConfig = configPathFixture('valid.config.connected.js')
-        const result = await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
-        const expectPoint = { eid: expect.any(Number), address: expect.any(String) }
-        const expectVector = { from: expectPoint, to: expectPoint }
-        expect(result).toEqual([
-            { vector: expectVector, hasPeer: false },
-            { vector: expectVector, hasPeer: false },
-        ])
+        await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
     })
 
-    it('should show both chains are connected after running wire', async () => {
+    it('should show all chains are connected after running wire with two networks', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
         const oappConfig = configPathFixture('valid.config.connected.js')
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
-        const result = await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
-        const expectPoint = { eid: expect.any(Number), address: expect.any(String) }
-        const expectVector = { from: expectPoint, to: expectPoint }
-        expect(result).toEqual([
-            { vector: expectVector, hasPeer: true },
-            { vector: expectVector, hasPeer: true },
-        ])
+        await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show all chains are connected after running wire with three networks', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.config.connected.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show all chains are connected expect one after running wire with three networks', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.config.missing.connection.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show all chains are not connected expect one after running wire with three networks', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.config.one.connection.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
     })
 })
