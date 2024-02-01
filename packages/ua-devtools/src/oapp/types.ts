@@ -50,34 +50,34 @@ export interface OAppEdgeConfig {
     enforcedOptions?: OAppEnforcedOptionConfig[]
 }
 
-interface BaseExecutorOption {
+export interface BaseExecutorOption {
     msgType: ExecutorOptionType
 }
 
-interface EndcodedOption extends BaseExecutorOption {
+export interface EndcodedOption extends BaseExecutorOption {
     options: string
 }
 
-interface ExecutorLzReceiveOption extends BaseExecutorOption {
+export interface ExecutorLzReceiveOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.LZ_RECEIVE
     gas: string | number
     value: string | number
 }
 
-interface ExecutorNativeDropOption extends BaseExecutorOption {
+export interface ExecutorNativeDropOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.NATIVE_DROP
     amount: string | number
     receiver: string
 }
 
-interface ExecutorComposeOption extends BaseExecutorOption {
+export interface ExecutorComposeOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.COMPOSE
     index: number
     gas: string | number
     value: string | number
 }
 
-interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
+export interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.ORDERED
 }
 
