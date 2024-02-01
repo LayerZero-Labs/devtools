@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.0.7
+
+### Patch Changes
+
+- f0036c5: Use monorepo 2.1.2 released dependencies
+
 ## 0.0.6
 
 ### Patch Changes
