@@ -1,13 +1,19 @@
 import { z } from 'zod'
-import { AddressSchema, UIntBigIntSchema } from '@layerzerolabs/devtools'
+import { AddressSchema, UIntBigIntSchema, UIntNumberSchema } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import {
+    EndcodedOption,
+    ExecutorComposeOption,
+    ExecutorLzReceiveOption,
+    ExecutorNativeDropOption,
+    ExecutorOrderedExecutionOption,
     OAppEdgeConfig,
     OAppEnforcedOptionConfig,
     OAppReceiveConfig,
     OAppReceiveLibraryConfig,
     OAppSendConfig,
 } from './types'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 export const OAppReceiveLibraryConfigSchema = z.object({
     gracePeriod: UIntBigIntSchema,
@@ -23,12 +29,45 @@ export const OAppReceiveConfigSchema = z.object({
     ulnConfig: Uln302UlnConfigSchema,
 }) satisfies z.ZodSchema<OAppReceiveConfig, z.ZodTypeDef, unknown>
 
-export const OAppEnforcedOptionSchema = z.object({
-    msgType: z.number(),
-    options: z.string(),
-}) satisfies z.ZodSchema<OAppEnforcedOptionConfig, z.ZodTypeDef, unknown>
+const ExecutorOptionTypeSchema = z.nativeEnum(ExecutorOptionType)
 
-export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionSchema) satisfies z.ZodSchema<
+export const EncodedOptionSchema = z.object({
+    msgType: ExecutorOptionTypeSchema,
+    options: z.string(),
+}) satisfies z.ZodSchema<EndcodedOption, z.ZodTypeDef, unknown>
+
+export const ExecutorLzReceiveOptionSchema = z.object({
+    msgType: z.literal(ExecutorOptionType.LZ_RECEIVE),
+    gas: UIntNumberSchema,
+    value: UIntNumberSchema,
+}) satisfies z.ZodSchema<ExecutorLzReceiveOption, z.ZodTypeDef, unknown>
+
+export const ExecutorNativeDropOptionSchema = z.object({
+    msgType: z.literal(ExecutorOptionType.NATIVE_DROP),
+    amount: UIntNumberSchema,
+    receiver: AddressSchema,
+}) satisfies z.ZodSchema<ExecutorNativeDropOption, z.ZodTypeDef, unknown>
+
+export const ExecutorComposeOptionSchema = z.object({
+    msgType: z.literal(ExecutorOptionType.COMPOSE),
+    index: UIntNumberSchema,
+    gas: UIntNumberSchema,
+    value: UIntNumberSchema,
+}) satisfies z.ZodSchema<ExecutorComposeOption, z.ZodTypeDef, unknown>
+
+export const ExecutorOrderedExecutionOptionSchema = z.object({
+    msgType: z.literal(ExecutorOptionType.ORDERED),
+}) satisfies z.ZodSchema<ExecutorOrderedExecutionOption, z.ZodTypeDef, unknown>
+
+export const OAppEnforcedOptionConfigSchema = z.union([
+    EncodedOptionSchema,
+    ExecutorLzReceiveOptionSchema,
+    ExecutorNativeDropOptionSchema,
+    ExecutorComposeOptionSchema,
+    ExecutorOrderedExecutionOptionSchema,
+]) satisfies z.ZodSchema<OAppEnforcedOptionConfig, z.ZodTypeDef, unknown>
+
+export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionConfigSchema) satisfies z.ZodSchema<
     OAppEnforcedOptionConfig[],
     z.ZodTypeDef,
     unknown
