@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.1.2
+
+### Patch Changes
+
+- e2fcf96: Updating Enforced Options Schema
+
 ## 0.1.1
 
 ### Patch Changes
