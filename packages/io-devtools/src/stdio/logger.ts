@@ -1,5 +1,6 @@
 import type { Format } from 'logform'
 import { createLogger as createWinstonLogger, format, transports, type Logger } from 'winston'
+import { z } from 'zod'
 
 /**
  * Re-export for ease of use
@@ -19,20 +20,22 @@ export enum LogLevel {
     silly = 'silly',
 }
 
+const LogLevelSchema = z.nativeEnum(LogLevel)
+
 /**
- * Type assertion utility for LogLevel
+ * Type assertion utility for `LogLevel`
  *
- * @param value `unknown`
- * @returns `value is LogLevel`
+ * @param {unknown} value
+ * @returns {boolean}
  */
-const isLogLevel = (value: unknown): value is LogLevel => typeof value === 'string' && value in LogLevel
+export const isLogLevel = (value: unknown): value is LogLevel => LogLevelSchema.safeParse(value).success
 
 let DEFAULT_LOG_LEVEL = LogLevel.info
 
 /**
  * Sets the default log level used when creating new loggers.
  *
- * @param level `LogLevel`
+ * @param {string} level
  */
 export const setDefaultLogLevel = (level: string) => {
     if (!isLogLevel(level)) {
