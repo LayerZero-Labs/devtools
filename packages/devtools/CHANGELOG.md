@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools
 
+## 0.1.2
+
+### Patch Changes
+
+- 40e8dba: Remove CommaSeparatedValuesSchema in favor of splitCommaSeparated; Move LogLevelSchema; Export isLogLevel
+- 4258ef3: Add retry helpers
+- Updated dependencies [40e8dba]
+  - @layerzerolabs/io-devtools@0.1.1
+
 ## 0.1.1
 
 ### Patch Changes
