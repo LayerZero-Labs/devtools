@@ -75,8 +75,8 @@ export const firstFactory =
         await first(factories.map((factory) => () => factory(...input)))
 
 /**
- * RetryStrategy is a way of having a fine grain control
- * over execution of retried function.
+ * RetryStrategy represents a function that, when passed to `createRetryFactory`,
+ * controls the execution of a retried function.
  *
  * It will be executed on every failed attempt and has the ability to modify the
  * input originally passed to the retried function.
@@ -92,16 +92,16 @@ export const firstFactory =
  * const functionThatCanFail = (money: number): Promise<void> => { ... }
  *
  * // We can create a strategy that will keep adding 1 to the amount of money
- * const strategy: RetryStrategy<[money: number]> = (attempt, error, [previousMoney]) => [previousMoney + 1]
+ * const strategy: RetryStrategy<[money: number]> = (attempt, error, [previousMoney], [originalMoney]) => [previousMoney + 1]
  *
  * // Or we can create a strategy that will adjust the money based on the initial value
  * //
  * // In this made up case it will take the original amount and will add 2 for every failed attempt
- * const strategy: RetryStrategy<[money: number]> = (attempt, error, _, [originalMoney]) => [originalMoney + attempt * 2]
+ * const strategy: RetryStrategy<[money: number]> = (attempt, error, [previousMoney], [originalMoney]) => [originalMoney + attempt * 2]
  *
  * // Or we can go insane with our logic and can, because without objective morality
  * // everything is permissible, update the amount on every other attempt
- * const strategy: RetryStrategy<[money: number]> = (attempt, error, _, [originalMoney]) => attempt % 2 ? [previousMoney + 1] : true
+ * const strategy: RetryStrategy<[money: number]> = (attempt, error, [previousMoney], [originalMoney]) => attempt % 2 ? [previousMoney + 1] : true
  * ```
  *
  * @param {number} attempt The 0-indexed attempt that the retry function is performing
