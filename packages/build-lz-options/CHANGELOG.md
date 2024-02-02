@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.0.7
+
+### Patch Changes
+
+- fb0ce16: Wording fixes
+
 ## 0.0.6
 
 ### Patch Changes
