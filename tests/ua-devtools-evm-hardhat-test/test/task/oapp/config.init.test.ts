@@ -97,19 +97,19 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
                                 title: 'britney',
                                 value: 'britney',
                                 disabled: false,
-                                description: `Connected to ${formatEid(getEidForNetworkName('britney'))}`,
+                                hint: `Connected to ${formatEid(getEidForNetworkName('britney'))}`,
                             },
                             {
                                 title: 'tango',
                                 value: 'tango',
                                 disabled: false,
-                                description: `Connected to ${formatEid(getEidForNetworkName('tango'))}`,
+                                hint: `Connected to ${formatEid(getEidForNetworkName('tango'))}`,
                             },
                             {
                                 title: 'vengaboys',
                                 value: 'vengaboys',
                                 disabled: false,
-                                description: `Connected to ${formatEid(getEidForNetworkName('vengaboys'))}`,
+                                hint: `Connected to ${formatEid(getEidForNetworkName('vengaboys'))}`,
                             },
                             {
                                 title: 'hardhat',
