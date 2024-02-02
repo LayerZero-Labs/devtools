@@ -1,7 +1,7 @@
 /// <reference types="jest-extended" />
 
 import fc from 'fast-check'
-import { first, firstFactory, sequence } from '@/common/promise'
+import { createSimpleRetryStrategy, createRetryFactory, first, firstFactory, sequence } from '@/common/promise'
 
 describe('common/promise', () => {
     const valueArbitrary = fc.anything()
@@ -189,6 +189,153 @@ describe('common/promise', () => {
                     expect(successful).toHaveBeenCalledWith(...args)
                 })
             )
+        })
+    })
+
+    describe('createSimpleRetryStrategy', () => {
+        describe('if numAttempts is lower than 1', () => {
+            const numAttemptsArbitrary = fc.integer({ max: 0 })
+
+            it('should throw', () => {
+                fc.assert(
+                    fc.property(numAttemptsArbitrary, (numAttempts) => {
+                        expect(() => createSimpleRetryStrategy(numAttempts)).toThrow()
+                    })
+                )
+            })
+        })
+
+        describe('if numAttempts is greater or equal than 1', () => {
+            const numAttemptsArbitrary = fc.integer({ min: 1, max: 20 })
+
+            describe('without wrapped strategy', () => {
+                it('should return a function that returns true until numAttempts is reached', () => {
+                    fc.assert(
+                        fc.property(numAttemptsArbitrary, (numAttempts) => {
+                            const strategy = createSimpleRetryStrategy(numAttempts)
+
+                            // The first N attempts should return true since we want to retry them
+                            for (let attempt = 1; attempt <= numAttempts; attempt++) {
+                                expect(strategy(attempt, 'error', [], [])).toBeTruthy()
+                            }
+
+                            // The N+1th attempt should return false
+                            expect(strategy(numAttempts + 1, 'error', [], [])).toBeFalsy()
+                        })
+                    )
+                })
+            })
+
+            describe('with wrapped strategy', () => {
+                it('should return false if the amount of attempts has been reached, the wrapped strategy value otherwise', () => {
+                    fc.assert(
+                        fc.property(numAttemptsArbitrary, (numAttempts) => {
+                            // We'll create a simple wrapped strategy
+                            const wrappedStrategy = (attempt: number) => [attempt]
+                            const strategy = createSimpleRetryStrategy(numAttempts, wrappedStrategy)
+
+                            // The first N attempts should return the return value of the wrapped strategy
+                            for (let attempt = 1; attempt <= numAttempts; attempt++) {
+                                expect(strategy(attempt, 'error', [0], [0])).toEqual(wrappedStrategy(attempt))
+                            }
+
+                            // The N+1th attempt should return false
+                            expect(strategy(numAttempts + 1, 'error', [0], [0])).toBeFalsy()
+                        })
+                    )
+                })
+            })
+        })
+    })
+
+    describe('createRetryFactory', () => {
+        it('should retry three times by default', async () => {
+            const failingFunction = jest
+                .fn()
+                .mockRejectedValueOnce('fail 1')
+                .mockRejectedValueOnce('fail 2')
+                .mockRejectedValueOnce('fail 3')
+                .mockResolvedValue('success')
+
+            const retryFailingFunction = createRetryFactory()(failingFunction)
+
+            await expect(retryFailingFunction()).resolves.toBe('success')
+        })
+
+        it('should not adjust the input if the strategy returns a boolean', async () => {
+            const strategy = jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false)
+            const failingFunction = jest.fn().mockRejectedValueOnce('fail').mockResolvedValue('success')
+
+            const retryFailingFunction = createRetryFactory(strategy)(failingFunction)
+
+            await expect(retryFailingFunction('some', 'input')).resolves.toBe('success')
+
+            expect(failingFunction).toHaveBeenCalledTimes(2)
+            expect(failingFunction).toHaveBeenNthCalledWith(1, 'some', 'input')
+            expect(failingFunction).toHaveBeenNthCalledWith(2, 'some', 'input')
+        })
+
+        it('should adjust the input if the strategy returns a new input', async () => {
+            const strategy = jest
+                .fn()
+                .mockReturnValueOnce(['other', 'input'])
+                .mockReturnValueOnce(['different', 'input'])
+
+            const failingFunction = jest
+                .fn()
+                .mockRejectedValueOnce('fail')
+                .mockRejectedValueOnce('fail')
+                .mockResolvedValue('success')
+
+            const retryFailingFunction = createRetryFactory(strategy)(failingFunction)
+
+            await expect(retryFailingFunction('some', 'input')).resolves.toBe('success')
+
+            expect(failingFunction).toHaveBeenCalledTimes(3)
+            expect(failingFunction).toHaveBeenNthCalledWith(1, 'some', 'input')
+            expect(failingFunction).toHaveBeenNthCalledWith(2, 'other', 'input')
+            expect(failingFunction).toHaveBeenNthCalledWith(3, 'different', 'input')
+
+            // Now we check that the strategy has been called correctly
+            expect(strategy).toHaveBeenCalledTimes(2)
+            // On the first call the original input and the adjusted input should be the same
+            expect(strategy).toHaveBeenNthCalledWith(1, 1, 'fail', ['some', 'input'], ['some', 'input'])
+            // On the second call the original inout should stay the same and previous input should have been adjusted
+            expect(strategy).toHaveBeenNthCalledWith(2, 2, 'fail', ['other', 'input'], ['some', 'input'])
+        })
+
+        it('should use the last updated input if strategy returns boolean after adjusting input', async () => {
+            // In this case we'll create a super weird strategy
+            // that only updates the input every now and then
+            const strategy = jest
+                .fn()
+                // It will update the inputs on the first call
+                .mockReturnValueOnce(['other', 'input'])
+                // Then it will return true to mark that we should keep retrying
+                .mockReturnValueOnce(true)
+                // Then it will update the input again
+                .mockReturnValueOnce(['different', 'input'])
+
+            const failingFunction = jest
+                .fn()
+                .mockRejectedValueOnce('fail')
+                .mockRejectedValueOnce('fail')
+                .mockRejectedValueOnce('fail')
+                .mockResolvedValue('success')
+
+            const retryFailingFunction = createRetryFactory(strategy)(failingFunction)
+
+            await expect(retryFailingFunction('some', 'input')).resolves.toBe('success')
+
+            expect(failingFunction).toHaveBeenCalledTimes(4)
+            // First the failing function should have been called with the original input
+            expect(failingFunction).toHaveBeenNthCalledWith(1, 'some', 'input')
+            // On the second attempt the input should have been updated
+            expect(failingFunction).toHaveBeenNthCalledWith(2, 'other', 'input')
+            // On the third attempt the strategy just returned true so the output will be reused
+            expect(failingFunction).toHaveBeenNthCalledWith(3, 'other', 'input')
+            // On the fourth attempt the strategy updated the input again
+            expect(failingFunction).toHaveBeenNthCalledWith(4, 'different', 'input')
         })
     })
 })
