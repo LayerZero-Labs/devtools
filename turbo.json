@@ -36,5 +36,6 @@
       "outputs": []
     }
   },
-  "globalDependencies": ["tsconfig.json"]
+  "globalDependencies": ["tsconfig.json"],
+  "globalPassThroughEnv": ["MNEMONIC"]
 }
