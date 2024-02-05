@@ -1,23 +1,64 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { TASK_LZ_DEPLOY } from '@/constants/tasks'
-import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import {
+    PromptOption,
+    createLogger,
+    pluralizeNoun,
+    printBoolean,
+    promptToContinue,
+    promptToSelectMultiple,
+    setDefaultLogLevel,
+} from '@layerzerolabs/io-devtools'
 
-import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
+import { formatEid } from '@layerzerolabs/devtools'
+import { getEidsByNetworkName, getHreByNetworkName } from '@/runtime'
 import { types } from '@/cli'
-import { assertDefinedNetworks } from '@/internal/assertions'
+import { promptForText } from '@layerzerolabs/io-devtools'
+import { Deployment } from 'hardhat-deploy/dist/types'
+import { assertDefinedNetworks, assertHardhatDeploy } from '@/internal/assertions'
+import { splitCommaSeparated } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     networks?: string[]
+    tags?: string[]
     logLevel?: string
     ci?: boolean
 }
 
+/**
+ * Result of this task, a map of `NetworkDeployResult` objects keyed by network names
+ *
+ * @see {@link NetworkDeployResult}
+ */
+type DeployResults = Record<string, NetworkDeployResult>
+
+/**
+ * Result of a deployment for one particular network.
+ *
+ * Unfortunately, when deployment fails partially,
+ * there is now way of getting the partial deployment result from hardhat-deploy
+ * and just an error is returned instead
+ */
+type NetworkDeployResult =
+    // A successful result will contain a map of deployments by their contract names
+    | {
+          contracts: Record<string, Deployment>
+          error?: never
+      }
+    // A failed result will only contain an error
+    | {
+          contracts?: never
+          error: unknown
+      }
+
 const action: ActionType<TaskArgs> = async ({
     networks: networksArgument,
+    tags: tagsArgument = [],
     logLevel = 'info',
     ci = false,
-}): Promise<void> => {
+}): Promise<DeployResults> => {
     printLogo()
 
     // Make sure to check that the networks are defined
@@ -33,27 +74,181 @@ const action: ActionType<TaskArgs> = async ({
     const isInteractive = !ci
     logger.debug(isInteractive ? 'Running in interactive mode' : 'Running in non-interactive (CI) mode')
 
-    // First we'll deal with the networks
-    if (networksArgument == null) {
-        logger.verbose('No --networks argument provided, will use all networks')
+    // We grab a mapping between network names and endpoint IDs
+    const eidsByNetworks = Object.entries(getEidsByNetworkName())
+    const configuredNetworkNames = eidsByNetworks.flatMap(([name, eid]) => (eid == null ? [] : [name]))
+
+    // We'll use all the configured network names as the default for the networks argument
+    const networks: string[] = networksArgument ?? configuredNetworkNames
+
+    // Here we'll store the final value for the networks we'd like to deploy
+    let selectedNetworks: string[]
+
+    let selectedTags: string[]
+
+    if (isInteractive) {
+        // In the interactive mode, we'll ask the user to confirm which networks they want to deploy
+
+        // We'll preselect the networks passed as --networks argument and we'll do it in O(1)
+        const networksSet = new Set(networks)
+
+        const options: PromptOption<string>[] = eidsByNetworks
+            .map(([networkName, eid]) => ({
+                title: networkName,
+                value: networkName,
+                disabled: eid == null,
+                selected: networksSet.has(networkName),
+                hint: eid == null ? undefined : `Connected to ${formatEid(eid)}`,
+            }))
+            .sort(
+                (a, b) =>
+                    // We want to show the enabled networks first
+                    Number(a.disabled) - Number(b.disabled) ||
+                    //  And sort the rest by their name
+                    a.title.localeCompare(b.title)
+            )
+
+        // Now we ask the user to confirm the network selection
+        selectedNetworks = await promptToSelectMultiple('Which networks would you like to deploy?', { options })
+
+        // And we ask to confirm the tags to deploy
+        selectedTags = await promptForText('Which deploy script tags would you like to use?', {
+            defaultValue: tagsArgument?.join(','),
+            hint: 'Leave empty to use all deploy scripts',
+        }).then(splitCommaSeparated)
+    } else {
+        // In the non-interactive mode we'll use whatever we got on the CLI
+        selectedNetworks = networks
+        selectedTags = tagsArgument
     }
+
+    // If no networks have been selected, we exit
+    if (selectedNetworks.length === 0) return logger.warn(`No networks selected, exiting`), {}
+
+    // We'll tell the user what's about to happen
+    logger.info(
+        pluralizeNoun(
+            selectedNetworks.length,
+            `Will deploy 1 network: ${selectedNetworks.join(',')}`,
+            `Will deploy ${selectedNetworks.length} networks: ${selectedNetworks.join(', ')}`
+        )
+    )
+
+    if (selectedTags.length === 0) {
+        // Deploying all tags might not be what the user wants so we'll warn them about it
+        logger.warn(`Will use all deployment scripts`)
+    } else {
+        logger.info(`Will use deploy scripts tagged with ${selectedTags.join(', ')}`)
+    }
+
+    // Now we confirm with the user that they want to continue
+    const shouldDeploy = isInteractive ? await promptToContinue() : true
+    if (!shouldDeploy) return logger.verbose(`User cancelled the operation, exiting`), {}
+
+    // We talk we talk we talk
+    logger.verbose(`Running deployment scripts`)
+
+    // Now we render a progressbar to monitor the deployment progress
+    const progressBar = render(createProgressBar({ before: 'Deploying... ', after: ` 0/${selectedNetworks.length}` }))
+
+    // For now we'll use a very simple deployment logic with no retries
+    //
+    // For display purposes, we'll track the number of networks we deployed
+    let numProcessed: number = 0
+
+    // And for diplay purposes we'll also track the failures
+    const results: DeployResults = {}
+
+    // Now we run all the deployments
+    await Promise.all(
+        selectedNetworks.map(async (networkName) => {
+            // First we grab the hre for that network
+            const env = await getHreByNetworkName(networkName)
+
+            try {
+                // We need to make sure the user has enabled hardhat-deploy
+                assertHardhatDeploy(env)
+
+                // The core of this task, running the hardhat deploy scripts
+                const contracts = await env.deployments.run(selectedTags, {
+                    writeDeploymentsToFiles: true,
+                })
+
+                results[networkName] = { contracts }
+
+                logger.debug(`Successfully deployed network ${networkName}`)
+            } catch (error: unknown) {
+                // If we fail to deploy, we just store the error and continue
+                //
+                // Unfortunately, there is no way of knowing whether the failure was total
+                // or partial so we don't know whether there are any contracts that got deployed
+                results[networkName] = { error }
+
+                logger.debug(`Failed deploying network ${networkName}: ${error}`)
+            } finally {
+                numProcessed++
+
+                // Now we update the progressbar
+                progressBar.rerender(
+                    createProgressBar({
+                        before: 'Deploying... ',
+                        after: ` ${numProcessed}/${selectedNetworks.length}`,
+                        progress: numProcessed,
+                    })
+                )
+            }
+        })
+    )
+
+    // We drop the progressbar and continue
+    progressBar.clear()
+
+    // We check whether we got any errors
+    const errors = Object.entries(results).flatMap(([networkName, { error }]) =>
+        error == null ? [] : [{ networkName, error }]
+    )
+
+    // If nothing went wrong we just exit
+    if (errors.length === 0) return logger.info(`${printBoolean(true)} Your contracts are now deployed`), results
+
+    // We log the fact that there were some errors
+    logger.error(
+        `${printBoolean(false)} ${pluralizeNoun(errors.length, 'Failed to deploy 1 network', `Failed to deploy ${errors.length} networks`)}`
+    )
+
+    // If some of the deployments failed, we let the user know
+    const previewErrors = isInteractive ? await promptToContinue(`Would you like to see the deployment errors?`) : true
+    if (previewErrors)
+        printRecords(
+            errors.map(({ networkName, error }) => ({
+                Network: networkName,
+                Error: String(error),
+            }))
+        )
+
+    return results
 }
 
-if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY) {
-    task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts')
-        .addParam(
-            'networks',
-            'List of comma-separated networks. If not provided, all networks will be deployed',
-            undefined,
-            types.csv,
-            true
-        )
-        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-        .addParam(
-            'ci',
-            'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
-            false,
-            types.boolean
-        )
-        .setAction(action)
-}
+task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts')
+    .addParam(
+        'networks',
+        'List of comma-separated networks. If not provided, all networks will be deployed',
+        undefined,
+        types.csv,
+        true
+    )
+    .addParam(
+        'tags',
+        'List of comma-separated deploy script tags to deploy. If not provided, all deploy scripts will be executed',
+        undefined,
+        types.csv,
+        true
+    )
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addParam(
+        'ci',
+        'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
+        false,
+        types.boolean
+    )
+    .setAction(action)
