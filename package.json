@@ -7,6 +7,7 @@
     "clean": "$npm_execpath turbo run clean",
     "dev": "$npm_execpath turbo run dev",
     "lint": "$npm_execpath turbo run lint",
+    "lint:fix": "$npm_execpath turbo run lint:fix",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
     "registry:logs": "docker compose -f docker-compose.registry.yaml logs -f",
