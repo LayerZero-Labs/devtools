@@ -270,6 +270,20 @@ exports[`omnigraph/format formatEid should format 10242 correctly 1`] = `"JOC_TE
 
 exports[`omnigraph/format formatEid should format 10243 correctly 1`] = `"BLAST_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10245 correctly 1`] = `"BASESEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10246 correctly 1`] = `"MANTLESEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10247 correctly 1`] = `"ZKPOLYGONSEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10248 correctly 1`] = `"ZKSYNCSEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10249 correctly 1`] = `"ZORASEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10251 correctly 1`] = `"XAI_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10252 correctly 1`] = `"TANGIBLE_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -545,6 +559,20 @@ exports[`omnigraph/format formatEid should format 40241 correctly 1`] = `"KIWI2_
 exports[`omnigraph/format formatEid should format 40242 correctly 1`] = `"JOC_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40243 correctly 1`] = `"BLAST_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40245 correctly 1`] = `"BASESEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40246 correctly 1`] = `"MANTLESEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40247 correctly 1`] = `"ZKPOLYGONSEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40248 correctly 1`] = `"ZKSYNCSEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40249 correctly 1`] = `"ZORASEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40251 correctly 1`] = `"XAI_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40252 correctly 1`] = `"TANGIBLE_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
