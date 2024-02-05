@@ -14,7 +14,7 @@
     "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
   },
   "devDependencies": {
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.19.5",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "typescript": "^5.3.3"

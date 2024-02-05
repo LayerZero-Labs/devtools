@@ -17,7 +17,7 @@
     "test:hardhat": "hardhat test"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
+    "@babel/core": "^7.23.9",
     "@layerzerolabs/eslint-config-next": "^2.1.3",
     "@layerzerolabs/lz-definitions": "~2.1.3",
     "@layerzerolabs/lz-evm-messagelib-v2": "~2.1.3",
@@ -38,11 +38,11 @@
     "@types/mocha": "^10.0.6",
     "chai": "^4.4.1",
     "ethers": "^5.7.2",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.19.5",
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.11.45",
     "mocha": "^10.2.0",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
