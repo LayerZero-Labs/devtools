@@ -1,4 +1,4 @@
-import type { IOApp, EnforcedOptions, OAppEnforcedOptionConfig } from '@layerzerolabs/ua-devtools'
+import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
 import {
     type Bytes32,
     type OmniAddress,
@@ -8,13 +8,13 @@ import {
     areBytes32Equal,
     ignoreZero,
     makeBytes32,
+    Bytes,
 } from '@layerzerolabs/devtools'
 import { type OmniContract, formatOmniContract } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
@@ -71,42 +71,41 @@ export class OApp extends OmniSDK implements IOApp {
         }
     }
 
-    async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
+    async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
         this.logger.debug(`Getting enforced options for eid ${eid} (${formatEid(eid)}) and message type ${msgType}`)
 
         return await this.contract.contract.enforcedOptions(eid, msgType)
     }
 
-    async setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction> {
+    async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
         this.logger.debug(`Setting enforced options to ${printJson(enforcedOptions)}`)
+        const serializedConfig = this.serializeExecutorOptions(enforcedOptions)
 
-        const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [enforcedOptions])
+        const data = this.contract.contract.interface.encodeFunctionData('setEnforcedOptions', [serializedConfig])
         return {
             ...this.createTransaction(data),
             description: `Setting enforced options to ${printJson(enforcedOptions)}`,
         }
     }
 
-    encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options {
-        if ('options' in enforcedOptionConfig) return Options.fromOptions(enforcedOptionConfig.options)
-
-        if (enforcedOptionConfig.msgType == ExecutorOptionType.LZ_RECEIVE) {
-            return Options.newOptions().addExecutorLzReceiveOption(enforcedOptionConfig.gas, enforcedOptionConfig.value)
-        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.NATIVE_DROP) {
-            return Options.newOptions().addExecutorNativeDropOption(
-                enforcedOptionConfig.amount,
-                enforcedOptionConfig.receiver
-            )
-        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.COMPOSE) {
-            return Options.newOptions().addExecutorComposeOption(
-                enforcedOptionConfig.index,
-                enforcedOptionConfig.gas,
-                enforcedOptionConfig.value
-            )
-        } else if (enforcedOptionConfig.msgType == ExecutorOptionType.ORDERED) {
-            return Options.newOptions().addExecutorOrderedExecutionOption()
-        } else {
-            throw new Error(`Invalid ExecutorOptionType`)
-        }
+    /**
+     * Prepares the Executor config to be sent to the contract
+     *
+     * @param {OAppEnforcedOptionParam[]}
+     * @returns {SerializedEnforcedOptions[]}
+     */
+    protected serializeExecutorOptions(
+        oappEnforcedOptionParam: OAppEnforcedOptionParam[]
+    ): SerializedEnforcedOptions[] {
+        return oappEnforcedOptionParam.map(({ eid, option: { msgType, options } }) => ({ eid, msgType, options }))
     }
+}
+
+/**
+ * Helper type that matches the solidity implementation
+ */
+interface SerializedEnforcedOptions {
+    eid: number
+    msgType: number
+    options: string
 }

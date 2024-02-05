@@ -1,9 +1,18 @@
-import { OmniAddress, flattenTransactions, OmniPointMap, type OmniTransaction } from '@layerzerolabs/devtools'
-import { EnforcedOptions, OAppEnforcedOptionConfig, OAppFactory, OAppOmniGraph } from './types'
+import {
+    Bytes,
+    flattenTransactions,
+    formatOmniVector,
+    isDeepEqual,
+    OmniAddress,
+    OmniPointMap,
+    type OmniTransaction,
+} from '@layerzerolabs/devtools'
+import { OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
-import { formatOmniVector, isDeepEqual } from '@layerzerolabs/devtools'
 import { SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
 export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
@@ -221,30 +230,44 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
     return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
 }
 
-export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) =>
-    flattenTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (config?.enforcedOptions == null) return []
-                const enforcedOptions: EnforcedOptions[] = []
-                const enforcedOptionsConfig: OAppEnforcedOptionConfig[] = config.enforcedOptions
-                const oappSdk = await createSdk(from)
-                for (const enforcedOption of enforcedOptionsConfig) {
-                    const currentEnforcedOption = await oappSdk.getEnforcedOptions(to.eid, enforcedOption.msgType)
-                    const encodedEnforcedOption = oappSdk.encodeEnforcedOptions(enforcedOption).toHex().toLowerCase()
-                    if (currentEnforcedOption !== encodedEnforcedOption) {
-                        enforcedOptions.push({
-                            eid: to.eid,
-                            msgType: enforcedOption.msgType,
-                            options: encodedEnforcedOption,
-                        })
-                    }
-                }
-                if (enforcedOptions.length === 0) return []
-                return [await oappSdk.setEnforcedOptions(enforcedOptions)]
-            })
+export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) => {
+    // This function builds a map to find all OAppEnforcedOptionParam[] to execute for a given OApp
+    const setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]> = new OmniPointMap()
+
+    for (const {
+        vector: { from, to },
+        config,
+    } of graph.connections) {
+        if (config?.enforcedOptions == null) continue
+        const oappSdk = await createSdk(from)
+
+        // combines enforced options together by msgType
+        const enforcedOptionsByType = config.enforcedOptions.reduce(
+            enforcedOptionsReducer,
+            new Map<ExecutorOptionType, Options>()
         )
-    )
+
+        // We ask the oapp SDK whether this config has already been applied
+        for (const [msgType, options] of enforcedOptionsByType) {
+            const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
+            if (currentEnforcedOption !== options.toHex()) {
+                // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
+                const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
+                setConfigsByLibrary.push({
+                    eid: to.eid,
+                    option: {
+                        msgType,
+                        options: options.toHex(),
+                    },
+                })
+                setEnforcedOptionsByEndpoint.set(from, setConfigsByLibrary)
+            }
+        }
+    }
+
+    // This function iterates over the map (OApp -> OAppEnforcedOptionParam[]) to execute setEnforcedOptions
+    return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
+}
 
 const buildOmniTransactions = async (
     setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
@@ -259,4 +282,47 @@ const buildOmniTransactions = async (
         }
     }
     return omniTransaction
+}
+
+const buildEnforcedOptionsOmniTransactions = async (
+    setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]>,
+    createSdk: OAppFactory
+): Promise<OmniTransaction[]> => {
+    const omniTransaction: OmniTransaction[] = []
+    for (const [from, enforcedOptionsConfig] of setEnforcedOptionsByEndpoint) {
+        const oappSdk = await createSdk(from)
+        omniTransaction.push(await oappSdk.setEnforcedOptions(enforcedOptionsConfig))
+    }
+    return omniTransaction
+}
+
+const enforcedOptionsReducer = (
+    optionsByType: Map<ExecutorOptionType, Options>,
+    optionConfig: OAppEnforcedOption
+): Map<ExecutorOptionType, Options> => {
+    const { msgType } = optionConfig
+    const currentOptions = optionsByType.get(msgType) ?? Options.newOptions()
+
+    switch (msgType) {
+        case ExecutorOptionType.LZ_RECEIVE:
+            return optionsByType.set(
+                msgType,
+                currentOptions.addExecutorLzReceiveOption(optionConfig.gas, optionConfig.value)
+            )
+
+        case ExecutorOptionType.NATIVE_DROP:
+            return optionsByType.set(
+                msgType,
+                currentOptions.addExecutorNativeDropOption(optionConfig.amount, optionConfig.receiver)
+            )
+
+        case ExecutorOptionType.COMPOSE:
+            return optionsByType.set(
+                msgType,
+                currentOptions.addExecutorComposeOption(optionConfig.index, optionConfig.gas, optionConfig.value)
+            )
+
+        case ExecutorOptionType.ORDERED:
+            return optionsByType.set(msgType, currentOptions.addExecutorOrderedExecutionOption())
+    }
 }
