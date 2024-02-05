@@ -1,6 +1,7 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import type {
+    Bytes,
     Factory,
     IOmniSDK,
     OmniAddress,
@@ -8,23 +9,17 @@ import type {
     OmniPoint,
     OmniTransaction,
     OmniVector,
+    PossiblyBigInt,
 } from '@layerzerolabs/devtools'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 export interface IOApp extends IOmniSDK {
     getEndpointSDK(): Promise<IEndpoint>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>
-    getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string>
-    setEnforcedOptions(enforcedOptions: EnforcedOptions[]): Promise<OmniTransaction>
-    encodeEnforcedOptions(enforcedOptionConfig: OAppEnforcedOptionConfig): Options
-}
-
-export type EnforcedOptions = {
-    eid: EndpointId
-    msgType: number
-    options: string
+    getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes>
+    setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction>
 }
 
 export interface OAppReceiveLibraryConfig {
@@ -47,50 +42,59 @@ export interface OAppEdgeConfig {
     receiveLibraryTimeoutConfig?: Timeout
     sendConfig?: OAppSendConfig
     receiveConfig?: OAppReceiveConfig
-    enforcedOptions?: OAppEnforcedOptionConfig[]
+    enforcedOptions?: OAppEnforcedOption[]
 }
 
 export interface BaseExecutorOption {
     msgType: ExecutorOptionType
 }
 
-export interface EndcodedOption extends BaseExecutorOption {
+export interface EncodedOption extends BaseExecutorOption {
     options: string
 }
 
 export interface ExecutorLzReceiveOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.LZ_RECEIVE
-    gas: string | number
-    value: string | number
+    gas: PossiblyBigInt
+    value: PossiblyBigInt
 }
 
 export interface ExecutorNativeDropOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.NATIVE_DROP
-    amount: string | number
+    amount: PossiblyBigInt
     receiver: string
 }
 
 export interface ExecutorComposeOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.COMPOSE
     index: number
-    gas: string | number
-    value: string | number
+    gas: PossiblyBigInt
+    value: PossiblyBigInt
 }
 
 export interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
     msgType: ExecutorOptionType.ORDERED
 }
 
-export type OAppEnforcedOptionConfig =
+export type OAppEnforcedOption =
     | ExecutorLzReceiveOption
     | ExecutorNativeDropOption
     | ExecutorComposeOption
     | ExecutorOrderedExecutionOption
-    | EndcodedOption
+
+export interface OAppEnforcedOptionParam {
+    eid: EndpointId
+    option: EncodedOption
+}
 
 export interface OAppPeers {
     vector: OmniVector
     hasPeer: boolean
+}
+
+export interface OAppEnforcedOptions {
+    vector: OmniVector
+    enforcedOptions: EncodedOption[]
 }
 
 export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>

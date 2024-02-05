@@ -2,13 +2,12 @@ import { z } from 'zod'
 import { AddressSchema, UIntBigIntSchema, UIntNumberSchema } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import {
-    EndcodedOption,
     ExecutorComposeOption,
     ExecutorLzReceiveOption,
     ExecutorNativeDropOption,
     ExecutorOrderedExecutionOption,
     OAppEdgeConfig,
-    OAppEnforcedOptionConfig,
+    OAppEnforcedOption,
     OAppReceiveConfig,
     OAppReceiveLibraryConfig,
     OAppSendConfig,
@@ -28,13 +27,6 @@ export const OAppSendConfigSchema = z.object({
 export const OAppReceiveConfigSchema = z.object({
     ulnConfig: Uln302UlnConfigSchema,
 }) satisfies z.ZodSchema<OAppReceiveConfig, z.ZodTypeDef, unknown>
-
-const ExecutorOptionTypeSchema = z.nativeEnum(ExecutorOptionType)
-
-export const EncodedOptionSchema = z.object({
-    msgType: ExecutorOptionTypeSchema,
-    options: z.string(),
-}) satisfies z.ZodSchema<EndcodedOption, z.ZodTypeDef, unknown>
 
 export const ExecutorLzReceiveOptionSchema = z.object({
     msgType: z.literal(ExecutorOptionType.LZ_RECEIVE),
@@ -60,15 +52,14 @@ export const ExecutorOrderedExecutionOptionSchema = z.object({
 }) satisfies z.ZodSchema<ExecutorOrderedExecutionOption, z.ZodTypeDef, unknown>
 
 export const OAppEnforcedOptionConfigSchema = z.union([
-    EncodedOptionSchema,
     ExecutorLzReceiveOptionSchema,
     ExecutorNativeDropOptionSchema,
     ExecutorComposeOptionSchema,
     ExecutorOrderedExecutionOptionSchema,
-]) satisfies z.ZodSchema<OAppEnforcedOptionConfig, z.ZodTypeDef, unknown>
+]) satisfies z.ZodSchema<OAppEnforcedOption, z.ZodTypeDef, unknown>
 
 export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionConfigSchema) satisfies z.ZodSchema<
-    OAppEnforcedOptionConfig[],
+    OAppEnforcedOption[],
     z.ZodTypeDef,
     unknown
 >

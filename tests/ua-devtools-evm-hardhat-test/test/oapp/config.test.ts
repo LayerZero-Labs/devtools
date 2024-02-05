@@ -1,36 +1,36 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployOApp } from '../__utils__/oapp'
+import { deployOApp, getLibraryAddress } from '../__utils__/oapp'
 import {
-    OmniContractFactoryHardhat,
     createConnectedContractFactory,
-    createSignerFactory,
     createProviderFactory,
+    createSignerFactory,
+    OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { OApp, createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
+import { createOAppFactory, OApp } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
-import { getLibraryAddress } from '../__utils__/oapp'
 import {
-    setupDefaultEndpoint,
-    avaxExecutor,
     avaxDvn,
     avaxDvn_Opt2,
     avaxDvn_Opt3,
-    ethSendUln,
-    deployEndpoint,
-    bscExecutor,
-    bscDvn,
-    ethSendUln2_Opt2,
-    avaxSendUln2_Opt2,
-    ethReceiveUln2_Opt2,
-    avaxReceiveUln2_Opt2,
-    ethReceiveUln,
+    avaxExecutor,
     avaxReceiveUln,
+    avaxReceiveUln2_Opt2,
+    avaxSendUln2_Opt2,
+    bscDvn,
+    bscExecutor,
+    deployEndpoint,
     ethDvn,
+    ethReceiveUln,
+    ethReceiveUln2_Opt2,
+    ethSendUln,
+    ethSendUln2_Opt2,
+    setupDefaultEndpoint,
 } from '../__utils__/endpoint'
 import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { IEndpoint } from '@layerzerolabs/protocol-devtools'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
@@ -1219,6 +1219,24 @@ describe('oapp/config', () => {
 
         describe('configureEnforcedOptions', () => {
             let graph: OAppOmniGraph
+            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: OApp
+
+            beforeEach(async () => {
+                bscContract = await contractFactory(bscPointHardhat)
+                bscPoint = omniContractToPoint(bscContract)
+                bscOAppSdk = await oappSdkFactory(bscPoint)
+                // Before we configure the OApp, we'll set some peers
+                const [_, errors] = await signAndSend([
+                    await ethOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
+                    await avaxOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
+                    await bscOAppSdk.setPeer(ethPoint.eid, ethPoint.address),
+                    await bscOAppSdk.setPeer(avaxPoint.eid, avaxPoint.address),
+                ])
+
+                // eslint-disable-next-line jest/no-standalone-expect
+                expect(errors).toEqual([])
+            })
+
             it('should return empty transactions when enforcedOptions is empty', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
@@ -1250,7 +1268,8 @@ describe('oapp/config', () => {
                 transactions = await configureOApp(graph, oappSdkFactory)
                 expect(transactions).toEqual([])
             })
-            it('should return all setEnforcedOption transactions', async () => {
+
+            it("should return addExecutorLzReceiveOption tx's in both directions for msgType: 1", async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1268,7 +1287,8 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
-                                        options: '0x00030100110100000000000000000000000000030d40',
+                                        gas: '200000',
+                                        value: '0',
                                     },
                                 ],
                             },
@@ -1289,25 +1309,111 @@ describe('oapp/config', () => {
                 }
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
+                const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toLowerCase()
                 expect(transactions).toEqual([
                     await ethOAppSdk.setEnforcedOptions([
                         {
                             eid: avaxPoint.eid,
-                            msgType: 1,
-                            options: '0x00030100110100000000000000000000000000030d40',
+                            option: {
+                                msgType: 1,
+                                options: options,
+                            },
                         },
                     ]),
                     await avaxOAppSdk.setEnforcedOptions([
                         {
                             eid: ethPoint.eid,
-                            msgType: 1,
-                            options: '0x00030100110100000000000000000000000000030d40',
+                            option: {
+                                msgType: 1,
+                                options: options,
+                            },
                         },
                     ]),
                 ])
             })
 
-            it('should return one transactions when enforcedOptions', async () => {
+            it("should combine addExecutorLzReceiveOption's into one tx for both chains for msgType: 1", async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                        {
+                            point: bscPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 1,
+                                        gas: '200000',
+                                        value: '0',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: ethPoint, to: bscPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 1,
+                                        gas: '200000',
+                                        value: '0',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {},
+                        },
+                        {
+                            vector: { from: avaxPoint, to: bscPoint },
+                            config: {},
+                        },
+                        {
+                            vector: { from: bscPoint, to: ethPoint },
+                            config: {},
+                        },
+                        {
+                            vector: { from: bscPoint, to: avaxPoint },
+                            config: {},
+                        },
+                    ],
+                }
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toLowerCase()
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 1,
+                                options: options,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 1,
+                                options: options,
+                            },
+                        },
+                    ]),
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine addExecutorLzReceiveOption settings for one chain into one transaction for msgType: 1', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1325,19 +1431,85 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
-                                        options: '0x00030100110100000000000000000000000000030d40',
+                                        gas: '250000',
+                                        value: '0',
+                                    },
+                                    {
+                                        msgType: 1,
+                                        gas: '550000',
+                                        value: '2',
                                     },
                                 ],
                             },
                         },
                         {
                             vector: { from: avaxPoint, to: ethPoint },
+                            config: {},
+                        },
+                    ],
+                }
+                const options = Options.newOptions()
+                    .addExecutorLzReceiveOption(250000, 0)
+                    .addExecutorLzReceiveOption(550000, 2)
+                    .toHex()
+                    .toLowerCase()
+
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 1,
+                                options: options,
+                            },
+                        },
+                    ]),
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine addExecutorNativeDropOption settings for two chains into one transaction for msgType: 2', async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                        {
+                            point: bscPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: 1,
-                                        gas: '200000',
-                                        value: '0',
+                                        msgType: 2,
+                                        amount: 1,
+                                        receiver: '0x0000000000000000000000000000000000000001',
+                                    },
+                                    {
+                                        msgType: 2,
+                                        amount: 2,
+                                        receiver: '0x000000000000000000000000000000000000002',
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: ethPoint, to: bscPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 2,
+                                        amount: 1,
+                                        receiver: '0x000000000000000000000000000000000000003',
                                     },
                                 ],
                             },
@@ -1345,28 +1517,434 @@ describe('oapp/config', () => {
                     ],
                 }
 
-                const [_, errors] = await signAndSend([
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+
+                const avaxOptions = Options.newOptions()
+                    .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000001')
+                    .addExecutorNativeDropOption(2, '0x0000000000000000000000000000000000000002')
+                    .toHex()
+                    .toLowerCase()
+
+                const bscOptions = Options.newOptions()
+                    .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000003')
+                    .toHex()
+                    .toLowerCase()
+
+                const expectedTransactions = [
                     await ethOAppSdk.setEnforcedOptions([
                         {
                             eid: avaxPoint.eid,
-                            msgType: 1,
-                            options: '0x00030100110100000000000000000000000000030d40',
+                            option: {
+                                msgType: 2,
+                                options: avaxOptions,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 2,
+                                options: bscOptions,
+                            },
                         },
                     ]),
-                ])
-                expect(errors).toEqual([])
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine addExecutorComposeOption settings into one transaction for msgType: 3', async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 0,
+                                        gas: 200000,
+                                        value: 1,
+                                    },
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 1,
+                                        gas: 200500,
+                                        value: 0,
+                                    },
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 2,
+                                        gas: 300000,
+                                        value: 2,
+                                    },
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 3,
+                                        gas: 100000,
+                                        value: 0,
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {},
+                        },
+                    ],
+                }
 
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
-                expect(transactions).toEqual([
-                    await avaxOAppSdk.setEnforcedOptions([
+                const options = Options.newOptions()
+                    .addExecutorComposeOption(0, 200000, 1)
+                    .addExecutorComposeOption(1, 200500, 0)
+                    .addExecutorComposeOption(2, 300000, 2)
+                    .addExecutorComposeOption(3, 100000, 0)
+                    .toHex()
+                    .toLowerCase()
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
                         {
-                            eid: ethPoint.eid,
-                            msgType: 1,
-                            options: '0x00030100110100000000000000000000000000030d40',
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 3,
+                                options: options,
+                            },
                         },
                     ]),
-                ])
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine addExecutorComposeOption settings for two chains into one transaction for msgType: 3', async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                        {
+                            point: bscPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 0,
+                                        gas: 200000,
+                                        value: 1,
+                                    },
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 1,
+                                        gas: 200500,
+                                        value: 0,
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: ethPoint, to: bscPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 0,
+                                        gas: 300000,
+                                        value: 0,
+                                    },
+                                    {
+                                        msgType: ExecutorOptionType.COMPOSE,
+                                        index: 1,
+                                        gas: 200005,
+                                        value: 1,
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                }
+
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+
+                const avaxOptions = Options.newOptions()
+                    .addExecutorComposeOption(0, 200000, 1)
+                    .addExecutorComposeOption(1, 200500, 0)
+                    .toHex()
+                    .toLowerCase()
+
+                const bscOptions = Options.newOptions()
+                    .addExecutorComposeOption(0, 300000, 0)
+                    .addExecutorComposeOption(1, 200005, 1)
+                    .toHex()
+                    .toLowerCase()
+
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 3,
+                                options: avaxOptions,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 3,
+                                options: bscOptions,
+                            },
+                        },
+                    ]),
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine addExecutorLzReceiveOption, addExecutorNativeDropOption, and addExecutorComposeOption settings for two chains when applicable', async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                        {
+                            point: bscPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 1,
+                                        gas: '250000',
+                                        value: '0',
+                                    },
+                                    {
+                                        msgType: 1,
+                                        gas: '550000',
+                                        value: '2',
+                                    },
+                                    {
+                                        msgType: 1,
+                                        gas: '450000',
+                                        value: '1',
+                                    },
+                                    {
+                                        msgType: 2,
+                                        amount: 1,
+                                        receiver: '0x0000000000000000000000000000000000000001',
+                                    },
+                                    {
+                                        msgType: 2,
+                                        amount: 2,
+                                        receiver: '0x000000000000000000000000000000000000002',
+                                    },
+                                    {
+                                        msgType: 3,
+                                        index: 0,
+                                        gas: 200000,
+                                        value: 1,
+                                    },
+                                    {
+                                        msgType: 3,
+                                        index: 1,
+                                        gas: 200500,
+                                        value: 0,
+                                    },
+                                    {
+                                        msgType: 3,
+                                        index: 2,
+                                        gas: 300000,
+                                        value: 2,
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: ethPoint, to: bscPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 1,
+                                        gas: '300000',
+                                        value: '1',
+                                    },
+                                    {
+                                        msgType: 2,
+                                        amount: 3,
+                                        receiver: '0x000000000000000000000000000000000000001',
+                                    },
+                                    {
+                                        msgType: 3,
+                                        index: 0,
+                                        gas: 100000,
+                                        value: 0,
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                }
+
+                const avaxLzReceiveOptions = Options.newOptions()
+                    .addExecutorLzReceiveOption(250000, 0)
+                    .addExecutorLzReceiveOption(550000, 2)
+                    .addExecutorLzReceiveOption(450000, 1)
+                    .toHex()
+                    .toLowerCase()
+
+                const avaxOptionsExecutor = Options.newOptions()
+                    .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000001')
+                    .addExecutorNativeDropOption(2, '0x0000000000000000000000000000000000000002')
+                    .toHex()
+                    .toLowerCase()
+
+                const avaxComposeOptions = Options.newOptions()
+                    .addExecutorComposeOption(0, 200000, 1)
+                    .addExecutorComposeOption(1, 200500, 0)
+                    .addExecutorComposeOption(2, 300000, 2)
+                    .toHex()
+                    .toLowerCase()
+
+                const bscLzReceiveOptions = Options.newOptions()
+                    .addExecutorLzReceiveOption(300000, 1)
+                    .toHex()
+                    .toLowerCase()
+
+                const bscOptionsExecutor = Options.newOptions()
+                    .addExecutorNativeDropOption(3, '0x0000000000000000000000000000000000000001')
+                    .toHex()
+                    .toLowerCase()
+
+                const bscComposeOptions = Options.newOptions()
+                    .addExecutorComposeOption(0, 100000, 0)
+                    .toHex()
+                    .toLowerCase()
+
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 1,
+                                options: avaxLzReceiveOptions,
+                            },
+                        },
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 2,
+                                options: avaxOptionsExecutor,
+                            },
+                        },
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 3,
+                                options: avaxComposeOptions,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 1,
+                                options: bscLzReceiveOptions,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 2,
+                                options: bscOptionsExecutor,
+                            },
+                        },
+                        {
+                            eid: bscPoint.eid,
+                            option: {
+                                msgType: 3,
+                                options: bscComposeOptions,
+                            },
+                        },
+                    ]),
+                ]
+                expect(transactions).toEqual(expectedTransactions)
+            })
+
+            it('should combine both addExecutorOrderedExecutionOption into one transaction', async () => {
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                enforcedOptions: [
+                                    {
+                                        msgType: 4,
+                                    },
+                                    {
+                                        msgType: 4,
+                                    },
+                                ],
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {},
+                        },
+                    ],
+                }
+
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                const options = Options.newOptions()
+                    .addExecutorOrderedExecutionOption()
+                    .addExecutorOrderedExecutionOption()
+                    .toHex()
+                    .toLowerCase()
+                const expectedTransactions = [
+                    await ethOAppSdk.setEnforcedOptions([
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
+                                msgType: 4,
+                                options: options,
+                            },
+                        },
+                    ]),
+                ]
+                expect(transactions).toEqual(expectedTransactions)
             })
 
             afterEach(async () => {
