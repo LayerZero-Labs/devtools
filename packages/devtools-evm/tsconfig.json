@@ -5,7 +5,7 @@
   "compilerOptions": {
     "types": ["node", "jest"],
     "paths": {
-      "@/*": ["./src/*"],
-    },
-  },
+      "@/*": ["./src/*"]
+    }
+  }
 }

@@ -4,6 +4,6 @@
   "include": ["src", "*.config.ts"],
   "compilerOptions": {
     "module": "commonjs",
-    "types": ["node"],
-  },
+    "types": ["node"]
+  }
 }
