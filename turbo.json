@@ -36,5 +36,14 @@
       "outputs": []
     }
   },
-  "globalDependencies": ["tsconfig.json"]
+  "globalDependencies": ["tsconfig.json"],
+  "globalPassThroughEnv": [
+    "LZ_ENABLE_EXPERIMENTAL_TASK_LZ_DEPLOY",
+    "LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT",
+    "MNEMONIC",
+    "NETWORK_URL_VENGABOYS",
+    "NETWORK_URL_BRITNEY",
+    "NETWORK_URL_TANGO",
+    "CI"
+  ]
 }

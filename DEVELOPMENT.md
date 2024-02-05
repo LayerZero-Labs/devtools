@@ -349,3 +349,12 @@ If running into issues with failing deployment transactions when running the tes
 ```bash
 pnpm clean
 ```
+
+### Problems with missing environment variables
+
+If running into issues with missing environment variables when running any of the commands that rely on `turbo` (e.g. `build` or `test`), make sure that these are either:
+
+- Specified as environment variables that have an effect on build output - [env](https://turbo.build/repo/docs/reference/configuration#env) in `turbo.json`
+- Specified as _global_ environment variables that have an effect on build output - [globalEnv](https://turbo.build/repo/docs/reference/configuration#globalenv)
+- Specified as environment variables that don't have an effect on build output - [passThroughEnv](https://turbo.build/repo/docs/reference/configuration#passthroughenv)
+- Specified as _global_ environment variables that don't have an effect on build output - [globalPassThroughEnv](https://turbo.build/repo/docs/reference/configuration#globalpassthroughenv)
