@@ -22,6 +22,9 @@
     "lint": {
       "cache": false
     },
+    "lint:fix": {
+      "cache": false
+    },
     "start": {
       "outputs": [],
       "dependsOn": ["build"],
