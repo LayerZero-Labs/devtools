@@ -4,6 +4,7 @@ runs:
   using: "composite"
   steps:
     - name: Enable corepack
+      shell: bash
       run: corepack enable
 
     - name: Setup Node.js
