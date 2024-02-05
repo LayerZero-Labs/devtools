@@ -34,11 +34,11 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.1.1",
     "@layerzerolabs/devtools-evm": "~0.1.1",
-    "@layerzerolabs/lz-definitions": "~2.1.2",
+    "@layerzerolabs/lz-definitions": "~2.1.3",
     "@layerzerolabs/omnicounter-devtools": "~0.1.1",
     "@layerzerolabs/protocol-devtools": "~0.1.1",
     "@layerzerolabs/protocol-devtools-evm": "~0.1.1",
-    "@layerzerolabs/ua-devtools": "~0.1.1",
+    "@layerzerolabs/ua-devtools": "~0.1.2",
     "@layerzerolabs/ua-devtools-evm": "~0.1.1",
     "@swc/core": "^1.3.105",
     "@swc/jest": "^0.2.31",
@@ -53,7 +53,7 @@
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.1.1",
     "@layerzerolabs/devtools-evm": "~0.1.1",
-    "@layerzerolabs/lz-definitions": "~2.1.2",
+    "@layerzerolabs/lz-definitions": "~2.1.3",
     "@layerzerolabs/omnicounter-devtools": "~0.1.1",
     "@layerzerolabs/protocol-devtools": "~0.1.1",
     "@layerzerolabs/protocol-devtools-evm": "~0.1.1",
