@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.18
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+- 253c79e: Add lz:deploy task; Add createClearDeployments utility
+
 ## 0.0.17
 
 ### Patch Changes
