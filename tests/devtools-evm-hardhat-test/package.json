@@ -13,6 +13,7 @@
     "clean": "rm -rf artifacts cache deployments",
     "compile": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "test": "jest --ci --runInBand --forceExit"
   },
   "devDependencies": {

@@ -12,7 +12,8 @@
     "contracts/"
   ],
   "scripts": {
-    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'"
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "~2.1.3",

@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
   },
   "devDependencies": {
