@@ -136,7 +136,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             // And we want to select two networks
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
-            // Since we provided selected no networks, we should get an empty object back
+            // Since the user said no to the development, we should get an empty object back
             await expect(hre.run(TASK_LZ_DEPLOY, {})).resolves.toEqual({})
         })
 
@@ -148,7 +148,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             // And we want to select two networks
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
-            // Since we provided selected no networks, we should get an empty object back
+            // Since we provided selected no tags, everything will be deployed
             await expect(hre.run(TASK_LZ_DEPLOY, {})).resolves.toEqual({
                 tango: {
                     contracts: expect.objectContaining({
