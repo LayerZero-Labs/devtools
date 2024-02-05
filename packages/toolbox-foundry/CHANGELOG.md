@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.1
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+
 ## 0.1.0
 
 ### Minor Changes

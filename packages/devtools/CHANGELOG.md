@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools
 
+## 0.1.3
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+- Updated dependencies [253c79e]
+- Updated dependencies [5c58d69]
+  - @layerzerolabs/io-devtools@0.1.2
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.4
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+
 ## 0.0.3
 
 ### Patch Changes

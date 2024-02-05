@@ -1,5 +1,12 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.2
+
+### Patch Changes
+
+- 253c79e: Rename description to hint for select prompts
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+
 ## 0.1.1
 
 ### Patch Changes

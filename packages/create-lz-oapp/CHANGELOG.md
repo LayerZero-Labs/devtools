@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.10
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+
 ## 0.1.9
 
 ### Patch Changes

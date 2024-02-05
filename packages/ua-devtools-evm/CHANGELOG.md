@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.1.2
+
+### Patch Changes
+
+- 5c58d69: Update @layerzerolabs dependencies to 2.1.3
+- Updated dependencies [253c79e]
+- Updated dependencies [5c58d69]
+  - @layerzerolabs/io-devtools@0.1.2
+  - @layerzerolabs/protocol-devtools-evm@0.1.2
+  - @layerzerolabs/protocol-devtools@0.1.2
+  - @layerzerolabs/devtools-evm@0.1.2
+  - @layerzerolabs/ua-devtools@0.1.3
+  - @layerzerolabs/devtools@0.1.3
+
 ## 0.1.1
 
 ### Patch Changes
