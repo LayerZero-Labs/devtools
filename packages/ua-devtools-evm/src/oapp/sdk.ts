@@ -97,15 +97,7 @@ export class OApp extends OmniSDK implements IOApp {
     protected serializeExecutorOptions(
         oappEnforcedOptionParam: OAppEnforcedOptionParam[]
     ): SerializedEnforcedOptions[] {
-        const serializedEnforcedOptions: SerializedEnforcedOptions[] = []
-        for (const oAppEnforcedOptionParam of oappEnforcedOptionParam) {
-            serializedEnforcedOptions.push({
-                eid: oAppEnforcedOptionParam.eid,
-                msgType: oAppEnforcedOptionParam.option.msgType,
-                options: oAppEnforcedOptionParam.option.options,
-            })
-        }
-        return serializedEnforcedOptions
+        return oappEnforcedOptionParam.map(({ eid, option: { msgType, options } }) => ({ eid, msgType, options }))
     }
 }
 
