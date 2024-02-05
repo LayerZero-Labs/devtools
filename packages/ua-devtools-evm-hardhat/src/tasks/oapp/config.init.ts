@@ -64,7 +64,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise
             title: networkName,
             value: networkName,
             disabled: eid == null,
-            description: eid == null ? undefined : `Connected to ${formatEid(eid)}`,
+            hint: eid == null ? undefined : `Connected to ${formatEid(eid)}`,
         }))
         .sort(
             (a, b) =>

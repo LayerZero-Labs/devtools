@@ -52,17 +52,22 @@ export const promptToContinue = async (
 type PromptValidator<TValue extends string> = (value: TValue) => string | boolean | Promise<string | boolean>
 
 interface TextProps {
+    /**
+     * Additional message to show to the user
+     */
+    hint?: string
     defaultValue?: string
     validate?: PromptValidator<string>
 }
 
 export const promptForText = async (
     message: string = 'Do you want to continue?',
-    { defaultValue, validate }: TextProps = {}
+    { defaultValue, hint, validate }: TextProps = {}
 ) => {
     const { value } = await prompts({
         type: 'text',
         name: 'value',
+        hint,
         message,
         onState: handlePromptState,
         validate,
@@ -74,7 +79,7 @@ export const promptForText = async (
 
 export interface PromptOption<TValue> {
     title: string
-    description?: string
+    hint?: string
     disabled?: boolean
     selected?: boolean
     value?: TValue
