@@ -62,7 +62,9 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
-## Configuring Contracts <code style="background: gray; border-radius: 9999px; color: white; font-size: 0.5em;">in development</code>
+## Configuring Contracts
+
+<code style="background: gray; border-radius: 9999px; color: white">in development</code>
 
 After deploying your contracts across multiple chains, it's time to configure your application's <a href="https://docs.layerzero.network/contracts/configure-dvns" style="color: #a77dff">Security Stack</a> and <a href="https://docs.layerzero.network/contracts/executor-configuration" style="color: #a77dff">Executor</a>. Initialize your OApp configuration file with:
 
