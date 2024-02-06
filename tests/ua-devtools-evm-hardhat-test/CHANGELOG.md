@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.19
+
+### Patch Changes
+
+- ce0c2f4: Fixing configureEnforcedOptions
+
 ## 0.0.18
 
 ### Patch Changes

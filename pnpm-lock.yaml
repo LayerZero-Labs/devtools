@@ -1213,7 +1213,7 @@ importers:
         specifier: ~0.1.2
         version: link:../test-devtools
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.1.3
+        specifier: ~0.1.4
         version: link:../ua-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -1619,10 +1619,10 @@ importers:
         specifier: ~0.1.2
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.1.3
+        specifier: ~0.1.4
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~0.1.2
+        specifier: ~0.1.3
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
         specifier: ~0.1.2

@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.1.3
+
+### Patch Changes
+
+- ce0c2f4: Fixing configureEnforcedOptions
+- Updated dependencies [ce0c2f4]
+  - @layerzerolabs/ua-devtools@0.1.4
+
 ## 0.1.2
 
 ### Patch Changes
