@@ -32,6 +32,7 @@ new Command("build-lz-options")
     render(<ConfigSummary value={config} />).unmount();
 
     let output: string = "";
+    const warning: string[] = [];
 
     switch (config.type.id) {
       case OptionType.TYPE_1: {
@@ -66,10 +67,14 @@ new Command("build-lz-options")
       }
       case OptionType.TYPE_3: {
         const options = await promptForOptionType3();
+        const lzReceiveOption = options.decodeExecutorLzReceiveOption();
+        if (!lzReceiveOption || lzReceiveOption.gas < 1) {
+          warning.push("Options do not specify any lzReceive gas.");
+        }
         output = options.toHex();
         break;
       }
     }
-    render(<OutputOptions props={{ hex: output }} />);
+    render(<OutputOptions props={{ hex: output, warning }} />);
   })
   .parseAsync();
