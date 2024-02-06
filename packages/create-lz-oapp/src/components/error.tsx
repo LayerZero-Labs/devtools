@@ -1,6 +1,6 @@
 import React from "react";
 import type { Config } from "@/types";
-import { Box, Text } from "ink";
+import { Box, Newline, Text } from "ink";
 import {
   BadGitRefError,
   DestinationNotEmptyError,
@@ -70,17 +70,23 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
             <Text>{error.stdout}</Text>
           </Box>
 
-          <Box margin={1}>
-            <Text bold>To try again:</Text>
-          </Box>
+          <Text bold>To try again:</Text>
 
-          <Text color="green"># Navigate to your project:</Text>
-          <Text color="cyan">cd {config.destination}</Text>
-          <Text color="green"># Reattempt the installation:</Text>
-          <Text color="cyan">
-            {config.packageManager.executable}{" "}
-            {config.packageManager.args.join(" ")}
-          </Text>
+          <Box
+            margin={1}
+            borderStyle="round"
+            borderColor="gray"
+            flexDirection="column"
+          >
+            <Text color="green"># Navigate to your project</Text>
+            <Text color="cyan">cd {config.destination}</Text>
+            <Newline />
+            <Text color="green"># Reattempt the installation</Text>
+            <Text color="cyan">
+              {config.packageManager.executable}{" "}
+              {config.packageManager.args.join(" ")}
+            </Text>
+          </Box>
         </Box>
       );
 
