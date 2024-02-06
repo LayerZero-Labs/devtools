@@ -4,13 +4,18 @@ import { Command } from "commander";
 import { promptForConfig } from "@/utilities/prompts";
 import { ConfigSummary } from "@/components/config";
 import { Setup } from "@/components/setup";
-import { promptToContinue } from "@layerzerolabs/io-devtools";
+import {
+  LogLevel,
+  promptToContinue,
+  setDefaultLogLevel,
+} from "@layerzerolabs/io-devtools";
 import { printLogo } from "@layerzerolabs/io-devtools/swag";
 import { version } from "../package.json";
 import {
   ciOption,
   destinationOption,
   exampleOption,
+  logLevelOption,
   packageManagerOption,
 } from "./options";
 import type { Config, Example, PackageManager } from "./types";
@@ -20,6 +25,7 @@ interface Args {
   ci?: boolean;
   destination?: string;
   example?: Example;
+  logLevel?: LogLevel;
   packageManager: PackageManager;
 }
 
@@ -29,13 +35,17 @@ new Command("create-lz-oapp")
   .addOption(ciOption)
   .addOption(destinationOption)
   .addOption(exampleOption)
+  .addOption(logLevelOption)
   .addOption(packageManagerOption)
   .action(async (args: Args) => {
     printLogo();
 
     // We'll provide a CI mode - a non-interctaive mode in which all input is taken
     // from the CLI arguments and if something is missing, an error is thrown
-    const { ci } = args;
+    const { ci, logLevel = "info" } = args;
+
+    // We'll set a default log level for any loggers created past this point
+    setDefaultLogLevel(logLevel);
 
     // First we get the config
     const config = ci
