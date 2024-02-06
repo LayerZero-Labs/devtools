@@ -1,6 +1,7 @@
 /// <reference types="jest-extended" />
 
 import hre from 'hardhat'
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import {
     TASK_LZ_DEPLOY,
     createClearDeployments,
@@ -23,6 +24,7 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 const promptForTextMock = promptForText as jest.Mock
 const promptToContinueMock = promptToContinue as jest.Mock
 const promptToSelectMultipleMock = promptToSelectMultiple as jest.Mock
+const runMock = jest.spyOn(hre, 'run')
 
 describe(`task ${TASK_LZ_DEPLOY}`, () => {
     const expectDeployment = expect.objectContaining({
@@ -57,6 +59,21 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
     })
 
     describe('in interactive mode', () => {
+        it('should compile contracts', async () => {
+            // We want to say no to deployment, just test that the compilation has run
+            promptToContinueMock.mockResolvedValueOnce(false)
+            // We want to deploy all files
+            promptForTextMock.mockResolvedValueOnce('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValueOnce([])
+
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            // For some reason even though we did not specify any arguments to the compile task,
+            // jest still sees some aarguments being passed so we need to pass those to make this expect work
+            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+        })
+
         it('should ask for networks & tags', async () => {
             // We want to say yes to deployment
             promptToContinueMock.mockResolvedValueOnce(true)
@@ -181,6 +198,16 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
     })
 
     describe('in CI mode', () => {
+        it('should compile contracts', async () => {
+            // We want to just check the compilation and not deploy anything
+            // se we set the networks to an empty array
+            await hre.run(TASK_LZ_DEPLOY, { ci: true, networks: [] })
+
+            // For some reason even though we did not specify any arguments to the compile task,
+            // jest still sees some aarguments being passed so we need to pass those to make this expect work
+            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+        })
+
         it('should use all available networks & tags if networks argument is undefined', async () => {
             await expect(
                 hre.run(TASK_LZ_DEPLOY, {
