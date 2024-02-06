@@ -1,7 +1,7 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 const sepoliaContract = {
-    eid: EndpointId.ETHEREUM_V2_TESTNET,
+    eid: EndpointId.SEPOLIA_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
