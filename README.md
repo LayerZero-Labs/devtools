@@ -53,10 +53,18 @@ Test your contract using `npx hardhat test` or `forge test`.
 To deploy your contracts to your desired blockchains, run the following command in your project's folder:
 
 ```bash
-# TODO: Specify the exact command for deployment
+npx hardhat lz:deploy
+```
+
+More information about available CLI arguments can be found using the `--help` flag:
+
+```bash
+npx hardhat lz:deploy --help
 ```
 
 ## Configuring Contracts
+
+<code style="background: gray; border-radius: 9999px; color: white">in development</code>
 
 After deploying your contracts across multiple chains, it's time to configure your application's <a href="https://docs.layerzero.network/contracts/configure-dvns" style="color: #a77dff">Security Stack</a> and <a href="https://docs.layerzero.network/contracts/executor-configuration" style="color: #a77dff">Executor</a>. Initialize your OApp configuration file with:
 
