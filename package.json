@@ -25,8 +25,8 @@
   },
   "lint-staged": {
     "**/*": [
-      "pnpm prettier --write --ignore-unknown",
-      "pnpm eslint --fix"
+      "npx prettier --write --ignore-unknown",
+      "npx eslint --fix"
     ]
   },
   "resolutions": {
