@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.0.10
+
+### Patch Changes
+
+- 151a92e: Improve error handling and introduce node engine specifiers
+
 ## 0.0.9
 
 ### Patch Changes
