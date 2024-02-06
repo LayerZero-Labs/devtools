@@ -29,3 +29,24 @@ pnpm create lz-oapp
 # or
 bunx create-lz-oapp
 ```
+
+### CLI options
+
+The list of available options is available by using `--help` CLI flag:
+
+```bash
+npx create-lz-oapp@latest --help
+```
+
+```
+Create LayerZero OApp with one command
+
+Options:
+  -V, --version                output the version number
+  --ci                         Run in CI (non-interactive) mode (default: false)
+  -d,--destination <path>      Project directory
+  -e,--example <name>          Example project (choices: "oft", "oapp")
+  --log-level <level>          Log level (choices: "error", "warn", "info", "http", "verbose", "debug", "silly", default: "info")
+  -p,--package-manager <name>  Node package manager to use (choices: "npm", "yarn", "pnpm", "bun")
+  -h, --help                   display help for command
+```
