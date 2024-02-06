@@ -62,19 +62,15 @@ More information about available CLI arguments can be found using the `--help` f
 npx hardhat lz:deploy --help
 ```
 
-## Configuring Contracts
+## Configuring contracts
 
-<code style="background: gray; border-radius: 9999px; color: white">in development</code>
+The <a href="https://github.com/LayerZero-Labs/devtools/tree/main/examples" style="color: #a77dff">examples</a> come with basic `layerzero.config.ts` files that should get you started on testnet straight away.
 
-After deploying your contracts across multiple chains, it's time to configure your application's <a href="https://docs.layerzero.network/contracts/configure-dvns" style="color: #a77dff">Security Stack</a> and <a href="https://docs.layerzero.network/contracts/executor-configuration" style="color: #a77dff">Executor</a>. Initialize your OApp configuration file with:
-
-```bash
-npx hardhat lz:oapp:config:init
-```
+More information on how to configure your `OApp` will be available in our <a href="https://docs.layerzero.network/" style="color: #a77dff">docs</a> soon.
 
 ## Wiring Contracts
 
-Finally, pair your deployed contracts using:
+Pair your deployed contracts using:
 
 ```bash
 npx hardhat lz:oapp:wire
