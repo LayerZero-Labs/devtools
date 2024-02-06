@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.0.11
+
+### Patch Changes
+
+- 2007d55: Update example configs; Use dotenv in examples; Use layerzero.config without an extension as a default value for --oapp-config
+
 ## 0.0.10
 
 ### Patch Changes
