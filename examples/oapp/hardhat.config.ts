@@ -56,12 +56,12 @@ const config: HardhatUserConfig = {
         },
         fuji: {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: 'https://api.avax-test.network/',
+            url: 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
         },
         mumbai: {
             eid: EndpointId.POLYGON_V2_TESTNET,
-            url: 'https://rpc-mumbai.matic.today',
+            url: 'https://rpc.ankr.com/polygon_mumbai',
             accounts,
         },
     },

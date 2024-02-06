@@ -50,7 +50,7 @@ export const PACKAGE_MANAGERS: PackageManager[] = [
         id: 'pnpm',
         executable: 'pnpm',
         args: ['install'],
-        label: 'pnpm',
+        label: 'pnpm (recommended)',
     },
     {
         id: 'bun',
