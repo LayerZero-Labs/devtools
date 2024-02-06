@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.1.3
+
+### Patch Changes
+
+- 2007d55: Update example configs; Use dotenv in examples; Use layerzero.config without an extension as a default value for --oapp-config
+
 ## 0.1.2
 
 ### Patch Changes
