@@ -15,14 +15,13 @@ export const OutputOptions: React.FC<OptionOutputProps> = ({
 }: OptionOutputProps) => {
   return (
     <Box flexDirection="column">
-      {props.warning.length > 0 && (
-        <Text color={"yellow"}>
-          <Text bold={true}>Warning:</Text> {props.warning}
+      {props.warning.map((warning) => (
+        <Text color="yellow">
+          <Text bold>Warning:</Text> {warning}
         </Text>
-      )}
+      ))}
       <Text>
-        <Text bold={true}>Result:</Text>{" "}
-        <Text color={"green"}>{props.hex}</Text>
+        <Text bold>Result:</Text> <Text color="green">{props.hex}</Text>
       </Text>
     </Box>
   );
