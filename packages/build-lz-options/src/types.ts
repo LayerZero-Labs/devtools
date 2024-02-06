@@ -20,6 +20,7 @@ export interface OptionTypeInput {
  */
 export interface OptionOutput {
     hex: string
+    warning: string[]
 }
 
 /**
