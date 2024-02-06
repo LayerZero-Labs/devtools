@@ -1,4 +1,5 @@
 import { Config, Example } from '@/types'
+import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { rm } from 'fs/promises'
 import { resolve } from 'path'
 import tiged from 'tiged'
@@ -20,7 +21,11 @@ export const createExampleGitURL = (example: Example): string => {
 }
 
 export const cloneExample = async ({ example, destination }: Config) => {
+    const logger = createModuleLogger('cloning')
+
     const url = createExampleGitURL(example)
+    logger.verbose(`Cloning example from ${url} to ${destination}`)
+
     const emitter = tiged(url, {
         disableCache: true,
         mode: 'git',
@@ -30,6 +35,9 @@ export const cloneExample = async ({ example, destination }: Config) => {
     try {
         // First we clone the whole proejct
         await emitter.clone(destination)
+
+        logger.verbose(`Cloned example from ${url} to ${destination}`)
+        logger.verbose(`Cleaning up`)
 
         // Then we cleanup what we don't want to be included
         await cleanupExample(destination)
