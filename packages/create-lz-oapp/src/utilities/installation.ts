@@ -39,12 +39,16 @@ export const installDependencies = (config: Config) =>
 
         child.on('close', (code) => {
             switch (code) {
+                // The null case happens when the script receives a sigterm signall
+                // (i.e. is cancelled by the user)
                 case null:
                     return reject(new Error(`Failed to install dependencies: Installation interrupted`))
 
+                // 0 exit code means success
                 case 0:
                     return resolve()
 
+                // And any other non-zero exit code means an error
                 default:
                     return reject(new InstallationError(config.packageManager, code, std.join('')))
             }
