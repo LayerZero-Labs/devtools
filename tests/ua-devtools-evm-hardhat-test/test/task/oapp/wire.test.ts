@@ -95,8 +95,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         })
 
         it('should accept a path without an extension', async () => {
-            const oappConfigWithExtension = configPathFixture('valid.config.empty.js')
-            const oappConfig = oappConfigWithExtension.replace(/\.js$/, '')
+            const oappConfig = configPathFixture('valid.config.empty.js')
 
             await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 

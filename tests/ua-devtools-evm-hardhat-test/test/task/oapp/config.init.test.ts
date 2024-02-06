@@ -76,7 +76,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
                 const { promptToSelectMultipleMock } = await getPromptMocks()
                 const hre = getTestHre({ config: './hardhat.config.without-eids.ts' })
 
-                await expect(hre.run(TASK_LZ_OAPP_CONFIG_INIT, {})).resolves.toEqual([])
+                await expect(
+                    hre.run(TASK_LZ_OAPP_CONFIG_INIT, { oappConfig: './layerzero.config.js' })
+                ).resolves.toEqual([])
 
                 expect(promptToSelectMultipleMock).not.toHaveBeenCalled()
             })
@@ -87,7 +89,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
                 const { promptToSelectMultipleMock } = await getPromptMocks()
                 promptToSelectMultipleMock.mockResolvedValue(['britney'])
 
-                await hre.run(TASK_LZ_OAPP_CONFIG_INIT, {})
+                await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { oappConfig: './layerzero.config.js' })
 
                 expect(promptToSelectMultipleMock).toHaveBeenCalledWith(
                     `Select the networks to include in your OApp config`,
