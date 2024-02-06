@@ -1,6 +1,16 @@
 import { task } from 'hardhat/config'
 import { deployEndpoint, setupDefaultEndpoint } from '../test/__utils__/endpoint'
 import { deployOApp } from '../test/__utils__/oapp'
+import { deployOmniCounter } from '../test/__utils__/omnicounter'
+
+/**
+ * This will deploy and wire up the endpoints.
+ */
+const deployAndWireEndpoint = async () => {
+    // intentionally serial
+    await deployEndpoint(true)
+    await setupDefaultEndpoint()
+}
 
 /**
  * Task that will:
@@ -10,15 +20,32 @@ import { deployOApp } from '../test/__utils__/oapp'
  * - Deploy the DefaultOApp
  *
  * If you want to expose the networks locally
- * and deploy your own endpoints, this task is tjust for you!
+ * and deploy your own endpoints, this task is just for you!
  *
- * See the root README.md section for info about how to expose networks locally
+ * See the root README.md section for info about how to expose networks locally.
  */
-task('lz:test:oapp:deploy', 'Deploy the test OApp on a default EndpointV2 infrastructure', async () => {
-    // This will deploy and wire up the endpoints
-    await deployEndpoint(true)
-    await setupDefaultEndpoint()
+task('lz:test:oapp:deploy', 'Deploy the test OApp on default EndpointV2 infrastructure', async () => {
+    await deployAndWireEndpoint()
 
     // Deploy the DefaultOApp
     await deployOApp(true)
+})
+
+/**
+ * Task that will:
+ *
+ * - Deploy EndpointV2-related infrastructure
+ * - Wire the EndpointV2-related infrastructure with default configuration
+ * - Deploy the OmniCounter
+ *
+ * If you want to expose the networks locally
+ * and deploy your own endpoints, this task is just for you!
+ *
+ * See the root README.md section for info about how to expose networks locally.
+ */
+task('lz:test:omnicounter:deploy', 'Deploy the OmniCounter on a default EndpointV2 infrastructure', async () => {
+    await deployAndWireEndpoint()
+
+    // Deploy the OmniCounter
+    await deployOmniCounter(true)
 })
