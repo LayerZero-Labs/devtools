@@ -1,6 +1,6 @@
 {
   "name": "build-lz-options",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Build LayerZero options with one command",
   "keywords": [
     "LayerZero",

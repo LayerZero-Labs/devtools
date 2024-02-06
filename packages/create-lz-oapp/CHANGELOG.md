@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.11
+
+### Patch Changes
+
+- 151a92e: Improve error handling and introduce node engine specifiers
+
 ## 0.1.10
 
 ### Patch Changes

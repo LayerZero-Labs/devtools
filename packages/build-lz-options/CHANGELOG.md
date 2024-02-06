@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.0.9
+
+### Patch Changes
+
+- 67f7ca6: Warn users if lzReceive gas is not set.
+
 ## 0.0.8
 
 ### Patch Changes
