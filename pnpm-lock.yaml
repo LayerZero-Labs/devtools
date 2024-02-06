@@ -131,6 +131,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.1
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -224,6 +227,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.1
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -6556,6 +6562,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
