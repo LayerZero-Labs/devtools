@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.1.4
+
+### Patch Changes
+
+- ce0c2f4: Fixing configureEnforcedOptions
+
 ## 0.1.3
 
 ### Patch Changes
