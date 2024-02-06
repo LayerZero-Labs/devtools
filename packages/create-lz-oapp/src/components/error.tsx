@@ -63,7 +63,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
       return (
         <Box flexDirection="column">
           <Text color="red">
-            There was a problem installing the NPM dependencies:
+            There was a problem installing NPM dependencies:
           </Text>
 
           <Box margin={1} borderStyle="round" borderColor="gray">
