@@ -3,14 +3,12 @@ description: Setup node & package manager, checkout code
 runs:
   using: "composite"
   steps:
-    - uses: pnpm/action-setup@v2
-      name: Install pnpm
-      with:
-        version: 8
-        run_install: false
+    - name: Enable corepack
+      shell: bash
+      run: corepack enable
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
         cache: "pnpm"
