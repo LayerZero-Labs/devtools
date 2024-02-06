@@ -1,6 +1,6 @@
 import { InvalidOptionArgumentError, Option } from 'commander'
 import { AVAILABLE_PACKAGE_MANAGERS, EXAMPLES } from './config'
-import { isDirectory, isFile } from '@layerzerolabs/io-devtools'
+import { LogLevel, isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 
 export const packageManagerOption = new Option('-p,--package-manager <name>', 'Node package manager to use')
@@ -38,3 +38,15 @@ export const destinationOption = new Option('-d,--destination <path>', 'Project 
 })
 
 export const ciOption = new Option('--ci', 'Run in CI (non-interactive) mode').default(false)
+
+export const logLevelOption = new Option('--log-level <level>', 'Log level')
+    .choices([
+        LogLevel.error,
+        LogLevel.warn,
+        LogLevel.info,
+        LogLevel.http,
+        LogLevel.verbose,
+        LogLevel.debug,
+        LogLevel.silly,
+    ])
+    .default(LogLevel.info)
