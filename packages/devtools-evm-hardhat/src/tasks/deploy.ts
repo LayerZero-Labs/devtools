@@ -1,5 +1,6 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
+import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_DEPLOY } from '@/constants/tasks'
 import {
     PromptOption,
@@ -53,12 +54,10 @@ type NetworkDeployResult =
           error: unknown
       }
 
-const action: ActionType<TaskArgs> = async ({
-    networks: networksArgument,
-    tags: tagsArgument = [],
-    logLevel = 'info',
-    ci = false,
-}): Promise<DeployResults> => {
+const action: ActionType<TaskArgs> = async (
+    { networks: networksArgument, tags: tagsArgument = [], logLevel = 'info', ci = false },
+    hre
+): Promise<DeployResults> => {
     printLogo()
 
     // Make sure to check that the networks are defined
@@ -73,6 +72,15 @@ const action: ActionType<TaskArgs> = async ({
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
     logger.debug(isInteractive ? 'Running in interactive mode' : 'Running in non-interactive (CI) mode')
+
+    // The first thing to do is to ensure that the project is compiled
+    try {
+        logger.info(`Compiling you hardhat project`)
+
+        await hre.run(TASK_COMPILE)
+    } catch (error) {
+        logger.warn(`Failed to compile the project: ${error}`)
+    }
 
     // We grab a mapping between network names and endpoint IDs
     const eidsByNetworks = Object.entries(getEidsByNetworkName())
