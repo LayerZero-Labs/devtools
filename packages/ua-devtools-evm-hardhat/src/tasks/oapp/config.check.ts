@@ -83,6 +83,6 @@ task(
     TASK_LZ_OAPP_CONFIG_CHECK,
     'outputs visual console table to show current state of oapp connections via configuration'
 )
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(checkWire)

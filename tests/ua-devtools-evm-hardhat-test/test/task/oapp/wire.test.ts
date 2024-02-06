@@ -94,6 +94,14 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             await deployOApp()
         })
 
+        it('should accept a path without an extension', async () => {
+            const oappConfig = configPathFixture('valid.config.empty.js')
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
         it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
 

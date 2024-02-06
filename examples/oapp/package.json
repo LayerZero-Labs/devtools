@@ -37,6 +37,7 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
     "chai": "^4.4.1",
+    "dotenv": "^16.4.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.19.5",
     "hardhat-contract-sizer": "^2.10.0",
