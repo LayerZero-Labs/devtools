@@ -7,8 +7,8 @@ import { handlePromptState, promptToContinue } from '@layerzerolabs/io-devtools'
 
 // Max value of a Uint128 using a BigInt container.
 const MAX_UINT_128 = BigInt(2) ** BigInt(128) - BigInt(1)
-// Max value of a Uint8 using a number container.
-const MAX_UINT_8 = 0xffff
+// Max value of a Uint16 using a number container.
+const MAX_UINT_16 = 0xffffffff
 // Default initial text number.
 const DEFAULT_INITIAL_TEXT_NUMBER = BigInt('200000')
 
@@ -67,11 +67,14 @@ export const promptForOptionType = () =>
         },
     ])
 
-const promptForGasLimit: PromptObject<'gasLimit'> = promptForBigInt('gasLimit', 'What gas limit do you want to set?')
+const promptForGasLimit: PromptObject<'gasLimit'> = promptForBigInt(
+    'gasLimit',
+    'What gas limit (uint128) do you want to set?'
+)
 
 const promptForNativeDropAmount: PromptObject<'nativeDropAmount'> = promptForBigInt(
     'nativeDropAmount',
-    'What native gas drop do you want to set?'
+    'What native gas drop amount (uint128) do you want to set?'
 )
 
 /**
@@ -81,17 +84,17 @@ const promptForIndex: PromptObject<'index'> = {
     onState: handlePromptState,
     type: 'number',
     name: 'index',
-    message: 'What is the index?',
+    message: 'What is the index (uint16)?',
     initial: 0,
     min: 0,
-    max: MAX_UINT_8,
+    max: MAX_UINT_16,
 }
 
 const promptForNativeDropAddress: PromptObject<'nativeDropAddress'> = {
     onState: handlePromptState,
     type: 'text',
     name: 'nativeDropAddress',
-    message: 'What native gas drop do you want to set?',
+    message: 'What native gas drop address (bytes32) do you want to set?',
     initial: makeBytes32(),
 }
 
