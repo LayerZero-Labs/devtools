@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.12
+
+### Patch Changes
+
+- 9996f00: Updated Readmes and the example rpcs used in createLZOApp
+
 ## 0.1.11
 
 ### Patch Changes

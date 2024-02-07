@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm
 
+## 0.1.3
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+- Updated dependencies [8227742]
+  - @layerzerolabs/devtools@0.1.4
+
 ## 0.1.2
 
 ### Patch Changes
