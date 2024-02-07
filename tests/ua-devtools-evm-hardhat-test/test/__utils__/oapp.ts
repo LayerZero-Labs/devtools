@@ -23,13 +23,13 @@ export type OAppTestConfig = {
     executorLibrary: string
     executorMaxMessageSize: number
     receiveTimeoutConfigLibrary: string
-    receiveLibraryGracePeriod: number
-    receiveLibraryTimeoutExpiry: number
-    sendUlnConfirmations: number
+    receiveLibraryGracePeriod: bigint
+    receiveLibraryTimeoutExpiry: bigint
+    sendUlnConfirmations: bigint
     sendUlnRequiredDVNs: string[]
     sendUlnOptionalDVNs: string[]
     sendUlnOptionalDVNThreshold: number
-    receiveUlnConfirmations: number
+    receiveUlnConfirmations: bigint
     receiveUlnRequiredDVNs: string[]
     receiveUlnOptionalDVNs: string[]
     receiveUlnOptionalDVNThreshold: number
@@ -73,9 +73,7 @@ export const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeC
                 confirmations: testConfig.sendUlnConfirmations,
                 optionalDVNThreshold: testConfig.sendUlnOptionalDVNThreshold,
                 requiredDVNs: testConfig.sendUlnRequiredDVNs,
-                requiredDVNCount: testConfig.sendUlnOptionalDVNs.length,
                 optionalDVNs: testConfig.sendUlnOptionalDVNs,
-                optionalDVNCount: testConfig.sendUlnOptionalDVNs.length,
             },
         },
         receiveConfig: {
@@ -83,9 +81,7 @@ export const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeC
                 confirmations: testConfig.receiveUlnConfirmations,
                 optionalDVNThreshold: testConfig.receiveUlnOptionalDVNThreshold,
                 requiredDVNs: testConfig.receiveUlnRequiredDVNs,
-                requiredDVNCount: testConfig.receiveUlnRequiredDVNs.length,
                 optionalDVNs: testConfig.receiveUlnOptionalDVNs,
-                optionalDVNCount: testConfig.receiveUlnOptionalDVNs.length,
             },
         },
     }
@@ -135,13 +131,13 @@ export const getDefaultEthConfig = async (): Promise<OAppTestConfig> => {
         executorLibrary: await getLibraryAddress(avaxExecutor),
         executorMaxMessageSize: 100,
         receiveTimeoutConfigLibrary: await getLibraryAddress(ethReceiveUln2_Opt2),
-        receiveLibraryGracePeriod: 0,
-        receiveLibraryTimeoutExpiry: 0,
-        receiveUlnConfirmations: 24,
+        receiveLibraryGracePeriod: BigInt(0),
+        receiveLibraryTimeoutExpiry: BigInt(0),
+        receiveUlnConfirmations: BigInt(24),
         receiveUlnOptionalDVNs: ethReceiveUlnOptionalDVNs,
         receiveUlnOptionalDVNThreshold: 0,
         receiveUlnRequiredDVNs: ethReceiveUlnRequiredDVNs,
-        sendUlnConfirmations: 42,
+        sendUlnConfirmations: BigInt(42),
         sendUlnOptionalDVNs: ethSendUlnOptionalDVNs,
         sendUlnOptionalDVNThreshold: 0,
         sendUlnRequiredDVNs: ethSendUlnRequiredDVNs,
@@ -162,13 +158,13 @@ export const getDefaultAvaxConfig = async (): Promise<OAppTestConfig> => {
         executorLibrary: await getLibraryAddress(ethExecutor),
         executorMaxMessageSize: 999,
         receiveTimeoutConfigLibrary: await getLibraryAddress(avaxReceiveUln2_Opt2),
-        receiveLibraryGracePeriod: 0,
-        receiveLibraryTimeoutExpiry: 0,
-        receiveUlnConfirmations: 96,
+        receiveLibraryGracePeriod: BigInt(0),
+        receiveLibraryTimeoutExpiry: BigInt(0),
+        receiveUlnConfirmations: BigInt(96),
         receiveUlnOptionalDVNs: avaxReceiveUlnOptionalDVNs,
         receiveUlnOptionalDVNThreshold: 0,
         receiveUlnRequiredDVNs: avaxSendUlnRequiredDVNs,
-        sendUlnConfirmations: 69,
+        sendUlnConfirmations: BigInt(69),
         sendUlnOptionalDVNs: avaxSendUlnOptionalDVNs,
         sendUlnOptionalDVNThreshold: 0,
         sendUlnRequiredDVNs: avaxReceiveUlnRequiredDVNs,
