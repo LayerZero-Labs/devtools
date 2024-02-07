@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-example
 
+## 0.0.12
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+- 9996f00: Updated Readmes and the example rpcs used in createLZOApp
+
 ## 0.0.11
 
 ### Patch Changes

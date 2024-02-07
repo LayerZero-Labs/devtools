@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.1.4
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+- 3a438b1: Compile project before depolying in lz:deploy
+- Updated dependencies [8227742]
+  - @layerzerolabs/devtools-evm@0.1.3
+  - @layerzerolabs/devtools@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes

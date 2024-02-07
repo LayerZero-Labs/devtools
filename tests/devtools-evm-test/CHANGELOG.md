@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.8
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+
 ## 0.0.7
 
 ### Patch Changes

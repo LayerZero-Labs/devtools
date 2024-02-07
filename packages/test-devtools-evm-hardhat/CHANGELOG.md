@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.1.3
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.21
+
+### Patch Changes
+
+- 8227742: Update @layerzero-labs dependencies to 2.1.4
+- 12a8550: Adding optionType to enforcedOptions config
+
 ## 0.0.20
 
 ### Patch Changes
