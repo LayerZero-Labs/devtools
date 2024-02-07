@@ -1,5 +1,5 @@
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
-import { OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniGraphBuilder, OmniTransaction } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
 import { configureOApp, type OAppConfigurator, type OAppFactory, type OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -21,6 +21,22 @@ const action: ActionType<TaskArgs> = async ({
     const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
 
     logger.verbose(`Running with graph:\n\n${printJson(graph)}`)
+
+    // As an additional step, even though this task is getting called
+    // from controlled and type-safe environments (for now),
+    // we pass thr graph through a builder
+    //
+    // We can discard the output, this step is only here to ensure that the graph is valid
+    // (this) call would throw if the graph was not valid
+    try {
+        logger.verbose(`Validating graph`)
+
+        OmniGraphBuilder.fromGraph(graph)
+    } catch (error) {
+        logger.verbose(`Provided graph does not look valid: ${error}`)
+
+        throw new Error(`An error occurred while verifying OApp OmniGraph: ${error}`)
+    }
 
     try {
         return await configurator(graph, oappFactory)
