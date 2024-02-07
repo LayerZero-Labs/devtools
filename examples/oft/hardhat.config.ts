@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
     },
     networks: {
         sepolia: {
-            eid: EndpointId.ETHEREUM_V2_TESTNET,
+            eid: EndpointId.SEPOLIA_V2_TESTNET,
             url: 'https://rpc.sepolia.org/',
             accounts,
         },

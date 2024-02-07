@@ -48,5 +48,6 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
 }
 
-module.exports.tags = [contractName]
+deploy.tags = [contractName]
+
 export default deploy

@@ -48,4 +48,5 @@ const deploy: DeployFunction = async (hre) => {
 }
 
 deploy.tags = [contractName]
+
 export default deploy
