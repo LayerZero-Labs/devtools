@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.0.11
+
+### Patch Changes
+
+- 23f376c: Update build-lz-options README.md with warning information
+
 ## 0.0.10
 
 ### Patch Changes
