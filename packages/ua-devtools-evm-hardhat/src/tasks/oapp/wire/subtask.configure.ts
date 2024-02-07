@@ -24,7 +24,7 @@ const action: ActionType<TaskArgs> = async ({
 
     // As an additional step, even though this task is getting called
     // from controlled and type-safe environments (for now),
-    // we pass thr graph through a builder
+    // we pass the graph through a builder
     //
     // We can discard the output, this step is only here to ensure that the graph is valid
     // (this) call would throw if the graph was not valid
