@@ -1287,6 +1287,7 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '200000',
                                         value: '0',
                                     },
@@ -1299,6 +1300,7 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '200000',
                                         value: '0',
                                     },
@@ -1353,6 +1355,7 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '200000',
                                         value: '0',
                                     },
@@ -1365,27 +1368,12 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '200000',
                                         value: '0',
                                     },
                                 ],
                             },
-                        },
-                        {
-                            vector: { from: avaxPoint, to: ethPoint },
-                            config: {},
-                        },
-                        {
-                            vector: { from: avaxPoint, to: bscPoint },
-                            config: {},
-                        },
-                        {
-                            vector: { from: bscPoint, to: ethPoint },
-                            config: {},
-                        },
-                        {
-                            vector: { from: bscPoint, to: avaxPoint },
-                            config: {},
                         },
                     ],
                 }
@@ -1431,11 +1419,13 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '250000',
                                         value: '0',
                                     },
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '550000',
                                         value: '2',
                                     },
@@ -1470,7 +1460,7 @@ describe('oapp/config', () => {
                 expect(transactions).toEqual(expectedTransactions)
             })
 
-            it('should combine addExecutorNativeDropOption settings for two chains into one transaction for msgType: 2', async () => {
+            it('should combine diff option types (LZ_RECEIVE & NATIVE_DROP) for msgType: 1 and one option type (NATIVE_DROP) for msgType: 2 w/ multiple chains', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1490,14 +1480,22 @@ describe('oapp/config', () => {
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: 2,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                                        gas: '250000',
+                                        value: '0',
+                                    },
+                                    {
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 1,
                                         receiver: '0x0000000000000000000000000000000000000001',
                                     },
                                     {
                                         msgType: 2,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 2,
-                                        receiver: '0x000000000000000000000000000000000000002',
+                                        receiver: '0x0000000000000000000000000000000000000002',
                                     },
                                 ],
                             },
@@ -1508,8 +1506,9 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 2,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 1,
-                                        receiver: '0x000000000000000000000000000000000000003',
+                                        receiver: '0x0000000000000000000000000000000000000003',
                                     },
                                 ],
                             },
@@ -1520,13 +1519,18 @@ describe('oapp/config', () => {
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
 
-                const avaxOptions = Options.newOptions()
+                const avaxOptionsMsgType1 = Options.newOptions()
+                    .addExecutorLzReceiveOption(250000, 0)
                     .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000001')
+                    .toHex()
+                    .toLowerCase()
+
+                const avaxOptionsMsgType2 = Options.newOptions()
                     .addExecutorNativeDropOption(2, '0x0000000000000000000000000000000000000002')
                     .toHex()
                     .toLowerCase()
 
-                const bscOptions = Options.newOptions()
+                const bscOptionsMsgType2 = Options.newOptions()
                     .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000003')
                     .toHex()
                     .toLowerCase()
@@ -1536,15 +1540,22 @@ describe('oapp/config', () => {
                         {
                             eid: avaxPoint.eid,
                             option: {
+                                msgType: 1,
+                                options: avaxOptionsMsgType1,
+                            },
+                        },
+                        {
+                            eid: avaxPoint.eid,
+                            option: {
                                 msgType: 2,
-                                options: avaxOptions,
+                                options: avaxOptionsMsgType2,
                             },
                         },
                         {
                             eid: bscPoint.eid,
                             option: {
                                 msgType: 2,
-                                options: bscOptions,
+                                options: bscOptionsMsgType2,
                             },
                         },
                     ]),
@@ -1552,7 +1563,7 @@ describe('oapp/config', () => {
                 expect(transactions).toEqual(expectedTransactions)
             })
 
-            it('should combine addExecutorComposeOption settings into one transaction for msgType: 3', async () => {
+            it('should combine addExecutorComposeOption settings into one transaction for msgType: 1', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1569,25 +1580,29 @@ describe('oapp/config', () => {
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 0,
                                         gas: 200000,
                                         value: 1,
                                     },
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 1,
                                         gas: 200500,
                                         value: 0,
                                     },
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 2,
                                         gas: 300000,
                                         value: 2,
                                     },
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 3,
                                         gas: 100000,
                                         value: 0,
@@ -1616,7 +1631,7 @@ describe('oapp/config', () => {
                         {
                             eid: avaxPoint.eid,
                             option: {
-                                msgType: 3,
+                                msgType: 1,
                                 options: options,
                             },
                         },
@@ -1625,7 +1640,7 @@ describe('oapp/config', () => {
                 expect(transactions).toEqual(expectedTransactions)
             })
 
-            it('should combine addExecutorComposeOption settings for two chains into one transaction for msgType: 3', async () => {
+            it('should combine addExecutorComposeOption settings for two chains into one transaction for two different msgTypes (1 & 2)', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1645,13 +1660,15 @@ describe('oapp/config', () => {
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 0,
                                         gas: 200000,
                                         value: 1,
                                     },
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 1,
                                         gas: 200500,
                                         value: 0,
@@ -1664,13 +1681,15 @@ describe('oapp/config', () => {
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 2,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 0,
                                         gas: 300000,
                                         value: 0,
                                     },
                                     {
-                                        msgType: ExecutorOptionType.COMPOSE,
+                                        msgType: 2,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 1,
                                         gas: 200005,
                                         value: 1,
@@ -1684,13 +1703,13 @@ describe('oapp/config', () => {
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
 
-                const avaxOptions = Options.newOptions()
+                const avaxOptionsMsgType1 = Options.newOptions()
                     .addExecutorComposeOption(0, 200000, 1)
                     .addExecutorComposeOption(1, 200500, 0)
                     .toHex()
                     .toLowerCase()
 
-                const bscOptions = Options.newOptions()
+                const bscOptionsMsgType2 = Options.newOptions()
                     .addExecutorComposeOption(0, 300000, 0)
                     .addExecutorComposeOption(1, 200005, 1)
                     .toHex()
@@ -1701,15 +1720,15 @@ describe('oapp/config', () => {
                         {
                             eid: avaxPoint.eid,
                             option: {
-                                msgType: 3,
-                                options: avaxOptions,
+                                msgType: 1,
+                                options: avaxOptionsMsgType1,
                             },
                         },
                         {
                             eid: bscPoint.eid,
                             option: {
-                                msgType: 3,
-                                options: bscOptions,
+                                msgType: 2,
+                                options: bscOptionsMsgType2,
                             },
                         },
                     ]),
@@ -1738,43 +1757,39 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '250000',
                                         value: '0',
                                     },
                                     {
                                         msgType: 1,
-                                        gas: '550000',
-                                        value: '2',
-                                    },
-                                    {
-                                        msgType: 1,
-                                        gas: '450000',
-                                        value: '1',
-                                    },
-                                    {
-                                        msgType: 2,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 1,
                                         receiver: '0x0000000000000000000000000000000000000001',
                                     },
                                     {
-                                        msgType: 2,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 2,
                                         receiver: '0x000000000000000000000000000000000000002',
                                     },
                                     {
-                                        msgType: 3,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 0,
                                         gas: 200000,
                                         value: 1,
                                     },
                                     {
-                                        msgType: 3,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 1,
                                         gas: 200500,
                                         value: 0,
                                     },
                                     {
-                                        msgType: 3,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 2,
                                         gas: 300000,
                                         value: 2,
@@ -1788,16 +1803,19 @@ describe('oapp/config', () => {
                                 enforcedOptions: [
                                     {
                                         msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
                                         gas: '300000',
                                         value: '1',
                                     },
                                     {
                                         msgType: 2,
+                                        optionType: ExecutorOptionType.NATIVE_DROP,
                                         amount: 3,
                                         receiver: '0x000000000000000000000000000000000000001',
                                     },
                                     {
                                         msgType: 3,
+                                        optionType: ExecutorOptionType.COMPOSE,
                                         index: 0,
                                         gas: 100000,
                                         value: 0,
@@ -1808,37 +1826,27 @@ describe('oapp/config', () => {
                     ],
                 }
 
-                const avaxLzReceiveOptions = Options.newOptions()
+                const avaxOptionsMsgType1 = Options.newOptions()
                     .addExecutorLzReceiveOption(250000, 0)
-                    .addExecutorLzReceiveOption(550000, 2)
-                    .addExecutorLzReceiveOption(450000, 1)
-                    .toHex()
-                    .toLowerCase()
-
-                const avaxOptionsExecutor = Options.newOptions()
                     .addExecutorNativeDropOption(1, '0x0000000000000000000000000000000000000001')
                     .addExecutorNativeDropOption(2, '0x0000000000000000000000000000000000000002')
-                    .toHex()
-                    .toLowerCase()
-
-                const avaxComposeOptions = Options.newOptions()
                     .addExecutorComposeOption(0, 200000, 1)
                     .addExecutorComposeOption(1, 200500, 0)
                     .addExecutorComposeOption(2, 300000, 2)
                     .toHex()
                     .toLowerCase()
 
-                const bscLzReceiveOptions = Options.newOptions()
+                const bscOptionsMsgType1 = Options.newOptions()
                     .addExecutorLzReceiveOption(300000, 1)
                     .toHex()
                     .toLowerCase()
 
-                const bscOptionsExecutor = Options.newOptions()
+                const bscOptionsMsgType2 = Options.newOptions()
                     .addExecutorNativeDropOption(3, '0x0000000000000000000000000000000000000001')
                     .toHex()
                     .toLowerCase()
 
-                const bscComposeOptions = Options.newOptions()
+                const bscOptionsMsgType3 = Options.newOptions()
                     .addExecutorComposeOption(0, 100000, 0)
                     .toHex()
                     .toLowerCase()
@@ -1851,42 +1859,28 @@ describe('oapp/config', () => {
                             eid: avaxPoint.eid,
                             option: {
                                 msgType: 1,
-                                options: avaxLzReceiveOptions,
-                            },
-                        },
-                        {
-                            eid: avaxPoint.eid,
-                            option: {
-                                msgType: 2,
-                                options: avaxOptionsExecutor,
-                            },
-                        },
-                        {
-                            eid: avaxPoint.eid,
-                            option: {
-                                msgType: 3,
-                                options: avaxComposeOptions,
+                                options: avaxOptionsMsgType1,
                             },
                         },
                         {
                             eid: bscPoint.eid,
                             option: {
                                 msgType: 1,
-                                options: bscLzReceiveOptions,
+                                options: bscOptionsMsgType1,
                             },
                         },
                         {
                             eid: bscPoint.eid,
                             option: {
                                 msgType: 2,
-                                options: bscOptionsExecutor,
+                                options: bscOptionsMsgType2,
                             },
                         },
                         {
                             eid: bscPoint.eid,
                             option: {
                                 msgType: 3,
-                                options: bscComposeOptions,
+                                options: bscOptionsMsgType3,
                             },
                         },
                     ]),
@@ -1894,7 +1888,7 @@ describe('oapp/config', () => {
                 expect(transactions).toEqual(expectedTransactions)
             })
 
-            it('should combine both addExecutorOrderedExecutionOption into one transaction', async () => {
+            it('should combine addExecutorLzReceiveOption & addExecutorOrderedExecutionOption into one transaction for msgType: 1', async () => {
                 // This is the OApp config that we want to use against our contracts
                 graph = {
                     contracts: [
@@ -1911,10 +1905,14 @@ describe('oapp/config', () => {
                             config: {
                                 enforcedOptions: [
                                     {
-                                        msgType: 4,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                                        gas: '225000',
+                                        value: '0',
                                     },
                                     {
-                                        msgType: 4,
+                                        msgType: 1,
+                                        optionType: ExecutorOptionType.ORDERED,
                                     },
                                 ],
                             },
@@ -1929,16 +1927,17 @@ describe('oapp/config', () => {
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
                 const options = Options.newOptions()
-                    .addExecutorOrderedExecutionOption()
+                    .addExecutorLzReceiveOption(225000, 0)
                     .addExecutorOrderedExecutionOption()
                     .toHex()
                     .toLowerCase()
+
                 const expectedTransactions = [
                     await ethOAppSdk.setEnforcedOptions([
                         {
                             eid: avaxPoint.eid,
                             option: {
-                                msgType: 4,
+                                msgType: 1,
                                 options: options,
                             },
                         },

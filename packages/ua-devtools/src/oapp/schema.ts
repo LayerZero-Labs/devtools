@@ -29,26 +29,30 @@ export const OAppReceiveConfigSchema = z.object({
 }) satisfies z.ZodSchema<OAppReceiveConfig, z.ZodTypeDef, unknown>
 
 export const ExecutorLzReceiveOptionSchema = z.object({
-    msgType: z.literal(ExecutorOptionType.LZ_RECEIVE),
+    msgType: UIntNumberSchema,
+    optionType: z.literal(ExecutorOptionType.LZ_RECEIVE),
     gas: UIntNumberSchema,
     value: UIntNumberSchema,
 }) satisfies z.ZodSchema<ExecutorLzReceiveOption, z.ZodTypeDef, unknown>
 
 export const ExecutorNativeDropOptionSchema = z.object({
-    msgType: z.literal(ExecutorOptionType.NATIVE_DROP),
+    msgType: UIntNumberSchema,
+    optionType: z.literal(ExecutorOptionType.NATIVE_DROP),
     amount: UIntNumberSchema,
     receiver: AddressSchema,
 }) satisfies z.ZodSchema<ExecutorNativeDropOption, z.ZodTypeDef, unknown>
 
 export const ExecutorComposeOptionSchema = z.object({
-    msgType: z.literal(ExecutorOptionType.COMPOSE),
+    msgType: UIntNumberSchema,
+    optionType: z.literal(ExecutorOptionType.COMPOSE),
     index: UIntNumberSchema,
     gas: UIntNumberSchema,
     value: UIntNumberSchema,
 }) satisfies z.ZodSchema<ExecutorComposeOption, z.ZodTypeDef, unknown>
 
 export const ExecutorOrderedExecutionOptionSchema = z.object({
-    msgType: z.literal(ExecutorOptionType.ORDERED),
+    msgType: UIntNumberSchema,
+    optionType: z.literal(ExecutorOptionType.ORDERED),
 }) satisfies z.ZodSchema<ExecutorOrderedExecutionOption, z.ZodTypeDef, unknown>
 
 export const OAppEnforcedOptionConfigSchema = z.union([
