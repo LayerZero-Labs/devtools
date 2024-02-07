@@ -1,5 +1,12 @@
 # build-lz-options
 
+## 0.0.12
+
+### Patch Changes
+
+- efbcfdf: Ensure address is valid
+- 398f7cd: Fix index container (uint16 instead of uint8)
+
 ## 0.0.11
 
 ### Patch Changes
