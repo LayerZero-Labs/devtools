@@ -16,7 +16,7 @@
 
 <p align="center">Template project for getting started with LayerZero's  <code>OApp</code> contract development.</p>
 
-### Getting Started
+## 1) Developing Contracts
 
 #### Installing dependencies
 
@@ -73,3 +73,36 @@ Or adjust the `package.json` to for example remove `hardhat` tests:
 - "test:hardhat": "$npm_execpath hardhat test"
 + "test": "forge test"
 ```
+
+## 2) Deploying Contracts
+
+Set up deployer wallet/account:
+
+- Rename `.env.example` -> `.env`
+- Choose your preferred means of setting up your deployer wallet/account:
+
+```
+MNEMONIC="test test test test test test test test test test test junk"
+or...
+PRIVATE_KEY="0xabc...def"
+```
+
+To deploy your contracts to your desired blockchains, run the following command in your project's folder:
+
+```bash
+npx hardhat lz:deploy
+```
+
+More information about available CLI arguments can be found using the `--help` flag:
+
+```bash
+npx hardhat lz:deploy --help
+```
+
+By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
+
+<br></br>
+
+<p align="center">
+  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
+</p>
