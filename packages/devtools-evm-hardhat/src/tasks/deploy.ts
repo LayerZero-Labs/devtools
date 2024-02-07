@@ -237,7 +237,7 @@ const action: ActionType<TaskArgs> = async (
     return results
 }
 
-task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts')
+task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts', action)
     .addParam(
         'networks',
         'List of comma-separated networks. If not provided, all networks will be deployed',
@@ -259,4 +259,3 @@ task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts')
         false,
         types.boolean
     )
-    .setAction(action)

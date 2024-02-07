@@ -49,8 +49,7 @@ const action: ActionType<TaskArgs> = async ({
     }
 }
 
-subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp')
+subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp', action)
     .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph', undefined, types.any)
     .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, types.any, true)
     .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, types.any, true)
-    .setAction(action)

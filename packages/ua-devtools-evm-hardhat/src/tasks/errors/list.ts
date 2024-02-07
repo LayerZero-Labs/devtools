@@ -76,8 +76,7 @@ export const action: ActionType<TaskArgs> = async (
     printVerticalTable(rows)
 }
 
-task(TASK_LZ_ERRORS_LIST, 'List all custom errors from your project')
+task(TASK_LZ_ERRORS_LIST, 'List all custom errors from your project', action)
     .addParam('containing', 'Only show custom errors containing a string', '', types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('showSourcePath', 'Show contract source path')
-    .setAction(action)

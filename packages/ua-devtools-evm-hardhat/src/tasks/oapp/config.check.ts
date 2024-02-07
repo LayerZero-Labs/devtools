@@ -16,7 +16,7 @@ interface TaskArgs {
     logLevel?: string
 }
 
-export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -81,8 +81,8 @@ export const checkWire: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPa
 
 task(
     TASK_LZ_OAPP_CONFIG_CHECK,
-    'outputs visual console table to show current state of oapp connections via configuration'
+    'outputs visual console table to show current state of oapp connections via configuration',
+    action
 )
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .setAction(checkWire)
