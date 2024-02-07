@@ -296,33 +296,47 @@ const buildEnforcedOptionsOmniTransactions = async (
     return omniTransaction
 }
 
+/**
+ * Reduces enforced options based on passed in enforced option configuration.
+ * @param {Map<number, Options>} enforcedOptionsByMsgType - The map of enforced options by message type.
+ * @param {OAppEnforcedOption} enforcedOptionsConfig - The passed in enforced option configuration.
+ * @returns {Map<number, Options>} The reduced map of enforced options by message type.
+ */
 const enforcedOptionsReducer = (
-    optionsByMsgType: Map<number, Options>,
-    optionConfig: OAppEnforcedOption
+    enforcedOptionsByMsgType: Map<number, Options>,
+    enforcedOptionsConfig: OAppEnforcedOption
 ): Map<number, Options> => {
-    const { optionType, msgType } = optionConfig
-    const currentOptions = optionsByMsgType.get(msgType) ?? Options.newOptions()
+    /**
+     * optionType - ExecutorOptionType (LZ_RECEIVE, NATIVE_DROP, COMPOSE, ORDERED)
+     * msgType - OApp defined msgType
+     */
+    const { optionType, msgType } = enforcedOptionsConfig
+    const currentOptions = enforcedOptionsByMsgType.get(msgType) ?? Options.newOptions()
 
     switch (optionType) {
         case ExecutorOptionType.LZ_RECEIVE:
-            return optionsByMsgType.set(
+            return enforcedOptionsByMsgType.set(
                 msgType,
-                currentOptions.addExecutorLzReceiveOption(optionConfig.gas, optionConfig.value)
+                currentOptions.addExecutorLzReceiveOption(enforcedOptionsConfig.gas, enforcedOptionsConfig.value)
             )
 
         case ExecutorOptionType.NATIVE_DROP:
-            return optionsByMsgType.set(
+            return enforcedOptionsByMsgType.set(
                 msgType,
-                currentOptions.addExecutorNativeDropOption(optionConfig.amount, optionConfig.receiver)
+                currentOptions.addExecutorNativeDropOption(enforcedOptionsConfig.amount, enforcedOptionsConfig.receiver)
             )
 
         case ExecutorOptionType.COMPOSE:
-            return optionsByMsgType.set(
+            return enforcedOptionsByMsgType.set(
                 msgType,
-                currentOptions.addExecutorComposeOption(optionConfig.index, optionConfig.gas, optionConfig.value)
+                currentOptions.addExecutorComposeOption(
+                    enforcedOptionsConfig.index,
+                    enforcedOptionsConfig.gas,
+                    enforcedOptionsConfig.value
+                )
             )
 
         case ExecutorOptionType.ORDERED:
-            return optionsByMsgType.set(msgType, currentOptions.addExecutorOrderedExecutionOption())
+            return enforcedOptionsByMsgType.set(msgType, currentOptions.addExecutorOrderedExecutionOption())
     }
 }

@@ -46,6 +46,10 @@ export interface OAppEdgeConfig {
 }
 
 export interface BaseExecutorOption {
+    /**
+     * The message type defined by OApp's to set enforced options for.
+     * @type {number}
+     */
     msgType: number
 }
 
