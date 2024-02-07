@@ -284,6 +284,8 @@ exports[`omnigraph/format formatEid should format 10251 correctly 1`] = `"XAI_TE
 
 exports[`omnigraph/format formatEid should format 10252 correctly 1`] = `"TANGIBLE_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10253 correctly 1`] = `"EXOCORE_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -573,6 +575,8 @@ exports[`omnigraph/format formatEid should format 40249 correctly 1`] = `"ZORASE
 exports[`omnigraph/format formatEid should format 40251 correctly 1`] = `"XAI_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40252 correctly 1`] = `"TANGIBLE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40253 correctly 1`] = `"EXOCORE_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
