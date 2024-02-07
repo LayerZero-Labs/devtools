@@ -46,7 +46,7 @@ export interface OAppEdgeConfig {
 }
 
 export interface BaseExecutorOption {
-    msgType: ExecutorOptionType
+    msgType: number
 }
 
 export interface EncodedOption extends BaseExecutorOption {
@@ -54,26 +54,26 @@ export interface EncodedOption extends BaseExecutorOption {
 }
 
 export interface ExecutorLzReceiveOption extends BaseExecutorOption {
-    msgType: ExecutorOptionType.LZ_RECEIVE
+    optionType: ExecutorOptionType.LZ_RECEIVE
     gas: PossiblyBigInt
     value: PossiblyBigInt
 }
 
 export interface ExecutorNativeDropOption extends BaseExecutorOption {
-    msgType: ExecutorOptionType.NATIVE_DROP
+    optionType: ExecutorOptionType.NATIVE_DROP
     amount: PossiblyBigInt
     receiver: string
 }
 
 export interface ExecutorComposeOption extends BaseExecutorOption {
-    msgType: ExecutorOptionType.COMPOSE
+    optionType: ExecutorOptionType.COMPOSE
     index: number
     gas: PossiblyBigInt
     value: PossiblyBigInt
 }
 
 export interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
-    msgType: ExecutorOptionType.ORDERED
+    optionType: ExecutorOptionType.ORDERED
 }
 
 export type OAppEnforcedOption =
