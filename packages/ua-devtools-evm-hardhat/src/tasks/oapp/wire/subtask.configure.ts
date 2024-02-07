@@ -38,6 +38,8 @@ const action: ActionType<TaskArgs> = async ({
         throw new Error(`An error occurred while verifying OApp OmniGraph: ${error}`)
     }
 
+    // The only thing this task does is it uses the provided arguments
+    // to compile a list of OmniTransactions
     try {
         return await configurator(graph, oappFactory)
     } catch (error) {
