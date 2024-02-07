@@ -38,7 +38,7 @@ export const createSignAndSend =
         const successful: OmniTransactionWithReceipt[] = []
 
         for (const [index, transaction] of transactions.entries()) {
-            // We want to refer to this transaction by index so we create an ordinal for it (1st, 2nd etc)
+            // We want to refer to this transaction by index, so we create an ordinal for it (1st, 2nd etc.)
             const ordinal = pluralizeOrdinal(index + 1)
 
             try {

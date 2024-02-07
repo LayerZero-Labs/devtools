@@ -8,7 +8,7 @@ import { deepStrictEqual } from 'assert'
  * const theyDontMatch = isDeepEqual({ a: 1 }, { a: '1' }) // false
  * ```
  *
- * @param {T} a
+ * @param {unknown} a
  * @param {unknown} b
  * @returns {boolean}
  */

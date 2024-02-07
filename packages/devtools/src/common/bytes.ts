@@ -39,7 +39,7 @@ export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined)
 /**
  * Turns a potentially zero address into undefined
  *
- * @param {PossiblyBytes | PossiblyBigInt | null | undefined} address
+ * @param {PossiblyBytes | PossiblyBigInt | null | undefined} value
  *
  * @returns {string | undefined}
  */

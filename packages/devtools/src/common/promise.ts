@@ -143,7 +143,9 @@ type RetryStrategy<TInput extends unknown[]> = Factory<
  * @returns {<TOutput>(task: Factory<TInput, TOutput>) => Factory<TInput, TOutput>}
  */
 export const createRetryFactory =
-    <TInput extends unknown[]>(strategy: RetryStrategy<TInput> = createSimpleRetryStrategy(3)) =>
+    <TInput extends unknown[]>(
+        strategy: RetryStrategy<TInput> = createSimpleRetryStrategy(3)
+    ): (<TOutput>(task: Factory<TInput, TOutput>) => Factory<TInput, TOutput>) =>
     <TOutput>(task: Factory<TInput, TOutput>): Factory<TInput, TOutput> =>
     async (...input) => {
         // We'll store the last used input in this variable
