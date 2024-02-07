@@ -93,6 +93,7 @@ const promptForNativeDropAddress: PromptObject<'nativeDropAddress'> = {
     name: 'nativeDropAddress',
     message: 'What native gas drop do you want to set?',
     initial: makeBytes32(),
+    validate: (str: string) => str.length <= 66, // 32 bytes is 64 nibbles + '0x'
 }
 
 const promptForWorkerType = () =>
