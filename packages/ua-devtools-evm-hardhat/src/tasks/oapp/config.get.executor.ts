@@ -11,10 +11,7 @@ interface TaskArgs {
     networks?: string[]
 }
 
-export const getExecutorConfig: ActionType<TaskArgs> = async (
-    { logLevel = 'info', networks: networksArgument },
-    hre
-) => {
+const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: networksArgument }, hre) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
@@ -47,8 +44,8 @@ export const getExecutorConfig: ActionType<TaskArgs> = async (
 
 task(
     TASK_LZ_OAPP_CONFIG_GET_EXECUTOR,
-    'Outputs the Executors destination configurations including the native max cap amount '
+    'Outputs the Executors destination configurations including the native max cap amount',
+    action
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.csv, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .setAction(getExecutorConfig)

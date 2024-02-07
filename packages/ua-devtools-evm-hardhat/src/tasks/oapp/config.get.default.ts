@@ -18,10 +18,7 @@ interface TaskArgs {
     json?: boolean
 }
 
-export const getDefaultConfig: ActionType<TaskArgs> = async (
-    { logLevel = 'info', networks: networksArgument, json },
-    hre
-) => {
+const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: networksArgument, json }, hre) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
     const logger = createLogger()
@@ -121,7 +118,8 @@ export const getDefaultConfig: ActionType<TaskArgs> = async (
 
 task(
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
-    'Outputs the default Send and Receive Messaging Library versions and the default application config'
+    'Outputs the default Send and Receive Messaging Library versions and the default application config',
+    action
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.csv, true)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
@@ -132,4 +130,3 @@ task(
         types.boolean,
         true
     )
-    .setAction(getDefaultConfig)

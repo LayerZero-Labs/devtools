@@ -1,6 +1,6 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
+import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
 import {
     createLogger,
     setDefaultLogLevel,
@@ -9,18 +9,15 @@ import {
     pluralizeNoun,
     printBoolean,
 } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
-import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import {
-    createConnectedContractFactory,
-    createSignerFactory,
-    formatOmniTransaction,
-    types,
-} from '@layerzerolabs/devtools-evm-hardhat'
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { createSignerFactory, formatOmniTransaction, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createSignAndSend, OmniTransaction } from '@layerzerolabs/devtools'
 import { createProgressBar, printLogo, printRecords, render } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import type { OmniTransactionWithError, OmniTransactionWithReceipt, SignAndSendResult } from '@layerzerolabs/devtools'
+import type { TaskArgs as SubtaskConfigureArgs } from './subtask.configure'
+
+import './subtask.configure'
 
 interface TaskArgs {
     oappConfig: string
@@ -28,11 +25,10 @@ interface TaskArgs {
     ci?: boolean
 }
 
-const action: ActionType<TaskArgs> = async ({
-    oappConfig: oappConfigPath,
-    logLevel = 'info',
-    ci = false,
-}): Promise<SignAndSendResult> => {
+const action: ActionType<TaskArgs> = async (
+    { oappConfig: oappConfigPath, logLevel = 'info', ci = false },
+    hre
+): Promise<SignAndSendResult> => {
     printLogo()
 
     // We only want to be asking users for input if we are not in interactive mode
@@ -47,15 +43,12 @@ const action: ActionType<TaskArgs> = async ({
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)
-    const contractFactory = createConnectedContractFactory()
-    const oAppFactory = createOAppFactory(contractFactory)
 
-    let transactions: OmniTransaction[]
-    try {
-        transactions = await configureOApp(graph, oAppFactory)
-    } catch (error) {
-        throw new Error(`An error occurred while getting the OApp configuration: ${error}`)
-    }
+    // We'll get the list of OmniTransactions using a subtask to allow for developers
+    // to use this as a hook and extend the configuration
+    const transactions: OmniTransaction[] = await hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
+        graph,
+    } satisfies SubtaskConfigureArgs)
 
     // Flood users with debug output
     logger.verbose(`Created a list of wiring transactions`)
@@ -195,6 +188,7 @@ const action: ActionType<TaskArgs> = async ({
 
     return [successfulTransactions, errors, transactionsToSign]
 }
+
 task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp')
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)

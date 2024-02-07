@@ -78,7 +78,6 @@ export const action: ActionType<TaskArgs> = async ({ hash, logLevel = 'info' }, 
     return error
 }
 
-task(TASK_LZ_ERRORS_DECODE, 'Decodes custom error data based')
+task(TASK_LZ_ERRORS_DECODE, 'Decodes custom error data based', action)
     .addPositionalParam('hash', 'Encoded contract error hash (including the 0x prefix)', undefined, types.string, false)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .setAction(action)

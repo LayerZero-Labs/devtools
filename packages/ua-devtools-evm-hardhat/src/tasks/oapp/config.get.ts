@@ -13,7 +13,7 @@ interface TaskArgs {
     oappConfig: string
 }
 
-export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) => {
+const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
@@ -110,8 +110,8 @@ export const getOAppConfig: ActionType<TaskArgs> = async ({ logLevel = 'info', o
 
 task(
     TASK_LZ_OAPP_CONFIG_GET,
-    'Outputs the default Send and Receive Messaging Library versions and the default application config'
+    'Outputs the default Send and Receive Messaging Library versions and the default application config',
+    action
 )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
-    .setAction(getOAppConfig)
