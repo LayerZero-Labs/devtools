@@ -1,6 +1,6 @@
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
 import { OmniTransaction } from '@layerzerolabs/devtools'
-import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
 import { configureOApp, type OAppConfigurator, type OAppFactory, type OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -32,7 +32,7 @@ const action: ActionType<TaskArgs> = async ({
 }
 
 subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp')
-    .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph')
-    .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, undefined, true)
-    .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, undefined, true)
+    .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph', undefined, types.any)
+    .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, types.any, true)
+    .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, types.any, true)
     .setAction(action)
