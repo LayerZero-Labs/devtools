@@ -78,9 +78,14 @@ Or adjust the `package.json` to for example remove `hardhat` tests:
 
 Set up deployer wallet/account:
 
-> - Rename `.env.example` -> `.env`
-> - Replace the existing 12 word mnemonic with yours, this will be used to deploy your contracts.
-> - Fund this address with the corresponding chain's native tokens you want to deploy to.
+- Rename `.env.example` -> `.env`
+- Choose your preferred means of setting up your deployer wallet/account:
+
+```
+MNEMONIC="test test test test test test test test test test test junk"
+or...
+PRIVATE_KEY="0xabc...def"
+```
 
 To deploy your contracts to your desired blockchains, run the following command in your project's folder:
 
