@@ -1,7 +1,7 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { createLogger, printBoolean, printCrossTable, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { TASK_LZ_OAPP_CONFIG_CHECK } from '@/constants/tasks'
+import { TASK_LZ_OAPP_PEERS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
@@ -79,10 +79,6 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
     }
 }
 
-task(
-    TASK_LZ_OAPP_CONFIG_CHECK,
-    'outputs visual console table to show current state of oapp connections via configuration',
-    action
-)
+task(TASK_LZ_OAPP_PEERS_GET, 'Outputs OApp peer connections', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`task lz:oapp:config:check should show a standard lzReceive setting for all pathways 1`] = `
+exports[`task lz:oapp:peers:get should show a standard lzReceive setting for all pathways 1`] = `
 [
   "┌───────────┬───────────────────────────────────────────────────────────┬───────────────────────────────────────────────────────────┐
 │ from → to │ britney                                                   │ vengaboys                                                 │
@@ -28,7 +28,7 @@ exports[`task lz:oapp:config:check should show a standard lzReceive setting for 
 ]
 `;
 
-exports[`task lz:oapp:config:check should show all chains are connected after running wire with three networks 1`] = `
+exports[`task lz:oapp:peers:get should show all chains are connected after running wire with three networks 1`] = `
 [
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
@@ -48,7 +48,7 @@ exports[`task lz:oapp:config:check should show all chains are connected after ru
 ]
 `;
 
-exports[`task lz:oapp:config:check should show all chains are connected after running wire with two networks 1`] = `
+exports[`task lz:oapp:peers:get should show all chains are connected after running wire with two networks 1`] = `
 [
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │
@@ -66,7 +66,7 @@ exports[`task lz:oapp:config:check should show all chains are connected after ru
 ]
 `;
 
-exports[`task lz:oapp:config:check should show all chains are connected expect one after running wire with three networks 1`] = `
+exports[`task lz:oapp:peers:get should show all chains are connected expect one after running wire with three networks 1`] = `
 [
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
@@ -86,7 +86,7 @@ exports[`task lz:oapp:config:check should show all chains are connected expect o
 ]
 `;
 
-exports[`task lz:oapp:config:check should show all chains are not connected expect one after running wire with three networks 1`] = `
+exports[`task lz:oapp:peers:get should show all chains are not connected expect one after running wire with three networks 1`] = `
 [
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
@@ -106,7 +106,7 @@ exports[`task lz:oapp:config:check should show all chains are not connected expe
 ]
 `;
 
-exports[`task lz:oapp:config:check should show different combined enforced options for all pathways 1`] = `
+exports[`task lz:oapp:peers:get should show different combined enforced options for all pathways 1`] = `
 [
   "┌───────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │ from → to │ britney                                                                                                                     │ vengaboys                                                                                                                   │ tango                                                                                                                               │
@@ -220,7 +220,7 @@ exports[`task lz:oapp:config:check should show different combined enforced optio
 ]
 `;
 
-exports[`task lz:oapp:config:check should show enforced options for one pathway 1`] = `
+exports[`task lz:oapp:peers:get should show enforced options for one pathway 1`] = `
 [
   "┌───────────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┬───────────┬───────┐
 │ from → to │ britney                                                                                                                           │ vengaboys │ tango │
@@ -250,7 +250,7 @@ exports[`task lz:oapp:config:check should show enforced options for one pathway 
 ]
 `;
 
-exports[`task lz:oapp:config:check should show no chains are connected with two networks 1`] = `
+exports[`task lz:oapp:peers:get should show no chains are connected with two networks 1`] = `
 [
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │

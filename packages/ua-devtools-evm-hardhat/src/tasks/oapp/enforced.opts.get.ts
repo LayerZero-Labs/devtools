@@ -1,7 +1,7 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { createLogger, printCrossTable, printRecord, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { TASK_LZ_OAPP_ENFORCED_OPTIONS_GET } from '@/constants/tasks'
+import { TASK_LZ_OAPP_ENFORCED_OPTS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { EncodedOption, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
@@ -17,7 +17,7 @@ interface TaskArgs {
     logLevel?: string
 }
 
-export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -87,10 +87,9 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
     }
 }
 
-task(TASK_LZ_OAPP_ENFORCED_OPTIONS_GET, 'Outputs table of OApp enforced options using layerzero.config')
+task(TASK_LZ_OAPP_ENFORCED_OPTS_GET, 'Outputs OApp enforced options', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .setAction(enforcedOptionsGet)
 
 /**
  * Decodes enforced options from the provided encoded enforced options.
