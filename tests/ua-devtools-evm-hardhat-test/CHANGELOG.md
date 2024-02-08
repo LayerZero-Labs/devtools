@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.0.22
+
+### Patch Changes
+
+- b2670f8: Adding getEnforcedOptions task
+- cc62747: Rename EVM Hardhat Tasks
+
 ## 0.0.21
 
 ### Patch Changes

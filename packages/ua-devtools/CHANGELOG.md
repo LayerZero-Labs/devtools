@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools
 
+## 0.1.6
+
+### Patch Changes
+
+- b2670f8: Adding getEnforcedOptions task
+- cc62747: Rename EVM Hardhat Tasks
+
 ## 0.1.5
 
 ### Patch Changes
