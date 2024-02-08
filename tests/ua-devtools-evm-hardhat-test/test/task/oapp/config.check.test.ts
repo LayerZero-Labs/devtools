@@ -2,7 +2,11 @@ import hre from 'hardhat'
 import { resolve } from 'path'
 import { isFile } from '@layerzerolabs/io-devtools'
 import { deployOApp } from '../../__utils__/oapp'
-import { TASK_LZ_OAPP_CONFIG_CHECK, TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import {
+    TASK_LZ_OAPP_CONFIG_CHECK,
+    TASK_LZ_OAPP_ENFORCED_OPTIONS_GET,
+    TASK_LZ_OAPP_WIRE,
+} from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
@@ -58,6 +62,30 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_CHECK}`, () => {
         const oappConfig = configPathFixture('valid.multi.network.config.one.connection.js')
         await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
         await hre.run(TASK_LZ_OAPP_CONFIG_CHECK, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show enforced options for one pathway', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.one.pathway.enforced.options.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_ENFORCED_OPTIONS_GET, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show a standard lzReceive setting for all pathways', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.lzreceive.enforced.options.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_ENFORCED_OPTIONS_GET, { oappConfig })
+        expect(consoleSpy.mock.lastCall).toMatchSnapshot()
+    })
+
+    it('should show different combined enforced options for all pathways', async () => {
+        const consoleSpy = jest.spyOn(console, 'log')
+        const oappConfig = configPathFixture('valid.multi.network.enforced.options.js')
+        await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+        await hre.run(TASK_LZ_OAPP_ENFORCED_OPTIONS_GET, { oappConfig })
         expect(consoleSpy.mock.lastCall).toMatchSnapshot()
     })
 })
