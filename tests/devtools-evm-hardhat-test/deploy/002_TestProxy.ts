@@ -10,7 +10,10 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
 
-    await deployments.delete('TestProxy')
+    deployments.delete('TestProxy')
+    deployments.delete('TestProxy_Implementation')
+    deployments.delete('TestProxy_Proxy')
+    deployments.delete('DefaultProxyAdmin')
     const testProxyDeployment = await deployments.deploy('TestProxy', {
         from: deployer,
         proxy: {

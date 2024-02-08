@@ -82,6 +82,38 @@ teardown() {
     assert [ ! -d $DESTINATION ]
 }
 
+# This test is a bit ridiculous because it basically checks that we error out
+# on the fact that we have insufficient funds, not on the fact that the EndpointV2 deployment cannot be found
+@test "should find EndpointV2 deployment for oapp in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
+    local MNEMONIC="test test test test test test test test test test test junk"
+
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+
+    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
+    assert_output --partial "insufficient funds for intrinsic transaction cost"
+
+    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
+    assert_output --partial "insufficient funds for intrinsic transaction cost"
+}
+
+# This test is a bit ridiculous because it basically checks that we error out
+# on the fact that we have insufficient funds, not on the fact that the EndpointV2 deployment cannot be found
+@test "should find EndpointV2 deployment for oft in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
+    local MNEMONIC="test test test test test test test test test test test junk"
+
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+
+    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
+    assert_output --partial "insufficient funds for intrinsic transaction cost"
+
+    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
+    assert_output --partial "insufficient funds for intrinsic transaction cost"
+}
+
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 

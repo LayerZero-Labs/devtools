@@ -2,6 +2,7 @@
 
 import hre from 'hardhat'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
+import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
 import {
     TASK_LZ_DEPLOY,
     createClearDeployments,
@@ -24,7 +25,8 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 const promptForTextMock = promptForText as jest.Mock
 const promptToContinueMock = promptToContinue as jest.Mock
 const promptToSelectMultipleMock = promptToSelectMultiple as jest.Mock
-const runMock = jest.spyOn(hre, 'run')
+const runSpy = jest.spyOn(hre, 'run')
+const runDeploySpy = jest.spyOn(DeploymentsManager.prototype, 'runDeploy')
 
 describe(`task ${TASK_LZ_DEPLOY}`, () => {
     const expectDeployment = expect.objectContaining({
@@ -45,6 +47,8 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         promptForTextMock.mockReset()
         promptToContinueMock.mockReset()
         promptToSelectMultipleMock.mockReset()
+
+        runDeploySpy.mockClear()
 
         const getHreByEid = createGetHreByEid(hre)
         const clearDeployments = createClearDeployments(getHreByEid)
@@ -71,7 +75,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
 
             // For some reason even though we did not specify any arguments to the compile task,
             // jest still sees some aarguments being passed so we need to pass those to make this expect work
-            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+            expect(runSpy).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
         })
 
         it('should ask for networks & tags', async () => {
@@ -166,7 +170,58 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
             // Since we provided selected no tags, everything will be deployed
+            await expect(hre.run(TASK_LZ_DEPLOY, { reset: true })).resolves.toEqual({
+                tango: {
+                    contracts: expect.objectContaining({
+                        Thrower: expectDeployment,
+                        TestProxy: expectDeployment,
+                    }),
+                },
+                vengaboys: {
+                    contracts: expect.objectContaining({
+                        Thrower: expectDeployment,
+                        TestProxy: expectDeployment,
+                    }),
+                },
+            })
+        })
+
+        it('should not redeploy if reset flag has not been passed', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValue(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValue('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValue(['vengaboys', 'tango'])
+
+            // We run the deploy first
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            // Then we run the deploy again and expect nothing to have been deployed
+            // since we didn't pass the --reset flag
             await expect(hre.run(TASK_LZ_DEPLOY, {})).resolves.toEqual({
+                tango: {
+                    contracts: {},
+                },
+                vengaboys: {
+                    contracts: {},
+                },
+            })
+        })
+
+        it('should redeploy if reset flag has been passed', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValue(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValue('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValue(['vengaboys', 'tango'])
+
+            // We run the deploy first
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            // Then we run the deploy again
+            await expect(hre.run(TASK_LZ_DEPLOY, { reset: true })).resolves.toEqual({
                 tango: {
                     contracts: expect.objectContaining({
                         Thrower: expectDeployment,
@@ -190,10 +245,38 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             // And we want to select two networks
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
-            const { tango, vengaboys } = await hre.run(TASK_LZ_DEPLOY, {})
+            await hre.run(TASK_LZ_DEPLOY, {})
 
-            expect(Object.keys(tango.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(vengaboys.contracts)).toEqual(['Thrower'])
+            expect(runDeploySpy).toHaveBeenCalledTimes(2)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(1, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(2, ['Thrower'], expect.any(Object))
+        })
+
+        it('should not reset memory on the deployments extension', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValueOnce(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValueOnce('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
+
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            expect(runDeploySpy).toHaveBeenCalledTimes(2)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(
+                1,
+                [],
+                expect.objectContaining({
+                    resetMemory: false,
+                })
+            )
+            expect(runDeploySpy).toHaveBeenNthCalledWith(
+                2,
+                [],
+                expect.objectContaining({
+                    resetMemory: false,
+                })
+            )
         })
     })
 
@@ -205,13 +288,14 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
 
             // For some reason even though we did not specify any arguments to the compile task,
             // jest still sees some aarguments being passed so we need to pass those to make this expect work
-            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+            expect(runSpy).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
         })
 
         it('should use all available networks & tags if networks argument is undefined', async () => {
             await expect(
                 hre.run(TASK_LZ_DEPLOY, {
                     ci: true,
+                    reset: true,
                 })
             ).resolves.toEqual({
                 britney: {
@@ -255,6 +339,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
                 hre.run(TASK_LZ_DEPLOY, {
                     ci: true,
                     tags: [],
+                    reset: true,
                 })
             ).resolves.toEqual({
                 britney: {
@@ -279,11 +364,12 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         })
 
         it('should deploy only the tags provided', async () => {
-            const { tango, vengaboys, britney } = await hre.run(TASK_LZ_DEPLOY, { ci: true, tags: ['Thrower'] })
+            await hre.run(TASK_LZ_DEPLOY, { ci: true, tags: ['Thrower'] })
 
-            expect(Object.keys(britney.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(tango.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(vengaboys.contracts)).toEqual(['Thrower'])
+            expect(runDeploySpy).toHaveBeenCalledTimes(3)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(1, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(2, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(3, ['Thrower'], expect.any(Object))
         })
     })
 })
