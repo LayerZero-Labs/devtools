@@ -10,7 +10,11 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
 
-    await deployments.delete('TestProxy')
+    await Promise.all(
+        ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
+            deployments.delete(contractName)
+        )
+    )
     const testProxyDeployment = await deployments.deploy('TestProxy', {
         from: deployer,
         proxy: {
