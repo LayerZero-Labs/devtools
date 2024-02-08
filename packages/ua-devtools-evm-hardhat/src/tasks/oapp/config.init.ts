@@ -92,7 +92,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise
 
 if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT) {
     task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file', action)
-        .addParam('oappConfig', 'Path to the new LayerZero OApp config', undefined, types.string)
+        .addParam('oappConfig', 'Path to the new LayerZero OApp config', './layerzero.config.js', types.string)
         .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
         .addParam(
             'ci',

@@ -110,8 +110,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) =
 
 task(
     TASK_LZ_OAPP_CONFIG_GET,
-    'Outputs the default Send and Receive Messaging Library versions and the default application config',
+    'Outputs Custom OApp Config, Default OApp Config, and Active OApp Config. Each config contains Send & Receive Librarys, Send Uln & Executor Configs, and Recieve Executor Configs',
     action
 )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
