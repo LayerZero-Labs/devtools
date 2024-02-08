@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import type { Config } from "@/types";
-import { Box } from "ink";
+import { Box, Newline, Text } from "ink";
 import { cloneExample } from "@/utilities/cloning";
 import { Progress } from "./progress";
 import { installDependencies } from "@/utilities/installation";
@@ -38,6 +38,47 @@ export const Setup: React.FC<Props> = ({ config }) => {
         state={install.state}
         error={({ error }) => <ErrorMessage config={config} error={error} />}
       />
+
+      {setup.state?.success ? <NextSteps config={config} /> : null}
     </Box>
   );
 };
+
+const NextSteps: React.FC<{ config: Config }> = ({ config }) => (
+  <Box flexDirection="column">
+    <Text>
+      <Text color="green">✔</Text> All done!
+    </Text>
+
+    <Box
+      margin={1}
+      borderStyle="round"
+      borderColor="gray"
+      flexDirection="column"
+    >
+      <Text># Navigate to your project</Text>
+      <Text color="cyan">cd {config.destination}</Text>
+      <Newline />
+
+      <Text>#</Text>
+      <Text># Follow the steps in hardhat.config.ts:</Text>
+      <Text>#</Text>
+      <Text># - Create an .env file based on the provided template</Text>
+      <Text># - Adjust the contracts to your liking</Text>
+      <Text>#</Text>
+      <Newline />
+
+      <Text># Deploy your contracts</Text>
+      <Text color="cyan">npx hardhat lz:deploy</Text>
+      <Newline />
+
+      <Text bold>
+        Visit our docs page at{" "}
+        <Text underline color="cyan">
+          https://docs.layerzero.network/
+        </Text>{" "}
+        for more info
+      </Text>
+    </Box>
+  </Box>
+);
