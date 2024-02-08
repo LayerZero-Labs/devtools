@@ -66,6 +66,8 @@ const NextSteps: React.FC<{ config: Config }> = ({ config }) => (
       <Text># - Create an .env file based on the provided template</Text>
       <Text># - Adjust the contracts to your liking</Text>
       <Text>#</Text>
+      <Newline />
+
       <Text># Deploy your contracts</Text>
       <Text color="cyan">npx hardhat lz:deploy</Text>
       <Newline />
