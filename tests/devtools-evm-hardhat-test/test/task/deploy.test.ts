@@ -2,6 +2,7 @@
 
 import hre from 'hardhat'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
+import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
 import {
     TASK_LZ_DEPLOY,
     createClearDeployments,
@@ -24,7 +25,8 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 const promptForTextMock = promptForText as jest.Mock
 const promptToContinueMock = promptToContinue as jest.Mock
 const promptToSelectMultipleMock = promptToSelectMultiple as jest.Mock
-const runMock = jest.spyOn(hre, 'run')
+const runSpy = jest.spyOn(hre, 'run')
+const runDeploySpy = jest.spyOn(DeploymentsManager.prototype, 'runDeploy')
 
 describe(`task ${TASK_LZ_DEPLOY}`, () => {
     const expectDeployment = expect.objectContaining({
@@ -45,6 +47,8 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         promptForTextMock.mockReset()
         promptToContinueMock.mockReset()
         promptToSelectMultipleMock.mockReset()
+
+        runDeploySpy.mockClear()
 
         const getHreByEid = createGetHreByEid(hre)
         const clearDeployments = createClearDeployments(getHreByEid)
@@ -71,7 +75,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
 
             // For some reason even though we did not specify any arguments to the compile task,
             // jest still sees some aarguments being passed so we need to pass those to make this expect work
-            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+            expect(runSpy).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
         })
 
         it('should ask for networks & tags', async () => {
@@ -195,6 +199,19 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             expect(Object.keys(tango.contracts)).toEqual(['Thrower'])
             expect(Object.keys(vengaboys.contracts)).toEqual(['Thrower'])
         })
+
+        it('should not reset memory on the deployments extension', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValueOnce(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValueOnce('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
+
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            expect(runDeploySpy).toHaveBeenCalledTimes(2)
+        })
     })
 
     describe('in CI mode', () => {
@@ -205,7 +222,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
 
             // For some reason even though we did not specify any arguments to the compile task,
             // jest still sees some aarguments being passed so we need to pass those to make this expect work
-            expect(runMock).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
+            expect(runSpy).toHaveBeenCalledWith(TASK_COMPILE, undefined, {}, undefined)
         })
 
         it('should use all available networks & tags if networks argument is undefined', async () => {
