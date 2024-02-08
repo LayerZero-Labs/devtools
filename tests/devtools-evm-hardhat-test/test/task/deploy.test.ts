@@ -170,7 +170,58 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
             // Since we provided selected no tags, everything will be deployed
+            await expect(hre.run(TASK_LZ_DEPLOY, { reset: true })).resolves.toEqual({
+                tango: {
+                    contracts: expect.objectContaining({
+                        Thrower: expectDeployment,
+                        TestProxy: expectDeployment,
+                    }),
+                },
+                vengaboys: {
+                    contracts: expect.objectContaining({
+                        Thrower: expectDeployment,
+                        TestProxy: expectDeployment,
+                    }),
+                },
+            })
+        })
+
+        it('should not redeploy if reset flag has not been passed', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValue(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValue('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValue(['vengaboys', 'tango'])
+
+            // We run the deploy first
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            // Then we run the deploy again and expect nothing to have been deployed
+            // since we didn't pass the --reset flag
             await expect(hre.run(TASK_LZ_DEPLOY, {})).resolves.toEqual({
+                tango: {
+                    contracts: {},
+                },
+                vengaboys: {
+                    contracts: {},
+                },
+            })
+        })
+
+        it('should redeploy if reset flag has been passed', async () => {
+            // We want to say yes to deployment
+            promptToContinueMock.mockResolvedValue(true)
+            // We want to deploy two imaginary tags
+            promptForTextMock.mockResolvedValue('')
+            // And we want to select two networks
+            promptToSelectMultipleMock.mockResolvedValue(['vengaboys', 'tango'])
+
+            // We run the deploy first
+            await hre.run(TASK_LZ_DEPLOY, {})
+
+            // Then we run the deploy again
+            await expect(hre.run(TASK_LZ_DEPLOY, { reset: true })).resolves.toEqual({
                 tango: {
                     contracts: expect.objectContaining({
                         Thrower: expectDeployment,
@@ -194,10 +245,11 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             // And we want to select two networks
             promptToSelectMultipleMock.mockResolvedValueOnce(['vengaboys', 'tango'])
 
-            const { tango, vengaboys } = await hre.run(TASK_LZ_DEPLOY, {})
+            await hre.run(TASK_LZ_DEPLOY, {})
 
-            expect(Object.keys(tango.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(vengaboys.contracts)).toEqual(['Thrower'])
+            expect(runDeploySpy).toHaveBeenCalledTimes(2)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(1, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(2, ['Thrower'], expect.any(Object))
         })
 
         it('should not reset memory on the deployments extension', async () => {
@@ -211,6 +263,20 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             await hre.run(TASK_LZ_DEPLOY, {})
 
             expect(runDeploySpy).toHaveBeenCalledTimes(2)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(
+                1,
+                [],
+                expect.objectContaining({
+                    resetMemory: false,
+                })
+            )
+            expect(runDeploySpy).toHaveBeenNthCalledWith(
+                2,
+                [],
+                expect.objectContaining({
+                    resetMemory: false,
+                })
+            )
         })
     })
 
@@ -229,6 +295,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             await expect(
                 hre.run(TASK_LZ_DEPLOY, {
                     ci: true,
+                    reset: true,
                 })
             ).resolves.toEqual({
                 britney: {
@@ -272,6 +339,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
                 hre.run(TASK_LZ_DEPLOY, {
                     ci: true,
                     tags: [],
+                    reset: true,
                 })
             ).resolves.toEqual({
                 britney: {
@@ -296,11 +364,16 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         })
 
         it('should deploy only the tags provided', async () => {
-            const { tango, vengaboys, britney } = await hre.run(TASK_LZ_DEPLOY, { ci: true, tags: ['Thrower'] })
+            await hre.run(TASK_LZ_DEPLOY, {
+                ci: true,
+                tags: ['Thrower'],
+                reset: true,
+            })
 
-            expect(Object.keys(britney.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(tango.contracts)).toEqual(['Thrower'])
-            expect(Object.keys(vengaboys.contracts)).toEqual(['Thrower'])
+            expect(runDeploySpy).toHaveBeenCalledTimes(3)
+            expect(runDeploySpy).toHaveBeenNthCalledWith(1, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(2, ['Thrower'], expect.any(Object))
+            expect(runDeploySpy).toHaveBeenNthCalledWith(3, ['Thrower'], expect.any(Object))
         })
     })
 })
