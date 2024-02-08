@@ -3,7 +3,7 @@ import { task } from 'hardhat/config'
 import { createLogger, printCrossTable, printRecord, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { TASK_LZ_OAPP_ENFORCED_OPTIONS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { EncodedOption, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppEnforcedOptions } from '@layerzerolabs/ua-devtools'
@@ -27,7 +27,7 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
     const logger = createLogger()
     const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
 
-    // need points for OApp Peer Matrix
+    // need points for OApp Enforced Option Matrix
     const points = graph.contracts
         .map(({ point }) => point)
         .map((point) => ({
@@ -41,7 +41,7 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
 
     try {
         const enforcedOptions = await checkOAppEnforcedOptions(graph, oAppFactory)
-        const peerNetworkMatrix = points.map((row) => {
+        const enforcedOptsNetworkMatrix = points.map((row) => {
             /**
              * for each point in the network (referred to as 'row'), create a row in the matrix
              */
@@ -53,15 +53,14 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
                     return areVectorsEqual(peer.vector, { from: column, to: row })
                 })
                 /**
-                 * update the row with a key-value pair indicating the connection status for the current column
+                 * update the row with a key-value pair indicating the enforced option for the current column
                  */
-                const enforcedOptsByMsgType = {}
+                const enforcedOptsByMsgType: Record<string, unknown> = {}
                 if (connection?.enforcedOptions) {
-                    connection.enforcedOptions.forEach((option) => {
-                        let enforcedOpts = {}
-                        if (!isZero(option.options)) {
-                            enforcedOpts = updateEnforcedOptsFromOptions(enforcedOpts, option)
-                            enforcedOptsByMsgType['msgType: ' + option.msgType] = enforcedOpts
+                    connection.enforcedOptions.forEach((encodedEnforcedOpts) => {
+                        if (!isZero(encodedEnforcedOpts.options)) {
+                            enforcedOptsByMsgType['msgType: ' + encodedEnforcedOpts.msgType] =
+                                decodeEnforcedOptions(encodedEnforcedOpts)
                         }
                     })
                 }
@@ -78,7 +77,9 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
             return connectionsForCurrentRow
         })
 
-        console.log(printCrossTable(peerNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)]))
+        console.log(
+            printCrossTable(enforcedOptsNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)])
+        )
 
         return enforcedOptions
     } catch (error) {
@@ -87,50 +88,33 @@ export const enforcedOptionsGet: ActionType<TaskArgs> = async ({ oappConfig: oap
 }
 
 task(TASK_LZ_OAPP_ENFORCED_OPTIONS_GET, 'Outputs table of OApp enforced options using layerzero.config')
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .setAction(enforcedOptionsGet)
 
 /**
- * Updates the enforced options object based on the provided encoded enforced options.
- * @param enforcedOpts - The enforced options object to update.
- * @param option - The encoded enforced options that needs to be decoded to extract enforced options.
- * @returns The updated enforced options object.
+ * Decodes enforced options from the provided encoded enforced options.
+ * @param {EncodedOption} option - The encoded options.
+ * @returns {Record<string, unknown>} - The decoded enforced options.
  */
-function updateEnforcedOptsFromOptions(enforcedOpts, option) {
+function decodeEnforcedOptions(option: EncodedOption): Record<string, unknown> {
     const fromOptions = Options.fromOptions(option.options)
     const lzReceiveOption = fromOptions.decodeExecutorLzReceiveOption()
     const lzNativeDropOption = fromOptions.decodeExecutorNativeDropOption()
     const lzComposeOption = fromOptions.decodeExecutorComposeOption()
     const lzOrderedExecutionOption = fromOptions.decodeExecutorOrderedExecutionOption()
 
-    enforcedOpts = {
-        ...enforcedOpts,
+    return {
         ...(lzReceiveOption ? { lzReceiveOption } : {}),
-        ...updateEnforcedOpts(enforcedOpts, 'lzNativeDropOption', lzNativeDropOption),
-        ...updateEnforcedOpts(enforcedOpts, 'lzComposeOption', lzComposeOption),
+        ...(lzNativeDropOption.length ? { lzNativeDropOption: headOrEverything(lzNativeDropOption) } : {}),
+        ...(lzComposeOption.length ? { lzComposeOption: headOrEverything(lzComposeOption) } : {}),
         ...(lzOrderedExecutionOption ? { lzOrderedExecutionOption } : {}),
     }
-
-    return enforcedOpts
 }
 
 /**
- * Updates the enforced options for better readability.
- * @param enforcedOpts - The enforced options object to update.
- * @param optionName - The name of the option to update.
- * @param optionValue - The value of the option to update.
- * @returns The updated enforced options object.
+ *  This is used for better readability in print tables
+ *  If array has length 1, pop from array and return the object
+ *  Else return the array
  */
-function updateEnforcedOpts(enforcedOpts, optionName, optionValue) {
-    if (optionValue && optionValue.length === 1) {
-        // If the option value is defined and has length 1, pop from array and keep as object
-        return { ...enforcedOpts, [optionName]: optionValue.pop() }
-    } else if (optionValue && optionValue.length > 1) {
-        // If the option value exists and has length greater than 1, keep it as an array
-        return { ...enforcedOpts, [optionName]: [...(enforcedOpts[optionName] || []), ...optionValue] }
-    } else {
-        // If the option value is not defined or has length 0, return the original enforcedOpts
-        return enforcedOpts
-    }
-}
+const headOrEverything = <T>(array: T[]): T | T[] => (array.length === 1 ? array[0]! : array)
