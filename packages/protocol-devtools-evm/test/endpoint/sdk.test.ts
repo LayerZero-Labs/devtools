@@ -2,7 +2,7 @@ import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import type { Contract } from '@ethersproject/contracts'
 import { makeZeroAddress, type OmniContract } from '@layerzerolabs/devtools-evm'
-import { Endpoint } from '@/endpoint'
+import { EndpointV2 } from '../../src/endpointv2'
 import { isZero, makeBytes32 } from '@layerzerolabs/devtools'
 
 describe('endpoint/sdk', () => {
@@ -28,7 +28,7 @@ describe('endpoint/sdk', () => {
         it('should reject if the address is a zeroish address', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, zeroishAddressArbitrary, async (omniContract, address) => {
-                    const sdk = new Endpoint(omniContract, uln302Factory)
+                    const sdk = new EndpointV2(omniContract, uln302Factory)
 
                     await expect(sdk.getUln302SDK(address)).rejects.toThrow(
                         /Uln302 cannot be instantiated: Uln302 address cannot be a zero value for Endpoint/
@@ -48,7 +48,7 @@ describe('endpoint/sdk', () => {
 
                         uln302Factory.mockReset().mockResolvedValue(uln302Sdk)
 
-                        const sdk = new Endpoint(omniContract, uln302Factory)
+                        const sdk = new EndpointV2(omniContract, uln302Factory)
                         const uln302 = await sdk.getUln302SDK(address)
 
                         expect(uln302).toBe(uln302Sdk)

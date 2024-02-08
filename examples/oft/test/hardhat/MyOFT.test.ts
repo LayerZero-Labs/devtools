@@ -17,8 +17,8 @@ describe('MyOFT Test', function () {
     let endpointOwner: SignerWithAddress
     let myOFTA: Contract
     let myOFTB: Contract
-    let mockEndpointA: Contract
-    let mockEndpointB: Contract
+    let mockEndpointV2A: Contract
+    let mockEndpointV2B: Contract
 
     // Before hook for setup that runs once before all tests in the block
     before(async function () {
@@ -46,16 +46,16 @@ describe('MyOFT Test', function () {
     // beforeEach hook for setup that runs before each test in the block
     beforeEach(async function () {
         // Deploying a mock LZEndpoint with the given Endpoint ID
-        mockEndpointA = await EndpointV2Mock.deploy(eidA)
-        mockEndpointB = await EndpointV2Mock.deploy(eidB)
+        mockEndpointV2A = await EndpointV2Mock.deploy(eidA)
+        mockEndpointV2B = await EndpointV2Mock.deploy(eidB)
 
         // Deploying two instances of MyOFT contract with different identifiers and linking them to the mock LZEndpoint
-        myOFTA = await MyOFT.deploy('aOFT', 'aOFT', mockEndpointA.address, ownerA.address)
-        myOFTB = await MyOFT.deploy('bOFT', 'bOFT', mockEndpointB.address, ownerB.address)
+        myOFTA = await MyOFT.deploy('aOFT', 'aOFT', mockEndpointV2A.address, ownerA.address)
+        myOFTB = await MyOFT.deploy('bOFT', 'bOFT', mockEndpointV2B.address, ownerB.address)
 
         // Setting destination endpoints in the LZEndpoint mock for each MyOFT instance
-        await mockEndpointA.setDestLzEndpoint(myOFTB.address, mockEndpointB.address)
-        await mockEndpointB.setDestLzEndpoint(myOFTA.address, mockEndpointA.address)
+        await mockEndpointV2A.setDestLzEndpoint(myOFTB.address, mockEndpointV2B.address)
+        await mockEndpointV2B.setDestLzEndpoint(myOFTA.address, mockEndpointV2A.address)
 
         // Setting each MyOFT instance as a peer of the other in the mock LZEndpoint
         await myOFTA.connect(ownerA).setPeer(eidB, ethers.utils.zeroPad(myOFTB.address, 32))

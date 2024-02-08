@@ -5,7 +5,7 @@ import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
+import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -35,8 +35,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     }
 
     beforeAll(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
     })
 
     beforeEach(async () => {

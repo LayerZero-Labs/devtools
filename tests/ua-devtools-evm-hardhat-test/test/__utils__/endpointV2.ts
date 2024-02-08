@@ -9,10 +9,10 @@ import {
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
-    configureEndpoint,
+    configureEndpointV2,
     DVNDstConfig,
     DVNEdgeConfig,
-    EndpointEdgeConfig,
+    EndpointV2EdgeConfig,
     Uln302NodeConfig,
     Uln302ExecutorConfig,
     configureUln302,
@@ -27,7 +27,7 @@ import {
 } from '@layerzerolabs/protocol-devtools'
 import {
     createDVNFactory,
-    createEndpointFactory,
+    createEndpointV2Factory,
     createExecutorFactory,
     createPriceFeedFactory,
     createUln302Factory,
@@ -113,11 +113,22 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
+ * Deploys the EndpointV2 contracts, then wires the infrastructure.
+ *
+ * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
+ */
+export const deployAndSetupDefaultEndpointV2 = async (writeToFileSystem: boolean = false): Promise<void> => {
+    // intentionally serial
+    await deployEndpointV2(writeToFileSystem)
+    return setupDefaultEndpointV2()
+}
+
+/**
  * Deploys the EndpointV2 contracts
  *
  * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
  */
-export const deployEndpoint = async (writeToFileSystem: boolean = false) => {
+const deployEndpointV2 = async (writeToFileSystem: boolean = false) => {
     const environmentFactory = createGetHreByEid()
     const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
     const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
@@ -131,16 +142,16 @@ export const deployEndpoint = async (writeToFileSystem: boolean = false) => {
 }
 
 /**
- * Helper function that wires the endpoint infrastructure.
+ * Helper function that wires the EndpointV2 infrastructure.
  *
- * The contracts still need to be deployed (use `deployEndpoint`)
+ * The contracts still need to be deployed (use `deployEndpointV2`)
  */
-export const setupDefaultEndpoint = async (): Promise<void> => {
+const setupDefaultEndpointV2 = async (): Promise<void> => {
     // This is the tooling we are going to need
     const contractFactory = createConnectedContractFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
     const ulnSdkFactory = createUln302Factory(contractFactory)
-    const endpointSdkFactory = createEndpointFactory(contractFactory, ulnSdkFactory)
+    const endpointV2SdkFactory = createEndpointV2Factory(contractFactory, ulnSdkFactory)
     const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
     const executorSdkFactory = createExecutorFactory(contractFactory)
     const dvnSdkFactory = createDVNFactory(contractFactory)
@@ -510,7 +521,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
     }
 
     // This is the graph for EndpointV2
-    const config: OmniGraphHardhat<unknown, EndpointEdgeConfig> = {
+    const config: OmniGraphHardhat<unknown, EndpointV2EdgeConfig> = {
         contracts: [
             {
                 contract: ethEndpoint,
@@ -576,7 +587,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
 
     // Now we compile a list of all the transactions that need to be executed for the ULNs and Endpoints
     const builderEndpoint = await OmniGraphBuilderHardhat.fromConfig(config)
-    const endpointTransactions = await configureEndpoint(builderEndpoint.graph, endpointSdkFactory)
+    const endpointV2Transactions = await configureEndpointV2(builderEndpoint.graph, endpointV2SdkFactory)
 
     const builderPriceFeed = await OmniGraphBuilderHardhat.fromConfig(priceFeedConfig)
     const priceFeedTransactions = await configurePriceFeed(builderPriceFeed.graph, priceFeedSdkFactory)
@@ -605,7 +616,7 @@ export const setupDefaultEndpoint = async (): Promise<void> => {
         ...executorTransactions,
         ...sendUlnTransactions,
         ...receiveUlnTransactions,
-        ...endpointTransactions,
+        ...endpointV2Transactions,
         ...sendUlnTransactions_Opt2,
         ...receiveUlnTransactions_Opt2,
     ]

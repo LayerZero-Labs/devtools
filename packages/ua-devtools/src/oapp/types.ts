@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpoint, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Bytes,
     Factory,
@@ -14,7 +14,7 @@ import type {
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 export interface IOApp extends IOmniSDK {
-    getEndpointSDK(): Promise<IEndpoint>
+    getEndpointV2SDK(): Promise<IEndpointV2>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>

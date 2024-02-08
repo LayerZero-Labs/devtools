@@ -9,7 +9,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IncrementType } from '@layerzerolabs/omnicounter-devtools'
 import { createOmniCounterFactory, OmniCounter } from '@layerzerolabs/omnicounter-devtools-evm'
-import { createEndpointFactory } from '@layerzerolabs/protocol-devtools-evm'
+import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 import { configureOAppPeers, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { createSignAndSend, makeBytes32, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
@@ -20,7 +20,7 @@ import {
     OmniGraphBuilderHardhat,
     OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { deployEndpoint, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployAndSetupDefaultEndpointV2 } from '../__utils__/endpointV2'
 import { deployOmniCounter } from '../__utils__/omnicounter'
 import assert from 'assert'
 import {
@@ -85,7 +85,7 @@ const applyPremium = (input: bigint) => (BigInt(input) * BigInt(110)) / BigInt(1
 describe('oapp/options', () => {
     const ethOmniCounter = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'OmniCounter' }
     const avaxOmniCounter = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'OmniCounter' }
-    const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
+    const ethEndpointV2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
 
     let ethSdk: OmniCounter
     let ethSigner: OmniSignerEVM
@@ -93,8 +93,7 @@ describe('oapp/options', () => {
     let contractFactory: OmniContractFactoryHardhat
 
     beforeAll(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
         await deployOmniCounter()
 
         contractFactory = createConnectedContractFactory()
@@ -135,13 +134,13 @@ describe('oapp/options', () => {
             value: applyPremium(incrementOutput.messagingFee.nativeFee),
         }
 
-        const ethEndpointPoint = omniContractToPoint(await contractFactory(ethEndpoint))
-        const endpointSdkFactory = createEndpointFactory(contractFactory)
-        const ethEndpointSdk = await endpointSdkFactory(ethEndpointPoint)
+        const ethEndpointPointV2 = omniContractToPoint(await contractFactory(ethEndpointV2))
+        const endpointV2SdkFactory = createEndpointV2Factory(contractFactory)
+        const ethEndpointV2Sdk = await endpointV2SdkFactory(ethEndpointPointV2)
         const incrementTxResponse = await ethSigner.signAndSend(incrementTx)
         const incrementTxReceipt: TransactionReceipt = await incrementTxResponse.wait()
         expect(incrementTxReceipt.status).toEqual(1)
-        return parseLogsWithName(incrementTxReceipt, ethEndpointSdk.contract.contract, 'PacketSent')
+        return parseLogsWithName(incrementTxReceipt, ethEndpointV2Sdk.contract.contract, 'PacketSent')
     }
 
     it('executorLzReceiveOption', async () => {

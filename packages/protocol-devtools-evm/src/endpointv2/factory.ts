@@ -1,8 +1,8 @@
 import pMemoize from 'p-memoize'
-import type { EndpointFactory, Uln302Factory } from '@layerzerolabs/protocol-devtools'
+import type { EndpointV2Factory, Uln302Factory } from '@layerzerolabs/protocol-devtools'
 import type { OmniPoint } from '@layerzerolabs/devtools'
 import type { OmniContractFactory } from '@layerzerolabs/devtools-evm'
-import { Endpoint } from './sdk'
+import { EndpointV2 } from './sdk'
 import { createUln302Factory } from '@/uln302/factory'
 
 /**
@@ -10,10 +10,11 @@ import { createUln302Factory } from '@/uln302/factory'
  * based on an `OmniPoint` with help of an `OmniContractFactory`
  *
  * @param {OmniContractFactory} contractFactory
- * @returns {EndpointFactory<Endpoint>}
+ * @param {Uln302Factory} uln302Factory
+ * @returns {EndpointV2Factory<EndpointV2>}
  */
-export const createEndpointFactory = <TOmniPoint = never>(
+export const createEndpointV2Factory = <TOmniPoint = never>(
     contractFactory: OmniContractFactory<TOmniPoint | OmniPoint>,
     uln302Factory: Uln302Factory = createUln302Factory(contractFactory)
-): EndpointFactory<Endpoint, TOmniPoint | OmniPoint> =>
-    pMemoize(async (point) => new Endpoint(await contractFactory(point), uln302Factory))
+): EndpointV2Factory<EndpointV2, TOmniPoint | OmniPoint> =>
+    pMemoize(async (point) => new EndpointV2(await contractFactory(point), uln302Factory))

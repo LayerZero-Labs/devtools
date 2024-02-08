@@ -7,7 +7,7 @@ import {
     TASK_LZ_OAPP_ENFORCED_OPTS_GET,
     TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
+import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
 
 describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
     const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
@@ -18,8 +18,7 @@ describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
     }
 
     beforeAll(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
     })
 
     beforeEach(async () => {

@@ -1,11 +1,10 @@
-import { defaultExecutorDstConfig, deployEndpoint, setupDefaultEndpoint } from '../../__utils__/endpoint'
+import { defaultExecutorDstConfig, deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_EXECUTOR } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET_EXECUTOR}`, () => {
     beforeEach(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
     })
 
     it('should return destination executor configurations with passed in networks', async () => {

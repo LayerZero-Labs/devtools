@@ -29,7 +29,7 @@ export type PossiblyBytes = Bytes | Bytes32 | Bytes20
  */
 export type Factory<TInput extends unknown[], TOutput> = (...input: TInput) => TOutput | Promise<TOutput>
 
-export type EndpointBasedFactory<TValue> = Factory<[eid: EndpointId], TValue>
+export type EndpointV2BasedFactory<TValue> = Factory<[eid: EndpointId], TValue>
 
 /**
  * Helper type that grabs all the keys of a type / an interface

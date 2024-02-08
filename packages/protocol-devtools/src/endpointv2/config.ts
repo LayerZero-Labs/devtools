@@ -1,16 +1,19 @@
 import { flattenTransactions, type OmniTransaction, OmniPointMap, Bytes32 } from '@layerzerolabs/devtools'
-import type { EndpointFactory, EndpointOmniGraph, IEndpoint } from './types'
+import type { EndpointV2Factory, EndpointV2OmniGraph, IEndpointV2 } from './types'
 
-export type EndpointConfigurator = (graph: EndpointOmniGraph, createSdk: EndpointFactory) => Promise<OmniTransaction[]>
+export type EndpointV2Configurator = (
+    graph: EndpointV2OmniGraph,
+    createSdk: EndpointV2Factory
+) => Promise<OmniTransaction[]>
 
-export const configureEndpoint: EndpointConfigurator = async (graph, createSdk) =>
+export const configureEndpointV2: EndpointV2Configurator = async (graph, createSdk) =>
     flattenTransactions([
-        await configureEndpointRegisterLibraries(graph, createSdk),
-        await configureEndpointDefaultReceiveLibraries(graph, createSdk),
-        await configureEndpointDefaultSendLibraries(graph, createSdk),
+        await configureEndpointV2RegisterLibraries(graph, createSdk),
+        await configureEndpointV2DefaultReceiveLibraries(graph, createSdk),
+        await configureEndpointV2DefaultSendLibraries(graph, createSdk),
     ])
 
-export const configureEndpointRegisterLibraries: EndpointConfigurator = async (graph, createSdk) => {
+export const configureEndpointV2RegisterLibraries: EndpointV2Configurator = async (graph, createSdk) => {
     const librariesByEndpoint = graph.connections.reduce(
         (librariesByEndpoint, { vector: { from }, config }) =>
             librariesByEndpoint.set(
@@ -34,7 +37,7 @@ export const configureEndpointRegisterLibraries: EndpointConfigurator = async (g
     )
 }
 
-export const configureEndpointDefaultReceiveLibraries: EndpointConfigurator = async (graph, createSdk) =>
+export const configureEndpointV2DefaultReceiveLibraries: EndpointV2Configurator = async (graph, createSdk) =>
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
@@ -55,7 +58,7 @@ export const configureEndpointDefaultReceiveLibraries: EndpointConfigurator = as
         )
     )
 
-export const configureEndpointDefaultSendLibraries: EndpointConfigurator = async (graph, createSdk) =>
+export const configureEndpointV2DefaultSendLibraries: EndpointV2Configurator = async (graph, createSdk) =>
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
@@ -70,7 +73,7 @@ export const configureEndpointDefaultSendLibraries: EndpointConfigurator = async
         )
     )
 
-const registerLibraries = async (sdk: IEndpoint, libraries: string[]): Promise<OmniTransaction[]> =>
+const registerLibraries = async (sdk: IEndpointV2, libraries: string[]): Promise<OmniTransaction[]> =>
     flattenTransactions(
         await Promise.all(
             libraries.map(async (address) => {

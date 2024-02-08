@@ -1,10 +1,15 @@
-import { EndpointEdgeConfig, EndpointOmniGraph, IEndpoint, configureEndpointRegisterLibraries } from '@/endpoint'
+import {
+    EndpointV2EdgeConfig,
+    EndpointV2OmniGraph,
+    IEndpointV2,
+    configureEndpointV2RegisterLibraries,
+} from '@/endpointv2/index'
 import { OmniPoint, arePointsEqual } from '@layerzerolabs/devtools'
 import fc from 'fast-check'
 import { addressArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
 
-describe('endpoint/config', () => {
-    describe('configureEndpointRegisterLibraries', () => {
+describe('EndpointV2/config', () => {
+    describe('configureEndpointV2RegisterLibraries', () => {
         // We'll create a simple mock SDK to work with library registration
         class MockSDK {
             constructor(readonly point: OmniPoint) {}
@@ -27,12 +32,12 @@ describe('endpoint/config', () => {
                         fc.pre(!arePointsEqual(pointB, pointC))
                         fc.pre(!arePointsEqual(pointC, pointA))
 
-                        const config: EndpointEdgeConfig = {
+                        const config: EndpointV2EdgeConfig = {
                             defaultReceiveLibrary: libraryAddress,
                             defaultSendLibrary: libraryAddress,
                         }
 
-                        const graph: EndpointOmniGraph = {
+                        const graph: EndpointV2OmniGraph = {
                             contracts: [],
                             connections: [
                                 {
@@ -62,8 +67,8 @@ describe('endpoint/config', () => {
                             ],
                         }
 
-                        const createSdk = jest.fn((point: OmniPoint) => new MockSDK(point) as unknown as IEndpoint)
-                        const result = await configureEndpointRegisterLibraries(graph, createSdk)
+                        const createSdk = jest.fn((point: OmniPoint) => new MockSDK(point) as unknown as IEndpointV2)
+                        const result = await configureEndpointV2RegisterLibraries(graph, createSdk)
 
                         // The result should not contain any duplicate library registrations
                         expect(result).toEqual([
