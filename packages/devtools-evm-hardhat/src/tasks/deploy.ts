@@ -20,12 +20,14 @@ import { promptForText } from '@layerzerolabs/io-devtools'
 import { Deployment } from 'hardhat-deploy/dist/types'
 import { assertDefinedNetworks, assertHardhatDeploy } from '@/internal/assertions'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
+import { isDeepEqual } from '@layerzerolabs/devtools'
 
 interface TaskArgs {
     networks?: string[]
     tags?: string[]
     logLevel?: string
     ci?: boolean
+    reset?: boolean
 }
 
 /**
@@ -55,7 +57,7 @@ type NetworkDeployResult =
       }
 
 const action: ActionType<TaskArgs> = async (
-    { networks: networksArgument, tags: tagsArgument = [], logLevel = 'info', ci = false },
+    { networks: networksArgument, tags: tagsArgument = [], logLevel = 'info', ci = false, reset = false },
     hre
 ): Promise<DeployResults> => {
     printLogo()
@@ -72,6 +74,7 @@ const action: ActionType<TaskArgs> = async (
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
     logger.debug(isInteractive ? 'Running in interactive mode' : 'Running in non-interactive (CI) mode')
+    logger.debug(reset ? 'Will delete existing deployments' : 'Will not delete existing deployments')
 
     // The first thing to do is to ensure that the project is compiled
     try {
@@ -177,10 +180,33 @@ const action: ActionType<TaskArgs> = async (
                 // We need to make sure the user has enabled hardhat-deploy
                 assertHardhatDeploy(env)
 
+                // We first collect all existing deployments
+                //
+                // We do this so that we can diff the state before and after
+                // running the deployment scripts.
+                //
+                // This is, in immediate effect, a workaround for having to set resetMemory
+                // in the options for the run() function below to false. In near future though
+                // it opens doors for being able to return partially successful deployment results
+                const deploymentsBefore = await env.deployments.all()
+
                 // The core of this task, running the hardhat deploy scripts
-                const contracts = await env.deployments.run(selectedTags, {
+                const deploymentsAfter = await env.deployments.run(selectedTags, {
+                    // If we don't pass resetmemory or set it to true,
+                    // hardhat deploy will erase the database of deployments
+                    // (including the external deployments)
+                    //
+                    // In effect this means the deployments for LayerZero artifacts would not be available
+                    resetMemory: false,
                     writeDeploymentsToFiles: true,
+                    deletePreviousDeployments: reset,
                 })
+
+                const contracts = Object.fromEntries(
+                    Object.entries(deploymentsAfter).filter(
+                        ([name]) => !isDeepEqual(deploymentsBefore[name], deploymentsAfter[name])
+                    )
+                )
 
                 results[networkName] = { contracts }
 
@@ -254,3 +280,4 @@ task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts', action)
     )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
+    .addFlag('reset', 'Delete existing deployments')
