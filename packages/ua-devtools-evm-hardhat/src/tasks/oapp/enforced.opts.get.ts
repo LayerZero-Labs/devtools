@@ -17,7 +17,7 @@ interface TaskArgs {
     logLevel?: string
 }
 
-export const enforcedOptsGet: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -87,10 +87,9 @@ export const enforcedOptsGet: ActionType<TaskArgs> = async ({ oappConfig: oappCo
     }
 }
 
-task(TASK_LZ_OAPP_ENFORCED_OPTS_GET, 'Outputs OApp enforced options')
+task(TASK_LZ_OAPP_ENFORCED_OPTS_GET, 'Outputs OApp enforced options', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .setAction(enforcedOptsGet)
 
 /**
  * Decodes enforced options from the provided encoded enforced options.

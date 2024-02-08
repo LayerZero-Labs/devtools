@@ -118,7 +118,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
 
 task(
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
-    'Outputs the Default OApp Config. Each config contains Send & Receive Librarys, Send Uln & Executor Configs, and Recieve Executor Configs',
+    'Outputs the Default OApp Config. Each config contains Send & Receive Libraries, Send Uln & Executor Configs, and Receive Executor Configs',
     action
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.csv, true)
