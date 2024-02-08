@@ -91,7 +91,7 @@ teardown() {
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
-    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci true
+    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
@@ -107,7 +107,7 @@ teardown() {
     npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
-    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci true
+    MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
