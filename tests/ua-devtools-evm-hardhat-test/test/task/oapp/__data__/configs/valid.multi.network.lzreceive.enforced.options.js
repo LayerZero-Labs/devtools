@@ -12,11 +12,6 @@ const avaxContract = {
     contractName: 'DefaultOApp',
 };
 
-const bscContract = {
-    eid: EndpointId.BSC_V2_MAINNET,
-    contractName: 'DefaultOApp',
-};
-
 module.exports = {
     contracts: [
         {
@@ -24,9 +19,6 @@ module.exports = {
         },
         {
             contract: ethContract,
-        },
-        {
-            contract: bscContract,
         },
     ],
     connections: [
@@ -45,64 +37,8 @@ module.exports = {
             },
         },
         {
-            from: ethContract,
-            to: bscContract,
-            config: {
-                enforcedOptions: [
-                    {
-                        msgType: 1,
-                        optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200000,
-                        value: 0,
-                    },
-                ],
-            },
-        },
-        {
             from: avaxContract,
             to: ethContract,
-            config: {
-                enforcedOptions: [
-                    {
-                        msgType: 1,
-                        optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200000,
-                        value: 0,
-                    },
-                ],
-            },
-        },
-        {
-            from: avaxContract,
-            to: bscContract,
-            config: {
-                enforcedOptions: [
-                    {
-                        msgType: 1,
-                        optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200000,
-                        value: 0,
-                    },
-                ],
-            },
-        },
-        {
-            from: bscContract,
-            to: ethContract,
-            config: {
-                enforcedOptions: [
-                    {
-                        msgType: 1,
-                        optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200000,
-                        value: 0,
-                    },
-                ],
-            },
-        },
-        {
-            from: bscContract,
-            to: avaxContract,
             config: {
                 enforcedOptions: [
                     {
