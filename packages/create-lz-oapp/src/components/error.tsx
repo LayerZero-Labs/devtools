@@ -78,10 +78,10 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
             borderColor="gray"
             flexDirection="column"
           >
-            <Text color="green"># Navigate to your project</Text>
+            <Text># Navigate to your project</Text>
             <Text color="cyan">cd {config.destination}</Text>
             <Newline />
-            <Text color="green"># Reattempt the installation</Text>
+            <Text># Reattempt the installation</Text>
             <Text color="cyan">
               {config.packageManager.executable}{" "}
               {config.packageManager.args.join(" ")}
