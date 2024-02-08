@@ -11,6 +11,7 @@ import {
     createSignAndSend,
 } from '@layerzerolabs/devtools'
 import {
+    createLogger,
     createModuleLogger,
     pluralizeNoun,
     printBoolean,
@@ -21,23 +22,28 @@ import { createProgressBar, printRecords, render } from '@layerzerolabs/io-devto
 import { subtask } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 
-export interface TaskArgs {
+export interface SignAndSendTaskArgs {
     ci?: boolean
     transactions: OmniTransaction[]
     createSigner?: OmniSignerFactory
 }
 
-const action: ActionType<TaskArgs> = async ({
+const action: ActionType<SignAndSendTaskArgs> = async ({
     ci,
     transactions,
     createSigner = createSignerFactory(),
-}: TaskArgs): Promise<SignAndSendResult> => {
+}): Promise<SignAndSendResult> => {
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
 
-    const logger = createModuleLogger(SUBTASK_LZ_SIGN_AND_SEND)
+    const logger = createLogger()
+    const subtaskLogger = createModuleLogger(SUBTASK_LZ_SIGN_AND_SEND)
 
-    logger.verbose(`Signing and sending transactions:\n\n${printJson(transactions)}`)
+    // Ask them whether they want to see them
+    const previewTransactions = isInteractive
+        ? await promptToContinue(`Would you like to preview the transactions before continuing?`)
+        : true
+    if (previewTransactions) printRecords(transactions.map(formatOmniTransaction))
 
     // Now ask the user whether they want to go ahead with signing them
     //
@@ -45,7 +51,9 @@ const action: ActionType<TaskArgs> = async ({
     const shouldSubmit = isInteractive
         ? await promptToContinue(`Would you like to submit the required transactions?`)
         : true
-    if (!shouldSubmit) return logger.verbose(`User cancelled the operation, exiting`), [[], [], transactions]
+    if (!shouldSubmit) return subtaskLogger.verbose(`User cancelled the operation, exiting`), [[], [], transactions]
+
+    subtaskLogger.verbose(`Signing and sending transactions:\n\n${printJson(transactions)}`)
 
     // The last step is to execute those transactions
     //
@@ -72,7 +80,7 @@ const action: ActionType<TaskArgs> = async ({
             createProgressBar({ before: 'Signing... ', after: ` 0/${transactionsToSign.length}` })
         )
 
-        logger.verbose(`Sending the transactions`)
+        subtaskLogger.verbose(`Sending the transactions`)
         const [successfulBatch, errorsBatch, pendingBatch] = await signAndSend(
             transactionsToSign,
             (result, results) => {
@@ -101,10 +109,10 @@ const action: ActionType<TaskArgs> = async ({
         // And we update the array of transactions with the ones that did not make it through
         transactionsToSign = pendingBatch
 
-        logger.verbose(`Sent the transactions`)
-        logger.debug(`Successfully sent the following transactions:\n\n${printJson(successfulBatch)}`)
-        logger.debug(`Failed to send the following transactions:\n\n${printJson(errorsBatch)}`)
-        logger.debug(`Did not send the following transactions:\n\n${printJson(pendingBatch)}`)
+        subtaskLogger.verbose(`Sent the transactions`)
+        subtaskLogger.debug(`Successfully sent the following transactions:\n\n${printJson(successfulBatch)}`)
+        subtaskLogger.debug(`Failed to send the following transactions:\n\n${printJson(errorsBatch)}`)
+        subtaskLogger.debug(`Did not send the following transactions:\n\n${printJson(pendingBatch)}`)
 
         // Let the user know about the results of the batch
         logger.info(
@@ -148,6 +156,8 @@ const action: ActionType<TaskArgs> = async ({
             break
         }
     }
+
+    return [successfulTransactions, errors, transactionsToSign]
 }
 
 subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign and send a list of transactions using a local signer', action)

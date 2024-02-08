@@ -7,17 +7,17 @@ import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { subtask } from 'hardhat/config'
 import { ActionType } from 'hardhat/types'
 
-export interface TaskArgs {
+export interface SubtaskConfigureTaskArgs {
     graph: OAppOmniGraph
     configurator?: OAppConfigurator
     oappFactory?: OAppFactory
 }
 
-const action: ActionType<TaskArgs> = async ({
+const action: ActionType<SubtaskConfigureTaskArgs> = async ({
     graph,
     configurator = configureOApp,
     oappFactory = createOAppFactory(createConnectedContractFactory()),
-}: TaskArgs): Promise<OmniTransaction[]> => {
+}): Promise<OmniTransaction[]> => {
     const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
 
     logger.verbose(`Running with graph:\n\n${printJson(graph)}`)
