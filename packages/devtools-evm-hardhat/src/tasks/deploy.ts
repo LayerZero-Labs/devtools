@@ -202,6 +202,7 @@ const action: ActionType<TaskArgs> = async (
                     deletePreviousDeployments: reset,
                 })
 
+                // Now we do a little diff on what contracts had been changed
                 const contracts = Object.fromEntries(
                     Object.entries(deploymentsAfter).filter(
                         ([name]) => !isDeepEqual(deploymentsBefore[name], deploymentsAfter[name])
