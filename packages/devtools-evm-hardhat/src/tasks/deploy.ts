@@ -253,9 +253,4 @@ task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts', action)
         true
     )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addParam(
-        'ci',
-        'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
-        false,
-        types.boolean
-    )
+    .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')

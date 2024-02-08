@@ -192,9 +192,4 @@ const action: ActionType<TaskArgs> = async (
 task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addParam(
-        'ci',
-        'Continuous integration (non-interactive) mode. Will not ask for any input from the user',
-        false,
-        types.boolean
-    )
+    .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
