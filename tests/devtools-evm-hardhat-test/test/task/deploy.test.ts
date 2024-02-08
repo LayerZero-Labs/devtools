@@ -364,11 +364,7 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         })
 
         it('should deploy only the tags provided', async () => {
-            await hre.run(TASK_LZ_DEPLOY, {
-                ci: true,
-                tags: ['Thrower'],
-                reset: true,
-            })
+            await hre.run(TASK_LZ_DEPLOY, { ci: true, tags: ['Thrower'] })
 
             expect(runDeploySpy).toHaveBeenCalledTimes(3)
             expect(runDeploySpy).toHaveBeenNthCalledWith(1, ['Thrower'], expect.any(Object))
