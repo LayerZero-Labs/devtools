@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.1.5
+
+### Patch Changes
+
+- 5675416: Fix problems with missing deployments when running lz:deploy
+- b2670f8: Adding getEnforcedOptions task
+- cc62747: Rename EVM Hardhat Tasks
+- Updated dependencies [5675416]
+- Updated dependencies [b2670f8]
+- Updated dependencies [cc62747]
+  - @layerzerolabs/devtools-evm-hardhat@0.1.5
+  - @layerzerolabs/ua-devtools@0.1.6
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.0.10
+
+### Patch Changes
+
+- 5675416: Fix problems with missing deployments when running lz:deploy
+
 ## 0.0.9
 
 ### Patch Changes
