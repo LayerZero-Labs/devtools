@@ -80,5 +80,5 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 }
 
 task(TASK_LZ_OAPP_PEERS_GET, 'Outputs OApp peer connections', action)
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)

@@ -114,4 +114,4 @@ task(
     action
 )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', './layerzero.config.js', types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
