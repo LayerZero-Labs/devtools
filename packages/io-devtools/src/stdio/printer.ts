@@ -86,10 +86,10 @@ export const printRecord = <TRecord extends object>(
  * the property name.
  *
  * @param {Record<string | number, unknown>} records
- * @param {string[]} [header] - header row if provided (OPTIONAL)
- * @param center - center text if true (OPTIONAL)
- * @param keyColor - color of keys in table (DEFAULT: WHITE)
- * @param valueColor - color of values in table (DEFAULT: MAGENTA)
+ * @param {string[]} [headers] - header row if provided
+ * @param {boolean} [center] - center text if true
+ * @param {Preprocess} [keyColor=COLORS.DEFAULT_KEY] keyColor - color of keys in table
+ * @param {Preprocess} [valueColor=COLORS.DEFAULT_VALUE] valueColor - color of values in table
  * @returns {string}
  */
 export const printCrossTable = <TRecord extends Record<string | number, unknown>>(
@@ -108,16 +108,7 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
     const coloredHeaders = headers?.map((header) => keyColor(header)) ?? []
     table.push(coloredHeaders)
 
-    if (center) {
-        // Keep property column 'left'
-        const colAligns: HorizontalAlignment[] = ['left']
-        // Center-align for all other columns
-        for (let i = 0; i < records.length; i++) {
-            colAligns.push('center')
-        }
-        // Set the alignment for the table
-        table.options.colAligns = colAligns
-    }
+    table.options.colAligns = center ? (['left', ...records.map(() => 'center')] as HorizontalAlignment[]) : []
 
     // We'll gather all the properties of all the records in this array
     //
@@ -152,9 +143,9 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
  * Helper utility for printing out boolean values
  *
  * @param {boolean | null | undefined} value
- * @param nullColor
- * @param trueColor
- * @param falseColor
+ * @param {Preprocess} [nullColor=COLORS.NOT_APPLICABLE] nullColor
+ * @param {Preprocess} [trueColor=COLORS.TRUE] trueColor
+ * @param {Preprocess} [falseColor=COLORS.FALSE] falseColor
  * @returns {string}
  */
 export const printBoolean = (
