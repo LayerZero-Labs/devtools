@@ -69,9 +69,9 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
         console.log(
             printCrossTable(peerNetworkMatrix, ['from → to', ...points.map(({ networkName }) => networkName)], true)
         )
-        console.log(`${printBoolean(true)} - Connected`)
-        console.log(`${printBoolean(false)} - Not Connected`)
-        console.log(`${printBoolean(undefined)} - Ignored `)
+        console.log(` ${printBoolean(true)} - Connected`)
+        console.log(` ${printBoolean(false)} - Not Connected`)
+        console.log(` ${printBoolean(undefined)} - Ignored`)
 
         return peers
     } catch (error) {
