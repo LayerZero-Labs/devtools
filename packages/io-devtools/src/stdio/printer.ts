@@ -96,8 +96,8 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
     records: TRecord[],
     headers?: string[],
     center?: boolean,
-    keyColor: chalk.Chalk = COLORS.DEFAULT_KEY,
-    valueColor: chalk.Chalk = COLORS.DEFAULT_VALUE
+    keyColor: Preprocess = COLORS.DEFAULT_KEY,
+    valueColor: Preprocess = COLORS.DEFAULT_VALUE
 ): string => {
     const table = new Table({
         wordWrap: true,
@@ -159,9 +159,9 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
  */
 export const printBoolean = (
     value: boolean | null | undefined,
-    nullColor: chalk.Chalk = COLORS.NOT_APPLICABLE,
-    trueColor: chalk.Chalk = COLORS.TRUE,
-    falseColor: chalk.Chalk = COLORS.FALSE
+    nullColor: Preprocess = COLORS.NOT_APPLICABLE,
+    trueColor: Preprocess = COLORS.TRUE,
+    falseColor: Preprocess = COLORS.FALSE
 ): string => (value == null ? nullColor('∅') : value ? trueColor('✓') : falseColor('⤫'))
 
 export const printZodErrors = (error: ZodError<unknown>): string => {
