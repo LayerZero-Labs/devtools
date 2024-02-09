@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Utilities for LayerZero EVM projects",
   "repository": {
     "type": "git",

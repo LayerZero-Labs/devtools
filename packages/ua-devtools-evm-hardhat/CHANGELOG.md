@@ -1,6 +1,6 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
-## 1.0.0
+## 0.2.0
 
 ### Minor Changes
 
@@ -9,12 +9,12 @@
 ### Patch Changes
 
 - Updated dependencies [6e464f2]
-  - @layerzerolabs/protocol-devtools-evm@1.0.0
-  - @layerzerolabs/devtools-evm-hardhat@1.0.0
-  - @layerzerolabs/protocol-devtools@1.0.0
-  - @layerzerolabs/ua-devtools-evm@1.0.0
-  - @layerzerolabs/devtools-evm@1.0.0
-  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/protocol-devtools-evm@0.2.0
+  - @layerzerolabs/devtools-evm-hardhat@0.2.0
+  - @layerzerolabs/protocol-devtools@0.2.0
+  - @layerzerolabs/ua-devtools-evm@0.2.0
+  - @layerzerolabs/devtools-evm@0.2.0
+  - @layerzerolabs/ua-devtools@0.2.0
   - @layerzerolabs/devtools@0.2.0
 
 ## 0.1.6

@@ -277,7 +277,7 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -560,7 +560,7 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -696,7 +696,7 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -736,25 +736,25 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../omnicounter-devtools
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools-evm
       '@swc/core':
         specifier: ^1.4.0
@@ -854,7 +854,7 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -866,7 +866,7 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.1.3
@@ -1040,10 +1040,10 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -1061,22 +1061,22 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.1.3
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -1146,7 +1146,7 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.1.3
@@ -1201,7 +1201,7 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -1213,16 +1213,16 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools':
         specifier: ~0.1.3
         version: link:../test-devtools
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -1277,10 +1277,10 @@ importers:
         specifier: ~0.2.0
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -1295,16 +1295,16 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../ua-devtools-evm
       '@swc/core':
         specifier: ^1.4.0
@@ -1376,10 +1376,10 @@ importers:
         specifier: ~0.2.0
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -1406,16 +1406,16 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools':
         specifier: ~0.1.3
@@ -1496,7 +1496,7 @@ importers:
         specifier: ~0.2.0
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ~2.1.4
@@ -1583,10 +1583,10 @@ importers:
         specifier: ~0.2.0
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -1613,16 +1613,16 @@ importers:
         specifier: ~2.1.4
         version: 2.1.4
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.1.3
@@ -1631,13 +1631,13 @@ importers:
         specifier: ~0.1.4
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~1.0.0
+        specifier: ~0.2.0
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -6567,6 +6567,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
