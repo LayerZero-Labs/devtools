@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.0.13
+
+### Patch Changes
+
+- 71e355c: Update "@layerzerolabs/\*" dependencies
+
 ## 0.0.12
 
 ### Patch Changes

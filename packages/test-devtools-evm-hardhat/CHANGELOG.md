@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.1.4
+
+### Patch Changes
+
+- 71e355c: Update "@layerzerolabs/\*" dependencies
+
 ## 0.1.3
 
 ### Patch Changes

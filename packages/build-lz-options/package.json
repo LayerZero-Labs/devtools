@@ -1,6 +1,6 @@
 {
   "name": "build-lz-options",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Build LayerZero options with one command",
   "keywords": [
     "LayerZero",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@ethersproject/address": "~5.7.0",
-    "@layerzerolabs/devtools": "~0.2.0",
-    "@layerzerolabs/devtools-evm": "~0.2.0",
+    "@layerzerolabs/devtools": "~0.2.1",
+    "@layerzerolabs/devtools-evm": "~0.2.1",
     "@layerzerolabs/io-devtools": "~0.1.2",
     "@layerzerolabs/lz-v2-utilities": "~2.1.5",
     "@types/prompts": "^2.4.9",

@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.2.1
+
+### Patch Changes
+
+- 71e355c: Update "@layerzerolabs/\*" dependencies
+- Updated dependencies [71e355c]
+  - @layerzerolabs/devtools@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
