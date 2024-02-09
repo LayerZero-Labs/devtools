@@ -1,9 +1,8 @@
 import {
-    deployEndpoint,
+    deployAndSetupDefaultEndpointV2,
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
-    setupDefaultEndpoint,
-} from '../../__utils__/endpoint'
+} from '../../__utils__/endpointV2'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@layerzerolabs/ua-devtools-evm-hardhat'
@@ -21,8 +20,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     }
 
     beforeEach(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
         await deployOApp()
     })
 

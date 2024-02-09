@@ -12,35 +12,35 @@ import {
 } from '@layerzerolabs/devtools'
 import { type OmniContract, formatOmniContract } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { EndpointFactory, IEndpoint } from '@layerzerolabs/protocol-devtools'
+import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
         contract: OmniContract,
-        protected readonly endpointFactory: EndpointFactory
+        protected readonly endpointV2Factory: EndpointV2Factory
     ) {
         super(contract)
     }
 
-    async getEndpointSDK(): Promise<IEndpoint> {
+    async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
         let address: string
 
-        // First we'll need the endpoint address from the contract
+        // First we'll need the EndpointV2 address from the contract
         try {
             address = await this.contract.contract.endpoint()
         } catch (error) {
             // We'll just wrap the error in some nice words
-            throw new Error(`Failed to get endpoint address for OApp ${formatOmniContract(this.contract)}: ${error}`)
+            throw new Error(`Failed to get EndpointV2 address for OApp ${formatOmniContract(this.contract)}: ${error}`)
         }
 
-        // We'll also do an additional check to see whether the endpoint has been set to a non-zero address
+        // We'll also do an additional check to see whether the EndpointV2 has been set to a non-zero address
         if (isZero(address)) {
             throw new Error(
-                `Endpoint cannot be instantiated: Endpoint address has been set to a zero value for OApp ${formatOmniContract(
+                `EndpointV2 cannot be instantiated: EndpointV2 address has been set to a zero value for OApp ${formatOmniContract(
                     this.contract
                 )}`
             )
@@ -48,7 +48,7 @@ export class OApp extends OmniSDK implements IOApp {
 
         this.logger.debug(`Got EndpointV2 address: ${address}`)
 
-        return await this.endpointFactory({ address, eid: this.contract.eid })
+        return await this.endpointV2Factory({ address, eid: this.contract.eid })
     }
 
     async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
@@ -91,7 +91,7 @@ export class OApp extends OmniSDK implements IOApp {
     /**
      * Prepares the Executor config to be sent to the contract
      *
-     * @param {OAppEnforcedOptionParam[]}
+     * @param {OAppEnforcedOptionParam[]} oappEnforcedOptionParam
      * @returns {SerializedEnforcedOptions[]}
      */
     protected serializeExecutorOptions(

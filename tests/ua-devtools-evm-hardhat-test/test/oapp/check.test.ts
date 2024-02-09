@@ -4,7 +4,7 @@ import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deployOApp } from '../__utils__/oapp'
-import { deployEndpoint, setupDefaultEndpoint } from '../__utils__/endpoint'
+import { deployAndSetupDefaultEndpointV2 } from '../__utils__/endpointV2'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 describe('oapp/check', () => {
@@ -12,8 +12,7 @@ describe('oapp/check', () => {
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
 
     beforeAll(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
     })
 
     // This is the OApp config that we want to use against our contracts

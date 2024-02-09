@@ -11,7 +11,7 @@ import type {
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@/uln302/types'
 
-export interface IEndpoint extends IOmniSDK {
+export interface IEndpointV2 extends IOmniSDK {
     getUln302SDK(address: OmniAddress): Promise<IUln302>
 
     getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
@@ -206,15 +206,15 @@ export interface Timeout {
     expiry: bigint
 }
 
-export interface EndpointEdgeConfig {
+export interface EndpointV2EdgeConfig {
     defaultReceiveLibrary: OmniAddress
     defaultReceiveLibraryGracePeriod?: bigint
     defaultSendLibrary: OmniAddress
 }
 
-export type EndpointOmniGraph = OmniGraph<unknown, EndpointEdgeConfig>
+export type EndpointV2OmniGraph = OmniGraph<unknown, EndpointV2EdgeConfig>
 
-export type EndpointFactory<TEndpoint extends IEndpoint = IEndpoint, TOmniPoint = OmniPoint> = Factory<
+export type EndpointV2Factory<TEndpointV2 extends IEndpointV2 = IEndpointV2, TOmniPoint = OmniPoint> = Factory<
     [TOmniPoint],
-    TEndpoint
+    TEndpointV2
 >

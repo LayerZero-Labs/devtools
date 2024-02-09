@@ -1,5 +1,5 @@
 import { task } from 'hardhat/config'
-import { deployEndpoint, setupDefaultEndpoint } from '../test/__utils__/endpoint'
+import { deployAndSetupDefaultEndpointV2 } from '../test/__utils__/endpointV2'
 import { deployOApp } from '../test/__utils__/oapp'
 import { deployOmniCounter } from '../test/__utils__/omnicounter'
 
@@ -7,9 +7,7 @@ import { deployOmniCounter } from '../test/__utils__/omnicounter'
  * This will deploy and wire up the endpoints.
  */
 const deployAndWireEndpoint = async () => {
-    // intentionally serial
-    await deployEndpoint(true)
-    await setupDefaultEndpoint()
+    await deployAndSetupDefaultEndpointV2(true)
 }
 
 /**

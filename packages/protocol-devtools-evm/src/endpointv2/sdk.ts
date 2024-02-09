@@ -1,7 +1,7 @@
 import { MessageParams, MessagingFee, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import type {
-    IEndpoint,
+    IEndpointV2,
     IUln302,
     SetConfigParam,
     Uln302ExecutorConfig,
@@ -28,11 +28,11 @@ const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
 
 /**
- * EVM-specific SDK for EnvpointV2 contracts
+ * EVM-specific SDK for EndpointV2 contracts
  *
- * @implements {IEndpoint}
+ * @implements {IEndpointV2}
  */
-export class Endpoint extends OmniSDK implements IEndpoint {
+export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     constructor(
         contract: OmniContract,
         private readonly uln302Factory: Uln302Factory
@@ -45,7 +45,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
 
         assert(
             !isZero(address),
-            `Uln302 cannot be instantiated: Uln302 address cannot be a zero value for Endpoint ${formatOmniPoint(
+            `Uln302 cannot be instantiated: Uln302 address cannot be a zero value for EndpointV2 ${formatOmniPoint(
                 this.point
             )}`
         )
@@ -260,7 +260,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     /**
-     * @see {@link IEndpoint.hasAppExecutorConfig}
+     * @see {@link IEndpointV2.hasAppExecutorConfig}
      */
     async hasAppExecutorConfig(
         oapp: OmniAddress,
@@ -294,7 +294,7 @@ export class Endpoint extends OmniSDK implements IEndpoint {
     }
 
     /**
-     * @see {@link IEndpoint.hasAppUlnConfig}
+     * @see {@link IEndpointV2.hasAppUlnConfig}
      */
     async hasAppUlnConfig(oapp: string, uln: OmniAddress, eid: EndpointId, config: Uln302UlnConfig): Promise<boolean> {
         const ulnSdk = await this.getUln302SDK(uln)

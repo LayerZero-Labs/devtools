@@ -15,7 +15,7 @@ import {
     avaxSendUln2_Opt2,
     avaxReceiveUln2_Opt2,
     ethExecutor,
-} from './endpoint'
+} from './endpointV2'
 
 export type OAppTestConfig = {
     sendLibrary: string

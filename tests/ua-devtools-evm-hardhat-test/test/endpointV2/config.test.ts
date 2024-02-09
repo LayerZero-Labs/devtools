@@ -2,10 +2,10 @@ import 'hardhat'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployEndpoint, getDefaultUlnConfig, setupDefaultEndpoint } from '../__utils__/endpoint'
-import { createEndpointFactory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
+import { deployAndSetupDefaultEndpointV2, getDefaultUlnConfig } from '../__utils__/endpointV2'
+import { createEndpointV2Factory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
 
-describe('endpoint/config', () => {
+describe('EndpointV2/config', () => {
     const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
     const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
     const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
@@ -16,15 +16,14 @@ describe('endpoint/config', () => {
     const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
 
     beforeEach(async () => {
-        await deployEndpoint()
-        await setupDefaultEndpoint()
+        await deployAndSetupDefaultEndpointV2()
     })
 
-    describe('endpoint', () => {
+    describe('EndpointV2', () => {
         it('should have default libraries configured', async () => {
             // This is the required tooling we need to set up
             const connectedContractFactory = createConnectedContractFactory()
-            const sdkFactory = createEndpointFactory(connectedContractFactory)
+            const sdkFactory = createEndpointV2Factory(connectedContractFactory)
 
             // Now for the purposes of the test, we need to get coordinates of our contracts
             const ethEndpointPoint = omniContractToPoint(await connectedContractFactory(ethEndpoint))

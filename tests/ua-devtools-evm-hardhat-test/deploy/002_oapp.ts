@@ -3,7 +3,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 import assert from 'assert'
 
 /**
- * This deploy function will deploy and configure LayerZero endpoint
+ * This deploy function will deploy and configure EndpointV2 and DefaultOApp
  *
  * @param env `HardhatRuntimeEnvironment`
  */

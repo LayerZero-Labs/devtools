@@ -6,7 +6,7 @@ import {
     OmniGraphBuilderHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
-import { createEndpointFactory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
+import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { resolve } from 'path'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -21,8 +21,8 @@ export async function getSendConfig(
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
-    const endpointFactory = createEndpointFactory(contractFactory)
-    const localEndpointSDK = await endpointFactory({ eid: localEid, contractName: 'EndpointV2' })
+    const EndpointV2Factory = createEndpointV2Factory(contractFactory)
+    const localEndpointSDK = await EndpointV2Factory({ eid: localEid, contractName: 'EndpointV2' })
 
     let sendLibrary
     let localSendUlnSDK
@@ -87,8 +87,8 @@ export async function getReceiveConfig(
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
     const contractFactory = createConnectedContractFactory()
-    const endpointFactory = createEndpointFactory(contractFactory)
-    const localEndpointSDK = await endpointFactory({ eid: localEid, contractName: 'EndpointV2' })
+    const EndpointV2Factory = createEndpointV2Factory(contractFactory)
+    const localEndpointSDK = await EndpointV2Factory({ eid: localEid, contractName: 'EndpointV2' })
 
     let receiveLibrary
     let localReceiveUlnSDK
