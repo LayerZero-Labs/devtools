@@ -69,8 +69,8 @@ describe('oapp/config', () => {
         avaxPoint = omniContractToPoint(avaxContract)
         avaxOAppSdk = await oappSdkFactory(avaxPoint)
 
-        ethEndpointV2Sdk = await ethOAppSdk.getEndpointV2SDK()
-        avaxEndpointV2Sdk = await avaxOAppSdk.getEndpointV2SDK()
+        ethEndpointV2Sdk = await ethOAppSdk.getEndpointSDK()
+        avaxEndpointV2Sdk = await avaxOAppSdk.getEndpointSDK()
     })
 
     describe('configureOAppPeers', () => {

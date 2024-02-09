@@ -6,7 +6,7 @@ import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointV2BasedFactory, Factory, formatEid } from '@layerzerolabs/devtools'
+import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/devtools'
 import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
 import assert from 'assert'
 import memoize from 'micro-memoize'
@@ -120,7 +120,7 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
  */
 export const createGetHreByEid = (
     hre = getDefaultRuntimeEnvironment()
-): EndpointV2BasedFactory<HardhatRuntimeEnvironment> =>
+): EndpointBasedFactory<HardhatRuntimeEnvironment> =>
     pMemoize(async (eid: EndpointId) => getHreByNetworkName(getNetworkNameForEid(eid, hre)))
 
 /**

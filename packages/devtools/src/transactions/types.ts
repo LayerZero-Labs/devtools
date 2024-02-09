@@ -1,5 +1,5 @@
 import { OmniPoint } from '@/omnigraph/types'
-import { EndpointV2BasedFactory } from '@/types'
+import { EndpointBasedFactory } from '@/types'
 
 export interface OmniTransaction {
     point: OmniPoint
@@ -38,4 +38,4 @@ export interface OmniSigner<TResponse extends OmniTransactionResponse = OmniTran
     signAndSend: (transaction: OmniTransaction) => Promise<TResponse>
 }
 
-export type OmniSignerFactory<TSigner extends OmniSigner = OmniSigner> = EndpointV2BasedFactory<TSigner>
+export type OmniSignerFactory<TSigner extends OmniSigner = OmniSigner> = EndpointBasedFactory<TSigner>

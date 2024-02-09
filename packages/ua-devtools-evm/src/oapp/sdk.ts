@@ -24,7 +24,7 @@ export class OApp extends OmniSDK implements IOApp {
         super(contract)
     }
 
-    async getEndpointV2SDK(): Promise<IEndpointV2> {
+    async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
         let address: string

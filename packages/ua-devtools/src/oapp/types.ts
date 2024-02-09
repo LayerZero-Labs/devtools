@@ -14,7 +14,7 @@ import type {
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 export interface IOApp extends IOmniSDK {
-    getEndpointV2SDK(): Promise<IEndpointV2>
+    getEndpointSDK(): Promise<IEndpointV2>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>
