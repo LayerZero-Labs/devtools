@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.1.0
+
+### Minor Changes
+
+- 6e464f2: Specify EndpointV2 with the "V2" suffix wherever appropriate
+
 ## 0.0.12
 
 ### Patch Changes

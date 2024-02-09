@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- 6e464f2: Specify EndpointV2 with the "V2" suffix wherever appropriate
+
 ## 0.1.4
 
 ### Patch Changes

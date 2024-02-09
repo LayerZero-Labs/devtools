@@ -1,5 +1,22 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.0
+
+### Minor Changes
+
+- 6e464f2: Specify EndpointV2 with the "V2" suffix wherever appropriate
+
+### Patch Changes
+
+- Updated dependencies [6e464f2]
+  - @layerzerolabs/protocol-devtools-evm@0.2.0
+  - @layerzerolabs/devtools-evm-hardhat@0.2.0
+  - @layerzerolabs/protocol-devtools@0.2.0
+  - @layerzerolabs/ua-devtools-evm@0.2.0
+  - @layerzerolabs/devtools-evm@0.2.0
+  - @layerzerolabs/ua-devtools@0.2.0
+  - @layerzerolabs/devtools@0.2.0
+
 ## 0.1.6
 
 ### Patch Changes
