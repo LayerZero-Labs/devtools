@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.0.0
+
+### Minor Changes
+
+- 6e464f2: Specify EndpointV2 with the "V2" suffix wherever appropriate
+
+### Patch Changes
+
+- Updated dependencies [6e464f2]
+  - @layerzerolabs/devtools@0.2.0
+
 ## 0.1.3
 
 ### Patch Changes

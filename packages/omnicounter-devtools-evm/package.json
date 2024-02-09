@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/omnicounter-devtools-evm",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "Utilities for working with LayerZero OmniCounter contract",
   "repository": {
     "type": "git",
@@ -33,14 +33,14 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.1.4",
-    "@layerzerolabs/devtools-evm": "~0.1.3",
+    "@layerzerolabs/devtools": "~0.2.0",
+    "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/lz-definitions": "~2.1.4",
-    "@layerzerolabs/omnicounter-devtools": "~0.1.3",
-    "@layerzerolabs/protocol-devtools": "~0.1.3",
-    "@layerzerolabs/protocol-devtools-evm": "~0.1.3",
-    "@layerzerolabs/ua-devtools": "~0.1.5",
-    "@layerzerolabs/ua-devtools-evm": "~0.1.4",
+    "@layerzerolabs/omnicounter-devtools": "~1.0.0",
+    "@layerzerolabs/protocol-devtools": "~1.0.0",
+    "@layerzerolabs/protocol-devtools-evm": "~1.0.0",
+    "@layerzerolabs/ua-devtools": "~1.0.0",
+    "@layerzerolabs/ua-devtools-evm": "~1.0.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -52,14 +52,14 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.1.4",
-    "@layerzerolabs/devtools-evm": "~0.1.3",
+    "@layerzerolabs/devtools": "~0.2.0",
+    "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/lz-definitions": "~2.1.3",
-    "@layerzerolabs/omnicounter-devtools": "~0.1.3",
-    "@layerzerolabs/protocol-devtools": "~0.1.3",
-    "@layerzerolabs/protocol-devtools-evm": "~0.1.3",
-    "@layerzerolabs/ua-devtools": "~0.1.5",
-    "@layerzerolabs/ua-devtools-evm": "~0.1.4",
+    "@layerzerolabs/omnicounter-devtools": "~1.0.0",
+    "@layerzerolabs/protocol-devtools": "~1.0.0",
+    "@layerzerolabs/protocol-devtools-evm": "~1.0.0",
+    "@layerzerolabs/ua-devtools": "~1.0.0",
+    "@layerzerolabs/ua-devtools-evm": "~1.0.0",
     "zod": "^3.22.4"
   },
   "publishConfig": {
