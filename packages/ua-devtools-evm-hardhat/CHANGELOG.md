@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.1.6
+
+### Patch Changes
+
+- 700168d: Move sign & send logic into a subtask
+- Updated dependencies [700168d]
+  - @layerzerolabs/devtools-evm-hardhat@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes

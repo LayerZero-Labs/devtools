@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.13
+
+### Patch Changes
+
+- 6f61452: Add next steps summary to create-lz-oapp
+
 ## 0.1.12
 
 ### Patch Changes
