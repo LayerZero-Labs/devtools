@@ -158,7 +158,7 @@ By default, `jest` will run in [CI mode](https://jestjs.io/docs/cli#--ci). This 
 To update the snapshots, you will need to run the tests in local mode (so that the new snapshots are written to your filesystem) and pass the [`--updateSnapshot`](https://jestjs.io/docs/cli#--updatesnapshot) CLI flag to `jest`:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshot" pnpm test:local
+CI=1 DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshot" pnpm test:local
 ```
 
 If you encounter any errors coming from existing snapshots that have to do with output formatting (i.e. difference in colored/uncolored output), see the [troubleshooting section below](#troubleshooting--updating-snapshots)
