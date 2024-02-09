@@ -8,7 +8,6 @@ import {
 import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
 import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
-import { resolve } from 'path'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { Logger } from '@layerzerolabs/io-devtools'
 
@@ -166,7 +165,7 @@ export async function validateAndTransformOappConfig(oappConfigPath: string, log
     /**
      * At this point we have a correctly typed config in the hardhat format
      */
-    const hardhatGraph: OAppOmniGraphHardhat = await configLoader(resolve(oappConfigPath))
+    const hardhatGraph: OAppOmniGraphHardhat = await configLoader(oappConfigPath)
     /**
      * We'll also print out the whole config for verbose loggers
      */

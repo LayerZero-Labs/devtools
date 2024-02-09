@@ -64,10 +64,6 @@ services:
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
-      # Uncomment these lines if you run into issues with outdated snapshots
-      #
-      # See DEVELOPMENT.md for more details on this issue
-      # - ./tests:/app/tests
       # Hardhat has an issue with caching compilers inside a docker container,
       # failing with EACCES -13 error, pointing to a permissions issue with the cache folder.
       #

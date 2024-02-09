@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
-import { relative, resolve } from 'path'
+import { dirname, join, relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
@@ -25,9 +25,9 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     const expectTransaction = { data: expect.any(String), point: expectOmniPoint, description: expect.any(String) }
     const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expectTransaction }
 
-    const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
+    const CONFIGS_BASE_DIR = relative(cwd(), join(__dirname, '__data__', 'configs'))
     const configPathFixture = (fileName: string): string => {
-        const path = resolve(CONFIGS_BASE_DIR, fileName)
+        const path = join(CONFIGS_BASE_DIR, fileName)
 
         expect(isFile(path)).toBeTruthy()
 
@@ -52,15 +52,17 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         })
 
         it('should fail if the config file is not a file', async () => {
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: __dirname })).rejects.toMatchSnapshot()
+            const oappConfig = dirname(configPathFixture('invalid.config.empty.json'))
+
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
-            const readme = resolve(__dirname, '..', '..', '..', 'README.md')
+            const oappConfig = 'README.md'
 
-            expect(isFile(readme)).toBeTruthy()
+            expect(isFile(oappConfig)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: readme })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JSON file', async () => {
@@ -109,9 +111,9 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
-        it('should work with relative paths', async () => {
+        it('should work with absolute paths', async () => {
             const oappConfigAbsolute = configPathFixture('valid.config.empty.js')
-            const oappConfig = relative(cwd(), oappConfigAbsolute)
+            const oappConfig = resolve(oappConfigAbsolute)
 
             await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
 

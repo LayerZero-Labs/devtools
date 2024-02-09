@@ -158,10 +158,10 @@ By default, `jest` will run in [CI mode](https://jestjs.io/docs/cli#--ci). This 
 To update the snapshots, you will need to run the tests in local mode (so that the new snapshots are written to your filesystem) and pass the [`--updateSnapshot`](https://jestjs.io/docs/cli#--updatesnapshot) CLI flag to `jest`:
 
 ```bash
-DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshot" pnpm test:local
+CI=1 DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshot" pnpm test:local
 ```
 
-If you encounter any errors coming from existing snapshots that have to do with output formatting (i.e. difference in colored/uncolored output), see the [troubleshooting section below](#troubleshooting--updating-snapshots)
+If you encounter any errors coming from existing snapshots that have to do with output formatting (i.e. difference in colored/uncolored output), see the [troubleshooting section below](#troubleshooting--snapshots)
 
 #### Container logs
 
@@ -298,12 +298,12 @@ If you see this error, just follow turbo's lead and use:
 pnpm dev --concurrency 19
 ```
 
-#### Problems with snapshots
+#### Problems with snapshots <a id="troubleshooting--snapshots"></a>
 
 We use jest snapshots in a lot of places throughout the codebase. When an intentional change to the codebase is made and snapshots need to be updated, there are several ways of doing so:
 
 - Erase the original snapshot file and run the test. The snapshot will be recreated and the diff should only show your expected changes
-- Run the tests from within the affected package with `-u` flag. This will update the snapshots.
+- Run the tests from within the affected package with `--updateSnapshot` flag. This will update the snapshots.
 
 For some packages the snapshot output depends on environment variables and other factors. For example the `io-devtools` tests for printers have different output based on whether the active shell is`TTY` orwhether the `CI` environment variable is set and non-empty.
 
@@ -312,19 +312,6 @@ If you encounter errors when running these tests, just set the environment varia
 ```bash
 CI=1 pnpm test
 ```
-
-#### Problems with snapshot updating <a id="troubleshooting--updating-snapshots"></a>
-
-If snapshots are used in a test that relies on filesystem paths, the situation becomes a bit complex. In long term, we should steer away from this approach as it makes updating snapshots a bit cumbersome.
-
-Should you need to update snapshots for this kind of tests, follow these steps:
-
-- Go to `docker-compose.yaml` and find the `volumes` section of the `tests` service
-- Uncomment the line that says `./tests:/app/tests` - this will link the contain & host directories where the snapshots are being written
-- Run the tests and pass an `--updateSnapshot` flag to `jest`
-  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=\!./examples/* -- --updateSnapshots" pnpm test:ci` if you want to run all the tests
-  - `DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS="--filter=ua-devtools-evm-hardhat-test -- --updateSnapshot" pnpm test:ci` if you want to only run a specific test suite
-- Profit
 
 ### Problems compiling with `forge`
 
