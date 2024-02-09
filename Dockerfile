@@ -26,6 +26,7 @@ FROM node:$NODE_VERSION as base
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
+ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
 RUN apt-get update
@@ -54,7 +55,6 @@ RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
-
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
