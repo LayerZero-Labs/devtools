@@ -33,18 +33,18 @@ exports[`task lz:oapp:peers:get should show all chains are connected after runni
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ∅       │ ✓         │ ✓     │
+│ britney   │    ∅    │     ✓     │   ✓   │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ∅         │ ✓     │
+│ vengaboys │    ✓    │     ∅     │   ✓   │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ✓       │ ✓         │ ∅     │
-└───────────┴─────────┴───────────┴───────┘",
-  "
-	✓ - Connected
+│ tango     │    ✓    │     ✓     │   ∅   │
+└───────────┴─────────┴───────────┴───────┘
 ",
-  "	⤫ - Not Connected
+  "✓ - Connected
 ",
-  "	∅ - Ignored",
+  "⤫ - Not Connected
+",
+  "∅ - Ignored",
 ]
 `;
 
@@ -53,16 +53,16 @@ exports[`task lz:oapp:peers:get should show all chains are connected after runni
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │
 ├───────────┼─────────┼───────────┤
-│ britney   │ ∅       │ ✓         │
+│ britney   │    ∅    │     ✓     │
 ├───────────┼─────────┼───────────┤
-│ vengaboys │ ✓       │ ∅         │
-└───────────┴─────────┴───────────┘",
-  "
-	✓ - Connected
+│ vengaboys │    ✓    │     ∅     │
+└───────────┴─────────┴───────────┘
 ",
-  "	⤫ - Not Connected
+  "✓ - Connected
 ",
-  "	∅ - Ignored",
+  "⤫ - Not Connected
+",
+  "∅ - Ignored",
 ]
 `;
 
@@ -71,18 +71,18 @@ exports[`task lz:oapp:peers:get should show all chains are connected expect one 
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ∅       │ ✓         │ ✓     │
+│ britney   │    ∅    │     ✓     │   ✓   │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ∅         │ ✓     │
+│ vengaboys │    ✓    │     ∅     │   ✓   │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ∅       │ ✓         │ ∅     │
-└───────────┴─────────┴───────────┴───────┘",
-  "
-	✓ - Connected
+│ tango     │    ∅    │     ✓     │   ∅   │
+└───────────┴─────────┴───────────┴───────┘
 ",
-  "	⤫ - Not Connected
+  "✓ - Connected
 ",
-  "	∅ - Ignored",
+  "⤫ - Not Connected
+",
+  "∅ - Ignored",
 ]
 `;
 
@@ -91,18 +91,18 @@ exports[`task lz:oapp:peers:get should show all chains are not connected expect 
   "┌───────────┬─────────┬───────────┬───────┐
 │ from → to │ britney │ vengaboys │ tango │
 ├───────────┼─────────┼───────────┼───────┤
-│ britney   │ ∅       │ ∅         │ ∅     │
+│ britney   │    ∅    │     ∅     │   ∅   │
 ├───────────┼─────────┼───────────┼───────┤
-│ vengaboys │ ✓       │ ∅         │ ∅     │
+│ vengaboys │    ✓    │     ∅     │   ∅   │
 ├───────────┼─────────┼───────────┼───────┤
-│ tango     │ ∅       │ ∅         │ ∅     │
-└───────────┴─────────┴───────────┴───────┘",
-  "
-	✓ - Connected
+│ tango     │    ∅    │     ∅     │   ∅   │
+└───────────┴─────────┴───────────┴───────┘
 ",
-  "	⤫ - Not Connected
+  "✓ - Connected
 ",
-  "	∅ - Ignored",
+  "⤫ - Not Connected
+",
+  "∅ - Ignored",
 ]
 `;
 
@@ -255,15 +255,15 @@ exports[`task lz:oapp:peers:get should show no chains are connected with two net
   "┌───────────┬─────────┬───────────┐
 │ from → to │ britney │ vengaboys │
 ├───────────┼─────────┼───────────┤
-│ britney   │ ∅       │ ⤫         │
+│ britney   │    ∅    │     ⤫     │
 ├───────────┼─────────┼───────────┤
-│ vengaboys │ ⤫       │ ∅         │
-└───────────┴─────────┴───────────┘",
-  "
-	✓ - Connected
+│ vengaboys │    ⤫    │     ∅     │
+└───────────┴─────────┴───────────┘
 ",
-  "	⤫ - Not Connected
+  "✓ - Connected
 ",
-  "	∅ - Ignored",
+  "⤫ - Not Connected
+",
+  "∅ - Ignored",
 ]
 `;

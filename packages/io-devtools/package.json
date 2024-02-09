@@ -37,6 +37,7 @@
     "test": "jest --ci"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
     "cli-table3": "^0.6.3",
     "logform": "^2.6.0",
     "prompts": "^2.4.2",

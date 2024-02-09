@@ -1,5 +1,15 @@
-import Table, { HorizontalTableRow } from 'cli-table3'
+import Table, { HorizontalAlignment, HorizontalTableRow } from 'cli-table3'
+import chalk from 'chalk'
 import type { ZodError } from 'zod'
+
+type Preprocess = (value: string) => string
+export const COLORS = {
+    TRUE: chalk.rgb(0, 153, 0), // GREEN
+    FALSE: chalk.rgb(255, 0, 0), // RED
+    NOT_APPLICABLE: chalk.rgb(255, 128, 0), // ORANGE
+    DEFAULT_KEY: chalk.rgb(255, 255, 255), // WHITE
+    DEFAULT_VALUE: chalk.rgb(167, 125, 255), // MAGENTA
+}
 
 /**
  * Returns a JSON-serialized version of a string, replacing all `BigInt`
@@ -29,28 +39,41 @@ export const printJson = (obj: unknown, pretty = true): string =>
  * @see {@link printRecord}
  *
  * @param value
+ * @param keyColor - color of keys in table (DEFAULT: WHITE)
+ * @param valueColor - color of values in table (DEFAULT: MAGENTA)
  * @returns
  */
-const printValue = (value: unknown): string => {
+const printValue = (
+    value: unknown,
+    keyColor: Preprocess = COLORS.DEFAULT_KEY,
+    valueColor: Preprocess = COLORS.DEFAULT_VALUE
+): string => {
     switch (true) {
         case value == null:
         case value instanceof Date:
         case typeof value !== 'object':
-            return String(value)
+            return valueColor(String(value))
 
         default:
-            return printRecord(value)
+            return printRecord(value, undefined, keyColor, valueColor)
     }
 }
 
-export const printRecord = <TRecord extends object>(obj: TRecord, title?: string | number): string => {
+export const printRecord = <TRecord extends object>(
+    obj: TRecord,
+    title?: string | number,
+    keyColor: Preprocess = COLORS.DEFAULT_KEY,
+    valueColor: Preprocess = COLORS.DEFAULT_VALUE
+): string => {
     const table = new Table({
         wordWrap: true,
         wrapOnWordBoundary: false,
     })
 
     const headers: HorizontalTableRow[] = title == null ? [] : [[{ content: title, colSpan: 2 }]]
-    const rows = Object.entries(obj).map(([key, value]): HorizontalTableRow => [key, printValue(value)])
+    const rows = Object.entries(obj).map(
+        ([key, value]): HorizontalTableRow => [keyColor(key), printValue(value, keyColor, valueColor)]
+    )
 
     return table.push(...headers, ...rows), table.toString()
 }
@@ -63,19 +86,38 @@ export const printRecord = <TRecord extends object>(obj: TRecord, title?: string
  * the property name.
  *
  * @param {Record<string | number, unknown>} records
- * @param {string[]} [header]
+ * @param {string[]} [header] - header row if provided (OPTIONAL)
+ * @param center - center text if true (OPTIONAL)
+ * @param keyColor - color of keys in table (DEFAULT: WHITE)
+ * @param valueColor - color of values in table (DEFAULT: MAGENTA)
  * @returns {string}
  */
 export const printCrossTable = <TRecord extends Record<string | number, unknown>>(
     records: TRecord[],
-    header?: string[]
+    headers?: string[],
+    center?: boolean,
+    keyColor: chalk.Chalk = COLORS.DEFAULT_KEY,
+    valueColor: chalk.Chalk = COLORS.DEFAULT_VALUE
 ): string => {
     const table = new Table({
-        head: header ?? [],
         wordWrap: true,
         wrapOnWordBoundary: false,
-        style: { head: ['reset'] },
     })
+
+    // Set the colored headers if provided
+    const coloredHeaders = headers?.map((header) => keyColor(header)) ?? []
+    table.push(coloredHeaders)
+
+    if (center) {
+        // Keep property column 'left'
+        const colAligns: HorizontalAlignment[] = ['left']
+        // Center-align for all other columns
+        for (let i = 0; i < records.length; i++) {
+            colAligns.push('center')
+        }
+        // Set the alignment for the table
+        table.options.colAligns = colAligns
+    }
 
     // We'll gather all the properties of all the records in this array
     //
@@ -94,10 +136,10 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
         propertiesLeft.delete(property)
 
         // Get all the values and print them
-        const values = records.map((record) => record[property]).map(printValue)
+        const values = records.map((record) => printValue(record[property], keyColor, valueColor))
 
         // Create a row with the property label first
-        const row = [property, ...values]
+        const row = [keyColor(property), ...values]
 
         // And add to the table
         table.push(row)
@@ -110,9 +152,17 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
  * Helper utility for printing out boolean values
  *
  * @param {boolean | null | undefined} value
+ * @param nullColor
+ * @param trueColor
+ * @param falseColor
  * @returns {string}
  */
-export const printBoolean = (value: boolean | null | undefined): string => (value == null ? '∅' : value ? '✓' : '⤫')
+export const printBoolean = (
+    value: boolean | null | undefined,
+    nullColor: chalk.Chalk = COLORS.NOT_APPLICABLE,
+    trueColor: chalk.Chalk = COLORS.TRUE,
+    falseColor: chalk.Chalk = COLORS.FALSE
+): string => (value == null ? nullColor('∅') : value ? trueColor('✓') : falseColor('⤫'))
 
 export const printZodErrors = (error: ZodError<unknown>): string => {
     // Here we will go through all the errors and prefix them with the name
