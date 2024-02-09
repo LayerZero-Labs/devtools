@@ -10,7 +10,6 @@ import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 import { spawnSync } from 'child_process'
-import { cleanAllDeployments } from '../../__utils__/common'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -28,11 +27,6 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
         // We'll deploy the endpoint and save the deployments to the filesystem
         // since we want to be able to tun the task using spawnSync
         await deployAndSetupDefaultEndpointV2(true)
-    })
-
-    afterAll(async () => {
-        // We'll be good citizens and clean the endpoint deployments
-        await cleanAllDeployments()
     })
 
     it('should return default configurations with passed in networks param', async () => {

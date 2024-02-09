@@ -3,12 +3,7 @@
 import hre from 'hardhat'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
-import {
-    TASK_LZ_DEPLOY,
-    createClearDeployments,
-    createGetHreByEid,
-    getEidForNetworkName,
-} from '@layerzerolabs/devtools-evm-hardhat'
+import { TASK_LZ_DEPLOY } from '@layerzerolabs/devtools-evm-hardhat'
 import { promptForText, promptToContinue, promptToSelectMultiple } from '@layerzerolabs/io-devtools'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
@@ -49,13 +44,6 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
         promptToSelectMultipleMock.mockReset()
 
         runDeploySpy.mockClear()
-
-        const getHreByEid = createGetHreByEid(hre)
-        const clearDeployments = createClearDeployments(getHreByEid)
-
-        await clearDeployments(getEidForNetworkName('britney'))
-        await clearDeployments(getEidForNetworkName('tango'))
-        await clearDeployments(getEidForNetworkName('vengaboys'))
     })
 
     it('should be available', () => {

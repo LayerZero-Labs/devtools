@@ -1,3 +1,4 @@
+import * as jestExtended from 'jest-extended';
+
 // add all jest-extended matchers
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-expect.extend(require('jest-extended'));
+expect.extend(jestExtended);
