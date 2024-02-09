@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.9
+
+### Patch Changes
+
+- 71e355c: Update "@layerzerolabs/\*" dependencies
+
 ## 0.0.8
 
 ### Patch Changes
