@@ -1,11 +1,15 @@
 {
   "name": "LayerZero Devtools",
   "build": {
-    // Sets the run context to one level up instead of the .devcontainer folder.
     "context": "..",
-    // Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-    "dockerfile": "../Dockerfile"
+    "dockerfile": "../Dockerfile",
+    "target": "base"
   },
   "mounts": ["type=volume,target=${containerWorkspaceFolder}/node_modules"],
-  "runArgs": ["--env-file", ".env"]
+  "runArgs": ["--env-file", ".env"],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  }
 }
