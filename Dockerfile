@@ -30,6 +30,13 @@ ENV PATH "/root/.foundry/bin:$PATH"
 # Update the system packages
 RUN apt-get update
 
+# Add required packages
+RUN apt-get install --yes \
+    # expect is a utility that can be used to test CLI scripts
+    # 
+    # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
+    expect
+
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
