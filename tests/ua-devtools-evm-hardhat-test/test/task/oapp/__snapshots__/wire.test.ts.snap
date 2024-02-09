@@ -2,9 +2,9 @@
 
 exports[`task lz:oapp:wire with invalid configs should fail if the config file does not exist 1`] = `[Error: Unable to read config file './does-not-exist.js'. Check that the file exists and is readable to your terminal user]`;
 
-exports[`task lz:oapp:wire with invalid configs should fail if the config file is not a file 1`] = `[Error: Unable to read config file '/Users/jan/Workspace/devtools/tests/ua-devtools-evm-hardhat-test/test/task/oapp'. Check that the file exists and is readable to your terminal user]`;
+exports[`task lz:oapp:wire with invalid configs should fail if the config file is not a file 1`] = `[Error: Unable to read config file 'test/task/oapp/__data__/configs'. Check that the file exists and is readable to your terminal user]`;
 
-exports[`task lz:oapp:wire with invalid configs should fail if the config file is not a valid JSON or JS file 1`] = `[Error: Unable to read config file '/Users/jan/Workspace/devtools/tests/ua-devtools-evm-hardhat-test/README.md': SyntaxError: Unexpected token '<']`;
+exports[`task lz:oapp:wire with invalid configs should fail if the config file is not a valid JSON or JS file 1`] = `[Error: Unable to read config file 'README.md': SyntaxError: Unexpected token '<']`;
 
 exports[`task lz:oapp:wire with invalid configs should fail with a malformed JS file (001) 1`] = `
 [Error: Config from file 'test/task/oapp/__data__/configs/invalid.config.001.js' is malformed. Please fix the following errors:

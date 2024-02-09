@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
-import { join, relative, resolve } from 'path'
+import { dirname, join, relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
@@ -52,15 +52,17 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         })
 
         it('should fail if the config file is not a file', async () => {
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: __dirname })).rejects.toMatchSnapshot()
+            const oappConfig = dirname(configPathFixture('invalid.config.empty.json'))
+
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
-            const readme = join(__dirname, '..', '..', '..', 'README.md')
+            const oappConfig = 'README.md'
 
-            expect(isFile(readme)).toBeTruthy()
+            expect(isFile(oappConfig)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: readme })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JSON file', async () => {
