@@ -1,3 +1,11 @@
+import { rmSync } from 'fs';
+import jestExtended from 'jest-extended';
+
 // add all jest-extended matchers
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-expect.extend(require('jest-extended'));
+expect.extend(jestExtended);
+
+// clear all deployments before & after every test
+const clearDeployments = () => rmSync('./deployments', { force: true, recursive: true });
+
+beforeEach(clearDeployments);
+afterEach(clearDeployments);
