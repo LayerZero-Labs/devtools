@@ -1,0 +1,15 @@
+{
+  "name": "LayerZero Devtools",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile",
+    "target": "base"
+  },
+  "mounts": ["type=volume,target=${containerWorkspaceFolder}/node_modules"],
+  "runArgs": ["--env-file", ".env"],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": false
+    }
+  }
+}

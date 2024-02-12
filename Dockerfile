@@ -26,9 +26,17 @@ FROM node:$NODE_VERSION as base
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
+ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
 RUN apt-get update
+
+# Add required packages
+RUN apt-get install --yes \
+    # expect is a utility that can be used to test CLI scripts
+    # 
+    # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
+    expect
 
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
@@ -47,7 +55,6 @@ RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
-
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
