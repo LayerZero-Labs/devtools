@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.1.0
+
+### Minor Changes
+
+- 3fb1788: Support to warn if Verifier PreCrime option is specified
+
 ## 0.0.13
 
 ### Patch Changes
