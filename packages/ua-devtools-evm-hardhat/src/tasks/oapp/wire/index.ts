@@ -60,7 +60,6 @@ const action: ActionType<TaskArgs> = async (
             `There are ${transactions.length} transactions required to configure the OApp`
         )
     )
-
     // Now sign & send the transactions
     const signAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
         transactions,

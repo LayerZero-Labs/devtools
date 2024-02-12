@@ -1,13 +1,16 @@
 import 'hardhat/types/config'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ConnectSafeConfig } from '@gnosis.pm/safe-core-sdk'
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
         eid?: never
+        safeConfig?: never
     }
 
     interface HardhatNetworkConfig {
         eid?: never
+        safeConfig?: never
     }
 
     interface HttpNetworkUserConfig {
@@ -17,10 +20,15 @@ declare module 'hardhat/types/config' {
          * on this network.
          *
          * This allows you to use arbitrary network names while maintaining
-         * allowing you to easilty find deployment and artifact information
+         * allowing you to easily find deployment and artifact information
          * for LayerZero protocol contracts using the standard hardhat deploy methods
          */
         eid?: EndpointId
+
+        /**
+         * Optional gnosis safe config.
+         */
+        safeConfig?: SafeConfig
     }
 
     interface HttpNetworkConfig {
@@ -30,10 +38,19 @@ declare module 'hardhat/types/config' {
          * on this network.
          *
          * This allows you to use arbitrary network names while maintaining
-         * allowing you to easilty find deployment and artifact information
+         * allowing you to easily find deployment and artifact information
          * for LayerZero protocol contracts using the standard hardhat deploy methods
          */
         eid?: EndpointId
+
+        /**
+         * Optional gnosis safe config.
+         */
+        safeConfig?: SafeConfig
+    }
+    interface SafeConfig extends ConnectSafeConfig {
+        safeUrl: string
+        safeAddress: string // override to make ConnectSafeConfig.safeAddress mandatory
     }
 
     interface HardhatUserConfig {

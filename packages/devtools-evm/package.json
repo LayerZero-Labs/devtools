@@ -36,6 +36,11 @@
     "test": "jest --ci"
   },
   "dependencies": {
+    "@gnosis.pm/safe-core-sdk": "^3.2.0",
+    "@gnosis.pm/safe-core-sdk-types": "^1.0.0",
+    "@gnosis.pm/safe-ethers-lib": "^1.7.0",
+    "@gnosis.pm/safe-service-client": "1.1.1",
+    "ethers": "5.7.2",
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
