@@ -33,7 +33,7 @@ describe('verifyTarget', () => {
         await verifyTarget(
             {
                 paths: {
-                    deployments: path.resolve(__dirname, '__data__', 'deployments'),
+                    deployments: path.resolve(__dirname, '__data__', 'deploymentz'),
                 },
                 networks: {
                     fuji: {
@@ -74,7 +74,7 @@ describe('verifyTarget', () => {
         await verifyTarget(
             {
                 paths: {
-                    deployments: path.resolve(__dirname, '__data__', 'deployments'),
+                    deployments: path.resolve(__dirname, '__data__', 'deploymentz'),
                 },
                 networks: {
                     'renamed-testnet': {
