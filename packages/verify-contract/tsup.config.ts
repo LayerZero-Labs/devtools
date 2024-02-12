@@ -25,7 +25,7 @@ export default defineConfig([
                 resolveFrom: 'cwd',
                 assets: {
                     from: ['./node_modules/@solidity-parser/parser/dist/antlr/*'],
-                    to: ['./dist'],
+                    to: ['./dist/antlr'],
                 },
             }),
         ],
