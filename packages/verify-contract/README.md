@@ -9,11 +9,11 @@
 <!-- The badges section -->
 <p align="center">
   <!-- Shields.io NPM published package version -->
-  <a href="https://www.npmjs.com/package/create-lz-oapp"><img alt="NPM Version" src="https://img.shields.io/npm/v/create-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/verify-contract"><img alt="NPM Version" src="https://img.shields.io/npm/v/@layerzerolabs/verify-contract"/></a>
   <!-- Shields.io NPM downloads -->
-  <a href="https://www.npmjs.com/package/create-lz-oapp"><img alt="Downloads" src="https://img.shields.io/npm/dm/create-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/verify-contract"><img alt="Downloads" src="https://img.shields.io/npm/dm/@layerzerolabs/verify-contract"/></a>
   <!-- Shields.io license badge -->
-  <a href="https://www.npmjs.com/package/create-lz-oapp"><img alt="NPM License" src="https://img.shields.io/npm/l/create-lz-oapp"/></a>
+  <a href="https://www.npmjs.com/package/@layerzerolabs/verify-contract"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/verify-contract"/></a>
 </p>
 
 ## Installation
