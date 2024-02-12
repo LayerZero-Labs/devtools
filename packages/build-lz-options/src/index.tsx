@@ -71,6 +71,11 @@ new Command("build-lz-options")
         if (!lzReceiveOption || lzReceiveOption.gas < 1) {
           warning.push("Options do not specify any lzReceive gas.");
         }
+        if (options.hasVerifierPreCrimeOption()) {
+          warning.push(
+            "PreCrime Verifier Option is not supported by the default LayerZero DVN.  Please ensure the DVN you have specified supports this option.",
+          );
+        }
         output = options.toHex();
         break;
       }

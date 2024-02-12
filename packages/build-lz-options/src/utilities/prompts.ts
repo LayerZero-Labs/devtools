@@ -1,7 +1,7 @@
 import { EXECUTOR_OPTION_TYPE, OPTION_TYPES, WORKER_TYPE } from '@/config'
 import { OptionType1Summary, OptionType2Summary } from '@/types'
 import { makeBytes32 } from '@layerzerolabs/devtools'
-import { ExecutorOptionType, Options, WorkerId } from '@layerzerolabs/lz-v2-utilities'
+import { ExecutorOptionType, GasLimit, NativeDrop, Options, WorkerId } from '@layerzerolabs/lz-v2-utilities'
 import prompts, { PromptObject } from 'prompts'
 import { handlePromptState, promptToContinue } from '@layerzerolabs/io-devtools'
 
@@ -11,6 +11,67 @@ const MAX_UINT_128 = BigInt(2) ** BigInt(128) - BigInt(1)
 const MAX_UINT_16 = 0xffffffff
 // Default initial text number.
 const DEFAULT_INITIAL_TEXT_NUMBER = BigInt('200000')
+
+/**
+ * OptionsBuilder class to build Options.  This class is a facade around the @layerzerolabs/lz-v2-utilities Options
+ * builder, purpose built to support an interactive experience.
+ */
+class OptionsBuilder {
+    private constructor(
+        protected options: Options = Options.newOptions(),
+        protected specifiesVerifierPreCrimeIndex: boolean = false
+    ) {}
+
+    /**
+     * Factory method.
+     * @returns {OptionsBuilder}
+     */
+    public static newBuilder(): OptionsBuilder {
+        return new OptionsBuilder()
+    }
+
+    public addExecutorLzReceiveOption(gasLimit: GasLimit, nativeDrop: NativeDrop = 0): OptionsBuilder {
+        this.options = this.options.addExecutorLzReceiveOption(gasLimit, nativeDrop)
+        return this
+    }
+
+    public addExecutorNativeDropOption(nativeDrop: NativeDrop, receiver: string): OptionsBuilder {
+        this.options = this.options.addExecutorNativeDropOption(nativeDrop, receiver)
+        return this
+    }
+
+    public addExecutorComposeOption(index: number, gasLimit: GasLimit, nativeDrop: NativeDrop = 0): OptionsBuilder {
+        this.options = this.options.addExecutorComposeOption(index, gasLimit, nativeDrop)
+        return this
+    }
+
+    public addExecutorOrderedExecutionOption(): OptionsBuilder {
+        this.options = this.options.addExecutorOrderedExecutionOption()
+        return this
+    }
+
+    public addVerifierPrecrimeOption(verifierIdx: number): OptionsBuilder {
+        this.options = this.options.addVerifierPrecrimeOption(verifierIdx)
+        this.specifiesVerifierPreCrimeIndex = true
+        return this
+    }
+
+    /**
+     * Check if the options include Verifier PreCrime.
+     * @returns {boolean}
+     */
+    public hasVerifierPreCrimeOption(): boolean {
+        return this.specifiesVerifierPreCrimeIndex
+    }
+
+    public toHex(): string {
+        return this.options.toHex()
+    }
+
+    public decodeExecutorLzReceiveOption() {
+        return this.options.decodeExecutorLzReceiveOption()
+    }
+}
 
 /**
  * Helper function to validate a string as a bigint.
@@ -90,6 +151,11 @@ const promptForIndex: PromptObject<'index'> = {
     max: MAX_UINT_16,
 }
 
+const promptForVerifierPrecrimeIndex: PromptObject<'index'> = {
+    ...promptForIndex,
+    message: 'What verifier precrime index (uint16) do you want to use?',
+}
+
 const promptForNativeDropAddress: PromptObject<'nativeDropAddress'> = {
     onState: handlePromptState,
     type: 'text',
@@ -128,12 +194,12 @@ const promptForExecutorOptionType = () =>
         },
     ])
 
-const promptExecutorLzReceiveOption = async (options: Options): Promise<Options> => {
+const promptExecutorLzReceiveOption = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
     const { gasLimit, nativeDropAmount } = await prompts([promptForGasLimit, promptForNativeDropAmount])
     return options.addExecutorLzReceiveOption(gasLimit, nativeDropAmount)
 }
 
-const promptExecutorNativeDropOption = async (options: Options): Promise<Options> => {
+const promptExecutorNativeDropOption = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
     const { nativeDropAmount, nativeDropAddress } = await prompts([
         promptForNativeDropAmount,
         promptForNativeDropAddress,
@@ -141,7 +207,7 @@ const promptExecutorNativeDropOption = async (options: Options): Promise<Options
     return options.addExecutorNativeDropOption(nativeDropAmount, nativeDropAddress)
 }
 
-const promptExecutorComposeOption = async (options: Options): Promise<Options> => {
+const promptExecutorComposeOption = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
     const { index, gasLimit, nativeDropAmount } = await prompts([
         promptForIndex,
         promptForGasLimit,
@@ -151,15 +217,15 @@ const promptExecutorComposeOption = async (options: Options): Promise<Options> =
     return options.addExecutorComposeOption(index, gasLimit, nativeDropAmount)
 }
 
-const promptForExecutorOption = async (options: Options): Promise<Options> => {
+const promptForExecutorOption = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
     const executorOptionType = await promptForExecutorOptionType()
     switch (executorOptionType.type?.id) {
         case ExecutorOptionType.LZ_RECEIVE:
             return promptExecutorLzReceiveOption(options)
         case ExecutorOptionType.NATIVE_DROP:
-            return await promptExecutorNativeDropOption(options)
+            return promptExecutorNativeDropOption(options)
         case ExecutorOptionType.COMPOSE:
-            return await promptExecutorComposeOption(options)
+            return promptExecutorComposeOption(options)
         case ExecutorOptionType.ORDERED:
             return options.addExecutorOrderedExecutionOption()
         default:
@@ -168,8 +234,8 @@ const promptForExecutorOption = async (options: Options): Promise<Options> => {
     }
 }
 
-const promptVerifierPrecrimeOption = async (options: Options): Promise<Options> => {
-    const { index } = await prompts([promptForIndex])
+const promptVerifierPrecrimeOption = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
+    const { index } = await prompts([promptForVerifierPrecrimeIndex])
     return options.addVerifierPrecrimeOption(index)
 }
 
@@ -184,7 +250,7 @@ export const promptForOptionType1 = (): Promise<OptionType1Summary> => prompts(p
 export const promptForOptionType2 = (): Promise<OptionType2Summary> =>
     prompts([promptForGasLimit, promptForNativeDropAmount, promptForNativeDropAddress])
 
-const determineWorkerType = async (options: Options): Promise<Options> => {
+const determineWorkerType = async (options: OptionsBuilder): Promise<OptionsBuilder> => {
     const workerType = await promptForWorkerType()
     switch (workerType.type?.id) {
         case WorkerId.EXECUTOR:
@@ -200,8 +266,8 @@ const determineWorkerType = async (options: Options): Promise<Options> => {
 /**
  * Helper function to prompt for OptionType.TYPE_3.
  */
-export const promptForOptionType3 = async (): Promise<Options> => {
-    let options = Options.newOptions()
+export const promptForOptionType3 = async (): Promise<OptionsBuilder> => {
+    let options = OptionsBuilder.newBuilder()
     do {
         options = await determineWorkerType(options)
     } while (await promptToContinue('Would you like to add another option?'))

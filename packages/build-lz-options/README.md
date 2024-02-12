@@ -30,11 +30,16 @@ pnpm build-lz-options
 bunx build-lz-options
 ```
 
-## Warnings
+## :warning: Known Warnings
 
-### :warning: Warning: Options do not specify any lzReceive gas
+### Options do not specify any lzReceive gas
 
 The default LayerZero ExecutorFeeLib requires the sum of lzReceive gas for all Options for a message is a positive
 integer. This is classified as a warning and not an error, as `build-lz-options` tool is not aware of the context in
 which the generated Options are used. For example, Options may be combined elsewhere in the application, perhaps with
 OApp Enforced Options, and the result will have a positive lzReceive gas sum.
+
+### PreCrime Verifier Option is not supported by the default LayerZero DVN. Please ensure the DVN you have specified supports this option.
+
+The default LayerZero DVN does not currently support the Verifier PreCrime option. If you specify this option, please
+ensure that the DVN you are using supports PreCrime.
