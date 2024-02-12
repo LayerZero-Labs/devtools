@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.3
+
+### Patch Changes
+
+- e766c86: Adding in Default Colors to print outs
+
 ## 0.1.2
 
 ### Patch Changes

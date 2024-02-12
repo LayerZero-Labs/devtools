@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.1.2
+
+### Patch Changes
+
+- e766c86: Adding in Default Colors to print outs
+
 ## 0.1.1
 
 ### Patch Changes
