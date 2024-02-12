@@ -1,6 +1,7 @@
 .turbo
 dist
 node_modules
+*.exp
 *.md
 *.sol
 *.toml

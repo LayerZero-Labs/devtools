@@ -1,3 +1,4 @@
+*.exp
 *.log
 .eslintignore
 .prettierignore

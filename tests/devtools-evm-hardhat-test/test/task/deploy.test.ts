@@ -4,7 +4,15 @@ import hre from 'hardhat'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { DeploymentsManager } from 'hardhat-deploy/dist/src/DeploymentsManager'
 import { TASK_LZ_DEPLOY } from '@layerzerolabs/devtools-evm-hardhat'
-import { promptForText, promptToContinue, promptToSelectMultiple } from '@layerzerolabs/io-devtools'
+import {
+    isDirectory,
+    isFile,
+    promptForText,
+    promptToContinue,
+    promptToSelectMultiple,
+} from '@layerzerolabs/io-devtools'
+import { spawnSync } from 'child_process'
+import { join } from 'path'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -24,6 +32,77 @@ const runSpy = jest.spyOn(hre, 'run')
 const runDeploySpy = jest.spyOn(DeploymentsManager.prototype, 'runDeploy')
 
 describe(`task ${TASK_LZ_DEPLOY}`, () => {
+    describe('expectations', () => {
+        const EXPECTATIONS_DIRECTORY = join('test', 'task', 'deploy.test.expectations')
+        const expectationPath = (name: string) => join(EXPECTATIONS_DIRECTORY, `${name}.exp`)
+        const runExpect = (name: string) =>
+            spawnSync(expectationPath(name), {
+                encoding: 'utf8',
+                stdio: 'inherit',
+            })
+
+        const deploymentsPath = (networkName: string) => join('deployments', networkName)
+
+        const deploymentPath = (networkName: string) => (name: string) =>
+            join(deploymentsPath(networkName), `${name}.json`)
+
+        it('should deploy all tags on all networks', async () => {
+            const result = runExpect('deploy-all')
+
+            expect(result.status).toBe(0)
+
+            const britneyDeploymentPath = deploymentPath('britney')
+            const tangoDeploymentPath = deploymentPath('tango')
+            const vengaboysDeploymentPath = deploymentPath('vengaboys')
+
+            expect(isFile(britneyDeploymentPath('TestProxy'))).toBeTruthy()
+            expect(isFile(tangoDeploymentPath('TestProxy'))).toBeTruthy()
+            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeTruthy()
+
+            expect(isFile(britneyDeploymentPath('Thrower'))).toBeTruthy()
+            expect(isFile(tangoDeploymentPath('Thrower'))).toBeTruthy()
+            expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
+        })
+
+        it('should deploy all tags on vengaboys', async () => {
+            const result = runExpect('deploy-vengaboys')
+
+            expect(result.status).toBe(0)
+
+            const vengaboysDeploymentPath = deploymentPath('vengaboys')
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+
+            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeTruthy()
+            expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
+        })
+
+        it('should deploy single tag on vengaboys', async () => {
+            const result = runExpect('deploy-vengaboys-thrower')
+
+            expect(result.status).toBe(0)
+
+            const vengaboysDeploymentPath = deploymentPath('vengaboys')
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+
+            expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
+            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeFalsy()
+        })
+
+        it('should not deploy anything if tag does not exist', async () => {
+            const result = runExpect('deploy-all-missing-tag')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+    })
+
     const expectDeployment = expect.objectContaining({
         abi: expect.any(Array),
         args: expect.any(Array),
