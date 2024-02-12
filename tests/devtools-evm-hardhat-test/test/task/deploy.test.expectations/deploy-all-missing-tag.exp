@@ -27,7 +27,7 @@ if {$force_conservative} {
 }
 
 
-set timeout -1
+set timeout 60
 spawn npx hardhat lz:deploy
 match_max 100000
 
