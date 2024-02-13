@@ -114,6 +114,8 @@ exports[`omnigraph/format formatEid should format 234 correctly 1`] = `"BB1_MAIN
 
 exports[`omnigraph/format formatEid should format 235 correctly 1`] = `"RARIBLE_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 236 correctly 1`] = `"XAI_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10106 correctly 1`] = `"AVALANCHE_TESTNET"`;
@@ -413,6 +415,8 @@ exports[`omnigraph/format formatEid should format 30230 correctly 1`] = `"SHIMME
 exports[`omnigraph/format formatEid should format 30234 correctly 1`] = `"BB1_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30235 correctly 1`] = `"RARIBLE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30236 correctly 1`] = `"XAI_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 40102 correctly 1`] = `"BSC_V2_TESTNET"`;
 
