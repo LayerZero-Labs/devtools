@@ -87,3 +87,6 @@ RUN \
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Install dependencies (fail if we forgot to update the lockfile)
     pnpm install --recursive --offline --frozen-lockfile
+
+# We do this to avoid issues with native bindings not being built
+RUN pnpm rebuild --recursive
