@@ -23,7 +23,9 @@ describe('MyOFT Test', function () {
     // Before hook for setup that runs once before all tests in the block
     before(async function () {
         // Contract factory for our tested contract
-        MyOFT = await ethers.getContractFactory('OFTMock')
+        //
+        // We are using a derived contract that exposes a mint() function for testing purposes
+        MyOFT = await ethers.getContractFactory('MyOFTMock')
 
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
