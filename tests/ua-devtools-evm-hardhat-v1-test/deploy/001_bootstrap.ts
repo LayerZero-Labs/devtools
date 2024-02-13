@@ -17,7 +17,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     await deployments.delete('Endpoint')
     const endpointDeployment = await deployments.deploy('Endpoint', {
         from: deployer,
-        args: [network.config.eid, deployer],
+        args: [network.config.eid],
     })
 
     console.table({
