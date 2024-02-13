@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.1.2
+
+### Patch Changes
+
+- c8f1739: Fix OFT example tests
+
 ## 0.1.1
 
 ### Patch Changes
