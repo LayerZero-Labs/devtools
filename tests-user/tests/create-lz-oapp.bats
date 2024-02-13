@@ -94,7 +94,7 @@ teardown() {
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 
-    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
+    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network sepolia
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 }
 
@@ -110,7 +110,7 @@ teardown() {
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 
-    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network fuji
+    MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network sepolia
     assert_output --partial "insufficient funds for intrinsic transaction cost"
 }
 
