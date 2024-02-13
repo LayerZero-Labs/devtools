@@ -619,15 +619,9 @@ importers:
 
   packages/devtools-evm-hardhat-export-deployments:
     dependencies:
-      chalk:
-        specifier: ^4.1.2
-        version: 4.1.2
-      fp-ts:
-        specifier: ^2.16.2
-        version: 2.16.2
-      zod:
-        specifier: ^3.22.4
-        version: 3.22.4
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
     devDependencies:
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.2
@@ -644,18 +638,24 @@ importers:
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
+      chalk:
+        specifier: ^4.1.2
+        version: 4.1.2
       commander:
         specifier: ^11.1.0
         version: 11.1.0
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
       jest:
         specifier: ^29.6.2
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.1.6
-        version: 5.3.3
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
 
   packages/io-devtools:
     dependencies:
@@ -7162,7 +7162,7 @@ packages:
 
   /fp-ts@2.16.2:
     resolution: {integrity: sha512-CkqAjnIKFqvo3sCyoBTqgJvF+bHrSik584S9nhTjtBESLx26cbtVMR/T9a6ApChOcSDAaM3JydDmWDUn4EEXng==}
-    dev: false
+    dev: true
 
   /fs-extra@0.30.0:
     resolution: {integrity: sha512-UvSPKyhMn6LEd/WpUaV9C9t3zATuqoqfWc3QdPhPLb58prN9tqYPlPWi8Krxi44loBoUzlobqZ3+8tGpxxSzwA==}
