@@ -617,6 +617,46 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  packages/devtools-evm-hardhat-export-deployments:
+    dependencies:
+      chalk:
+        specifier: ^4.1.2
+        version: 4.1.2
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+    devDependencies:
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.2
+        version: link:../io-devtools
+      '@swc/core':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@swc/jest':
+        specifier: ^0.2.36
+        version: 0.2.36(@swc/core@1.4.0)
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      commander:
+        specifier: ^11.1.0
+        version: 11.1.0
+      jest:
+        specifier: ^29.6.2
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
+      tsup:
+        specifier: ~8.0.1
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.3.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.3.3
+
   packages/io-devtools:
     dependencies:
       chalk:
@@ -1340,7 +1380,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
-        specifier: ^8.0.1
+        specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
@@ -7119,6 +7159,10 @@ packages:
 
   /fp-ts@1.19.3:
     resolution: {integrity: sha512-H5KQDspykdHuztLTg+ajGN0Z2qUjcEf3Ybxc6hLt0k7/zPkn29XnKnxlBPyW2XIddWrGaJBzBl4VLYOtk39yZg==}
+
+  /fp-ts@2.16.2:
+    resolution: {integrity: sha512-CkqAjnIKFqvo3sCyoBTqgJvF+bHrSik584S9nhTjtBESLx26cbtVMR/T9a6ApChOcSDAaM3JydDmWDUn4EEXng==}
+    dev: false
 
   /fs-extra@0.30.0:
     resolution: {integrity: sha512-UvSPKyhMn6LEd/WpUaV9C9t3zATuqoqfWc3QdPhPLb58prN9tqYPlPWi8Krxi44loBoUzlobqZ3+8tGpxxSzwA==}
