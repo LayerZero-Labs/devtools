@@ -11,6 +11,7 @@ export const bscEndpoint = { eid: EndpointId.BSC_MAINNET, contractName: 'Endpoin
  */
 export const deployEndpoint = async (hre = getDefaultRuntimeEnvironment()) => {
     await hre.run(TASK_LZ_DEPLOY, {
+        ci: true,
         tags: ['Endpoint'],
     })
 }

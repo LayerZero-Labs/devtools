@@ -11,6 +11,7 @@ export const bscLzApp = { eid: EndpointId.BSC_MAINNET, contractName: 'DefaultLzA
  */
 export const deployLzApp = async (hre = getDefaultRuntimeEnvironment()) => {
     await hre.run(TASK_LZ_DEPLOY, {
+        ci: true,
         tags: ['DefaultLzApp'],
     })
 }
