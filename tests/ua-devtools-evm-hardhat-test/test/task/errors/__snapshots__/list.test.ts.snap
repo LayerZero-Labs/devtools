@@ -2453,6 +2453,21 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0xdec9f031",
     },
     {
+      "Contract": "DVNDecompressor",
+      "Error": "IncorrectDictAccess(uint256)",
+      "Signature": "0x50695b8f",
+    },
+    {
+      "Contract": "DecompressorExtension",
+      "Error": "IncorrectDictAccess(uint256)",
+      "Signature": "0x50695b8f",
+    },
+    {
+      "Contract": "ExecutorDecompressor",
+      "Error": "IncorrectDictAccess(uint256)",
+      "Signature": "0x50695b8f",
+    },
+    {
       "Contract": "IExecutor",
       "Error": "Worker_NotAllowed()",
       "Signature": "0x4ab5ebcd",
