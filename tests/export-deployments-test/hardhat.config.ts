@@ -33,7 +33,7 @@ const config: HardhatUserConfig = {
                 // We'll offset the initial index for the accounts by 10
                 // for every test project so that the project can use 10 accounts
                 // without getting any nonce race conditions with other test runs
-                initialIndex: 10,
+                initialIndex: 30,
             },
         },
         britney: {
@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
                 // We'll offset the initial index for the accounts by 10
                 // for every test project so that the project can use 10 accounts
                 // without getting any nonce race conditions with other test runs
-                initialIndex: 10,
+                initialIndex: 30,
             },
         },
         tango: {
@@ -67,7 +67,7 @@ const config: HardhatUserConfig = {
                 // We'll offset the initial index for the accounts by 10
                 // for every test project so that the project can use 10 accounts
                 // without getting any nonce race conditions with other test runs
-                initialIndex: 10,
+                initialIndex: 30,
             },
         },
     },
