@@ -33,7 +33,7 @@ describe('omnigraph/coordinates', () => {
 
                     // chai is not great with deep equality on class instances so we need to compare the result property by property
                     expect(omniContract.eid).toBe(eid)
-                    expect(omniContract.contract.address).toBe(address)
+                    expect(omniContract.contract.target).toBe(address)
                     expect(omniContract.contract.interface.fragments).toEqual([])
                 })
             )
