@@ -1,11 +1,13 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createSignerFactory } from '@/transactions/signer'
-import { JsonRpcProvider, JsonRpcSigner, Network } from 'ethers'
+import { JsonRpcProvider, ZeroAddress } from 'ethers'
 import { OmniSignerEVM } from '@layerzerolabs/devtools-evm'
+import { HardhatEthersProvider } from '@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider'
+import { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 
-// Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
-jest.spyOn(JsonRpcProvider.prototype, '_detectNetwork').mockResolvedValue(new Network('mock', BigInt(1)))
+// The signer will ask for eth_accounts so we want to return some addresses for that
+jest.spyOn(HardhatEthersProvider.prototype, 'send').mockResolvedValue([ZeroAddress])
 
 describe('signer', () => {
     describe('createSignerFactory', () => {
@@ -17,8 +19,8 @@ describe('signer', () => {
             const signer = await createSignerFactory()(EndpointId.ETHEREUM_V2_MAINNET)
 
             expect(signer).toBeInstanceOf(OmniSignerEVM)
-            expect(signer.signer).toBeInstanceOf(JsonRpcSigner)
-            expect(signer.signer.provider).toBeInstanceOf(JsonRpcProvider)
+            expect(signer.signer).toBeInstanceOf(HardhatEthersSigner)
+            expect(signer.signer.provider).toBeInstanceOf(HardhatEthersProvider)
 
             // Ethers has this ugly habit of importing files here and there,
             // firing RPC requests and all.
