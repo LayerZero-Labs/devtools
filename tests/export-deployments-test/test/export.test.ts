@@ -71,7 +71,7 @@ describe(`export`, () => {
             })
         })
 
-        it('should export all contracts from a ingle network', async () => {
+        it('should export all contracts from a single network', async () => {
             const result = runExpect('export-network')
 
             expect(result.status).toBe(0)
