@@ -6,7 +6,7 @@ exports[`events/parser parent no arg event 1`] = `
 [
   LogDescription {
     "args": [],
-    "eventFragment": EventFragment {
+    "fragment": EventFragment {
       "_isFragment": true,
       "anonymous": false,
       "constructor": [Function],
