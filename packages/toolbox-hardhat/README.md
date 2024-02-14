@@ -97,9 +97,58 @@ module.exports = config;
 
 To use the `lz:oapp:wire` task you must first fill out your `layerzero.config` file.
 
-To set up your config, you have to export an object from layerzero.config
+#### LayerZero configuration:
 
-This object can have entries like `contracts` and `connections`. For example:
+- `contracts`: A conditionally required array of LayerZero Contracts.
+
+  - `contract`: A LayerZero Contract, defines the `eid` along with either the `contractName` or the `address`.
+    - `eid`: A number, defines the [LayerZero Endpoint](https://docs.layerzero.network/contracts/endpoint-addresses) Identifier.
+    - `contractName`: The contract name. An _optional_ parameter. It should be provided only if the contract was deployed using hardhat-deploy and the deployment information is located in the deployments folder.
+    - `address`: The contract address. An _optional_ parameter. It should be provided if the contracts are not located in the deployments folder.<br><br>
+
+- `connections`: A conditionally required array of LayerZero Connections defining the configuration between two LayerZero contracts.
+  - `from`: A LayerZero Contract, defines the `from` contract. This sets the peer `from -> to`.
+  - `to`: A LayerZero Contract, defines the `to` contract. This sets the peer `from -> to`.
+    - _Note: Both `from` and `to` are optional; you are not required to connect all pathways. However, `from` and `to` must be defined to set `config`_.
+  - `config`: An _optional_ LayerZero Config, defines a configuration between two contracts.
+    - `sendLibrary`: An _optional_ string, defines the Send Library Address.
+    - `receiveLibraryConfig`: An _optional_ LayerZero Receive Library Config, defines the receiveLibrary and gracePeriod.
+      - `receiveLibrary`: A string, defines the Receive Library Address.
+      - `gracePeriod`: A number, defines Grace Period.
+    - `receiveLibraryTimeoutConfig`: An _optional_ LayerZero Receive Library Timeout Config, defines the lib and expiry.
+      - `lib`: A string, defines the Receive Library Address.
+      - `expiry`: A number, defines the block timestamp the Receive Library will expire.
+    - `sendConfig`: An _optional_ LayerZero Send Config, defines the executorConfig and ulnConfig.
+      - `executorConfig`: A LayerZero Executor Config, defines the maxMessageSize and executor.
+        - `maxMessageSize`: A number, defines the maxMessageSize.
+        - `executor`: A string, defines the Executor Address.
+      - `ulnConfig`: An _optional_ LayerZero ULN Config Object, defines the confirmations, optionalDVNThreshold, requiredDVNs, and optionalDVNs.
+        - `confirmations`: A number, defines the Block Confirmations.
+        - `optionalDVNThreshold`: A number, defines the Optional DVN Threshold.
+        - `requiredDVNs`: An array of strings, defines the Required DVNs.
+        - `optionalDVNs`: An array of strings, defines the Optional DVNs.
+    - `receiveConfig`: An _optional_ LayerZero Receive Config, defines the ulnConfig.
+      - `ulnConfig`: A LayerZero ULN Config Object, defines the confirmations, optionalDVNThreshold, requiredDVNs, and optionalDVNs.
+        - `confirmations`: A number, defines the Block Confirmations.
+        - `optionalDVNThreshold`: A number, defines the Optional DVN Threshold.
+        - `requiredDVNs`: A array of strings, defines the Required DVNs.
+        - `optionalDVNs`: A array of strings, defines the Optional DVNs.
+    - `enforcedOptions`: An _optional_ array of LayerZero Enforced Options, defines the msgType and optionType.
+      - `msgType`: A number, defines a user defined msgType for the OApp
+      - `optionType`: A number, defines type of Enforced Option.
+        - `LZ_RECEIVE`: Enforced option type 1
+          - `gas`: A number, defines gas for Option Type LZ_RECEIVE.
+          - `value`: A number, defines value for Option Type LZ_RECEIVE.
+        - `NATIVE_DROP`: Enforced option type 2
+          - `amount`: A number, defines amount for Option Type NATIVE_DROP.
+          - `receiver`: A string, defines the receiver address for Option Type NATIVE_DROP.
+        - `COMPOSE`: Enforced option type 3
+          - `index`: A number, defines the index of the composable calls for Option Type COMPOSE.
+          - `gas`: A number, defines gas for the composable calls for Option Type COMPOSE.
+          - `value`: A number, defines value for the composable calls for Option Type COMPOSE.
+        - `ORDERED`: Enforced option type 4
+
+#### For example:
 
 #### TypeScript (layerzero.config.ts)
 
@@ -132,7 +181,7 @@ const graph: OAppOmniGraphHardhat = {
   ],
   connections: [
     {
-      // Sets the peer `from -> to`
+      // Sets the peer `from -> to`. Optional, you do not have to connect all pathways.
       from: fujiContract,
       to: sepoliaContract,
       // Optional Configuration
@@ -192,14 +241,14 @@ const graph: OAppOmniGraphHardhat = {
             receiver: "0x0000000000000000000000000000000000000000",
           },
           {
-            msgType: 1,
+            msgType: 2,
             optionType: ExecutorOptionType.COMPOSE,
             index: 0,
             gas: 200000,
             value: 1,
           },
           {
-            msgType: 1,
+            msgType: 2,
             optionType: ExecutorOptionType.COMPOSE,
             index: 1,
             gas: 300000,
@@ -212,58 +261,6 @@ const graph: OAppOmniGraphHardhat = {
 };
 export default graph;
 ```
-
-## LayerZero configuration
-
-- The `sepoliaContract` and `fujiContract` are defining LayerZero OApp Contracts to wire.<br><br>
-
-- `contracts`: A conditionally required array of LayerZero Contracts.
-
-  - `contract`: A LayerZero Contract, defines the `eid` along with either the `contractName` or the `address`.
-    - `eid`: A number, defines the [LayerZero Endpoint](https://docs.layerzero.network/contracts/endpoint-addresses) Identifier.
-    - `contractName`: The contract name. An optional parameter. It should be provided only if the contract was deployed using hardhat-deploy and the deployment information is located in the deployments folder.
-    - `address`: The contract address. An optional parameter. It should be provided if the contracts are not located in the deployments folder.<br><br>
-
-- `connections`: A conditionally required array of LayerZero Connections defining the configuration between two LayerZero contracts.
-  - `from`: A LayerZero Contract, defines the `from` contract. This sets the peer `from -> to`
-  - `to`: A LayerZero Contract, defines the `to` contract. This sets the peer `from -> to`
-  - `config`: An optional LayerZero Config, defines a configuration between two contracts.
-    - `sendLibrary`: An optional string, defines the Send Library Address.
-    - `receiveLibraryConfig`: An optional LayerZero Receive Library Config, defines the receiveLibrary and gracePeriod.
-      - `receiveLibrary`: A string, defines the Receive Library Address.
-      - `gracePeriod`: A number, defines Grace Period.
-    - `receiveLibraryTimeoutConfig`: An optional LayerZero Receive Library Timeout Config, defines the lib and expiry.
-      - `lib`: A string, defines the Receive Library Address.
-      - `expiry`: A number, defines the block timestamp the Receive Library will expire.
-    - `sendConfig`: An optional LayerZero Send Config, defines the executorConfig and ulnConfig.
-      - `executorConfig`: A LayerZero Executor Config, defines the maxMessageSize and executor.
-        - `maxMessageSize`: A number, defines the maxMessageSize.
-        - `executor`: A string, defines the Executor Address.
-      - `ulnConfig`: An optional LayerZero ULN Config Object, defines the confirmations, optionalDVNThreshold, requiredDVNs, and optionalDVNs.
-        - `confirmations`: A number, defines the Block Confirmations.
-        - `optionalDVNThreshold`: A number, defines the Optional DVN Threshold.
-        - `requiredDVNs`: An array of strings, defines the Required DVNs.
-        - `optionalDVNs`: An array of strings, defines the Optional DVNs.
-    - `receiveConfig`: An optional LayerZero Receive Config, defines the ulnConfig.
-      - `ulnConfig`: A LayerZero ULN Config Object, defines the confirmations, optionalDVNThreshold, requiredDVNs, and optionalDVNs.
-        - `confirmations`: A number, defines the Block Confirmations.
-        - `optionalDVNThreshold`: A number, defines the Optional DVN Threshold.
-        - `requiredDVNs`: A array of strings, defines the Required DVNs.
-        - `optionalDVNs`: A array of strings, defines the Optional DVNs.
-    - `enforcedOptions`: An optional array of LayerZero Enforced Options, defines the msgType and optionType.
-      - `msgType`: A number, defines a user defined msgType for the OApp
-      - `optionType`: A number, defines type of Enforced Option.
-        - `LZ_RECEIVE`: Enforced option type 1
-          - `gas`: A number, defines gas for Option Type LZ_RECEIVE.
-          - `value`: A number, defines value for Option Type LZ_RECEIVE.
-        - `NATIVE_DROP`: Enforced option type 2
-          - `amount`: A number, defines amount for Option Type NATIVE_DROP.
-          - `receiver`: A string, defines the receiver address for Option Type NATIVE_DROP.
-        - `COMPOSE`: Enforced option type 3
-          - `index`: A number, defines the index of the composable calls for Option Type COMPOSE.
-          - `gas`: A number, defines gas for the composable calls for Option Type COMPOSE.
-          - `value`: A number, defines value for the composable calls for Option Type COMPOSE.
-        - `ORDERED`: Enforced option type 4
 
 ## Usage
 
