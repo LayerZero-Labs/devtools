@@ -25,4 +25,4 @@ export const parseLogs = (receipt: TransactionReceipt, contract: Contract): LogD
  * @returns {LogDescription[]}
  */
 export const parseLogsWithName = (receipt: TransactionReceipt, contract: Contract, name: string): LogDescription[] =>
-    parseLogs(receipt, contract).filter((log) => log.fragment.name === name)
+    parseLogs(receipt, contract).filter((log) => log.name === name)
