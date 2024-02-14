@@ -35,9 +35,15 @@ export const EXAMPLES: Example[] = [
 
 export const PACKAGE_MANAGERS: PackageManager[] = [
     {
+        id: 'pnpm',
+        executable: 'pnpm',
+        args: ['install'],
+        label: 'pnpm (recommended)',
+    },
+    {
         id: 'npm',
         executable: 'npm',
-        args: ['install', '--legacy-peer-deps'],
+        args: ['install'],
         label: 'npm',
     },
     {
@@ -45,12 +51,6 @@ export const PACKAGE_MANAGERS: PackageManager[] = [
         executable: 'yarn',
         args: ['install'],
         label: 'yarn',
-    },
-    {
-        id: 'pnpm',
-        executable: 'pnpm',
-        args: ['install'],
-        label: 'pnpm (recommended)',
     },
     {
         id: 'bun',

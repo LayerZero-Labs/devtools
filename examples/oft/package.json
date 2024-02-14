@@ -16,6 +16,10 @@
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
+  "resolutions": {
+    "@openzeppelin/contracts": "^5.0.1",
+    "ethers": "^5.7.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/eslint-config-next": "^2.1.7",
@@ -51,5 +55,15 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "overrides": {
+    "@openzeppelin/contracts": "^5.0.1",
+    "ethers": "^5.7.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@openzeppelin/contracts": "^5.0.1",
+      "ethers": "^5.7.2"
+    }
   }
 }
