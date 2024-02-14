@@ -217,7 +217,7 @@ describe('oapp/sdk', () => {
                             description: `Setting peer for eid ${peerEid} (${formatEid(peerEid)}) to address ${makeBytes32(peerAddress)}`,
                             point: {
                                 eid: omniContract.eid,
-                                address: omniContract.contract.address,
+                                address: omniContract.contract.target,
                             },
                         })
                     }
