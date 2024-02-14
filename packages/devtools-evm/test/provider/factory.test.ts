@@ -44,7 +44,9 @@ describe('provider/factory', () => {
                     const provider = await providerFactory(eid)
 
                     expect(provider).toBeInstanceOf(JsonRpcProvider)
-                    expect(provider.connection.url).toBe(url)
+                    expect(provider._getConnection().toString()).toBe(
+                        `<FetchRequest method="GET" url="${url}" headers={"accept-encoding":"gzip"} body=null>`
+                    )
                 })
             )
         })
@@ -57,7 +59,9 @@ describe('provider/factory', () => {
                     const provider = await providerFactory(eid)
 
                     expect(provider).toBeInstanceOf(JsonRpcProvider)
-                    expect(provider.connection.url).toBe(url)
+                    expect(provider._getConnection().toString()).toBe(
+                        `<FetchRequest method="GET" url="${url}" headers={"accept-encoding":"gzip"} body=null>`
+                    )
                 })
             )
         })

@@ -1,7 +1,7 @@
 /// <reference types="jest-extended" />
 
 import fc from 'fast-check'
-import { AddressZero } from 'ethers'
+import { ZeroAddress } from 'ethers'
 import { evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { addChecksum, makeZeroAddress } from '@/address'
 import { isAddress } from 'ethers'
@@ -11,7 +11,7 @@ describe('address', () => {
         it('should return address with non-zero address', () => {
             fc.assert(
                 fc.property(evmAddressArbitrary, (address) => {
-                    fc.pre(address !== AddressZero)
+                    fc.pre(address !== ZeroAddress)
 
                     expect(makeZeroAddress(address)).toBe(address)
                 })
@@ -19,15 +19,15 @@ describe('address', () => {
         })
 
         it('should return undefined with zero address', () => {
-            expect(makeZeroAddress(AddressZero)).toBe(AddressZero)
+            expect(makeZeroAddress(ZeroAddress)).toBe(ZeroAddress)
         })
 
         it('should return undefined with undefined', () => {
-            expect(makeZeroAddress(undefined)).toBe(AddressZero)
+            expect(makeZeroAddress(undefined)).toBe(ZeroAddress)
         })
 
         it('should return undefined with null', () => {
-            expect(makeZeroAddress(null)).toBe(AddressZero)
+            expect(makeZeroAddress(null)).toBe(ZeroAddress)
         })
     })
 
