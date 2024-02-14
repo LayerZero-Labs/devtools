@@ -20,7 +20,7 @@ export class LzApp extends OmniSDK implements ILzApp {
         this.logger.debug(`Getting trusted remote for eid ${eid} (${formatEid(eid)})`)
 
         try {
-            return ignoreZero(await this.contract.contract.getTrustedRemoteAddress(eid))
+            return ignoreZero(await this.contract.contract.getTrustedRemoteAddress?.(eid))
         } catch (error: unknown) {
             const parsedError = parseGenericError(error)
 
