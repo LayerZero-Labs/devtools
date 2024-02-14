@@ -1,11 +1,11 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createSignerFactory } from '@/transactions/signer'
-import { JsonRpcProvider, JsonRpcSigner } from 'ethers'
+import { JsonRpcProvider, JsonRpcSigner, Network } from 'ethers'
 import { OmniSignerEVM } from '@layerzerolabs/devtools-evm'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
-jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chainId: 1, name: 'mock' })
+jest.spyOn(JsonRpcProvider.prototype, '_detectNetwork').mockResolvedValue(new Network('mock', BigInt(1)))
 
 describe('signer', () => {
     describe('createSignerFactory', () => {
