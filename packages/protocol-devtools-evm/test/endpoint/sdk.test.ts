@@ -10,7 +10,7 @@ describe('endpoint/sdk', () => {
         const zeroishAddressArbitrary = fc.constantFrom(makeZeroAddress(), makeBytes32())
         const jestFunctionArbitrary = fc.anything().map(() => jest.fn())
         const oappOmniContractArbitrary = fc.record({
-            address: evmAddressArbitrary,
+            target: evmAddressArbitrary,
             peers: jestFunctionArbitrary,
             endpoint: jestFunctionArbitrary,
             interface: fc.record({
