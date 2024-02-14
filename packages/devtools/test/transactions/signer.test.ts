@@ -26,12 +26,12 @@ describe('transactions/signer', () => {
                 fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
                     // We'll prepare some mock objects for this test
                     // to mock the transaction responses and receipts
-                    const receipt = { transactionHash: '0x0' }
+                    const receipt = { hash: '0x0' }
 
                     // Our successful wait will produce a receipt
                     const successfulWait = jest.fn().mockResolvedValue(receipt)
                     const successfulResponse: OmniTransactionResponse = {
-                        transactionHash: '0x0',
+                        hash: '0x0',
                         wait: successfulWait,
                     }
 
@@ -66,19 +66,19 @@ describe('transactions/signer', () => {
                         // We'll prepare some mock objects for this test
                         // to mock the transaction responses and receipts
                         const error = new Error('Failed transaction')
-                        const receipt = { transactionHash: '0x0' }
+                        const receipt = { hash: '0x0' }
 
                         // Our successful wait will produce a receipt
                         const successfulWait = jest.fn().mockResolvedValue(receipt)
                         const successfulResponse: OmniTransactionResponse = {
-                            transactionHash: '0x0',
+                            hash: '0x0',
                             wait: successfulWait,
                         }
 
                         // Our unsuccessful wait will throw an error
                         const unsuccessfulWait = jest.fn().mockRejectedValue(error)
                         const unsuccessfulResponse: OmniTransactionResponse = {
-                            transactionHash: '0x0',
+                            hash: '0x0',
                             wait: unsuccessfulWait,
                         }
 
@@ -127,10 +127,10 @@ describe('transactions/signer', () => {
                         // We'll prepare some mock objects for this test
                         // to mock the transaction responses and receipts
                         const error = new Error('Failed transaction')
-                        const receipt = { transactionHash: '0x0' }
+                        const receipt = { hash: '0x0' }
                         const successfulWait = jest.fn().mockResolvedValue(receipt)
                         const successfulResponse: OmniTransactionResponse = {
-                            transactionHash: '0x0',
+                            hash: '0x0',
                             wait: successfulWait,
                         }
 
@@ -174,12 +174,12 @@ describe('transactions/signer', () => {
                 fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
                     // We'll prepare some mock objects for this test
                     // to mock the transaction responses and receipts
-                    const receipt = { transactionHash: '0x0' }
+                    const receipt = { hash: '0x0' }
 
                     // Our successful wait will produce a receipt
                     const successfulWait = jest.fn().mockResolvedValue(receipt)
                     const successfulResponse: OmniTransactionResponse = {
-                        transactionHash: '0x0',
+                        hash: '0x0',
                         wait: successfulWait,
                     }
 

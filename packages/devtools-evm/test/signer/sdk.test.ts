@@ -68,7 +68,7 @@ describe('signer/sdk', () => {
                         const signer = { sendTransaction } as unknown as Signer
                         const omniSigner = new OmniSignerEVM(transaction.point.eid, signer)
 
-                        expect(await omniSigner.signAndSend(transaction)).toEqual({ transactionHash: hash })
+                        expect(await omniSigner.signAndSend(transaction)).toEqual({ hash })
                         expect(sendTransaction).toHaveBeenCalledWith({
                             to: transaction.point.address,
                             data: transaction.data,
