@@ -1,5 +1,12 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.5
+
+### Patch Changes
+
+- e0f41b5: Add LzApp SDK & trusted remote configurator
+- e0f41b5: Update @layerzero-labs dependencies
+
 ## 0.0.4
 
 ### Patch Changes

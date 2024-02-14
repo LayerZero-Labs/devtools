@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.15
+
+### Patch Changes
+
+- c6e3b45: Lock versions of ethers & @openzeppelin/contracts in packages; Put pnpm first in create-lz-oapp
+
 ## 0.1.14
 
 ### Patch Changes

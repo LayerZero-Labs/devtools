@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.2.3
+
+### Patch Changes
+
+- e0f41b5: Update @layerzero-labs dependencies
+
 ## 0.2.2
 
 ### Patch Changes

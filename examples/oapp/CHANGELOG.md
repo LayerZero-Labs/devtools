@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.1.3
+
+### Patch Changes
+
+- c6e3b45: Lock versions of ethers & @openzeppelin/contracts in packages; Put pnpm first in create-lz-oapp
+
 ## 0.1.2
 
 ### Patch Changes

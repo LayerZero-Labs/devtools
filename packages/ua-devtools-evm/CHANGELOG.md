@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.2.3
+
+### Patch Changes
+
+- e0f41b5: Add LzApp SDK & trusted remote configurator
+- e0f41b5: Update @layerzero-labs dependencies
+- Updated dependencies [e0f41b5]
+- Updated dependencies [e0f41b5]
+  - @layerzerolabs/ua-devtools@0.2.3
+  - @layerzerolabs/protocol-devtools-evm@0.2.3
+  - @layerzerolabs/protocol-devtools@0.2.3
+  - @layerzerolabs/devtools-evm@0.2.3
+  - @layerzerolabs/devtools@0.2.3
+
 ## 0.2.2
 
 ### Patch Changes

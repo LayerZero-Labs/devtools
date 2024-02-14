@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.1.6
+
+### Patch Changes
+
+- e0f41b5: Update @layerzero-labs dependencies
+
 ## 0.1.5
 
 ### Patch Changes
