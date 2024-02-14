@@ -97,6 +97,10 @@ module.exports = config;
 
 To use the `lz:oapp:wire` task you must first fill out your `layerzero.config` file.
 
+To set up your config, you have to export an object from layerzero.config
+
+This object can have entries like `contracts` and `connections`. For example:
+
 #### TypeScript (layerzero.config.ts)
 
 ```typescript
@@ -128,18 +132,24 @@ const graph: OAppOmniGraphHardhat = {
   ],
   connections: [
     {
+      // Sets the peer `from -> to`
       from: fujiContract,
       to: sepoliaContract,
+      // Optional Configuration
       config: {
+        // Optional Send Library
         sendLibrary: "0x0000000000000000000000000000000000000000",
+        // Optional Receive Library Configuration
         receiveLibraryConfig: {
           receiveLibrary: "0x0000000000000000000000000000000000000000",
           gracePeriod: BigInt(0),
         },
+        // Optional Receive Library Timeout Configuration
         receiveLibraryTimeoutConfig: {
           lib: "0x0000000000000000000000000000000000000000",
           expiry: BigInt(0),
         },
+        // Optional Send Configuration
         sendConfig: {
           executorConfig: {
             maxMessageSize: 99,
@@ -155,6 +165,7 @@ const graph: OAppOmniGraphHardhat = {
             optionalDVNThreshold: 2,
           },
         },
+        // Optional Receive Configuration
         receiveConfig: {
           ulnConfig: {
             confirmations: BigInt(42),
@@ -166,6 +177,7 @@ const graph: OAppOmniGraphHardhat = {
             optionalDVNThreshold: 2,
           },
         },
+        // Optional Enforced Options Configuration
         enforcedOptions: [
           {
             msgType: 1,
@@ -201,6 +213,8 @@ const graph: OAppOmniGraphHardhat = {
 export default graph;
 ```
 
+## LayerZero configuration
+
 - The `sepoliaContract` and `fujiContract` are defining LayerZero OApp Contracts to wire.<br><br>
 
 - `contracts`: A conditionally required array of LayerZero Contracts.
@@ -211,8 +225,8 @@ export default graph;
     - `address`: The contract address. An optional parameter. It should be provided if the contracts are not located in the deployments folder.<br><br>
 
 - `connections`: A conditionally required array of LayerZero Connections defining the configuration between two LayerZero contracts.
-  - `from`: A LayerZero Contract, defines the `from` contract.
-  - `to`: A LayerZero Contract, defines the `to` contract.
+  - `from`: A LayerZero Contract, defines the `from` contract. This sets the peer `from -> to`
+  - `to`: A LayerZero Contract, defines the `to` contract. This sets the peer `from -> to`
   - `config`: An optional LayerZero Config, defines a configuration between two contracts.
     - `sendLibrary`: An optional string, defines the Send Library Address.
     - `receiveLibraryConfig`: An optional LayerZero Receive Library Config, defines the receiveLibrary and gracePeriod.
