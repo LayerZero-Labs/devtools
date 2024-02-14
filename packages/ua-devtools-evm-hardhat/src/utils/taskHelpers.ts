@@ -10,6 +10,7 @@ import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/p
 import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { Logger } from '@layerzerolabs/io-devtools'
+import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 
 export async function getSendConfig(
     localNetworkName: string,
@@ -34,9 +35,7 @@ export async function getSendConfig(
         /**
          * need to return sendLibrary == AddressZero when custom config is using default send library
          */
-        sendLibrary = isDefault
-            ? '0x0000000000000000000000000000000000000000'
-            : await localEndpointSDK.getSendLibrary(address, remoteEid)
+        sendLibrary = isDefault ? makeZeroAddress() : await localEndpointSDK.getSendLibrary(address, remoteEid)
         if (sendLibrary == null) throw new Error(`Custom Send Library not set from ${localEid} to ${remoteEid}`)
         /**
          * if using a custom send library use it to retrieve the custom ULN
@@ -103,7 +102,7 @@ export async function getReceiveConfig(
         /**
          * need to return receiveLibrary == AddressZero when custom config is using default receive library
          */
-        receiveLibrary = isDefault ? '0x0000000000000000000000000000000000000000' : receiveAppLibrary
+        receiveLibrary = isDefault ? makeZeroAddress() : receiveAppLibrary
         if (receiveLibrary == null) throw new Error(`Custom Receive Library not set from ${localEid} to ${remoteEid}`)
         if (receiveAppLibrary == null)
             throw new Error(`Default Receive Library not set from ${localEid} to ${remoteEid}`)

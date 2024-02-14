@@ -2,7 +2,7 @@ import { addChecksum, type OmniContract } from '@layerzerolabs/devtools-evm'
 import { Uln302 } from '@/uln302'
 import { EndpointId, MainnetV2EndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from 'ethers'
-import { AddressZero } from 'ethers'
+import { ZeroAddress } from 'ethers'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import artifact from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
 import fc from 'fast-check'
@@ -15,14 +15,14 @@ describe('uln302/sdk', () => {
     const dvnsArbitrary = fc.array(evmAddressArbitrary, { minLength: 2 })
 
     beforeEach(async () => {
-        contract = new Contract(AddressZero, artifact.abi)
+        contract = new Contract(ZeroAddress, artifact.abi)
         omniContract = { eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET, contract }
         ulnSdk = new Uln302(omniContract)
     })
 
     describe('encodeExecutorConfig', () => {
         it('should encode and decode the Uln302ExecutorConfig', async () => {
-            const executorConfig: Uln302ExecutorConfig = { executor: AddressZero, maxMessageSize: 100 }
+            const executorConfig: Uln302ExecutorConfig = { executor: ZeroAddress, maxMessageSize: 100 }
             const executorConfigEncoded = ulnSdk.encodeExecutorConfig(executorConfig)
             expect(executorConfigEncoded).toMatchSnapshot()
 
@@ -36,8 +36,8 @@ describe('uln302/sdk', () => {
             const ulnConfig: Uln302UlnConfig = {
                 confirmations: BigInt(100),
                 optionalDVNThreshold: 1,
-                optionalDVNs: [AddressZero, AddressZero],
-                requiredDVNs: [AddressZero],
+                optionalDVNs: [ZeroAddress, ZeroAddress],
+                requiredDVNs: [ZeroAddress],
             }
             const ulnConfigEncoded = ulnSdk.encodeUlnConfig(ulnConfig)
             expect(ulnConfigEncoded).toMatchSnapshot()
