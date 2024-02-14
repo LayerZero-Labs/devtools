@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import 'hardhat'
-import { JsonRpcProvider } from 'ethers'
+import { BaseContract, JsonRpcProvider } from 'ethers'
 import { createConnectedContractFactory } from '@/omnigraph'
 import { pointArbitrary } from '@layerzerolabs/test-devtools'
 import { Contract } from 'ethers'
@@ -49,7 +49,7 @@ describe('omnigraph/contracts', () => {
 
                     expect(connectedOmniContract.eid).toBe(point.eid)
                     expect(connectedOmniContract.contract).not.toBe(contract)
-                    expect(connectedOmniContract.contract).toBeInstanceOf(Contract)
+                    expect(connectedOmniContract.contract).toBeInstanceOf(BaseContract)
                     expect(connectedOmniContract.contract.provider).toBe(provider)
                 })
             )
