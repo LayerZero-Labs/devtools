@@ -1,5 +1,5 @@
 import fc from 'fast-check'
-import { AddressZero } from 'ethers'
+import { AddressZero } from '@ethersproject/constants'
 import { evmAddressArbitrary, evmBytes32Arbitrary } from '@layerzerolabs/test-devtools'
 import { areBytes32Equal, compareBytes32Ascending, ignoreZero, isZero, makeBytes32 } from '@/common/bytes'
 

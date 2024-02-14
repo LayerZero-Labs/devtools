@@ -50,7 +50,7 @@ export const createSignAndSend =
                 logger.debug(`Signing ${ordinal} transaction`)
                 const response = await signer.signAndSend(transaction)
 
-                logger.debug(`Signed ${ordinal} transaction, got hash ${response.hash}`)
+                logger.debug(`Signed ${ordinal} transaction, got hash ${response.transactionHash}`)
 
                 const receipt = await response.wait()
                 logger.debug(`Finished ${ordinal} transaction`)
