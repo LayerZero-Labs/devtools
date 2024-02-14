@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.2.2
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.2.1
 
 ### Patch Changes

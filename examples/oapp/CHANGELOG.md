@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.1.2
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.1.1
 
 ### Patch Changes

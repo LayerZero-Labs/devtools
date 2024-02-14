@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.10
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.0.9
 
 ### Patch Changes

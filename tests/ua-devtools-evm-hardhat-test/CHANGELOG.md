@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.1.3
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.6
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+- Updated dependencies [491b5a5]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.1.5
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.2.3
+  - @layerzerolabs/protocol-devtools-evm@0.2.2
+  - @layerzerolabs/devtools-evm-hardhat@0.2.2
+  - @layerzerolabs/protocol-devtools@0.2.2
+  - @layerzerolabs/ua-devtools-evm@0.2.2
+  - @layerzerolabs/devtools-evm@0.2.2
+  - @layerzerolabs/ua-devtools@0.2.2
+  - @layerzerolabs/devtools@0.2.2
+
 ## 0.1.5
 
 ### Patch Changes
