@@ -16,7 +16,7 @@ export interface OmniTransactionWithResponse<TReceipt extends OmniTransactionRec
 
 export interface OmniTransactionWithReceipt<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
     transaction: OmniTransaction
-    receipt: TReceipt
+    receipt: TReceipt | null
 }
 
 export interface OmniTransactionWithError<TError = unknown> {
@@ -25,12 +25,12 @@ export interface OmniTransactionWithError<TError = unknown> {
 }
 
 export interface OmniTransactionResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
-    transactionHash: string
-    wait: (confirmations?: number) => Promise<TReceipt>
+    hash: string
+    wait: (confirmations?: number) => Promise<TReceipt | null>
 }
 
 export interface OmniTransactionReceipt {
-    transactionHash: string
+    hash: string
 }
 
 export interface OmniSigner<TResponse extends OmniTransactionResponse = OmniTransactionResponse> {
