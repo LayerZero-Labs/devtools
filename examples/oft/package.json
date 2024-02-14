@@ -16,6 +16,9 @@
     "test:forge": "forge test",
     "test:hardhat": "hardhat test"
   },
+  "resolutions": {
+    "ethers": "~6.11.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/eslint-config-next": "^2.1.7",
@@ -51,5 +54,13 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "overrides": {
+    "ethers": "~6.11.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ethers": "~6.11.0"
+    }
   }
 }
