@@ -22,7 +22,7 @@ const handleSigTerm = () => process.exit(0)
 process.on('SIGINT', handleSigTerm)
 process.on('SIGTERM', handleSigTerm)
 
-new Command('devtools-evm-hardhat-export-deployments')
+new Command('export-deployments')
     .version(version)
     .addOption(deploymentsPathOption)
     .addOption(outputPathOption)

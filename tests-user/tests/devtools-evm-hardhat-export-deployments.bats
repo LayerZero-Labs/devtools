@@ -7,9 +7,9 @@ setup() {
 }
 
 @test "should output version" {
-    npx --yes @layerzerolabs/devtools-evm-hardhat-export-deployments --version
+    npx --yes @layerzerolabs/export-deployments --version
 }
 
 @test "should output help" {
-    npx --yes @layerzerolabs/devtools-evm-hardhat-export-deployments --help
+    npx --yes @layerzerolabs/export-deployments --help
 }

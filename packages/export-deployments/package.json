@@ -1,11 +1,11 @@
 {
-  "name": "@layerzerolabs/devtools-evm-hardhat-export-deployments",
+  "name": "@layerzerolabs/export-deployments",
   "version": "0.0.1",
   "description": "Export hardhat deploy deployments file into typescript",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/devtools-evm-hardhat-export-deployments"
+    "directory": "packages/export-deployments"
   },
   "license": "MIT",
   "main": "./dist/index.js",
