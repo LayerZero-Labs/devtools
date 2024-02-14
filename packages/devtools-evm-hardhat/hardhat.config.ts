@@ -12,17 +12,17 @@ import './src/tasks'
 const config: HardhatUserConfig = {
     networks: {
         'ethereum-mainnet': {
-            url: 'no:///way',
+            url: 'http://nonexistent.url',
             saveDeployments: false,
             eid: EndpointId.ETHEREUM_V2_MAINNET,
         },
         'ethereum-testnet': {
-            url: 'no:///way',
+            url: 'http://nonexistent.url',
             saveDeployments: false,
             eid: EndpointId.ETHEREUM_TESTNET,
         },
         'bsc-testnet': {
-            url: 'no:///way',
+            url: 'http://nonexistent.url',
             saveDeployments: false,
             accounts: {
                 mnemonic: 'test test test test test test test test test test test junk',

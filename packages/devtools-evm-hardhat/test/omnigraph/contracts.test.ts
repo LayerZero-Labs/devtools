@@ -50,7 +50,7 @@ describe('omnigraph/contracts', () => {
                     expect(connectedOmniContract.eid).toBe(point.eid)
                     expect(connectedOmniContract.contract).not.toBe(contract)
                     expect(connectedOmniContract.contract).toBeInstanceOf(BaseContract)
-                    expect(connectedOmniContract.contract.provider).toBe(provider)
+                    expect(connectedOmniContract.contract.runner).toBe(provider)
                 })
             )
         })

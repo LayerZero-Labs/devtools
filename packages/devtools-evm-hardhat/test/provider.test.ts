@@ -29,12 +29,7 @@ describe('provider', () => {
             jest.spyOn(env.network.provider, 'send').mockResolvedValue('sent')
             expect(await provider.send('dummy', [])).toBe('sent')
 
-            // Ethers has this ugly habit of importing files here and there,
-            // firing RPC requests and all.
-            //
-            // If we don't wait for the provider to be ready, jest will complain
-            // about requests being made after test teardown
-            await provider.ready
+            provider.destroy()
         })
     })
 })
