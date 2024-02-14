@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.2.2
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+- Updated dependencies [491b5a5]
+  - @layerzerolabs/protocol-devtools-evm@0.2.2
+  - @layerzerolabs/omnicounter-devtools@0.2.2
+  - @layerzerolabs/protocol-devtools@0.2.2
+  - @layerzerolabs/ua-devtools-evm@0.2.2
+  - @layerzerolabs/devtools-evm@0.2.2
+  - @layerzerolabs/ua-devtools@0.2.2
+  - @layerzerolabs/devtools@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes

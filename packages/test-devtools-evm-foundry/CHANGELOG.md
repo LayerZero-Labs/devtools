@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.1.5
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.1.4
 
 ### Patch Changes

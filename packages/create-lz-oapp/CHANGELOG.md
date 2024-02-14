@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.14
+
+### Patch Changes
+
+- 491b5a5: Upgrade contract Dependencies to 2.1.7
+
 ## 0.1.13
 
 ### Patch Changes
