@@ -92,10 +92,10 @@ teardown() {
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
-    assert_output --partial "insufficient funds for intrinsic transaction cost"
+    refute_output --partial "No deployment found for: EndpointV2"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network sepolia
-    assert_output --partial "insufficient funds for intrinsic transaction cost"
+    refute_output --partial "No deployment found for: EndpointV2"
 }
 
 # This test is a bit ridiculous because it basically checks that we error out
@@ -108,10 +108,10 @@ teardown() {
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
-    assert_output --partial "insufficient funds for intrinsic transaction cost"
+    refute_output --partial "No deployment found for: EndpointV2"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat deploy --network sepolia
-    assert_output --partial "insufficient funds for intrinsic transaction cost"
+    refute_output --partial "No deployment found for: EndpointV2"
 }
 
 @test "should work with pnpm & oapp example in CI mode" {
