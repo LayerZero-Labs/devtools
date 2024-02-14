@@ -22,7 +22,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
         )
 
-        const config = await this.contract.contract.getUlnConfig(makeZeroAddress(address), eid)
+        const config = await this.contract.contract.getUlnConfig?.(makeZeroAddress(address), eid)
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
@@ -42,7 +42,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             this.logger.warn(`Passed in OApp address is zero. This will request the default config.`)
         }
 
-        const config = await this.contract.contract.getAppUlnConfig(makeZeroAddress(address), eid)
+        const config = await this.contract.contract.getAppUlnConfig?.(makeZeroAddress(address), eid)
         // Now we convert the ethers-specific object into the common structure
         //
         // Here we need to spread the config into an object because what ethers gives us
@@ -69,7 +69,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @see {@link IUln302.getExecutorConfig}
      */
     async getExecutorConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302ExecutorConfig> {
-        const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
+        const config = await this.contract.contract.getExecutorConfig?.(makeZeroAddress(address), eid)
 
         // Now we convert the ethers-specific object into the common structure
         //
@@ -82,7 +82,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @see {@link IUln302.getAppExecutorConfig}
      */
     async getAppExecutorConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302ExecutorConfig> {
-        const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
+        const config = await this.contract.contract.executorConfigs?.(makeZeroAddress(address), eid)
 
         if (isZero(address)) {
             this.logger.warn(`Passed in OApp address is zero. This will request the default config.`)

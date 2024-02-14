@@ -31,7 +31,7 @@ export class OApp extends OmniSDK implements IOApp {
 
         // First we'll need the EndpointV2 address from the contract
         try {
-            address = await this.contract.contract.endpoint()
+            address = await this.contract.contract.endpoint?.()
         } catch (error) {
             // We'll just wrap the error in some nice words
             throw new Error(`Failed to get EndpointV2 address for OApp ${formatOmniContract(this.contract)}: ${error}`)
@@ -54,7 +54,7 @@ export class OApp extends OmniSDK implements IOApp {
     async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
         this.logger.debug(`Getting peer for eid ${eid} (${formatEid(eid)})`)
 
-        return ignoreZero(await this.contract.contract.peers(eid))
+        return ignoreZero(await this.contract.contract.peers?.(eid))
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
@@ -74,7 +74,7 @@ export class OApp extends OmniSDK implements IOApp {
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
         this.logger.debug(`Getting enforced options for eid ${eid} (${formatEid(eid)}) and message type ${msgType}`)
 
-        return await this.contract.contract.enforcedOptions(eid, msgType)
+        return await this.contract.contract.enforcedOptions?.(eid, msgType)
     }
 
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {

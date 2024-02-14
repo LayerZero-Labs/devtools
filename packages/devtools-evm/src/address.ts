@@ -1,6 +1,5 @@
 import type { OmniAddress } from '@layerzerolabs/devtools'
-import { getAddress } from '@ethersproject/address'
-import { AddressZero } from '@ethersproject/constants'
+import { getAddress, ZeroAddress } from 'ethers'
 
 /**
  * Turns a nullish value (`null` or `undefined`) into a zero address
@@ -9,7 +8,7 @@ import { AddressZero } from '@ethersproject/constants'
  *
  * @returns {string}
  */
-export const makeZeroAddress = (address?: OmniAddress | null | undefined): string => address ?? AddressZero
+export const makeZeroAddress = (address?: OmniAddress | null | undefined): string => address ?? ZeroAddress
 
 /**
  * Applies checksum to a given address, lower/uppercasing

@@ -9,7 +9,7 @@ export const createSignerFactory = (
 ): OmniSignerFactory<OmniSignerEVM> => {
     return pMemoize(async (eid) => {
         const provider = await providerFactory(eid)
-        const signer = provider.getSigner(addressOrIndex)
+        const signer = await provider.getSigner(addressOrIndex)
 
         return new OmniSignerEVM(eid, signer)
     })

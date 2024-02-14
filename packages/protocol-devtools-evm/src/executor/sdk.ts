@@ -7,7 +7,7 @@ import { ExecutorDstConfigSchema } from './schema'
 
 export class Executor extends OmniSDK implements IExecutor {
     async getDstConfig(eid: EndpointId): Promise<ExecutorDstConfig> {
-        const config = await this.contract.contract.dstConfig(eid)
+        const config = await this.contract.contract.dstConfig?.(eid)
 
         // Now we convert the ethers-specific object into the common structure
         //

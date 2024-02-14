@@ -17,11 +17,6 @@
     "test": "jest --ci"
   },
   "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/abstract-provider": "^5.7.0",
-    "@ethersproject/abstract-signer": "^5.7.0",
-    "@ethersproject/contracts": "^5.7.0",
-    "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.2.2",
     "@layerzerolabs/devtools-evm": "~0.2.2",
     "@layerzerolabs/lz-definitions": "~2.1.7",
@@ -31,7 +26,7 @@
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
-    "ethers": "^5.7.2",
+    "ethers": "~6.11.0",
     "fast-check": "^3.15.1",
     "hardhat": "^2.19.5",
     "jest": "^29.7.0",

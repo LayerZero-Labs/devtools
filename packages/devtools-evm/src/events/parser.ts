@@ -1,6 +1,4 @@
-import type { LogDescription } from '@ethersproject/abi'
-import { Contract } from '@ethersproject/contracts'
-import { TransactionReceipt } from '@ethersproject/providers'
+import type { Contract, LogDescription, TransactionReceipt } from 'ethers'
 
 /**
  * Parse event logs.
@@ -10,12 +8,10 @@ import { TransactionReceipt } from '@ethersproject/providers'
  */
 export const parseLogs = (receipt: TransactionReceipt, contract: Contract): LogDescription[] =>
     receipt.logs?.flatMap((log) => {
-        // ensure the log address matches the contract address
-        if (log.address !== contract.address) {
-            return []
-        }
         try {
-            return [contract.interface.parseLog(log)]
+            const parsed = contract.interface.parseLog(log)
+
+            return parsed == null ? [] : [parsed]
         } catch {
             return []
         }
@@ -29,4 +25,4 @@ export const parseLogs = (receipt: TransactionReceipt, contract: Contract): LogD
  * @returns {LogDescription[]}
  */
 export const parseLogsWithName = (receipt: TransactionReceipt, contract: Contract, name: string): LogDescription[] =>
-    parseLogs(receipt, contract).filter((log) => log.eventFragment.name === name)
+    parseLogs(receipt, contract).filter((log) => log.fragment.name === name)

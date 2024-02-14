@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { evmAddressArbitrary, endpointArbitrary } from '@layerzerolabs/test-devtools'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { omniContractToPoint } from '@/omnigraph/coordinates'
 import type { OmniContract } from '@/omnigraph/types'
 

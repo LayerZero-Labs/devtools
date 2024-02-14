@@ -1,7 +1,7 @@
 import type { OmniPoint } from '@layerzerolabs/devtools'
 import pMemoize from 'p-memoize'
 import { OmniContract } from '@layerzerolabs/devtools-evm'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import assert from 'assert'
 import { OmniContractFactoryHardhat, OmniDeployment } from './types'
 import { createGetHreByEid } from '@/runtime'

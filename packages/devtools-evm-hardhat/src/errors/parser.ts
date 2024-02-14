@@ -1,5 +1,5 @@
 import { getAllArtifacts, isErrorFragment } from '@/artifacts'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { OmniContract, createContractErrorParser } from '@layerzerolabs/devtools-evm'
 import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'

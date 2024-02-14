@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
-import { JsonRpcSigner } from '@ethersproject/providers'
+import { JsonRpcSigner } from 'ethers'
 import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
 
 jest.mock('@layerzerolabs/io-devtools', () => {

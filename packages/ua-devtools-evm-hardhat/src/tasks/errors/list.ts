@@ -3,9 +3,9 @@ import { task } from 'hardhat/config'
 import { TASK_COMPILE } from 'hardhat/builtin-tasks/task-names'
 import { TASK_LZ_ERRORS_LIST } from '@/constants/tasks'
 import { getAllArtifacts, types } from '@layerzerolabs/devtools-evm-hardhat'
-import { Fragment } from '@ethersproject/abi'
-import { hexDataSlice } from '@ethersproject/bytes'
-import { id } from '@ethersproject/hash'
+import { Fragment } from 'ethers'
+import { dataSlice } from 'ethers'
+import { id } from 'ethers'
 import { printLogo, printVerticalTable } from '@layerzerolabs/io-devtools/swag'
 import { isErrorFragment } from '@layerzerolabs/devtools-evm-hardhat'
 import { createLogger, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
@@ -54,7 +54,7 @@ export const action: ActionType<TaskArgs> = async (
                 // And add the contract name
                 Contract: artifact.contractName,
                 // The error hash
-                Signature: hexDataSlice(id(fragment.format()), 0, 4),
+                Signature: dataSlice(id(fragment.format()), 0, 4),
             }))
             // Now we filter out the entries that match the query string from the CLI arguments
             //

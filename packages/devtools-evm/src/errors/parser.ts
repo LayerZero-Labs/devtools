@@ -1,8 +1,10 @@
-import { defaultAbiCoder } from '@ethersproject/abi'
+import { AbiCoder } from 'ethers'
 import { ContractError, CustomError, UnknownError, PanicError, RevertError } from './errors'
-import { BigNumberishBigIntSchema } from '@/schema'
-import type { Contract } from '@ethersproject/contracts'
+import type { Contract } from 'ethers'
 import type { OmniContractErrorParserFactory } from './types'
+import { UIntBigIntSchema } from '@layerzerolabs/devtools'
+
+const defaultAbiCoder = AbiCoder.defaultAbiCoder()
 
 /**
  * Creates an error parser based on a specific `OmniContract`
@@ -76,7 +78,7 @@ const basicDecoder = (data: string): ContractError[] => {
         try {
             // The codes should follow the docs here https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions
             const [decodedRawReason] = defaultAbiCoder.decode(['uint256'], `0x${reason}`)
-            const decodedReason = BigNumberishBigIntSchema.parse(decodedRawReason)
+            const decodedReason = UIntBigIntSchema.parse(decodedRawReason)
 
             return [new PanicError(decodedReason)]
         } catch {
@@ -112,6 +114,7 @@ const createContractDecoder =
     (data: string): ContractError[] => {
         try {
             const errorDescription = contract.interface.parseError(data)
+            if (errorDescription == null) return []
 
             return [new CustomError(errorDescription.name, [...errorDescription.args])]
         } catch {

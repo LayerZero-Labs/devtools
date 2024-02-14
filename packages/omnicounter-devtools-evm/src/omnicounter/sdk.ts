@@ -4,6 +4,7 @@ import { EndpointV2Factory } from '@layerzerolabs/protocol-devtools'
 import { OApp } from '@layerzerolabs/ua-devtools-evm'
 import { type OmniAddress, makeBytes32 } from '@layerzerolabs/devtools'
 import { OmniContract } from '@layerzerolabs/devtools-evm'
+import assert from 'assert'
 
 export class OmniCounter extends OApp implements IOmniCounter {
     public constructor(
@@ -23,9 +24,10 @@ export class OmniCounter extends OApp implements IOmniCounter {
         const endpointV2Sdk = await super.getEndpointSDK()
         const messagingFee = await endpointV2Sdk.quote(
             { dstEid: eid, options, message: data, receiver: makeBytes32(receiver), payInLzToken: false },
-            this.contract.contract.address
+            await this.contract.contract.getAddress()
         )
-        const gasLimit = (await this.contract.contract.estimateGas.increment!(eid, type, options)).toBigInt()
+        const gasLimit = await this.contract.contract.increment?.estimateGas(eid, type, options)
+        assert(gasLimit != null, 'Did not receive gas estimation from OmniCounter')
 
         return {
             omniTransaction: super.createTransaction(data),

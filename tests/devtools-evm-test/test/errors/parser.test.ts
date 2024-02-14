@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import hre from 'hardhat'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import {
     createContractErrorParser,
     PanicError,

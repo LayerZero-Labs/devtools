@@ -7,7 +7,7 @@ import { PriceDataSchema } from './schema'
 
 export class PriceFeed extends OmniSDK implements IPriceFeed {
     async getPrice(eid: EndpointId): Promise<PriceData> {
-        const config = await this.contract.contract['getPrice(uint32)'](eid)
+        const config = await this.contract.contract['getPrice(uint32)']?.(eid)
 
         // Now we convert the ethers-specific object into the common structure
         //

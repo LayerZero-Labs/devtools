@@ -23,6 +23,7 @@ import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302 } from '@/uln302'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
+import { QuoteOutputSchema } from './schema'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -56,13 +57,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default receive library for eid ${eid} (${formatEid(eid)})`)
 
-        return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
+        return ignoreZero(await this.contract.contract.defaultReceiveLibrary?.(eid))
     }
 
     async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`)
 
-        return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
+        return ignoreZero(await this.contract.contract.getSendLibrary?.(sender, dstEid))
     }
 
     async getReceiveLibrary(
@@ -71,7 +72,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     ): Promise<[address: OmniAddress | undefined, isDefault: boolean]> {
         this.logger.debug(`Getting receive library for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`)
 
-        return await this.contract.contract.getReceiveLibrary(receiver, srcEid)
+        return await this.contract.contract.getReceiveLibrary?.(receiver, srcEid)
     }
 
     async setDefaultReceiveLibrary(
@@ -98,7 +99,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default send library for eid ${eid} (${formatEid(eid)})`)
 
-        return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
+        return ignoreZero(await this.contract.contract.defaultSendLibrary?.(eid))
     }
 
     async isDefaultSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<boolean> {
@@ -110,7 +111,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             this.logger.warn(`Checking default send library received a zero address (${sender}) for eid ${dstEid}`)
         }
 
-        return await this.contract.contract.isDefaultSendLibrary(sender, dstEid)
+        return await this.contract.contract.isDefaultSendLibrary?.(sender, dstEid)
     }
 
     async setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction> {
@@ -170,7 +171,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             `Getting receive library timeout for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`
         )
 
-        const timeout = await this.contract.contract.receiveLibraryTimeout(receiver, srcEid)
+        const timeout = await this.contract.contract.receiveLibraryTimeout?.(receiver, srcEid)
 
         return TimeoutSchema.parse({ ...timeout })
     }
@@ -178,7 +179,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
         this.logger.debug(`Getting default receive library timeout for eid ${eid} (${formatEid(eid)})`)
 
-        const timeout = await this.contract.contract.defaultReceiveLibraryTimeout(eid)
+        const timeout = await this.contract.contract.defaultReceiveLibraryTimeout?.(eid)
 
         return TimeoutSchema.parse({ ...timeout })
     }
@@ -302,8 +303,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return ulnSdk.hasAppUlnConfig(eid, oapp, config)
     }
 
-    isRegisteredLibrary(uln: OmniAddress): Promise<boolean> {
-        return this.contract.contract.isRegisteredLibrary(uln)
+    async isRegisteredLibrary(uln: OmniAddress): Promise<boolean> {
+        const isRegistered = await this.contract.contract.isRegisteredLibrary?.(uln)
+
+        return isRegistered ?? false
     }
 
     async registerLibrary(uln: OmniAddress): Promise<OmniTransaction> {
@@ -316,11 +319,9 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     public async quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee> {
-        const { nativeFee, lzTokenFee } = await this.contract.contract.quote(params, sender)
-        return {
-            nativeFee: BigInt(nativeFee),
-            lzTokenFee: BigInt(lzTokenFee),
-        }
+        const quote = await this.contract.contract.quote?.(params, sender)
+
+        return QuoteOutputSchema.parse({ ...quote })
     }
 
     async getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {

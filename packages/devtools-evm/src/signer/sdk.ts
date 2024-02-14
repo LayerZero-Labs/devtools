@@ -1,5 +1,5 @@
-import type { TransactionReceipt, TransactionRequest } from '@ethersproject/abstract-provider'
-import type { Signer } from '@ethersproject/abstract-signer'
+import type { TransactionReceipt, TransactionRequest } from 'ethers'
+import type { Signer } from 'ethers'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     formatEid,
@@ -29,12 +29,8 @@ export class OmniSignerEVM implements OmniSigner {
         this.#assertTransaction(transaction)
 
         const nativeTransaction = this.#serializeTransaction(transaction)
-        const { hash, ...response } = await this.signer.sendTransaction(nativeTransaction)
 
-        return {
-            ...response,
-            transactionHash: hash,
-        }
+        return await this.signer.sendTransaction(nativeTransaction)
     }
 
     #assertTransaction(transaction: OmniTransaction) {

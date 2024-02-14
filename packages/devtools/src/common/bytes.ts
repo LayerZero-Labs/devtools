@@ -1,5 +1,5 @@
 import type { PossiblyBigInt, PossiblyBytes } from '@/types'
-import { hexZeroPad } from '@ethersproject/bytes'
+import { zeroPadValue } from 'ethers'
 
 /**
  * Converts an address into Bytes32 by padding it with zeros.
@@ -10,7 +10,7 @@ import { hexZeroPad } from '@ethersproject/bytes'
  * @returns {string}
  */
 export const makeBytes32 = (address?: PossiblyBytes | null | undefined): PossiblyBytes =>
-    hexZeroPad(address || '0x0', 32)
+    zeroPadValue(address || '0x0', 32)
 
 /**
  * Compares two Bytes32-like values by value (i.e. ignores casing on strings

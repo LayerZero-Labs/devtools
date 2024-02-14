@@ -6,6 +6,8 @@ settings:
 
 overrides:
   rustbn.js: ^0.3.0
+  ethers: ~6.11.0
+  zksync-web3: npm:zksync-ethers@6.3.0
 
 importers:
 
@@ -115,10 +117,10 @@ importers:
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@openzeppelin/contracts':
         specifier: ^5.0.1
         version: 5.0.1
@@ -138,8 +140,8 @@ importers:
         specifier: ^16.4.1
         version: 16.4.1
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
@@ -211,10 +213,10 @@ importers:
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@openzeppelin/contracts':
         specifier: ^5.0.1
         version: 5.0.1
@@ -234,8 +236,8 @@ importers:
         specifier: ^16.4.1
         version: 16.4.1
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
@@ -270,9 +272,6 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
     devDependencies:
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -300,6 +299,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^4.6.0
         version: 4.6.0(eslint@8.56.0)
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       ink:
         specifier: ^3.2.0
         version: 3.2.0(@types/react@17.0.75)(react@17.0.2)
@@ -404,12 +406,6 @@ importers:
         specifier: ~3.1.1
         version: 3.1.1
     devDependencies:
-      '@ethersproject/bytes':
-        specifier: ~5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ~5.7.0
-        version: 5.7.0
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.3
         version: link:../io-devtools
@@ -428,6 +424,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -459,30 +458,6 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-provider':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
-      '@ethersproject/bignumber':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -504,6 +479,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -541,21 +519,6 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
-      '@ethersproject/wallet':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -577,9 +540,12 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.1.5
         version: link:../test-devtools-evm-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -589,6 +555,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -835,24 +804,6 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
-      '@ethersproject/abstract-provider':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/bignumber':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -883,6 +834,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1024,21 +978,6 @@ importers:
 
   packages/toolbox-hardhat:
     dependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
-      '@ethersproject/bytes':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/hash':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -1083,7 +1022,7 @@ importers:
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       ink:
         specifier: ^3.2.0
         version: 3.2.0(@types/react@17.0.75)(react@17.0.2)
@@ -1113,8 +1052,8 @@ importers:
         specifier: ^29.5.12
         version: 29.5.12
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
@@ -1191,15 +1130,6 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -1236,6 +1166,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      ethers:
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1264,18 +1197,6 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/bytes':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/hash':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../devtools
@@ -1322,8 +1243,8 @@ importers:
         specifier: ^16.4.1
         version: 16.4.1
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1402,27 +1323,6 @@ importers:
       '@babel/core':
         specifier: ^7.23.9
         version: 7.23.9
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/bignumber':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
-      '@ethersproject/wallet':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../../packages/devtools
@@ -1479,10 +1379,10 @@ importers:
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@openzeppelin/contracts':
         specifier: ^4.9.5
         version: 4.9.5
@@ -1499,8 +1399,8 @@ importers:
         specifier: ^29.5.12
         version: 29.5.12
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1528,21 +1428,6 @@ importers:
 
   tests/devtools-evm-test:
     devDependencies:
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-provider':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../../packages/devtools
@@ -1557,10 +1442,10 @@ importers:
         version: link:../../packages/test-devtools
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -1571,8 +1456,8 @@ importers:
         specifier: ^29.5.12
         version: 29.5.12
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1609,27 +1494,6 @@ importers:
       '@babel/core':
         specifier: ^7.23.9
         version: 7.23.9
-      '@ethersproject/abi':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/abstract-signer':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/address':
-        specifier: ~5.7.0
-        version: 5.7.0
-      '@ethersproject/constants':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/contracts':
-        specifier: ^5.7.0
-        version: 5.7.0
-      '@ethersproject/providers':
-        specifier: ^5.7.2
-        version: 5.7.2
-      '@ethersproject/wallet':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@layerzerolabs/devtools':
         specifier: ~0.2.2
         version: link:../../packages/devtools
@@ -1692,10 +1556,10 @@ importers:
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+        version: 3.0.5(ethers@6.11.0)(hardhat@2.19.5)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.19.5)
+        version: 2.2.3(ethers@6.11.0)(hardhat@2.19.5)
       '@openzeppelin/contracts':
         specifier: ^5.0.1
         version: 5.0.1
@@ -1709,8 +1573,8 @@ importers:
         specifier: ^29.5.12
         version: 29.5.12
       ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
+        specifier: ~6.11.0
+        version: 6.11.0
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
@@ -1886,6 +1750,9 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /@adraffy/ens-normalize@1.10.1:
+    resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
@@ -2242,10 +2109,10 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@chainlink/contracts-ccip@0.7.6(ethers@5.7.2):
+  /@chainlink/contracts-ccip@0.7.6(ethers@6.11.0):
     resolution: {integrity: sha512-yNbCBFpLs3R+ALymto9dQYKz3vatnjqYGu1pnMD0i2fHEMthiXe0+otaNCGNht6n8k7ruNaA0DNpz3F+2jHQXw==}
     dependencies:
-      '@eth-optimism/contracts': 0.5.40(ethers@5.7.2)
+      '@eth-optimism/contracts': 0.5.40(ethers@6.11.0)
       '@openzeppelin/contracts': 4.3.3
       '@openzeppelin/contracts-upgradeable-4.7.3': /@openzeppelin/contracts-upgradeable@4.7.3
       '@openzeppelin/contracts-v0.7': /@openzeppelin/contracts@3.4.2
@@ -2733,29 +2600,29 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@eth-optimism/contracts@0.5.40(ethers@5.7.2):
+  /@eth-optimism/contracts@0.5.40(ethers@6.11.0):
     resolution: {integrity: sha512-MrzV0nvsymfO/fursTB7m/KunkPsCndltVgfdHaT1Aj5Vi6R/doKIGGkOofHX+8B6VMZpuZosKCMQ5lQuqjt8w==}
     peerDependencies:
-      ethers: ^5
+      ethers: ~6.11.0
     dependencies:
       '@eth-optimism/core-utils': 0.12.0
       '@ethersproject/abstract-provider': 5.7.0
       '@ethersproject/abstract-signer': 5.7.0
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
     dev: true
 
-  /@eth-optimism/contracts@0.6.0(ethers@5.7.2):
+  /@eth-optimism/contracts@0.6.0(ethers@6.11.0):
     resolution: {integrity: sha512-vQ04wfG9kMf1Fwy3FEMqH2QZbgS0gldKhcBeBUPfO8zu68L61VI97UDXmsMQXzTsEAxK8HnokW3/gosl4/NW3w==}
     peerDependencies:
-      ethers: ^5
+      ethers: ~6.11.0
     dependencies:
       '@eth-optimism/core-utils': 0.12.0
       '@ethersproject/abstract-provider': 5.7.0
       '@ethersproject/abstract-signer': 5.7.0
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -2883,6 +2750,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/transactions': 5.7.0
+    dev: true
 
   /@ethersproject/hash@5.7.0:
     resolution: {integrity: sha512-qX5WrQfnah1EFnO5zJv1v46a8HW0+E5xuBBDTwMFZLuVTx0tbU2kkx15NqdjxecrLGatQN9FGQKpb1FKdHCt+g==}
@@ -2912,6 +2780,7 @@ packages:
       '@ethersproject/strings': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/wordlists': 5.7.0
+    dev: true
 
   /@ethersproject/json-wallets@5.7.0:
     resolution: {integrity: sha512-8oee5Xgu6+RKgJTkvEMl2wDgSPSAQ9MB/3JYjFV9jlKvcYHUXZC+cQp0njgmxdHkYWn8s6/IqIZYm0YWCjO/0g==}
@@ -2929,6 +2798,7 @@ packages:
       '@ethersproject/transactions': 5.7.0
       aes-js: 3.0.0
       scrypt-js: 3.0.1
+    dev: true
 
   /@ethersproject/keccak256@5.7.0:
     resolution: {integrity: sha512-2UcPboeL/iW+pSg6vZ6ydF8tCnv3Iu/8tUmLLzWWGzxWKFFqOBQFLo6uLUv6BDrLgCDfN28RJ/wtByx+jZ4KBg==}
@@ -2949,6 +2819,7 @@ packages:
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
+    dev: true
 
   /@ethersproject/properties@5.7.0:
     resolution: {integrity: sha512-J87jy8suntrAkIZtecpxEPxY//szqr1mlBaYlQ0r4RCaiD2hjheqF9s1LVE8vVuJCXisjIP+JgtK/Do54ej4Sw==}
@@ -3041,13 +2912,6 @@ packages:
       '@ethersproject/rlp': 5.7.0
       '@ethersproject/signing-key': 5.7.0
 
-  /@ethersproject/units@5.7.0:
-    resolution: {integrity: sha512-pD3xLMy3SJu9kG5xDGI7+xhTEmGXlEqXU4OfNapmfnxLVY4EMSSRp7j1k7eezutBPH7RBN/7QPnwR7hzNlEFeg==}
-    dependencies:
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/logger': 5.7.0
-
   /@ethersproject/wallet@5.7.0:
     resolution: {integrity: sha512-MhmXlJXEJFBFVKrDLB4ZdDzxcBxQ3rLyCkhNqVu3CDYvR97E+8r01UgrI+TI99Le+aYm/in/0vp86guJuM7FCA==}
     dependencies:
@@ -3066,6 +2930,7 @@ packages:
       '@ethersproject/signing-key': 5.7.0
       '@ethersproject/transactions': 5.7.0
       '@ethersproject/wordlists': 5.7.0
+    dev: true
 
   /@ethersproject/web@5.7.1:
     resolution: {integrity: sha512-Gueu8lSvyjBWL4cYsWsjh6MtMwM0+H4HvqFPZfB6dV8ctbP9zFAO73VG1cMWae0FLPCtz0peKPpZY8/ugJJX2w==}
@@ -3084,6 +2949,7 @@ packages:
       '@ethersproject/logger': 5.7.0
       '@ethersproject/properties': 5.7.0
       '@ethersproject/strings': 5.7.0
+    dev: true
 
   /@fastify/busboy@2.1.0:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
@@ -3415,7 +3281,7 @@ packages:
   /@layerzerolabs/evm-sdks-core@2.1.7:
     resolution: {integrity: sha512-JaSDCY2Bj7wp8LYdsRiR3iK3giy18hQeRYC44/Mnqvp8Q9vbNDHeBI5EMLQCvAnCIKcwP+5ugOdyZPWiBT46wg==}
     dependencies:
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3443,8 +3309,8 @@ packages:
         optional: true
     dependencies:
       '@axelar-network/axelar-gmp-sdk-solidity': 5.6.4
-      '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
-      '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
+      '@chainlink/contracts-ccip': 0.7.6(ethers@6.11.0)
+      '@eth-optimism/contracts': 0.6.0(ethers@6.11.0)
       '@layerzerolabs/lz-evm-protocol-v2': 2.1.7(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7': 2.1.7(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts': 4.9.5
@@ -3471,8 +3337,8 @@ packages:
         optional: true
     dependencies:
       '@axelar-network/axelar-gmp-sdk-solidity': 5.6.4
-      '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
-      '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
+      '@chainlink/contracts-ccip': 0.7.6(ethers@6.11.0)
+      '@eth-optimism/contracts': 0.6.0(ethers@6.11.0)
       '@layerzerolabs/lz-evm-protocol-v2': 2.1.7(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@5.0.1)(hardhat-deploy@0.11.45)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7': 2.1.7(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@5.0.1)(hardhat-deploy@0.11.45)
       '@openzeppelin/contracts': 5.0.1
@@ -3576,7 +3442,7 @@ packages:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@layerzerolabs/evm-sdks-core': 2.1.7
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3585,7 +3451,7 @@ packages:
     resolution: {integrity: sha512-b5dsJH7/W5GmR1uEAKvFMoKQvm5CD22BpWwVXwNR+EyUlgpvST6Or0RoAnrJQms4FtI10yG7KLVdq83NKsf+nA==}
     dependencies:
       '@layerzerolabs/evm-sdks-core': 2.1.7
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3677,6 +3543,11 @@ packages:
       tweetnacl: 1.0.3
       tweetnacl-util: 0.15.1
 
+  /@noble/curves@1.2.0:
+    resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
+    dependencies:
+      '@noble/hashes': 1.3.2
+
   /@noble/curves@1.3.0:
     resolution: {integrity: sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==}
     dependencies:
@@ -3684,6 +3555,10 @@ packages:
 
   /@noble/hashes@1.2.0:
     resolution: {integrity: sha512-FZfhjEDbT5GRswV3C6uvLPHMiVD6lQBmpoX5+eSiPaMTXte/IKqI5dykDxzZB/WBeK/CDuQRBWarPdi3FNY2zQ==}
+
+  /@noble/hashes@1.3.2:
+    resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
+    engines: {node: '>= 16'}
 
   /@noble/hashes@1.3.3:
     resolution: {integrity: sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==}
@@ -3723,7 +3598,7 @@ packages:
       '@nomicfoundation/ethereumjs-tx': 5.0.2
       '@nomicfoundation/ethereumjs-util': 9.0.2
       ethereum-cryptography: 0.1.3
-      ethers: 5.7.2
+      ethers: 6.11.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3799,7 +3674,7 @@ packages:
       '@nomicfoundation/ethereumjs-rlp': 5.0.2
       debug: 4.3.4(supports-color@8.1.1)
       ethereum-cryptography: 0.1.3
-      ethers: 5.7.2
+      ethers: 6.11.0
       js-sdsl: 4.4.2
     transitivePeerDependencies:
       - bufferutil
@@ -3860,14 +3735,14 @@ packages:
       - supports-color
       - utf-8-validate
 
-  /@nomicfoundation/hardhat-ethers@3.0.5(ethers@5.7.2)(hardhat@2.19.5):
+  /@nomicfoundation/hardhat-ethers@3.0.5(ethers@6.11.0)(hardhat@2.19.5):
     resolution: {integrity: sha512-RNFe8OtbZK6Ila9kIlHp0+S80/0Bu/3p41HUpaRIoHLm6X3WekTd83vob3rE54Duufu1edCiBDxspBzi2rxHHw==}
     peerDependencies:
-      ethers: ^6.1.0
+      ethers: ~6.11.0
       hardhat: ^2.0.0
     dependencies:
       debug: 4.3.4(supports-color@8.1.1)
-      ethers: 5.7.2
+      ethers: 6.11.0
       hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
       lodash.isequal: 4.5.0
     transitivePeerDependencies:
@@ -3968,13 +3843,13 @@ packages:
       '@nomicfoundation/solidity-analyzer-win32-ia32-msvc': 0.1.1
       '@nomicfoundation/solidity-analyzer-win32-x64-msvc': 0.1.1
 
-  /@nomiclabs/hardhat-ethers@2.2.3(ethers@5.7.2)(hardhat@2.19.5):
+  /@nomiclabs/hardhat-ethers@2.2.3(ethers@6.11.0)(hardhat@2.19.5):
     resolution: {integrity: sha512-YhzPdzb612X591FOe68q+qXVXGG2ANZRvDo0RRUtimev85rCrAlv/TLMEZw5c+kq9AbzocLTVX/h2jVIFPL9Xg==}
     peerDependencies:
-      ethers: ^5.0.0
+      ethers: ~6.11.0
       hardhat: ^2.0.0
     dependencies:
-      ethers: 5.7.2
+      ethers: 6.11.0
       hardhat: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
     dev: true
 
@@ -4579,6 +4454,9 @@ packages:
   /@types/node@12.20.55:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
+  /@types/node@18.15.13:
+    resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
+
   /@types/node@18.18.14:
     resolution: {integrity: sha512-iSOeNeXYNYNLLOMDSVPvIFojclvMZ/HDY2dU17kUlcsOsSQETbWIslJbYLZgA+ox8g2XQwSHKTkght1a5X26lQ==}
     dependencies:
@@ -4918,6 +4796,10 @@ packages:
 
   /aes-js@3.0.0:
     resolution: {integrity: sha512-H7wUZRn8WpTq9jocdxQ2c8x2sKo9ZVmzfRE13GiNJXfp7NcKYEdvl3vspKjXox6RIG2VtaRe4JFvxG4rqp2Zuw==}
+    dev: true
+
+  /aes-js@4.0.0-beta.5:
+    resolution: {integrity: sha512-G965FqalsNyrPqgEGON7nIx1e/OVENSgiEIzyC63haUMuvNnwIgIjMs52hlTCKhkBny7A2ORNlfY9Zu+jmGk1Q==}
 
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
@@ -6810,39 +6692,17 @@ packages:
       ethjs-util: 0.1.6
       rlp: 2.2.7
 
-  /ethers@5.7.2:
-    resolution: {integrity: sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==}
+  /ethers@6.11.0:
+    resolution: {integrity: sha512-kPHNTnhVWiWU6AVo6CAeTjXEK24SpCXyZvwG9ROFjT0Vlux0EOhWKBAeC+45iDj80QNJTYaT1SDEmeunT0vDNw==}
+    engines: {node: '>=14.0.0'}
     dependencies:
-      '@ethersproject/abi': 5.7.0
-      '@ethersproject/abstract-provider': 5.7.0
-      '@ethersproject/abstract-signer': 5.7.0
-      '@ethersproject/address': 5.7.0
-      '@ethersproject/base64': 5.7.0
-      '@ethersproject/basex': 5.7.0
-      '@ethersproject/bignumber': 5.7.0
-      '@ethersproject/bytes': 5.7.0
-      '@ethersproject/constants': 5.7.0
-      '@ethersproject/contracts': 5.7.0
-      '@ethersproject/hash': 5.7.0
-      '@ethersproject/hdnode': 5.7.0
-      '@ethersproject/json-wallets': 5.7.0
-      '@ethersproject/keccak256': 5.7.0
-      '@ethersproject/logger': 5.7.0
-      '@ethersproject/networks': 5.7.1
-      '@ethersproject/pbkdf2': 5.7.0
-      '@ethersproject/properties': 5.7.0
-      '@ethersproject/providers': 5.7.2
-      '@ethersproject/random': 5.7.0
-      '@ethersproject/rlp': 5.7.0
-      '@ethersproject/sha2': 5.7.0
-      '@ethersproject/signing-key': 5.7.0
-      '@ethersproject/solidity': 5.7.0
-      '@ethersproject/strings': 5.7.0
-      '@ethersproject/transactions': 5.7.0
-      '@ethersproject/units': 5.7.0
-      '@ethersproject/wallet': 5.7.0
-      '@ethersproject/web': 5.7.1
-      '@ethersproject/wordlists': 5.7.0
+      '@adraffy/ens-normalize': 1.10.1
+      '@noble/curves': 1.2.0
+      '@noble/hashes': 1.3.2
+      '@types/node': 18.15.13
+      aes-js: 4.0.0-beta.5
+      tslib: 2.4.0
+      ws: 8.5.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -7449,13 +7309,13 @@ packages:
       chokidar: 3.5.3
       debug: 4.3.4(supports-color@8.1.1)
       enquirer: 2.4.1
-      ethers: 5.7.2
+      ethers: 6.11.0
       form-data: 4.0.0
       fs-extra: 10.1.0
       match-all: 1.2.6
       murmur-128: 0.2.1
       qs: 6.11.2
-      zksync-web3: 0.14.4(ethers@5.7.2)
+      zksync-web3: /zksync-ethers@6.3.0(ethers@6.11.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -10970,6 +10830,9 @@ packages:
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
+  /tslib@2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
     dev: true
@@ -11585,6 +11448,18 @@ packages:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
 
+  /ws@8.5.0:
+    resolution: {integrity: sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   /y18n@4.0.3:
     resolution: {integrity: sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==}
     dev: true
@@ -11691,13 +11566,12 @@ packages:
     dependencies:
       '@types/yoga-layout': 1.9.2
 
-  /zksync-web3@0.14.4(ethers@5.7.2):
-    resolution: {integrity: sha512-kYehMD/S6Uhe1g434UnaMN+sBr9nQm23Ywn0EUP5BfQCsbjcr3ORuS68PosZw8xUTu3pac7G6YMSnNHk+fwzvg==}
-    deprecated: This package has been deprecated in favor of zksync-ethers@5.0.0
+  /zksync-ethers@6.3.0(ethers@6.11.0):
+    resolution: {integrity: sha512-ApQIJSFevxFNVQTO1MxkmXxmx9N0qZHNvMzjFvu5v40QPFGkpUt09pY/WHy3b5BlsXzybQ3q2YnHaz/c/TgilA==}
     peerDependencies:
-      ethers: ^5.7.0
+      ethers: ~6.11.0
     dependencies:
-      ethers: 5.7.2
+      ethers: 6.11.0
     dev: true
 
   /zod@3.22.4:

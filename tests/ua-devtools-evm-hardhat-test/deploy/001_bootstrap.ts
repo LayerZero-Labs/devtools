@@ -1,4 +1,4 @@
-import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
+import { TransactionReceipt, TransactionResponse } from 'ethers'
 import { formatEid } from '@layerzerolabs/devtools'
 import { wrapEIP1193Provider } from '@layerzerolabs/devtools-evm-hardhat'
 import assert from 'assert'
@@ -26,7 +26,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 
     const [deployer] = await getUnnamedAccounts()
     assert(deployer, 'Missing deployer')
-    const signer = wrapEIP1193Provider(network.provider).getSigner()
+    const signer = wrapEIP1193Provider(network.provider, network.name).getSigner()
 
     await deployments.delete('EndpointV2')
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {

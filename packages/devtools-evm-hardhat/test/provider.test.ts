@@ -2,7 +2,7 @@ import 'hardhat'
 import { createGetHreByEid } from '@/runtime'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createProviderFactory } from '@/provider'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { JsonRpcProvider } from 'ethers'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result
 jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chainId: 1, name: 'mock' })

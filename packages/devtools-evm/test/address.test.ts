@@ -1,10 +1,10 @@
 /// <reference types="jest-extended" />
 
 import fc from 'fast-check'
-import { AddressZero } from '@ethersproject/constants'
+import { AddressZero } from 'ethers'
 import { evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { addChecksum, makeZeroAddress } from '@/address'
-import { isAddress } from '@ethersproject/address'
+import { isAddress } from 'ethers'
 
 describe('address', () => {
     describe('makeZeroAddress', () => {

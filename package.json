@@ -57,5 +57,11 @@
   "packageManager": "pnpm@8.14.0",
   "engines": {
     "node": ">=18.16.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "ethers": "~6.11.0",
+      "zksync-web3": "npm:zksync-ethers@6.3.0"
+    }
   }
 }

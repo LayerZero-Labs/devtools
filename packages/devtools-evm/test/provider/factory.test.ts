@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { createProviderFactory } from '@/provider/factory'
 import { endpointArbitrary } from '@layerzerolabs/test-devtools'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { JsonRpcProvider } from 'ethers'
 
 // We'll use the fake timers to work around the fact that JsonRpcProvider uses setTimeout
 // to schedule a task in the queue in its constructor

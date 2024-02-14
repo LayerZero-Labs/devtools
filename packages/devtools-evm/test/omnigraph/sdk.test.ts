@@ -2,7 +2,7 @@ import { makeZeroAddress } from '@/address'
 import { createContractErrorParser } from '@/errors/parser'
 import { OmniContract } from '@/omnigraph'
 import { OmniSDK } from '@/omnigraph/sdk'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 jest.mock('@/errors/parser', () => ({

@@ -1,4 +1,4 @@
-import type { Contract } from '@ethersproject/contracts'
+import type { Contract } from 'ethers'
 import type { Factory, IOmniSDK as IOmniSDKAbstract, OmniPoint, WithEid } from '@layerzerolabs/devtools'
 
 export type OmniContract<TContract extends Contract = Contract> = WithEid<{

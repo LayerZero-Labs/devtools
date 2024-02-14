@@ -1,13 +1,12 @@
 import type { HardhatRuntimeEnvironment, EthereumProvider } from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
-import type { JsonRpcProvider } from '@ethersproject/providers'
 import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/devtools'
-import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
+import { HardhatEthersProvider } from '@nomicfoundation/hardhat-ethers/internal/hardhat-ethers-provider'
 import assert from 'assert'
 import memoize from 'micro-memoize'
 
@@ -130,7 +129,10 @@ export const createGetHreByEid = (
  * @param {EIP1193Provider} provider
  * @returns {JsonRpcProvider}
  */
-export const wrapEIP1193Provider = (provider: EthereumProvider): JsonRpcProvider => new EthersProviderWrapper(provider)
+export const wrapEIP1193Provider = (
+    provider: EthereumProvider,
+    networkName: string = 'unnamed network'
+): HardhatEthersProvider => new HardhatEthersProvider(provider, networkName)
 
 /**
  * Gets an EndpointId defined in the hardhat config

@@ -1,9 +1,9 @@
 import fc from 'fast-check'
 import 'hardhat'
-import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers'
+import { JsonRpcProvider, Web3Provider } from 'ethers'
 import { createConnectedContractFactory } from '@/omnigraph'
 import { pointArbitrary } from '@layerzerolabs/test-devtools'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 
 // Ethers calls the eth_chainId RPC method when initializing a provider so we mock the result

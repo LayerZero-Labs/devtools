@@ -5,7 +5,7 @@ import { Deployment } from 'hardhat-deploy/dist/types'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { OmniDeployment, createContractFactory, omniDeploymentToContract, omniDeploymentToPoint } from '@/omnigraph'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { createGetHreByEid } from '@/runtime'
 

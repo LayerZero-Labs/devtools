@@ -1,6 +1,6 @@
 import { parseLogs, parseLogsWithName } from '@layerzerolabs/devtools-evm'
 import fc from 'fast-check'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import hre from 'hardhat'
 
 describe('events/parser', () => {

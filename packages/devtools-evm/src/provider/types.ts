@@ -1,5 +1,5 @@
 import type { EndpointBasedFactory } from '@layerzerolabs/devtools'
-import type { BaseProvider } from '@ethersproject/providers'
+import type { Provider as BaseProvider } from 'ethers'
 
 export type Provider = BaseProvider
 

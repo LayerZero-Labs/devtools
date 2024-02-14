@@ -6,7 +6,7 @@ import {
     createOmniNodeHardhatTransformer,
     createOmniPointHardhatTransformer,
 } from '@/omnigraph/transformations'
-import { Contract } from '@ethersproject/contracts'
+import { Contract } from 'ethers'
 import { endpointArbitrary, evmAddressArbitrary, nullableArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
 import { isOmniPoint, parallel, sequence } from '@layerzerolabs/devtools'
 

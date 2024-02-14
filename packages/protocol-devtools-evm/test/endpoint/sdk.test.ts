@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
-import type { Contract } from '@ethersproject/contracts'
+import type { Contract } from 'ethers'
 import { makeZeroAddress, type OmniContract } from '@layerzerolabs/devtools-evm'
 import { EndpointV2 } from '../../src/endpointv2'
 import { isZero, makeBytes32 } from '@layerzerolabs/devtools'

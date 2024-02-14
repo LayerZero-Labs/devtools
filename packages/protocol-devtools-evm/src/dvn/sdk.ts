@@ -7,7 +7,7 @@ import { DVNDstConfigSchema } from './schema'
 
 export class DVN extends OmniSDK implements IDVN {
     async getDstConfig(eid: EndpointId): Promise<DVNDstConfig> {
-        const config = await this.contract.contract.dstConfig(eid)
+        const config = await this.contract.contract.dstConfig?.(eid)
 
         // Now we convert the ethers-specific object into the common structure
         //

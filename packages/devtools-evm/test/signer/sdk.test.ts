@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { endpointArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
-import { Signer } from '@ethersproject/abstract-signer'
+import { Signer } from 'ethers'
 import { OmniSignerEVM } from '@/signer'
 
 describe('signer/sdk', () => {
