@@ -31,6 +31,18 @@ export const createConst =
             )
         )
 
+/**
+ * Wraps an expression with "as const"
+ *
+ * @param {Expression} expression
+ * @returns {Expression}
+ */
+export const creteAsConst = (expression: Expression): Expression =>
+    factory.createAsExpression(
+        expression,
+        factory.createTypeReferenceNode(factory.createIdentifier('const'), undefined)
+    )
+
 export const createIdentifier = factory.createIdentifier
 
 export const createStringLiteral = factory.createStringLiteral
