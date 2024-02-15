@@ -4,6 +4,7 @@
 import { spawnSync } from 'child_process'
 import { join } from 'path'
 import { isDirectory } from '@layerzerolabs/io-devtools'
+import { readFileSync } from 'fs'
 
 describe(`export`, () => {
     describe('expectations', () => {
@@ -101,6 +102,15 @@ describe(`export`, () => {
                     tango: expect.any(String),
                 },
             })
+        })
+
+        it('should include "as const" when exporting the ABIs', async () => {
+            const result = runExpect('export-all')
+
+            expect(result.status).toBe(0)
+
+            const generated = readFileSync(join(__dirname, '..', 'generated', 'Test.ts'), 'utf8')
+            expect(generated).toMatch(/as const/)
         })
     })
 })

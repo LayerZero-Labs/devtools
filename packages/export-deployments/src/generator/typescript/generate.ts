@@ -11,6 +11,7 @@ import {
     createExportConst,
     createIdentifier,
     createStringLiteral,
+    creteAsConst,
     normalizeIdentifierName,
     printTSFile,
     recordToObjectLiteral,
@@ -128,7 +129,16 @@ const transformGroupedContractInformation = ({ addresses, abis, transactionHashe
                 uniqueAbis,
                 // Take the array of unique ABIs and turn them into a list of variable declarations
                 A.mapWithIndex((index, abi) =>
-                    pipe(abi, runtimeObjectToExpressionSafe, E.map(createConst()(createAbiIdentifier(index))))
+                    pipe(
+                        abi,
+                        runtimeObjectToExpressionSafe,
+                        // Add "as const" to the exported ABIs
+                        //
+                        // This is very useful for e.g. viem that infers a lot of the information
+                        // based on the shape of the ABI
+                        E.map(creteAsConst),
+                        E.map(createConst()(createAbiIdentifier(index)))
+                    )
                 ),
                 A.sequence(E.Applicative),
                 // With the declarations ready, we can construct an object that maps a network name
