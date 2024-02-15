@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.7
+
+### Patch Changes
+
+- d1adc8d: Adding in documentation for layerzero.config
+
 ## 0.1.6
 
 ### Patch Changes
