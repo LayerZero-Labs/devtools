@@ -1635,7 +1635,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/export-deployments':
-        specifier: ~0.0.1
+        specifier: ~0.0.2
         version: link:../../packages/export-deployments
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.3
