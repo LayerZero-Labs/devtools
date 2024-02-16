@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /// <reference types="jest-extended" />
 
-import { TASK_LZ_DEPLOY } from '@layerzerolabs/devtools-evm-hardhat'
+import { TASK_LZ_EXPORT_DEPLOYMENTS_TYPESCRIPT } from '@layerzerolabs/devtools-evm-hardhat'
 import { spawnSync } from 'child_process'
 import { join } from 'path'
 
-describe(`task ${TASK_LZ_DEPLOY}`, () => {
+describe(`task ${TASK_LZ_EXPORT_DEPLOYMENTS_TYPESCRIPT}`, () => {
     describe('expectations', () => {
         const EXPECTATIONS_DIRECTORY = join('test', 'task', 'export.deployments.typescript.expectations')
         const expectationPath = (name: string) => join(EXPECTATIONS_DIRECTORY, `${name}.exp`)
@@ -23,6 +23,11 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             'TestProxy_Proxy',
             'Thrower',
         ]
+
+        beforeEach(() => {
+            // We need to reset the modules so that the imports of ../../generated are not cached
+            jest.resetModules()
+        })
 
         it('should export all deployments', async () => {
             const result = runExpect('export-all')
