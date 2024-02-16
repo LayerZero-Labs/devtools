@@ -43,6 +43,7 @@
     "test": "jest --ci --forceExit"
   },
   "dependencies": {
+    "@layerzerolabs/export-deployments": "~0.0.1",
     "micro-memoize": "~4.1.2",
     "p-memoize": "~4.0.4",
     "zod": "^3.22.4"
