@@ -39,10 +39,7 @@ export abstract class OmniSignerEVMBase implements OmniSigner {
  * Implements an OmniSigner interface for EVM-compatible chains
  */
 export class OmniSignerEVM extends OmniSignerEVMBase {
-    constructor(
-        public override readonly eid: EndpointId,
-        public override readonly signer: Signer
-    ) {
+    constructor(eid: EndpointId, signer: Signer) {
         super(eid, signer)
     }
 
@@ -88,8 +85,8 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     protected safeService: SafeServiceClient | undefined
 
     constructor(
-        public override readonly eid: EndpointId,
-        public override readonly signer: Signer,
+        eid: EndpointId,
+        signer: Signer,
         protected readonly safeUrl: string,
         protected readonly safeConfig: TSafeConfig
     ) {
