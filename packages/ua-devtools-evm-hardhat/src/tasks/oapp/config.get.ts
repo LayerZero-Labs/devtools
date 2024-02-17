@@ -110,7 +110,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) =
 
 task(
     TASK_LZ_OAPP_CONFIG_GET,
-    'Outputs Custom OApp Config, Default OApp Config, and Active OApp Config. Each config contains Send & Receive Libraries, Send Uln & Executor Configs, and Recieve Executor Configs',
+    'Outputs Custom OApp Config, Default OApp Config, and Active OApp Config. Each config contains Send & Receive Libraries, Send Uln & Executor Configs, and Receive Executor Configs',
     action
 )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
