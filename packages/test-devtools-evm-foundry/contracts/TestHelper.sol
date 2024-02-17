@@ -2,35 +2,40 @@
 
 pragma solidity ^0.8.18;
 
+// Forge
 import { Test } from "forge-std/Test.sol";
+import "forge-std/console.sol";
+
+// Oz
 import { DoubleEndedQueue } from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
 
+// Msg Lib
 import { UlnConfig, SetDefaultUlnConfigParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 import { SetDefaultExecutorConfigParam, ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
-import { ReceiveUln302 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln302/ReceiveUln302.sol";
-import { IDVN } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol";
-import { DVN, ExecuteParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/dvn/DVN.sol";
-import { DVNFeeLib } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/dvn/DVNFeeLib.sol";
-import { IExecutor } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol";
-import { Executor } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/Executor.sol";
-import { PriceFeed } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/PriceFeed.sol";
-import { ILayerZeroPriceFeed } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol";
-import { IReceiveUlnE2 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol";
-import { ReceiveUln302 } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln302/ReceiveUln302.sol";
+
+// Protocol
 import { IMessageLib } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol";
-import { EndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/EndpointV2.sol";
 import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol";
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
 import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 
+// @dev oz4/5 breaking change...
+import { ReceiveUln302Mock as ReceiveUln302, IReceiveUlnE2 } from "./mocks/ReceiveUln302Mock.sol";
+import { DVNMock as DVN, ExecuteParam, IDVN } from "./mocks/DVNMock.sol";
+import { DVNFeeLibMock as DVNFeeLib } from "./mocks/DVNFeeLibMock.sol";
+import { ExecutorMock as Executor, IExecutor } from "./mocks/ExecutorMock.sol";
+import { PriceFeedMock as PriceFeed, ILayerZeroPriceFeed } from "./mocks/PriceFeedMock.sol";
+import { EndpointV2Mock as EndpointV2 } from "./mocks//EndpointV2Mock.sol";
+
+// OApp
 import { OApp } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
 import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
 
+// Misc. Mocks
 import { OptionsHelper } from "./OptionsHelper.sol";
 import { SendUln302Mock as SendUln302 } from "./mocks/SendUln302Mock.sol";
 import { SimpleMessageLibMock } from "./mocks/SimpleMessageLibMock.sol";
-import "./mocks/ExecutorFeeLibMock.sol";
-import "forge-std/console.sol";
+import { ExecutorFeeLibMock as ExecutorFeeLib } from "./mocks/ExecutorFeeLibMock.sol";
 
 /**
  * @title TestHelper
@@ -94,8 +99,8 @@ contract TestHelper is Test, OptionsHelper {
         address[] memory signers = new address[](1);
         signers[0] = vm.addr(1);
 
-        PriceFeed priceFeed = new PriceFeed();
-        priceFeed.initialize(address(this));
+        // @dev oz4/5 breaking change... constructor init
+        PriceFeed priceFeed = new PriceFeed(address(this));
 
         for (uint8 i = 0; i < _endpointNum; i++) {
             if (_libraryType == LibraryType.UltraLightNode) {
@@ -112,7 +117,7 @@ contract TestHelper is Test, OptionsHelper {
                     receiveLibs[i] = address(receiveUln);
                 }
 
-                Executor executor = new Executor();
+                Executor executor;
                 DVN dvn;
                 {
                     address[] memory admins = new address[](1);
@@ -121,8 +126,7 @@ contract TestHelper is Test, OptionsHelper {
                     address[] memory messageLibs = new address[](2);
                     messageLibs[0] = address(sendUln);
                     messageLibs[1] = address(receiveUln);
-
-                    executor.initialize(
+                    executor = new Executor(
                         endpointAddr,
                         address(0x0),
                         messageLibs,
@@ -130,7 +134,8 @@ contract TestHelper is Test, OptionsHelper {
                         address(this),
                         admins
                     );
-                    ExecutorFeeLib executorLib = new ExecutorFeeLibMock();
+
+                    ExecutorFeeLib executorLib = new ExecutorFeeLib();
                     executor.setWorkerFeeLib(address(executorLib));
 
                     dvn = new DVN(i + 1, messageLibs, address(priceFeed), signers, 1, admins);
