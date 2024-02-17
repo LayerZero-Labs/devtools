@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.0.13
+
+### Patch Changes
+
+- f0392c5: Add export deployments hardhat task
+
 ## 0.0.12
 
 ### Patch Changes
