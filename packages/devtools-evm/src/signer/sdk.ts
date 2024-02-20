@@ -77,9 +77,6 @@ export class OmniSignerEVM extends OmniSignerEVMBase {
  * Implements an OmniSigner interface for EVM-compatible chains using Gnosis Safe.
  */
 export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends OmniSignerEVMBase {
-    // TODO: upgrade from @gnosis.pm to @safeglobal dependencies once the codebase upgrades to Ethers v6.  Currently,
-    // devtools only supports Ethers v5, and @safeglobal only supports Ethers v6.
-
     protected safeSdk: Safe | undefined
     protected apiKit: SafeApiKit | undefined
 

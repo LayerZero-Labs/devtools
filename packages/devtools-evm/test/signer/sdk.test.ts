@@ -2,8 +2,8 @@ import fc from 'fast-check'
 import { endpointArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
 import { Signer } from '@ethersproject/abstract-signer'
 import { GnosisOmniSignerEVM, OmniSignerEVM } from '@/signer'
-import Safe, { SafeConfig } from '@gnosis.pm/safe-core-sdk'
-import SafeServiceClient from '@gnosis.pm/safe-service-client'
+import Safe, { SafeConfig } from '@safe-global/protocol-kit'
+import SafeApiKit from '@safe-global/api-kit'
 
 describe('signer/ethers', () => {
     const transactionHashArbitrary = fc.hexaString()
@@ -121,22 +121,24 @@ describe('signer/ethers', () => {
                                 {} as SafeConfig
                             )
                             omniSigner['safeSdk'] = {
-                                createTransaction: jest.fn(),
+                                createTransaction: jest.fn().mockResolvedValue({ data: 'transaction' }),
                                 getTransactionHash: jest.fn().mockResolvedValue(transactionHash),
                                 getAddress: jest.fn(),
+                                signTransactionHash: jest.fn().mockResolvedValue({ data: 'signature' }),
                             } as unknown as Safe
-                            const safeService = (omniSigner['safeService'] = {
+                            const safeService = (omniSigner['apiKit'] = {
                                 proposeTransaction: jest.fn(),
-                            } as unknown as SafeServiceClient)
+                            } as unknown as SafeApiKit)
 
                             const result = await omniSigner.signAndSend(transaction)
                             expect(result.transactionHash).toEqual(transactionHash)
                             expect(await result.wait()).toEqual({ transactionHash })
                             expect(safeService.proposeTransaction).toHaveBeenCalledWith({
                                 safeAddress: undefined,
-                                safeTransaction: undefined,
+                                safeTransactionData: 'transaction',
                                 safeTxHash: transactionHash,
                                 senderAddress: undefined,
+                                senderSignature: 'signature',
                             })
                         }
                     )
