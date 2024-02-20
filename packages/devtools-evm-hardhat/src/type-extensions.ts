@@ -1,6 +1,6 @@
 import 'hardhat/types/config'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { ConnectSafeConfig } from '@gnosis.pm/safe-core-sdk'
+import { ConnectSafeConfigWithSafeAddress } from '@safe-global/protocol-kit'
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
@@ -48,7 +48,7 @@ declare module 'hardhat/types/config' {
          */
         safeConfig?: SafeConfig
     }
-    interface SafeConfig extends ConnectSafeConfig {
+    interface SafeConfig extends ConnectSafeConfigWithSafeAddress {
         safeUrl: string
         safeAddress: string // override to make ConnectSafeConfig.safeAddress mandatory
     }

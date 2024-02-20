@@ -1,9 +1,8 @@
 import type { TransactionReceipt, TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Signer } from '@ethersproject/abstract-signer'
-import Safe, { ConnectSafeConfig } from '@gnosis.pm/safe-core-sdk'
-import { SafeTransactionDataPartial } from '@gnosis.pm/safe-core-sdk-types'
-import EthersAdapter from '@gnosis.pm/safe-ethers-lib'
-import SafeServiceClient from '@gnosis.pm/safe-service-client'
+import Safe, { ConnectSafeConfig, EthersAdapter } from '@safe-global/protocol-kit'
+import SafeApiKit from '@safe-global/api-kit'
+import { MetaTransactionData, OperationType } from '@safe-global/safe-core-sdk-types'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     formatEid,
@@ -82,7 +81,7 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     // devtools only supports Ethers v5, and @safeglobal only supports Ethers v6.
 
     protected safeSdk: Safe | undefined
-    protected safeService: SafeServiceClient | undefined
+    protected apiKit: SafeApiKit | undefined
 
     constructor(
         eid: EndpointId,
@@ -99,16 +98,18 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
 
     async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse> {
         this.assertTransaction(transaction)
-        const { safeSdk, safeService } = await this.#initSafe()
+        const { safeSdk, apiKit } = await this.#initSafe()
         const safeTransaction = await safeSdk.createTransaction({
-            safeTransactionData: this.#serializeTransaction(transaction),
+            safeTransactionData: [this.#serializeTransaction(transaction)],
         })
         const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
-        const safeAddress = safeSdk.getAddress()
+        const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
+        const safeAddress = await safeSdk.getAddress()
         const senderAddress = await this.signer.getAddress()
-        await safeService.proposeTransaction({
+        await apiKit.proposeTransaction({
+            senderSignature: senderSignature.data,
             safeAddress,
-            safeTransaction,
+            safeTransactionData: safeTransaction.data,
             safeTxHash,
             senderAddress,
         })
@@ -122,21 +123,22 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
         }
     }
 
-    #serializeTransaction(transaction: OmniTransaction): SafeTransactionDataPartial {
+    #serializeTransaction(transaction: OmniTransaction): MetaTransactionData {
         return {
             to: transaction.point.address,
             data: transaction.data,
             value: '0',
+            operation: OperationType.Call,
         }
     }
 
     async #initSafe() {
-        if (this.safeConfig && (!this.safeSdk || !this.safeService)) {
+        if (this.safeConfig && (!this.safeSdk || !this.apiKit)) {
             const ethAdapter = new EthersAdapter({
                 ethers,
                 signerOrProvider: this.signer,
             })
-            this.safeService = new SafeServiceClient(this.safeUrl)
+            this.apiKit = new SafeApiKit({ txServiceUrl: this.safeUrl, ethAdapter })
 
             const contractNetworks = this.safeConfig.contractNetworks
             this.safeSdk = await Safe.create({
@@ -145,9 +147,9 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
                 ...(!!contractNetworks && { contractNetworks }),
             })
         }
-        if (!this.safeSdk || !this.safeService) {
+        if (!this.safeSdk || !this.apiKit) {
             throw new Error('Safe SDK not initialized')
         }
-        return { safeSdk: this.safeSdk, safeService: this.safeService }
+        return { safeSdk: this.safeSdk, apiKit: this.apiKit }
     }
 }
