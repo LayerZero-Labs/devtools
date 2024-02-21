@@ -55,9 +55,10 @@ export const configureSendLibraries: OAppConfigurator = async (graph, createSdk)
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
+                const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
-                if (currentSendLibrary === config.sendLibrary) return []
+                if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) return []
                 return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
             })
         )
@@ -71,9 +72,12 @@ export const configureReceiveLibraries: OAppConfigurator = async (graph, createS
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
-                const [currentReceiveLibrary] = await endpointSdk.getReceiveLibrary(from.address, to.eid)
+                const [currentReceiveLibrary, isDefaultLibrary] = await endpointSdk.getReceiveLibrary(
+                    from.address,
+                    to.eid
+                )
 
-                if (currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) return []
+                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) return []
                 return [
                     await endpointSdk.setReceiveLibrary(
                         from.address,
