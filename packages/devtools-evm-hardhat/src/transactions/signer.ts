@@ -3,6 +3,7 @@ import type { OmniSignerFactory } from '@layerzerolabs/devtools'
 import { GnosisOmniSignerEVM, OmniSignerEVM } from '@layerzerolabs/devtools-evm'
 import { createProviderFactory } from '@/provider'
 import { createGetHreByEid } from '@/runtime'
+import { ConnectSafeConfigWithSafeAddress } from '@safe-global/protocol-kit'
 
 export const createSignerFactory = (
     addressOrIndex?: string | number,
@@ -20,7 +21,7 @@ export const createGnosisSignerFactory = (
     addressOrIndex?: string | number,
     providerFactory = createProviderFactory(),
     networkEnvironmentFactory = createGetHreByEid()
-): OmniSignerFactory<GnosisOmniSignerEVM> => {
+): OmniSignerFactory<GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress>> => {
     return pMemoize(async (eid) => {
         const provider = await providerFactory(eid)
         const signer = provider.getSigner(addressOrIndex)
@@ -30,6 +31,6 @@ export const createGnosisSignerFactory = (
         if (!safeConfig) {
             throw new Error('No safe config found for the current network')
         }
-        return new GnosisOmniSignerEVM(eid, signer, safeConfig.safeUrl, safeConfig)
+        return new GnosisOmniSignerEVM<ConnectSafeConfigWithSafeAddress>(eid, signer, safeConfig.safeUrl, safeConfig)
     })
 }
