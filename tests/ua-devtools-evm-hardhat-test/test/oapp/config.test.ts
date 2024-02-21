@@ -17,6 +17,7 @@ import {
     avaxExecutor,
     avaxReceiveUln,
     avaxReceiveUln2_Opt2,
+    avaxSendUln,
     avaxSendUln2_Opt2,
     bscDvn,
     bscExecutor,
@@ -154,6 +155,56 @@ describe('oapp/config', () => {
             expect(errors).toEqual([])
         })
 
+        describe('configureSendLibraries lock defaults', () => {
+            let ethSendLibrary: string, avaxSendLibrary: string, graph: OAppOmniGraph
+            beforeEach(async () => {
+                ethSendLibrary = await getLibraryAddress(ethSendUln)
+                avaxSendLibrary = await getLibraryAddress(avaxSendUln)
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                sendLibrary: ethSendLibrary,
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {
+                                sendLibrary: avaxSendLibrary,
+                            },
+                        },
+                    ],
+                }
+            })
+
+            it('should lock in default configureSendLibraries transactions', async () => {
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                expect(transactions).toEqual([
+                    await ethEndpointV2Sdk.setSendLibrary(ethPoint.address, avaxPoint.eid, ethSendLibrary),
+                    await avaxEndpointV2Sdk.setSendLibrary(avaxPoint.address, ethPoint.eid, avaxSendLibrary),
+                ])
+            })
+
+            afterEach(async () => {
+                const [_, errors] = await signAndSend(transactions)
+                // eslint-disable-next-line jest/no-standalone-expect
+                expect(errors).toEqual([])
+                const transactionsAgain = await configureOApp(graph, oappSdkFactory)
+                // eslint-disable-next-line jest/no-standalone-expect
+                expect(transactionsAgain).toEqual([])
+            })
+        })
+
         describe('configureSendLibraries', () => {
             let ethSendLibrary: string, avaxSendLibrary: string, graph: OAppOmniGraph
             beforeEach(async () => {
@@ -224,6 +275,71 @@ describe('oapp/config', () => {
             })
         })
 
+        describe('configureReceiveLibraries lock defaults', () => {
+            let ethReceiveLibrary: string, avaxReceiveLibrary: string, graph: OAppOmniGraph
+            beforeEach(async () => {
+                ethReceiveLibrary = await getLibraryAddress(ethReceiveUln)
+                avaxReceiveLibrary = await getLibraryAddress(avaxReceiveUln)
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                receiveLibraryConfig: {
+                                    receiveLibrary: ethReceiveLibrary,
+                                    gracePeriod: BigInt(0),
+                                },
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: {
+                                receiveLibraryConfig: {
+                                    receiveLibrary: avaxReceiveLibrary,
+                                    gracePeriod: BigInt(0),
+                                },
+                            },
+                        },
+                    ],
+                }
+            })
+
+            it('should return all lock in configureReceiveLibraries transactions', async () => {
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                expect(transactions).toEqual([
+                    await ethEndpointV2Sdk.setReceiveLibrary(
+                        ethPoint.address,
+                        avaxPoint.eid,
+                        ethReceiveLibrary,
+                        BigInt(0)
+                    ),
+                    await avaxEndpointV2Sdk.setReceiveLibrary(
+                        avaxPoint.address,
+                        ethPoint.eid,
+                        avaxReceiveLibrary,
+                        BigInt(0)
+                    ),
+                ])
+            })
+
+            afterEach(async () => {
+                const [_, errors] = await signAndSend(transactions)
+                // eslint-disable-next-line jest/no-standalone-expect
+                expect(errors).toEqual([])
+                const transactionsAgain = await configureOApp(graph, oappSdkFactory)
+                // eslint-disable-next-line jest/no-standalone-expect
+                expect(transactionsAgain).toEqual([])
+            })
+        })
         describe('configureReceiveLibraries', () => {
             let ethReceiveLibrary: string, avaxReceiveLibrary: string, graph: OAppOmniGraph
             beforeEach(async () => {
