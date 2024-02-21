@@ -1,9 +1,16 @@
-import { TASK_LZ_OAPP_CONFIG_INIT } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { HardhatContext } from 'hardhat/internal/context'
-import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { formatEid } from '@layerzerolabs/devtools'
-import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import hre from 'hardhat'
+import {
+    TASK_LZ_OAPP_CONFIG_INIT,
+    TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
+    TASK_LZ_OAPP_WIRE,
+} from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
 import { getTestHre } from '@layerzerolabs/test-devtools-evm-hardhat'
+import * as fs from 'fs'
+import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import { formatEid } from '@layerzerolabs/devtools'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
+import { deployOApp } from '../../__utils__/oapp'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -15,20 +22,11 @@ jest.mock('@layerzerolabs/io-devtools', () => {
     }
 })
 
+const promptToContinueMock = promptToContinue as jest.Mock
+
 describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
-    /**
-     * Helper utility that loads hardhat in isolation,
-     * ensuring that a new copy of hardhat will be loaded
-     * everytime we call this.
-     *
-     * This is useful since we are testing a behavior of feature flagged task
-     * whose presence is determined by a env variable when hardhat is loaded
-     *
-     * @param {(hre: HardhatRuntimeEnvironment) => void | Promise<void>} callback Callback to be executed
-     * @returns {Promise<void>}
-     */
-    const useIsolatedHre = (callback: (hre: HardhatRuntimeEnvironment) => void | Promise<void>): Promise<void> =>
-        jest.isolateModulesAsync(async () => callback(await import('hardhat')))
+    const actual = './layerzero_actual.config.js'
+    const expected = './layerzero_expected.config.js'
 
     const getPromptMocks = async () => {
         const { promptToContinue, promptToSelectMultiple } = await import('@layerzerolabs/io-devtools')
@@ -39,94 +37,222 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
         }
     }
 
-    afterEach(() => {
-        jest.resetModules()
-
-        // On top of isolating the import of hardhat, we also need to wipe the HardhatContext
-        // after every test, otherwise the context will be preserved and the new hardhat import
-        // will fail since it will try to re-register already registered tasks
-        HardhatContext.deleteHardhatContext()
+    beforeEach(async () => {
+        // We'll deploy the endpoint and save the deployments to the filesystem
+        // since we want to be able to tun the task using spawnSync
+        await deployAndSetupDefaultEndpointV2(true)
+        await deployOApp()
     })
 
-    describe('when LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT env feature flag is not set', () => {
-        beforeEach(() => {
-            process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT = ''
-        })
-
-        it('should not be available', async () => {
-            await useIsolatedHre((hre) => {
-                expect(hre.tasks[TASK_LZ_OAPP_CONFIG_INIT]).toBeUndefined()
-            })
-        })
+    afterEach(async () => {
+        // Delete the test file after each test
+        fs.existsSync(actual) && fs.unlinkSync(actual)
+        fs.existsSync(expected) && fs.unlinkSync(expected)
     })
 
-    describe('when LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT env feature flag is set', () => {
-        beforeEach(() => {
-            process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT = '1'
-        })
+    it('should throw an error if there are no networks configured with eid', async () => {
+        const { promptToSelectMultipleMock } = await getPromptMocks()
+        const hre = getTestHre({ config: './hardhat.config.without-eids.ts' })
+        await expect(hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: 'MyOApp' })).rejects.toThrow()
+        expect(promptToSelectMultipleMock).not.toHaveBeenCalled()
+    })
 
-        it('should be available', async () => {
-            await useIsolatedHre((hre) => {
-                expect(hre.tasks[TASK_LZ_OAPP_CONFIG_INIT]).not.toBeUndefined()
+    it('should ask the user to select networks for the config', async () => {
+        const { promptToSelectMultipleMock } = await getPromptMocks()
+        promptToSelectMultipleMock.mockResolvedValue(['britney'])
+
+        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: 'MyOApp', oappConfig: actual })
+
+        expect(promptToSelectMultipleMock).toHaveBeenCalledWith(
+            `Select the networks to include in your OApp config`,
+            expect.objectContaining({
+                options: [
+                    {
+                        title: 'britney',
+                        value: 'britney',
+                        disabled: false,
+                        hint: `Connected to ${formatEid(getEidForNetworkName('britney'))}`,
+                    },
+                    {
+                        title: 'tango',
+                        value: 'tango',
+                        disabled: false,
+                        hint: `Connected to ${formatEid(getEidForNetworkName('tango'))}`,
+                    },
+                    {
+                        title: 'vengaboys',
+                        value: 'vengaboys',
+                        disabled: false,
+                        hint: `Connected to ${formatEid(getEidForNetworkName('vengaboys'))}`,
+                    },
+                    {
+                        title: 'hardhat',
+                        value: 'hardhat',
+                        disabled: true,
+                    },
+                    {
+                        title: 'localhost',
+                        value: 'localhost',
+                        disabled: true,
+                    },
+                ],
             })
-        })
+        )
+    })
 
-        it('should return an empty array if there are no networks configured with eid', async () => {
-            await useIsolatedHre(async () => {
-                const { promptToSelectMultipleMock } = await getPromptMocks()
-                const hre = getTestHre({ config: './hardhat.config.without-eids.ts' })
+    it('should generate a LayerZero Configuration with the two selected networks', async () => {
+        const { promptToSelectMultipleMock } = await getPromptMocks()
+        const networks = ['britney', 'tango']
+        promptToSelectMultipleMock.mockResolvedValue(networks)
+        const contractName = 'MyOApp'
+        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
 
-                await expect(
-                    hre.run(TASK_LZ_OAPP_CONFIG_INIT, { oappConfig: './layerzero.config.js' })
-                ).resolves.toEqual([])
+        // generate an expected LayerZero Config file to compare
+        await generateExpectedLzConfig(expected, networks, contractName)
+        const expectedContent = fs.readFileSync(expected, 'utf-8')
+        const actualContent = fs.readFileSync(actual, 'utf-8')
+        expect(expectedContent).toEqual(actualContent)
+    })
 
-                expect(promptToSelectMultipleMock).not.toHaveBeenCalled()
-            })
-        })
+    it('should generate a LayerZero Configuration with the three selected networks and then wire using generated config', async () => {
+        const { promptToSelectMultipleMock } = await getPromptMocks()
+        const networks = ['britney', 'tango', 'vengaboys']
+        promptToSelectMultipleMock.mockResolvedValue(networks)
+        const contractName = 'DefaultOApp'
+        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
 
-        it('should ask the user to select networks for the config', async () => {
-            await useIsolatedHre(async (hre) => {
-                const { promptToSelectMultipleMock } = await getPromptMocks()
-                promptToSelectMultipleMock.mockResolvedValue(['britney'])
+        // generate an expected LayerZero Config file to compare
+        await generateExpectedLzConfig(expected, networks, contractName)
 
-                await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { oappConfig: './layerzero.config.js' })
+        const expectedContent = fs.readFileSync(expected, 'utf-8')
+        const actualContent = fs.readFileSync(actual, 'utf-8')
+        expect(expectedContent).toEqual(actualContent)
 
-                expect(promptToSelectMultipleMock).toHaveBeenCalledWith(
-                    `Select the networks to include in your OApp config`,
-                    expect.objectContaining({
-                        options: [
-                            {
-                                title: 'britney',
-                                value: 'britney',
-                                disabled: false,
-                                hint: `Connected to ${formatEid(getEidForNetworkName('britney'))}`,
-                            },
-                            {
-                                title: 'tango',
-                                value: 'tango',
-                                disabled: false,
-                                hint: `Connected to ${formatEid(getEidForNetworkName('tango'))}`,
-                            },
-                            {
-                                title: 'vengaboys',
-                                value: 'vengaboys',
-                                disabled: false,
-                                hint: `Connected to ${formatEid(getEidForNetworkName('vengaboys'))}`,
-                            },
-                            {
-                                title: 'hardhat',
-                                value: 'hardhat',
-                                disabled: true,
-                            },
-                            {
-                                title: 'localhost',
-                                value: 'localhost',
-                                disabled: true,
-                            },
-                        ],
-                    })
-                )
-            })
-        })
+        // wire using generated config and expect no errors
+        const oappConfig = actual
+
+        promptToContinueMock
+            .mockResolvedValueOnce(false) // We don't want to see the list
+            .mockResolvedValueOnce(true) // We want to continue
+
+        const [, errors] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+        expect(errors).toEqual([])
     })
 })
+
+/**
+ * Builds expected LayerZero config to compare against
+ * @param filename filename
+ * @param networks selected networks
+ */
+async function generateExpectedLzConfig(filename: string, networks: string[], contractName: string) {
+    const endpointIdImportStatement = `import { EndpointId } from "@layerzerolabs/lz-definitions";\n`
+    const networkContractVariables = networks
+        .map(
+            (network) =>
+                `const ${network}Contract = {\n    eid: ${getTestEndpoint(network)},\n    contractName: "${contractName}"\n};`
+        )
+        .join('\n')
+    const contractsArray = networks.map((network) => `{ contract: ${network}Contract }`).join(', ')
+    const connectionsArray = await getConnectionsArray(networks ?? [])
+    const exportContent = `\nexport default { contracts: [${contractsArray}], connections: [${connectionsArray}] };\n`
+    const lzConfigContent = endpointIdImportStatement + networkContractVariables + exportContent
+    fs.writeFileSync(filename, lzConfigContent)
+}
+
+/**
+ * Gets string representation of test endpoint enum
+ * @param network
+ * @return string representation of test endpoint enum
+ */
+function getTestEndpoint(network: string): string {
+    switch (network) {
+        case 'vengaboys':
+            return 'EndpointId.ETHEREUM_V2_MAINNET'
+        case 'britney':
+            return 'EndpointId.AVALANCHE_V2_MAINNET'
+        case 'tango':
+            return 'EndpointId.BSC_V2_MAINNET'
+        default:
+            throw new Error('test network does not exist.')
+    }
+}
+
+/**
+ * Builds connection array string using passed in selected networks.
+ * Calls TASK_LZ_OAPP_CONFIG_GET_DEFAULT to get default values for all pathways
+ * @param networks
+ * @return string representation of the connections array
+ *
+ *         connections: [
+ *             {
+ *                from: firstContract,
+ *                to: secondContract,
+ *                config:{
+ *                    ...configs
+ *                }
+ *             },
+ *             {
+ *                from: secondContract,
+ *                to: firstContract,
+ *                config:{
+ *                    ...configs
+ *                }
+ *             }
+ *         ]
+ */
+async function getConnectionsArray(networks: string[]) {
+    const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_DEFAULT, {
+        networks,
+    })
+
+    let connectionsContent = ''
+    for (const from of networks) {
+        for (const to of networks) {
+            if (from === to) continue
+            const defaultConfig = getDefaultConfigTask[from][to]
+            connectionsContent += `{ from: ${from}Contract, to: ${to}Contract, config: ${buildDefaultConfig(defaultConfig)} }, `
+        }
+    }
+    connectionsContent = connectionsContent.substring(0, connectionsContent.length - 2)
+    return connectionsContent
+}
+
+/**
+ * Builds config string with passed in defaults.
+ *
+ * @param defaultConfig
+ * @return string representing config
+ *
+ *      config: {
+ *           sendLibrary: "0x0000000000000000000000000000000000000000",
+ *           receiveLibraryConfig: {...},
+ *           receiveLibraryTimeoutConfig: {...},
+ *           sendConfig: {...},
+ *           receiveConfig: {...}
+ *      }
+ */
+function buildDefaultConfig(defaultConfig): string {
+    return (
+        `{ ` +
+        `sendLibrary: "${defaultConfig.defaultSendLibrary}", ` +
+        `receiveLibraryConfig: { receiveLibrary: "${defaultConfig.defaultReceiveLibrary}", gracePeriod: 0 }, ` +
+        `sendConfig: { executorConfig: { maxMessageSize: ${defaultConfig.sendExecutorConfig?.maxMessageSize}, executor: "${defaultConfig.sendExecutorConfig?.executor}" }, ` +
+        `ulnConfig: { confirmations: ${defaultConfig.sendUlnConfig.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.sendUlnConfig.requiredDVNs)}, optionalDVNs: ${handleDvns(defaultConfig.sendUlnConfig.optionalDVNs)}, optionalDVNThreshold: ${defaultConfig.sendUlnConfig.optionalDVNThreshold ?? 0} } }, ` +
+        `receiveConfig: { ulnConfig: { confirmations: ${defaultConfig.receiveUlnConfig.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.receiveUlnConfig.requiredDVNs)}, optionalDVNs: ${handleDvns(defaultConfig.receiveUlnConfig.optionalDVNs)}, optionalDVNThreshold: ${defaultConfig.receiveUlnConfig.optionalDVNThreshold ?? 0} } }` +
+        ` }`
+    )
+}
+
+/**
+ * Handles converting array of DVNs (required or optional) to a string
+ * @param dvnArray
+ * @return string representing dvns
+ */
+function handleDvns(dvnArray: string[]): string {
+    if (dvnArray.length > 0) {
+        return '[' + dvnArray.map((str) => `"${str}"`).join(', ') + ']'
+    } else {
+        return '[]'
+    }
+}
