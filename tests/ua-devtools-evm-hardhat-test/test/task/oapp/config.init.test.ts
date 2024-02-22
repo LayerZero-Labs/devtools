@@ -142,8 +142,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
 
 /**
  * Builds expected LayerZero config to compare against
- * @param filename filename
- * @param networks selected networks
+ * @param {string} filename filename
+ * @param {string[]} networks selected networks
+ * @param {string} contractName name of contract
  */
 async function generateExpectedLzConfig(filename: string, networks: string[], contractName: string) {
     const endpointIdImportStatement = `import { EndpointId } from "@layerzerolabs/lz-definitions";\n`
@@ -162,8 +163,8 @@ async function generateExpectedLzConfig(filename: string, networks: string[], co
 
 /**
  * Gets string representation of test endpoint enum
- * @param network
- * @return string representation of test endpoint enum
+ * @param {string} network
+ * @return {string} string representation of test endpoint enum
  */
 function getTestEndpoint(network: string): string {
     switch (network) {
@@ -181,23 +182,19 @@ function getTestEndpoint(network: string): string {
 /**
  * Builds connection array string using passed in selected networks.
  * Calls TASK_LZ_OAPP_CONFIG_GET_DEFAULT to get default values for all pathways
- * @param networks
- * @return string representation of the connections array
+ * @param {string[]} networks
+ * @return {string} string representation of the connections array
  *
  *         connections: [
  *             {
  *                from: firstContract,
  *                to: secondContract,
- *                config:{
- *                    ...configs
- *                }
+ *                config:{...}
  *             },
  *             {
  *                from: secondContract,
  *                to: firstContract,
- *                config:{
- *                    ...configs
- *                }
+ *                config:{...}
  *             }
  *         ]
  */
@@ -221,18 +218,17 @@ async function getConnectionsArray(networks: string[]) {
 /**
  * Builds config string with passed in defaults.
  *
- * @param defaultConfig
- * @return string representing config
+ * @param {Record<string, Record<string, unknown>>} defaultConfig
+ * @return {string} string representing config
  *
  *      config: {
  *           sendLibrary: "0x0000000000000000000000000000000000000000",
  *           receiveLibraryConfig: {...},
- *           receiveLibraryTimeoutConfig: {...},
  *           sendConfig: {...},
  *           receiveConfig: {...}
  *      }
  */
-function buildDefaultConfig(defaultConfig): string {
+function buildDefaultConfig(defaultConfig: Record<string, Record<string, unknown>>): string {
     return (
         `{ ` +
         `sendLibrary: "${defaultConfig.defaultSendLibrary}", ` +
@@ -246,8 +242,8 @@ function buildDefaultConfig(defaultConfig): string {
 
 /**
  * Handles converting array of DVNs (required or optional) to a string
- * @param dvnArray
- * @return string representing dvns
+ * @param {string[]} dvnArray
+ * @return {string} string representing dvns
  */
 function handleDvns(dvnArray: string[]): string {
     if (dvnArray.length > 0) {

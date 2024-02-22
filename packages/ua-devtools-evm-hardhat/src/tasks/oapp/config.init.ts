@@ -94,7 +94,6 @@ const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel
     const generatedLzConfig: NodeArray<Statement> = await generateLzConfig(selectedNetworks, contractName)
     const layerZeroConfigContent: string = printer.printList(ListFormat.MultiLine, generatedLzConfig, sourceFile)
     writeFileSync(oappConfig, layerZeroConfigContent)
-
     return oappConfig
 }
 
