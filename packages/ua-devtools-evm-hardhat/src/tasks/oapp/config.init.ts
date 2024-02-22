@@ -30,7 +30,7 @@ interface TaskArgs {
  *
  * The return value is a file path to the newly generated LayerZero Config file
  *
- * @returns {Promise<oappConfig>}
+ * @returns {Promise<string>}
  */
 const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel = 'info' }, hre): Promise<string> => {
     printLogo()

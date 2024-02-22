@@ -234,8 +234,8 @@ function buildDefaultConfig(defaultConfig: Record<string, Record<string, unknown
         `sendLibrary: "${defaultConfig.defaultSendLibrary}", ` +
         `receiveLibraryConfig: { receiveLibrary: "${defaultConfig.defaultReceiveLibrary}", gracePeriod: 0 }, ` +
         `sendConfig: { executorConfig: { maxMessageSize: ${defaultConfig.sendExecutorConfig?.maxMessageSize}, executor: "${defaultConfig.sendExecutorConfig?.executor}" }, ` +
-        `ulnConfig: { confirmations: ${defaultConfig.sendUlnConfig.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.sendUlnConfig.requiredDVNs)}, optionalDVNs: ${handleDvns(defaultConfig.sendUlnConfig.optionalDVNs)}, optionalDVNThreshold: ${defaultConfig.sendUlnConfig.optionalDVNThreshold ?? 0} } }, ` +
-        `receiveConfig: { ulnConfig: { confirmations: ${defaultConfig.receiveUlnConfig.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.receiveUlnConfig.requiredDVNs)}, optionalDVNs: ${handleDvns(defaultConfig.receiveUlnConfig.optionalDVNs)}, optionalDVNThreshold: ${defaultConfig.receiveUlnConfig.optionalDVNThreshold ?? 0} } }` +
+        `ulnConfig: { confirmations: ${defaultConfig.sendUlnConfig?.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.sendUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(defaultConfig.sendUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${defaultConfig.sendUlnConfig?.optionalDVNThreshold ?? 0} } }, ` +
+        `receiveConfig: { ulnConfig: { confirmations: ${defaultConfig.receiveUlnConfig?.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${defaultConfig.receiveUlnConfig?.optionalDVNThreshold ?? 0} } }` +
         ` }`
     )
 }

@@ -10,10 +10,10 @@ import {
     Statement,
     VariableStatement,
 } from 'typescript'
-import { formatEid } from '@layerzerolabs/devtools'
+import { formatEid, OmniAddress } from '@layerzerolabs/devtools'
 import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
-import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     CONFIG,
     CONFIRMATIONS,
@@ -41,11 +41,15 @@ import {
     ULN_CONFIG,
     ZERO,
 } from '@/oapp/typescript/constants'
+import { backOff } from 'exponential-backoff'
+import { createLogger } from '@layerzerolabs/io-devtools'
+
+const logger = createLogger()
 
 /**
  * Normalizes the identifier name by replacing hyphens with underscores.
  *
- * @param {string} name - The input string to normalize.
+ * @param {string} name The input string to normalize.
  * @returns {string} The normalized identifier name.
  */
 export const normalizeIdentifierName = (name: string): string => name.replaceAll('-', '_')
@@ -74,8 +78,8 @@ export const createEndpointImportDeclaration = (): ImportDeclaration =>
 /**
  * Creates contract variables for the selected networks and contract name.
  *
- * @param {string[]} selectedNetworks - An array of network names.
- * @param {string} contractName - The name of the contract.
+ * @param {string[]} selectedNetworks An array of network names.
+ * @param {string} contractName The name of the contract.
  * @returns {VariableStatement[]} An array of VariableStatement objects representing the created contract variables.
  *
  *      const networkContract = {
@@ -119,7 +123,7 @@ export const createContractVariables = (selectedNetworks: string[], contractName
 /**
  * Creates the contracts and connections configurations.
  *
- * @param {Map<string, Identifier>} contractMap - A map containing network names as keys and corresponding contract identifiers as values.
+ * @param {Map<string, Identifier>} contractMap A map containing network names as keys and corresponding contract identifiers as values.
  * @returns {Promise<ExportAssignment>} A promise that resolves to an ExportAssignment object representing the created contracts and connections.
  *
  *      export default {
@@ -152,31 +156,43 @@ export const createContractVariables = (selectedNetworks: string[], contractName
 export const createContractsAndConnections = async (
     contractMap: Map<string, Identifier>
 ): Promise<ExportAssignment> => {
-    let contracts = factory.createArrayLiteralExpression([])
-    let connections = factory.createArrayLiteralExpression([])
+    let contractsArrayLiteral = factory.createArrayLiteralExpression([])
+    let connectionsArrayLiteral = factory.createArrayLiteralExpression([])
 
     for (const [fromNetwork, fromContract] of contractMap) {
-        const contractObject = factory.createObjectLiteralExpression([
-            factory.createPropertyAssignment(factory.createIdentifier(CONTRACT.toLowerCase()), fromContract),
+        contractsArrayLiteral = factory.createArrayLiteralExpression([
+            ...contractsArrayLiteral.elements,
+            factory.createObjectLiteralExpression([
+                factory.createPropertyAssignment(factory.createIdentifier(CONTRACT.toLowerCase()), fromContract),
+            ]),
         ])
-        contracts = factory.createArrayLiteralExpression([...contracts.elements, contractObject])
-        for (const [toNetwork, toContract] of contractMap) {
-            if (fromNetwork == toNetwork) continue
-            const contractObject = factory.createObjectLiteralExpression([
-                factory.createPropertyAssignment(factory.createIdentifier(FROM), fromContract),
-                factory.createPropertyAssignment(factory.createIdentifier(TO), toContract),
-                await createDefaultConfig(fromNetwork, toNetwork),
-            ])
-            connections = factory.createArrayLiteralExpression([...connections.elements, contractObject])
-        }
+
+        const connections = await Promise.all(
+            Array.from(contractMap)
+                .filter(([toNetwork]) => fromNetwork !== toNetwork)
+                .map(([toNetwork, toContract]) =>
+                    createDefaultConfig(fromNetwork, toNetwork).then((defaultConfig) =>
+                        factory.createObjectLiteralExpression([
+                            factory.createPropertyAssignment(factory.createIdentifier(FROM), fromContract),
+                            factory.createPropertyAssignment(factory.createIdentifier(TO), toContract),
+                            defaultConfig,
+                        ])
+                    )
+                )
+        )
+
+        connectionsArrayLiteral = factory.createArrayLiteralExpression([
+            ...connectionsArrayLiteral.elements,
+            ...connections,
+        ])
     }
 
     return factory.createExportAssignment(
         /* modifiers */ undefined,
         /* isExportEquals */ false,
         factory.createObjectLiteralExpression([
-            factory.createPropertyAssignment(CONTRACTS, contracts),
-            factory.createPropertyAssignment(CONNECTIONS, connections),
+            factory.createPropertyAssignment(CONTRACTS, contractsArrayLiteral),
+            factory.createPropertyAssignment(CONNECTIONS, connectionsArrayLiteral),
         ])
     )
 }
@@ -184,7 +200,7 @@ export const createContractsAndConnections = async (
 /**
  * Creates a send library configuration.
  *
- * @param {string} sendDefaultLibrary - The default send library.
+ * @param {string} sendDefaultLibrary The default send library.
  * @returns {PropertyAssignment} A PropertyAssignment object representing the send library configuration.
  *
  *      sendLibrary: "0x0000000000000000000000000000000000000000"
@@ -199,7 +215,7 @@ export const createSendLibraryConfig = (sendDefaultLibrary: string): PropertyAss
 /**
  * Creates a receive library configuration object.
  *
- * @param {string} receiveDefaultLibrary - The default receive library.
+ * @param {string} receiveDefaultLibrary The default receive library.
  * @returns {PropertyAssignment} A PropertyAssignment object representing the receive library configuration.
  *
  *      receiveLibraryConfig: {
@@ -223,9 +239,9 @@ export const createReceiveLibraryConfig = (receiveDefaultLibrary: string): Prope
 /**
  * Creates an executor configuration object.
  *
- * @param {object} executorConfig - The executor configuration parameters.
- * @param {number} executorConfig.maxMessageSize - The maximum message size.
- * @param {string} executorConfig.executor - The executor string.
+ * @param {object} executorConfig The executor configuration parameters.
+ * @param {number} executorConfig.maxMessageSize The maximum message size.
+ * @param {string} executorConfig.executor The executor string.
  * @returns {ObjectLiteralExpression} An ObjectLiteralExpression representing the executor configuration.
  *
  *     executorConfig: {
@@ -246,11 +262,11 @@ export const creatExecutorConfig = ({ maxMessageSize, executor }: Uln302Executor
 /**
  * Creates a ULN configuration object.
  *
- * @param {object} ulnConfig - The ULN configuration parameters.
- * @param {bigint} ulnConfig.confirmations - The number of confirmations.
- * @param {string[]} ulnConfig.requiredDVNs - An array of required DVNs.
- * @param {string[]} ulnConfig.optionalDVNs - An array of optional DVNs.
- * @param {number} ulnConfig.optionalDVNThreshold - The threshold for optional DVNs.
+ * @param {object} ulnConfig The ULN configuration parameters.
+ * @param {bigint} ulnConfig.confirmations The number of confirmations.
+ * @param {string[]} ulnConfig.requiredDVNs An array of required DVNs.
+ * @param {string[]} ulnConfig.optionalDVNs An array of optional DVNs.
+ * @param {number} ulnConfig.optionalDVNThreshold The threshold for optional DVNs.
  * @returns {ObjectLiteralExpression} An ObjectLiteralExpression representing the ULN configuration.
  *
  *     ulnConfig: {
@@ -296,8 +312,8 @@ export const creatUlnConfig = ({
 /**
  * Creates a send configuration object.
  *
- * @param {Uln302ExecutorConfig} sendDefaultExecutorConfig - The default executor configuration.
- * @param {Uln302UlnConfig} sendDefaultUlnConfig - The default ULN configuration.
+ * @param {Uln302ExecutorConfig} sendDefaultExecutorConfig The default executor configuration.
+ * @param {Uln302UlnConfig} sendDefaultUlnConfig The default ULN configuration.
  * @returns {PropertyAssignment} A PropertyAssignment object representing the send configuration.
  *
  *     sendConfig: {
@@ -305,7 +321,7 @@ export const creatUlnConfig = ({
  *       ulnConfig: {},
  *     }
  */
-export const creatSendConfig = (
+export const createSendConfig = (
     sendDefaultExecutorConfig: Uln302ExecutorConfig,
     sendDefaultUlnConfig: Uln302UlnConfig
 ): PropertyAssignment => {
@@ -327,7 +343,7 @@ export const creatSendConfig = (
 /**
  * Creates a receive configuration object.
  *
- * @param {Uln302UlnConfig} receiveDefaultUlnConfig - The default ULN configuration.
+ * @param {Uln302UlnConfig} receiveDefaultUlnConfig The default ULN configuration.
  * @returns {PropertyAssignment} A PropertyAssignment object representing the receive configuration.
  *
  *     receiveConfig: {
@@ -349,8 +365,8 @@ export const creatReceiveConfig = (receiveDefaultUlnConfig: Uln302UlnConfig): Pr
 /**
  * Creates a default LayerZero configuration from the passed in networks by reading current defaults off-chain.
  *
- * @param {string} fromNetwork - The source network.
- * @param {string} toNetwork - The destination network.
+ * @param {string} fromNetwork The source network.
+ * @param {string} toNetwork The destination network.
  * @returns {Promise<PropertyAssignment>} A promise that resolves to a PropertyAssignment object representing the default configuration.
  * @throws {Error} Throws an error if any required default configuration is missing.
  *
@@ -363,11 +379,19 @@ export const creatReceiveConfig = (receiveDefaultUlnConfig: Uln302UlnConfig): Pr
  *         }
  */
 export const createDefaultConfig = async (fromNetwork: string, toNetwork: string): Promise<PropertyAssignment> => {
-    const receiveDefaultConfig = await getReceiveConfig(fromNetwork, toNetwork)
-    const [receiveDefaultLibrary, receiveDefaultUlnConfig] = receiveDefaultConfig ?? []
+    let sendDefaultConfig: [OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined
+    let receiveDefaultConfig: [OmniAddress, Uln302UlnConfig, Timeout] | undefined
+    try {
+        ;[sendDefaultConfig, receiveDefaultConfig] = await Promise.all([
+            basicRetryPolicy(() => getSendConfig(fromNetwork, toNetwork)),
+            basicRetryPolicy(() => getReceiveConfig(fromNetwork, toNetwork)),
+        ])
+    } catch (error) {
+        console.error('Failed to get send and receive default configs:', error)
+    }
 
-    const sendDefaultConfig = await getSendConfig(fromNetwork, toNetwork)
     const [sendDefaultLibrary, sendDefaultUlnConfig, sendDefaultExecutorConfig] = sendDefaultConfig ?? []
+    const [receiveDefaultLibrary, receiveDefaultUlnConfig] = receiveDefaultConfig ?? []
 
     if (sendDefaultLibrary == null) {
         throw new Error(
@@ -396,7 +420,7 @@ export const createDefaultConfig = async (fromNetwork: string, toNetwork: string
         factory.createObjectLiteralExpression([
             createSendLibraryConfig(sendDefaultLibrary),
             createReceiveLibraryConfig(receiveDefaultLibrary),
-            creatSendConfig(sendDefaultExecutorConfig, sendDefaultUlnConfig),
+            createSendConfig(sendDefaultExecutorConfig, sendDefaultUlnConfig),
             creatReceiveConfig(receiveDefaultUlnConfig),
         ])
     )
@@ -405,8 +429,8 @@ export const createDefaultConfig = async (fromNetwork: string, toNetwork: string
 /**
  * Generates a default LayerZero configuration for the selected networks and contract.
  *
- * @param {string[]} selectedNetworks - An array of network names.
- * @param {string} contractName - The name of the contract.
+ * @param {string[]} selectedNetworks An array of network names.
+ * @param {string} contractName The name of the contract.
  * @returns {Promise<NodeArray<Statement>>} A promise that resolves to a NodeArray containing generated LayerZero configuration statements.
  */
 export const generateLzConfig = async (
@@ -425,3 +449,47 @@ export const generateLzConfig = async (
             )
         ),
     ])
+
+/**
+ * Retry policy function that retries a given asynchronous operation with exponential backoff strategy.
+ * @template T - The type of the result returned by the asynchronous operation.
+ * @param {() => Promise<T>} fn - The asynchronous operation to be retried.
+ * @param {number} [maxAttempts=3] - The maximum number of attempts.
+ * @param {number} [baseDelay=1000] - The base delay in milliseconds before the first retry.
+ * @param {number} [maxDelay=15000] - The maximum delay in milliseconds between retries.
+ * @returns {Promise<T>} - A promise resolving to the result of the operation if successful.
+ * @throws {Error} - Throws an error if all attempts fail.
+ */
+async function basicRetryPolicy<T>(
+    fn: () => Promise<T>,
+    maxAttempts: number = 3,
+    baseDelay: number = 1000,
+    maxDelay: number = 15000
+): Promise<T> {
+    const operation = async () => {
+        return await fn()
+    }
+
+    const backoffOptions = {
+        numOfAttempts: maxAttempts,
+        startingDelay: baseDelay,
+        delayFirstAttempt: true,
+        maxDelay: maxDelay,
+        factor: 2,
+        randomisationFactor: 0.5,
+    }
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+            logger.verbose(`Attempt ${attempt + 1}/${maxAttempts}`)
+            return await backOff(operation, backoffOptions)
+        } catch (error) {
+            logger.info(`Attempt ${attempt + 1} failed with error: ${error}`)
+            if (attempt < maxAttempts - 1) {
+                logger.info('Retrying...')
+            }
+        }
+    }
+
+    throw new Error(`All ${maxAttempts} attempts failed`)
+}
