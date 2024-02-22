@@ -84,3 +84,6 @@ middlewares:
 
 # https://verdaccio.org/docs/logger
 log: { type: stdout, format: pretty, level: http }
+
+# https://verdaccio.org/docs/configuration/#max-body-size
+max_body_size: 100mb
