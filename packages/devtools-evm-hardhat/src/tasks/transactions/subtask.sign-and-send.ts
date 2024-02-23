@@ -1,7 +1,7 @@
 import { types } from '@/cli'
 import { SUBTASK_LZ_SIGN_AND_SEND } from '@/constants'
 import { formatOmniTransaction } from '@/transactions/format'
-import { createSignerFactory } from '@/transactions/signer'
+import { createGnosisSignerFactory, createSignerFactory } from '@/transactions/signer'
 import {
     type OmniSignerFactory,
     type OmniTransaction,
@@ -25,13 +25,16 @@ import type { ActionType } from 'hardhat/types'
 export interface SignAndSendTaskArgs {
     ci?: boolean
     transactions: OmniTransaction[]
+    useSafe?: boolean
     createSigner?: OmniSignerFactory
 }
 
 const action: ActionType<SignAndSendTaskArgs> = async ({
     ci,
     transactions,
-    createSigner = createSignerFactory(),
+    useSafe = false,
+    // useSafe will override createSigner using Gnosis factory
+    createSigner = useSafe ? createGnosisSignerFactory() : createSignerFactory(),
 }): Promise<SignAndSendResult> => {
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
@@ -164,3 +167,4 @@ subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign and send a list of transactions using a 
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addParam('transactions', 'List of OmniTransaction objects', undefined, types.any)
     .addParam('createSigner', 'Function that creates a signer for a particular network', undefined, types.any, true)
+    .addParam('useSafe', 'Use Gnosis Safe for signing.  Overrides createSigner.', false, types.boolean, true)

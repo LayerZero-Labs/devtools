@@ -30,6 +30,7 @@
     ]
   },
   "resolutions": {
+    "es5-ext": "https://github.com/LayerZero-Labs/es5-ext",
     "rustbn.js": "^0.3.0"
   },
   "devDependencies": {
