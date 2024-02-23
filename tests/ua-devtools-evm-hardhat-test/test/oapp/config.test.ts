@@ -11,18 +11,15 @@ import { createOAppFactory, OApp } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
-    avaxDvn,
-    avaxDvn_Opt2,
-    avaxDvn_Opt3,
-    avaxExecutor,
     avaxReceiveUln,
     avaxReceiveUln2_Opt2,
     avaxSendUln,
     avaxSendUln2_Opt2,
-    bscDvn,
-    bscExecutor,
     deployAndSetupDefaultEndpointV2,
     ethDvn,
+    ethDvn_Opt2,
+    ethDvn_Opt3,
+    ethExecutor,
     ethReceiveUln,
     ethReceiveUln2_Opt2,
     ethSendUln,
@@ -607,24 +604,11 @@ describe('oapp/config', () => {
             })
 
             describe('configureSendConfig', () => {
-                let graph: OAppOmniGraph,
-                    bscExecutorAddress: string,
-                    bscDvnAddress: string,
-                    avaxExecutorAddress: string,
-                    avaxDvnAddress: string,
-                    ethToAvaxSendUlnDVNs: string[],
-                    ethToBscSendUlnDVNs: string[],
-                    ethSendLibrary: string
+                let graph: OAppOmniGraph, ethExecutorAddress: string, ethDvnAddress: string, ethSendLibrary: string
 
                 beforeEach(async () => {
-                    bscExecutorAddress = await getLibraryAddress(bscExecutor)
-                    bscDvnAddress = await getLibraryAddress(bscDvn)
-
-                    avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
-                    avaxDvnAddress = await getLibraryAddress(avaxDvn)
-
-                    ethToAvaxSendUlnDVNs = [avaxDvnAddress]
-                    ethToBscSendUlnDVNs = [bscDvnAddress]
+                    ethExecutorAddress = await getLibraryAddress(ethExecutor)
+                    ethDvnAddress = await getLibraryAddress(ethDvn)
                     ethSendLibrary = await getLibraryAddress(ethSendUln)
 
                     graph = {
@@ -646,12 +630,12 @@ describe('oapp/config', () => {
                                     sendConfig: {
                                         executorConfig: {
                                             maxMessageSize: 99,
-                                            executor: avaxExecutorAddress,
+                                            executor: ethExecutorAddress,
                                         },
                                         ulnConfig: {
                                             confirmations: BigInt(42),
-                                            requiredDVNs: ethToAvaxSendUlnDVNs,
-                                            optionalDVNs: ethToAvaxSendUlnDVNs,
+                                            requiredDVNs: [ethDvnAddress],
+                                            optionalDVNs: [ethDvnAddress],
                                             optionalDVNThreshold: 1,
                                         },
                                     },
@@ -663,12 +647,12 @@ describe('oapp/config', () => {
                                     sendConfig: {
                                         executorConfig: {
                                             maxMessageSize: 99,
-                                            executor: bscExecutorAddress,
+                                            executor: ethExecutorAddress,
                                         },
                                         ulnConfig: {
                                             confirmations: BigInt(42),
-                                            requiredDVNs: ethToBscSendUlnDVNs,
-                                            optionalDVNs: ethToBscSendUlnDVNs,
+                                            requiredDVNs: [ethDvnAddress],
+                                            optionalDVNs: [ethDvnAddress],
                                             optionalDVNThreshold: 1,
                                         },
                                     },
@@ -703,7 +687,7 @@ describe('oapp/config', () => {
                                     eid: avaxPoint.eid,
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: avaxExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                 },
                             ])),
@@ -712,8 +696,8 @@ describe('oapp/config', () => {
                                     eid: avaxPoint.eid,
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethToAvaxSendUlnDVNs,
-                                        optionalDVNs: ethToAvaxSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -723,7 +707,7 @@ describe('oapp/config', () => {
                                     eid: bscPoint.eid,
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: bscExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                 },
                             ])),
@@ -732,8 +716,8 @@ describe('oapp/config', () => {
                                     eid: bscPoint.eid,
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethToBscSendUlnDVNs,
-                                        optionalDVNs: ethToBscSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -751,7 +735,7 @@ describe('oapp/config', () => {
                                     eid: bscPoint.eid,
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: bscExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                 },
                             ])),
@@ -760,8 +744,8 @@ describe('oapp/config', () => {
                                     eid: bscPoint.eid,
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethToBscSendUlnDVNs,
-                                        optionalDVNs: ethToBscSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -779,7 +763,7 @@ describe('oapp/config', () => {
                                     eid: avaxPoint.eid,
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: avaxExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                 },
                             ])),
@@ -788,8 +772,8 @@ describe('oapp/config', () => {
                                     eid: avaxPoint.eid,
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethToAvaxSendUlnDVNs,
-                                        optionalDVNs: ethToAvaxSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -801,16 +785,16 @@ describe('oapp/config', () => {
 
                 it('should not take the order of requiredDVNs into account', async () => {
                     const requiredDVNs = await Promise.all([
-                        getLibraryAddress(avaxDvn),
-                        getLibraryAddress(avaxDvn_Opt2),
-                        getLibraryAddress(avaxDvn_Opt3),
+                        getLibraryAddress(ethDvn),
+                        getLibraryAddress(ethDvn_Opt2),
+                        getLibraryAddress(ethDvn_Opt3),
                     ])
 
                     const config = {
                         sendConfig: {
                             executorConfig: {
                                 maxMessageSize: 99,
-                                executor: avaxExecutorAddress,
+                                executor: ethExecutorAddress,
                             },
                             ulnConfig: {
                                 confirmations: BigInt(42),
@@ -869,16 +853,16 @@ describe('oapp/config', () => {
 
                 it('should not take the order of optionalDVNs into account', async () => {
                     const optionalDVNs = await Promise.all([
-                        getLibraryAddress(avaxDvn),
-                        getLibraryAddress(avaxDvn_Opt2),
-                        getLibraryAddress(avaxDvn_Opt3),
+                        getLibraryAddress(ethDvn),
+                        getLibraryAddress(ethDvn_Opt2),
+                        getLibraryAddress(ethDvn_Opt3),
                     ])
 
                     const config = {
                         sendConfig: {
                             executorConfig: {
                                 maxMessageSize: 99,
-                                executor: avaxExecutorAddress,
+                                executor: ethExecutorAddress,
                             },
                             ulnConfig: {
                                 confirmations: BigInt(42),
@@ -1086,15 +1070,11 @@ describe('oapp/config', () => {
         describe('configureConfig configureSendConfig and configureReceiveConfig together', () => {
             let graph: OAppOmniGraph
             it('should return all setConfig transactions', async () => {
-                const avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
-                const avaxDvnAddress = await getLibraryAddress(avaxDvn)
-                const ethSendUlnDVNs: string[] = [avaxDvnAddress]
-
-                const ethDvnAddress = await getLibraryAddress(ethDvn)
-                const ethReceiveUlnDVNs: string[] = [ethDvnAddress]
-
                 const ethSendLibrary = await getLibraryAddress(ethSendUln)
                 const ethReceiveLibrary = await getLibraryAddress(ethReceiveUln)
+
+                const ethExecutorAddress = await getLibraryAddress(ethExecutor)
+                const ethDvnAddress = await getLibraryAddress(ethDvn)
 
                 // This is the OApp config that we want to use against our contracts
                 graph = {
@@ -1113,20 +1093,20 @@ describe('oapp/config', () => {
                                 sendConfig: {
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: avaxExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethSendUlnDVNs,
-                                        optionalDVNs: ethSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
                                 receiveConfig: {
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNs: ethReceiveUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -1148,7 +1128,7 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 executorConfig: {
                                     maxMessageSize: 99,
-                                    executor: avaxExecutorAddress,
+                                    executor: ethExecutorAddress,
                                 },
                             },
                         ])),
@@ -1157,8 +1137,8 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
                                     confirmations: BigInt(42),
-                                    requiredDVNs: ethSendUlnDVNs,
-                                    optionalDVNs: ethSendUlnDVNs,
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
                             },
@@ -1170,8 +1150,8 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
                                     confirmations: BigInt(42),
-                                    requiredDVNs: ethReceiveUlnDVNs,
-                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
                             },
@@ -1193,16 +1173,11 @@ describe('oapp/config', () => {
         describe('setAll configs', () => {
             let graph: OAppOmniGraph
             it('should return all setConfig transactions', async () => {
-                const avaxExecutorAddress = await getLibraryAddress(avaxExecutor)
-                const avaxDvnAddress = await getLibraryAddress(avaxDvn)
-                const ethSendUlnDVNs: string[] = [avaxDvnAddress]
-
-                const ethDvnAddress = await getLibraryAddress(ethDvn)
-                const ethReceiveUlnDVNs: string[] = [ethDvnAddress]
-
+                const ethExecutorAddress = await getLibraryAddress(ethExecutor)
                 const ethSendLibrary = await getLibraryAddress(ethSendUln2_Opt2)
                 const ethReceiveLibrary = await getLibraryAddress(ethReceiveUln2_Opt2)
                 const ethDefaultReceiveLibrary = await getLibraryAddress(ethReceiveUln)
+                const ethDvnAddress = await getLibraryAddress(ethDvn)
 
                 const createProvider = createProviderFactory()
                 const ethProvider = await createProvider(EndpointId.ETHEREUM_V2_MAINNET)
@@ -1241,20 +1216,20 @@ describe('oapp/config', () => {
                                 sendConfig: {
                                     executorConfig: {
                                         maxMessageSize: 99,
-                                        executor: avaxExecutorAddress,
+                                        executor: ethExecutorAddress,
                                     },
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethSendUlnDVNs,
-                                        optionalDVNs: ethSendUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
                                 receiveConfig: {
                                     ulnConfig: {
                                         confirmations: BigInt(42),
-                                        requiredDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNs: ethReceiveUlnDVNs,
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
                                 },
@@ -1289,7 +1264,7 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 executorConfig: {
                                     maxMessageSize: 99,
-                                    executor: avaxExecutorAddress,
+                                    executor: ethExecutorAddress,
                                 },
                             },
                         ])),
@@ -1298,8 +1273,8 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
                                     confirmations: BigInt(42),
-                                    requiredDVNs: ethSendUlnDVNs,
-                                    optionalDVNs: ethSendUlnDVNs,
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
                             },
@@ -1311,8 +1286,8 @@ describe('oapp/config', () => {
                                 eid: avaxPoint.eid,
                                 ulnConfig: {
                                     confirmations: BigInt(42),
-                                    requiredDVNs: ethReceiveUlnDVNs,
-                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
                             },
