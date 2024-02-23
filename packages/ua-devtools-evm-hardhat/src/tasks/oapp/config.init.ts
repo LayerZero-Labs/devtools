@@ -6,29 +6,33 @@ import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { createLogger, pluralizeNoun, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { promptToSelectMultiple } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraphHardhat } from '@/oapp'
+import {
+    createPrinter,
+    createSourceFile,
+    ListFormat,
+    NodeArray,
+    ScriptKind,
+    ScriptTarget,
+    SourceFile,
+    Statement,
+} from 'typescript'
+import { generateLzConfig } from '@/oapp/typescript/typescript'
+import { writeFileSync } from 'fs'
 
 interface TaskArgs {
+    contractName: string
     oappConfig: string
     logLevel?: string
 }
 
-interface ConfigFile {
-    path: string
-    value: OAppOmniGraphHardhat
-}
-
 /**
  * This task will initialize a config file based on user input
- * and return an array of `ConfigFile` objects.
  *
- * The return value is an array to support cases where the users would select
- * a combination of mainnet/testnet networks in which case we'll split them into
- * multiple configurations per network stage.
+ * The return value is a file path to the newly generated LayerZero Config file
  *
- * @returns {Promise<ConfigFile[]>}
+ * @returns {Promise<string>}
  */
-const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise<ConfigFile[]> => {
+const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel = 'info' }, hre): Promise<string> => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -50,9 +54,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise
 
     // If there are no configured networks, we exit
     if (configuredNetworkNames.length == 0) {
-        logger.warn(`There are no networks configured with 'eid' in your hardhat config, exiting`)
-
-        return []
+        throw new Error(`There are no networks configured with 'eid' in your hardhat config, exiting`)
     }
 
     // Now we ask the user to select the networks used in the config
@@ -87,12 +89,15 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info' }, hre): Promise
         )
     )
 
-    return []
+    const printer = createPrinter()
+    const sourceFile: SourceFile = createSourceFile(oappConfig, '', ScriptTarget.ESNext, true, ScriptKind.TS)
+    const generatedLzConfig: NodeArray<Statement> = await generateLzConfig(selectedNetworks, contractName)
+    const layerZeroConfigContent: string = printer.printList(ListFormat.MultiLine, generatedLzConfig, sourceFile)
+    writeFileSync(oappConfig, layerZeroConfigContent)
+    return oappConfig
 }
 
-if (process.env.LZ_ENABLE_EXPERIMENTAL_TASK_LZ_OAPP_CONFIG_INIT) {
-    task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file', action)
-        .addParam('oappConfig', 'Path to the new LayerZero OApp config', undefined, types.string)
-        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
-        .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
-}
+task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file', action)
+    .addParam('oappConfig', 'Path to the new LayerZero OApp config', undefined, types.string)
+    .addParam('contractName', 'Name of contract in deployments folder', undefined, types.string)
+    .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)

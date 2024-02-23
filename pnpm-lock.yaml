@@ -1319,6 +1319,9 @@ importers:
 
   packages/ua-devtools-evm-hardhat:
     dependencies:
+      exponential-backoff:
+        specifier: ~3.1.1
+        version: 3.1.1
       p-memoize:
         specifier: ~4.0.4
         version: 4.0.4
