@@ -460,36 +460,24 @@ export const generateLzConfig = async (
  * @returns {Promise<T>} - A promise resolving to the result of the operation if successful.
  * @throws {Error} - Throws an error if all attempts fail.
  */
-async function basicRetryPolicy<T>(
-    fn: () => Promise<T>,
-    maxAttempts: number = 3,
-    baseDelay: number = 1000,
-    maxDelay: number = 15000
-): Promise<T> {
+async function basicRetryPolicy<T>(fn: () => Promise<T>, maxAttempts: number = 3): Promise<T> {
     const operation = async () => {
         return await fn()
     }
 
     const backoffOptions = {
         numOfAttempts: maxAttempts,
-        startingDelay: baseDelay,
-        delayFirstAttempt: true,
-        maxDelay: maxDelay,
-        factor: 2,
-        randomisationFactor: 0.5,
-    }
-
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-            logger.verbose(`Attempt ${attempt + 1}/${maxAttempts}`)
-            return await backOff(operation, backoffOptions)
-        } catch (error) {
-            logger.info(`Attempt ${attempt + 1} failed with error: ${error}`)
-            if (attempt < maxAttempts - 1) {
+        retry: (e: any, attemptNumber: number) => {
+            logger.info(`Attempt ${attemptNumber}/${maxAttempts} failed with error: ${e}`)
+            if (attemptNumber < maxAttempts) {
                 logger.info('Retrying...')
+                return true
+            } else {
+                logger.info(`All ${maxAttempts} attempts failed.`)
+                return false
             }
-        }
+        },
     }
 
-    throw new Error(`All ${maxAttempts} attempts failed`)
+    return await backOff(operation, backoffOptions)
 }
