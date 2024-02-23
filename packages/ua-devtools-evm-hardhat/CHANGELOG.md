@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.4
+
+### Patch Changes
+
+- 2732dfc: Add support for submitting transactions to Gnosis Safes using @safe-global
+- Updated dependencies [ed386dc]
+- Updated dependencies [2732dfc]
+  - @layerzerolabs/ua-devtools@0.2.4
+  - @layerzerolabs/devtools-evm-hardhat@0.2.5
+  - @layerzerolabs/devtools-evm@0.2.4
+
 ## 0.2.3
 
 ### Patch Changes

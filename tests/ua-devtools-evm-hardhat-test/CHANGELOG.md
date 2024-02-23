@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.1.4
+
+### Patch Changes
+
+- ed386dc: Fixing wire task to lock in default send and receive libraries
+
 ## 0.1.3
 
 ### Patch Changes
