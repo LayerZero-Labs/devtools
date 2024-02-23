@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.2.4
+
+### Patch Changes
+
+- ed386dc: Fixing wire task to lock in default send and receive libraries
+
 ## 0.2.3
 
 ### Patch Changes
