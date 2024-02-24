@@ -11,7 +11,7 @@
 <h1 align="center">LayerZero Developer Utilities</h1>
 
 <p align="center">
-  <a href="https://github.com/LayerZero-Labs/devtools/blob/main/DEVELOPMENT.md" style="color: #a77dff">Development</a> | <a href="https://github.com/LayerZero-Labs/devtools/blob/main/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="https://github.com/LayerZero-Labs/devtools/tree/main/examples" style="color: #a77dff">Examples</a>
+  <a href="/DEVELOPMENT.md" style="color: #a77dff">Development</a> | <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> | <a href="/examples" style="color: #a77dff">Examples</a>
 </p>
 
 ---
@@ -34,7 +34,7 @@ Kick-start your development with our `create-lz-oapp` CLI utility. This command-
 npx create-lz-oapp@latest
 ```
 
-Following this, you will be guided through setting up a project template. Choose from a variety of <a href="https://github.com/LayerZero-Labs/devtools/tree/main/examples" style="color: #a77dff">examples</a> to match your project needs.
+Following this, you will be guided through setting up a project template. Choose from a variety of <a href="/examples" style="color: #a77dff">examples</a> to match your project needs.
 
 ## Writing Smart Contracts
 
@@ -64,7 +64,7 @@ npx hardhat lz:deploy --help
 
 ## Configuring contracts
 
-The <a href="https://github.com/LayerZero-Labs/devtools/tree/main/examples" style="color: #a77dff">examples</a> come with basic `layerzero.config.ts` files that should get you started on testnet straight away.
+The <a href="/examples" style="color: #a77dff">examples</a> come with basic `layerzero.config.ts` files that should get you started on testnet straight away.
 
 More information on how to configure your `OApp` will be available in our <a href="https://docs.layerzero.network/" style="color: #a77dff">docs</a> soon.
 
