@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm-hardhat",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Hardhat utilities for working with LayerZero EVM contracts",
   "repository": {
     "type": "git",

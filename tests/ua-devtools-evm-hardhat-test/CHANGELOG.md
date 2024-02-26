@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.1.5
+
+### Patch Changes
+
+- 5ca75a4: Updating lz:oapp:config:init task to generate a default LayerZero config
+
 ## 0.1.4
 
 ### Patch Changes
