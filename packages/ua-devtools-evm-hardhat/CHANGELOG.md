@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.5
+
+### Patch Changes
+
+- 5ca75a4: Updating lz:oapp:config:init task to generate a default LayerZero config
+- e9b6c37: Fix a typo in a task name
+
 ## 0.2.4
 
 ### Patch Changes
