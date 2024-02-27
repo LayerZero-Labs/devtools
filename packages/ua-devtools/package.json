@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -30,12 +30,12 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.2.3",
+    "@layerzerolabs/devtools": "~0.2.4",
     "@layerzerolabs/io-devtools": "~0.1.3",
     "@layerzerolabs/lz-definitions": "~2.1.11",
     "@layerzerolabs/lz-v2-utilities": "~2.1.11",
-    "@layerzerolabs/protocol-devtools": "~0.2.3",
-    "@layerzerolabs/test-devtools": "~0.1.6",
+    "@layerzerolabs/protocol-devtools": "~0.2.4",
+    "@layerzerolabs/test-devtools": "~0.1.7",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -48,11 +48,11 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.2.3",
+    "@layerzerolabs/devtools": "~0.2.4",
     "@layerzerolabs/io-devtools": "~0.1.2",
     "@layerzerolabs/lz-definitions": "~2.1.3",
     "@layerzerolabs/lz-v2-utilities": "~2.1.3",
-    "@layerzerolabs/protocol-devtools": "~0.2.3",
+    "@layerzerolabs/protocol-devtools": "~0.2.4",
     "zod": "^3.22.4"
   },
   "publishConfig": {

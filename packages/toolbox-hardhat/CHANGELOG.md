@@ -1,5 +1,21 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.8
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+- Updated dependencies [855fa36]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.1.6
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.2.6
+  - @layerzerolabs/protocol-devtools-evm@0.2.4
+  - @layerzerolabs/devtools-evm-hardhat@0.2.6
+  - @layerzerolabs/protocol-devtools@0.2.4
+  - @layerzerolabs/ua-devtools-evm@0.2.4
+  - @layerzerolabs/devtools-evm@0.2.5
+  - @layerzerolabs/ua-devtools@0.2.5
+  - @layerzerolabs/devtools@0.2.4
+
 ## 0.1.7
 
 ### Patch Changes

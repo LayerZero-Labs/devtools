@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.2.4
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+
 ## 0.2.3
 
 ### Patch Changes
