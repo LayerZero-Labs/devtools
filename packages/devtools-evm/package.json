@@ -52,7 +52,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.2.4",
     "@layerzerolabs/io-devtools": "~0.1.3",
-    "@layerzerolabs/lz-definitions": "~2.1.11",
+    "@layerzerolabs/lz-definitions": "~2.1.13",
     "@layerzerolabs/test-devtools": "~0.1.7",
     "@safe-global/safe-core-sdk-types": "^2.3.0",
     "@swc/core": "^1.4.0",

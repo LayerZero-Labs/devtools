@@ -120,9 +120,13 @@ exports[`omnigraph/format formatEid should format 237 correctly 1`] = `"REAL_MAI
 
 exports[`omnigraph/format formatEid should format 238 correctly 1`] = `"TILTYARD_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 243 correctly 1`] = `"BLAST_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 255 correctly 1`] = `"FRAXTAL_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 257 correctly 1`] = `"ZKATANA_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 260 correctly 1`] = `"MODE_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
@@ -316,9 +320,13 @@ exports[`omnigraph/format formatEid should format 20106 correctly 1`] = `"AVALAN
 
 exports[`omnigraph/format formatEid should format 20109 correctly 1`] = `"POLYGON_SANDBOX"`;
 
+exports[`omnigraph/format formatEid should format 20112 correctly 1`] = `"FANTOM_SANDBOX"`;
+
 exports[`omnigraph/format formatEid should format 20121 correctly 1`] = `"ETHEREUM_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20132 correctly 1`] = `"OPTIMISM_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20151 correctly 1`] = `"METIS_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20231 correctly 1`] = `"ARBITRUM_SANDBOX"`;
 
@@ -440,9 +448,13 @@ exports[`omnigraph/format formatEid should format 30237 correctly 1`] = `"REAL_V
 
 exports[`omnigraph/format formatEid should format 30238 correctly 1`] = `"TILTYARD_V2_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 30243 correctly 1`] = `"BLAST_V2_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 30255 correctly 1`] = `"FRAXTAL_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30257 correctly 1`] = `"ZKATANA_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30260 correctly 1`] = `"MODE_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -629,5 +641,7 @@ exports[`omnigraph/format formatEid should format 50109 correctly 1`] = `"POLYGO
 exports[`omnigraph/format formatEid should format 50121 correctly 1`] = `"ETHEREUM_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50132 correctly 1`] = `"OPTIMISM_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50151 correctly 1`] = `"METIS_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50168 correctly 1`] = `"SOLANA_V2_SANDBOX"`;
