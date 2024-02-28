@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { Interface } from '@ethersproject/abi'
+import { Interface, type JsonFragment } from '@ethersproject/abi'
 import { type MinimalAbi } from './schema'
 import * as parser from '@solidity-parser/parser'
 import { TypeName, type FunctionDefinition } from '@solidity-parser/parser/dist/src/ast-types'
@@ -12,7 +12,7 @@ import { TypeName, type FunctionDefinition } from '@solidity-parser/parser/dist/
  * @param args Constructor arguments
  * @returns
  */
-export const encodeContructorArguments = (abi: any[], args: unknown[] | undefined): string | undefined => {
+export const encodeContructorArguments = (abi: JsonFragment[], args: unknown[] | undefined): string | undefined => {
     if (args == null || args.length === 0) return undefined
 
     const iface = new Interface(abi)

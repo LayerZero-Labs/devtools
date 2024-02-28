@@ -1,9 +1,25 @@
 import { Command, InvalidOptionArgumentError, Option } from 'commander'
 import { verifyTarget, verifyNonTarget } from './hardhat-deploy/verify'
 import { COLORS } from './common/logger'
-import { createLogger } from '@layerzerolabs/io-devtools'
-import { VerifyHardhatNonTargetConfig, type VerifyHardhatTargetConfig } from './hardhat-deploy/types'
+import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
+import { type VerifyHardhatNonTargetConfig, type VerifyHardhatTargetConfig } from './hardhat-deploy/types'
 import { version } from '../package.json'
+
+interface CommonArgs {
+    apiKey?: string
+    apiUrl?: string
+    deployments?: string
+    dryRun?: boolean
+    logLevel: LogLevel
+    network: string
+}
+
+interface NonTargetArgs extends CommonArgs {
+    address: string
+    arguments?: string[]
+    deployment: string
+    name: string
+}
 
 const logLevelOption = new Option('-l,--log-level <level>', 'Log level')
     .choices(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'])
@@ -51,7 +67,7 @@ const verifyNonTargetCommand = new Command('non-target')
             }
         }
     )
-    .action(async (args: any) => {
+    .action(async (args: NonTargetArgs) => {
         const logger = createLogger(args.logLevel)
         const config: VerifyHardhatNonTargetConfig = {
             dryRun: args.dryRun,
@@ -84,6 +100,10 @@ const verifyNonTargetCommand = new Command('non-target')
         }
     })
 
+interface TargetArgs extends CommonArgs {
+    contracts?: string[]
+}
+
 const verifyTargetCommand = new Command('target')
     .description('Verifies contracts that have been a part of a deployment, i.e. have their own deployment files')
     .addOption(logLevelOption)
@@ -99,7 +119,7 @@ const verifyTargetCommand = new Command('target')
             return value?.trim() ? value.split(',').map((c: string) => c.trim()) : undefined
         }
     )
-    .action(async (args: any) => {
+    .action(async (args: TargetArgs) => {
         const logger = createLogger(args.logLevel)
         const config: VerifyHardhatTargetConfig = {
             dryRun: args.dryRun,
