@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools
 
+## 0.2.5
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+- Updated dependencies [855fa36]
+  - @layerzerolabs/protocol-devtools@0.2.4
+  - @layerzerolabs/devtools@0.2.4
+
 ## 0.2.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.1.2
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+
 ## 0.1.1
 
 ### Patch Changes

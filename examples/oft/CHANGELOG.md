@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.1.5
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+
 ## 0.1.4
 
 ### Patch Changes

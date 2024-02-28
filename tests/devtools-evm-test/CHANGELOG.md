@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.11
+
+### Patch Changes
+
+- 855fa36: Update to latest layerzerolabsmonorepo dependencies
+
 ## 0.0.10
 
 ### Patch Changes
