@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.2.7
+
+### Patch Changes
+
+- b93a018: Update @layerzero-labs dependencies to 2.1.13
+- Updated dependencies [b93a018]
+  - @layerzerolabs/devtools-evm@0.2.6
+  - @layerzerolabs/devtools@0.2.5
+
 ## 0.2.6
 
 ### Patch Changes
