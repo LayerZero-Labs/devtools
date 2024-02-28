@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.1.8
+
+### Patch Changes
+
+- b93a018: Update @layerzero-labs dependencies to 2.1.13
+
 ## 0.1.7
 
 ### Patch Changes

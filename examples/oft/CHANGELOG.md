@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.1.6
+
+### Patch Changes
+
+- b93a018: Update @layerzero-labs dependencies to 2.1.13
+
 ## 0.1.5
 
 ### Patch Changes
