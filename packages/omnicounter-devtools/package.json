@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.2.4",
-    "@layerzerolabs/lz-definitions": "~2.1.11",
+    "@layerzerolabs/lz-definitions": "~2.1.12",
     "@layerzerolabs/protocol-devtools": "~0.2.4",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
