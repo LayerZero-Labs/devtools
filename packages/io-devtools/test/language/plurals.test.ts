@@ -19,9 +19,5 @@ describe('language/plurals', () => {
                 expect(pluralizeNoun(n, 'cactus', 'cacti')).toMatchSnapshot()
             )
         })
-
-        it('should fail on new snapshot', () => {
-            expect('ole').toMatchSnapshot()
-        })
     })
 })
