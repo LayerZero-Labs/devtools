@@ -17,8 +17,6 @@
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
-    "@openzeppelin/contracts": "^5.0.1",
-    "@openzeppelin/contracts-upgradeable": "^5.0.1",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
@@ -58,14 +56,10 @@
     "node": ">=18.16.0"
   },
   "overrides": {
-    "@openzeppelin/contracts": "^5.0.1",
-    "@openzeppelin/contracts-upgradeable": "^5.0.1",
     "ethers": "^5.7.2"
   },
   "pnpm": {
     "overrides": {
-      "@openzeppelin/contracts": "^5.0.1",
-      "@openzeppelin/contracts-upgradeable": "^5.0.1",
       "ethers": "^5.7.2"
     }
   }
