@@ -17,7 +17,8 @@
     "test:hardhat": "hardhat test"
   },
   "resolutions": {
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -57,11 +58,13 @@
     "node": ">=18.16.0"
   },
   "overrides": {
-    "ethers": "^5.7.2"
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
   },
   "pnpm": {
     "overrides": {
-      "ethers": "^5.7.2"
+      "ethers": "^5.7.2",
+      "hardhat-deploy": "^0.12.1"
     }
   }
 }
