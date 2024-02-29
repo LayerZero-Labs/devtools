@@ -29,8 +29,6 @@
   },
   "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
   "rules": {
-    "prettier/prettier": "error",
-
     // This rule needs to be disabled otherwise ESLint will error out
     // on things like TypeScript enums or function types
     "no-unused-vars": "off",

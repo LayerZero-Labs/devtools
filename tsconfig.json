@@ -31,6 +31,6 @@
     "resolveJsonModule": true,
     "types": ["node"],
     "skipLibCheck": true,
-    "stripInternal": true,
-  },
+    "stripInternal": true
+  }
 }
