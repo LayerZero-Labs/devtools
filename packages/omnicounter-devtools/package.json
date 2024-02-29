@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.2.5",
-    "@layerzerolabs/lz-definitions": "~2.1.7",
+    "@layerzerolabs/lz-definitions": "~2.1.15",
     "@layerzerolabs/protocol-devtools": "~0.2.5",
     "zod": "^3.22.4"
   },

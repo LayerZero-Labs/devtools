@@ -38,7 +38,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.1.7",
+    "@layerzerolabs/lz-definitions": "~2.1.15",
     "fast-check": "^3.14.0"
   },
   "publishConfig": {

@@ -85,7 +85,7 @@
     "@layerzerolabs/devtools": "~0.2.5",
     "@layerzerolabs/devtools-evm": "~0.2.6",
     "@layerzerolabs/io-devtools": "~0.1.2",
-    "@layerzerolabs/lz-definitions": "~2.1.7",
+    "@layerzerolabs/lz-definitions": "~2.1.15",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "hardhat": "^2.19.4",
     "hardhat-deploy": "^0.11.45"
