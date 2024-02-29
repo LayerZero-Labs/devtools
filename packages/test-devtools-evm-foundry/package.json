@@ -31,8 +31,8 @@
     "@layerzerolabs/lz-evm-oapp-v2": "~2.1.15",
     "@layerzerolabs/lz-evm-protocol-v2": "~2.1.15",
     "@layerzerolabs/lz-evm-v1-0.7": "~2.1.15",
-    "@openzeppelin/contracts": "^4.9.5",
-    "@openzeppelin/contracts-upgradeable": "^4.9.5"
+    "@openzeppelin/contracts": "^4.9.5 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.9.5 || ^5.0.0"
   },
   "publishConfig": {
     "access": "public"
