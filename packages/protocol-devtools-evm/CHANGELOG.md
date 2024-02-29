@@ -1,5 +1,15 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.2.6
+
+### Patch Changes
+
+- e7ef1aa: Update @layerzero-labs dependencies to 2.1.15
+- Updated dependencies [e7ef1aa]
+  - @layerzerolabs/protocol-devtools@0.2.6
+  - @layerzerolabs/devtools-evm@0.2.7
+  - @layerzerolabs/devtools@0.2.6
+
 ## 0.2.5
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.8
+
+### Patch Changes
+
+- e7ef1aa: Update @layerzero-labs dependencies to 2.1.15
+- Updated dependencies [e7ef1aa]
+  - @layerzerolabs/protocol-devtools-evm@0.2.6
+  - @layerzerolabs/devtools-evm-hardhat@0.2.8
+  - @layerzerolabs/protocol-devtools@0.2.6
+  - @layerzerolabs/ua-devtools-evm@0.2.6
+  - @layerzerolabs/devtools-evm@0.2.7
+  - @layerzerolabs/ua-devtools@0.2.7
+  - @layerzerolabs/devtools@0.2.6
+
 ## 0.2.7
 
 ### Patch Changes
