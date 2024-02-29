@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.1.4
+
+### Patch Changes
+
+- e7ef1aa: Update @layerzero-labs dependencies to 2.1.15
+
 ## 0.1.3
 
 ### Patch Changes

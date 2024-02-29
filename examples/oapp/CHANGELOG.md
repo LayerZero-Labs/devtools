@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.1.6
+
+### Patch Changes
+
+- e7ef1aa: Update @layerzero-labs dependencies to 2.1.15
+
 ## 0.1.5
 
 ### Patch Changes
