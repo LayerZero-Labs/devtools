@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: LZBL-1.2
 pragma solidity ^0.8.0;
 
 // @dev oz4/5 breaking change... path
