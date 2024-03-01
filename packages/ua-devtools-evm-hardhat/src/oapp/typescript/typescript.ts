@@ -10,7 +10,7 @@ import {
     Statement,
     VariableStatement,
 } from 'typescript'
-import { formatEid, OmniAddress } from '@layerzerolabs/devtools'
+import { createRetryFactory, createSimpleRetryStrategy, formatEid, OmniAddress } from '@layerzerolabs/devtools'
 import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
@@ -41,10 +41,8 @@ import {
     ULN_CONFIG,
     ZERO,
 } from '@/oapp/typescript/constants'
-import { backOff } from 'exponential-backoff'
-import { createLogger } from '@layerzerolabs/io-devtools'
 
-const logger = createLogger()
+const retryThreeTimes = createRetryFactory(createSimpleRetryStrategy<[string, string]>(3))
 
 /**
  * Normalizes the identifier name by replacing hyphens with underscores.
@@ -383,8 +381,8 @@ export const createDefaultConfig = async (fromNetwork: string, toNetwork: string
     let receiveDefaultConfig: [OmniAddress, Uln302UlnConfig, Timeout] | undefined
     try {
         ;[sendDefaultConfig, receiveDefaultConfig] = await Promise.all([
-            basicRetryPolicy(() => getSendConfig(fromNetwork, toNetwork)),
-            basicRetryPolicy(() => getReceiveConfig(fromNetwork, toNetwork)),
+            retryThreeTimes(getSendConfig)(fromNetwork, toNetwork),
+            retryThreeTimes(getReceiveConfig)(fromNetwork, toNetwork),
         ])
     } catch (error) {
         console.error('Failed to get send and receive default configs:', error)
@@ -449,35 +447,3 @@ export const generateLzConfig = async (
             )
         ),
     ])
-
-/**
- * Retry policy function that retries a given asynchronous operation with exponential backoff strategy.
- * @template T - The type of the result returned by the asynchronous operation.
- * @param {() => Promise<T>} fn - The asynchronous operation to be retried.
- * @param {number} [maxAttempts=3] - The maximum number of attempts.
- * @param {number} [baseDelay=1000] - The base delay in milliseconds before the first retry.
- * @param {number} [maxDelay=15000] - The maximum delay in milliseconds between retries.
- * @returns {Promise<T>} - A promise resolving to the result of the operation if successful.
- * @throws {Error} - Throws an error if all attempts fail.
- */
-async function basicRetryPolicy<T>(fn: () => Promise<T>, maxAttempts: number = 3): Promise<T> {
-    const operation = async () => {
-        return await fn()
-    }
-
-    const backoffOptions = {
-        numOfAttempts: maxAttempts,
-        retry: (e: any, attemptNumber: number) => {
-            logger.info(`Attempt ${attemptNumber}/${maxAttempts} failed with error: ${e}`)
-            if (attemptNumber < maxAttempts) {
-                logger.info('Retrying...')
-                return true
-            } else {
-                logger.info(`All ${maxAttempts} attempts failed.`)
-                return false
-            }
-        },
-    }
-
-    return await backOff(operation, backoffOptions)
-}

@@ -1325,12 +1325,12 @@ importers:
 
   packages/ua-devtools-evm-hardhat:
     dependencies:
-      exponential-backoff:
-        specifier: ~3.1.1
-        version: 3.1.1
       p-memoize:
         specifier: ~4.0.4
         version: 4.0.4
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
     devDependencies:
       '@ethersproject/abi':
         specifier: ^5.7.0
@@ -1410,9 +1410,6 @@ importers:
       tsup:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
-      typescript:
-        specifier: ^5.3.3
-        version: 5.3.3
       zod:
         specifier: ^3.22.4
         version: 3.22.4
