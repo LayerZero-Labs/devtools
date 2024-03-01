@@ -61,10 +61,14 @@ const action: ActionType<TaskArgs> = async (
         )
     )
     // Now sign & send the transactions
-    const signAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
+    const signAndSendResult: SignAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
         transactions,
         ci,
     } satisfies SignAndSendTaskArgs)
+
+    // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
+    const [, failed] = signAndSendResult
+    if (failed.length !== 0) process.exitCode = process.exitCode || 1
 
     return signAndSendResult
 }
