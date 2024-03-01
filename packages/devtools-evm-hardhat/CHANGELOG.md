@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.2.9
+
+### Patch Changes
+
+- d0d1cb3: Mark hardhat tasks with exit code 1 if they were not successful
+
 ## 0.2.8
 
 ### Patch Changes

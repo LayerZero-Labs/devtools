@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.9
+
+### Patch Changes
+
+- 0dace79: Use retry functionality provided by devtools
+- d0d1cb3: Mark hardhat tasks with exit code 1 if they were not successful
+- Updated dependencies [d0d1cb3]
+  - @layerzerolabs/devtools-evm-hardhat@0.2.9
+
 ## 0.2.8
 
 ### Patch Changes
