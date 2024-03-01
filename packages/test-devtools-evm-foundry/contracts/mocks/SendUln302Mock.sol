@@ -15,11 +15,11 @@ import { SendUlnBase } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/S
 import { SendLibBaseE2, WorkerOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol";
 import { SetConfigParam } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol";
 
-import { TestHelper } from "../TestHelper.sol";
+import { TestHelperOz5 } from "../TestHelperOz5.sol";
 
 contract SendUln302Mock is SendUlnBase, SendLibBaseE2 {
     // offchain packets schedule
-    TestHelper public testHelper;
+    TestHelperOz5 public testHelper;
 
     uint32 internal constant CONFIG_TYPE_EXECUTOR = 1;
     uint32 internal constant CONFIG_TYPE_ULN = 2;
@@ -32,7 +32,7 @@ contract SendUln302Mock is SendUlnBase, SendLibBaseE2 {
         uint256 _treasuryGasCap,
         uint256 _treasuryGasForFeeCap
     ) Ownable(msg.sender) SendLibBaseE2(_endpoint, _treasuryGasCap, _treasuryGasForFeeCap) {
-        testHelper = TestHelper(_verifyHelper);
+        testHelper = TestHelperOz5(_verifyHelper);
     }
 
     // ============================ OnlyEndpoint ===================================

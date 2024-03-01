@@ -38,11 +38,11 @@ import { SimpleMessageLibMock } from "./mocks/SimpleMessageLibMock.sol";
 import { ExecutorFeeLibMock as ExecutorFeeLib } from "./mocks/ExecutorFeeLibMock.sol";
 
 /**
- * @title TestHelper
+ * @title TestHelperOz5
  * @notice Helper contract for setting up and managing LayerZero test environments.
  * @dev Extends Foundry's Test contract and provides utility functions for setting up mock endpoints and OApps.
  */
-contract TestHelper is Test, OptionsHelper {
+contract TestHelperOz5 is Test, OptionsHelper {
     using OptionsBuilder for bytes;
 
     enum LibraryType {

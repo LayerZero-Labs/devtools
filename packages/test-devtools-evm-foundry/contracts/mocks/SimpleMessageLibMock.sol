@@ -13,11 +13,11 @@ import { Errors } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
 import { Transfer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol";
 
-import { TestHelper } from "../TestHelper.sol";
+import { TestHelperOz5 } from "../TestHelperOz5.sol";
 
 contract SimpleMessageLibMock is Ownable, ERC165 {
     // offchain packets schedule
-    TestHelper public testHelper;
+    TestHelperOz5 public testHelper;
 
     using SafeERC20 for IERC20;
     using PacketV1Codec for bytes;
@@ -51,7 +51,7 @@ contract SimpleMessageLibMock is Ownable, ERC165 {
 
     // @dev oz4/5 breaking change... Ownable constructor
     constructor(address payable _verifyHelper, address _endpoint) Ownable(msg.sender) {
-        testHelper = TestHelper(_verifyHelper);
+        testHelper = TestHelperOz5(_verifyHelper);
         endpoint = _endpoint;
         treasury = address(0x0);
         localEid = ILayerZeroEndpointV2(_endpoint).eid();
