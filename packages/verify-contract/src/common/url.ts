@@ -13,7 +13,9 @@ export const getDefaultScanApiUrl = (networkName: string): string | undefined =>
 export const tryGetScanBrowserUrlFromScanUrl = (scanApiUrl: string): string | undefined => {
     try {
         const urlObject = new URL(scanApiUrl)
-        if (!urlObject.hostname.startsWith('api.') && !urlObject.hostname.startsWith('api-')) return undefined
+        if (!urlObject.hostname.startsWith('api.') && !urlObject.hostname.startsWith('api-')) {
+            return undefined
+        }
 
         urlObject.hostname = urlObject.hostname.replace(/^api[.-]/, '')
         urlObject.pathname = '/'

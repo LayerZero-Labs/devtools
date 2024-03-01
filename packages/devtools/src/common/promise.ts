@@ -168,7 +168,9 @@ export const createRetryFactory =
                 const strategyOutput = await strategy(attempt, error, currentInput, input)
 
                 // The strategy can simply return true/false, in which case we'll not be adjusting the input at all
-                if (typeof strategyOutput === 'boolean') return strategyOutput
+                if (typeof strategyOutput === 'boolean') {
+                    return strategyOutput
+                }
 
                 // If we got an input back, we'll adjust it and keep trying
                 return (currentInput = strategyOutput), true
@@ -197,8 +199,12 @@ export const createSimpleRetryStrategy = <TInput extends unknown[]>(
     assert(numAttempts > 0, `Number of attempts for a strategy must be larger than 0`)
 
     return (attempt, error, previousInput, originalInput) => {
-        if (attempt > numAttempts) return false
-        if (wrappedStrategy == null) return true
+        if (attempt > numAttempts) {
+            return false
+        }
+        if (wrappedStrategy == null) {
+            return true
+        }
 
         return wrappedStrategy(attempt, error, previousInput, originalInput)
     }

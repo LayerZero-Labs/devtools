@@ -45,7 +45,9 @@ export const pluralizeOrdinal = (n: number): string => {
  */
 export const pluralizeNoun = (n: number, singular: string, plural: string = `${singular}s`): string => {
     const rule = cardinalRules.select(n)
-    if (rule === 'one') return singular
+    if (rule === 'one') {
+        return singular
+    }
 
     return plural
 }

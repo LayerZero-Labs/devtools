@@ -22,7 +22,9 @@ export const createContractErrorParser: OmniContractErrorParserFactory = (contra
 
 export const parseContractError = (error: unknown, contract: Contract): ContractError | undefined => {
     // If the error already is a ContractError, we'll continue
-    if (error instanceof ContractError) return error
+    if (error instanceof ContractError) {
+        return error
+    }
 
     try {
         // If the error is unknown we'll try to decode basic errors
@@ -37,7 +39,9 @@ export const parseContractError = (error: unknown, contract: Contract): Contract
 
 export const parseGenericError = (error: unknown): ContractError | undefined => {
     // If the error already is a ContractError, we'll continue
-    if (error instanceof ContractError) return error
+    if (error instanceof ContractError) {
+        return error
+    }
 
     try {
         // If the error is unknown we'll try to decode basic errors
@@ -64,14 +68,18 @@ const PANIC_ERROR_PREFIX = '0x4e487b71'
  * @returns `ContractError[]` Decoded errors, if any
  */
 const basicDecoder = (data: string): ContractError[] => {
-    if (data === '' || data === '0x') return [new UnknownError(`Reverted with empty data`)]
+    if (data === '' || data === '0x') {
+        return [new UnknownError(`Reverted with empty data`)]
+    }
 
     // This covers the case for assert()
     if (data.startsWith(PANIC_ERROR_PREFIX)) {
         const reason = data.slice(PANIC_ERROR_PREFIX.length)
 
         // If the reason is empty, we'll assume the default 0 exit code
-        if (reason === '') return [new PanicError(BigInt(0))]
+        if (reason === '') {
+            return [new PanicError(BigInt(0))]
+        }
 
         try {
             // The codes should follow the docs here https://docs.soliditylang.org/en/latest/control-structures.html#error-handling-assert-require-revert-and-exceptions

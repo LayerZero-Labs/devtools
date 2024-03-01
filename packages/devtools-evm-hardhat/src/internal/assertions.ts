@@ -33,7 +33,9 @@ export function assertDefinedNetworks<TNetworkNames extends Iterable<string>>(
     const definedNetworkNames = new Set(Object.keys(getEidsByNetworkName(hre)))
 
     for (const networkName of networkNames) {
-        if (definedNetworkNames.has(networkName)) continue
+        if (definedNetworkNames.has(networkName)) {
+            continue
+        }
 
         throw new AssertionError({
             message: `Network '${networkName}' has not been defined. Defined networks are ${Array.from(definedNetworkNames).join(', ')}`,

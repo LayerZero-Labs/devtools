@@ -622,7 +622,9 @@ const setupDefaultEndpointV2 = async (): Promise<void> => {
     ]
 
     const [_, errors] = await signAndSend(transactions)
-    if (errors.length === 0) return
+    if (errors.length === 0) {
+        return
+    }
 
     const errorParser = await createErrorParser()
     const parsedErrors = await Promise.all(errors.map(({ error }) => errorParser(error)))

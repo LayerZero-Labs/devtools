@@ -32,7 +32,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
         for (const localNetwork of networks) {
             const localEid = getEidForNetworkName(localNetwork)
             for (const remoteNetwork of networks) {
-                if (localNetwork === remoteNetwork) continue
+                if (localNetwork === remoteNetwork) {
+                    continue
+                }
 
                 const defaultConfig = getDefaultConfigTask[localNetwork][remoteNetwork]
                 const sendUln302 = await contractFactory({ contractName: 'SendUln302', eid: localEid })

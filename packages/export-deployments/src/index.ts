@@ -72,8 +72,11 @@ export const generateSafe = ({
 export const generate = (options: ExportDeploymentsOptions) => {
     const result = generateSafe(options)
 
-    if (E.isLeft(result)) throw result.left
-    else return result.right
+    if (E.isLeft(result)) {
+        throw result.left
+    } else {
+        return result.right
+    }
 }
 
 /**
@@ -94,8 +97,12 @@ export const createIncludeDirent =
         const nameW = dir.name
         const nameWo = basename(nameW, '.json')
 
-        if (exclude?.includes(nameW) || exclude?.includes(nameWo)) return false
-        if (include == null) return true
+        if (exclude?.includes(nameW) || exclude?.includes(nameWo)) {
+            return false
+        }
+        if (include == null) {
+            return true
+        }
 
         return include.includes(nameW) || include.includes(nameWo)
     }

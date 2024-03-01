@@ -10,8 +10,11 @@ const EXIT_ALT_SCREEN_ANSI = '\x1b[?1049l'
 const createWrite = (socket: NodeJS.WriteStream) => (content: string) => {
     return new Promise<void>((resolve, reject) => {
         socket.write(content, (error) => {
-            if (error != null) reject(error)
-            else resolve()
+            if (error != null) {
+                reject(error)
+            } else {
+                resolve()
+            }
         })
     })
 }

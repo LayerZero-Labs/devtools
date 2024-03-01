@@ -57,7 +57,9 @@ export const createRecordLogger =
     }
 
 const formatLoggableValue = (value: LoggableValue): string => {
-    if (value == null) return '-'
+    if (value == null) {
+        return '-'
+    }
 
     switch (typeof value) {
         case 'boolean':

@@ -14,7 +14,9 @@ export const configureExecutorDstConfig: ExecutorConfigurator = async (graph, cr
                 const dstConfig = await sdk.getDstConfig(to.eid)
 
                 // TODO Normalize the config values using a schema before comparing them
-                if (isDeepEqual(dstConfig, config.dstConfig)) return []
+                if (isDeepEqual(dstConfig, config.dstConfig)) {
+                    return []
+                }
 
                 return [await sdk.setDstConfig(to.eid, config.dstConfig)]
             })

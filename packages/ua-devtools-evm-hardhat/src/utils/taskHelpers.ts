@@ -29,7 +29,9 @@ export async function getSendConfig(
      * if custom is true then get the custom send uln config
      */
     if (custom) {
-        if (address == null) throw new Error(`Must pass in OApp address when custom param is set to true`)
+        if (address == null) {
+            throw new Error(`Must pass in OApp address when custom param is set to true`)
+        }
         const isDefault = await localEndpointSDK.isDefaultSendLibrary(address, remoteEid)
         /**
          * need to return sendLibrary == AddressZero when custom config is using default send library
@@ -37,7 +39,9 @@ export async function getSendConfig(
         sendLibrary = isDefault
             ? '0x0000000000000000000000000000000000000000'
             : await localEndpointSDK.getSendLibrary(address, remoteEid)
-        if (sendLibrary == null) throw new Error(`Custom Send Library not set from ${localEid} to ${remoteEid}`)
+        if (sendLibrary == null) {
+            throw new Error(`Custom Send Library not set from ${localEid} to ${remoteEid}`)
+        }
         /**
          * if using a custom send library use it to retrieve the custom ULN
          * else get the default send library and use it to retrieve the default ULN
@@ -46,7 +50,9 @@ export async function getSendConfig(
             localSendUlnSDK = await localEndpointSDK.getUln302SDK(sendLibrary)
         } else {
             const defaultSendLib = await localEndpointSDK.getDefaultSendLibrary(remoteEid)
-            if (defaultSendLib == null) throw new Error(`Default Send Library not set from ${localEid} to ${remoteEid}`)
+            if (defaultSendLib == null) {
+                throw new Error(`Default Send Library not set from ${localEid} to ${remoteEid}`)
+            }
             localSendUlnSDK = await localEndpointSDK.getUln302SDK(defaultSendLib)
         }
     } else {
@@ -58,7 +64,9 @@ export async function getSendConfig(
             address == null
                 ? await localEndpointSDK.getDefaultSendLibrary(remoteEid)
                 : await localEndpointSDK.getSendLibrary(address, remoteEid)
-        if (sendLibrary == null) throw new Error(`Default Send Library not set from ${localEid} to ${remoteEid}`)
+        if (sendLibrary == null) {
+            throw new Error(`Default Send Library not set from ${localEid} to ${remoteEid}`)
+        }
         localSendUlnSDK = await localEndpointSDK.getUln302SDK(sendLibrary)
     }
 
@@ -95,7 +103,9 @@ export async function getReceiveConfig(
      * if custom is true then get the custom receive uln config
      */
     if (custom) {
-        if (address == null) throw new Error(`Must pass in OApp address when custom param is set to true`)
+        if (address == null) {
+            throw new Error(`Must pass in OApp address when custom param is set to true`)
+        }
         /**
          * getReceiveLibrary returns a custom receive library if set else it returns the default retrieve library
          */
@@ -104,9 +114,12 @@ export async function getReceiveConfig(
          * need to return receiveLibrary == AddressZero when custom config is using default receive library
          */
         receiveLibrary = isDefault ? '0x0000000000000000000000000000000000000000' : receiveAppLibrary
-        if (receiveLibrary == null) throw new Error(`Custom Receive Library not set from ${localEid} to ${remoteEid}`)
-        if (receiveAppLibrary == null)
+        if (receiveLibrary == null) {
+            throw new Error(`Custom Receive Library not set from ${localEid} to ${remoteEid}`)
+        }
+        if (receiveAppLibrary == null) {
             throw new Error(`Default Receive Library not set from ${localEid} to ${remoteEid}`)
+        }
 
         /**
          * use receiveAppLibrary from getReceiveLibrary return to get correct uln
@@ -121,7 +134,9 @@ export async function getReceiveConfig(
             address == null
                 ? await localEndpointSDK.getDefaultReceiveLibrary(remoteEid)
                 : await localEndpointSDK.getReceiveLibrary(address, remoteEid).then(([address]) => address)
-        if (receiveLibrary == null) throw new Error(`Default Receive Library not set from ${localEid} to ${remoteEid}`)
+        if (receiveLibrary == null) {
+            throw new Error(`Default Receive Library not set from ${localEid} to ${remoteEid}`)
+        }
         localReceiveUlnSDK = await localEndpointSDK.getUln302SDK(receiveLibrary)
     }
     /**

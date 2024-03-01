@@ -13,7 +13,9 @@ import { TypeName, type FunctionDefinition } from '@solidity-parser/parser/dist/
  * @returns
  */
 export const encodeContructorArguments = (abi: JsonFragment[], args: unknown[] | undefined): string | undefined => {
-    if (args == null || args.length === 0) return undefined
+    if (args == null || args.length === 0) {
+        return undefined
+    }
 
     const iface = new Interface(abi)
     const encodedConstructorArguments = iface.encodeDeploy(args)
@@ -31,7 +33,9 @@ export const getContructorABIFromSource = (source: string): MinimalAbi => {
         let constructorDefinition: FunctionDefinition | undefined
         parser.visit(ast, {
             FunctionDefinition: (node) => {
-                if (node.isConstructor) constructorDefinition = node
+                if (node.isConstructor) {
+                    constructorDefinition = node
+                }
             },
         })
 

@@ -46,7 +46,9 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
     const previewTransactions = isInteractive
         ? await promptToContinue(`Would you like to preview the transactions before continuing?`)
         : true
-    if (previewTransactions) printRecords(transactions.map(formatOmniTransaction))
+    if (previewTransactions) {
+        printRecords(transactions.map(formatOmniTransaction))
+    }
 
     // Now ask the user whether they want to go ahead with signing them
     //
@@ -54,7 +56,9 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
     const shouldSubmit = isInteractive
         ? await promptToContinue(`Would you like to submit the required transactions?`)
         : true
-    if (!shouldSubmit) return subtaskLogger.verbose(`User cancelled the operation, exiting`), [[], [], transactions]
+    if (!shouldSubmit) {
+        return subtaskLogger.verbose(`User cancelled the operation, exiting`), [[], [], transactions]
+    }
 
     subtaskLogger.verbose(`Signing and sending transactions:\n\n${printJson(transactions)}`)
 
@@ -141,13 +145,14 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
         const previewErrors = isInteractive
             ? await promptToContinue(`Would you like to preview the failed transactions?`)
             : true
-        if (previewErrors)
+        if (previewErrors) {
             printRecords(
                 errors.map(({ error, transaction }) => ({
                     error: String(error),
                     ...formatOmniTransaction(transaction),
                 }))
             )
+        }
 
         // We'll ask the user if they want to retry if we're in interactive mode
         //

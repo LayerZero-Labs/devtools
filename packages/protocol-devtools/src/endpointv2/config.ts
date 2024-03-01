@@ -45,7 +45,9 @@ export const configureEndpointV2DefaultReceiveLibraries: EndpointV2Configurator 
                 const address = await sdk.getDefaultReceiveLibrary(to.eid)
 
                 // If the library is already set as default, do nothing
-                if (config.defaultReceiveLibrary === address) return []
+                if (config.defaultReceiveLibrary === address) {
+                    return []
+                }
 
                 return [
                     await sdk.setDefaultReceiveLibrary(
@@ -66,7 +68,9 @@ export const configureEndpointV2DefaultSendLibraries: EndpointV2Configurator = a
                 const address = await sdk.getDefaultSendLibrary(to.eid)
 
                 // If the library is already set as default, do nothing
-                if (config.defaultSendLibrary === address) return []
+                if (config.defaultSendLibrary === address) {
+                    return []
+                }
 
                 return [await sdk.setDefaultSendLibrary(to.eid, config.defaultSendLibrary)]
             })
@@ -79,7 +83,9 @@ const registerLibraries = async (sdk: IEndpointV2, libraries: string[]): Promise
             libraries.map(async (address) => {
                 const isRegistered = await sdk.isRegisteredLibrary(address)
 
-                if (isRegistered) return []
+                if (isRegistered) {
+                    return []
+                }
                 return [await sdk.registerLibrary(address)]
             })
         )

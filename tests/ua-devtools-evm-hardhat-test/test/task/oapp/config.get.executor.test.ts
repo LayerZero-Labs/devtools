@@ -12,7 +12,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_EXECUTOR}`, () => {
         const executorConfigReturnData = await hre.run(TASK_LZ_OAPP_CONFIG_GET_EXECUTOR, { networks })
         for (const localNetwork of networks) {
             for (const remoteNetwork of networks) {
-                if (localNetwork === remoteNetwork) continue
+                if (localNetwork === remoteNetwork) {
+                    continue
+                }
                 const executorConfig = executorConfigReturnData[localNetwork][remoteNetwork]
                 expect(executorConfig).toEqual(defaultExecutorDstConfig)
             }
@@ -24,7 +26,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_EXECUTOR}`, () => {
         const networks = ['britney', 'vengaboys', 'tango']
         for (const localNetwork of networks) {
             for (const remoteNetwork of networks) {
-                if (localNetwork === remoteNetwork) continue
+                if (localNetwork === remoteNetwork) {
+                    continue
+                }
                 const executorConfig = executorConfigReturnData[localNetwork][remoteNetwork]
                 expect(executorConfig).toEqual(defaultExecutorDstConfig)
             }

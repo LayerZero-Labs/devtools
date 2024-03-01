@@ -172,7 +172,9 @@ export const getNetworkNameForEid = (
     const eidsByNetworkName = getEidsByNetworkName(hre)
 
     for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
-        if (networkEid === eid) return networkName
+        if (networkEid === eid) {
+            return networkName
+        }
     }
 
     // Here we error out if there are no networks with this eid
@@ -211,7 +213,9 @@ export const getEidsByNetworkName = memoize(
         const allNetworkNames = new Set(Object.keys(definedEidsByNetworkName))
 
         // If the number of unique networks matches the number of unique endpoint IDs, there are no duplicates
-        if (allDefinedEids.size === allNetworkNames.size) return eidsByNetworkName
+        if (allDefinedEids.size === allNetworkNames.size) {
+            return eidsByNetworkName
+        }
 
         // At this point the number of defined endpoint IDs can only be lower than
         // the number of defined network names (since network names are taken from the keys

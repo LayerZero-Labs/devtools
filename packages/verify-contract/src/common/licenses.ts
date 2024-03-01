@@ -25,7 +25,9 @@ export const findLicenseType = (sourceCode: string): LicenseType => {
     const matches = sourceCode.match(/\/\/\s*SPDX-License-Identifier:\s*(.*)\s*/i)
     const licenseName = matches?.[1]
 
-    if (licenseName == null) return LicenseType.None
+    if (licenseName == null) {
+        return LicenseType.None
+    }
     if (!(licenseName in LicenseType)) {
         console.warn('Found unknown SPDX license identifier: %s', licenseName)
     }
