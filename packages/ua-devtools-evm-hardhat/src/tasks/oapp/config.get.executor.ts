@@ -25,7 +25,9 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
     for (const localNetworkName of networks) {
         configs[localNetworkName] = {}
         for (const remoteNetworkName of networks) {
-            if (remoteNetworkName === localNetworkName) continue
+            if (remoteNetworkName === localNetworkName) {
+                continue
+            }
             const executorDstConfig = await getExecutorDstConfig(localNetworkName, remoteNetworkName)
 
             configs[localNetworkName]![remoteNetworkName] = executorDstConfig

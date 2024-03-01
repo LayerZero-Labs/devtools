@@ -28,7 +28,9 @@ export const listEntriesSafe = (predicate: Predicate<Dirent>) =>
             const subDirectories: string[] = []
 
             while ((subDirectory = dir.readSync())) {
-                if (predicate(subDirectory)) subDirectories.push(resolve(path, subDirectory.name))
+                if (predicate(subDirectory)) {
+                    subDirectories.push(resolve(path, subDirectory.name))
+                }
             }
 
             return subDirectories

@@ -19,7 +19,9 @@ export const configureLzAppTrustedRemotes: LzAppConfigurator = async (graph, cre
                 const hasPeer = await sdk.hasTrustedRemote(to.eid, to.address)
 
                 logger.verbose(`Checked connection ${formatOmniVector({ from, to })}: ${printBoolean(hasPeer)}`)
-                if (hasPeer) return []
+                if (hasPeer) {
+                    return []
+                }
 
                 logger.verbose(`Creating a connection ${formatOmniVector({ from, to })}`)
                 return [await sdk.setTrustedRemote(to.eid, to.address)]

@@ -33,7 +33,9 @@ export const parsePathsConfig = (
 export const parseFilterConfig = (
     filterConfig: VerifyHardhatFilterConfig | null | undefined
 ): VerifyHardhatFilterFunction => {
-    if (filterConfig == null) return () => true
+    if (filterConfig == null) {
+        return () => true
+    }
 
     switch (typeof filterConfig) {
         case 'boolean':

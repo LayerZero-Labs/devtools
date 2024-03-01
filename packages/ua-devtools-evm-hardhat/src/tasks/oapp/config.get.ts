@@ -36,7 +36,9 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) =
     for (const [index, localNetworkName] of networks.entries()) {
         configs[localNetworkName] = {}
         for (const remoteNetworkName of networks) {
-            if (remoteNetworkName === localNetworkName) continue
+            if (remoteNetworkName === localNetworkName) {
+                continue
+            }
 
             // OApp User Set Config
             const receiveCustomConfig = await getReceiveConfig(

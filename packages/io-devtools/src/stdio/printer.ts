@@ -121,7 +121,9 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
 
     for (const property of properties) {
         // If we already added this one, we continue
-        if (!propertiesLeft.has(property)) continue
+        if (!propertiesLeft.has(property)) {
+            continue
+        }
 
         // Now we mark the property as added
         propertiesLeft.delete(property)
@@ -160,7 +162,9 @@ export const printZodErrors = (error: ZodError<unknown>): string => {
     // of the property on which they happened, if any
     const errors = error.flatten((issue) => {
         const propertyPath = issue.path?.join('.') ?? ''
-        if (propertyPath === '') return issue.message
+        if (propertyPath === '') {
+            return issue.message
+        }
 
         return `Property '${propertyPath}': ${issue.message}`
     })

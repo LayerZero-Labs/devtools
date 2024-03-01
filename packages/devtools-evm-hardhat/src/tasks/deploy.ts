@@ -134,7 +134,9 @@ const action: ActionType<TaskArgs> = async (
     }
 
     // If no networks have been selected, we exit
-    if (selectedNetworks.length === 0) return logger.warn(`No networks selected, exiting`), {}
+    if (selectedNetworks.length === 0) {
+        return logger.warn(`No networks selected, exiting`), {}
+    }
 
     // We'll tell the user what's about to happen
     logger.info(
@@ -154,7 +156,9 @@ const action: ActionType<TaskArgs> = async (
 
     // Now we confirm with the user that they want to continue
     const shouldDeploy = isInteractive ? await promptToContinue() : true
-    if (!shouldDeploy) return logger.verbose(`User cancelled the operation, exiting`), {}
+    if (!shouldDeploy) {
+        return logger.verbose(`User cancelled the operation, exiting`), {}
+    }
 
     // We talk we talk we talk
     logger.verbose(`Running deployment scripts`)
@@ -244,7 +248,9 @@ const action: ActionType<TaskArgs> = async (
     )
 
     // If nothing went wrong we just exit
-    if (errors.length === 0) return logger.info(`${printBoolean(true)} Your contracts are now deployed`), results
+    if (errors.length === 0) {
+        return logger.info(`${printBoolean(true)} Your contracts are now deployed`), results
+    }
 
     // We log the fact that there were some errors
     logger.error(
@@ -253,13 +259,14 @@ const action: ActionType<TaskArgs> = async (
 
     // If some of the deployments failed, we let the user know
     const previewErrors = isInteractive ? await promptToContinue(`Would you like to see the deployment errors?`) : true
-    if (previewErrors)
+    if (previewErrors) {
         printRecords(
             errors.map(({ networkName, error }) => ({
                 Network: networkName,
                 Error: String(error),
             }))
         )
+    }
 
     return results
 }

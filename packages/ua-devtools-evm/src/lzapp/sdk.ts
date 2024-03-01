@@ -26,7 +26,9 @@ export class LzApp extends OmniSDK implements ILzApp {
 
             // The method will revert if there is no trusted remote set for this path
             // in which case we want to return undefined instead of throwing
-            if (parsedError?.reason === 'LzApp: no trusted path record') return undefined
+            if (parsedError?.reason === 'LzApp: no trusted path record') {
+                return undefined
+            }
 
             this.logger.debug(`Got an error getting trusted remote for eid ${eid} (${formatEid(eid)}): ${error}`)
 

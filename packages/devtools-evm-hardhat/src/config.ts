@@ -154,7 +154,9 @@ export const withLayerZeroArtifacts = (...packageNames: string[]) => {
         const newArtifacts = new Set(
             resolvedArtifactsDirectories.filter((artifact) => !existingArtifacts.has(artifact))
         )
-        if (newArtifacts.size === 0) return config
+        if (newArtifacts.size === 0) {
+            return config
+        }
 
         return {
             ...config,

@@ -17,7 +17,9 @@ export const configurePriceFeedPriceData: PriceFeedConfigurator = async (graph, 
                 const priceData = await sdk.getPrice(to.eid)
 
                 // TODO Normalize the config values using a schema before comparing them
-                if (isDeepEqual(priceData, config.priceData)) return []
+                if (isDeepEqual(priceData, config.priceData)) {
+                    return []
+                }
 
                 return [await sdk.setPrice(to.eid, config.priceData)]
             })

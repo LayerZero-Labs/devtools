@@ -38,7 +38,9 @@ export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => 
                 const hasPeer = await sdk.hasPeer(to.eid, to.address)
 
                 logger.verbose(`Checked connection ${formatOmniVector({ from, to })}: ${printBoolean(hasPeer)}`)
-                if (hasPeer) return []
+                if (hasPeer) {
+                    return []
+                }
 
                 logger.verbose(`Creating a connection ${formatOmniVector({ from, to })}`)
                 return [await sdk.setPeer(to.eid, to.address)]
@@ -51,14 +53,18 @@ export const configureSendLibraries: OAppConfigurator = async (graph, createSdk)
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (!config?.sendLibrary) return []
+                if (!config?.sendLibrary) {
+                    return []
+                }
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
                 const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
-                if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) return []
+                if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) {
+                    return []
+                }
                 return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
             })
         )
@@ -68,7 +74,9 @@ export const configureReceiveLibraries: OAppConfigurator = async (graph, createS
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (config?.receiveLibraryConfig == null) return []
+                if (config?.receiveLibraryConfig == null) {
+                    return []
+                }
 
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
@@ -77,7 +85,9 @@ export const configureReceiveLibraries: OAppConfigurator = async (graph, createS
                     to.eid
                 )
 
-                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) return []
+                if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
+                    return []
+                }
                 return [
                     await endpointSdk.setReceiveLibrary(
                         from.address,
@@ -94,14 +104,18 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
     flattenTransactions(
         await Promise.all(
             graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
-                if (config?.receiveLibraryTimeoutConfig == null) return []
+                if (config?.receiveLibraryTimeoutConfig == null) {
+                    return []
+                }
 
                 const { receiveLibraryTimeoutConfig } = config
                 const oappSdk = await createSdk(from)
                 const endpointSdk = await oappSdk.getEndpointSDK()
                 const timeout = await endpointSdk.getReceiveLibraryTimeout(from.address, to.eid)
 
-                if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) return []
+                if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) {
+                    return []
+                }
                 return [
                     await endpointSdk.setReceiveLibraryTimeout(
                         from.address,
@@ -122,7 +136,9 @@ export const configureSendConfig: OAppConfigurator = async (graph, createSdk) =>
         vector: { from, to },
         config,
     } of graph.connections) {
-        if (!config?.sendConfig) continue
+        if (!config?.sendConfig) {
+            continue
+        }
         const oappSdk = await createSdk(from)
         const endpointSdk = await oappSdk.getEndpointSDK()
         const currentSendLibrary = config?.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
@@ -193,7 +209,9 @@ export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk)
         vector: { from, to },
         config,
     } of graph.connections) {
-        if (!config?.receiveConfig) continue
+        if (!config?.receiveConfig) {
+            continue
+        }
         const oappSdk = await createSdk(from)
         const endpointSdk = await oappSdk.getEndpointSDK()
         const [currentReceiveLibrary] = config?.receiveLibraryConfig?.receiveLibrary
@@ -242,7 +260,9 @@ export const configureEnforcedOptions: OAppConfigurator = async (graph, createSd
         vector: { from, to },
         config,
     } of graph.connections) {
-        if (config?.enforcedOptions == null) continue
+        if (config?.enforcedOptions == null) {
+            continue
+        }
         const oappSdk = await createSdk(from)
 
         // combines enforced options together by msgType

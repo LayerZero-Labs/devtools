@@ -11,7 +11,9 @@ export const parseNetworksConfig = (
 ): Record<NetworkName, NetworkConfig> => {
     return Object.entries(partialNetworksConfig ?? {}).reduce((networksConfig, [networkName, networkConfig]) => {
         // In case the config is not defined let's just go to the next one
-        if (networkConfig == null) return networksConfig
+        if (networkConfig == null) {
+            return networksConfig
+        }
 
         // The API URL can either be specified:
         //

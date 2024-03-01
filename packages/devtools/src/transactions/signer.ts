@@ -29,7 +29,9 @@ export const createSignAndSend =
         const n = transactions.length
 
         // Just exit when there is nothing to sign
-        if (n === 0) return logger.debug(`No transactions to sign, exiting`), [[], [], []]
+        if (n === 0) {
+            return logger.debug(`No transactions to sign, exiting`), [[], [], []]
+        }
 
         // Tell the user how many we are signing
         logger.debug(`Signing ${n} ${pluralizeNoun(n, 'transaction')}`)

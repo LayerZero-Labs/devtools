@@ -206,7 +206,9 @@ async function getConnectionsArray(networks: string[]) {
     let connectionsContent = ''
     for (const from of networks) {
         for (const to of networks) {
-            if (from === to) continue
+            if (from === to) {
+                continue
+            }
             const defaultConfig = getDefaultConfigTask[from][to]
             connectionsContent += `{ from: ${from}Contract, to: ${to}Contract, config: ${buildDefaultConfig(defaultConfig)} }, `
         }

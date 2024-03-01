@@ -140,15 +140,17 @@ class Verification extends EventEmitter implements IVerification {
             const result = await checkGuid(this.props.apiUrl, guid)
             this.logger.verbose(`Received raw polling response from ${this.props.apiUrl}:\n\n${JSON.stringify(result)}`)
 
-            if (result.status === 1)
+            if (result.status === 1) {
                 return {
                     alreadyVerified: false,
                 }
+            }
 
-            if (isAlreadyVerifiedResult(result.result))
+            if (isAlreadyVerifiedResult(result.result)) {
                 return {
                     alreadyVerified: true,
                 }
+            }
 
             if (isPendingResult(result.result)) {
                 await sleep(10_000)
@@ -242,11 +244,21 @@ const createVerificationRequest = ({
         sourceCode,
     }
 
-    if (apiKey != null) request.apikey = apiKey
-    if (optimizerRuns != null) request.runs = String(optimizerRuns)
-    if (constructorArguments != null) request.constructorArguements = constructorArguments
-    if (evmVersion != null) request.evmversion = evmVersion
-    if (licenseType != null) request.licenseType = String(licenseType)
+    if (apiKey != null) {
+        request.apikey = apiKey
+    }
+    if (optimizerRuns != null) {
+        request.runs = String(optimizerRuns)
+    }
+    if (constructorArguments != null) {
+        request.constructorArguements = constructorArguments
+    }
+    if (evmVersion != null) {
+        request.evmversion = evmVersion
+    }
+    if (licenseType != null) {
+        request.licenseType = String(licenseType)
+    }
 
     return request
 }
