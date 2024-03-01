@@ -261,6 +261,9 @@ const action: ActionType<TaskArgs> = async (
             }))
         )
 
+    // Mark the process as unsuccessful (only if it has not yet been marked as such)
+    process.exitCode = process.exitCode || 1
+
     return results
 }
 
