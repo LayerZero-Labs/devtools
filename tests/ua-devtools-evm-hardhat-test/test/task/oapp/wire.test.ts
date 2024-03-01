@@ -198,10 +198,22 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 sendTransactionMock.mockRestore()
             })
 
+            it('should set the exit code to 1', async () => {
+                const error = new Error('Oh god dammit')
+
+                // We want to make the transaction fail
+                sendTransactionMock.mockRejectedValue(error)
+
+                const oappConfig = configPathFixture('valid.config.connected.js')
+                await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+
+                expect(process.exitCode).toBe(1)
+            })
+
             it('should return a list of failed transactions in the CI mode', async () => {
                 const error = new Error('Oh god dammit')
 
-                // We want to make the fail
+                // We want to make the transaction fail
                 sendTransactionMock.mockRejectedValue(error)
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
