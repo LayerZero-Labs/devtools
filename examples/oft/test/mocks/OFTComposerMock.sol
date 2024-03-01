@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: LZBL-1.2
-pragma solidity ^0.8.22;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.0;
 
 import { IOAppComposer } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppComposer.sol";
 
