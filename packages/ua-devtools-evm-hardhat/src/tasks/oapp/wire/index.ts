@@ -68,7 +68,9 @@ const action: ActionType<TaskArgs> = async (
 
     // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
     const [, failed] = signAndSendResult
-    if (failed.length !== 0) process.exitCode = process.exitCode || 1
+    if (failed.length !== 0) {
+        process.exitCode = process.exitCode || 1
+    }
 
     return signAndSendResult
 }
