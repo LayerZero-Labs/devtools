@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.1.6
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+
 ## 0.1.5
 
 ### Patch Changes

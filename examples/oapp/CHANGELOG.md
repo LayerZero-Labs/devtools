@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.1.7
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+
 ## 0.1.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.4
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+
 ## 0.1.3
 
 ### Patch Changes

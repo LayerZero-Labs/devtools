@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.1.10
+
+### Patch Changes
+
+- b7494ca: Added a TestHelperOz5.sol for testing contracts in Foundry
+
 ## 0.1.9
 
 ### Patch Changes

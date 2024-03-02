@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.0.6
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+
 ## 0.0.5
 
 ### Patch Changes
