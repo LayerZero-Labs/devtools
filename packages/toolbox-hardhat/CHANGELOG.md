@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.11
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+- Updated dependencies [9e78abe]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.2.10
+  - @layerzerolabs/devtools-evm-hardhat@0.2.10
+  - @layerzerolabs/io-devtools@0.1.4
+
 ## 0.1.10
 
 ### Patch Changes

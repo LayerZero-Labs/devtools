@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.0.17
+
+### Patch Changes
+
+- 9e78abe: Update hardhat-deploy
+
 ## 0.0.16
 
 ### Patch Changes
