@@ -11,10 +11,8 @@
 name: Check code submission
 
 on:
-  push:
-    # We have package publishing workflow running on main so this one is redundant
-    branches-ignore:
-      - "main"
+  pull_request:
+  workflow_dispatch:
 
 # We want the workflow to stop and yield to a new run if new code is pushed
 concurrency:
