@@ -32,7 +32,7 @@ export const ExecutorLzReceiveOptionSchema = z.object({
     msgType: UIntNumberSchema,
     optionType: z.literal(ExecutorOptionType.LZ_RECEIVE),
     gas: UIntNumberSchema,
-    value: UIntNumberSchema,
+    value: UIntNumberSchema.optional(),
 }) satisfies z.ZodSchema<ExecutorLzReceiveOption, z.ZodTypeDef, unknown>
 
 export const ExecutorNativeDropOptionSchema = z.object({
@@ -47,7 +47,7 @@ export const ExecutorComposeOptionSchema = z.object({
     optionType: z.literal(ExecutorOptionType.COMPOSE),
     index: UIntNumberSchema,
     gas: UIntNumberSchema,
-    value: UIntNumberSchema,
+    value: UIntNumberSchema.optional(),
 }) satisfies z.ZodSchema<ExecutorComposeOption, z.ZodTypeDef, unknown>
 
 export const ExecutorOrderedExecutionOptionSchema = z.object({
