@@ -14,13 +14,13 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
 import './subtask.configure'
 
 interface TaskArgs {
-    oappConfig: string
+    oappConfig?: string
     logLevel?: string
     ci?: boolean
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false },
+    { oappConfig: oappConfigPath = 'layerzeroconfig.ts', logLevel = 'info', ci = false },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -76,6 +76,6 @@ const action: ActionType<TaskArgs> = async (
 }
 
 task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
-    .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
+    .addParam('oappConfig', 'Path to your LayerZero OApp config. If not provided, defaults to layerzeroconfig.ts', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
