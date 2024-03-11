@@ -1221,7 +1221,7 @@ importers:
         specifier: ~2.1.15
         version: 2.1.15
       '@layerzerolabs/protocol-devtools':
-        specifier: ~0.2.7
+        specifier: ~0.2.8
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
         specifier: ~0.1.10

@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools
 
+## 0.2.9
+
+### Patch Changes
+
+- 673c268: Adjust schemas after making ULN config types optional
+- Updated dependencies [673c268]
+  - @layerzerolabs/protocol-devtools@0.2.8
+
 ## 0.2.8
 
 ### Patch Changes
