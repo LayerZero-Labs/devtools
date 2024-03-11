@@ -47,6 +47,9 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest-4xlarge
+    strategy:
+      matrix:
+        filter: ["'./examples/*'", "'./packages/*'", "'./tests/*'"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -64,6 +67,8 @@ jobs:
 
       - name: Test
         run: pnpm test:ci
+        env:
+          DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS: "--filter=${{ matrix.filter }}"
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
