@@ -1,5 +1,24 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.2.6
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+- Updated dependencies [eec31a0]
+- Updated dependencies [54cf16e]
+- Updated dependencies [2b9ae6a]
+- Updated dependencies [4429472]
+- Updated dependencies [e41dbfe]
+- Updated dependencies [2b9ae6a]
+  - @layerzerolabs/ua-devtools@0.2.8
+  - @layerzerolabs/devtools@0.2.7
+  - @layerzerolabs/devtools-evm@0.2.8
+  - @layerzerolabs/omnicounter-devtools@0.2.7
+  - @layerzerolabs/protocol-devtools@0.2.7
+  - @layerzerolabs/protocol-devtools-evm@0.2.7
+  - @layerzerolabs/ua-devtools-evm@0.2.7
+
 ## 0.2.5
 
 ### Patch Changes

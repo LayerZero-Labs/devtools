@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.6
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.0.5
 
 ### Patch Changes

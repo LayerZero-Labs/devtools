@@ -1,5 +1,21 @@
 # @layerzerolabs/ua-devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- eec31a0: Make value optional in enforced options
+- 54cf16e: Silence bigint-buffer warning
+- 4429472: Make executorConfig and ulnConfig optional
+- e41dbfe: Make properties of Uln302 config optional
+- Updated dependencies [54cf16e]
+- Updated dependencies [2b9ae6a]
+- Updated dependencies [e41dbfe]
+- Updated dependencies [2b9ae6a]
+  - @layerzerolabs/devtools@0.2.7
+  - @layerzerolabs/io-devtools@0.1.5
+  - @layerzerolabs/protocol-devtools@0.2.7
+
 ## 0.2.7
 
 ### Patch Changes
