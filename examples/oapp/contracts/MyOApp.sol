@@ -34,6 +34,7 @@ contract MyOApp is OApp {
      * @param _message The message.
      * @param _options Message execution options (e.g., for sending gas to destination).
      * @param _payInLzToken Whether to return fee in ZRO token.
+     * @return fee A `MessagingFee` struct containing the calculated gas fee in either the native token or ZRO token.
      */
     function quote(
         uint32 _dstEid,
