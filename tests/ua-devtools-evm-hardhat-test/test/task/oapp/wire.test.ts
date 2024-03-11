@@ -219,7 +219,13 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 const oappConfig = configPathFixture('valid.config.connected.js')
                 const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
 
+                // The transactions are being grouped by chain and signed in parallel
+                // so we expect one failure per chain
                 expect(errors).toEqual([
+                    {
+                        error,
+                        transaction: expectTransaction,
+                    },
                     {
                         error,
                         transaction: expectTransaction,
@@ -290,10 +296,11 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     },
                 ])
 
-                // Since we failed on the first transaction, we expect
-                // all the transaction to still be pending and none of them to be successful
-                expect(successful).toEqual([])
-                expect(pending).toEqual([expectTransaction, expectTransaction])
+                // Since we failed on the first transaction (on one chain only),
+                // we expect one transaction on the other chain to go though just fine
+                // and the failed one to appear in the pending array
+                expect(successful).toEqual([expectTransactionWithReceipt])
+                expect(pending).toEqual([expectTransaction])
             })
 
             it('should not retry successful transactions', async () => {
