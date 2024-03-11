@@ -24,7 +24,7 @@
     "test:user": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS tests"
   },
   "lint-staged": {
-    "**/*": [
+    "**/*.{js,ts,tsx,json}": [
       "pnpm prettier --write --ignore-unknown",
       "pnpm eslint --fix"
     ]
