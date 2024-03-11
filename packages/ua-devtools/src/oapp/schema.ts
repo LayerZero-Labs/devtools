@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { AddressSchema, UIntBigIntSchema, UIntNumberSchema } from '@layerzerolabs/devtools'
-import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
+import { Uln302ExecutorConfigSchema, Uln302UlnUserConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import {
     ExecutorComposeOption,
     ExecutorLzReceiveOption,
@@ -20,12 +20,12 @@ export const OAppReceiveLibraryConfigSchema = z.object({
 }) satisfies z.ZodSchema<OAppReceiveLibraryConfig, z.ZodTypeDef, unknown>
 
 export const OAppSendConfigSchema = z.object({
-    executorConfig: Uln302ExecutorConfigSchema,
-    ulnConfig: Uln302UlnConfigSchema,
+    executorConfig: Uln302ExecutorConfigSchema.optional(),
+    ulnConfig: Uln302UlnUserConfigSchema.optional(),
 }) satisfies z.ZodSchema<OAppSendConfig, z.ZodTypeDef, unknown>
 
 export const OAppReceiveConfigSchema = z.object({
-    ulnConfig: Uln302UlnConfigSchema,
+    ulnConfig: Uln302UlnUserConfigSchema.optional(),
 }) satisfies z.ZodSchema<OAppReceiveConfig, z.ZodTypeDef, unknown>
 
 export const ExecutorLzReceiveOptionSchema = z.object({
