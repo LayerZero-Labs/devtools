@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- 673c268: Adjust schemas after making ULN config types optional
+
 ## 0.2.7
 
 ### Patch Changes
