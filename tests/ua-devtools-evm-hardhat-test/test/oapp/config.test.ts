@@ -585,7 +585,7 @@ describe('oapp/config', () => {
         })
 
         describe('configureConfig configureSendConfig and configureReceiveConfig separately', () => {
-            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: OApp
+            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: IOApp
 
             beforeEach(async () => {
                 bscContract = await contractFactory(bscPointHardhat)

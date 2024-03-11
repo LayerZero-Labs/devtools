@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { pointArbitrary } from '@layerzerolabs/test-devtools'
-import { OmniTransaction, flattenTransactions } from '@/transactions'
+import { OmniTransaction, flattenTransactions, groupTransactionsByEid } from '@/transactions'
 
 describe('transactions/utils', () => {
     const nullableArbitrary = fc.constantFrom(null, undefined)
@@ -47,6 +47,48 @@ describe('transactions/utils', () => {
                         }
                     }
                 )
+            )
+        })
+    })
+
+    describe('groupTransactionsByEid', () => {
+        it('should return an empty map when an empty array is passed in', () => {
+            expect(groupTransactionsByEid([])).toEqual(new Map())
+        })
+
+        it('should return a map with containing all the transactions passed in', () => {
+            fc.assert(
+                fc.property(fc.array(transactionArbitrary), (transactions) => {
+                    const grouped = groupTransactionsByEid(transactions)
+
+                    for (const transaction of transactions) {
+                        expect(grouped.get(transaction.point.eid)).toContain(transaction)
+                    }
+                })
+            )
+        })
+
+        it('should preserve the order of transaction per group', () => {
+            fc.assert(
+                fc.property(fc.array(transactionArbitrary), (transactions) => {
+                    const grouped = groupTransactionsByEid(transactions)
+
+                    for (const transactionsForEid of grouped.values()) {
+                        // Here we want to make sure that within a group of transactions,
+                        // no transactions have changed order
+                        //
+                        // The logic here goes something like this:
+                        // - We look for the indices of transactions from the grouped array in the original array
+                        // - If two transactions swapped places, this array would then contain an inversion
+                        //   (transaction at an earlier index in the grouped array would appear after a transaction
+                        //   at a later index). So what we do is remove the inversions by sorting the array of indices
+                        //   and make sure this sorted array matches the original one
+                        const transactionIndices = transactionsForEid.map((t) => transactions.indexOf(t))
+                        const sortedTransactionIndices = transactionIndices.slice().sort()
+
+                        expect(transactionIndices).toEqual(sortedTransactionIndices)
+                    }
+                })
             )
         })
     })

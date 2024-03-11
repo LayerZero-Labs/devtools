@@ -1,6 +1,12 @@
 import fc from 'fast-check'
 import { pointArbitrary } from '@layerzerolabs/test-devtools'
-import { OmniSignerFactory, OmniTransaction, OmniTransactionResponse, createSignAndSend } from '@/transactions'
+import {
+    OmniSignerFactory,
+    OmniTransaction,
+    OmniTransactionResponse,
+    createSignAndSend,
+    groupTransactionsByEid,
+} from '@/transactions'
 
 describe('transactions/signer', () => {
     const transactionArbitrary: fc.Arbitrary<OmniTransaction> = fc.record({
@@ -44,9 +50,17 @@ describe('transactions/signer', () => {
                     // Now we send all the transactions to the flow and observe the output
                     const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
-                    expect(successful).toEqual(transactions.map((transaction) => ({ transaction, receipt })))
+                    // Since we are executing groups of transactions in parallel,
+                    // in general the order of successful transaction will not match the order of input transactions
+                    expect(successful).toContainAllValues(transactions.map((transaction) => ({ transaction, receipt })))
                     expect(errors).toEqual([])
                     expect(pending).toEqual([])
+
+                    // What needs to match though is the order of successful transactions within groups
+                    //
+                    // For that we group the successful transactions and make sure those are equal to the grouped original transactions
+                    const groupedSuccessful = groupTransactionsByEid(successful.map(({ transaction }) => transaction))
+                    expect(groupedSuccessful).toEqual(groupTransactionsByEid(transactions))
 
                     // We also check that the signer factory has been called with the eids
                     for (const transaction of transactions) {
@@ -93,6 +107,17 @@ describe('transactions/signer', () => {
                             [failedTransaction, Promise.resolve(unsuccessfulResponse)],
                         ])
 
+                        const expectedSuccessful = [
+                            // The first batch should all go through
+                            ...firstBatch,
+                            // The transactions that are not on the chain affected by the failed transaction should also pass
+                            ...secondBatch.filter(({ point }) => point.eid !== failedTransaction.point.eid),
+                        ]
+
+                        const expectedPending = secondBatch.filter(
+                            ({ point }) => point.eid === failedTransaction.point.eid
+                        )
+
                         // Our signAndSend will then use the map to resolve/reject transactions
                         const signAndSend = jest.fn().mockImplementation((t) => implementations.get(t))
                         const sign = jest.fn().mockRejectedValue('Oh god no')
@@ -103,9 +128,21 @@ describe('transactions/signer', () => {
                         const transactions = [...firstBatch, failedTransaction, ...secondBatch]
                         const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
-                        expect(successful).toEqual(firstBatch.map((transaction) => ({ transaction, receipt })))
+                        // Since we are executing groups of transactions in parallel,
+                        // in general the order of successful transaction will not match the order of input transactions
+                        expect(successful).toContainAllValues(
+                            expectedSuccessful.map((transaction) => ({ transaction, receipt }))
+                        )
                         expect(errors).toEqual([{ transaction: failedTransaction, error }])
-                        expect(pending).toEqual([failedTransaction, ...secondBatch])
+                        expect(pending).toEqual([failedTransaction, ...expectedPending])
+
+                        // What needs to match though is the order of successful transactions within groups
+                        //
+                        // For that we group the successful transactions and make sure those are equal to the grouped original transactions
+                        const groupedSuccessful = groupTransactionsByEid(
+                            successful.map(({ transaction }) => transaction)
+                        )
+                        expect(groupedSuccessful).toEqual(groupTransactionsByEid(expectedSuccessful))
 
                         // We also check that the signer factory has been called with the eids
                         expect(signerFactory).toHaveBeenCalledWith(failedTransaction.point.eid)
@@ -145,6 +182,17 @@ describe('transactions/signer', () => {
                             [failedTransaction, Promise.reject(error)],
                         ])
 
+                        const expectedSuccessful = [
+                            // The first batch should all go through
+                            ...firstBatch,
+                            // The transactions that are not on the chain affected by the failed transaction should also pass
+                            ...secondBatch.filter(({ point }) => point.eid !== failedTransaction.point.eid),
+                        ]
+
+                        const expectedPending = secondBatch.filter(
+                            ({ point }) => point.eid === failedTransaction.point.eid
+                        )
+
                         // Our signAndSend will then use the map to resolve/reject transactions
                         const signAndSend = jest.fn().mockImplementation((t) => implementations.get(t))
                         const sign = jest.fn().mockRejectedValue('Oh god no')
@@ -155,9 +203,21 @@ describe('transactions/signer', () => {
                         const transactions = [...firstBatch, failedTransaction, ...secondBatch]
                         const [successful, errors, pending] = await signAndSendTransactions(transactions)
 
-                        expect(successful).toEqual(firstBatch.map((transaction) => ({ transaction, receipt })))
+                        // Since we are executing groups of transactions in parallel,
+                        // in general the order of successful transaction will not match the order of input transactions
+                        expect(successful).toContainAllValues(
+                            expectedSuccessful.map((transaction) => ({ transaction, receipt }))
+                        )
                         expect(errors).toEqual([{ transaction: failedTransaction, error }])
-                        expect(pending).toEqual([failedTransaction, ...secondBatch])
+                        expect(pending).toEqual([failedTransaction, ...expectedPending])
+
+                        // What needs to match though is the order of successful transactions within groups
+                        //
+                        // For that we group the successful transactions and make sure those are equal to the grouped original transactions
+                        const groupedSuccessful = groupTransactionsByEid(
+                            successful.map(({ transaction }) => transaction)
+                        )
+                        expect(groupedSuccessful).toEqual(groupTransactionsByEid(expectedSuccessful))
 
                         // We also check that the signer factory has been called with the eids
                         expect(signerFactory).toHaveBeenCalledWith(failedTransaction.point.eid)
@@ -190,16 +250,16 @@ describe('transactions/signer', () => {
                     const signAndSendTransactions = createSignAndSend(signerFactory)
 
                     const handleProgress = jest.fn()
-                    await signAndSendTransactions(transactions, handleProgress)
+                    const [successful] = await signAndSendTransactions(transactions, handleProgress)
 
                     // We check whether onProgress has been called for every transaction
-                    for (const [index, transaction] of transactions.entries()) {
+                    for (const [index, transaction] of successful.entries()) {
                         expect(handleProgress).toHaveBeenNthCalledWith(
                             index + 1,
                             // We expect the transaction in question to be passed
-                            { transaction, receipt },
+                            transaction,
                             // As well as the list of all the successful transactions so far
-                            transactions.slice(0, index + 1).map((transaction) => ({ transaction, receipt }))
+                            successful.slice(0, index + 1)
                         )
                     }
                 })
