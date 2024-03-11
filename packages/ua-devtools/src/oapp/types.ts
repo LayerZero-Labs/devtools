@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Bytes,
     Factory,
@@ -29,11 +29,11 @@ export interface OAppReceiveLibraryConfig {
 
 export interface OAppSendConfig {
     executorConfig?: Uln302ExecutorConfig
-    ulnConfig?: Uln302UlnConfig
+    ulnConfig?: Uln302UlnUserConfig
 }
 
 export interface OAppReceiveConfig {
-    ulnConfig?: Uln302UlnConfig
+    ulnConfig?: Uln302UlnUserConfig
 }
 
 export interface OAppEdgeConfig {

@@ -1,5 +1,10 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import type {
+    IUln302,
+    Uln302ExecutorConfig,
+    Uln302UlnConfig,
+    Uln302UlnUserConfig,
+} from '@layerzerolabs/protocol-devtools'
 import {
     OmniAddress,
     formatEid,
@@ -53,7 +58,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.hasAppUlnConfig}
      */
-    async hasAppUlnConfig(eid: EndpointId, oapp: string, config: Uln302UlnConfig): Promise<boolean> {
+    async hasAppUlnConfig(eid: EndpointId, oapp: string, config: Uln302UlnUserConfig): Promise<boolean> {
         const currentConfig = await this.getAppUlnConfig(eid, oapp)
         const currentSerializedConfig = this.serializeUlnConfig(currentConfig)
         const serializedConfig = this.serializeUlnConfig(config)
@@ -142,14 +147,14 @@ export class Uln302 extends OmniSDK implements IUln302 {
         return Uln302UlnConfigSchema.parse({ ...rtnConfig })
     }
 
-    encodeUlnConfig(config: Uln302UlnConfig): string {
+    encodeUlnConfig(config: Uln302UlnUserConfig): string {
         const serializedConfig = this.serializeUlnConfig(config)
         const encoded = this.contract.contract.interface.encodeFunctionResult('getUlnConfig', [serializedConfig])
 
         return assert(typeof encoded === 'string', 'Must be a string'), encoded
     }
 
-    async setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction> {
+    async setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnUserConfig): Promise<OmniTransaction> {
         const serializedConfig = this.serializeUlnConfig(config)
         const data = this.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
             [
@@ -173,15 +178,15 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * contracts (for optimization purposes) but don't need to be present
      * in our configuration and ensuring correct checksum on the DVN addresses.
      *
-     * @param {Uln302UlnConfig} config
+     * @param {Uln302UlnUserConfig} config
      * @returns {SerializedUln302UlnConfig}
      */
     protected serializeUlnConfig({
-        confirmations,
+        confirmations = BigInt(0),
         requiredDVNs,
-        optionalDVNs,
-        optionalDVNThreshold,
-    }: Uln302UlnConfig): SerializedUln302UlnConfig {
+        optionalDVNs = [],
+        optionalDVNThreshold = 0,
+    }: Uln302UlnUserConfig): SerializedUln302UlnConfig {
         return {
             confirmations,
             optionalDVNThreshold,

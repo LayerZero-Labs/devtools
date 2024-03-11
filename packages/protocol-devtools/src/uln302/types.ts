@@ -36,12 +36,12 @@ export interface IUln302 extends IOmniSDK {
      *
      * @param {EndpointId} eid
      * @param {OmniAddress} oapp
-     * @param {Uln302UlnConfig} config
+     * @param {Uln302UlnUserConfig} config
      * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
      */
-    hasAppUlnConfig(eid: EndpointId, oapp: OmniAddress, config: Uln302UlnConfig): Promise<boolean>
+    hasAppUlnConfig(eid: EndpointId, oapp: OmniAddress, config: Uln302UlnUserConfig): Promise<boolean>
 
-    setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnConfig): Promise<OmniTransaction>
+    setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnUserConfig): Promise<OmniTransaction>
 
     /**
      * Gets the Executor config for a given endpoint ID and an address.
@@ -97,9 +97,20 @@ export interface Uln302UlnConfig {
     optionalDVNs: string[]
 }
 
+/**
+ * Uln302UlnConfig interface with optional properties left out
+ * for user convenience.
+ */
+export interface Uln302UlnUserConfig {
+    confirmations?: bigint
+    optionalDVNThreshold?: number
+    requiredDVNs: string[]
+    optionalDVNs?: string[]
+}
+
 export interface Uln302NodeConfig {
     defaultExecutorConfigs: [eid: EndpointId, config: Uln302ExecutorConfig][]
-    defaultUlnConfigs: [eid: EndpointId, config: Uln302UlnConfig][]
+    defaultUlnConfigs: [eid: EndpointId, config: Uln302UlnUserConfig][]
 }
 
 export type Uln302OmniGraph = OmniGraph<Uln302NodeConfig, unknown>

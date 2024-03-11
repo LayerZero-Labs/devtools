@@ -9,7 +9,7 @@ import type {
     PossiblyBytes,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig } from '@/uln302/types'
+import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig, Uln302UlnUserConfig } from '@/uln302/types'
 
 export interface IEndpointV2 extends IOmniSDK {
     getUln302SDK(address: OmniAddress): Promise<IUln302>
@@ -158,10 +158,10 @@ export interface IEndpointV2 extends IOmniSDK {
      * @param {OmniAddress} oapp
      * @param {OmniAddress} uln
      * @param {EndpointId} eid
-     * @param {Uln302UlnConfig} config
+     * @param {Uln302UlnUserConfig} config
      * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
      */
-    hasAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId, config: Uln302UlnConfig): Promise<boolean>
+    hasAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId, config: Uln302UlnUserConfig): Promise<boolean>
 
     setUlnConfig(oapp: OmniAddress, uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
 
@@ -179,7 +179,7 @@ export interface Uln302SetExecutorConfig {
 
 export interface Uln302SetUlnConfig {
     eid: EndpointId
-    ulnConfig: Uln302UlnConfig
+    ulnConfig: Uln302UlnUserConfig
 }
 
 export interface SetConfigParam {

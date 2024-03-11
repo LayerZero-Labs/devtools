@@ -8,6 +8,7 @@ import type {
     Uln302Factory,
     Uln302SetUlnConfig,
     Uln302UlnConfig,
+    Uln302UlnUserConfig,
 } from '@layerzerolabs/protocol-devtools'
 import {
     formatEid,
@@ -296,7 +297,12 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     /**
      * @see {@link IEndpointV2.hasAppUlnConfig}
      */
-    async hasAppUlnConfig(oapp: string, uln: OmniAddress, eid: EndpointId, config: Uln302UlnConfig): Promise<boolean> {
+    async hasAppUlnConfig(
+        oapp: string,
+        uln: OmniAddress,
+        eid: EndpointId,
+        config: Uln302UlnUserConfig
+    ): Promise<boolean> {
         const ulnSdk = await this.getUln302SDK(uln)
 
         return ulnSdk.hasAppUlnConfig(eid, oapp, config)
