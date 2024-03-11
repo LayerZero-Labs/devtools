@@ -74,6 +74,9 @@ WORKDIR /app
 
 COPY pnpm-*.yaml .npmrc ./
 
+# Get the node_modules patches since we need them for installation
+COPY patches/ patches/
+
 RUN \
     #  Mount pnpm store
     --mount=type=cache,id=pnpm-store,target=/pnpm \

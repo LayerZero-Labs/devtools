@@ -10,6 +10,11 @@ overrides:
   hardhat-deploy: ^0.12.1
   rustbn.js: ^0.3.0
 
+patchedDependencies:
+  bigint-buffer@1.1.5:
+    hash: efddntnlu76geqa7be4guatjva
+    path: patches/bigint-buffer@1.1.5.patch
+
 importers:
 
   .:
@@ -4806,7 +4811,7 @@ packages:
       '@noble/hashes': 1.3.3
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.5.0
-      bigint-buffer: 1.1.5
+      bigint-buffer: 1.1.5(patch_hash=efddntnlu76geqa7be4guatjva)
       bn.js: 5.2.1
       borsh: 0.7.0
       bs58: 4.0.1
@@ -5987,12 +5992,13 @@ packages:
       is-windows: 1.0.2
     dev: true
 
-  /bigint-buffer@1.1.5:
+  /bigint-buffer@1.1.5(patch_hash=efddntnlu76geqa7be4guatjva):
     resolution: {integrity: sha512-trfYco6AoZ+rKhKnxA0hgX0HAbVP/s808/EuDSe2JDzUnCp/xAsli35Orvk67UrTEcwuxZqYZDmfA2RXJgxVvA==}
     engines: {node: '>= 10.0.0'}
     requiresBuild: true
     dependencies:
       bindings: 1.5.0
+    patched: true
 
   /bigint-crypto-utils@3.3.0:
     resolution: {integrity: sha512-jOTSb+drvEDxEq6OuUybOAv/xxoh3cuYRUIPyu8sSHQNKM303UQ2R1DAo45o1AkcIXw6fzbaFI1+xGGdaXs2lg==}
@@ -8121,6 +8127,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
