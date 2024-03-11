@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools
 
+## 0.2.7
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+- 2b9ae6a: Sign transactions for different chains in parallel
+- 2b9ae6a: Add groupTransactionsByEid utility
+- Updated dependencies [54cf16e]
+  - @layerzerolabs/io-devtools@0.1.5
+
 ## 0.2.6
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-example",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -31,9 +31,9 @@
     "@layerzerolabs/lz-v2-utilities": "~2.1.15",
     "@layerzerolabs/prettier-config-next": "^2.1.15",
     "@layerzerolabs/solhint-config": "^2.1.15",
-    "@layerzerolabs/test-devtools-evm-foundry": "~0.1.10",
-    "@layerzerolabs/toolbox-foundry": "~0.1.1",
-    "@layerzerolabs/toolbox-hardhat": "~0.1.11",
+    "@layerzerolabs/test-devtools-evm-foundry": "~0.1.11",
+    "@layerzerolabs/toolbox-foundry": "~0.1.2",
+    "@layerzerolabs/toolbox-hardhat": "~0.1.12",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.1",

@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.1.9
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.1.8
 
 ### Patch Changes

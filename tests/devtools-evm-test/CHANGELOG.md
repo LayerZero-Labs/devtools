@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.14
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.0.13
 
 ### Patch Changes

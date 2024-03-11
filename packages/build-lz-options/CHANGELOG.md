@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.1.5
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.1.4
 
 ### Patch Changes
