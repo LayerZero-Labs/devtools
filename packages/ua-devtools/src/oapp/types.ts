@@ -60,7 +60,7 @@ export interface EncodedOption extends BaseExecutorOption {
 export interface ExecutorLzReceiveOption extends BaseExecutorOption {
     optionType: ExecutorOptionType.LZ_RECEIVE
     gas: PossiblyBigInt
-    value: PossiblyBigInt
+    value?: PossiblyBigInt
 }
 
 export interface ExecutorNativeDropOption extends BaseExecutorOption {
@@ -73,7 +73,7 @@ export interface ExecutorComposeOption extends BaseExecutorOption {
     optionType: ExecutorOptionType.COMPOSE
     index: number
     gas: PossiblyBigInt
-    value: PossiblyBigInt
+    value?: PossiblyBigInt
 }
 
 export interface ExecutorOrderedExecutionOption extends BaseExecutorOption {
