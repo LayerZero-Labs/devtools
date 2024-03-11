@@ -20,17 +20,11 @@ export interface ComposeSpecServiceBuild {
     cache_from?: string[]
     cache_to?: string[]
     no_cache?: boolean
-    additional_contexts?: ListOrDict
     network?: string
     pull?: boolean
     target?: string
-    shm_size?: number | string
-    extra_hosts?: ListOrDict
-    isolation?: string
     privileged?: boolean
-    //   secrets?: ServiceConfigOrSecret;
     tags?: string[]
-    //   ulimits?: Ulimits;
     platforms?: string[]
 }
 
