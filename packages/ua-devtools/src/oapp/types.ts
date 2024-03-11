@@ -28,12 +28,12 @@ export interface OAppReceiveLibraryConfig {
 }
 
 export interface OAppSendConfig {
-    executorConfig: Uln302ExecutorConfig
-    ulnConfig: Uln302UlnConfig
+    executorConfig?: Uln302ExecutorConfig
+    ulnConfig?: Uln302UlnConfig
 }
 
 export interface OAppReceiveConfig {
-    ulnConfig: Uln302UlnConfig
+    ulnConfig?: Uln302UlnConfig
 }
 
 export interface OAppEdgeConfig {
