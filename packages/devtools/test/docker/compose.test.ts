@@ -21,6 +21,8 @@ describe('docker/compose', () => {
             await writeFile(SPEC_FILE_PATH, spec)
 
             expect(validateSpec().status).toBe(0)
+
+            expect(spec).toMatchSnapshot()
         })
 
         it('should create a valid compose spec if called with basic services', async () => {
@@ -51,6 +53,8 @@ describe('docker/compose', () => {
             await writeFile(SPEC_FILE_PATH, spec)
 
             expect(validateSpec().status).toBe(0)
+
+            expect(spec).toMatchSnapshot()
         })
     })
 })
