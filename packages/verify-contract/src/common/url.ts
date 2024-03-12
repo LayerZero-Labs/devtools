@@ -73,4 +73,6 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['mantle', 'https://explorer.mantle.xyz/api'],
     ['metis', 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan'],
     ['scroll', 'https://api.scrollscan.com/api'],
+    ['fraxtal', 'https://api.fraxscan.com/api'],
+    ['mode', 'https://explorer.mode.network/api'],
 ])
