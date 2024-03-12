@@ -11,6 +11,8 @@
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
 ARG NODE_VERSION=20.10.0
+ARG FOUNDRY_VERSION=nightly-156cb1396b7076c6f9cb56f3719f8c90f7f52064
+ARG ALPINE_VERSION=3.19
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -107,7 +109,7 @@ RUN pnpm rebuild --recursive
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM ghcr.io/foundry-rs/foundry AS foundry
+FROM ghcr.io/foundry-rs/foundry:$FOUNDRY_VERSION AS foundry
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -118,7 +120,7 @@ FROM ghcr.io/foundry-rs/foundry AS foundry
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM alpine:3.19.1 AS evm-node
+FROM alpine:$ALPINE_VERSION AS evm-node
 
 STOPSIGNAL SIGINT
 
