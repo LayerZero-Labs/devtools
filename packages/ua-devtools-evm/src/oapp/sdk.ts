@@ -15,6 +15,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
+import { mapError } from '@layerzerolabs/devtools'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
@@ -27,15 +28,10 @@ export class OApp extends OmniSDK implements IOApp {
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
-        let address: string
-
-        // First we'll need the EndpointV2 address from the contract
-        try {
-            address = await this.contract.contract.endpoint()
-        } catch (error) {
-            // We'll just wrap the error in some nice words
-            throw new Error(`Failed to get EndpointV2 address for OApp ${formatOmniContract(this.contract)}: ${error}`)
-        }
+        const address = await mapError(
+            () => this.contract.contract.endpoint(),
+            (error) => new Error(`Failed to get EndpointV2 address for OApp ${this.label}: ${error}`)
+        )
 
         // We'll also do an additional check to see whether the EndpointV2 has been set to a non-zero address
         if (isZero(address)) {
@@ -52,9 +48,15 @@ export class OApp extends OmniSDK implements IOApp {
     }
 
     async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
-        this.logger.debug(`Getting peer for eid ${eid} (${formatEid(eid)})`)
+        const eidLabel = `eid ${eid} (${formatEid(eid)})`
 
-        return ignoreZero(await this.contract.contract.peers(eid))
+        this.logger.debug(`Getting peer for ${eidLabel}`)
+        const peer = await mapError(
+            () => this.contract.contract.peers(eid),
+            (error) => new Error(`Failed to get peer for ${eidLabel} for OApp ${this.label}: ${error}`)
+        )
+
+        return ignoreZero(peer)
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
@@ -72,9 +74,17 @@ export class OApp extends OmniSDK implements IOApp {
     }
 
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
-        this.logger.debug(`Getting enforced options for eid ${eid} (${formatEid(eid)}) and message type ${msgType}`)
+        const eidLabel = `eid ${eid} (${formatEid(eid)})`
 
-        return await this.contract.contract.enforcedOptions(eid, msgType)
+        this.logger.debug(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
+
+        return await mapError(
+            () => this.contract.contract.enforcedOptions(eid, msgType),
+            (error) =>
+                new Error(
+                    `Failed to get peer for ${eidLabel} and message type ${msgType} for OApp ${this.label}: ${error}`
+                )
+        )
     }
 
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
