@@ -36,8 +36,34 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
 export const parallel = async <T>(tasks: Task<T>[]): Promise<T[]> => await Promise.all(tasks.map((task) => task()))
 
 /**
+ * Maps the errors coming from a task. Errors thrown from the `toError`
+ * callback will not be caught.
+ *
+ * ```
+ * const functionThatMightThrow = () => sdk.getSomeAttribute()
+ *
+ * const result = await mapError(functionThatMightThrow, (error) => new Error(`Error produced: ${error}`))
+ * ```
+ *
+ * @template T
+ * @template E
+ * @param {(error: unknown) => E} toError Error mapping function
+ */
+export const mapError = async <T, E = unknown>(task: Task<T>, toError: (error: unknown) => E): Promise<Awaited<T>> => {
+    try {
+        return await task()
+    } catch (error: unknown) {
+        throw toError(error)
+    }
+}
+
+/**
  * Intercepts any errors coming from a task. The return value
- * of this call will be the return value of the task.
+ * of this call will be the return value of the task
+ * and the rejected value will be the original erorr.
+ *
+ * Any errors or rejections from the `onError` callback will be caught
+ * and the original error will be rethrown.
  *
  * ```
  * const functionThatMightThrow = () => sdk.getSomeAttribute()

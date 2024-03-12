@@ -8,6 +8,7 @@ import {
     firstFactory,
     sequence,
     tapError,
+    mapError,
 } from '@/common/promise'
 
 describe('common/promise', () => {
@@ -194,6 +195,60 @@ describe('common/promise', () => {
 
                     expect(successful).toHaveBeenCalledTimes(1)
                     expect(successful).toHaveBeenCalledWith(...args)
+                })
+            )
+        })
+    })
+
+    describe('mapError', () => {
+        it('should resolve with the return value of a synchronous task', async () => {
+            await fc.assert(
+                fc.asyncProperty(valueArbitrary, async (value) => {
+                    const task = jest.fn().mockReturnValue(value)
+                    const handleError = jest.fn()
+
+                    await expect(mapError(task, handleError)).resolves.toBe(value)
+                    expect(handleError).not.toHaveBeenCalled()
+                })
+            )
+        })
+
+        it('should resolve with the resolution value of an asynchronous task', async () => {
+            await fc.assert(
+                fc.asyncProperty(valueArbitrary, async (value) => {
+                    const task = jest.fn().mockResolvedValue(value)
+                    const handleError = jest.fn()
+
+                    await expect(mapError(task, handleError)).resolves.toBe(value)
+                    expect(handleError).not.toHaveBeenCalled()
+                })
+            )
+        })
+
+        it('should reject and call the toError callback if a synchronous task throws', async () => {
+            await fc.assert(
+                fc.asyncProperty(valueArbitrary, valueArbitrary, async (error, mappedError) => {
+                    const task = jest.fn().mockImplementation(() => {
+                        throw error
+                    })
+                    const handleError = jest.fn().mockReturnValue(mappedError)
+
+                    await expect(mapError(task, handleError)).rejects.toBe(mappedError)
+                    expect(handleError).toHaveBeenCalledOnce()
+                    expect(handleError).toHaveBeenCalledExactlyOnceWith(error)
+                })
+            )
+        })
+
+        it('should reject and call the toError callback if an asynchronous task rejects', async () => {
+            await fc.assert(
+                fc.asyncProperty(valueArbitrary, valueArbitrary, async (error, mappedError) => {
+                    const task = jest.fn().mockRejectedValue(error)
+                    const handleError = jest.fn().mockReturnValue(mappedError)
+
+                    await expect(tapError(task, handleError)).rejects.toBe(mappedError)
+                    expect(handleError).toHaveBeenCalledOnce()
+                    expect(handleError).toHaveBeenCalledExactlyOnceWith(error)
                 })
             )
         })
