@@ -97,3 +97,36 @@ RUN \
 
 # We do this to avoid issues with native bindings not being built
 RUN pnpm rebuild --recursive
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#             Image that gives us the foundry tools
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM ghcr.io/foundry-rs/foundry AS foundry
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#        Image with cast & anvil for a local EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM alpine:3.19.1 AS evm-node
+
+STOPSIGNAL SIGINT
+
+# We will provide a default healthcheck (that assumes that the netowrk is running on the default port 8545)
+HEALTHCHECK --timeout=2s --interval=2s CMD cast block --rpc-url http://localhost:8545/ latest
+
+# Get anvil
+COPY --from=foundry /usr/local/bin/anvil /usr/local/bin/anvil
+
+# Get cast for healthcheck
+COPY --from=foundry /usr/local/bin/cast /usr/local/bin/cast
