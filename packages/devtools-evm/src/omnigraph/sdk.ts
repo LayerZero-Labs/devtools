@@ -49,6 +49,13 @@ export abstract class OmniSDK implements IOmniSDK {
         )
     ) {}
 
+    /**
+     * Human radable label for this SDK
+     */
+    get label(): string {
+        return formatOmniContract(this.contract)
+    }
+
     get point(): OmniPoint {
         return omniContractToPoint(this.contract)
     }
