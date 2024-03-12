@@ -124,8 +124,8 @@ FROM alpine:$ALPINE_VERSION AS evm-node
 
 STOPSIGNAL SIGINT
 
-# We will provide a default healthcheck (that assumes that the netowrk is running on the default port 8545)
-HEALTHCHECK --timeout=2s --interval=2s CMD cast block --rpc-url http://localhost:8545/ latest
+# We will provide a default healthcheck (that assumes that the network is running on the default port 8545)
+HEALTHCHECK --interval=2s --retries=20 CMD cast block --rpc-url http://localhost:8545/ latest
 
 # Get anvil
 COPY --from=foundry /usr/local/bin/anvil /usr/local/bin/anvil
