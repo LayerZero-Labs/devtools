@@ -31,7 +31,8 @@
     "test": "jest --ci --forceExit"
   },
   "dependencies": {
-    "exponential-backoff": "~3.1.1"
+    "exponential-backoff": "~3.1.1",
+    "js-yaml": "~4.1.0"
   },
   "devDependencies": {
     "@ethersproject/bytes": "~5.7.0",
