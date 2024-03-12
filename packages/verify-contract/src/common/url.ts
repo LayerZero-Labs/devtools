@@ -75,4 +75,5 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['scroll', 'https://api.scrollscan.com/api'],
     ['fraxtal', 'https://api.fraxscan.com/api'],
     ['mode', 'https://explorer.mode.network/api'],
+    ['etherlink', 'https://explorer.etherlink.com/api'],
 ])
