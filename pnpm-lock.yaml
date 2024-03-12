@@ -536,6 +536,9 @@ importers:
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
@@ -1159,6 +1162,9 @@ importers:
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
         version: 3.0.5(ethers@5.7.2)(hardhat@2.19.5)
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
       ink:
         specifier: ^3.2.0
         version: 3.2.0(@types/react@17.0.75)(react@17.0.2)
@@ -8130,6 +8136,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
@@ -8480,7 +8487,6 @@ packages:
 
   /fp-ts@2.16.2:
     resolution: {integrity: sha512-CkqAjnIKFqvo3sCyoBTqgJvF+bHrSik584S9nhTjtBESLx26cbtVMR/T9a6ApChOcSDAaM3JydDmWDUn4EEXng==}
-    dev: true
 
   /fresh@0.5.2:
     resolution: {integrity: sha512-zJ2mQYM18rEFOudeV4GShTGIQ7RbzA7ozbU9I/XBpm7kqgMywgmylMwXHxZJmkVoYkna9d2pVXVXPdYTP9ej8Q==}
