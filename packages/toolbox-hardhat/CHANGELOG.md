@@ -1,5 +1,17 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.13
+
+### Patch Changes
+
+- cc83f96: Add fp-ts to dependencies
+- Updated dependencies [40c45c1]
+- Updated dependencies [40c45c1]
+- Updated dependencies [4292d81]
+- Updated dependencies [cc83f96]
+  - @layerzerolabs/devtools@0.2.8
+  - @layerzerolabs/devtools-evm@0.2.9
+
 ## 0.1.12
 
 ### Patch Changes
