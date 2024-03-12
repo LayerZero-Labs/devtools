@@ -246,7 +246,7 @@ describe('common/promise', () => {
                     const task = jest.fn().mockRejectedValue(error)
                     const handleError = jest.fn().mockReturnValue(mappedError)
 
-                    await expect(tapError(task, handleError)).rejects.toBe(mappedError)
+                    await expect(mapError(task, handleError)).rejects.toBe(mappedError)
                     expect(handleError).toHaveBeenCalledOnce()
                     expect(handleError).toHaveBeenCalledExactlyOnceWith(error)
                 })
