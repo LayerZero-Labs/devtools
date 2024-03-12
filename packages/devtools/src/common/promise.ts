@@ -36,6 +36,37 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
 export const parallel = async <T>(tasks: Task<T>[]): Promise<T[]> => await Promise.all(tasks.map((task) => task()))
 
 /**
+ * Intercepts any errors coming from a task. The return value
+ * of this call will be the return value of the task.
+ *
+ * ```
+ * const functionThatMightThrow = () => sdk.getSomeAttribute()
+ *
+ * // With custom logging
+ * const result = await tapError(functionThatMightThrow, (error) => console.error('Something went wrong:', error))
+ *
+ * // For lazy people
+ * const result = await tapError(functionThatMightThrow, console.error)
+ * ```
+ *
+ * @param {Factory<[error: unknown], void>} onError Synchronous or asynchronous error callback
+ */
+export const tapError = async <T>(task: Task<T>, onError: Factory<[error: unknown], void>): Promise<Awaited<T>> => {
+    try {
+        return await task()
+    } catch (error: unknown) {
+        try {
+            await onError(error)
+        } catch {
+            // Ignore the error from the callback since the original error
+            // is probably more informative
+        }
+
+        throw error
+    }
+}
+
+/**
  * Executes tasks in a sequence until one resolves.
  *
  * Will resolve with the output of the first task that resolves
