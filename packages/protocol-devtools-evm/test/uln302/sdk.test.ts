@@ -8,6 +8,7 @@ import artifact from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln30
 import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { compareBytes32Ascending } from '@layerzerolabs/devtools'
+import { Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 
 describe('uln302/sdk', () => {
     let contract: Contract, omniContract: OmniContract, ulnSdk: Uln302
@@ -118,6 +119,48 @@ describe('uln302/sdk', () => {
                 { numRuns: 20 }
             )
         })
+
+        it('should default the missing attributes', async () => {
+            await fc.assert(
+                fc.asyncProperty(endpointArbitrary, dvnsArbitrary, async (eid, dvns) => {
+                    const sortedDvns = [...dvns].sort((a, b) => a.localeCompare(b))
+                    const ulnUserConfig: Uln302UlnUserConfig = {
+                        requiredDVNs: dvns,
+                    }
+                    const ulnConfig: Uln302UlnConfig = {
+                        requiredDVNs: dvns,
+                        confirmations: BigInt(0),
+                        optionalDVNThreshold: 0,
+                        optionalDVNs: [],
+                    }
+
+                    // Let's check that both the sorted and the unsorted config produce the same transaction
+                    const transactionsWithDefaults = await ulnSdk.setDefaultUlnConfig(eid, ulnUserConfig)
+                    const transactionsWithFullConfig = await ulnSdk.setDefaultUlnConfig(eid, ulnConfig)
+                    expect(transactionsWithDefaults).toEqual(transactionsWithFullConfig)
+
+                    // And let's check that the encoding call is correct and the DVNs are sorted
+                    expect(transactionsWithDefaults.data).toBe(
+                        contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
+                            [
+                                {
+                                    eid,
+                                    config: {
+                                        confirmations: ulnConfig.confirmations,
+                                        optionalDVNThreshold: ulnConfig.optionalDVNThreshold,
+                                        optionalDVNs: ulnConfig.optionalDVNs,
+                                        requiredDVNs: sortedDvns.map(addChecksum),
+                                        requiredDVNCount: ulnConfig.requiredDVNs.length,
+                                        optionalDVNCount: ulnConfig.optionalDVNs.length,
+                                    },
+                                },
+                            ],
+                        ])
+                    )
+                }),
+                { numRuns: 20 }
+            )
+        })
     })
 
     describe('hasAppUlnConfig()', () => {
@@ -174,6 +217,57 @@ describe('uln302/sdk', () => {
                                 ...ulnConfig,
                             })
                         ).resolves.toBeTruthy()
+                    }
+                ),
+                { numRuns: 20 }
+            )
+        })
+
+        it('should return true if configs with defaults are identical', async () => {
+            await fc.assert(
+                fc.asyncProperty(endpointArbitrary, evmAddressArbitrary, dvnsArbitrary, async (eid, oapp, dvns) => {
+                    const ulnUserConfig: Uln302UlnUserConfig = {
+                        requiredDVNs: dvns,
+                    }
+                    const ulnConfig: Uln302UlnConfig = {
+                        requiredDVNs: dvns,
+                        optionalDVNs: [],
+                        optionalDVNThreshold: 0,
+                        confirmations: BigInt(0),
+                    }
+
+                    getAppUlnConfigSpy.mockReset()
+                    getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
+
+                    await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig)).resolves.toBeTruthy()
+                }),
+                { numRuns: 20 }
+            )
+        })
+
+        it('should return false if configs with defaults are not identical', async () => {
+            await fc.assert(
+                fc.asyncProperty(
+                    endpointArbitrary,
+                    evmAddressArbitrary,
+                    ulnConfigArbitrary,
+                    async (eid, oapp, ulnConfig) => {
+                        // We only want to test againsts configs that are not
+                        // equal to the default config
+                        fc.pre(
+                            ulnConfig.confirmations !== BigInt(0) ||
+                                ulnConfig.optionalDVNThreshold !== 0 ||
+                                ulnConfig.optionalDVNs.length !== 0
+                        )
+
+                        const ulnUserConfig: Uln302UlnUserConfig = {
+                            requiredDVNs: ulnConfig.requiredDVNs,
+                        }
+
+                        getAppUlnConfigSpy.mockReset()
+                        getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
+
+                        await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig)).resolves.toBeFalsy()
                     }
                 ),
                 { numRuns: 20 }

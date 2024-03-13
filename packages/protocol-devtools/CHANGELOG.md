@@ -1,5 +1,22 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- 673c268: Adjust schemas after making ULN config types optional
+
+## 0.2.7
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+- e41dbfe: Make properties of Uln302 config optional
+- Updated dependencies [54cf16e]
+- Updated dependencies [2b9ae6a]
+- Updated dependencies [2b9ae6a]
+  - @layerzerolabs/devtools@0.2.7
+
 ## 0.2.6
 
 ### Patch Changes

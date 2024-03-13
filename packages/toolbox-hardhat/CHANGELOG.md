@@ -1,5 +1,39 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.13
+
+### Patch Changes
+
+- cc83f96: Add fp-ts to dependencies
+- Updated dependencies [40c45c1]
+- Updated dependencies [40c45c1]
+- Updated dependencies [4292d81]
+- Updated dependencies [cc83f96]
+  - @layerzerolabs/devtools@0.2.8
+  - @layerzerolabs/devtools-evm@0.2.9
+
+## 0.1.12
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+- Updated dependencies [eec31a0]
+- Updated dependencies [54cf16e]
+- Updated dependencies [2b9ae6a]
+- Updated dependencies [4429472]
+- Updated dependencies [e41dbfe]
+- Updated dependencies [2b9ae6a]
+  - @layerzerolabs/ua-devtools@0.2.8
+  - @layerzerolabs/devtools@0.2.7
+  - @layerzerolabs/devtools-evm@0.2.8
+  - @layerzerolabs/devtools-evm-hardhat@0.2.11
+  - @layerzerolabs/io-devtools@0.1.5
+  - @layerzerolabs/protocol-devtools@0.2.7
+  - @layerzerolabs/protocol-devtools-evm@0.2.7
+  - @layerzerolabs/test-devtools-evm-hardhat@0.1.9
+  - @layerzerolabs/ua-devtools-evm@0.2.7
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.2.11
+
 ## 0.1.11
 
 ### Patch Changes

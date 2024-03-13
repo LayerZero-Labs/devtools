@@ -42,6 +42,9 @@ RUN apt-get install --yes \
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
+# Install docker
+RUN curl -sSL https://get.docker.com/ | sh
+
 # Enable corepack, new node package manager manager
 # 
 # See more here https://nodejs.org/api/corepack.html
@@ -55,6 +58,7 @@ RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
+RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -73,6 +77,9 @@ ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
 WORKDIR /app
 
 COPY pnpm-*.yaml .npmrc ./
+
+# Get the node_modules patches since we need them for installation
+COPY patches/ patches/
 
 RUN \
     #  Mount pnpm store

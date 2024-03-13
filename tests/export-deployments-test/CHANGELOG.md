@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.1.7
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.1.6
 
 ### Patch Changes

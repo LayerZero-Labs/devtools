@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
+import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Bytes,
     Factory,
@@ -28,12 +28,12 @@ export interface OAppReceiveLibraryConfig {
 }
 
 export interface OAppSendConfig {
-    executorConfig: Uln302ExecutorConfig
-    ulnConfig: Uln302UlnConfig
+    executorConfig?: Uln302ExecutorConfig
+    ulnConfig?: Uln302UlnUserConfig
 }
 
 export interface OAppReceiveConfig {
-    ulnConfig: Uln302UlnConfig
+    ulnConfig?: Uln302UlnUserConfig
 }
 
 export interface OAppEdgeConfig {
@@ -60,7 +60,7 @@ export interface EncodedOption extends BaseExecutorOption {
 export interface ExecutorLzReceiveOption extends BaseExecutorOption {
     optionType: ExecutorOptionType.LZ_RECEIVE
     gas: PossiblyBigInt
-    value: PossiblyBigInt
+    value?: PossiblyBigInt
 }
 
 export interface ExecutorNativeDropOption extends BaseExecutorOption {
@@ -73,7 +73,7 @@ export interface ExecutorComposeOption extends BaseExecutorOption {
     optionType: ExecutorOptionType.COMPOSE
     index: number
     gas: PossiblyBigInt
-    value: PossiblyBigInt
+    value?: PossiblyBigInt
 }
 
 export interface ExecutorOrderedExecutionOption extends BaseExecutorOption {

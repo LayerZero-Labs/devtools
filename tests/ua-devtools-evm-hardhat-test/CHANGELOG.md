@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.1.10
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+- 2b9ae6a: Sign transactions for different chains in parallel
+
 ## 0.1.9
 
 ### Patch Changes

@@ -70,4 +70,10 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['zkconsensys-mainnet', 'https://api.lineascan.build/api'],
     ['moonbeam', 'https://api-moonbeam.moonscan.io/api'],
     ['moonbeam-testnet', 'https://api-moonbase.moonscan.io/api'],
+    ['mantle', 'https://explorer.mantle.xyz/api'],
+    ['metis', 'https://api.routescan.io/v2/network/mainnet/evm/1088/etherscan'],
+    ['scroll', 'https://api.scrollscan.com/api'],
+    ['fraxtal', 'https://api.fraxscan.com/api'],
+    ['mode', 'https://explorer.mode.network/api'],
+    ['etherlink', 'https://explorer.etherlink.com/api'],
 ])

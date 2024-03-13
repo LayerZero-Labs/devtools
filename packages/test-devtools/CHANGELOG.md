@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.1.10
+
+### Patch Changes
+
+- 54cf16e: Silence bigint-buffer warning
+
 ## 0.1.9
 
 ### Patch Changes
