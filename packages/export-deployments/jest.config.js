@@ -1,5 +1,6 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
+    reporters: [['github-actions', { silent: false }], 'summary'],
     testEnvironment: 'node',
     testTimeout: 15000,
     moduleNameMapper: {
