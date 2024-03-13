@@ -630,6 +630,9 @@ importers:
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
       hardhat:
         specifier: ^2.19.5
         version: 2.19.5(ts-node@10.9.2)(typescript@5.3.3)
@@ -8136,6 +8139,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
