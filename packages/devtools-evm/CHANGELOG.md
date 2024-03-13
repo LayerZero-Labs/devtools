@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-evm
 
+## 0.2.9
+
+### Patch Changes
+
+- cc83f96: Add fp-ts to dependencies
+- Updated dependencies [40c45c1]
+- Updated dependencies [40c45c1]
+- Updated dependencies [4292d81]
+  - @layerzerolabs/devtools@0.2.8
+
 ## 0.2.8
 
 ### Patch Changes

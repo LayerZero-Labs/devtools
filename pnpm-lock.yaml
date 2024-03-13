@@ -510,7 +510,7 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.2.7
+        specifier: ~0.2.8
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.5
@@ -1118,10 +1118,10 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.2.7
+        specifier: ~0.2.8
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.2.8
+        specifier: ~0.2.9
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~0.2.11
@@ -8136,7 +8136,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}

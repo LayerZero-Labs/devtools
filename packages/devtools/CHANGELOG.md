@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- 40c45c1: Add tapError utility to simplify async error logging
+- 40c45c1: Add mapError utility
+- 4292d81: Add docker compose spec generation capabilities
+
 ## 0.2.7
 
 ### Patch Changes
