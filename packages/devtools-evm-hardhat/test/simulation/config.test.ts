@@ -1,4 +1,8 @@
-import { getAnvilOptionsFromHardhatNetworks, getHardhatNetworkOverrides, resolveSimulationConfig } from '@/simulation'
+import {
+    getAnvilOptionsFromHardhatNetworks,
+    getHardhatNetworkOverrides,
+    resolveSimulationConfig,
+} from '@/simulation/config'
 import fc from 'fast-check'
 import hre from 'hardhat'
 import { resolve } from 'path'
