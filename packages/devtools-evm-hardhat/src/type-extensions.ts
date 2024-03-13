@@ -1,6 +1,7 @@
 import 'hardhat/types/config'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ConnectSafeConfigWithSafeAddress } from '@safe-global/protocol-kit'
+import { SimulationUserConfig } from '@/simulation/types'
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
@@ -102,5 +103,19 @@ declare module 'hardhat/types/config' {
          * @default ['@layerzerolabs/lz-evm-sdk-v2','@layerzerolabs/test-devtools-evm-hardhat']
          */
         artifactSourcePackages?: string[]
+
+        /**
+         * Configuration of features that are not considered stable yet
+         */
+        experimental?: {
+            /**
+             * Configuration for omnichain simulation
+             *
+             * Omnichain simulation allows developers to easily setup
+             * local environment forked from live networks without
+             * having to adjust the `hardhat.config.ts` file
+             */
+            simulation?: SimulationUserConfig
+        }
     }
 }
