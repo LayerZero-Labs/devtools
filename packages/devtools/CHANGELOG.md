@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.2.9
+
+### Patch Changes
+
+- 6d2e1f8: Add types for simulation
+
 ## 0.2.8
 
 ### Patch Changes
