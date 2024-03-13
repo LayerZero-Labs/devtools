@@ -28,6 +28,12 @@ export interface AnvilOptions {
     //
 
     blockTime?: number
+
+    //
+    // State
+    //
+
+    state?: string
 }
 
 /**
@@ -37,7 +43,15 @@ export interface AnvilOptions {
  * @param {AnvilOptions} options
  * @returns {string[]} `anvil` CLI arguments
  */
-export const createAnvilCliOptions = ({ host, port, mnemonic, forkUrl, blockTime, count }: AnvilOptions): string[] =>
+export const createAnvilCliOptions = ({
+    host,
+    port,
+    mnemonic,
+    forkUrl,
+    blockTime,
+    count,
+    state,
+}: AnvilOptions): string[] =>
     pipe(
         [
             pipe(
@@ -63,6 +77,10 @@ export const createAnvilCliOptions = ({ host, port, mnemonic, forkUrl, blockTime
             pipe(
                 O.fromNullable(blockTime),
                 O.map((blockTime) => ['--block-time', String(blockTime)])
+            ),
+            pipe(
+                O.fromNullable(state),
+                O.map((state) => ['--state', state])
             ),
         ],
         A.compact,
