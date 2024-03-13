@@ -89,6 +89,8 @@ export interface ComposeSpecService {
     healthcheck?: ComposeSpecServiceHealthcheck
 }
 
+export type ComposeSpecServices = Record<string, ComposeSpecService>
+
 export interface ComposeSpecVolumeDefinition {
     name?: string
     driver?: string
@@ -98,10 +100,12 @@ export interface ComposeSpecVolumeDefinition {
 
 export type ComposeSpecVolume = null | ComposeSpecVolumeDefinition
 
+export type ComposeSpecVolumes = Record<string, ComposeSpecVolume>
+
 export interface ComposeSpec {
     version: ComposeSpecVersion
-    services?: Record<string, ComposeSpecService>
-    volumes?: Record<string, ComposeSpecVolume>
+    services?: ComposeSpecServices
+    volumes?: ComposeSpecVolumes
 }
 
 export type ListOrDict = Record<string, string | number | boolean | null> | string[]
