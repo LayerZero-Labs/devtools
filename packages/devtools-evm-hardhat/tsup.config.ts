@@ -10,5 +10,8 @@ export default defineConfig([
         splitting: false,
         treeshake: true,
         format: ['esm', 'cjs'],
+        loader: {
+            '.conf': 'text',
+        },
     },
 ])
