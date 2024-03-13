@@ -31,14 +31,33 @@ export interface SimulationUserConfig {
     anvil?: SimulationAnvilUserConfig
 }
 
+/**
+ * Resolved simulation config
+ */
 export interface SimulationConfig {
     port: number
     directory: string
     anvil: SimulationAnvilConfig
 }
 
+/**
+ * Resolved simulation config for anvil.
+ *
+ * This config is created by taking the user config
+ * and applying defaults.
+ */
 export type SimulationAnvilConfig = AnvilOptions & {
     mnemonic: NonNullable<AnvilOptions['mnemonic']>
 }
 
+/**
+ * User facing simulation config for anvil.
+ *
+ * This config cannot override several system attributes for anvil
+ * (since it would not really make sense seeing that anvil is being run in containers):
+ *
+ * - host & port: this would break the docker port bindings
+ * - state: state is kept within the container and is not accessible from the outside
+ * - forkUrl: this is set based on the hardhat config and points to the hardhat network url
+ */
 export type SimulationAnvilUserConfig = Omit<AnvilOptions, 'host' | 'port' | 'state' | 'forkUrl'>
