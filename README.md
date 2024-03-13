@@ -73,7 +73,7 @@ More information on how to configure your `OApp` will be available in our <a hre
 Pair your deployed contracts using:
 
 ```bash
-npx hardhat lz:oapp:wire
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
 ```
 
 By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
