@@ -4,7 +4,11 @@ import { ENDPOINT_IDS } from './constants'
 
 export const nullishArbitrary = fc.constantFrom(null, undefined)
 
+export const undefinedArbitrary = fc.constantFrom(undefined)
+
 export const nullableArbitrary = <T>(a: fc.Arbitrary<T>) => fc.oneof(a, nullishArbitrary)
+
+export const optionalArbitrary = <T>(a: fc.Arbitrary<T>) => fc.oneof(a, undefinedArbitrary)
 
 export const addressArbitrary = fc.string()
 
