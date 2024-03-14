@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.2.12
+
+### Patch Changes
+
+- 711cb98: Add config utilities for simulation
+- 6d2e1f8: Add types for simulation
+- Updated dependencies [6d2e1f8]
+  - @layerzerolabs/devtools-evm@0.2.10
+  - @layerzerolabs/devtools@0.2.9
+
 ## 0.2.11
 
 ### Patch Changes

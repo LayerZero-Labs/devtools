@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm
 
+## 0.2.10
+
+### Patch Changes
+
+- 6d2e1f8: Add types for simulation
+- Updated dependencies [6d2e1f8]
+  - @layerzerolabs/devtools@0.2.9
+
 ## 0.2.9
 
 ### Patch Changes
