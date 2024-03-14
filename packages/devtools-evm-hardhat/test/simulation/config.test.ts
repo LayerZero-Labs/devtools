@@ -1,4 +1,9 @@
-import { getAnvilOptionsFromHardhatNetworks, getHardhatNetworkOverrides, resolveSimulationConfig } from '@/simulation'
+import {
+    getAnvilOptionsFromHardhatNetworks,
+    getHardhatNetworkOverrides,
+    resolveSimulationConfig,
+} from '@/simulation/config'
+import { mnemonicArbitrary } from '@layerzerolabs/test-devtools'
 import fc from 'fast-check'
 import hre from 'hardhat'
 import { resolve } from 'path'
@@ -17,7 +22,7 @@ describe('simulation/config', () => {
 
         it('should not override user values if provided', () => {
             fc.assert(
-                fc.property(fc.integer(), fc.string(), fc.string(), (port, directory, mnemonic) => {
+                fc.property(fc.integer(), fc.string(), mnemonicArbitrary, (port, directory, mnemonic) => {
                     expect(resolveSimulationConfig({ port, directory, anvil: { mnemonic } }, hre.config)).toEqual({
                         port,
                         directory: resolve(hre.config.paths.root, directory),
