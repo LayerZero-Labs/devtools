@@ -2,7 +2,7 @@ import { tryCreateScanContractUrl, tryGetScanBrowserUrlFromScanUrl } from '@/com
 
 describe('url', () => {
     describe('tryGetScanBrowserUrlFromScanUrl', () => {
-        it.each([[''], ['borken url'], ['https://'], ['https:///'], ['scan.api']])(
+        it.each([[''], ['broken url'], ['https://'], ['https:///'], ['scan.api']])(
             'should return undefined when passed "%s"',
             (invalidUrl) => {
                 expect(tryGetScanBrowserUrlFromScanUrl(invalidUrl)).toBeUndefined()
