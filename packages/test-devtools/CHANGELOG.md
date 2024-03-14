@@ -1,5 +1,12 @@
 # @layerzerolabs/test-devtools
 
+## 0.1.11
+
+### Patch Changes
+
+- 622fd00: Add mnemonic arbitrary to test-devtools
+- 622fd00: Add optionalArbitrary
+
 ## 0.1.10
 
 ### Patch Changes

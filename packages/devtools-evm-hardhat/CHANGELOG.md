@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.2.13
+
+### Patch Changes
+
+- 622fd00: Add docker compose utilities for simulation
+
 ## 0.2.12
 
 ### Patch Changes

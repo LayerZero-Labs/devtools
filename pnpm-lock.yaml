@@ -610,7 +610,7 @@ importers:
         specifier: ~2.1.15
         version: 2.1.15
       '@layerzerolabs/test-devtools':
-        specifier: ~0.1.10
+        specifier: ~0.1.11
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.1.9
