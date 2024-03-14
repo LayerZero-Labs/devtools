@@ -7,7 +7,7 @@ import {
 } from '@/simulation/compose'
 import { serializeDockerComposeSpec } from '@layerzerolabs/devtools'
 import { AnvilOptions } from '@layerzerolabs/devtools-evm'
-import { optionalArbitrary } from '@layerzerolabs/test-devtools'
+import { mnemonicArbitrary, optionalArbitrary } from '@layerzerolabs/test-devtools'
 import { spawnSync } from 'child_process'
 import fc from 'fast-check'
 import { rm, writeFile } from 'fs/promises'
@@ -21,15 +21,25 @@ describe('simulation/compose', () => {
         host: optionalArbitrary(fc.ipV4()),
         port: optionalArbitrary(portArbitrary),
         count: optionalArbitrary(fc.integer()),
-        mnemonic: optionalArbitrary(fc.string()),
-        state: optionalArbitrary(fc.string()),
+        mnemonic: optionalArbitrary(mnemonicArbitrary),
         blockTime: optionalArbitrary(fc.integer()),
         forkUrl: optionalArbitrary(fc.webUrl()),
     })
 
+    // We are aware of shortcomings of the simulation spec generation process:
+    //
+    // - whitespace service names will generate invalid compose files. This should not be a problem in a real hardhat project
+    // - network named rpc will collide with the RPC proxy container defined in the spec
+    //
+    // Because of this we'll filter down on the possibilities when it comes to service names
+    const serviceNameArbitrary = fc.constantFrom('mumbai', 'sepolia-testnet', 'someNetwork', 'someNetwork.V2')
+
     const SPEC_FILE_PATH = join(__dirname, 'docker-compose.yaml')
 
-    const validateSpec = () => spawnSync('docker', ['compose', '-f', SPEC_FILE_PATH, 'config'])
+    // We add --log-level to suppress any warnings - for example warnings about environment variables not being defined
+    //
+    // This allows us to easily test the stderr for being empty (otherwise we would need to test it for not containing errors)
+    const validateSpec = () => spawnSync('docker', ['--log-level', 'ERROR', 'compose', '-f', SPEC_FILE_PATH, 'config'])
 
     afterEach(async () => {
         await rm(SPEC_FILE_PATH, { force: true })
@@ -46,6 +56,7 @@ describe('simulation/compose', () => {
 
             await writeFile(SPEC_FILE_PATH, spec)
 
+            expect(validateSpec().stderr.toString('utf8')).toBe('')
             expect(validateSpec().status).toBe(0)
 
             expect(spec).toMatchSnapshot()
@@ -63,6 +74,7 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
+                    expect(validateSpec().stderr.toString('utf8')).toBe('')
                     expect(validateSpec().status).toBe(0)
                 }),
                 { numRuns: 20 }
@@ -71,17 +83,6 @@ describe('simulation/compose', () => {
     })
 
     describe('createEvmNodeProxyServiceSpec()', () => {
-        // We are aware of shortcomings of the simulation spec generation process:
-        //
-        // - whitespace service names will generate invalid compose files. This should not be a problem in a real hardhat project
-        // - network named rpc will collide with the RPC proxy container defined in the spec
-        //
-        // Because of this we'll filter down on the possibilities when it comes to service names
-        const serviceNameArbitrary = fc
-            .string({ minLength: 1 })
-            .map((name) => name.replaceAll(/[^a-zA-Z]/g, '_'))
-            .filter((name) => name !== 'rpc')
-
         const servicesArbitrary = fc.dictionary(
             serviceNameArbitrary,
             anvilOptionsArbitrary.map(createEvmNodeServiceSpec)
@@ -100,6 +101,7 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
+                    expect(validateSpec().stderr.toString('utf8')).toBe('')
                     expect(validateSpec().status).toBe(0)
                 }),
                 { numRuns: 20 }
@@ -108,17 +110,6 @@ describe('simulation/compose', () => {
     })
 
     describe('createSimulationComposeSpec()', () => {
-        // We are aware of shortcomings of the simulation spec generation process:
-        //
-        // - whitespace service names will generate invalid compose files. This should not be a problem in a real hardhat project
-        // - network named rpc will collide with the RPC proxy container defined in the spec
-        //
-        // Because of this we'll filter down on the possibilities when it comes to service names
-        const serviceNameArbitrary = fc
-            .string({ minLength: 1 })
-            .map((name) => name.replaceAll(/[^a-zA-Z]/g, '_'))
-            .filter((name) => name !== 'rpc')
-
         const anvilOptionsRecordArbitrary = fc.dictionary(serviceNameArbitrary, anvilOptionsArbitrary)
 
         it('should work goddammit', async () => {
@@ -129,6 +120,7 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
+                    expect(validateSpec().stderr.toString('utf8')).toBe('')
                     expect(validateSpec().status).toBe(0)
                 }),
                 { numRuns: 20 }
