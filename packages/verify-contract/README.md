@@ -38,7 +38,7 @@ npx @layerzerolabs/verify-contract --help
 
 Using the CLI, contracts can be verified one network at a time.
 
-### Programatic usage
+### Programmatic usage
 
 The package provides two types of verification for hardhat deploy: _target_ and _non-target_.
 

@@ -77,7 +77,7 @@ new Command("create-lz-oapp")
   .parseAsync();
 
 /**
- * Helper utility for pretty printing any erros we might encounter
+ * Helper utility for pretty printing any errors we might encounter
  *
  * @param {unknown} error
  */

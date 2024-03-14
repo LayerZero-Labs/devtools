@@ -60,7 +60,7 @@ export const mapError = async <T, E = unknown>(task: Task<T>, toError: (error: u
 /**
  * Intercepts any errors coming from a task. The return value
  * of this call will be the return value of the task
- * and the rejected value will be the original erorr.
+ * and the rejected value will be the original error.
  *
  * Any errors or rejections from the `onError` callback will be caught
  * and the original error will be rethrown.
@@ -98,7 +98,7 @@ export const tapError = async <T>(task: Task<T>, onError: Factory<[error: unknow
  * Will resolve with the output of the first task that resolves
  * or reject with the last rejection.
  *
- * Will reject immediatelly if no tasks have been passed
+ * Will reject immediately if no tasks have been passed
  *
  * @param {Task<T>[]} tasks
  * @returns {Promise<T>}
@@ -212,7 +212,7 @@ export const createRetryFactory =
             // We'll effectively disable the numOfAttempts for exponential backoff
             // since we want the behavior to be completely controlled by the strategy
             numOfAttempts: Number.POSITIVE_INFINITY,
-            // The retry callback is called after an unsuccessful attemp
+            // The retry callback is called after an unsuccessful attempt
             //
             // It allows us to decide whether we want to keep trying or give up
             // (we can give up by returning false)

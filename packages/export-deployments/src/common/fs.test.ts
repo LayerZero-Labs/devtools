@@ -10,10 +10,10 @@ describe('common/fs', () => {
 
         it('should return a left either wrapped in error if readFileSync fails', () => {
             readFileSyncMock.mockImplementation(() => {
-                throw 'borken'
+                throw 'broken'
             })
 
-            expect(readFileSyncSafe('filename')).toEqual(E.left(new Error('borken')))
+            expect(readFileSyncSafe('filename')).toEqual(E.left(new Error('broken')))
         })
 
         it('should return a right either with utf8 contents if readFileSync succeeds', () => {
@@ -28,10 +28,10 @@ describe('common/fs', () => {
 
         it('should return a left either if mkdirSync fails', () => {
             mkdirSyncMock.mockImplementation(() => {
-                throw 'borken'
+                throw 'broken'
             })
 
-            expect(mkdirSafe('some/dir/name')).toEqual(E.left(new Error('borken')))
+            expect(mkdirSafe('some/dir/name')).toEqual(E.left(new Error('broken')))
         })
 
         it('should return a right either with the path if mkdirSync returns undefined', () => {
