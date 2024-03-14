@@ -50,7 +50,7 @@ export const createEvmNodeProxyServiceSpec = (
     ports: [`${port}:8545`],
     depends_on: pipe(
         networkServices,
-        // This service will depends on the RPCs to be healthy
+        // This service will depend on the RPCs to be healthy
         // so we'll take the networkServices object and replace
         // the values with service_healthy condition
         RR.map(() => ({
