@@ -1,6 +1,6 @@
 import '@/type-extensions'
 
-import { TASK_LZ_TEST_SIMULATION_START } from '@/constants'
+import { TASK_LZ_TEST_SIMULATION_LOGS, TASK_LZ_TEST_SIMULATION_START } from '@/constants'
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { types } from '@/cli'
@@ -91,6 +91,15 @@ const action: ActionType<SimulationStartTaskArgs> = async (
     // The error reporting on this part should be improved - we should check that "docker" and "docker compose"
     // are known commands before we go ahead and try executing them
     try {
+        if (daemon) {
+            logger.info(`Starting simulation in the background`)
+            logger.info(
+                `Use 'LZ_ENABLE_EXPERIMENTAL_SIMULATION=1 npx hardhat ${TASK_LZ_TEST_SIMULATION_LOGS}' to view the network logs`
+            )
+        } else {
+            logger.info(`Starting simulation`)
+        }
+
         logger.verbose(`Spawning docker compose up command for ${dockerComposePath}`)
 
         // This is a very quick and dirty way to pass an optional --wait argument to docker compose up
