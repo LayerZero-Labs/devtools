@@ -34,10 +34,10 @@
   },
   "devDependencies": {
     "@ethersproject/address": "~5.7.0",
-    "@layerzerolabs/devtools": "~0.2.7",
-    "@layerzerolabs/devtools-evm": "~0.2.8",
+    "@layerzerolabs/devtools": "~0.2.9",
+    "@layerzerolabs/devtools-evm": "~0.2.11",
     "@layerzerolabs/io-devtools": "~0.1.5",
-    "@layerzerolabs/lz-v2-utilities": "~2.1.15",
+    "@layerzerolabs/lz-v2-utilities": "~2.1.18",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",
     "commander": "^11.1.0",
