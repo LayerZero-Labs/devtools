@@ -51,17 +51,17 @@ const config: HardhatUserConfig = {
     networks: {
         sepolia: {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: 'https://rpc.sepolia.org/',
+            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
         },
         fuji: {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: 'https://rpc.ankr.com/avalanche_fuji',
+            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
         },
         mumbai: {
             eid: EndpointId.POLYGON_V2_TESTNET,
-            url: 'https://rpc.ankr.com/polygon_mumbai',
+            url: process.env.RPC_URL_MUMBAI || 'https://rpc.ankr.com/polygon_mumbai',
             accounts,
         },
     },
