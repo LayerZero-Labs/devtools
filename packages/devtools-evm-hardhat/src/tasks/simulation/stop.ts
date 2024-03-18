@@ -9,6 +9,7 @@ import { types } from '@/cli'
 import { resolveSimulationConfig } from '@/simulation/config'
 import { join } from 'path'
 import { spawnSync } from 'child_process'
+import { rmSync } from 'fs'
 
 export interface SimulationStopTaskArgs {
     logLevel?: LogLevel
@@ -45,6 +46,7 @@ const action: ActionType<SimulationStopTaskArgs> = async ({ logLevel = 'info' },
     // The error reporting on this part should be improved - we should check that "docker" and "docker compose"
     // are known commands before we go ahead and try executing them
     try {
+        logger.info(`Stopping simulation`)
         logger.verbose(`Spawning docker compose down command for ${dockerComposePath}`)
 
         spawnSync('docker', ['compose', '-f', dockerComposePath, 'down'], {
@@ -56,6 +58,12 @@ const action: ActionType<SimulationStopTaskArgs> = async ({ logLevel = 'info' },
         process.exitCode = 1
 
         return
+    } finally {
+        try {
+            rmSync(simulationConfig.directory, { force: true, recursive: true })
+        } catch (error) {
+            logger.error(`Failed to delete '${simulationConfig.directory}': ${error}`)
+        }
     }
 }
 
