@@ -27,7 +27,7 @@
     "./dist/index.*"
   ],
   "scripts": {
-    "prebuild": "$npm_execpath tsc --noEmit -p tsconfig.build.json",
+    "prebuild": "$npm_execpath tsc --noEmit",
     "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
