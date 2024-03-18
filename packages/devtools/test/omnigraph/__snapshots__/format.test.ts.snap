@@ -310,6 +310,8 @@ exports[`omnigraph/format formatEid should format 10259 correctly 1`] = `"EXOCOR
 
 exports[`omnigraph/format formatEid should format 10260 correctly 1`] = `"MODE_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10261 correctly 1`] = `"HEDERA_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -331,6 +333,8 @@ exports[`omnigraph/format formatEid should format 20151 correctly 1`] = `"METIS_
 exports[`omnigraph/format formatEid should format 20231 correctly 1`] = `"ARBITRUM_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 20420 correctly 1`] = `"TRON_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 20421 correctly 1`] = `"TRONDEV_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 30101 correctly 1`] = `"ETHEREUM_V2_MAINNET"`;
 
@@ -629,6 +633,8 @@ exports[`omnigraph/format formatEid should format 40258 correctly 1`] = `"SEI_V2
 exports[`omnigraph/format formatEid should format 40259 correctly 1`] = `"EXOCORE_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40260 correctly 1`] = `"MODE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40261 correctly 1`] = `"HEDERA_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
