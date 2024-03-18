@@ -1,5 +1,18 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.2.14
+
+### Patch Changes
+
+- eb4e4d0: Adjust simulation config logic for anvil
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [f9987d3]
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools-evm@0.2.12
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.13
 
 ### Patch Changes

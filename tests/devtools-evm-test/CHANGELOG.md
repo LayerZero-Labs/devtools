@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.0.15
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.0.14
 
 ### Patch Changes

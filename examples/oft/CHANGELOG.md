@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.1.10
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.1.9
 
 ### Patch Changes
