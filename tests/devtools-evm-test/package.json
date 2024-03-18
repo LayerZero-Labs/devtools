@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-test",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "private": true,
   "description": "Integration tests for ua-devtools-evm-hardhat for V2",
   "repository": {
@@ -22,10 +22,10 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.2.9",
-    "@layerzerolabs/devtools-evm": "~0.2.11",
+    "@layerzerolabs/devtools": "~0.2.10",
+    "@layerzerolabs/devtools-evm": "~0.2.12",
     "@layerzerolabs/lz-definitions": "~2.1.18",
-    "@layerzerolabs/test-devtools": "~0.1.11",
+    "@layerzerolabs/test-devtools": "~0.1.12",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@swc/core": "^1.4.0",

@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.0.19
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.0.18
 
 ### Patch Changes

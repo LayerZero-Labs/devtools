@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.0.9
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.0.8
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.2.12
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [f9987d3]
+- Updated dependencies [eb4e4d0]
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools-evm@0.2.12
+  - @layerzerolabs/devtools-evm-hardhat@0.2.14
+  - @layerzerolabs/protocol-devtools-evm@0.2.8
+  - @layerzerolabs/protocol-devtools@0.2.9
+  - @layerzerolabs/ua-devtools-evm@0.2.8
+  - @layerzerolabs/ua-devtools@0.2.11
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.11
 
 ### Patch Changes

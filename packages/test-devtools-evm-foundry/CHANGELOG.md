@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.1.12
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.1.11
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.2.9
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.8
 
 ### Patch Changes

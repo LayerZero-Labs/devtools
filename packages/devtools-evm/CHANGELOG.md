@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-evm
 
+## 0.2.12
+
+### Patch Changes
+
+- f9987d3: Add retries, timeout and forkBlockNumber properties to AnvilOptions
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.11
 
 ### Patch Changes

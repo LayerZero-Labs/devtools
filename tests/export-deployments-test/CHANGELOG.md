@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.1.8
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.1.7
 
 ### Patch Changes
