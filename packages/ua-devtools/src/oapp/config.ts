@@ -7,6 +7,7 @@ import {
     OmniPointMap,
     parallel,
     type OmniTransaction,
+    sequence,
 } from '@layerzerolabs/devtools'
 import { OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -16,33 +17,28 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
-export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
-    flattenTransactions(
-        // For now we keep the parallel execution as an opt-in feature flag
-        // before we have a retry logic fully in place for the SDKs
-        //
-        // This is to avoid 429 too many requests errors from the RPCs
-        process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
-            ? (createModuleLogger('OApp').warn(`You are using experimental parallel configuration`),
-              await parallel([
-                  () => configureOAppPeers(graph, createSdk),
-                  () => configureSendLibraries(graph, createSdk),
-                  () => configureReceiveLibraries(graph, createSdk),
-                  () => configureReceiveLibraryTimeouts(graph, createSdk),
-                  () => configureSendConfig(graph, createSdk),
-                  () => configureReceiveConfig(graph, createSdk),
-                  () => configureEnforcedOptions(graph, createSdk),
-              ]))
-            : [
-                  await configureOAppPeers(graph, createSdk),
-                  await configureSendLibraries(graph, createSdk),
-                  await configureReceiveLibraries(graph, createSdk),
-                  await configureReceiveLibraryTimeouts(graph, createSdk),
-                  await configureSendConfig(graph, createSdk),
-                  await configureReceiveConfig(graph, createSdk),
-                  await configureEnforcedOptions(graph, createSdk),
-              ]
-    )
+export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) => {
+    const logger = createModuleLogger('OApp')
+    const tasks = [
+        () => configureOAppPeers(graph, createSdk),
+        () => configureSendLibraries(graph, createSdk),
+        () => configureReceiveLibraries(graph, createSdk),
+        () => configureReceiveLibraryTimeouts(graph, createSdk),
+        () => configureSendConfig(graph, createSdk),
+        () => configureReceiveConfig(graph, createSdk),
+        () => configureEnforcedOptions(graph, createSdk),
+    ]
+
+    // For now we keep the parallel execution as an opt-in feature flag
+    // before we have a retry logic fully in place for the SDKs
+    //
+    // This is to avoid 429 too many requests errors from the RPCs
+    const applicative = process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+        ? (logger.warn(`You are using experimental parallel configuration`), parallel)
+        : sequence
+
+    return flattenTransactions(await applicative(tasks))
+}
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('OApp')
