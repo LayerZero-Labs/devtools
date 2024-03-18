@@ -59,7 +59,7 @@ const action: ActionType<SimulationStopTaskArgs> = async ({ logLevel = 'info' },
     }
 }
 
-if (process.env.LZ_ENABLE_EXPERIMENTAL_LZ_SIMULATION) {
+if (process.env.LZ_ENABLE_EXPERIMENTAL_SIMULATION) {
     task(TASK_LZ_TEST_SIMULATION_STOP, 'Stop LayerZero omnichain simulation', action).addParam(
         'logLevel',
         'Logging level. One of: error, warn, info, verbose, debug, silly',

@@ -108,7 +108,7 @@ const action: ActionType<SimulationStartTaskArgs> = async (
     }
 }
 
-if (process.env.LZ_ENABLE_EXPERIMENTAL_LZ_SIMULATION) {
+if (process.env.LZ_ENABLE_EXPERIMENTAL_SIMULATION) {
     task(TASK_LZ_TEST_SIMULATION_START, 'Start LayzerZero omnichain simulation', action)
         .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
         .addParam('networks', 'Comma-separated list of networks to simulate', undefined, types.csv, true)
