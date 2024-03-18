@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.2.11
+
+### Patch Changes
+
+- 04e1e67: Add stateInterval to AnvilOptions
+
 ## 0.2.10
 
 ### Patch Changes
