@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.1.10
+
+### Patch Changes
+
+- e3f9d58: Added floating pragma to the EndpointV2Mock.sol
+
 ## 0.1.9
 
 ### Patch Changes
