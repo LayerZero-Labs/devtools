@@ -34,6 +34,7 @@ export interface AnvilOptions {
     //
 
     state?: string
+    stateInterval?: number
 }
 
 /**
@@ -51,6 +52,7 @@ export const createAnvilCliOptions = ({
     blockTime,
     count,
     state,
+    stateInterval,
 }: AnvilOptions): string[] =>
     pipe(
         [
@@ -81,6 +83,10 @@ export const createAnvilCliOptions = ({
             pipe(
                 O.fromNullable(state),
                 O.map((state) => ['--state', state])
+            ),
+            pipe(
+                O.fromNullable(stateInterval),
+                O.map((stateInterval) => ['--state-interval', String(stateInterval)])
             ),
         ],
         A.compact,
