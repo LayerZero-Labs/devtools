@@ -16,6 +16,8 @@ describe('simulation/anvil', () => {
                 forkUrl: undefined,
                 blockTime: undefined,
                 count: undefined,
+                state: undefined,
+                stateInterval: undefined,
             }
 
             expect(createAnvilCliOptions(anvilOptionsWithEverythingUndefined)).toStrictEqual([])
