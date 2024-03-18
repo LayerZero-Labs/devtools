@@ -16,12 +16,16 @@ export interface AnvilOptions {
 
     mnemonic?: string
     count?: number
+    derivationPath?: string
 
     //
     // Forking options
     //
 
     forkUrl?: string
+    forkBlockNumber?: number
+    retries?: number
+    timeout?: number
 
     //
     // EVM options
@@ -49,8 +53,12 @@ export const createAnvilCliOptions = ({
     port,
     mnemonic,
     forkUrl,
+    forkBlockNumber,
+    retries,
+    timeout,
     blockTime,
     count,
+    derivationPath,
     state,
     stateInterval,
 }: AnvilOptions): string[] =>
@@ -73,8 +81,24 @@ export const createAnvilCliOptions = ({
                 O.map((count) => ['--count', String(count)])
             ),
             pipe(
+                O.fromNullable(derivationPath),
+                O.map((derivationPath) => ['--derivation-path', derivationPath])
+            ),
+            pipe(
                 O.fromNullable(forkUrl),
                 O.map((forkUrl) => ['--fork-url', forkUrl])
+            ),
+            pipe(
+                O.fromNullable(forkBlockNumber),
+                O.map((forkBlockNumber) => ['--fork-block-number', String(forkBlockNumber)])
+            ),
+            pipe(
+                O.fromNullable(retries),
+                O.map((retries) => ['--retries', String(retries)])
+            ),
+            pipe(
+                O.fromNullable(timeout),
+                O.map((timeout) => ['--timeout', String(timeout)])
             ),
             pipe(
                 O.fromNullable(blockTime),

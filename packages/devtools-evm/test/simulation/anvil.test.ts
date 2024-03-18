@@ -14,8 +14,12 @@ describe('simulation/anvil', () => {
                 port: undefined,
                 mnemonic: undefined,
                 forkUrl: undefined,
+                forkBlockNumber: undefined,
+                retries: undefined,
+                timeout: undefined,
                 blockTime: undefined,
                 count: undefined,
+                derivationPath: undefined,
                 state: undefined,
                 stateInterval: undefined,
             }
