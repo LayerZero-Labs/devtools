@@ -31,7 +31,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.2.7",
+    "@layerzerolabs/devtools": "~0.2.9",
     "@layerzerolabs/lz-definitions": "~2.1.15",
     "@layerzerolabs/protocol-devtools": "~0.2.7",
     "@swc/core": "^1.4.0",
@@ -45,7 +45,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.2.7",
+    "@layerzerolabs/devtools": "~0.2.9",
     "@layerzerolabs/lz-definitions": "~2.1.15",
     "@layerzerolabs/protocol-devtools": "~0.2.7",
     "zod": "^3.22.4"
