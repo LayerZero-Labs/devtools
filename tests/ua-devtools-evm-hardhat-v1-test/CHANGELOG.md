@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.0.8
+
+### Patch Changes
+
+- 226a0d5: Add feature-flagged parallel configuration execution
+
 ## 0.0.7
 
 ### Patch Changes

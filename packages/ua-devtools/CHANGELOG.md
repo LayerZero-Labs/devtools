@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools
 
+## 0.2.10
+
+### Patch Changes
+
+- 226a0d5: Add feature-flagged parallel configuration execution
+- 226a0d5: Use parallel execution when configuring OApp
+
 ## 0.2.9
 
 ### Patch Changes

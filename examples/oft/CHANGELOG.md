@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.1.9
+
+### Patch Changes
+
+- a5c185f: Take RPC URLs from the environment in the examples
+
 ## 0.1.8
 
 ### Patch Changes
