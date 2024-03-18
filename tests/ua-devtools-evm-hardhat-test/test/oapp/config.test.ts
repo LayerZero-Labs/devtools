@@ -1296,7 +1296,137 @@ describe('oapp/config', () => {
                 ])
             })
 
+            it('should return all setConfig transactions in parallel mode', async () => {
+                const ethExecutorAddress = await getLibraryAddress(ethExecutor)
+                const ethSendLibrary = await getLibraryAddress(ethSendUln2_Opt2)
+                const ethReceiveLibrary = await getLibraryAddress(ethReceiveUln2_Opt2)
+                const ethDefaultReceiveLibrary = await getLibraryAddress(ethReceiveUln)
+                const ethDvnAddress = await getLibraryAddress(ethDvn)
+
+                const createProvider = createProviderFactory()
+                const ethProvider = await createProvider(EndpointId.ETHEREUM_V2_MAINNET)
+                const latestEthBlock = (await ethProvider.getBlock('latest')).number
+                const expiryEthBlock = BigInt(latestEthBlock + 1000)
+
+                const [_, errors] = await signAndSend([
+                    await ethEndpointV2Sdk.registerLibrary(ethSendLibrary),
+                    await ethEndpointV2Sdk.registerLibrary(ethReceiveLibrary),
+                ])
+                expect(errors).toEqual([])
+
+                // This is the OApp config that we want to use against our contracts
+                graph = {
+                    contracts: [
+                        {
+                            point: ethPoint,
+                        },
+                        {
+                            point: avaxPoint,
+                        },
+                    ],
+                    connections: [
+                        {
+                            vector: { from: ethPoint, to: avaxPoint },
+                            config: {
+                                sendLibrary: ethSendLibrary,
+                                receiveLibraryConfig: {
+                                    receiveLibrary: ethReceiveLibrary,
+                                    gracePeriod: BigInt(0),
+                                },
+                                receiveLibraryTimeoutConfig: {
+                                    lib: ethDefaultReceiveLibrary,
+                                    expiry: expiryEthBlock,
+                                },
+                                sendConfig: {
+                                    executorConfig: {
+                                        maxMessageSize: 99,
+                                        executor: ethExecutorAddress,
+                                    },
+                                    ulnConfig: {
+                                        confirmations: BigInt(42),
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
+                                        optionalDVNThreshold: 1,
+                                    },
+                                },
+                                receiveConfig: {
+                                    ulnConfig: {
+                                        confirmations: BigInt(42),
+                                        requiredDVNs: [ethDvnAddress],
+                                        optionalDVNs: [ethDvnAddress],
+                                        optionalDVNThreshold: 1,
+                                    },
+                                },
+                            },
+                        },
+                        {
+                            vector: { from: avaxPoint, to: ethPoint },
+                            config: undefined,
+                        },
+                    ],
+                }
+
+                // We set the mode to parallel
+                process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = '1'
+
+                // Now we configure the OApp
+                transactions = await configureOApp(graph, oappSdkFactory)
+                expect(transactions).toEqual([
+                    await ethEndpointV2Sdk.setSendLibrary(ethPoint.address, avaxPoint.eid, ethSendLibrary),
+                    await ethEndpointV2Sdk.setReceiveLibrary(
+                        ethPoint.address,
+                        avaxPoint.eid,
+                        ethReceiveLibrary,
+                        BigInt(0)
+                    ),
+                    await ethEndpointV2Sdk.setReceiveLibraryTimeout(
+                        ethPoint.address,
+                        avaxPoint.eid,
+                        ethDefaultReceiveLibrary,
+                        expiryEthBlock
+                    ),
+                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                        ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: ethExecutorAddress,
+                                },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
+                                    optionalDVNThreshold: 1,
+                                },
+                            },
+                        ])),
+                    ]),
+                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
+                                    optionalDVNThreshold: 1,
+                                },
+                            },
+                        ])),
+                    ]),
+                ])
+            })
+
             afterEach(async () => {
+                // We reset the parallel mode
+                process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = undefined
+
                 const [_, errors] = await signAndSend(transactions)
                 // eslint-disable-next-line jest/no-standalone-expect
                 expect(errors).toEqual([])

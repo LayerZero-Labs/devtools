@@ -69,5 +69,42 @@ describe('lzapp/config', () => {
                 await avaxLzAppSdk.setTrustedRemote(ethLzAppPoint.eid, ethLzAppPoint.address),
             ])
         })
+
+        it('should return all setPeer transactions in parallel mode', async () => {
+            const graph: LzAppOmniGraph = {
+                contracts: [
+                    {
+                        point: ethLzAppPoint,
+                    },
+                    {
+                        point: avaxLzAppPoint,
+                    },
+                ],
+                connections: [
+                    {
+                        vector: { from: ethLzAppPoint, to: avaxLzAppPoint },
+                        config: undefined,
+                    },
+                    {
+                        vector: { from: avaxLzAppPoint, to: ethLzAppPoint },
+                        config: undefined,
+                    },
+                ],
+            }
+
+            process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = '1'
+
+            // This is the LzApp config that we want to use against our contracts
+            transactions = await configureLzApp(graph, lzappSdkFactory)
+
+            expect(transactions).toEqual([
+                await ethLzAppSdk.setTrustedRemote(avaxLzAppPoint.eid, avaxLzAppPoint.address),
+                await avaxLzAppSdk.setTrustedRemote(ethLzAppPoint.eid, ethLzAppPoint.address),
+            ])
+        })
+    })
+
+    afterEach(() => {
+        process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = undefined
     })
 })

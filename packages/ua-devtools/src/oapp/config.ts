@@ -18,15 +18,30 @@ export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) =>
 
 export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
     flattenTransactions(
-        await parallel([
-            () => configureOAppPeers(graph, createSdk),
-            () => configureSendLibraries(graph, createSdk),
-            () => configureReceiveLibraries(graph, createSdk),
-            () => configureReceiveLibraryTimeouts(graph, createSdk),
-            () => configureSendConfig(graph, createSdk),
-            () => configureReceiveConfig(graph, createSdk),
-            () => configureEnforcedOptions(graph, createSdk),
-        ])
+        // For now we keep the parallel execution as an opt-in feature flag
+        // before we have a retry logic fully in place for the SDKs
+        //
+        // This is to avoid 429 too many requests errors from the RPCs
+        process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+            ? (createModuleLogger('OApp').warn(`You are using experimental parallel configuration`),
+              await parallel([
+                  () => configureOAppPeers(graph, createSdk),
+                  () => configureSendLibraries(graph, createSdk),
+                  () => configureReceiveLibraries(graph, createSdk),
+                  () => configureReceiveLibraryTimeouts(graph, createSdk),
+                  () => configureSendConfig(graph, createSdk),
+                  () => configureReceiveConfig(graph, createSdk),
+                  () => configureEnforcedOptions(graph, createSdk),
+              ]))
+            : [
+                  await configureOAppPeers(graph, createSdk),
+                  await configureSendLibraries(graph, createSdk),
+                  await configureReceiveLibraries(graph, createSdk),
+                  await configureReceiveLibraryTimeouts(graph, createSdk),
+                  await configureSendConfig(graph, createSdk),
+                  await configureReceiveConfig(graph, createSdk),
+                  await configureEnforcedOptions(graph, createSdk),
+              ]
     )
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {

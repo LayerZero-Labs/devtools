@@ -1,11 +1,20 @@
-import { flattenTransactions, formatOmniVector, type OmniTransaction } from '@layerzerolabs/devtools'
+import { flattenTransactions, formatOmniVector, parallel, type OmniTransaction } from '@layerzerolabs/devtools'
 import { LzAppFactory, LzAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 
 export type LzAppConfigurator = (graph: LzAppOmniGraph, createSdk: LzAppFactory) => Promise<OmniTransaction[]>
 
 export const configureLzApp: LzAppConfigurator = async (graph: LzAppOmniGraph, createSdk: LzAppFactory) =>
-    flattenTransactions([await configureLzAppTrustedRemotes(graph, createSdk)])
+    flattenTransactions(
+        // For now we keep the parallel execution as an opt-in feature flag
+        // before we have a retry logic fully in place for the SDKs
+        //
+        // This is to avoid 429 too many requests errors from the RPCs
+        process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+            ? (createModuleLogger('LzApp').warn(`You are using experimental parallel configuration`),
+              await parallel([() => configureLzAppTrustedRemotes(graph, createSdk)]))
+            : [await configureLzAppTrustedRemotes(graph, createSdk)]
+    )
 
 export const configureLzAppTrustedRemotes: LzAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('LzApp')
