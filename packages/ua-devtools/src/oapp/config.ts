@@ -5,6 +5,7 @@ import {
     isDeepEqual,
     OmniAddress,
     OmniPointMap,
+    parallel,
     type OmniTransaction,
 } from '@layerzerolabs/devtools'
 import { OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory, OAppOmniGraph } from './types'
@@ -16,15 +17,17 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
 
 export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) =>
-    flattenTransactions([
-        await configureOAppPeers(graph, createSdk),
-        await configureSendLibraries(graph, createSdk),
-        await configureReceiveLibraries(graph, createSdk),
-        await configureReceiveLibraryTimeouts(graph, createSdk),
-        await configureSendConfig(graph, createSdk),
-        await configureReceiveConfig(graph, createSdk),
-        await configureEnforcedOptions(graph, createSdk),
-    ])
+    flattenTransactions(
+        await parallel([
+            () => configureOAppPeers(graph, createSdk),
+            () => configureSendLibraries(graph, createSdk),
+            () => configureReceiveLibraries(graph, createSdk),
+            () => configureReceiveLibraryTimeouts(graph, createSdk),
+            () => configureSendConfig(graph, createSdk),
+            () => configureReceiveConfig(graph, createSdk),
+            () => configureEnforcedOptions(graph, createSdk),
+        ])
+    )
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('OApp')
