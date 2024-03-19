@@ -52,7 +52,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     // await deployments.delete('DVN_Opt2')
     // await deployments.delete('DVN_Opt3')
 
-    const initialNonce = await wrapEIP1193Provider(network.provider).getTransactionCount(deployer)
+    const initialNonce = await wrapEIP1193Provider(network.provider).getTransactionCount(deployer, 'latest')
     const getNonce = createNonceProvider(initialNonce)
 
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
@@ -66,27 +66,27 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                 deployments.deploy('SendUln302', {
                     from: deployer,
                     args: [endpointV2Deployment.address, 0, 0],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('SendUln302_Opt2', {
                     contract: 'SendUln302',
                     from: deployer,
                     args: [endpointV2Deployment.address, 0, 0],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('ReceiveUln302', {
                     from: deployer,
                     args: [endpointV2Deployment.address],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('ReceiveUln302_Opt2', {
                     contract: 'ReceiveUln302',
                     from: deployer,
                     args: [endpointV2Deployment.address],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('PriceFeed', {
@@ -101,19 +101,19 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                             },
                         },
                     },
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('ExecutorFeeLib', {
                     from: deployer,
                     args: [DEFAULT_NATIVE_DECIMALS_RATE],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
             () =>
                 deployments.deploy('DVNFeeLib', {
                     from: deployer,
                     args: [DEFAULT_NATIVE_DECIMALS_RATE],
-                    nonce: getNonce(),
+                    nonce: 'pending',
                 }),
         ])
 
@@ -235,7 +235,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                         },
                     },
                 },
-                nonce: getNonce(),
+                nonce: 'pending',
             }),
         () =>
             deployments.deploy('DVN', {
@@ -248,7 +248,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                     1, // quorum
                     [deployer], // admins
                 ],
-                nonce: getNonce(),
+                nonce: 'pending',
             }),
         () =>
             deployments.deploy('DVN_Opt2', {
@@ -262,7 +262,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                     1, // quorum
                     [deployer], // admins
                 ],
-                nonce: getNonce(),
+                nonce: 'pending',
             }),
         () =>
             deployments.deploy('DVN_Opt3', {
@@ -276,7 +276,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
                     1, // quorum
                     [deployer], // admins
                 ],
-                nonce: getNonce(),
+                nonce: 'pending',
             }),
     ])
 
@@ -370,5 +370,5 @@ export default deploy
 const createNonceProvider = (startNonce: number) => {
     let currentNonce = startNonce
 
-    return (): number => (console.warn(`Current nonce is ${++currentNonce}`), currentNonce)
+    return (): number => currentNonce++
 }
