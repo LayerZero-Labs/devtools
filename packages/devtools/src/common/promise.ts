@@ -33,7 +33,10 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
  * @param {Task<T>[]} tasks
  * @returns {Promise<T[]>}
  */
-export const parallel = async <T>(tasks: Task<T>[]): Promise<T[]> => await Promise.all(tasks.map((task) => task()))
+export const parallel = async <T extends readonly Task<unknown>[] | []>(
+    tasks: T
+): Promise<{ -readonly [P in keyof T]: Awaited<ReturnType<T[P]>> }> =>
+    await Promise.all(tasks.map((task: Task<unknown>) => task()) as { [P in keyof T]: ReturnType<T[P]> })
 
 /**
  * Maps the errors coming from a task. Errors thrown from the `toError`
