@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.2.9
+
+### Patch Changes
+
+- 6ad78a3: Don't use printRecord for transaction descriptions
+
 ## 0.2.8
 
 ### Patch Changes

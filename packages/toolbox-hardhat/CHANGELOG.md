@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.1.15
+
+### Patch Changes
+
+- 28b2598: Add simulation tasks under LZ_ENABLE_EXPERIMENTAL_SIMULATION feature flag
+- Updated dependencies [28b2598]
+- Updated dependencies [6ad78a3]
+  - @layerzerolabs/devtools-evm-hardhat@0.2.15
+  - @layerzerolabs/protocol-devtools-evm@0.2.9
+
 ## 0.1.14
 
 ### Patch Changes
