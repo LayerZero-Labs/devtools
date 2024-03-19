@@ -34,7 +34,7 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "jest --verbose --ci"
   },
   "dependencies": {
     "chalk": "^4.1.2",

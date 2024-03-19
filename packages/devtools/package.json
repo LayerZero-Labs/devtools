@@ -28,7 +28,7 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci --forceExit"
+    "test": "jest --verbose --ci --forceExit"
   },
   "dependencies": {
     "exponential-backoff": "~3.1.1",
