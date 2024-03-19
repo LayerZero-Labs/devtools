@@ -2,7 +2,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IDVN, DVNDstConfig } from '@layerzerolabs/protocol-devtools'
 import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
-import { printRecord } from '@layerzerolabs/io-devtools'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { DVNDstConfigSchema } from './schema'
 
 export class DVN extends OmniSDK implements IDVN {
@@ -30,7 +30,7 @@ export class DVN extends OmniSDK implements IDVN {
 
         return {
             ...this.createTransaction(data),
-            description: `Setting dstConfig for ${formatEid(eid)}: ${printRecord(value)}`,
+            description: `Setting dstConfig for ${formatEid(eid)}: ${printJson(value)}`,
         }
     }
 }

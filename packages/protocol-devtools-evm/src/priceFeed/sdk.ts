@@ -2,7 +2,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IPriceFeed, PriceData } from '@layerzerolabs/protocol-devtools'
 import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
-import { printRecord } from '@layerzerolabs/io-devtools'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { PriceDataSchema } from './schema'
 
 export class PriceFeed extends OmniSDK implements IPriceFeed {
@@ -28,7 +28,7 @@ export class PriceFeed extends OmniSDK implements IPriceFeed {
 
         return {
             ...this.createTransaction(data),
-            description: `Setting price for ${formatEid(eid)}: ${printRecord(priceData)}`,
+            description: `Setting price for ${formatEid(eid)}: ${printJson(priceData)}`,
         }
     }
 }
