@@ -9,6 +9,9 @@ typechain-types
 cache
 artifacts
 
+# LayerZero specific files
+.layerzero
+
 # foundry test compilation files
 out
 

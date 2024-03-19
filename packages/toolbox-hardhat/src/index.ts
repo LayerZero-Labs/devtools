@@ -1,6 +1,8 @@
 import { extendConfig } from 'hardhat/config'
 import {
     createErrorParser,
+    getHardhatNetworkOverrides,
+    resolveSimulationConfig,
     withLayerZeroArtifacts,
     withLayerZeroDeployments,
 } from '@layerzerolabs/devtools-evm-hardhat'
@@ -10,6 +12,7 @@ import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
 import '@layerzerolabs/devtools-evm-hardhat/tasks'
 import '@layerzerolabs/ua-devtools-evm-hardhat/tasks'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { createModuleLogger } from '@layerzerolabs/io-devtools'
 
 // Register a hardhat-specific error parser factory on the OmniSDK
 OmniSDK.registerErrorParserFactory(createErrorParser)
@@ -44,5 +47,45 @@ extendConfig((config, userConfig) => {
     // if we got any external deployments
     if (external != null) {
         Object.assign(config, { external })
+    }
+
+    // !!!!!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!!!!!!!!
+    //
+    // If the LZ_EXPERIMENTAL_WITH_SIMULATION environment variable is set, we'll apply
+    // the simulation settings
+    //
+    // This feature is still in developer preview and requires familiarity with the code
+    // and knowledge of the requirements & developer flow
+    //
+    // !!!!!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!!!!!!!!
+    if (process.env.LZ_EXPERIMENTAL_WITH_SIMULATION) {
+        const logger = createModuleLogger('simulation')
+
+        logger.warn('')
+        logger.warn(`The experimental simulation mode is enabled`)
+        logger.warn(`This feature is still in developer preview`)
+        logger.warn('')
+        logger.warn(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`)
+        logger.warn(`!!! ONLY USE AT YOUR OWN RISK !!!`)
+        logger.warn(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`)
+        logger.warn('')
+        logger.warn(`The networks in your hardhat config will be forked`)
+        logger.warn('')
+
+        const simulationConfig = resolveSimulationConfig(layerZero?.experimental?.simulation ?? {}, config)
+        const networks = getHardhatNetworkOverrides(simulationConfig, config.networks)
+
+        Object.assign(config, { networks: { ...config.networks, ...networks } })
+
+        logger.warn(`The new network configuration is as follows:`)
+        logger.warn('')
+
+        Object.entries(config.networks).forEach(([networkName, networkConfig]) => {
+            if ('url' in networkConfig) {
+                logger.warn(`Network ${networkName} -> ${networkConfig.url}`)
+            }
+        })
+
+        logger.warn('')
     }
 })
