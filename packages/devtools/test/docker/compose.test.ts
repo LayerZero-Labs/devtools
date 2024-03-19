@@ -17,6 +17,7 @@ describe('docker/compose', () => {
         it('should create a valid compose spec if called with no services', async () => {
             const spec = serializeDockerComposeSpec({
                 version: '3.9',
+                services: {},
             })
 
             await writeFile(SPEC_FILE_PATH, spec)
