@@ -1,5 +1,5 @@
 import { TransactionReceipt, TransactionResponse } from '@ethersproject/providers'
-import { formatEid } from '@layerzerolabs/devtools'
+import { formatEid, parallel } from '@layerzerolabs/devtools'
 import { wrapEIP1193Provider } from '@layerzerolabs/devtools-evm-hardhat'
 import assert from 'assert'
 import { Contract } from 'ethers'
@@ -28,96 +28,306 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
     assert(deployer, 'Missing deployer')
     const signer = wrapEIP1193Provider(network.provider).getSigner()
 
-    await deployments.delete('EndpointV2')
+    // await deployments.delete('EndpointV2')
+    // await deployments.delete('SendUln302')
+    // await deployments.delete('SendUln302_Opt2')
+    // await deployments.delete('ReceiveUln302')
+    // await deployments.delete('ReceiveUln302_Opt2')
+    // await deployments.delete('ExecutorFeeLib')
+    // await deployments.delete('DVNFeeLib')
+
+    // await Promise.all(
+    //     ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
+    //         deployments.delete(contractName)
+    //     )
+    // )
+
+    // await Promise.all(
+    //     ['Executor_Proxy', 'Executor_Implementation', 'Executor', 'ExecutorProxyAdmin'].map((contractName) =>
+    //         deployments.delete(contractName)
+    //     )
+    // )
+
+    // await deployments.delete('DVN')
+    // await deployments.delete('DVN_Opt2')
+    // await deployments.delete('DVN_Opt3')
+
+    const initialNonce = await wrapEIP1193Provider(network.provider).getTransactionCount(deployer)
+    const getNonce = createNonceProvider(initialNonce)
+
     const endpointV2Deployment = await deployments.deploy('EndpointV2', {
         from: deployer,
         args: [network.config.eid, deployer],
     })
 
-    await deployments.delete('SendUln302')
-    const sendUln302 = await deployments.deploy('SendUln302', {
-        from: deployer,
-        args: [endpointV2Deployment.address, 0, 0],
-    })
+    const [sendUln302, sendUln302_Opt2, receiveUln302, receiveUln302_Opt2, priceFeed, executorFeeLib, dvnFeeLib] =
+        await parallel([
+            () =>
+                deployments.deploy('SendUln302', {
+                    from: deployer,
+                    args: [endpointV2Deployment.address, 0, 0],
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('SendUln302_Opt2', {
+                    contract: 'SendUln302',
+                    from: deployer,
+                    args: [endpointV2Deployment.address, 0, 0],
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('ReceiveUln302', {
+                    from: deployer,
+                    args: [endpointV2Deployment.address],
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('ReceiveUln302_Opt2', {
+                    contract: 'ReceiveUln302',
+                    from: deployer,
+                    args: [endpointV2Deployment.address],
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('PriceFeed', {
+                    from: deployer,
+                    proxy: {
+                        owner: deployer,
+                        proxyContract: 'OptimizedTransparentProxy',
+                        execute: {
+                            init: {
+                                methodName: 'initialize',
+                                args: [deployer],
+                            },
+                        },
+                    },
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('ExecutorFeeLib', {
+                    from: deployer,
+                    args: [DEFAULT_NATIVE_DECIMALS_RATE],
+                    nonce: getNonce(),
+                }),
+            () =>
+                deployments.deploy('DVNFeeLib', {
+                    from: deployer,
+                    args: [DEFAULT_NATIVE_DECIMALS_RATE],
+                    nonce: getNonce(),
+                }),
+        ])
 
-    await deployments.delete('ReceiveUln302')
-    const receiveUln302 = await deployments.deploy('ReceiveUln302', {
-        from: deployer,
-        args: [endpointV2Deployment.address],
-    })
+    // await deployments.delete('EndpointV2')
+    // const endpointV2Deployment = await deployments.deploy('EndpointV2', {
+    //     from: deployer,
+    //     args: [network.config.eid, deployer],
+    // })
 
-    await deployments.delete('SendUln302_Opt2')
-    const SendUln302_Opt2 = await deployments.deploy('SendUln302_Opt2', {
-        contract: 'SendUln302',
-        from: deployer,
-        args: [endpointV2Deployment.address, 0, 0],
-    })
+    // await deployments.delete('SendUln302')
+    // const sendUln302 = await deployments.deploy('SendUln302', {
+    //     from: deployer,
+    //     args: [endpointV2Deployment.address, 0, 0],
+    // })
 
-    await deployments.delete('ReceiveUln302_Opt2')
-    const ReceiveUln302_Opt2 = await deployments.deploy('ReceiveUln302_Opt2', {
-        contract: 'ReceiveUln302',
-        from: deployer,
-        args: [endpointV2Deployment.address],
-    })
+    // await deployments.delete('ReceiveUln302')
+    // const receiveUln302 = await deployments.deploy('ReceiveUln302', {
+    //     from: deployer,
+    //     args: [endpointV2Deployment.address],
+    // })
 
-    await Promise.all(
-        ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
-            deployments.delete(contractName)
-        )
-    )
-    const priceFeed = await deployments.deploy('PriceFeed', {
-        from: deployer,
-        proxy: {
-            owner: deployer,
-            proxyContract: 'OptimizedTransparentProxy',
-            execute: {
-                init: {
-                    methodName: 'initialize',
-                    args: [deployer],
+    // await deployments.delete('SendUln302_Opt2')
+    // const SendUln302_Opt2 = await deployments.deploy('SendUln302_Opt2', {
+    //     contract: 'SendUln302',
+    //     from: deployer,
+    //     args: [endpointV2Deployment.address, 0, 0],
+    // })
+
+    // await deployments.delete('ReceiveUln302_Opt2')
+    // const ReceiveUln302_Opt2 = await deployments.deploy('ReceiveUln302_Opt2', {
+    //     contract: 'ReceiveUln302',
+    //     from: deployer,
+    //     args: [endpointV2Deployment.address],
+    // })
+
+    // await Promise.all(
+    //     ['DefaultProxyAdmin', 'PriceFeed_Proxy', 'PriceFeed', 'PriceFeed_Implementation'].map((contractName) =>
+    //         deployments.delete(contractName)
+    //     )
+    // )
+    // const priceFeed = await deployments.deploy('PriceFeed', {
+    //     from: deployer,
+    //     proxy: {
+    //         owner: deployer,
+    //         proxyContract: 'OptimizedTransparentProxy',
+    //         execute: {
+    //             init: {
+    //                 methodName: 'initialize',
+    //                 args: [deployer],
+    //             },
+    //         },
+    //     },
+    // })
+
+    // await deployments.delete('ExecutorFeeLib')
+    // const executorFeeLib = await deployments.deploy('ExecutorFeeLib', {
+    //     from: deployer,
+    //     args: [DEFAULT_NATIVE_DECIMALS_RATE],
+    // })
+
+    // await Promise.all(
+    //     ['Executor_Proxy', 'Executor_Implementation', 'Executor', 'ExecutorProxyAdmin'].map((contractName) =>
+    //         deployments.delete(contractName)
+    //     )
+    // )
+    // const executor = await deployments.deploy('Executor', {
+    //     from: deployer,
+    //     log: true,
+    //     skipIfAlreadyDeployed: true,
+    //     proxy: {
+    //         owner: deployer,
+    //         proxyContract: 'OptimizedTransparentProxy',
+    //         viaAdminContract: { name: 'ExecutorProxyAdmin', artifact: 'ProxyAdmin' },
+    //         execute: {
+    //             init: {
+    //                 methodName: 'initialize',
+    //                 args: [
+    //                     endpointV2Deployment.address, // _endpoint
+    //                     receiveUln302.address, // _receiveUln301
+    //                     [sendUln302.address], // _messageLibs
+    //                     priceFeed.address, // _priceFeed
+    //                     deployer, // _roleAdmin
+    //                     [deployer], // _admins
+    //                 ],
+    //             },
+    //             onUpgrade: {
+    //                 methodName: 'onUpgrade',
+    //                 args: [receiveUln302.address],
+    //             },
+    //         },
+    //     },
+    // })
+
+    const [executor, dvn, dvn_Opt2, dvn_Opt3] = await parallel([
+        () =>
+            deployments.deploy('Executor', {
+                from: deployer,
+                log: true,
+                skipIfAlreadyDeployed: true,
+                proxy: {
+                    owner: deployer,
+                    proxyContract: 'OptimizedTransparentProxy',
+                    viaAdminContract: { name: 'ExecutorProxyAdmin', artifact: 'ProxyAdmin' },
+                    execute: {
+                        init: {
+                            methodName: 'initialize',
+                            args: [
+                                endpointV2Deployment.address, // _endpoint
+                                receiveUln302.address, // _receiveUln301
+                                [sendUln302.address], // _messageLibs
+                                priceFeed.address, // _priceFeed
+                                deployer, // _roleAdmin
+                                [deployer], // _admins
+                            ],
+                        },
+                        onUpgrade: {
+                            methodName: 'onUpgrade',
+                            args: [receiveUln302.address],
+                        },
+                    },
                 },
-            },
-        },
-    })
+                nonce: getNonce(),
+            }),
+        () =>
+            deployments.deploy('DVN', {
+                from: deployer,
+                args: [
+                    network.config.eid, // vid
+                    [sendUln302.address], // messageLibs
+                    priceFeed.address, // priceFeed
+                    [deployer], // signers
+                    1, // quorum
+                    [deployer], // admins
+                ],
+                nonce: getNonce(),
+            }),
+        () =>
+            deployments.deploy('DVN_Opt2', {
+                contract: 'DVN',
+                from: deployer,
+                args: [
+                    network.config.eid, // vid
+                    [sendUln302.address], // messageLibs
+                    priceFeed.address, // priceFeed
+                    [deployer], // signers
+                    1, // quorum
+                    [deployer], // admins
+                ],
+                nonce: getNonce(),
+            }),
+        () =>
+            deployments.deploy('DVN_Opt3', {
+                contract: 'DVN',
+                from: deployer,
+                args: [
+                    network.config.eid, // vid
+                    [sendUln302.address], // messageLibs
+                    priceFeed.address, // priceFeed
+                    [deployer], // signers
+                    1, // quorum
+                    [deployer], // admins
+                ],
+                nonce: getNonce(),
+            }),
+    ])
 
-    await deployments.delete('ExecutorFeeLib')
-    const executorFeeLib = await deployments.deploy('ExecutorFeeLib', {
-        from: deployer,
-        args: [DEFAULT_NATIVE_DECIMALS_RATE],
-    })
+    // await deployments.delete('DVN')
+    // const dvn = await deployments.deploy('DVN', {
+    //     from: deployer,
+    //     args: [
+    //         network.config.eid, // vid
+    //         [sendUln302.address], // messageLibs
+    //         priceFeed.address, // priceFeed
+    //         [deployer], // signers
+    //         1, // quorum
+    //         [deployer], // admins
+    //     ],
+    // })
 
-    await Promise.all(
-        ['Executor_Proxy', 'Executor_Implementation', 'Executor', 'ExecutorProxyAdmin'].map((contractName) =>
-            deployments.delete(contractName)
-        )
-    )
-    const executor = await deployments.deploy('Executor', {
-        from: deployer,
-        log: true,
-        skipIfAlreadyDeployed: true,
-        proxy: {
-            owner: deployer,
-            proxyContract: 'OptimizedTransparentProxy',
-            viaAdminContract: { name: 'ExecutorProxyAdmin', artifact: 'ProxyAdmin' },
-            execute: {
-                init: {
-                    methodName: 'initialize',
-                    args: [
-                        endpointV2Deployment.address, // _endpoint
-                        receiveUln302.address, // _receiveUln301
-                        [sendUln302.address], // _messageLibs
-                        priceFeed.address, // _priceFeed
-                        deployer, // _roleAdmin
-                        [deployer], // _admins
-                    ],
-                },
-                onUpgrade: {
-                    methodName: 'onUpgrade',
-                    args: [receiveUln302.address],
-                },
-            },
-        },
-    })
+    // await deployments.delete('DVN_Opt2')
+    // const dvn_Opt2 = await deployments.deploy('DVN_Opt2', {
+    //     contract: 'DVN',
+    //     from: deployer,
+    //     args: [
+    //         network.config.eid, // vid
+    //         [sendUln302.address], // messageLibs
+    //         priceFeed.address, // priceFeed
+    //         [deployer], // signers
+    //         1, // quorum
+    //         [deployer], // admins
+    //     ],
+    // })
 
+    // await deployments.delete('DVN_Opt3')
+    // const dvn_Opt3 = await deployments.deploy('DVN_Opt3', {
+    //     contract: 'DVN',
+    //     from: deployer,
+    //     args: [
+    //         network.config.eid, // vid
+    //         [sendUln302.address], // messageLibs
+    //         priceFeed.address, // priceFeed
+    //         [deployer], // signers
+    //         1, // quorum
+    //         [deployer], // admins
+    //     ],
+    // })
+
+    // await deployments.delete('DVNFeeLib')
+    // const dvnFeeLib = await deployments.deploy('DVNFeeLib', {
+    //     from: deployer,
+    //     args: [DEFAULT_NATIVE_DECIMALS_RATE],
+    // })
+
+    // Configure executor
     const executorContract = new Contract(executor.address, executor.abi).connect(signer)
     const setExecFeeLibResp: TransactionResponse = await executorContract.setWorkerFeeLib(executorFeeLib.address)
     const setExecFeeLibReceipt: TransactionReceipt = await setExecFeeLibResp.wait(1)
@@ -128,53 +338,7 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         'Executor worker fee lib not set correctly'
     )
 
-    await deployments.delete('DVN')
-    const dvn = await deployments.deploy('DVN', {
-        from: deployer,
-        args: [
-            network.config.eid, // vid
-            [sendUln302.address], // messageLibs
-            priceFeed.address, // priceFeed
-            [deployer], // signers
-            1, // quorum
-            [deployer], // admins
-        ],
-    })
-
-    await deployments.delete('DVN_Opt2')
-    const dvn_Opt2 = await deployments.deploy('DVN_Opt2', {
-        contract: 'DVN',
-        from: deployer,
-        args: [
-            network.config.eid, // vid
-            [sendUln302.address], // messageLibs
-            priceFeed.address, // priceFeed
-            [deployer], // signers
-            1, // quorum
-            [deployer], // admins
-        ],
-    })
-
-    await deployments.delete('DVN_Opt3')
-    const dvn_Opt3 = await deployments.deploy('DVN_Opt3', {
-        contract: 'DVN',
-        from: deployer,
-        args: [
-            network.config.eid, // vid
-            [sendUln302.address], // messageLibs
-            priceFeed.address, // priceFeed
-            [deployer], // signers
-            1, // quorum
-            [deployer], // admins
-        ],
-    })
-
-    await deployments.delete('DVNFeeLib')
-    const dvnFeeLib = await deployments.deploy('DVNFeeLib', {
-        from: deployer,
-        args: [DEFAULT_NATIVE_DECIMALS_RATE],
-    })
-
+    // Configure DVN
     const dvnContract = new Contract(dvn.address, dvn.abi).connect(signer)
     const setDvnFeeLibResp: TransactionResponse = await dvnContract.setWorkerFeeLib?.(dvnFeeLib.address)
     const setDvnFeeLibReceipt: TransactionReceipt = await setDvnFeeLibResp.wait()
@@ -187,8 +351,8 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         EndpointV2: endpointV2Deployment.address,
         SendUln302: sendUln302.address,
         ReceiveUln302: receiveUln302.address,
-        SendUln302_Opt2: SendUln302_Opt2.address,
-        ReceiveUln302_Opt2: ReceiveUln302_Opt2.address,
+        SendUln302_Opt2: sendUln302_Opt2.address,
+        ReceiveUln302_Opt2: receiveUln302_Opt2.address,
         PriceFeed: priceFeed.address,
         Executor: executor.address,
         ExecutorFeeLib: executorFeeLib.address,
@@ -202,3 +366,9 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
 deploy.tags = ['Bootstrap', 'EndpointV2']
 
 export default deploy
+
+const createNonceProvider = (startNonce: number) => {
+    let currentNonce = startNonce
+
+    return (): number => (console.warn(`Current nonce is ${++currentNonce}`), currentNonce)
+}
