@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.1
+
+### Patch Changes
+
+- 059d817: Add the ability to choose gnosis safe for transaction signing; add the ability to pick signer index/address
+
 ## 0.3.0
 
 ### Minor Changes
