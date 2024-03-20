@@ -1,5 +1,5 @@
 import type { OmniAddress } from '@layerzerolabs/devtools'
-import { getAddress } from '@ethersproject/address'
+import { getAddress, isAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 
 /**
@@ -19,3 +19,11 @@ export const makeZeroAddress = (address?: OmniAddress | null | undefined): strin
  * @returns {OmniAddress}
  */
 export const addChecksum = (address: OmniAddress): OmniAddress => getAddress(address)
+
+/**
+ * Re-export of `isAddress` from `@ethersporject/address`
+ *
+ * @param {OmniAddress} address
+ * @returns {boolean}
+ */
+export const isEVMAddress = isAddress

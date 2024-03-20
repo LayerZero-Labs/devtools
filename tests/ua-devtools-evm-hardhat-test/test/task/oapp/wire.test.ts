@@ -6,6 +6,11 @@ import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
 import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
+import {
+    createGnosisSignerFactory,
+    createSignerFactory,
+    SUBTASK_LZ_SIGN_AND_SEND,
+} from '@layerzerolabs/devtools-evm-hardhat'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -16,7 +21,20 @@ jest.mock('@layerzerolabs/io-devtools', () => {
     }
 })
 
+jest.mock('@layerzerolabs/devtools-evm-hardhat', () => {
+    const original = jest.requireActual('@layerzerolabs/devtools-evm-hardhat')
+
+    return {
+        ...original,
+        createGnosisSignerFactory: jest.fn(original.createGnosisSignerFactory),
+        createSignerFactory: jest.fn(original.createSignerFactory),
+    }
+})
+
+const hreRunSpy = jest.spyOn(hre, 'run')
 const promptToContinueMock = promptToContinue as jest.Mock
+const createGnosisSignerFactoryMock = createGnosisSignerFactory as jest.Mock
+const createSignerFactoryMock = createSignerFactory as jest.Mock
 
 describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     // Helper matcher object that checks for OmniPoint objects
@@ -40,6 +58,9 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
     beforeEach(async () => {
         promptToContinueMock.mockReset()
+        createGnosisSignerFactoryMock.mockClear()
+        createSignerFactoryMock.mockClear()
+        hreRunSpy.mockClear()
     })
 
     describe('with invalid configs', () => {
@@ -185,6 +206,123 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             expect(successful).toEqual([expectTransactionWithReceipt, expectTransactionWithReceipt])
             expect(errors).toEqual([])
+        })
+
+        it('should use gnosis safe signer if --safe flag is passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true })
+
+            expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
+
+            // Get the created gnosis signer factory
+            const createSigner = createGnosisSignerFactoryMock.mock.results[0]?.value
+            expect(typeof createSigner).toBe('function')
+
+            // Now we check that the sign and send subtask has been called with the correct signer factory
+            expect(hreRunSpy).toHaveBeenCalledWith(
+                SUBTASK_LZ_SIGN_AND_SEND,
+                {
+                    transactions: expect.any(Array),
+                    ci: false,
+                    createSigner,
+                },
+                {},
+                undefined
+            )
+        })
+
+        it('should use gnosis safe signer with index if --safe flag and --signer are passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+            const [signer] = await hre.getUnnamedAccounts()
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
+
+            expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
+            expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
+
+            // Get the created gnosis signer factory
+            const createSigner = createGnosisSignerFactoryMock.mock.results[0]?.value
+            expect(typeof createSigner).toBe('function')
+
+            // Now we check that the sign and send subtask has been called with the correct signer factory
+            expect(hreRunSpy).toHaveBeenCalledWith(
+                SUBTASK_LZ_SIGN_AND_SEND,
+                {
+                    transactions: expect.any(Array),
+                    ci: false,
+                    createSigner,
+                },
+                {},
+                undefined
+            )
+        })
+
+        it('should use signer index if --signer is passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer: 0 })
+
+            expect(createSignerFactory).toHaveBeenCalledOnce()
+            expect(createSignerFactory).toHaveBeenCalledWith(0)
+
+            // Get the created signer factory
+            const createSigner = createSignerFactoryMock.mock.results[0]?.value
+            expect(typeof createSigner).toBe('function')
+
+            // Now we check that the sign and send subtask has been called with the correct signer factory
+            expect(hreRunSpy).toHaveBeenCalledWith(
+                SUBTASK_LZ_SIGN_AND_SEND,
+                {
+                    transactions: expect.any(Array),
+                    ci: false,
+                    createSigner,
+                },
+                {},
+                undefined
+            )
+        })
+
+        it('should use signer address if --signer is passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+            const [signer] = await hre.getUnnamedAccounts()
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer })
+
+            expect(createSignerFactory).toHaveBeenCalledOnce()
+            expect(createSignerFactory).toHaveBeenCalledWith(signer)
+
+            // Get the created signer factory
+            const createSigner = createSignerFactoryMock.mock.results[0]?.value
+            expect(typeof createSigner).toBe('function')
+
+            // Now we check that the sign and send subtask has been called with the correct signer factory
+            expect(hreRunSpy).toHaveBeenCalledWith(
+                SUBTASK_LZ_SIGN_AND_SEND,
+                {
+                    transactions: expect.any(Array),
+                    ci: false,
+                    createSigner,
+                },
+                {},
+                undefined
+            )
         })
 
         describe('if a transaction fails', () => {

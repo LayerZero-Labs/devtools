@@ -3,7 +3,12 @@ import type { ActionType } from 'hardhat/types'
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
-import { types, SUBTASK_LZ_SIGN_AND_SEND } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    types,
+    SUBTASK_LZ_SIGN_AND_SEND,
+    createGnosisSignerFactory,
+    createSignerFactory,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { OmniTransaction } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
@@ -17,10 +22,12 @@ interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
+    safe?: boolean
+    signer?: string
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false },
+    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -60,10 +67,15 @@ const action: ActionType<TaskArgs> = async (
             `There are ${transactions.length} transactions required to configure the OApp`
         )
     )
+
+    // Now let's create the signer
+    const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
+
     // Now sign & send the transactions
     const signAndSendResult: SignAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
         transactions,
         ci,
+        createSigner,
     } satisfies SignAndSendTaskArgs)
 
     // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
@@ -79,3 +91,5 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
+    .addFlag('safe', 'Use gnosis safe to sign transactions')
+    .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
