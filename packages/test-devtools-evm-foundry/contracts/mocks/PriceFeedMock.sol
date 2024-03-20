@@ -181,7 +181,7 @@ contract PriceFeedMock is ILayerZeroPriceFeed, Ownable {
         } else if (l2Eid == 20132) {
             return 20121; // ethereum-goerli
         }
-        revert LZ_PriceFeed_UnknownL2Eid(l2Eid);
+        revert LZ_PriceFeed_NotAnOPStack(l2Eid);
     }
 
     function _estimateFeeWithDefaultModel(
