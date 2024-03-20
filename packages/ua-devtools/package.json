@@ -32,8 +32,8 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.2.10",
     "@layerzerolabs/io-devtools": "~0.1.5",
-    "@layerzerolabs/lz-definitions": "~2.1.18",
-    "@layerzerolabs/lz-v2-utilities": "~2.1.18",
+    "@layerzerolabs/lz-definitions": "~2.1.23",
+    "@layerzerolabs/lz-v2-utilities": "~2.1.23",
     "@layerzerolabs/protocol-devtools": "~0.2.9",
     "@layerzerolabs/test-devtools": "~0.1.12",
     "@swc/core": "^1.4.0",
