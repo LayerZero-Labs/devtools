@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.1.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
 ## 0.0.9
 
 ### Patch Changes

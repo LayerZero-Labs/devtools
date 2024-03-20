@@ -1,5 +1,24 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@1.0.0
+  - @layerzerolabs/protocol-devtools-evm@1.0.0
+  - @layerzerolabs/devtools-evm-hardhat@1.0.0
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/ua-devtools-evm@1.0.0
+  - @layerzerolabs/devtools-evm@1.0.0
+  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/devtools@0.3.0
+
 ## 0.1.15
 
 ### Patch Changes

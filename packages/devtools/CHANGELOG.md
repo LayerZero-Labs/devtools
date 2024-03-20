@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
 ## 0.2.10
 
 ### Patch Changes
