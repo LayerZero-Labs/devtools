@@ -56,9 +56,10 @@ describe('simulation/compose', () => {
 
             await writeFile(SPEC_FILE_PATH, spec)
 
-            expect(validateSpec().stderr.toString('utf8')).toBe('')
-            expect(validateSpec().status).toBe(0)
+            const result = validateSpec()
 
+            expect(result.stderr.toString('utf8')).toBe('')
+            expect(result.status).toBe(0)
             expect(spec).toMatchSnapshot()
         })
 
@@ -74,8 +75,10 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
-                    expect(validateSpec().stderr.toString('utf8')).toBe('')
-                    expect(validateSpec().status).toBe(0)
+                    const result = validateSpec()
+
+                    expect(result.stderr.toString('utf8')).toBe('')
+                    expect(result.status).toBe(0)
                 }),
                 { numRuns: 20 }
             )
@@ -101,8 +104,10 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
-                    expect(validateSpec().stderr.toString('utf8')).toBe('')
-                    expect(validateSpec().status).toBe(0)
+                    const result = validateSpec()
+
+                    expect(result.stderr.toString('utf8')).toBe('')
+                    expect(result.status).toBe(0)
                 }),
                 { numRuns: 20 }
             )
@@ -120,8 +125,10 @@ describe('simulation/compose', () => {
 
                     await writeFile(SPEC_FILE_PATH, spec)
 
-                    expect(validateSpec().stderr.toString('utf8')).toBe('')
-                    expect(validateSpec().status).toBe(0)
+                    const result = validateSpec()
+
+                    expect(result.stderr.toString('utf8')).toBe('')
+                    expect(result.status).toBe(0)
                 }),
                 { numRuns: 20 }
             )
