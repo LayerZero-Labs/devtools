@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "Utilities for working with LayerZero protocol contracts",
   "repository": {
     "type": "git",

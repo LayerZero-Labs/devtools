@@ -1,6 +1,6 @@
 # @layerzerolabs/ua-devtools-evm
 
-## 1.0.0
+## 0.3.0
 
 ### Minor Changes
 
@@ -9,10 +9,10 @@
 ### Patch Changes
 
 - Updated dependencies [a4093ab]
-  - @layerzerolabs/protocol-devtools-evm@1.0.0
-  - @layerzerolabs/protocol-devtools@1.0.0
-  - @layerzerolabs/devtools-evm@1.0.0
-  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/protocol-devtools-evm@0.3.0
+  - @layerzerolabs/protocol-devtools@0.3.0
+  - @layerzerolabs/devtools-evm@0.3.0
+  - @layerzerolabs/ua-devtools@0.3.0
   - @layerzerolabs/devtools@0.3.0
 
 ## 0.2.8

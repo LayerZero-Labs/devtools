@@ -35,7 +35,7 @@
   "devDependencies": {
     "@ethersproject/address": "~5.7.0",
     "@layerzerolabs/devtools": "~0.3.0",
-    "@layerzerolabs/devtools-evm": "~1.0.0",
+    "@layerzerolabs/devtools-evm": "~0.3.0",
     "@layerzerolabs/io-devtools": "~0.1.5",
     "@layerzerolabs/lz-v2-utilities": "~2.1.23",
     "@types/prompts": "^2.4.9",
