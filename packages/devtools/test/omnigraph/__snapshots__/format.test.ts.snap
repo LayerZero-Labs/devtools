@@ -312,6 +312,12 @@ exports[`omnigraph/format formatEid should format 10260 correctly 1`] = `"MODE_T
 
 exports[`omnigraph/format formatEid should format 10261 correctly 1`] = `"HEDERA_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10262 correctly 1`] = `"UNREAL_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10263 correctly 1`] = `"MASA_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10264 correctly 1`] = `"MERLIN_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -635,6 +641,12 @@ exports[`omnigraph/format formatEid should format 40259 correctly 1`] = `"EXOCOR
 exports[`omnigraph/format formatEid should format 40260 correctly 1`] = `"MODE_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40261 correctly 1`] = `"HEDERA_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40262 correctly 1`] = `"UNREAL_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40263 correctly 1`] = `"MASA_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40264 correctly 1`] = `"MERLIN_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
