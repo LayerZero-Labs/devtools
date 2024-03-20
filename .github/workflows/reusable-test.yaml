@@ -115,19 +115,14 @@ jobs:
           path: ./logs
 
   codespell:
+    name: Check spelling
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install cspell
-        run: npm install -g cspell
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/install-dependencies
 
       - name: Spell Check
         run: cspell "**/*" --config ./.cspell/cspell.json
