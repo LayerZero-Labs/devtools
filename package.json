@@ -68,6 +68,12 @@
   },
   "cspell": {
     "version": "0.2",
-    "useGitignore": true
-   }
+    "useGitignore": true,
+    "language": "en",
+    "words": [
+      "crate",
+      "borken"
+    ],
+    "ignorePaths": ["node_modules/"]
+  }
 }
