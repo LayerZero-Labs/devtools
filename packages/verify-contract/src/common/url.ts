@@ -76,4 +76,5 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['fraxtal', 'https://api.fraxscan.com/api'],
     ['mode', 'https://explorer.mode.network/api'],
     ['etherlink', 'https://explorer.etherlink.com/api'],
+    ['blast', 'https://api.blastscan.io/api'],
 ])
