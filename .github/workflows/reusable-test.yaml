@@ -51,8 +51,8 @@ jobs:
       matrix:
         filter:
           [
-            "./packages/ua-devtools-evm-hardhat-test",
-            "!./packages/ua-devtools-evm-hardhat-test",
+            "./tests/ua-devtools-evm-hardhat-test",
+            "!./tests/ua-devtools-evm-hardhat-test",
           ]
     steps:
       - name: Checkout repo
