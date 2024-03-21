@@ -1,6 +1,12 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createLogger, printCrossTable, printRecord, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import {
+    createConfigLoader,
+    createLogger,
+    printCrossTable,
+    printRecord,
+    setDefaultLogLevel,
+} from '@layerzerolabs/io-devtools'
 import { TASK_LZ_OAPP_ENFORCED_OPTS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { EncodedOption, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -11,6 +17,7 @@ import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual, isZero } from '@layerzerolabs/devtools'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
 
 interface TaskArgs {
     oappConfig: string
@@ -25,7 +32,11 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
+        oappConfigPath,
+        createConfigLoader(OAppOmniGraphHardhatSchema),
+        logger
+    )
 
     // need points for OApp Enforced Option Matrix
     const points = graph.contracts
