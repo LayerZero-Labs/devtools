@@ -35,7 +35,7 @@ describe('MyOApp Test', function () {
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
         //
-        // Unfortunately, hardhat itself does not yet provide a way of connecting external artifacts
+        // Unfortunately, hardhat itself does not yet provide a way of connecting external artifacts,
         // so we rely on hardhat-deploy to create a ContractFactory for EndpointV2Mock
         //
         // See https://github.com/NomicFoundation/hardhat/issues/1040
