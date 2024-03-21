@@ -97,7 +97,7 @@ describe('MyOFT Test', function () {
         const finalBalanceB = await myOFTB.balanceOf(ownerB.address)
 
         // Asserting that the final balances are as expected after the send operation
-        expect(finalBalanceA.eq(initialAmount.sub(tokensToSend))).to.be.true
-        expect(finalBalanceB.eq(tokensToSend)).to.be.true
+        expect(finalBalanceA).eql(initialAmount.sub(tokensToSend))
+        expect(finalBalanceB).eql(tokensToSend)
     })
 })
