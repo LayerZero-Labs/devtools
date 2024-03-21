@@ -1,0 +1,40 @@
+{
+  "name": "@layerzerolabs/test-evm-hardhat-setup",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Test setup utilities for hardhat E2E tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "tests/test-evm-hardhat-setup"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "$npm_execpath tsup",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@layerzerolabs/devtools": "~0.3.0",
+    "@layerzerolabs/devtools-evm": "~0.3.1",
+    "@layerzerolabs/devtools-evm-hardhat": "~0.3.1",
+    "@layerzerolabs/lz-definitions": "~2.1.23",
+    "@layerzerolabs/protocol-devtools": "~0.3.0",
+    "@layerzerolabs/protocol-devtools-evm": "~0.3.0",
+    "@types/jest": "^29.5.12",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.19.5",
+    "hardhat-deploy": "^0.12.1",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-definitions": "~2.1.23",
+    "hardhat": "^2.19.5",
+    "hardhat-deploy": "^0.12.1"
+  }
+}
