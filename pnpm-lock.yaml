@@ -1781,6 +1781,12 @@ importers:
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~0.3.0
         version: link:../../packages/protocol-devtools-evm
+      '@layerzerolabs/ua-devtools':
+        specifier: ~0.3.0
+        version: link:../../packages/ua-devtools
+      '@layerzerolabs/ua-devtools-evm':
+        specifier: ~0.3.0
+        version: link:../../packages/ua-devtools-evm
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
