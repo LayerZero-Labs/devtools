@@ -1,7 +1,13 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
-import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
+import {
+    createLogger,
+    setDefaultLogLevel,
+    printJson,
+    pluralizeNoun,
+    createConfigLoader,
+} from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
@@ -17,6 +23,7 @@ import type { SubtaskConfigureTaskArgs } from './subtask.configure'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
 import './subtask.configure'
+import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
 
 interface TaskArgs {
     oappConfig: string
@@ -37,7 +44,11 @@ const action: ActionType<TaskArgs> = async (
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
+        oappConfigPath,
+        createConfigLoader(OAppOmniGraphHardhatSchema),
+        logger
+    )
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)

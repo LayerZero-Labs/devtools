@@ -1,6 +1,12 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createLogger, printBoolean, printCrossTable, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import {
+    createConfigLoader,
+    createLogger,
+    printBoolean,
+    printCrossTable,
+    setDefaultLogLevel,
+} from '@layerzerolabs/io-devtools'
 import { TASK_LZ_OAPP_PEERS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
@@ -10,6 +16,7 @@ import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual } from '@layerzerolabs/devtools'
+import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
 
 interface TaskArgs {
     oappConfig: string
@@ -24,7 +31,11 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfigPath, logger)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
+        oappConfigPath,
+        createConfigLoader(OAppOmniGraphHardhatSchema),
+        logger
+    )
 
     // need points for OApp Peer Matrix
     const points = graph.contracts

@@ -1,14 +1,13 @@
-import { OmniAddress } from '@layerzerolabs/devtools'
+import { OmniAddress, OmniGraph } from '@layerzerolabs/devtools'
 import { ExecutorDstConfig, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     createConnectedContractFactory,
     getEidForNetworkName,
     OmniGraphBuilderHardhat,
+    OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { createConfigLoader, printJson } from '@layerzerolabs/io-devtools'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
-import { OAppOmniGraphHardhat, OAppOmniGraphHardhatSchema } from '@/oapp'
-import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { Logger } from '@layerzerolabs/io-devtools'
 
 export async function getSendConfig(
@@ -172,15 +171,15 @@ export async function getExecutorDstConfig(
     return await localExecutorSDK.getDstConfig(remoteEid)
 }
 
-export async function validateAndTransformOappConfig(oappConfigPath: string, logger: Logger): Promise<OAppOmniGraph> {
-    /**
-     * Now we create our config loader
-     */
-    const configLoader = createConfigLoader<OAppOmniGraphHardhat>(OAppOmniGraphHardhatSchema)
+export async function validateAndTransformOappConfig<TNodeConfig, TEdgeConfig>(
+    oappConfigPath: string,
+    configLoader: (path: string) => Promise<OmniGraphHardhat<TNodeConfig, TEdgeConfig>>,
+    logger: Logger
+): Promise<OmniGraph<TNodeConfig, TEdgeConfig>> {
     /**
      * At this point we have a correctly typed config in the hardhat format
      */
-    const hardhatGraph: OAppOmniGraphHardhat = await configLoader(oappConfigPath)
+    const hardhatGraph = await configLoader(oappConfigPath)
     /**
      * We'll also print out the whole config for verbose loggers
      */
@@ -191,7 +190,7 @@ export async function validateAndTransformOappConfig(oappConfigPath: string, log
      * with addresses instead of contractNames
      */
     logger.verbose(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
-    let graph: OAppOmniGraph
+
     try {
         /**
          * The transformation is achieved using a builder that also validates the resulting graph
@@ -201,16 +200,16 @@ export async function validateAndTransformOappConfig(oappConfigPath: string, log
         /**
          * We only need the graph so we throw away the builder
          */
-        graph = builder.graph
+        const graph = builder.graph
+
+        /**
+         * Show more detailed logs to interested users
+         */
+        logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
+        logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
+
+        return graph
     } catch (error) {
         throw new Error(`Config from file '${oappConfigPath}' is invalid: ${error}`)
     }
-
-    /**
-     * Show more detailed logs to interested users
-     */
-    logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
-    logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
-
-    return graph
 }
