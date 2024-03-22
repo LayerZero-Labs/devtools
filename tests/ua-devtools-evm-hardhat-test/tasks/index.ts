@@ -1,5 +1,5 @@
 import { task } from 'hardhat/config'
-import { deployAndSetupDefaultEndpointV2 } from '../test/__utils__/endpointV2'
+import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import { deployOApp } from '../test/__utils__/oapp'
 import { deployOmniCounter } from '../test/__utils__/omnicounter'
 

@@ -2,7 +2,7 @@ import 'hardhat'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployAndSetupDefaultEndpointV2, getDefaultUlnConfig } from '../__utils__/endpointV2'
+import { deployAndSetupDefaultEndpointV2, getDefaultUlnConfig } from '@layerzerolabs/test-setup-evm-hardhat'
 import { createEndpointV2Factory, createUln302Factory } from '@layerzerolabs/protocol-devtools-evm'
 
 describe('EndpointV2/config', () => {

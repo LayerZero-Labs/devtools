@@ -1,4 +1,4 @@
-import { defaultExecutorDstConfig, deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
+import { defaultExecutorDstConfig, deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_EXECUTOR } from '@layerzerolabs/ua-devtools-evm-hardhat'
 

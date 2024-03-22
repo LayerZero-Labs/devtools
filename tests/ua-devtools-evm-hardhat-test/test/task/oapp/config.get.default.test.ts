@@ -2,7 +2,7 @@ import {
     deployAndSetupDefaultEndpointV2,
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
-} from '../../__utils__/endpointV2'
+} from '@layerzerolabs/test-setup-evm-hardhat'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-hardhat'

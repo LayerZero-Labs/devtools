@@ -24,7 +24,7 @@ import {
     ethReceiveUln2_Opt2,
     ethSendUln,
     ethSendUln2_Opt2,
-} from '../__utils__/endpointV2'
+} from '@layerzerolabs/test-setup-evm-hardhat'
 import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'

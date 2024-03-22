@@ -20,7 +20,7 @@ import {
     OmniGraphBuilderHardhat,
     OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { deployAndSetupDefaultEndpointV2 } from '../__utils__/endpointV2'
+import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import { deployOmniCounter } from '../__utils__/omnicounter'
 import assert from 'assert'
 import {

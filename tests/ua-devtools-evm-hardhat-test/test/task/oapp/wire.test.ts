@@ -5,7 +5,7 @@ import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
+import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import {
     createGnosisSignerFactory,
     createSignerFactory,

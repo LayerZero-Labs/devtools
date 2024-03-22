@@ -4,7 +4,7 @@ import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deployOApp } from '../__utils__/oapp'
-import { deployAndSetupDefaultEndpointV2 } from '../__utils__/endpointV2'
+import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 describe('oapp/check', () => {
