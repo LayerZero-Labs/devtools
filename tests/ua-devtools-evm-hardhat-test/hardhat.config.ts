@@ -5,7 +5,7 @@ import type { HardhatUserConfig } from 'hardhat/types'
 // These tasks are only for when you want to play with this setup
 // using your own keyboard (using exposed networks)
 import './tasks'
-import { createTestNetworkConfig } from '@layerzerolabs/test-setup-evm-hardhat'
+import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 
 const mnemonic = process.env.MNEMONIC ?? ''
 
@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
     solidity: {
         version: '0.8.22',
     },
-    networks: createTestNetworkConfig({ mnemonic, initialIndex: 10 }),
+    networks: createTestNetworkConfigV2({ mnemonic, initialIndex: 10 }),
 }
 
 export default config

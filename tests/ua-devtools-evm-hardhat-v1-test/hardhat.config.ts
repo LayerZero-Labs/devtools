@@ -1,6 +1,6 @@
 import 'hardhat-deploy'
 import '@layerzerolabs/toolbox-hardhat'
-import { createTestNetworkConfig } from '@layerzerolabs/test-setup-evm-hardhat'
+import { createTestNetworkConfigV1 } from '@layerzerolabs/test-setup-evm-hardhat'
 import type { HardhatUserConfig } from 'hardhat/types'
 
 const MNEMONIC = process.env.MNEMONIC ?? ''
@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
     solidity: {
         version: '0.8.22',
     },
-    networks: createTestNetworkConfig({ mnemonic: MNEMONIC, initialIndex: 20 }),
+    networks: createTestNetworkConfigV1({ mnemonic: MNEMONIC, initialIndex: 20 }),
 }
 
 export default config
