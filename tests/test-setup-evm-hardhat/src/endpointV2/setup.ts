@@ -3,7 +3,6 @@
 import {
     createConnectedContractFactory,
     createErrorParser,
-    createGetHreByEid,
     createSignerFactory,
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
@@ -115,40 +114,11 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
- * Deploys the EndpointV2 contracts, then wires the infrastructure.
- *
- * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
- */
-export const deployAndSetupDefaultEndpointV2 = async (writeToFileSystem: boolean = false): Promise<void> => {
-    // intentionally serial
-    await deployEndpointV2(writeToFileSystem)
-    return setupDefaultEndpointV2()
-}
-
-/**
- * Deploys the EndpointV2 contracts
- *
- * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
- */
-const deployEndpointV2 = async (writeToFileSystem: boolean = false) => {
-    const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
-    const bsc = await environmentFactory(EndpointId.BSC_V2_MAINNET)
-
-    await Promise.all([
-        eth.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-        avax.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-        bsc.deployments.run('EndpointV2', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-    ])
-}
-
-/**
  * Helper function that wires the EndpointV2 infrastructure.
  *
  * The contracts still need to be deployed (use `deployEndpointV2`)
  */
-const setupDefaultEndpointV2 = async (): Promise<void> => {
+export const setupDefaultEndpointV2 = async (): Promise<void> => {
     // This is the tooling we are going to need
     const contractFactory = createConnectedContractFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
