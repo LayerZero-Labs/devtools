@@ -41,6 +41,7 @@
     "@types/node": "~18.18.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "cspell": "^8.6.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
@@ -65,18 +66,5 @@
     "patchedDependencies": {
       "bigint-buffer@1.1.5": "patches/bigint-buffer@1.1.5.patch"
     }
-  },
-  "cspell": {
-    "version": "0.2",
-    "useGitignore": true,
-    "language": "en",
-    "words": [
-      "crate",
-      "borken"
-    ],
-    "ignorePaths": [
-      "node_modules/**",
-      "./**"
-    ]
   }
 }

@@ -40,7 +40,7 @@ new Command("create-lz-oapp")
   .action(async (args: Args) => {
     printLogo();
 
-    // We'll provide a CI mode - a non-interctaive mode in which all input is taken
+    // We'll provide a CI mode - a non-interactive mode in which all input is taken
     // from the CLI arguments and if something is missing, an error is thrown
     const { ci, logLevel = "info" } = args;
 

@@ -126,7 +126,7 @@
 
 ### Patch Changes
 
-- 0cce862: Fixed a problem with duplicate library registration when confgiuring Endpoint
+- 0cce862: Fixed a problem with duplicate library registration when configuring Endpoint
 
 ## 0.0.2
 

@@ -125,4 +125,4 @@ jobs:
         uses: ./.github/workflows/actions/install-dependencies
 
       - name: Spell Check
-        run: cspell "**/*" --config ./.cspell/cspell.json
+        run: cspell --config ./cspell.json
