@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.6
+
+### Patch Changes
+
+- 2a36974: Add the ability to define configs as functions
+
 ## 0.1.5
 
 ### Patch Changes
