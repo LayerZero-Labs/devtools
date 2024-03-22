@@ -1,12 +1,12 @@
 {
-  "name": "@layerzerolabs/test-evm-hardhat-setup",
+  "name": "@layerzerolabs/test-setup-evm-hardhat",
   "version": "0.0.1",
   "private": true,
   "description": "Test setup utilities for hardhat E2E tests",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "tests/test-evm-hardhat-setup"
+    "directory": "tests/test-setup-evm-hardhat"
   },
   "license": "MIT",
   "scripts": {
