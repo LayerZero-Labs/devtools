@@ -5,7 +5,7 @@ import type { HardhatUserConfig } from 'hardhat/types'
 // These tasks are only for when you want to play with this setup
 // using your own keyboard (using exposed networks)
 import './tasks'
-import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 const mnemonic = process.env.MNEMONIC ?? ''
 

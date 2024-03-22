@@ -6,7 +6,7 @@ import {
     TASK_LZ_OAPP_ENFORCED_OPTS_GET,
     TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 describe(`task ${TASK_LZ_OAPP_PEERS_GET}`, () => {
     let consoleSpy: jest.SpyInstance

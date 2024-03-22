@@ -1562,9 +1562,9 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/test-devtools-evm-hardhat
-      '@layerzerolabs/test-setup-evm-hardhat':
+      '@layerzerolabs/test-setup-devtools-evm-hardhat':
         specifier: ~0.0.1
-        version: link:../test-setup-evm-hardhat
+        version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/toolbox-hardhat
@@ -1758,7 +1758,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  tests/test-setup-evm-hardhat:
+  tests/test-setup-devtools-evm-hardhat:
     devDependencies:
       '@ethersproject/providers':
         specifier: ^5.7.2
@@ -1886,9 +1886,9 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/test-devtools-evm-hardhat
-      '@layerzerolabs/test-setup-evm-hardhat':
+      '@layerzerolabs/test-setup-devtools-evm-hardhat':
         specifier: ~0.0.1
-        version: link:../test-setup-evm-hardhat
+        version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/toolbox-hardhat
@@ -2030,9 +2030,9 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/test-devtools-evm-hardhat
-      '@layerzerolabs/test-setup-evm-hardhat':
+      '@layerzerolabs/test-setup-devtools-evm-hardhat':
         specifier: ~0.0.1
-        version: link:../test-setup-evm-hardhat
+        version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/toolbox-hardhat
@@ -9233,7 +9233,7 @@ packages:
       ansi-escapes: 4.3.2
       boxen: 5.1.2
       chalk: 2.4.2
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       ci-info: 2.0.0
       debug: 4.3.4(supports-color@8.1.1)
       enquirer: 2.4.1

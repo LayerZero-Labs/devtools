@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import {
     createGnosisSignerFactory,
     createSignerFactory,

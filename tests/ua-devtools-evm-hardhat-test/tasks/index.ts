@@ -1,5 +1,5 @@
 import { task } from 'hardhat/config'
-import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 /**
  * This will deploy and wire up the endpoints.

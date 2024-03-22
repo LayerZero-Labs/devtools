@@ -28,7 +28,7 @@ import {
     setUpConfig,
     setUpOmniGraphHardhat,
     deployContract,
-} from '@layerzerolabs/test-setup-evm-hardhat'
+} from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import assert from 'assert'
 
 // The maximum value of an uint16.

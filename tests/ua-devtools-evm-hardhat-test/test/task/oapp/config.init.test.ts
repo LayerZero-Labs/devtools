@@ -4,7 +4,7 @@ import {
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
     TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { getTestHre } from '@layerzerolabs/test-devtools-evm-hardhat'
 import * as fs from 'fs'
 import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'

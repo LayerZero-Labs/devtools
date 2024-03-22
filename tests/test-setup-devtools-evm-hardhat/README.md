@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">@layerzerolabs/test-setup-evm-hardhat</h1>
+<h1 align="center">@layerzerolabs/test-setup-devtools-evm-hardhat</h1>
 
 ## Development
 

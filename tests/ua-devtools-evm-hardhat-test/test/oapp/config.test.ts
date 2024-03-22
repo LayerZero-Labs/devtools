@@ -25,7 +25,7 @@ import {
     ethSendUln,
     ethSendUln2_Opt2,
     getLibraryAddress,
-} from '@layerzerolabs/test-setup-evm-hardhat'
+} from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'

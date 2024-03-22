@@ -1,6 +1,6 @@
 import 'hardhat-deploy'
 import '@layerzerolabs/toolbox-hardhat'
-import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import type { HardhatUserConfig } from 'hardhat/types'
 
 const MNEMONIC = process.env.MNEMONIC ?? ''
