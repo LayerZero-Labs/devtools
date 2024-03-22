@@ -30,6 +30,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.3.0",
     "@layerzerolabs/devtools-evm": "~0.3.1",
     "@layerzerolabs/devtools-evm-hardhat": "~0.3.1",
@@ -46,6 +47,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/lz-definitions": "~2.1.23",
     "hardhat": "^2.19.5",
     "hardhat-deploy": "^0.12.1"

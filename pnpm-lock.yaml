@@ -1760,6 +1760,9 @@ importers:
 
   tests/test-setup-evm-hardhat:
     devDependencies:
+      '@ethersproject/providers':
+        specifier: ^5.7.2
+        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.3.0
         version: link:../../packages/devtools
@@ -9224,7 +9227,7 @@ packages:
       ansi-escapes: 4.3.2
       boxen: 5.1.2
       chalk: 2.4.2
-      chokidar: 3.6.0
+      chokidar: 3.5.3
       ci-info: 2.0.0
       debug: 4.3.4(supports-color@8.1.1)
       enquirer: 2.4.1

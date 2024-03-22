@@ -116,7 +116,7 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 /**
  * Helper function that wires the EndpointV2 infrastructure.
  *
- * The contracts still need to be deployed (use `deployEndpointV2`)
+ * The contracts still need to be deployed (use `deployContract`)
  */
 export const setupDefaultEndpointV2 = async (): Promise<void> => {
     // This is the tooling we are going to need
