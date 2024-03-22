@@ -1562,6 +1562,9 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/test-devtools-evm-hardhat
+      '@layerzerolabs/test-setup-evm-hardhat':
+        specifier: ~0.0.1
+        version: link:../test-setup-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/toolbox-hardhat
@@ -2018,6 +2021,9 @@ importers:
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/test-devtools-evm-hardhat
+      '@layerzerolabs/test-setup-evm-hardhat':
+        specifier: ~0.0.1
+        version: link:../test-setup-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.0
         version: link:../../packages/toolbox-hardhat

@@ -20,16 +20,16 @@ import {
     OmniGraphBuilderHardhat,
     OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
-import { deployOmniCounter } from '../__utils__/omnicounter'
-import assert from 'assert'
 import {
+    setupDefaultEndpointV2,
     getDefaultAvaxConfig,
     getDefaultEthConfig,
     OAppTestConfig,
     setUpConfig,
     setUpOmniGraphHardhat,
-} from '../__utils__/oapp'
+    deployContract,
+} from '@layerzerolabs/test-setup-evm-hardhat'
+import assert from 'assert'
 
 // The maximum value of an uint16.
 const MAX_UINT_16: number = 0xffff
@@ -93,8 +93,9 @@ describe('oapp/options', () => {
     let contractFactory: OmniContractFactoryHardhat
 
     beforeAll(async () => {
-        await deployAndSetupDefaultEndpointV2()
-        await deployOmniCounter()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
+        await deployContract('OmniCounter')
 
         contractFactory = createConnectedContractFactory()
         const sdkFactory = createOmniCounterFactory(contractFactory)

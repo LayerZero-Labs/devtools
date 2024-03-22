@@ -2,10 +2,9 @@ import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
 import { dirname, join, relative, resolve } from 'path'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { deployAndSetupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-evm-hardhat'
 import {
     createGnosisSignerFactory,
     createSignerFactory,
@@ -53,7 +52,8 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     }
 
     beforeAll(async () => {
-        await deployAndSetupDefaultEndpointV2()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
     })
 
     beforeEach(async () => {
@@ -65,7 +65,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
     describe('with invalid configs', () => {
         beforeAll(async () => {
-            await deployOApp()
+            await deployContract('OApp')
         })
 
         it('should fail if the config file does not exist', async () => {
@@ -113,7 +113,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
     describe('with valid configs', () => {
         beforeEach(async () => {
-            await deployOApp()
+            await deployContract('OApp')
         })
 
         it('should accept a path without an extension', async () => {
