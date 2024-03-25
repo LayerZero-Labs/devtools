@@ -1,8 +1,9 @@
 import {
-    deployAndSetupDefaultEndpointV2,
+    setupDefaultEndpointV2,
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
-} from '../../__utils__/endpointV2'
+    deployContract,
+} from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@layerzerolabs/ua-devtools-evm-hardhat'
@@ -26,7 +27,8 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_DEFAULT}`, () => {
     beforeEach(async () => {
         // We'll deploy the endpoint and save the deployments to the filesystem
         // since we want to be able to tun the task using spawnSync
-        await deployAndSetupDefaultEndpointV2(true)
+        await deployContract('EndpointV2', true)
+        await setupDefaultEndpointV2()
     })
 
     it('should return default configurations with passed in networks param', async () => {

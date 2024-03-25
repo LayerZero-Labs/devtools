@@ -1,13 +1,12 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployOApp, getLibraryAddress } from '../__utils__/oapp'
 import {
     createConnectedContractFactory,
     createProviderFactory,
     createSignerFactory,
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { createOAppFactory, OApp } from '@layerzerolabs/ua-devtools-evm'
+import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
@@ -15,7 +14,8 @@ import {
     avaxReceiveUln2_Opt2,
     avaxSendUln,
     avaxSendUln2_Opt2,
-    deployAndSetupDefaultEndpointV2,
+    setupDefaultEndpointV2,
+    deployContract,
     ethDvn,
     ethDvn_Opt2,
     ethDvn_Opt3,
@@ -24,7 +24,8 @@ import {
     ethReceiveUln2_Opt2,
     ethSendUln,
     ethSendUln2_Opt2,
-} from '../__utils__/endpointV2'
+    getLibraryAddress,
+} from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 import { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -51,8 +52,9 @@ describe('oapp/config', () => {
 
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
-        await deployAndSetupDefaultEndpointV2()
-        await deployOApp()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
+        await deployContract('OApp')
 
         contractFactory = createConnectedContractFactory()
         signAndSend = createSignAndSend(createSignerFactory())
@@ -1438,7 +1440,7 @@ describe('oapp/config', () => {
 
         describe('configureEnforcedOptions', () => {
             let graph: OAppOmniGraph
-            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: OApp
+            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: IOApp
 
             beforeEach(async () => {
                 bscContract = await contractFactory(bscPointHardhat)

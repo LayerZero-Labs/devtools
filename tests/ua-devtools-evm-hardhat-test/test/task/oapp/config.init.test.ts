@@ -4,13 +4,12 @@ import {
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
     TASK_LZ_OAPP_WIRE,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { getTestHre } from '@layerzerolabs/test-devtools-evm-hardhat'
 import * as fs from 'fs'
 import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import { formatEid } from '@layerzerolabs/devtools'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
-import { deployOApp } from '../../__utils__/oapp'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -40,8 +39,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
     beforeEach(async () => {
         // We'll deploy the endpoint and save the deployments to the filesystem
         // since we want to be able to tun the task using spawnSync
-        await deployAndSetupDefaultEndpointV2(true)
-        await deployOApp()
+        await deployContract('EndpointV2', true)
+        await setupDefaultEndpointV2()
+        await deployContract('OApp')
     })
 
     afterEach(async () => {
