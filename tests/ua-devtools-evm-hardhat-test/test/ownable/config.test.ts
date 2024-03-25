@@ -1,6 +1,5 @@
 import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { deployOApp } from '../__utils__/oapp'
 import {
     createConnectedContractFactory,
     createSignerFactory,
@@ -9,8 +8,8 @@ import {
 import { createOAppFactory, createOwnableFactory } from '@layerzerolabs/ua-devtools-evm'
 import { configureOwnable, IOwnable, OwnableFactory, OwnableOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
-import { deployAndSetupDefaultEndpointV2 } from '../__utils__/endpointV2'
 import { createSignAndSend, OmniPoint } from '@layerzerolabs/devtools'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 describe('ownable/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
@@ -28,12 +27,13 @@ describe('ownable/config', () => {
     let avaxOwnableSdk: IOwnable
 
     beforeAll(async () => {
-        await deployAndSetupDefaultEndpointV2()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
     })
 
     // This is the OApp config that we want to use against our contracts
     beforeEach(async () => {
-        await deployOApp()
+        await deployContract('OApp')
 
         contractFactory = createConnectedContractFactory()
         ownableFactory = createOwnableFactory(createOAppFactory(contractFactory))
