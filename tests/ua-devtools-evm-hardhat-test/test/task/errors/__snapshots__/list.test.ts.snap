@@ -189,26 +189,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x1e4fbdf7",
     },
     {
-      "Contract": "OmniCounter",
-      "Error": "InvalidDelegate()",
-      "Signature": "0xb5863604",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidEndpointCall()",
-      "Signature": "0x0fbdec0a",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
       "Contract": "EndpointV2",
       "Error": "LZ_InvalidExpiry()",
       "Signature": "0x05df9f22",
@@ -1771,91 +1751,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "DefaultOApp",
       "Error": "OwnableUnauthorizedAccount(address)",
       "Signature": "0x118cdaa7",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "AddressEmptyCode(address)",
-      "Signature": "0x9996b315",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "AddressInsufficientBalance(address)",
-      "Signature": "0xcd786059",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "FailedInnerCall()",
-      "Signature": "0x1425ea42",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidDelegate()",
-      "Signature": "0xb5863604",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidEndpointCall()",
-      "Signature": "0x0fbdec0a",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "LzTokenUnavailable()",
-      "Signature": "0x5373352a",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NoPeer(uint32)",
-      "Signature": "0xf6ff4fb7",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "NotEnoughNative(uint256)",
-      "Signature": "0x9f704120",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyEndpoint(address)",
-      "Signature": "0x91ac5e4f",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlyPeer(uint32,bytes32)",
-      "Signature": "0xc26bebcc",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OnlySelf()",
-      "Signature": "0x14d4a4e8",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "OwnableUnauthorizedAccount(address)",
-      "Signature": "0x118cdaa7",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
-      "Signature": "0x6dfcc650",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SafeERC20FailedOperation(address)",
-      "Signature": "0x5274afe7",
-    },
-    {
-      "Contract": "OmniCounter",
-      "Error": "SimulationResult(bytes)",
-      "Signature": "0x8351eea7",
     },
     {
       "Contract": "EndpointV2",
