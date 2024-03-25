@@ -16,6 +16,7 @@ import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-dev
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { mapError } from '@layerzerolabs/devtools'
+import { OwnableMixin } from '@/ownable/mixin'
 
 export class OApp extends OmniSDK implements IOApp {
     constructor(
@@ -23,6 +24,42 @@ export class OApp extends OmniSDK implements IOApp {
         protected readonly endpointV2Factory: EndpointV2Factory
     ) {
         super(contract)
+    }
+
+    getOwner(): Promise<string> {
+        // TODO This is a quick and dirty way of applying OwnableMixin
+        //
+        // The proper solution involves :
+        // - Option A: Using class decorators
+        // - Option B: Using dynamic classes
+        //
+        // TypeScript support for these is still lacking and the resulting code would slow
+        // down the development at this point
+        return OwnableMixin.getOwner.call(this)
+    }
+
+    hasOwner(address: string): Promise<boolean> {
+        // TODO This is a quick and dirty way of applying OwnableMixin
+        //
+        // The proper solution involves :
+        // - Option A: Using class decorators
+        // - Option B: Using dynamic classes
+        //
+        // TypeScript support for these is still lacking and the resulting code would slow
+        // down the development at this point
+        return OwnableMixin.hasOwner.call(this, address)
+    }
+
+    setOwner(address: string): Promise<OmniTransaction> {
+        // TODO This is a quick and dirty way of applying OwnableMixin
+        //
+        // The proper solution involves :
+        // - Option A: Using class decorators
+        // - Option B: Using dynamic classes
+        //
+        // TypeScript support for these is still lacking and the resulting code would slow
+        // down the development at this point
+        return OwnableMixin.setOwner.call(this, address)
     }
 
     async getEndpointSDK(): Promise<IEndpointV2> {

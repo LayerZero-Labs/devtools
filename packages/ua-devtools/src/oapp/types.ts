@@ -12,8 +12,9 @@ import type {
     PossiblyBigInt,
 } from '@layerzerolabs/devtools'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import type { IOwnable } from '@/ownable/types'
 
-export interface IOApp extends IOmniSDK {
+export interface IOApp extends IOmniSDK, IOwnable {
     getEndpointSDK(): Promise<IEndpointV2>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
