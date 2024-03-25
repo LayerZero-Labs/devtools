@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { OmniAddress, WithOptionals } from '@/types'
+import type { Factory, OmniAddress, WithOptionals } from '@/types'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
@@ -69,3 +69,11 @@ export type WithEid<TValue> = TValue & { eid: EndpointId }
 export interface IOmniSDK {
     point: OmniPoint
 }
+
+/**
+ * Base factory for all SDK factories
+ */
+export type OmniSDKFactory<TOmniSDK extends IOmniSDK = IOmniSDK, TOmniPoint = OmniPoint> = Factory<
+    [TOmniPoint],
+    TOmniSDK
+>
