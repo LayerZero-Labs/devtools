@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.14
+
+### Patch Changes
+
+- 5f1bd69: Added default url for blast network
+
 ## 1.1.13
 
 ### Patch Changes

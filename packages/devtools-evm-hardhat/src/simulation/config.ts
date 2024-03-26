@@ -1,4 +1,4 @@
-import type { HardhatConfig, HttpNetworkConfig, NetworkConfig, NetworkUserConfig } from 'hardhat/types'
+import type { HardhatConfig, HttpNetworkConfig, NetworkConfig } from 'hardhat/types'
 import type { SimulationConfig, SimulationUserConfig } from './types'
 import { resolve } from 'path'
 import { AnvilOptions } from '@layerzerolabs/devtools-evm'
@@ -22,6 +22,10 @@ export const resolveSimulationConfig = (
         // For now we'll hardcode the mnemonic we'll use to seed the accounts on the simulation networks
         mnemonic: 'test test test test test test test test test test test junk',
         ...userConfig.anvil,
+        // The host and port need to always point to 0.0.0.0:8545
+        // since anvil runs in the container that exposes this port on 0.0.0.0
+        host: '0.0.0.0',
+        port: 8545,
     },
 })
 
@@ -63,31 +67,23 @@ export const getAnvilOptionsFromHardhatNetworks = (
  *
  * @param {SimulationConfig} config
  * @param {Record<string, NetworkConfig>} networksConfig
- * @returns {Record<string, NetworkUserConfig>}
+ * @returns {Record<string, NetworkConfig>}
  */
 export const getHardhatNetworkOverrides = (
     config: SimulationConfig,
     networksConfig: Record<string, NetworkConfig>
-): Record<string, NetworkUserConfig> =>
+): Record<string, NetworkConfig> =>
     pipe(
         networksConfig,
         // We want to drop all the networks that don't have URLs
         R.filter(isHttpNetworkConfig),
-        // We'll map the network configs into objects that define the minimum overrides
-        // needed to make the simulation work.
+        // We'll take the existing network configs and point them to our RPC proxy
         //
-        // Having the complete network configs copied here would definitely
-        // simplify the step in which we'll be applying these overrides
-        // to hardhat config, but it comes with a bit of bad / unexpected UX.
-        //
-        // If users changed their hardhat configs without regenerating the simulation configs, they would
-        // not see their changes applied (since they would be hardcoded in these overrides).
-        //
-        // Another thing to consider is that these overrides will be turned into a JSON file.
-        // Any properties that cannot be serialized would disappear (and we cannot assume only serializable properties
-        // since people can use whatever hardhat plugins they want)
+        // It's important that these configs are not saved to filesystem as they might contain
+        // sensitive data (and forgetting to ignore these files in git could lead to security breaches)
         R.mapWithIndex(
-            (networkName): NetworkUserConfig => ({
+            (networkName, networkConfig): NetworkConfig => ({
+                ...networkConfig,
                 // We want to redirect this network to the local proxy
                 //
                 // This is the nginx server listening on the port we configured in the simulation configuration
@@ -102,6 +98,15 @@ export const getHardhatNetworkOverrides = (
                 // - We don't want to be throwing production mnemonics around and storing them in json files
                 accounts: {
                     mnemonic: config.anvil.mnemonic,
+                    // These need to be defaulted to the anvil options
+                    // (or the anvil defaults)
+                    //
+                    // See https://book.getfoundry.sh/reference/cli/anvil for anvil defaults
+                    count: config.anvil.count ?? 10,
+                    path: config.anvil.derivationPath ?? "m/44'/60'/0'/0/",
+                    // These will be hardcoded for now as anvil does not support setting these
+                    initialIndex: 0,
+                    passphrase: '',
                 },
             })
         )

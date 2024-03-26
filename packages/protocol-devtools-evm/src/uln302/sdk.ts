@@ -14,7 +14,7 @@ import {
 } from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema } from './schema'
 import assert from 'assert'
-import { printJson, printRecord } from '@layerzerolabs/io-devtools'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { isZero } from '@layerzerolabs/devtools'
 import { OmniSDK, addChecksum, makeZeroAddress } from '@layerzerolabs/devtools-evm'
 
@@ -167,7 +167,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
 
         return {
             ...this.createTransaction(data),
-            description: `Setting default ULN config for ${formatEid(eid)}: ${printRecord(serializedConfig)}`,
+            description: `Setting default ULN config for ${formatEid(eid)}: ${printJson(serializedConfig)}`,
         }
     }
 

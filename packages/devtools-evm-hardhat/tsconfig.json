@@ -8,5 +8,6 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "files": ["./types/conf.d.ts"]
 }

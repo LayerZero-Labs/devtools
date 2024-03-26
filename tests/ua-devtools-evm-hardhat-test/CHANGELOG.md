@@ -1,5 +1,30 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.1
+
+### Patch Changes
+
+- 059d817: Add the ability to choose gnosis safe for transaction signing; add the ability to pick signer index/address
+
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.1.12
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
+## 0.1.11
+
+### Patch Changes
+
+- 226a0d5: Add feature-flagged parallel configuration execution
+
 ## 0.1.10
 
 ### Patch Changes

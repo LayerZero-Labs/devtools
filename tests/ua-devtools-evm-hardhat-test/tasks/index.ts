@@ -1,13 +1,12 @@
 import { task } from 'hardhat/config'
-import { deployAndSetupDefaultEndpointV2 } from '../test/__utils__/endpointV2'
-import { deployOApp } from '../test/__utils__/oapp'
-import { deployOmniCounter } from '../test/__utils__/omnicounter'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 /**
  * This will deploy and wire up the endpoints.
  */
 const deployAndWireEndpoint = async () => {
-    await deployAndSetupDefaultEndpointV2(true)
+    await deployContract('EndpointV2', true)
+    await setupDefaultEndpointV2()
 }
 
 /**
@@ -26,7 +25,7 @@ task('lz:test:oapp:deploy', 'Deploy the test OApp on default EndpointV2 infrastr
     await deployAndWireEndpoint()
 
     // Deploy the DefaultOApp
-    await deployOApp(true)
+    await deployContract('OApp', true)
 })
 
 /**
@@ -45,5 +44,5 @@ task('lz:test:omnicounter:deploy', 'Deploy the OmniCounter on a default Endpoint
     await deployAndWireEndpoint()
 
     // Deploy the OmniCounter
-    await deployOmniCounter(true)
+    await deployContract('OmniCounter', true)
 })

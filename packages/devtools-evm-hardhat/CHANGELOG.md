@@ -1,5 +1,60 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.1
+
+### Patch Changes
+
+- 059d817: Add the ability to choose gnosis safe for transaction signing; add the ability to pick signer index/address
+- Updated dependencies [059d817]
+  - @layerzerolabs/devtools-evm@0.3.1
+
+## 0.3.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/devtools-evm@0.3.0
+  - @layerzerolabs/devtools@0.3.0
+
+## 0.2.15
+
+### Patch Changes
+
+- 28b2598: Add simulation tasks under LZ_ENABLE_EXPERIMENTAL_SIMULATION feature flag
+
+## 0.2.14
+
+### Patch Changes
+
+- eb4e4d0: Adjust simulation config logic for anvil
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [f9987d3]
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools-evm@0.2.12
+  - @layerzerolabs/devtools@0.2.10
+
+## 0.2.13
+
+### Patch Changes
+
+- 622fd00: Add docker compose utilities for simulation
+
+## 0.2.12
+
+### Patch Changes
+
+- 711cb98: Add config utilities for simulation
+- 6d2e1f8: Add types for simulation
+- Updated dependencies [6d2e1f8]
+  - @layerzerolabs/devtools-evm@0.2.10
+  - @layerzerolabs/devtools@0.2.9
+
 ## 0.2.11
 
 ### Patch Changes

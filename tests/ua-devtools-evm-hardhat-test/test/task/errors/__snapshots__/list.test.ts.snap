@@ -2309,13 +2309,13 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "PriceFeed",
-      "Error": "LZ_PriceFeed_OnlyPriceUpdater()",
-      "Signature": "0x320ae529",
+      "Error": "LZ_PriceFeed_NotAnOPStack(uint32)",
+      "Signature": "0xf42c33dc",
     },
     {
       "Contract": "PriceFeed",
-      "Error": "LZ_PriceFeed_UnknownL2Eid(uint32)",
-      "Signature": "0xea253945",
+      "Error": "LZ_PriceFeed_OnlyPriceUpdater()",
+      "Signature": "0x320ae529",
     },
     {
       "Contract": "PriceFeed",
@@ -2519,13 +2519,13 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "ILayerZeroPriceFeed",
-      "Error": "LZ_PriceFeed_OnlyPriceUpdater()",
-      "Signature": "0x320ae529",
+      "Error": "LZ_PriceFeed_NotAnOPStack(uint32)",
+      "Signature": "0xf42c33dc",
     },
     {
       "Contract": "ILayerZeroPriceFeed",
-      "Error": "LZ_PriceFeed_UnknownL2Eid(uint32)",
-      "Signature": "0xea253945",
+      "Error": "LZ_PriceFeed_OnlyPriceUpdater()",
+      "Signature": "0x320ae529",
     },
     {
       "Contract": "IWorker",
@@ -3056,6 +3056,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
       "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "RateLimiter",
+      "Error": "RateLimitExceeded()",
+      "Signature": "0xa74c1c5f",
     },
     {
       "Contract": "OFT",

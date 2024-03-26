@@ -1,5 +1,23 @@
 # @layerzerolabs/oapp-example
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.1.10
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
+## 0.1.9
+
+### Patch Changes
+
+- a5c185f: Take RPC URLs from the environment in the examples
+
 ## 0.1.8
 
 ### Patch Changes

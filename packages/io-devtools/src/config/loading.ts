@@ -34,13 +34,31 @@ export const createConfigLoader =
 
         logger.verbose(`Loaded config file '${absolutePath}'`)
 
+        // Now let's check whether the config file contains a function
+        //
+        // If so, we'll execute this function and will expect a config as a result
+        let rawConfigMaterialized: unknown
+        if (typeof rawConfig === 'function') {
+            logger.verbose(`Executing configuration function from config file '${absolutePath}'`)
+
+            try {
+                rawConfigMaterialized = await rawConfig()
+            } catch (error) {
+                throw new Error(`Got an exception while executing config funtion from file '${path}': ${error}`)
+            }
+        } else {
+            logger.verbose(`Using exported value from config file '${absolutePath}'`)
+            rawConfigMaterialized = rawConfig
+        }
+
         // It's time to make sure that the config is not malformed
         //
         // At this stage we are only interested in the shape of the data,
         // we are not checking whether the information makes sense (e.g.
         // whether there are no missing nodes etc)
         logger.verbose(`Validating the structure of config file '${absolutePath}'`)
-        const configParseResult = schema.safeParse(rawConfig)
+
+        const configParseResult = schema.safeParse(rawConfigMaterialized)
         if (configParseResult.success === false) {
             const userFriendlyErrors = printZodErrors(configParseResult.error)
 

@@ -1,5 +1,26 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.3.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/devtools@0.3.0
+
+## 0.2.9
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.8
 
 ### Patch Changes

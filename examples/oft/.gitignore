@@ -9,7 +9,11 @@ typechain-types
 cache
 artifacts
 
-#foundry test compilation files
+
+# LayerZero specific files
+.layerzero
+
+# foundry test compilation files
 out
 
 # pnpm

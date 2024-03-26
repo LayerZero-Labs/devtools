@@ -1,5 +1,24 @@
 # @layerzerolabs/test-devtools
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.1.12
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
+## 0.1.11
+
+### Patch Changes
+
+- 622fd00: Add mnemonic arbitrary to test-devtools
+- 622fd00: Add optionalArbitrary
+
 ## 0.1.10
 
 ### Patch Changes

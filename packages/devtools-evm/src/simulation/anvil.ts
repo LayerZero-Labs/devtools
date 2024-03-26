@@ -16,12 +16,16 @@ export interface AnvilOptions {
 
     mnemonic?: string
     count?: number
+    derivationPath?: string
 
     //
     // Forking options
     //
 
     forkUrl?: string
+    forkBlockNumber?: number
+    retries?: number
+    timeout?: number
 
     //
     // EVM options
@@ -34,6 +38,7 @@ export interface AnvilOptions {
     //
 
     state?: string
+    stateInterval?: number
 }
 
 /**
@@ -48,9 +53,14 @@ export const createAnvilCliOptions = ({
     port,
     mnemonic,
     forkUrl,
+    forkBlockNumber,
+    retries,
+    timeout,
     blockTime,
     count,
+    derivationPath,
     state,
+    stateInterval,
 }: AnvilOptions): string[] =>
     pipe(
         [
@@ -71,8 +81,24 @@ export const createAnvilCliOptions = ({
                 O.map((count) => ['--count', String(count)])
             ),
             pipe(
+                O.fromNullable(derivationPath),
+                O.map((derivationPath) => ['--derivation-path', derivationPath])
+            ),
+            pipe(
                 O.fromNullable(forkUrl),
                 O.map((forkUrl) => ['--fork-url', forkUrl])
+            ),
+            pipe(
+                O.fromNullable(forkBlockNumber),
+                O.map((forkBlockNumber) => ['--fork-block-number', String(forkBlockNumber)])
+            ),
+            pipe(
+                O.fromNullable(retries),
+                O.map((retries) => ['--retries', String(retries)])
+            ),
+            pipe(
+                O.fromNullable(timeout),
+                O.map((timeout) => ['--timeout', String(timeout)])
             ),
             pipe(
                 O.fromNullable(blockTime),
@@ -81,6 +107,10 @@ export const createAnvilCliOptions = ({
             pipe(
                 O.fromNullable(state),
                 O.map((state) => ['--state', state])
+            ),
+            pipe(
+                O.fromNullable(stateInterval),
+                O.map((stateInterval) => ['--state-interval', String(stateInterval)])
             ),
         ],
         A.compact,

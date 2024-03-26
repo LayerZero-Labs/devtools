@@ -2,7 +2,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IExecutor, ExecutorDstConfig } from '@layerzerolabs/protocol-devtools'
 import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
-import { printRecord } from '@layerzerolabs/io-devtools'
+import { printJson } from '@layerzerolabs/io-devtools'
 import { ExecutorDstConfigSchema } from './schema'
 
 export class Executor extends OmniSDK implements IExecutor {
@@ -31,7 +31,7 @@ export class Executor extends OmniSDK implements IExecutor {
 
         return {
             ...this.createTransaction(data),
-            description: `Setting dstConfig for ${formatEid(eid)}: ${printRecord(value)}`,
+            description: `Setting dstConfig for ${formatEid(eid)}: ${printJson(value)}`,
         }
     }
 }

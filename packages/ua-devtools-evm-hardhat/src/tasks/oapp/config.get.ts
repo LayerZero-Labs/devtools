@@ -1,12 +1,13 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
+import { createConfigLoader, createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig, validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { OAppOmniGraphHardhatSchema } from '@/oapp'
 
 interface TaskArgs {
     logLevel?: string
@@ -20,7 +21,11 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) =
     const networks: string[] = []
     const addresses: string[] = []
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(oappConfig, logger)
+    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
+        oappConfig,
+        createConfigLoader(OAppOmniGraphHardhatSchema),
+        logger
+    )
     graph.contracts.forEach((contract) => {
         networks.push(getNetworkNameForEid(contract.point.eid))
         addresses.push(contract.point.address)

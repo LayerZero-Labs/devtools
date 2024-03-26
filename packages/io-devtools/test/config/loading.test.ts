@@ -47,26 +47,132 @@ describe('config/loading', () => {
             await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
         })
 
-        it('should reject if the file contents do not match the schema', async () => {
-            isFileMock.mockReturnValue(true)
-            isReadableMock.mockReturnValue(true)
-            importDefaultMock.mockResolvedValue({ bad: 'config' })
+        describe('when config file exports a config', () => {
+            it('should reject if the file contents do not match the schema', async () => {
+                isFileMock.mockReturnValue(true)
+                isReadableMock.mockReturnValue(true)
+                importDefaultMock.mockResolvedValue({ bad: 'config' })
 
-            const schema = z.object({ good: z.string() })
-            const configLoader = createConfigLoader(schema)
+                const schema = z.object({ good: z.string() })
+                const configLoader = createConfigLoader(schema)
 
-            await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+                await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+            })
+
+            it('should resolve if the file contents match the schema', async () => {
+                isFileMock.mockReturnValue(true)
+                isReadableMock.mockReturnValue(true)
+                importDefaultMock.mockResolvedValue({ good: 'config' })
+
+                const schema = z.object({ good: z.string() })
+                const configLoader = createConfigLoader(schema)
+
+                await expect(configLoader('./myconfig.ts')).resolves.toMatchSnapshot()
+            })
         })
 
-        it('should resolve if the file contents match the schema', async () => {
-            isFileMock.mockReturnValue(true)
-            isReadableMock.mockReturnValue(true)
-            importDefaultMock.mockResolvedValue({ good: 'config' })
+        describe('when config file exports a function', () => {
+            describe('when it is a synchronous function', () => {
+                it('should reject if the function throws an error', async () => {
+                    const configFunctionMock = jest.fn(() => {
+                        throw new Error('Oh not again')
+                    })
 
-            const schema = z.object({ good: z.string() })
-            const configLoader = createConfigLoader(schema)
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
 
-            await expect(configLoader('./myconfig.ts')).resolves.toMatchSnapshot()
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+
+                it('should reject if the function returns an invalid config', async () => {
+                    const configFunctionMock = jest.fn().mockReturnValue({ bad: 'config' })
+
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
+
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+
+                it('should resolve if the function returns a valid config', async () => {
+                    const configFunctionMock = jest.fn().mockReturnValue({ good: 'config' })
+
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
+
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).resolves.toEqual({ good: 'config' })
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+            })
+
+            describe('when it is an asynchronous function', () => {
+                it('should reject if the function rejects', async () => {
+                    const configFunctionMock = jest.fn().mockRejectedValue(new Error('Y u do dis'))
+
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
+
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+
+                it('should reject if the function resolves with an invalid config', async () => {
+                    const configFunctionMock = jest.fn().mockResolvedValue({ bad: 'config' })
+
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
+
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).rejects.toMatchSnapshot()
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+
+                it('should resolve if the function returns a valid config', async () => {
+                    const configFunctionMock = jest.fn().mockResolvedValue({ good: 'config' })
+
+                    isFileMock.mockReturnValue(true)
+                    isReadableMock.mockReturnValue(true)
+                    importDefaultMock.mockResolvedValue(configFunctionMock)
+
+                    const schema = z.object({ good: z.string() })
+                    const configLoader = createConfigLoader(schema)
+
+                    await expect(configLoader('./myconfig.ts')).resolves.toEqual({ good: 'config' })
+
+                    expect(configFunctionMock).toHaveBeenCalledTimes(1)
+                    expect(configFunctionMock).toHaveBeenCalledWith()
+                })
+            })
         })
     })
 })

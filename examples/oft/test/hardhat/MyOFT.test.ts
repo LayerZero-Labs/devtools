@@ -37,7 +37,7 @@ describe('MyOFT Test', function () {
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
         //
-        // Unfortunately, hardhat itself does not yet provide a way of connecting external artifacts
+        // Unfortunately, hardhat itself does not yet provide a way of connecting external artifacts,
         // so we rely on hardhat-deploy to create a ContractFactory for EndpointV2Mock
         //
         // See https://github.com/NomicFoundation/hardhat/issues/1040
@@ -97,7 +97,7 @@ describe('MyOFT Test', function () {
         const finalBalanceB = await myOFTB.balanceOf(ownerB.address)
 
         // Asserting that the final balances are as expected after the send operation
-        expect(finalBalanceA.eq(initialAmount.sub(tokensToSend))).to.be.true
-        expect(finalBalanceB.eq(tokensToSend)).to.be.true
+        expect(finalBalanceA).eql(initialAmount.sub(tokensToSend))
+        expect(finalBalanceB).eql(tokensToSend)
     })
 })

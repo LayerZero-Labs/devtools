@@ -1,5 +1,54 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.0
+  - @layerzerolabs/protocol-devtools-evm@0.3.0
+  - @layerzerolabs/devtools-evm-hardhat@0.3.0
+  - @layerzerolabs/protocol-devtools@0.3.0
+  - @layerzerolabs/ua-devtools-evm@0.3.0
+  - @layerzerolabs/devtools-evm@0.3.0
+  - @layerzerolabs/ua-devtools@0.3.0
+  - @layerzerolabs/devtools@0.3.0
+
+## 0.1.15
+
+### Patch Changes
+
+- 28b2598: Add simulation tasks under LZ_ENABLE_EXPERIMENTAL_SIMULATION feature flag
+- Updated dependencies [28b2598]
+- Updated dependencies [6ad78a3]
+  - @layerzerolabs/devtools-evm-hardhat@0.2.15
+  - @layerzerolabs/protocol-devtools-evm@0.2.9
+
+## 0.1.14
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [f9987d3]
+- Updated dependencies [eb4e4d0]
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools-evm@0.2.12
+  - @layerzerolabs/devtools-evm-hardhat@0.2.14
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.2.12
+  - @layerzerolabs/protocol-devtools-evm@0.2.8
+  - @layerzerolabs/protocol-devtools@0.2.9
+  - @layerzerolabs/ua-devtools-evm@0.2.8
+  - @layerzerolabs/ua-devtools@0.2.11
+  - @layerzerolabs/devtools@0.2.10
+  - @layerzerolabs/test-devtools-evm-hardhat@0.1.11
+
 ## 0.1.13
 
 ### Patch Changes

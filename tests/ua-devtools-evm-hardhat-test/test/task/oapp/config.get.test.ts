@@ -1,15 +1,15 @@
 import {
-    deployAndSetupDefaultEndpointV2,
+    setupDefaultEndpointV2,
     getDefaultExecutorConfig,
     getDefaultUlnConfig,
-} from '../../__utils__/endpointV2'
+    deployContract,
+} from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
 import { TASK_LZ_OAPP_CONFIG_GET } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { resolve } from 'path'
 import { isFile } from '@layerzerolabs/io-devtools'
-import { deployOApp } from '../../__utils__/oapp'
 
 describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     const CONFIGS_BASE_DIR = resolve(__dirname, '__data__', 'configs')
@@ -20,8 +20,9 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET}`, () => {
     }
 
     beforeEach(async () => {
-        await deployAndSetupDefaultEndpointV2()
-        await deployOApp()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
+        await deployContract('OApp')
     })
 
     it('should return app specific configurations with a valid LayerZero OApp config', async () => {

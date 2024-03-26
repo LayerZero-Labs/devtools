@@ -1,5 +1,47 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.1
+
+### Patch Changes
+
+- 059d817: Add the ability to choose gnosis safe for transaction signing; add the ability to pick signer index/address
+
+## 0.3.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/devtools@0.3.0
+
+## 0.2.12
+
+### Patch Changes
+
+- f9987d3: Add retries, timeout and forkBlockNumber properties to AnvilOptions
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools@0.2.10
+
+## 0.2.11
+
+### Patch Changes
+
+- 04e1e67: Add stateInterval to AnvilOptions
+
+## 0.2.10
+
+### Patch Changes
+
+- 6d2e1f8: Add types for simulation
+- Updated dependencies [6d2e1f8]
+  - @layerzerolabs/devtools@0.2.9
+
 ## 0.2.9
 
 ### Patch Changes

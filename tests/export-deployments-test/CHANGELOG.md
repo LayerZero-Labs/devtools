@@ -1,5 +1,17 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.1.8
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
 ## 0.1.7
 
 ### Patch Changes

@@ -1,11 +1,5 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
-import {
-    OmniGraphHardhat,
-    OmniPointHardhat,
-    createConnectedContractFactory,
-    createGetHreByEid,
-} from '@layerzerolabs/devtools-evm-hardhat'
+import { OmniGraphHardhat, OmniPointHardhat, createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import {
     ethDvn,
     avaxDvn,
@@ -15,7 +9,7 @@ import {
     avaxSendUln2_Opt2,
     avaxReceiveUln2_Opt2,
     ethExecutor,
-} from './endpointV2'
+} from '@/endpointV2'
 
 export type OAppTestConfig = {
     sendLibrary: string
@@ -33,24 +27,6 @@ export type OAppTestConfig = {
     receiveUlnRequiredDVNs: string[]
     receiveUlnOptionalDVNs: string[]
     receiveUlnOptionalDVNThreshold: number
-}
-
-/**
- * Deploys the OApp contracts
- *
- * @param {boolean} [writeToFileSystem] Write the deployment files to filesystem. Keep this `false` for tests to avoid race conditions
- */
-export const deployOApp = async (writeToFileSystem: boolean = false) => {
-    const environmentFactory = createGetHreByEid()
-    const eth = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
-    const avax = await environmentFactory(EndpointId.AVALANCHE_V2_MAINNET)
-    const bsc = await environmentFactory(EndpointId.BSC_V2_MAINNET)
-
-    await Promise.all([
-        eth.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-        avax.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-        bsc.deployments.run('OApp', { writeDeploymentsToFiles: writeToFileSystem, resetMemory: false }),
-    ])
 }
 
 export const setUpConfig = async (testConfig: OAppTestConfig): Promise<OAppEdgeConfig> => {

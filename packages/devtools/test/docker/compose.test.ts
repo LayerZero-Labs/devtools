@@ -7,7 +7,8 @@ describe('docker/compose', () => {
     describe('serializeDockerComposeSpec', () => {
         const SPEC_FILE_PATH = join(__dirname, 'docker-compose.yaml')
 
-        const validateSpec = () => spawnSync('docker', ['compose', '-f', SPEC_FILE_PATH, 'config'])
+        const validateSpec = () =>
+            spawnSync('docker', ['--log-level', 'ERROR', 'compose', '-f', SPEC_FILE_PATH, 'config'])
 
         afterEach(async () => {
             await rm(SPEC_FILE_PATH, { force: true })
@@ -16,12 +17,15 @@ describe('docker/compose', () => {
         it('should create a valid compose spec if called with no services', async () => {
             const spec = serializeDockerComposeSpec({
                 version: '3.9',
+                services: {},
             })
 
             await writeFile(SPEC_FILE_PATH, spec)
 
-            expect(validateSpec().status).toBe(0)
+            const result = validateSpec()
 
+            expect(result.stderr.toString('utf8')).toBe('')
+            expect(result.status).toBe(0)
             expect(spec).toMatchSnapshot()
         })
 
@@ -52,8 +56,10 @@ describe('docker/compose', () => {
 
             await writeFile(SPEC_FILE_PATH, spec)
 
-            expect(validateSpec().status).toBe(0)
+            const result = validateSpec()
 
+            expect(result.stderr.toString('utf8')).toBe('')
+            expect(result.status).toBe(0)
             expect(spec).toMatchSnapshot()
         })
     })

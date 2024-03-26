@@ -1,5 +1,24 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.1.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.0.9
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
+## 0.0.8
+
+### Patch Changes
+
+- 226a0d5: Add feature-flagged parallel configuration execution
+
 ## 0.0.7
 
 ### Patch Changes

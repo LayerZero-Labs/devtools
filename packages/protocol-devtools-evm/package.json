@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-evm",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "Utilities for LayerZero EVM protocol contracts",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
     "./dist/index.*"
   ],
   "scripts": {
-    "prebuild": "$npm_execpath tsc --noEmit -p tsconfig.build.json",
+    "prebuild": "$npm_execpath tsc --noEmit",
     "build": "$npm_execpath tsup",
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
@@ -45,13 +45,13 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.2.7",
-    "@layerzerolabs/devtools-evm": "~0.2.8",
+    "@layerzerolabs/devtools": "~0.3.0",
+    "@layerzerolabs/devtools-evm": "~0.3.0",
     "@layerzerolabs/io-devtools": "~0.1.5",
-    "@layerzerolabs/lz-definitions": "~2.1.15",
-    "@layerzerolabs/lz-evm-sdk-v2": "~2.1.15",
-    "@layerzerolabs/protocol-devtools": "~0.2.7",
-    "@layerzerolabs/test-devtools": "~0.1.10",
+    "@layerzerolabs/lz-definitions": "~2.1.23",
+    "@layerzerolabs/lz-evm-sdk-v2": "~2.1.23",
+    "@layerzerolabs/protocol-devtools": "~0.3.0",
+    "@layerzerolabs/test-devtools": "~0.2.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -70,11 +70,11 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.2.7",
-    "@layerzerolabs/devtools-evm": "~0.2.8",
+    "@layerzerolabs/devtools": "~0.3.0",
+    "@layerzerolabs/devtools-evm": "~0.3.0",
     "@layerzerolabs/io-devtools": "~0.1.5",
     "@layerzerolabs/lz-definitions": "~2.1.15",
-    "@layerzerolabs/protocol-devtools": "~0.2.7",
+    "@layerzerolabs/protocol-devtools": "~0.3.0",
     "zod": "^3.22.4"
   },
   "publishConfig": {

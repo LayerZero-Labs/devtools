@@ -1,5 +1,35 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+### Patch Changes
+
+- Updated dependencies [a4093ab]
+  - @layerzerolabs/protocol-devtools-evm@0.3.0
+  - @layerzerolabs/protocol-devtools@0.3.0
+  - @layerzerolabs/devtools-evm@0.3.0
+  - @layerzerolabs/ua-devtools@0.3.0
+  - @layerzerolabs/devtools@0.3.0
+
+## 0.2.8
+
+### Patch Changes
+
+- ff6427c: Align the dependency ranges
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+- Updated dependencies [f9987d3]
+- Updated dependencies [ff6427c]
+- Updated dependencies [ff6427c]
+  - @layerzerolabs/devtools-evm@0.2.12
+  - @layerzerolabs/protocol-devtools-evm@0.2.8
+  - @layerzerolabs/protocol-devtools@0.2.9
+  - @layerzerolabs/ua-devtools@0.2.11
+  - @layerzerolabs/devtools@0.2.10
+
 ## 0.2.7
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.2.0
+
+### Minor Changes
+
+- a4093ab: Adapt LayerZero package updates, including OApp version 2
+
+## 0.1.11
+
+### Patch Changes
+
+- ff6427c: Update @LayerZero-Labs dependencies to 2.1.18
+
+## 0.1.10
+
+### Patch Changes
+
+- e3f9d58: Added floating pragma to the EndpointV2Mock.sol
+
 ## 0.1.9
 
 ### Patch Changes
