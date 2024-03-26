@@ -4,4 +4,4 @@
 "@layerzerolabs/toolbox-hardhat": patch
 ---
 
-Adding lz:ownable:transfer-ownership hardhta task
+Adding lz:ownable:transfer-ownership hardhat task
