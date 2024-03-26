@@ -4,16 +4,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
 [
   [
     {
-      "Contract": "DVNOptions",
-      "Error": "DVN_InvalidDVNIdx()",
-      "Signature": "0xd3d3d9bc",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "DVN_InvalidDVNOptions(uint256)",
-      "Signature": "0x04eb6e0c",
-    },
-    {
       "Contract": "OApp",
       "Error": "InvalidDelegate()",
       "Signature": "0xb5863604",
@@ -70,26 +60,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OAppSender",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidDelegate()",
-      "Signature": "0xb5863604",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidEndpointCall()",
-      "Signature": "0x0fbdec0a",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
       "Error": "OwnableInvalidOwner(address)",
       "Signature": "0x1e4fbdf7",
     },
@@ -117,51 +87,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OAppOptionsType3",
       "Error": "OwnableInvalidOwner(address)",
       "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidSize(uint256,uint256)",
-      "Signature": "0x3256c04c",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-      "Signature": "0x572e17ee",
-    },
-    {
-      "Contract": "AddressCast",
-      "Error": "AddressCast_InvalidAddress()",
-      "Signature": "0x6281faa2",
-    },
-    {
-      "Contract": "AddressCast",
-      "Error": "AddressCast_InvalidSizeForAddress()",
-      "Signature": "0x18456c9b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzComposeOption()",
-      "Signature": "0x8b4aa70b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzReceiveOption()",
-      "Signature": "0x4796aee1",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
     },
     {
       "Contract": "Ownable",
@@ -1263,16 +1188,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
 [
   [
     {
-      "Contract": "DVNOptions",
-      "Error": "DVN_InvalidDVNIdx()",
-      "Signature": "0xd3d3d9bc",
-    },
-    {
-      "Contract": "DVNOptions",
-      "Error": "DVN_InvalidDVNOptions(uint256)",
-      "Signature": "0x04eb6e0c",
-    },
-    {
       "Contract": "OApp",
       "Error": "InvalidDelegate()",
       "Signature": "0xb5863604",
@@ -1421,91 +1336,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OAppSender",
       "Error": "OwnableUnauthorizedAccount(address)",
       "Signature": "0x118cdaa7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "AddressEmptyCode(address)",
-      "Signature": "0x9996b315",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "AddressInsufficientBalance(address)",
-      "Signature": "0xcd786059",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "FailedInnerCall()",
-      "Signature": "0x1425ea42",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidDelegate()",
-      "Signature": "0xb5863604",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidEndpointCall()",
-      "Signature": "0x0fbdec0a",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "LzTokenUnavailable()",
-      "Signature": "0x5373352a",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "NoPeer(uint32)",
-      "Signature": "0xf6ff4fb7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "NotEnoughNative(uint256)",
-      "Signature": "0x9f704120",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "OnlyEndpoint(address)",
-      "Signature": "0x91ac5e4f",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "OnlyPeer(uint32,bytes32)",
-      "Signature": "0xc26bebcc",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "OnlySelf()",
-      "Signature": "0x14d4a4e8",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "OwnableUnauthorizedAccount(address)",
-      "Signature": "0x118cdaa7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
-      "Signature": "0x6dfcc650",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "SafeERC20FailedOperation(address)",
-      "Signature": "0x5274afe7",
-    },
-    {
-      "Contract": "OmniCounterAbstract",
-      "Error": "SimulationResult(bytes)",
-      "Signature": "0x8351eea7",
     },
     {
       "Contract": "IOAppCore",
@@ -1548,106 +1378,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x118cdaa7",
     },
     {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidOptionType(uint16)",
-      "Signature": "0x3a51740d",
-    },
-    {
-      "Contract": "OptionsBuilder",
-      "Error": "InvalidSize(uint256,uint256)",
-      "Signature": "0x3256c04c",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-      "Signature": "0x14d4a4e8",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OwnableInvalidOwner(address)",
-      "Signature": "0x1e4fbdf7",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "OwnableUnauthorizedAccount(address)",
-      "Signature": "0x118cdaa7",
-    },
-    {
-      "Contract": "OAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-      "Signature": "0x8351eea7",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "OnlySelf()",
-      "Signature": "0x14d4a4e8",
-    },
-    {
-      "Contract": "IOAppPreCrimeSimulator",
-      "Error": "SimulationResult(bytes)",
-      "Signature": "0x8351eea7",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "CrimeFound(bytes)",
-      "Signature": "0x19159757",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "InvalidSimulationResult(uint32,bytes)",
-      "Signature": "0x572e17ee",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "OnlyOffChain()",
-      "Signature": "0x9cbfe066",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketOversize(uint256,uint256)",
-      "Signature": "0x9db08605",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "PacketUnsorted()",
-      "Signature": "0x50823c85",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationFailed(bytes)",
-      "Signature": "0x614cbd8a",
-    },
-    {
-      "Contract": "IPreCrime",
-      "Error": "SimulationResultNotFound(uint32)",
-      "Signature": "0x01992f2a",
-    },
-    {
-      "Contract": "AddressCast",
-      "Error": "AddressCast_InvalidAddress()",
-      "Signature": "0x6281faa2",
-    },
-    {
-      "Contract": "AddressCast",
-      "Error": "AddressCast_InvalidSizeForAddress()",
-      "Signature": "0x18456c9b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzComposeOption()",
-      "Signature": "0x8b4aa70b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzReceiveOption()",
-      "Signature": "0x4796aee1",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
-    },
-    {
       "Contract": "Ownable",
       "Error": "OwnableInvalidOwner(address)",
       "Signature": "0x1e4fbdf7",
@@ -1681,26 +1411,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "Address",
       "Error": "FailedInnerCall()",
       "Signature": "0x1425ea42",
-    },
-    {
-      "Contract": "SafeCast",
-      "Error": "SafeCastOverflowedIntDowncast(uint8,int256)",
-      "Signature": "0x327269a7",
-    },
-    {
-      "Contract": "SafeCast",
-      "Error": "SafeCastOverflowedIntToUint(int256)",
-      "Signature": "0xa8ce4432",
-    },
-    {
-      "Contract": "SafeCast",
-      "Error": "SafeCastOverflowedUintDowncast(uint8,uint256)",
-      "Signature": "0x6dfcc650",
-    },
-    {
-      "Contract": "SafeCast",
-      "Error": "SafeCastOverflowedUintToInt(uint256)",
-      "Signature": "0x24775e06",
     },
     {
       "Contract": "DefaultOApp",
