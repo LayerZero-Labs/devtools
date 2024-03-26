@@ -1,4 +1,11 @@
-import type { OmniAddress, OmniGraph, Factory, OmniTransaction, IOmniSDK, OmniPoint } from '@layerzerolabs/devtools'
+import type {
+    OmniAddress,
+    OmniGraph,
+    OmniTransaction,
+    IOmniSDK,
+    OmniPoint,
+    OmniSDKFactory,
+} from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IUln302 extends IOmniSDK {
@@ -115,4 +122,7 @@ export interface Uln302NodeConfig {
 
 export type Uln302OmniGraph = OmniGraph<Uln302NodeConfig, unknown>
 
-export type Uln302Factory<TUln302 extends IUln302 = IUln302, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TUln302>
+export type Uln302Factory<TUln302 extends IUln302 = IUln302, TOmniPoint = OmniPoint> = OmniSDKFactory<
+    TUln302,
+    TOmniPoint
+>

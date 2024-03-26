@@ -1,4 +1,4 @@
-import type { Factory, IOmniSDK, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import type { IOmniSDK, OmniGraph, OmniPoint, OmniSDKFactory, OmniTransaction } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IPriceFeed extends IOmniSDK {
@@ -18,7 +18,7 @@ export interface PriceFeedEdgeConfig {
 
 export type PriceFeedOmniGraph = OmniGraph<unknown, PriceFeedEdgeConfig>
 
-export type PriceFeedFactory<TPriceFeed extends IPriceFeed = IPriceFeed, TOmniPoint = OmniPoint> = Factory<
-    [TOmniPoint],
-    TPriceFeed
+export type PriceFeedFactory<TPriceFeed extends IPriceFeed = IPriceFeed, TOmniPoint = OmniPoint> = OmniSDKFactory<
+    TPriceFeed,
+    TOmniPoint
 >

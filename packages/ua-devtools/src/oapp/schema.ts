@@ -8,11 +8,13 @@ import {
     ExecutorOrderedExecutionOption,
     OAppEdgeConfig,
     OAppEnforcedOption,
+    OAppNodeConfig,
     OAppReceiveConfig,
     OAppReceiveLibraryConfig,
     OAppSendConfig,
 } from './types'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import { OwnableNodeConfigSchema } from '@/ownable/schema'
 
 export const OAppReceiveLibraryConfigSchema = z.object({
     gracePeriod: UIntBigIntSchema,
@@ -68,6 +70,8 @@ export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionConfigSchema)
     unknown
 >
 
+export const OAppNodeConfigSchema = OwnableNodeConfigSchema satisfies z.ZodSchema<OAppNodeConfig, z.ZodTypeDef, unknown>
+
 export const OAppEdgeConfigSchema = z
     .object({
         sendLibrary: AddressSchema,
@@ -77,4 +81,5 @@ export const OAppEdgeConfigSchema = z
         receiveConfig: OAppReceiveConfigSchema,
         enforcedOptions: OAppEnforcedOptionsSchema,
     })
+    .passthrough()
     .partial() satisfies z.ZodSchema<OAppEdgeConfig, z.ZodTypeDef, unknown>

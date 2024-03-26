@@ -1,4 +1,11 @@
-import type { Factory, IOmniSDK, OmniAddress, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import type {
+    IOmniSDK,
+    OmniAddress,
+    OmniGraph,
+    OmniPoint,
+    OmniSDKFactory,
+    OmniTransaction,
+} from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface ILzApp extends IOmniSDK {
@@ -9,4 +16,4 @@ export interface ILzApp extends IOmniSDK {
 
 export type LzAppOmniGraph = OmniGraph<unknown, unknown>
 
-export type LzAppFactory<TLzApp extends ILzApp = ILzApp, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TLzApp>
+export type LzAppFactory<TLzApp extends ILzApp = ILzApp, TOmniPoint = OmniPoint> = OmniSDKFactory<TLzApp, TOmniPoint>
