@@ -14,6 +14,7 @@ import {
     SUBTASK_LZ_SIGN_AND_SEND,
     createConnectedContractFactory,
     createSignerFactory,
+    createGnosisSignerFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
@@ -27,10 +28,12 @@ interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
+    safe?: boolean
+    signer?: string
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false },
+    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -71,11 +74,15 @@ const action: ActionType<TaskArgs> = async (
             `There are ${transactions.length} transactions required to transfer the ownership`
         )
     )
-    // Now sign & send the transactions
+
+    // Now let's create the signer
+    const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
+
+    // And sign & send the transactions
     const signAndSendResult: SignAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
         transactions,
         ci,
-        createSigner: createSignerFactory(),
+        createSigner,
     } satisfies SignAndSendTaskArgs)
 
     // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
@@ -91,3 +98,5 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP, 'Transfer ownable contract ownership', 
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
+    .addFlag('safe', 'Use gnosis safe to sign transactions')
+    .addParam('signer', 'Index or address of signer', undefined, types.signer, true)

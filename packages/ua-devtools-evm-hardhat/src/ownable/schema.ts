@@ -11,7 +11,7 @@ import { OwnableNodeConfigSchema } from '@layerzerolabs/ua-devtools'
  * Validation schema for Ownable configs in hardhat environment.
  *
  * Produces an `OwnableOmniGraphHardhat` after successful parsing
- * the user input.
+ * of the user input.
  */
 export const OwnableOmniGraphHardhatSchema = createOmniGraphHardhatSchema(
     createOmniNodeHardhatSchema(OwnableNodeConfigSchema),
