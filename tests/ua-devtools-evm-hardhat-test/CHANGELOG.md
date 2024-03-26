@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.2
+
+### Patch Changes
+
+- ac40cb2: Adding lz:ownable:transfer-ownership hardhat task
+- ea92ae1: Add ownable functionality to OApp
+
 ## 0.2.1
 
 ### Patch Changes
