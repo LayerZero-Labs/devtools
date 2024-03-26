@@ -50,13 +50,13 @@ const action: ActionType<TaskArgs> = async (
     )
 
     // At this point we are ready to create the list of transactions
-    logger.verbose(`Creating a list of ownerhip transferring transactions`)
+    logger.verbose(`Creating a list of ownership transferring transactions`)
 
     const createSdk = createOwnableFactory(createOAppFactory(createConnectedContractFactory()))
     const transactions = await configureOwnable(graph, createSdk)
 
     // Flood users with debug output
-    logger.verbose(`Created a list of ownerhip transferring transactions`)
+    logger.verbose(`Created a list of ownership transferring transactions`)
     logger.debug(`Following transactions are necessary:\n\n${printJson(transactions)}`)
 
     // If there are no transactions that need to be executed, we'll just exit
