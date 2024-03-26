@@ -1,4 +1,4 @@
-import type { Factory, IOmniSDK, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import type { IOmniSDK, OmniGraph, OmniPoint, OmniSDKFactory, OmniTransaction } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IDVN extends IOmniSDK {
@@ -18,4 +18,4 @@ export interface DVNEdgeConfig {
 
 export type DVNOmniGraph = OmniGraph<unknown, DVNEdgeConfig>
 
-export type DVNFactory<TDVN extends IDVN = IDVN, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TDVN>
+export type DVNFactory<TDVN extends IDVN = IDVN, TOmniPoint = OmniPoint> = OmniSDKFactory<TDVN, TOmniPoint>
