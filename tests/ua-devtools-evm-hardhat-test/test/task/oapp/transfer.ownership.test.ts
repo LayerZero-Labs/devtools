@@ -2,10 +2,9 @@ import hre from 'hardhat'
 import { isFile, promptToContinue } from '@layerzerolabs/io-devtools'
 import { join, relative } from 'path'
 import { TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { deployOApp } from '../../__utils__/oapp'
 import { cwd } from 'process'
 import { JsonRpcSigner } from '@ethersproject/providers'
-import { deployAndSetupDefaultEndpointV2 } from '../../__utils__/endpointV2'
+import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -35,7 +34,8 @@ describe(`task ${TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP}`, () => {
     }
 
     beforeAll(async () => {
-        await deployAndSetupDefaultEndpointV2()
+        await deployContract('EndpointV2')
+        await setupDefaultEndpointV2()
     })
 
     beforeEach(async () => {
@@ -44,7 +44,7 @@ describe(`task ${TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP}`, () => {
 
     describe('with valid configs', () => {
         beforeEach(async () => {
-            await deployOApp()
+            await deployContract('OApp')
         })
 
         it('should exit if there is nothing to transfer', async () => {
