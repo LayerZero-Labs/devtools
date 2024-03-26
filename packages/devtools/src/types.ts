@@ -48,7 +48,7 @@ export type EndpointBasedFactory<TValue> = Factory<[eid: EndpointId], TValue>
  * ```
  */
 type GetMandatoryKeys<T> = {
-    [P in keyof T]: T[P] extends Exclude<T[P], NonNullable<unknown> | null> ? never : P
+    [P in keyof T]: T[P] extends Exclude<T[P], NonNullable<unknown> | null> ? never : undefined extends T[P] ? never : P
 }[keyof T]
 
 /**
