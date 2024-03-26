@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utilities for working with LayerZero protocol contracts",
   "repository": {
     "type": "git",
@@ -32,7 +32,7 @@
     "test": "jest --ci"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.0",
+    "@layerzerolabs/devtools": "~0.3.1",
     "@layerzerolabs/lz-definitions": "~2.1.23",
     "@layerzerolabs/test-devtools": "~0.2.0",
     "@swc/core": "^1.4.0",
@@ -47,7 +47,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.3.0",
+    "@layerzerolabs/devtools": "~0.3.1",
     "@layerzerolabs/lz-definitions": "~2.1.15",
     "zod": "^3.22.4"
   },

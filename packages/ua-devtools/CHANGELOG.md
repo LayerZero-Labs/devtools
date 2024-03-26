@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.1
+
+### Patch Changes
+
+- ea92ae1: Add ownable functionality to OApp
+- 9e39908: Clean up OApp & Ownable types; Add OAppNodeSchema
+- Updated dependencies [ea92ae1]
+- Updated dependencies [9e39908]
+  - @layerzerolabs/devtools@0.3.1
+  - @layerzerolabs/protocol-devtools@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes
