@@ -10,3 +10,5 @@ export const TASK_LZ_OAPP_ENFORCED_OPTS_GET = 'lz:oapp:enforced-opts:get'
 export const TASK_LZ_OAPP_CONFIG_INIT = 'lz:oapp:config:init'
 
 export const SUBTASK_LZ_OAPP_WIRE_CONFIGURE = '::lz:oapp:wire:configure'
+
+export const TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP = 'lz:ownable:transfer-ownership'
