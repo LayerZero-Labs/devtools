@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
                 // so that the accounts the projects uses do not overlap with other projects
                 //
                 // This will ensure that there are no nonce race conditions when running the tests in parallel
-                count: 40,
+                count: 50,
             },
         },
     },
