@@ -63,7 +63,7 @@ jobs:
         uses: ./.github/workflows/actions/setup-build-cache
 
       - name: Test
-        run: pnpm test:local
+        run: pnpm test:ci
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
