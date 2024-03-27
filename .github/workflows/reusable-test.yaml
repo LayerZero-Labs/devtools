@@ -118,6 +118,9 @@ jobs:
     name: Check spelling
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
