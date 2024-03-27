@@ -54,7 +54,9 @@ RUN apk add --no-cache \
     expect \
     # Add docker for the tests that interact with docker CLI
     docker \
-    docker-cli-compose
+    docker-cli-compose \
+    # Add make for toolbox-foundry
+    make
 
 # Install foundry
 COPY --from=foundry /usr/local/bin/forge /usr/local/bin/forge
