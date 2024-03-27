@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.2
+
+### Patch Changes
+
+- a6f2fef: Re-export useful types from toolbox-hardhat
+
 ## 0.3.1
 
 ### Patch Changes
