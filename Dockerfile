@@ -24,6 +24,8 @@ ARG BASE_IMAGE=ghcr.io/layerzero-labs/devtools-dev-base:main
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM node:$NODE_VERSION as base
 
+WORKDIR /app
+
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
