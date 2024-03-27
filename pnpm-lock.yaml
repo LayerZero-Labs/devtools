@@ -119,7 +119,7 @@ importers:
         specifier: ~0.1.2
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.2.0
+        specifier: ~0.2.2
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -218,7 +218,7 @@ importers:
         specifier: ~0.1.2
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.2.0
+        specifier: ~0.2.2
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1125,7 +1125,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.1
+        specifier: ~0.3.2
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.0
@@ -1164,7 +1164,7 @@ importers:
         specifier: ~0.3.1
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.3.2
+        specifier: ~0.3.3
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -1368,7 +1368,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.1
+        specifier: ~0.3.2
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.1

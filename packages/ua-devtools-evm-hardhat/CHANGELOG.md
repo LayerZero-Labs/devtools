@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.3
+
+### Patch Changes
+
+- a6f2fef: Re-export useful types from toolbox-hardhat
+- Updated dependencies [a6f2fef]
+  - @layerzerolabs/devtools@0.3.2
+
 ## 0.3.2
 
 ### Patch Changes
