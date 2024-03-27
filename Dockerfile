@@ -11,6 +11,18 @@
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
 ARG NODE_VERSION=20.10.0
+ARG FOUNDRY_VERSION=nightly-b174c3a4f80938636f18b3c9e49d45e6643f64a9
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#                        Library images
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM ghcr.io/foundry-rs/foundry:$FOUNDRY_VERSION as foundry
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -21,29 +33,30 @@ ARG NODE_VERSION=20.10.0
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION as base
+FROM node:$NODE_VERSION-alpine AS base
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 
-# Update the system packages
-RUN apt-get update
+# Update system packages
+RUN apk update --no-cache
+RUN apk upgrade --no-cache
 
-# Add required packages
-RUN apt-get install --yes \
+# Required system packages
+RUN apk add --no-cache \
+    curl \
     # expect is a utility that can be used to test CLI scripts
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
-    expect
+    expect \
+    # Add docker for the tests that interact with docker CLI
+    docker \
+    docker-cli-compose
 
 # Install foundry
-RUN curl -L https://foundry.paradigm.xyz | bash
-RUN foundryup
-
-# Install docker
-RUN curl -sSL https://get.docker.com/ | sh
+COPY --from=foundry /usr/local/bin/forge /usr/local/bin/forge
 
 # Enable corepack, new node package manager manager
 # 
@@ -53,11 +66,7 @@ RUN corepack enable
 # Output versions
 RUN node -v
 RUN pnpm -v
-RUN git --version
 RUN forge --version
-RUN anvil --version
-RUN chisel --version
-RUN cast --version
 RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -94,6 +103,3 @@ RUN \
     --mount=type=cache,id=pnpm-store,target=/pnpm \
     # Install dependencies (fail if we forgot to update the lockfile)
     pnpm install --recursive --offline --frozen-lockfile
-
-# We do this to avoid issues with native bindings not being built
-RUN pnpm rebuild --recursive
