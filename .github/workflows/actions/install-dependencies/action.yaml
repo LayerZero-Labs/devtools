@@ -3,17 +3,7 @@ description: Install everything we need to build this repo
 runs:
   using: "composite"
   steps:
-    # Fetch the dependencies without running the post-install scripts
-    - name: Fetch Dependencies
-      shell: bash
-      run: pnpm fetch --frozen-lockfile --prefer-offline --ignore-scripts
-
     # Install the dependencies and run the post-install scripts
     - name: Install Dependencies
       shell: bash
       run: pnpm install --frozen-lockfile --offline
-
-    # Rebuild native bindings
-    - name: Rebuild NPM packages
-      shell: bash
-      run: pnpm rebuild --recursive
