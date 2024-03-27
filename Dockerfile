@@ -46,6 +46,7 @@ RUN apk upgrade --no-cache
 
 # Required system packages
 RUN apk add --no-cache \
+    bash \
     curl \
     # expect is a utility that can be used to test CLI scripts
     # 
