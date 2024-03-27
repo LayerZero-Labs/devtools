@@ -11,6 +11,7 @@
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
 ARG NODE_VERSION=20.10.0
+ARG BASE_IMAGE=ghcr.io/layerzero-labs/devtools-dev-base:main
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -69,7 +70,7 @@ RUN docker compose version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM base as development
+FROM $BASE_IMAGE as development
 
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
