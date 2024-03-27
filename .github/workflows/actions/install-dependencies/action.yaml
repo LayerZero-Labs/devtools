@@ -6,4 +6,4 @@ runs:
     # Install the dependencies and run the post-install scripts
     - name: Install Dependencies
       shell: bash
-      run: pnpm install --frozen-lockfile --offline
+      run: pnpm install --frozen-lockfile --prefer-offline
