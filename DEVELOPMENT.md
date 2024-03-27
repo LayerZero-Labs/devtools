@@ -115,8 +115,8 @@ pnpm test:local
 
 In the local mode the environment sets up two `hardhat` nodes accessible from the host machine:
 
-- `http://localhost:10001`
-- `http://localhost:10002`
+- `http://127.0.0.1:10001`
+- `http://127.0.0.1:10002`
 
 The accounts on these networks are funded based on the `MNEMONIC` environment variable that is set based on the `.env` file.
 

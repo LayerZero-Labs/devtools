@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
             // If these are not specified, exposed networks are used
             //
             // See root README.md for usage with exposed network
-            url: process.env.NETWORK_URL_VENGABOYS ?? 'http://localhost:10001',
+            url: process.env.NETWORK_URL_VENGABOYS ?? 'http://127.0.0.1:10001',
             accounts: {
                 mnemonic: MNEMONIC,
                 // We'll offset the initial index for the accounts by 10
@@ -44,7 +44,7 @@ const config: HardhatUserConfig = {
             // If these are not specified, exposed networks are used
             //
             // See root README.md for usage with exposed network
-            url: process.env.NETWORK_URL_BRITNEY ?? 'http://localhost:10002',
+            url: process.env.NETWORK_URL_BRITNEY ?? 'http://127.0.0.1:10002',
             accounts: {
                 mnemonic: MNEMONIC,
                 // We'll offset the initial index for the accounts by 10
@@ -61,7 +61,7 @@ const config: HardhatUserConfig = {
             // If these are not specified, exposed networks are used
             //
             // See root README.md for usage with exposed network
-            url: process.env.NETWORK_URL_TANGO ?? 'http://localhost:10003',
+            url: process.env.NETWORK_URL_TANGO ?? 'http://127.0.0.1:10003',
             accounts: {
                 mnemonic: MNEMONIC,
                 // We'll offset the initial index for the accounts by 10
