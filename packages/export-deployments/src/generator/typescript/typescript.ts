@@ -88,7 +88,7 @@ const createJSONSourceFileSafe = E.tryCatchK(
 export const runtimeObjectToExpressionSafe = flow(
     // The first step is to JSON-serialize the object
     stringify,
-    // This step just converts the unknown exception we migth have gotten
+    // This step just converts the unknown exception we might have gotten
     // in the previous step to an Error instance
     E.mapLeft(E.toError),
 

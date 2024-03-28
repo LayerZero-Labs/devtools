@@ -30,8 +30,8 @@ export const parseNetworksConfig = (
 Please provide the API URL:
 
 - As an apiUrl config parameter in ${networkName} config
-- As a SCAN_API_URL_${networkName} enviornment variable
-- As a SCAN_API_URL_${normalizeNetworkName(networkName)} enviornment variable
+- As a SCAN_API_URL_${networkName} environment variable
+- As a SCAN_API_URL_${normalizeNetworkName(networkName)} environment variable
 `
         )
 
@@ -43,8 +43,8 @@ Please provide the API URL:
 Please provide the API key:
 
 - As an apiKey config parameter in ${networkName} config
-- As a SCAN_API_KEY_${networkName} enviornment variable
-- As a SCAN_API_KEY_${normalizeNetworkName(networkName)} enviornment variable`)
+- As a SCAN_API_KEY_${networkName} environment variable
+- As a SCAN_API_KEY_${normalizeNetworkName(networkName)} environment variable`)
         }
 
         // Similar thing goes for scan browser URL, if not provided then life goes on
@@ -60,8 +60,8 @@ Please provide the API key:
   Please provide the browser URL:
   
   - As an browserUrl config parameter in ${networkName} config
-  - As a SCAN_BROWSER_URL_${networkName} enviornment variable
-  - As a SCAN_BROWSER_URL_${normalizeNetworkName(networkName)} enviornment variable`)
+  - As a SCAN_BROWSER_URL_${networkName} environment variable
+  - As a SCAN_BROWSER_URL_${normalizeNetworkName(networkName)} environment variable`)
         }
 
         return {

@@ -19,7 +19,7 @@ const resolvePackageDirectory = (packageName: string): string => {
 }
 
 /**
- * Helper utility that adds external deployment paths for all LayzerZero enabled networks.
+ * Helper utility that adds external deployment paths for all LayerZero enabled networks.
  * This will make LayerZero contracts available in your deploy scripts and tasks.
  *
  * ```

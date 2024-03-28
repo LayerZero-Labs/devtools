@@ -70,7 +70,7 @@ export const getDefaultRuntimeEnvironment = (): HardhatRuntimeEnvironment => {
  * ```typescript
  * const env = getHreByNetworkName("bsc-testnet");
  *
- * // All the ususal properties are present
+ * // All the usual properties are present
  * env.deployments.get("MyContract")
  * ```
  *
@@ -81,7 +81,7 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
     const environment = getDefaultRuntimeEnvironment()
 
     try {
-        // The last step is to create a duplicate enviornment that mimics the original one
+        // The last step is to create a duplicate environment that mimics the original one
         // with one crucial difference - the network setup
         return new HardhatRuntimeEnvironmentImplementation(
             environment.config,
@@ -95,7 +95,7 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
             context.experimentalHardhatNetworkMessageTraceHooks,
             environment.userConfig,
             context.providerExtenders
-            // This is a bit annoying - the environmentExtenders are not stronly typed
+            // This is a bit annoying - the environmentExtenders are not strongly typed
             // so TypeScript complains that the properties required by HardhatRuntimeEnvironment
             // are not present on HardhatRuntimeEnvironmentImplementation
         ) as unknown as HardhatRuntimeEnvironment
@@ -112,7 +112,7 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
  * const getHreByEid = createGetHreByEid()
  * const env = await getHreByEid(EndpointId.AVALANCHE_V2_TESTNET);
  *
- * // All the ususal properties are present
+ * // All the usual properties are present
  * env.deployments.get("MyContract")
  * ```
  *
@@ -221,7 +221,7 @@ export const getEidsByNetworkName = memoize(
         // the number of defined network names (since network names are taken from the keys
         // of an object and endpoint IDs from its values)
         //
-        // To let the user know whihc networks to fix, we need to grab all the ones that
+        // To let the user know which networks to fix, we need to grab all the ones that
         // have been duplicated
         //
         // We are not claiming any efficiency of this algorithm as we don't expect any large numbers of networks

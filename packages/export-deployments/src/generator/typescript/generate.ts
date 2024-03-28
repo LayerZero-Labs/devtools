@@ -134,7 +134,7 @@ const transformGroupedContractInformation = ({ addresses, abis, transactionHashe
                         runtimeObjectToExpressionSafe,
                         // Add "as const" to the exported ABIs
                         //
-                        // This is very useful for e.g. viem that infers a lot of the information
+                        // This is very useful for e.g. view that infers a lot of the information
                         // based on the shape of the ABI
                         E.map(creteAsConst),
                         E.map(createConst()(createAbiIdentifier(index)))

@@ -128,7 +128,7 @@ const createContractDecoder =
     }
 
 /**
- * Helper function that traverses an unknown error and agthers all the fields
+ * Helper function that traverses an unknown error and gathers all the fields
  * that could possibly contain the revert data.
  *
  * The results are order from the most specific one to the least specific one

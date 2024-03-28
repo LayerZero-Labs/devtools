@@ -60,7 +60,7 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
 
     // The last step is to execute those transactions
     //
-    // For now we are only allowing sign & send using the accounts confgiured in hardhat config
+    // For now we are only allowing sign & send using the accounts configured in hardhat config
     const signAndSend = createSignAndSend(createSigner)
 
     // We'll use these variables to store the state of signing
@@ -105,7 +105,7 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
         //
         // We'll append the successful transactions
         successfulTransactions = [...successfulTransactions, ...successfulBatch]
-        // Overwrite the errrors
+        // Overwrite the errors
         //
         // We might in future return the error history but for now the last errors are okay
         errors = errorsBatch
@@ -126,7 +126,7 @@ const action: ActionType<SignAndSendTaskArgs> = async ({
             )
         )
 
-        // If there are no errors, we break out of the loop immediatelly
+        // If there are no errors, we break out of the loop immediately
         if (errors.length === 0) {
             logger.info(`${printBoolean(true)} Your OApp is now configured`)
 

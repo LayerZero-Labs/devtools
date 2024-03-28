@@ -29,7 +29,7 @@ export const getTestHre = (args: Partial<HardhatArguments>): HardhatRuntimeEnvir
         context.experimentalHardhatNetworkMessageTraceHooks,
         userConfig,
         context.providerExtenders
-        // This is a bit annoying - the environmentExtenders are not stronly typed
+        // This is a bit annoying - the environmentExtenders are not strongly typed
         // so TypeScript complains that the properties required by HardhatRuntimeEnvironment
         // are not present on HardhatRuntimeEnvironmentImplementation
     ) as unknown as HardhatRuntimeEnvironment

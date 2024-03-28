@@ -14,7 +14,7 @@ This package requires `make` CLI utility to be available. Make sure that `make` 
 make --help
 ```
 
-On MacOS, `make` is installed as a aprt of the XCode developer tools. On unix operating systems, `make` can be installed by adding the `build-essential` package:
+On MacOS, `make` is installed as a apart of the XCode developer tools. On unix operating systems, `make` can be installed by adding the `build-essential` package:
 
 ```bash
 # On Debian
