@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.15
+
+### Patch Changes
+
+- c09680a: Update @LayerZero-Labs dependencies to 2.1.25
+
 ## 1.1.14
 
 ### Patch Changes
