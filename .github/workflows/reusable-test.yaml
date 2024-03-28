@@ -128,4 +128,4 @@ jobs:
         uses: ./.github/workflows/actions/install-dependencies
 
       - name: Spell Check
-        run: cspell --config ./cspell.json
+        run: pnpm cspell --config ./cspell.json
