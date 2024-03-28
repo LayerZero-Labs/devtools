@@ -19,8 +19,8 @@
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/export-deployments": "~0.0.4",
-    "@layerzerolabs/io-devtools": "~0.1.5",
-    "@layerzerolabs/toolbox-hardhat": "~0.2.0",
+    "@layerzerolabs/io-devtools": "~0.1.6",
+    "@layerzerolabs/toolbox-hardhat": "~0.2.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.1",
