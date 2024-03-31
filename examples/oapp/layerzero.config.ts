@@ -1,21 +1,23 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-const sepoliaContract = {
+import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
+
+const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-const fujiContract = {
+const fujiContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-const mumbaiContract = {
+const mumbaiContract: OmniPointHardhat = {
     eid: EndpointId.POLYGON_V2_TESTNET,
     contractName: 'MyOApp',
 }
 
-export default {
+const config: OAppOmniGraphHardhat = {
     contracts: [
         {
             contract: fujiContract,
@@ -82,3 +84,5 @@ export default {
         },
     ],
 }
+
+export default config

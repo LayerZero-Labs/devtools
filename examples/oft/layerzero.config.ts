@@ -1,22 +1,23 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-const sepoliaContract = {
+import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
+
+const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
-const fujiContract = {
+const fujiContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
-const mumbaiContract = {
+const mumbaiContract: OmniPointHardhat = {
     eid: EndpointId.POLYGON_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
-export default {
+const config: OAppOmniGraphHardhat = {
     contracts: [
         {
             contract: fujiContract,
@@ -32,7 +33,6 @@ export default {
         {
             from: fujiContract,
             to: sepoliaContract,
-            config: {},
         },
         {
             from: fujiContract,
@@ -56,3 +56,5 @@ export default {
         },
     ],
 }
+
+export default config

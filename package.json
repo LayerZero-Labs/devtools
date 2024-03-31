@@ -10,6 +10,7 @@
     "lint:fix": "$npm_execpath turbo run lint:fix",
     "logs": "docker compose logs -f",
     "prepare": "husky install",
+    "prune": "git clean -dfX",
     "registry:logs": "docker compose -f docker-compose.registry.yaml logs -f",
     "registry:publish": "docker compose -f docker-compose.registry.yaml run --build --rm $DOCKER_COMPOSE_ARGS publish",
     "registry:start": "docker compose -f docker-compose.registry.yaml up npm-registry --wait $DOCKER_COMPOSE_ARGS",
@@ -37,7 +38,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@layerzerolabs/prettier-config-next": "^2.1.23",
+    "@layerzerolabs/prettier-config-next": "^2.1.25",
     "@types/node": "~18.18.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",

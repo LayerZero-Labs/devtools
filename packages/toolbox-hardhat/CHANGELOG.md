@@ -1,5 +1,28 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.2
+
+### Patch Changes
+
+- a6f2fef: Re-export useful types from toolbox-hardhat
+- Updated dependencies [a6f2fef]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.3
+  - @layerzerolabs/devtools@0.3.2
+
+## 0.2.1
+
+### Patch Changes
+
+- ac40cb2: Adding lz:ownable:transfer-ownership hardhat task
+- Updated dependencies [ac40cb2]
+- Updated dependencies [ea92ae1]
+- Updated dependencies [9e39908]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.2
+  - @layerzerolabs/ua-devtools-evm@0.3.1
+  - @layerzerolabs/ua-devtools@0.3.1
+  - @layerzerolabs/devtools@0.3.1
+  - @layerzerolabs/protocol-devtools@0.3.1
+
 ## 0.2.0
 
 ### Minor Changes

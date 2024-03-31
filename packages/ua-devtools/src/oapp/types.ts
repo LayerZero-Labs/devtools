@@ -2,18 +2,19 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Bytes,
-    Factory,
     IOmniSDK,
     OmniAddress,
     OmniGraph,
     OmniPoint,
+    OmniSDKFactory,
     OmniTransaction,
     OmniVector,
     PossiblyBigInt,
 } from '@layerzerolabs/devtools'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import type { IOwnable, OwnableNodeConfig } from '@/ownable/types'
 
-export interface IOApp extends IOmniSDK {
+export interface IOApp extends IOmniSDK, IOwnable {
     getEndpointSDK(): Promise<IEndpointV2>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
@@ -35,6 +36,8 @@ export interface OAppSendConfig {
 export interface OAppReceiveConfig {
     ulnConfig?: Uln302UlnUserConfig
 }
+
+export type OAppNodeConfig = OwnableNodeConfig
 
 export interface OAppEdgeConfig {
     sendLibrary?: string
@@ -101,6 +104,6 @@ export interface OAppEnforcedOptions {
     enforcedOptions: EncodedOption[]
 }
 
-export type OAppOmniGraph = OmniGraph<unknown, OAppEdgeConfig | undefined>
+export type OAppOmniGraph = OmniGraph<OAppNodeConfig | undefined, OAppEdgeConfig | undefined>
 
-export type OAppFactory<TOApp extends IOApp = IOApp, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TOApp>
+export type OAppFactory<TOApp extends IOApp = IOApp, TOmniPoint = OmniPoint> = OmniSDKFactory<TOApp, TOmniPoint>

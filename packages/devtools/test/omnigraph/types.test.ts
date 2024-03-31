@@ -12,6 +12,10 @@ describe('schema/types', () => {
             const node: OmniNode<unknown> = { point }
         })
 
+        it('should allow undefined config for a union', () => {
+            const node: OmniNode<number | undefined> = { point }
+        })
+
         it('should allow undefined config for undefined TConfig', () => {
             const node: OmniNode<undefined> = { point }
         })
@@ -74,6 +78,10 @@ describe('schema/types', () => {
 
         it('should allow undefined config for undefined TConfig', () => {
             const edge: OmniEdge<undefined> = { vector }
+        })
+
+        it('should allow undefined config for a union', () => {
+            const edge: OmniEdge<number | undefined> = { vector }
         })
 
         it('should not allow undefined config for null TConfig', () => {

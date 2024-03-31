@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools
 
+## 0.3.2
+
+### Patch Changes
+
+- a6f2fef: Re-export useful types from toolbox-hardhat
+
+## 0.3.1
+
+### Patch Changes
+
+- ea92ae1: Add ownable functionality to OApp
+
 ## 0.3.0
 
 ### Minor Changes
