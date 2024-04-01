@@ -39,8 +39,4 @@ services:
     extends:
       service: project
     build:
-      target: node-evm-hardhat
-    healthcheck:
-      interval: 2s
-      retries: 20
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
+      target: node-evm
