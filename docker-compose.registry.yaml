@@ -72,7 +72,7 @@ services:
   tests:
     build:
       context: .
-      target: base
+      target: ${DEVTOOLS_BASE_IMAGE:-base}
     depends_on:
       publish:
         condition: service_completed_successfully
