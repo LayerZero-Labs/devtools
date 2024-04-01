@@ -71,8 +71,9 @@ services:
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
   tests:
     build:
-      context: .
-      target: base
+      target: user
+      args:
+        BASE_IMAGE: ${DEVTOOLS_BASE_IMAGE:-base}
     depends_on:
       publish:
         condition: service_completed_successfully
