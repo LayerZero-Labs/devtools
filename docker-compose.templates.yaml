@@ -38,7 +38,8 @@ services:
   evm-node:
     extends:
       service: project
-    command: ["pnpm", "turbo", "start", "--filter", "test-evm-node"]
+    build:
+      target: node-evm-hardhat
     healthcheck:
       interval: 2s
       retries: 20

@@ -109,5 +109,54 @@ RUN \
     # Install dependencies (fail if we forgot to update the lockfile)
     pnpm install --recursive --offline --frozen-lockfile
 
-# We do this to avoid issues with native bindings not being built
-RUN pnpm rebuild --recursive
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#                 Image that builds an EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM development AS node-evm-hardhat-builder
+
+# Build the node
+RUN pnpm build --filter @layerzerolabs/test-evm-node
+
+# Isolate the project
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm \
+    pnpm --filter @layerzerolabs/test-evm-node deploy --prod /build
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#                 Image that runs an EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM node:$NODE_VERSION-alpine AS node-evm-hardhat
+
+WORKDIR /app
+
+# Update system packages
+RUN apk update
+# Install curl for healthcheck
+RUN apk add curl --no-cache
+
+# Get the built code
+# 
+# By default we'll get it from the dist folder
+# but for e.g. next we want to grab it from dist/.next/standalone
+COPY --from=node-evm-hardhat-builder /build /app
+
+# Enable corepack, new node package manager manager
+# 
+# See more here https://nodejs.org/api/corepack.html
+RUN corepack enable
+
+# Run the shit
+# 
+# This command uses pnpm workspace syntax since we don't have turbo available
+ENTRYPOINT pnpm start
