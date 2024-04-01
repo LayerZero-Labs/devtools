@@ -76,11 +76,11 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
-      # # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
-      # #
-      # # See more here https://github.com/docker/compose-cli/issues/1545
-      # - name: Pull base image
-      #   run: docker pull ghcr.io/layerzero-labs/devtools-dev-base:main
+      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      #
+      # See more here https://github.com/docker/compose-cli/issues/1545
+      - name: Pull base image
+        run: docker pull ghcr.io/layerzero-labs/devtools-dev-base:main
 
       - name: Test
         run: pnpm test:ci
