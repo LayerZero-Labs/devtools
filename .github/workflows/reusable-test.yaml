@@ -79,8 +79,8 @@ jobs:
       # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
       #
       # See more here https://github.com/docker/compose-cli/issues/1545
-      - name: Pull base image
-        run: docker pull ghcr.io/layerzero-labs/devtools-dev-base:main
+      - name: Authenticate to GHCR
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Test
         run: pnpm test:ci
