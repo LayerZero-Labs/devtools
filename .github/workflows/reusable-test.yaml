@@ -107,10 +107,6 @@ jobs:
       contents: read
       packages: read
 
-    # We'll run the job on the prebuilt base image
-    container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
