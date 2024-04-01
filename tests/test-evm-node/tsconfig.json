@@ -1,9 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "exclude": ["dist", "node_modules"],
-  "include": ["src", "*.config.ts"],
+  "include": ["hardhat.config.ts"],
   "compilerOptions": {
     "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
     "types": ["node"]
   }
 }

@@ -26,6 +26,12 @@ ARG NODE_VERSION=20.10.0
 # e.g. ghcr.io/layerzero-labs/devtools-dev-base:main
 ARG BASE_IMAGE=base
 
+# We will provide a way for consumers to override the default EVM node image
+# 
+# This will allow CI environments to supply the prebuilt EVM node image
+# while not breaking the flow for local development
+ARG EVM_NODE_IMAGE=node-evm-hardhat
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -109,5 +115,66 @@ RUN \
     # Install dependencies (fail if we forgot to update the lockfile)
     pnpm install --recursive --offline --frozen-lockfile
 
-# We do this to avoid issues with native bindings not being built
-RUN pnpm rebuild --recursive
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that builds a hardhat EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM development AS node-evm-hardhat-builder
+
+# Build the node
+RUN pnpm build --filter @layerzerolabs/test-evm-node
+
+# Isolate the project
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm \
+    pnpm --filter @layerzerolabs/test-evm-node deploy --prod /build
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that runs a hardhat EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM node:$NODE_VERSION-alpine AS node-evm-hardhat
+
+WORKDIR /app
+
+# Update system packages
+RUN apk update
+# Install curl for healthcheck
+RUN apk add curl --no-cache
+
+# Get the built code
+# 
+# By default we'll get it from the dist folder
+# but for e.g. next we want to grab it from dist/.next/standalone
+COPY --from=node-evm-hardhat-builder /build /app
+
+# Enable corepack, new node package manager manager
+# 
+# See more here https://nodejs.org/api/corepack.html
+RUN corepack enable
+
+# We want to keep the internals of the EVM node images encapsulated so we supply the healthcheckk as a part of the definition
+HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8545 || exit 1
+
+# Run the shit
+ENTRYPOINT pnpm start
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that runs a hardhat EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM $EVM_NODE_IMAGE AS node-evm

@@ -38,8 +38,5 @@ services:
   evm-node:
     extends:
       service: project
-    command: ["pnpm", "turbo", "start", "--filter", "test-evm-node"]
-    healthcheck:
-      interval: 2s
-      retries: 20
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8545/"]
+    build:
+      target: node-evm

@@ -9,12 +9,16 @@
     "directory": "tests/test-evm-node"
   },
   "license": "MIT",
+  "files": [
+    "./hardhat.config.ts",
+    "./tsconfig.json"
+  ],
   "scripts": {
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
   },
-  "devDependencies": {
+  "dependencies": {
     "hardhat": "^2.19.5",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
