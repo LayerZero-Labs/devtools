@@ -1858,25 +1858,25 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ~2.1.23
-        version: 2.1.23
+        version: 2.1.25
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ~2.1.23
-        version: 2.1.23(@axelar-network/axelar-gmp-sdk-solidity@5.6.4)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.1.23)(@layerzerolabs/lz-evm-v1-0.7@2.1.23)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
+        version: 2.1.25(@axelar-network/axelar-gmp-sdk-solidity@5.7.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.1.25)(@layerzerolabs/lz-evm-v1-0.7@2.1.25)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-oapp-v2':
         specifier: ~2.1.23
-        version: 2.1.23(@layerzerolabs/lz-evm-messagelib-v2@2.1.23)(@layerzerolabs/lz-evm-protocol-v2@2.1.23)(@layerzerolabs/lz-evm-v1-0.7@2.1.23)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
+        version: 2.1.25(@layerzerolabs/lz-evm-messagelib-v2@2.1.25)(@layerzerolabs/lz-evm-protocol-v2@2.1.25)(@layerzerolabs/lz-evm-v1-0.7@2.1.25)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ~2.1.23
-        version: 2.1.23(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
+        version: 2.1.25(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.2)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ~2.1.23
-        version: 2.1.23
+        version: 2.1.25
       '@layerzerolabs/lz-evm-sdk-v2':
         specifier: ~2.1.23
-        version: 2.1.23
+        version: 2.1.25
       '@layerzerolabs/lz-v2-utilities':
         specifier: ~2.1.23
-        version: 2.1.23
+        version: 2.1.25
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~0.3.0
         version: link:../../packages/omnicounter-devtools
@@ -8621,6 +8621,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
@@ -9558,7 +9559,7 @@ packages:
       ansi-escapes: 4.3.2
       boxen: 5.1.2
       chalk: 2.4.2
-      chokidar: 3.6.0
+      chokidar: 3.5.3
       ci-info: 2.0.0
       debug: 4.3.4(supports-color@8.1.1)
       enquirer: 2.4.1
