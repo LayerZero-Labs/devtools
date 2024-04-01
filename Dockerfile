@@ -12,6 +12,20 @@
 # so the code will still work on node 18.16.0
 ARG NODE_VERSION=20.10.0
 
+# We will allow consumers to override the default base image
+# 
+# This will allow CI environments to supply the prebuilt base image
+# while not breaking the flow for local development
+# 
+# Local development does not by default have access to GHCR and would require
+# an additonal step (docker login). While this step is easy, it is still nicer 
+# to provide a transiton period during which the local flow remains unchanged 
+# and the base image is built locally
+# 
+# The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:main
+ARG BASE_IMAGE=base
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -69,7 +83,7 @@ RUN docker compose version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM base as development
+FROM $BASE_IMAGE as development
 
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy

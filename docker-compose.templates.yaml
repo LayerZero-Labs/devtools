@@ -17,6 +17,13 @@ services:
   project:
     build:
       context: .
+      target: development
+      args:
+        # We'll provide a way to override the base image
+        # build argument using an environment variable
+        #
+        # This will allow Ci environments to override the base image easily
+        BASE_IMAGE: ${DEVTOOLS_BASE_IMAGE:-base}
     # We'll provide a single testing MNEMONIC for the project so that the test EVM nodes
     # account are in sync with the hardhat accounts
     environment:
