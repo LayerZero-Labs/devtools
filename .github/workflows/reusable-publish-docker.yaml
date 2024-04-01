@@ -2,12 +2,12 @@
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
 #
-#          Reusable workflow that publishes a base development docker image
+#          Reusable workflow that publishes base development docker images
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
-name: Build base development image
+name: Build base development images
 
 on:
   workflow_call:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   build:
-    name: Build base docker image
+    name: Build docker image
     runs-on: ubuntu-latest
 
     permissions:
