@@ -26,6 +26,14 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      matrix:
+        include:
+          - image: devtools-dev-base
+            target: base
+          - image: devtools-dev-node-evm-hardhat
+            target: node-evm-hardhat
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,7 +50,7 @@ jobs:
         uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
         with:
           images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/devtools-dev-base
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
           tags: |
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
@@ -58,7 +66,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          target: base
+          target: ${{ matrix.target }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
