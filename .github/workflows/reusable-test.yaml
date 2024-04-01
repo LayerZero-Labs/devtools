@@ -70,9 +70,6 @@ jobs:
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
-      - name: Install dependencies
-        uses: ./.github/workflows/actions/install-dependencies
-
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
@@ -110,10 +107,6 @@ jobs:
       contents: read
       packages: read
 
-    # We'll run the job on the prebuilt base image
-    container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -123,14 +116,19 @@ jobs:
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
-      - name: Install dependencies
-        uses: ./.github/workflows/actions/install-dependencies
+      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      #
+      # See more here https://github.com/docker/compose-cli/issues/1545
+      - name: Authenticate to GHCR
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Test
         run: pnpm test:user
         env:
           LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
+          # We'll use the prebuilt base image
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
