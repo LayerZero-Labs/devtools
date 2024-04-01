@@ -72,7 +72,7 @@ jobs:
           # in HOME folder and if it doesn't find one there it will create one
           #
           # Since we want to make sure it uses our .npmrc we'll just point it
-          # to our workspace root
-          HOME: ${{ github.workspace }}
+          # to our workspace root (which, in our container, is the /app directory)
+          HOME: /app
           GITHUB_TOKEN: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISHER }}
