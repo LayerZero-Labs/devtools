@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-example
 
+## 0.2.2
+
+### Patch Changes
+
+- c09680a: Update @LayerZero-Labs dependencies to 2.1.25
+- c09680a: Add eslint-plugin-jest-extended to examples
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.17
+
+### Patch Changes
+
+- c09680a: Update @LayerZero-Labs dependencies to 2.1.25
+
 ## 0.1.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.5
+
+### Patch Changes
+
+- c09680a: Update @LayerZero-Labs dependencies to 2.1.25
+
 ## 0.0.4
 
 ### Patch Changes
