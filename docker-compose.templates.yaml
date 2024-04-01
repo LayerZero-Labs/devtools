@@ -40,3 +40,5 @@ services:
       service: project
     build:
       target: node-evm
+      args:
+        EVM_NODE_IMAGE: ${DEVTOOLS_EVM_NODE_IMAGE:-node-evm-hardhat}

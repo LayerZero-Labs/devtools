@@ -129,6 +129,8 @@ jobs:
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
           DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          # And the prebuilt hardhat EVM node image
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
