@@ -22,6 +22,10 @@ jobs:
     name: Build & Lint
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: read
+
     # We'll run the job on the prebuilt base image
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
@@ -52,6 +56,11 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest-4xlarge
+
+    permissions:
+      contents: read
+      packages: read
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -67,11 +76,11 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
-      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
-      #
-      # See more here https://github.com/docker/compose-cli/issues/1545
-      - name: Pull base image
-        run: docker pull ghcr.io/layerzero-labs/devtools-dev-base:main
+      # # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      # #
+      # # See more here https://github.com/docker/compose-cli/issues/1545
+      # - name: Pull base image
+      #   run: docker pull ghcr.io/layerzero-labs/devtools-dev-base:main
 
       - name: Test
         run: pnpm test:ci
@@ -96,6 +105,10 @@ jobs:
   test-user:
     name: User test
     runs-on: ubuntu-latest-4xlarge
+
+    permissions:
+      contents: read
+      packages: read
 
     # We'll run the job on the prebuilt base image
     container:
