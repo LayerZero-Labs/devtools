@@ -43,6 +43,8 @@ ARG EVM_NODE_IMAGE=node-evm-hardhat
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM node:$NODE_VERSION as base
 
+WORKDIR /app
+
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV PATH "/root/.foundry/bin:$PATH"
