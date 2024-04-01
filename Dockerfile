@@ -113,7 +113,7 @@ RUN \
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#                 Image that builds an EVM node
+#              Image that builds a hardhat EVM node
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -131,7 +131,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm \
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#                 Image that runs an EVM node
+#              Image that runs a hardhat EVM node
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -157,6 +157,4 @@ COPY --from=node-evm-hardhat-builder /build /app
 RUN corepack enable
 
 # Run the shit
-# 
-# This command uses pnpm workspace syntax since we don't have turbo available
 ENTRYPOINT pnpm start
