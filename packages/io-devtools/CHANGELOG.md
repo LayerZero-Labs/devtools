@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.7
+
+### Patch Changes
+
+- 8a4addf: Replace cli-table3 with table
+
 ## 0.1.6
 
 ### Patch Changes
