@@ -63,6 +63,7 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
+          cwd: ${GITHUB_WORKSPACE}
           version: pnpm release:version
           publish: pnpm release:publish
           title: "🚀 Version packages"
