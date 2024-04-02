@@ -1,4 +1,4 @@
-import Table, { HorizontalAlignment, HorizontalTableRow } from 'cli-table3'
+import { ColumnUserConfig, getBorderCharacters, table } from 'table'
 import chalk from 'chalk'
 import type { ZodError } from 'zod'
 
@@ -65,17 +65,24 @@ export const printRecord = <TRecord extends object>(
     keyColor: Preprocess = COLORS.DEFAULT_KEY,
     valueColor: Preprocess = COLORS.DEFAULT_VALUE
 ): string => {
-    const table = new Table({
-        wordWrap: true,
-        wrapOnWordBoundary: false,
+    const rows = Object.entries(obj).map(([key, value]): string[] => [
+        keyColor(key),
+        printValue(value, keyColor, valueColor),
+    ])
+
+    if (title != null) {
+        rows.unshift([keyColor(String(title)), ''])
+    }
+
+    // The table library throws if there are no rows so we need to take care of that possibility
+    if (rows.length === 0) {
+        return ''
+    }
+
+    return table(rows, {
+        border: getBorderCharacters('norc'),
+        spanningCells: title == null ? undefined : [{ col: 0, row: 0, colSpan: 2 }],
     })
-
-    const headers: HorizontalTableRow[] = title == null ? [] : [[{ content: title, colSpan: 2 }]]
-    const rows = Object.entries(obj).map(
-        ([key, value]): HorizontalTableRow => [keyColor(key), printValue(value, keyColor, valueColor)]
-    )
-
-    return table.push(...headers, ...rows), table.toString()
 }
 
 /**
@@ -99,16 +106,12 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
     keyColor: Preprocess = COLORS.DEFAULT_KEY,
     valueColor: Preprocess = COLORS.DEFAULT_VALUE
 ): string => {
-    const table = new Table({
-        wordWrap: true,
-        wrapOnWordBoundary: false,
-    })
-
+    const columns: ColumnUserConfig[] = center
+        ? (['left', ...records.map(() => 'center')].map((alignment) => ({ alignment })) as ColumnUserConfig[])
+        : []
     // Set the colored headers if provided
-    const coloredHeaders = headers?.map((header) => keyColor(header)) ?? []
-    table.push(coloredHeaders)
-
-    table.options.colAligns = center ? (['left', ...records.map(() => 'center')] as HorizontalAlignment[]) : []
+    const headerRow: string[] = headers?.map((header) => keyColor(header)) ?? []
+    const rows: string[][] = [headerRow]
 
     // We'll gather all the properties of all the records in this array
     //
@@ -135,10 +138,10 @@ export const printCrossTable = <TRecord extends Record<string | number, unknown>
         const row = [keyColor(property), ...values]
 
         // And add to the table
-        table.push(row)
+        rows.push(row)
     }
 
-    return table.toString()
+    return table(rows, { border: getBorderCharacters('norc'), columns })
 }
 
 /**
