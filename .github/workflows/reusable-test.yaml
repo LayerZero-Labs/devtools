@@ -149,7 +149,7 @@ jobs:
           path: ./logs
 
   debug-publish:
-    name: Publish
+    name: Debug Publish
     runs-on: ubuntu-latest
 
     # We'll run the job on the prebuilt base image
@@ -186,8 +186,9 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
-          version: git status
-          publish: git status
+          cwd: ${GITHUB_WORKSPACE}
+          version: pnpm release:version
+          publish: pnpm release:publish
           title: "🚀 Version packages"
 
         env:
@@ -202,3 +203,4 @@ jobs:
           #
           # See more here https://github.com/actions/runner/issues/2058
           HOME: ${GITHUB_WORKSPACE}
+          GITHUB_TOKEN: INVALID
