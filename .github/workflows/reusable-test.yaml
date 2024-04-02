@@ -25,8 +25,6 @@ jobs:
     # We'll run the job on the prebuilt base image
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
-      volumes:
-        - "${{ github.workspace }}:/__w/devtools/devtools"
 
     steps:
       - name: Checkout repo
@@ -38,11 +36,11 @@ jobs:
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
-      - name: Install dependencies
-        uses: ./.github/workflows/actions/install-dependencies
+      # - name: Install dependencies
+      #   uses: ./.github/workflows/actions/install-dependencies
 
-      - name: Setup build cache
-        uses: ./.github/workflows/actions/setup-build-cache
+      # - name: Setup build cache
+      #   uses: ./.github/workflows/actions/setup-build-cache
 
       - name: Fix ownership
         run: git config --global --add safe.directory /__w/devtools/devtools
@@ -61,6 +59,7 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
+          cwd: /__w/devtools/devtools
           setupGitUser: false
           version: pnpm release:version
           publish: pnpm release:publish

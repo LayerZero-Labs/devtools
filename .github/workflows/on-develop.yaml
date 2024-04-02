@@ -13,6 +13,9 @@ name: Check code submission
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - "main-fixes"
 
 # We want the workflow to stop and yield to a new run if new code is pushed
 concurrency:
