@@ -252,7 +252,7 @@ describe('uln302/sdk', () => {
                     evmAddressArbitrary,
                     ulnConfigArbitrary,
                     async (eid, oapp, ulnConfig) => {
-                        // We only want to test againsts configs that are not
+                        // We only want to test against configs that are not
                         // equal to the default config
                         fc.pre(
                             ulnConfig.confirmations !== BigInt(0) ||

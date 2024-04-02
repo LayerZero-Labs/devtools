@@ -184,7 +184,7 @@
 
 ### Patch Changes
 
-- 0cce862: Fixed a problem with duplicate library registration when confgiuring Endpoint
+- 0cce862: Fixed a problem with duplicate library registration when configuring Endpoint
 - Updated dependencies [0cce862]
   - @layerzerolabs/devtools@0.0.3
 

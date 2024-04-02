@@ -45,7 +45,7 @@ git submodule update --init
 
 ### Setting up the environment
 
-This repository uses `pnpm` as its package manager and has a requirement on the minimum `node` version used. If using `nvm`, please run the following to setup the enviornment:
+This repository uses `pnpm` as its package manager and has a requirement on the minimum `node` version used. If using `nvm`, please run the following to setup the environment:
 
 ```bash
 # or nvm install if nvm use fails
@@ -218,7 +218,7 @@ pnpm stop
 E2E tests simulate user environment by publishing packages to a local NPM registry. They focus on ensuring that the examples we provide in this repository will work on user machines without interference of things such as:
 
 - Presence of code that is not published to NPM
-- Presence of NPM modules that are not included in package ependencies
+- Presence of NPM modules that are not included in package dependencies
 
 The user testing suite can be run as follows:
 
@@ -305,7 +305,7 @@ We use jest snapshots in a lot of places throughout the codebase. When an intent
 - Erase the original snapshot file and run the test. The snapshot will be recreated and the diff should only show your expected changes
 - Run the tests from within the affected package with `--updateSnapshot` flag. This will update the snapshots.
 
-For some packages the snapshot output depends on environment variables and other factors. For example the `io-devtools` tests for printers have different output based on whether the active shell is`TTY` orwhether the `CI` environment variable is set and non-empty.
+For some packages the snapshot output depends on environment variables and other factors. For example the `io-devtools` tests for printers have different output based on whether the active shell is`TTY` or whether the `CI` environment variable is set and non-empty.
 
 If you encounter errors when running these tests, just set the environment variable before running the test:
 

@@ -39,7 +39,7 @@ export const installDependencies = (config: Config) =>
 
         child.on('close', (code) => {
             switch (code) {
-                // The null case happens when the script receives a sigterm signall
+                // The null case happens when the script receives a sigterm signal
                 // (i.e. is cancelled by the user)
                 case null:
                     return reject(new Error(`Failed to install dependencies: Installation interrupted`))

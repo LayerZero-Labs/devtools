@@ -33,7 +33,7 @@ export const cloneExample = async ({ example, destination }: Config) => {
     })
 
     try {
-        // First we clone the whole proejct
+        // First we clone the whole project
         await emitter.clone(destination)
 
         logger.verbose(`Cloned example from ${url} to ${destination}`)

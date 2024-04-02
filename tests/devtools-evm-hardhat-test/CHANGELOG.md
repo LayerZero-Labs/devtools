@@ -78,7 +78,7 @@
 ### Patch Changes
 
 - 8227742: Update @layerzero-labs dependencies to 2.1.4
-- 3a438b1: Compile project before depolying in lz:deploy
+- 3a438b1: Compile project before deploying in lz:deploy
 
 ## 0.0.8
 
