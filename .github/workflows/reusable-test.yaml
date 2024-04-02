@@ -25,6 +25,7 @@ jobs:
     # We'll run the job on the prebuilt base image
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
+      options: --user root
 
     steps:
       - name: Checkout repo
@@ -43,10 +44,10 @@ jobs:
       #   uses: ./.github/workflows/actions/setup-build-cache
 
       - name: Fix ownership
-        run: git config --global --add safe.directory /__w/devtools/devtools
+        run: ls -al
 
-      - name: Fix ownership
-        run: chown -R root .
+      # - name: Fix ownership
+      #   run: chown -R root .
 
       # This step uses the changesets CLI to bump the package versions and/or publish the unpublished packages
       #
