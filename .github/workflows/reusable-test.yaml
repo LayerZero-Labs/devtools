@@ -44,6 +44,9 @@ jobs:
       - name: Setup build cache
         uses: ./.github/workflows/actions/setup-build-cache
 
+      - name: Debug filesystem
+        run: ls -al "${{ github.workspace }}"
+
       # This step uses the changesets CLI to bump the package versions and/or publish the unpublished packages
       #
       # How this works is:
@@ -58,6 +61,7 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
+          cwd: ${{ github.workspace }}
           version: pnpm release:version
           publish: pnpm release:publish
           title: "🚀 Version packages"
