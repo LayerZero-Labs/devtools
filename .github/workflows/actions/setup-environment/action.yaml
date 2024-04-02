@@ -11,7 +11,7 @@ runs:
     # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
     - name: Mark workspace directory as safe
       shell: bash
-      run: git config --global --add safe.directory $GITHUB_WORKSPACE
+      run: git config --global --add safe.directory $(realpath .)
 
     - uses: pnpm/action-setup@v2
       name: Install pnpm
