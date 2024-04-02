@@ -25,7 +25,6 @@ jobs:
     # We'll run the job on the prebuilt base image
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
-      options: --user root
 
     steps:
       - name: Checkout repo
@@ -63,8 +62,6 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
-          cwd: /__w/devtools/devtools
-          setupGitUser: false
           version: pnpm release:version
           publish: pnpm release:publish
           title: "🚀 Version packages"
