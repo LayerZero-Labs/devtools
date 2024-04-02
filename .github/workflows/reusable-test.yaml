@@ -26,7 +26,7 @@ jobs:
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
       volumes:
-        - "${{ github.workspace }}:${{ env.GITHUB_WORKSPACE }}"
+        - "${{ github.workspace }}:/__w/${{ github.repository }}/${{ github.repository }}"
 
     steps:
       - name: Checkout repo
