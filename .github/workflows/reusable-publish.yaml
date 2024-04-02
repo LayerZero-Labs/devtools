@@ -33,6 +33,16 @@ jobs:
           submodules: "true"
           token: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
 
+      # Workaround for dubious ownership problem inside a containerized workflow
+      #
+      # See https://github.com/actions/runner-images/issues/6775
+      #
+      # A possible solution to investigate is to use the 1001 user
+      # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+      - name: Transfer file ownership to the root user
+        shell: bash
+        run: chown -R root .
+
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
