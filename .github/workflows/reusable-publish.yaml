@@ -63,7 +63,6 @@ jobs:
       - name: Publish packages / create version bump PRs
         uses: changesets/action@v1
         with:
-          cwd: ${GITHUB_WORKSPACE}
           version: pnpm release:version
           publish: pnpm release:publish
           title: "🚀 Version packages"
@@ -75,10 +74,10 @@ jobs:
           # Since we want to make sure it uses our .npmrc we'll just point it
           # to our workspace root (which, in a workflow that uses a container, is put under __w directory)
           #
-          # Here we need to use the ${GITHUB_WORKSPACE} environment variable instead
-          # of the context value ${{ github.workspace }}
+          # Here we need to use the ${{ env.GITHUB_WORKSPACE }} environment variable instead
+          # of the github context value ${{ github.workspace }}
           #
           # See more here https://github.com/actions/runner/issues/2058
-          HOME: ${GITHUB_WORKSPACE}
+          HOME: ${{ env.GITHUB_WORKSPACE }}
           GITHUB_TOKEN: ${{ secrets.LAYERZERO_BOT_GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLISHER }}

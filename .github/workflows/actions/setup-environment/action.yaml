@@ -9,9 +9,9 @@ runs:
     #
     # A possible solution to investigate is to use the 1001 user
     # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
-    - name: Mark workspace directory as safe
+    - name: Transfer file ownership to the root user
       shell: bash
-      run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      run: chown -R root .
 
     - uses: pnpm/action-setup@v2
       name: Install pnpm
