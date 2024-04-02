@@ -45,7 +45,7 @@ jobs:
         uses: ./.github/workflows/actions/setup-build-cache
 
       - name: Fix ownership
-        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+        run: git config --global --add safe.directory /__w/devtools/devtools
 
       # This step uses the changesets CLI to bump the package versions and/or publish the unpublished packages
       #
