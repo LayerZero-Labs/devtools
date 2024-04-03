@@ -70,7 +70,9 @@ export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionConfigSchema)
     unknown
 >
 
-export const OAppNodeConfigSchema = OwnableNodeConfigSchema satisfies z.ZodSchema<OAppNodeConfig, z.ZodTypeDef, unknown>
+export const OAppNodeConfigSchema = OwnableNodeConfigSchema.extend({
+    delegate: AddressSchema.optional(),
+}) satisfies z.ZodSchema<OAppNodeConfig, z.ZodTypeDef, unknown>
 
 export const OAppEdgeConfigSchema = z
     .object({
