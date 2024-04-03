@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/io-devtools",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Utilities for working with I/O in LayerZero devtools",
   "repository": {
     "type": "git",
@@ -38,9 +38,9 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
-    "cli-table3": "^0.6.3",
     "logform": "^2.6.0",
     "prompts": "^2.4.2",
+    "table": "~6.8.2",
     "winston": "^3.11.0"
   },
   "devDependencies": {

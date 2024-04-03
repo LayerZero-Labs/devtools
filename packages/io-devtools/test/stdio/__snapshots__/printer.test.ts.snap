@@ -23,7 +23,8 @@ exports[`stdio/printer printRecord should return a list of items with indices fo
 │ 6 │ Symbol(oh hello) │
 ├───┼──────────────────┤
 │ 7 │ ()=>{}           │
-└───┴──────────────────┘"
+└───┴──────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return a list of items with indices for an object 1`] = `
@@ -43,7 +44,8 @@ exports[`stdio/printer printRecord should return a list of items with indices fo
 │ symbol    │ Symbol(oh hello) │
 ├───────────┼──────────────────┤
 │ function  │ ()=>{}           │
-└───────────┴──────────────────┘"
+└───────────┴──────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return a list of items with indices with a title for an array 1`] = `
@@ -65,7 +67,8 @@ exports[`stdio/printer printRecord should return a list of items with indices wi
 │ 6 │ Symbol(oh hello) │
 ├───┼──────────────────┤
 │ 7 │ ()=>{}           │
-└───┴──────────────────┘"
+└───┴──────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return a list of items with indices with a title for an object 1`] = `
@@ -87,7 +90,8 @@ exports[`stdio/printer printRecord should return a list of items with indices wi
 │ symbol    │ Symbol(oh hello) │
 ├───────────┼──────────────────┤
 │ function  │ ()=>{}           │
-└───────────┴──────────────────┘"
+└───────────┴──────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return a nested list for a nested object 1`] = `
@@ -125,6 +129,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │              │ ├───┼──────────────────┤         │
 │              │ │ 7 │ ()=>{}           │         │
 │              │ └───┴──────────────────┘         │
+│              │                                  │
 ├──────────────┼──────────────────────────────────┤
 │ nestedObject │ ┌───────────┬──────────────────┐ │
 │              │ │ string    │ something        │ │
@@ -143,7 +148,9 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │              │ ├───────────┼──────────────────┤ │
 │              │ │ function  │ ()=>{}           │ │
 │              │ └───────────┴──────────────────┘ │
-└──────────────┴──────────────────────────────────┘"
+│              │                                  │
+└──────────────┴──────────────────────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return a nested list for a nested object in array 1`] = `
@@ -181,6 +188,7 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │   │ ├───┼──────────────────┤         │
 │   │ │ 7 │ ()=>{}           │         │
 │   │ └───┴──────────────────┘         │
+│   │                                  │
 ├───┼──────────────────────────────────┤
 │ 9 │ ┌───────────┬──────────────────┐ │
 │   │ │ string    │ something        │ │
@@ -199,7 +207,9 @@ exports[`stdio/printer printRecord should return a nested list for a nested obje
 │   │ ├───────────┼──────────────────┤ │
 │   │ │ function  │ ()=>{}           │ │
 │   │ └───────────┴──────────────────┘ │
-└───┴──────────────────────────────────┘"
+│   │                                  │
+└───┴──────────────────────────────────┘
+"
 `;
 
 exports[`stdio/printer printRecord should return an empty string for an empty array 1`] = `""`;
