@@ -8,6 +8,7 @@ import {
     parallel,
     type OmniTransaction,
     sequence,
+    formatOmniPoint,
 } from '@layerzerolabs/devtools'
 import { OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory, OAppOmniGraph } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -38,6 +39,36 @@ export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, crea
         : sequence
 
     return flattenTransactions(await applicative(tasks))
+}
+
+export const configureOAppDelegates: OAppConfigurator = async (graph, createSdk) => {
+    const logger = createModuleLogger('OApp')
+
+    return flattenTransactions(
+        await Promise.all(
+            graph.contracts.map(async ({ point, config }): Promise<OmniTransaction[]> => {
+                const label = formatOmniPoint(point)
+
+                // Don't do anything if delegate is not set
+                if (config?.delegate == null) {
+                    return logger.verbose(`Delegate not set for ${label}, skipping`), []
+                }
+
+                logger.verbose(`Checking delegate for ${label}`)
+
+                const sdk = await createSdk(point)
+                const hasDelegate = await sdk.hasDelegate(config.delegate)
+
+                logger.verbose(`Delegate ${config.delegate} set for ${label}: ${printBoolean(hasDelegate)}`)
+                if (hasDelegate) {
+                    return logger.verbose(`Delegate ${config.delegate} already set for ${label}`), []
+                }
+
+                logger.verbose(`Setting delegate ${config.delegate} for ${label}`)
+                return [await sdk.setDelegate(config.delegate)]
+            })
+        )
+    )
 }
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
