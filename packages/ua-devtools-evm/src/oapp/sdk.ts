@@ -134,11 +134,11 @@ export class OApp extends OmniSDK implements IOApp {
         return this.logger.debug(`${delegate} ${hasDelegate ? 'is a delegate' : 'is not a delegate'}`), hasDelegate
     }
 
-    async setDelegate(address: OmniAddress): Promise<OmniTransaction> {
-        const description = `Setting delegate for to ${makeBytes32(address)}`
+    async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
+        const description = `Setting delegate to ${delegate}`
         this.logger.debug(description)
 
-        const data = this.contract.contract.interface.encodeFunctionData('setDelegate', [makeBytes32(address)])
+        const data = this.contract.contract.interface.encodeFunctionData('setDelegate', [delegate])
         return {
             ...this.createTransaction(data),
             description,
