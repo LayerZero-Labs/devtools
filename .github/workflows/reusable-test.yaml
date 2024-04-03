@@ -151,15 +151,16 @@ jobs:
   codespell:
     name: Check spelling
     runs-on: ubuntu-latest
-  steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v4
+    
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
 
-    - name: Setup environment
-      uses: ./.github/workflows/actions/setup-environment
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
 
-    - name: Install dependencies
-      uses: ./.github/workflows/actions/install-dependencies
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/install-dependencies
 
-    - name: Spell Check
-      run: pnpm cspell --config ./cspell.json
+      - name: Spell Check
+        run: pnpm cspell --config ./cspell.json
