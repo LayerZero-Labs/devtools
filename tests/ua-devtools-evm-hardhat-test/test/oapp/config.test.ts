@@ -7,7 +7,7 @@ import {
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOApp, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { configureOApp, configureOAppDelegates, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     avaxReceiveUln,
@@ -129,6 +129,131 @@ describe('oapp/config', () => {
             const transactionsAgain = await configureOApp(graph, oappSdkFactory)
             // eslint-disable-next-line jest/no-standalone-expect
             expect(transactionsAgain).toEqual([])
+        })
+    })
+
+    describe('configureOAppDelegates', () => {
+        it('should not return any transactions if configs are undefined', async () => {
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                        config: undefined,
+                    },
+                    {
+                        point: ethPoint,
+                        config: undefined,
+                    },
+                ],
+                connections: [],
+            }
+
+            expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([])
+        })
+
+        it('should not return any transactions if delegates are undefined', async () => {
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                        config: {
+                            delegate: undefined,
+                        },
+                    },
+                    {
+                        point: ethPoint,
+                        config: {
+                            delegate: undefined,
+                        },
+                    },
+                ],
+                connections: [],
+            }
+
+            expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([])
+        })
+
+        it('should return all setDelegate transactions if owners are specified', async () => {
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            delegate: ethPoint.address,
+                        },
+                    },
+                    {
+                        point: ethPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            delegate: avaxPoint.address,
+                        },
+                    },
+                ],
+                connections: [],
+            }
+
+            expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([
+                await avaxOAppSdk.setDelegate(ethPoint.address),
+                await ethOAppSdk.setDelegate(avaxPoint.address),
+            ])
+        })
+
+        it('should not set owners that have already been set', async () => {
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            owner: ethPoint.address,
+                        },
+                    },
+                    {
+                        point: ethPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            owner: avaxPoint.address,
+                        },
+                    },
+                ],
+                connections: [],
+            }
+
+            const signAndSend = createSignAndSend(createSignerFactory())
+            await signAndSend([await avaxOAppSdk.setDelegate(ethPoint.address)])
+
+            expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([
+                await ethOAppSdk.setOwner(avaxPoint.address),
+            ])
+        })
+
+        it('should not produce any transactions if ran again', async () => {
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            owner: ethPoint.address,
+                        },
+                    },
+                    {
+                        point: ethPoint,
+                        config: {
+                            // We'll make them an interlocked couple, living in perpetual state of codependence
+                            owner: avaxPoint.address,
+                        },
+                    },
+                ],
+                connections: [],
+            }
+
+            const signAndSend = createSignAndSend(createSignerFactory())
+            await signAndSend(await configureOAppDelegates(graph, oappSdkFactory))
+
+            expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([])
         })
     })
 
