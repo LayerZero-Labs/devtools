@@ -75,7 +75,8 @@ const defaultPriceData: PriceData = {
 }
 
 export const defaultExecutorDstConfig: ExecutorDstConfig = {
-    baseGas: BigInt(200_000),
+    lzComposeBaseGas: BigInt(200_000),
+    lzReceiveBaseGas: BigInt(200_000),
     multiplierBps: BigInt(0),
     floorMarginUSD: BigInt(0),
     nativeCap: BigInt(250_000_000_000_000_000), // 0.25 ether
