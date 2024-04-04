@@ -1,10 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import {
-    type IExecutor,
-    type ExecutorDstConfig,
-    ExecutorDstConfigPre2_1_27Schema,
-    ExecutorDstConfigPost2_1_27Schema,
-} from '@layerzerolabs/protocol-devtools'
+import { type IExecutor, type ExecutorDstConfig } from '@layerzerolabs/protocol-devtools'
 import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
@@ -33,7 +28,7 @@ export class Executor extends OmniSDK implements IExecutor {
     }
 
     private serializeExecutorConfig(eid: EndpointId, value: ExecutorDstConfig) {
-        if (ExecutorDstConfigPre2_1_27Schema.safeParse(value)) {
+        if (typeof value.baseGas === 'bigint') {
             return {
                 dstEid: eid,
                 baseGas: value.baseGas,
@@ -43,16 +38,13 @@ export class Executor extends OmniSDK implements IExecutor {
             }
         }
 
-        if (ExecutorDstConfigPost2_1_27Schema.safeParse(value)) {
-            return {
-                dstEid: eid,
-                baseGas: value.baseGas,
-                multiplierBps: value.multiplierBps,
-                floorMarginUSD: value.floorMarginUSD,
-                nativeCap: value.nativeCap,
-            }
+        return {
+            dstEid: eid,
+            lzComposeBaseGas: value.lzComposeBaseGas,
+            lzReceiveBaseGas: value.lzReceiveBaseGas,
+            multiplierBps: value.multiplierBps,
+            floorMarginUSD: value.floorMarginUSD,
+            nativeCap: value.nativeCap,
         }
-
-        throw new Error(`Failed to serialize ExecutorConfig for ${this.label}: ${printJson(value)}`)
     }
 }
