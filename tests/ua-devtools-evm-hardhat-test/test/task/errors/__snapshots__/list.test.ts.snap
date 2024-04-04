@@ -2204,6 +2204,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "ExecutorFeeLib",
+      "Error": "Executor_ZeroLzComposeGasProvided()",
+      "Signature": "0xa169d0e1",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
       "Error": "Executor_ZeroLzReceiveGasProvided()",
       "Signature": "0xe5eb8f30",
     },
@@ -2506,6 +2511,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IExecutorFeeLib",
       "Error": "Executor_UnsupportedOptionType(uint8)",
       "Signature": "0x052e5515",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "Executor_ZeroLzComposeGasProvided()",
+      "Signature": "0xa169d0e1",
     },
     {
       "Contract": "IExecutorFeeLib",
@@ -4871,6 +4881,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IExecutorFeeLib",
       "Error": "Executor_UnsupportedOptionType(uint8)",
       "Signature": "0x052e5515",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "Executor_ZeroLzComposeGasProvided()",
+      "Signature": "0xa169d0e1",
     },
     {
       "Contract": "IExecutorFeeLib",
