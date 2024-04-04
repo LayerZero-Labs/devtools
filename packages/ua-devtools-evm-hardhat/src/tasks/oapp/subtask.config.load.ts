@@ -62,6 +62,6 @@ const action: ActionType<SubtaskLoadConfigTaskArgs> = async ({
 }
 
 subtask(SUBTASK_LZ_OAPP_CONFIG_LOAD, 'Loads and transforms OmniGraphHardhat into an OmniGraph', action)
-    .addParam('oappConfig', 'Path to the config file', undefined, types.string)
+    .addParam('configPath', 'Path to the config file', undefined, types.string)
     .addParam('schema', 'Zod schema used to validate the config', undefined, types.any)
     .addParam('task', 'Task that is calling this subtask', undefined, types.string)
