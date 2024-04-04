@@ -200,21 +200,21 @@ describe('oapp/config', () => {
             ])
         })
 
-        it('should not set owners that have already been set', async () => {
+        it('should not set delegates that have already been set', async () => {
             const graph: OAppOmniGraph = {
                 contracts: [
                     {
                         point: avaxPoint,
                         config: {
                             // We'll make them an interlocked couple, living in perpetual state of codependence
-                            owner: ethPoint.address,
+                            delegate: ethPoint.address,
                         },
                     },
                     {
                         point: ethPoint,
                         config: {
                             // We'll make them an interlocked couple, living in perpetual state of codependence
-                            owner: avaxPoint.address,
+                            delegate: avaxPoint.address,
                         },
                     },
                 ],
@@ -225,7 +225,7 @@ describe('oapp/config', () => {
             await signAndSend([await avaxOAppSdk.setDelegate(ethPoint.address)])
 
             expect(await configureOAppDelegates(graph, oappSdkFactory)).toEqual([
-                await ethOAppSdk.setOwner(avaxPoint.address),
+                await ethOAppSdk.setDelegate(avaxPoint.address),
             ])
         })
 
@@ -236,14 +236,14 @@ describe('oapp/config', () => {
                         point: avaxPoint,
                         config: {
                             // We'll make them an interlocked couple, living in perpetual state of codependence
-                            owner: ethPoint.address,
+                            delegate: ethPoint.address,
                         },
                     },
                     {
                         point: ethPoint,
                         config: {
                             // We'll make them an interlocked couple, living in perpetual state of codependence
-                            owner: avaxPoint.address,
+                            delegate: avaxPoint.address,
                         },
                     },
                 ],
