@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 0.3.3
+
+### Patch Changes
+
+- 5ef3952: Add delegate configuration
+- Updated dependencies [5ef3952]
+  - @layerzerolabs/protocol-devtools@0.3.4
+
 ## 0.3.2
 
 ### Patch Changes
