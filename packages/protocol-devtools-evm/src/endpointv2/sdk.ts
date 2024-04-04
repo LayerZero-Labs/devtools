@@ -17,6 +17,7 @@ import {
     formatOmniPoint,
     isZero,
     ignoreZero,
+    areBytes32Equal,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/devtools-evm'
@@ -39,6 +40,18 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         private readonly uln302Factory: Uln302Factory
     ) {
         super(contract)
+    }
+
+    async getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined> {
+        this.logger.debug(`Getting delegate for OApp ${oapp}`)
+
+        return ignoreZero(await this.contract.contract.delegates(oapp))
+    }
+
+    async isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean> {
+        this.logger.debug(`Checking whether ${delegate} is a delegate for OApp ${oapp}`)
+
+        return areBytes32Equal(await this.getDelegate(oapp), delegate)
     }
 
     async getUln302SDK(address: OmniAddress): Promise<IUln302> {

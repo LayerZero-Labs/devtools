@@ -110,6 +110,41 @@ export class OApp extends OmniSDK implements IOApp {
         }
     }
 
+    async getDelegate(): Promise<OmniAddress | undefined> {
+        this.logger.debug(`Getting delegate`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        const delegate = await mapError(
+            () => endpointSdk.getDelegate(this.contract.contract.address),
+            (error) => new Error(`Failed to get delegate for OApp ${this.label}: ${error}`)
+        )
+
+        return this.logger.debug(delegate ? `Got delegate ${delegate}` : `OApp has no delegate`), delegate
+    }
+
+    async isDelegate(delegate: OmniAddress): Promise<boolean> {
+        this.logger.debug(`Checking whether ${delegate} is a delegate`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        const isDelegate = await mapError(
+            () => endpointSdk.isDelegate(this.contract.contract.address, delegate),
+            (error) => new Error(`Failed to check delegate for OApp ${this.label}: ${error}`)
+        )
+
+        return this.logger.debug(`${delegate} ${isDelegate ? 'is a delegate' : 'is not a delegate'}`), isDelegate
+    }
+
+    async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
+        const description = `Setting delegate to ${delegate}`
+        this.logger.debug(description)
+
+        const data = this.contract.contract.interface.encodeFunctionData('setDelegate', [delegate])
+        return {
+            ...this.createTransaction(data),
+            description,
+        }
+    }
+
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
         const eidLabel = `eid ${eid} (${formatEid(eid)})`
 

@@ -14,6 +14,9 @@ import type { IUln302, Uln302ExecutorConfig, Uln302UlnConfig, Uln302UlnUserConfi
 export interface IEndpointV2 extends IOmniSDK {
     getUln302SDK(address: OmniAddress): Promise<IUln302>
 
+    getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined>
+    isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean>
+
     getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
     setDefaultReceiveLibrary(
         eid: EndpointId,

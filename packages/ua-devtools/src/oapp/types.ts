@@ -19,6 +19,9 @@ export interface IOApp extends IOmniSDK, IOwnable {
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>
+    getDelegate(): Promise<OmniAddress | undefined>
+    isDelegate(address: OmniAddress): Promise<boolean>
+    setDelegate(address: OmniAddress): Promise<OmniTransaction>
     getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes>
     setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction>
 }
@@ -37,7 +40,9 @@ export interface OAppReceiveConfig {
     ulnConfig?: Uln302UlnUserConfig
 }
 
-export type OAppNodeConfig = OwnableNodeConfig
+export interface OAppNodeConfig extends OwnableNodeConfig {
+    delegate?: OmniAddress | null
+}
 
 export interface OAppEdgeConfig {
     sendLibrary?: string
