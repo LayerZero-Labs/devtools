@@ -6,12 +6,25 @@ export interface IExecutor extends IOmniSDK {
     setDstConfig(eid: EndpointId, value: ExecutorDstConfig): Promise<OmniTransaction>
 }
 
-export interface ExecutorDstConfig {
+export interface ExecutorDstConfigPre2_1_27 {
     baseGas: bigint
+    lzComposeBaseGas?: never
+    lzReceiveBaseGas?: never
     multiplierBps: bigint
     floorMarginUSD: bigint
     nativeCap: bigint
 }
+
+export interface ExecutorDstConfigPost2_1_27 {
+    baseGas?: never
+    lzComposeBaseGas: bigint
+    lzReceiveBaseGas: bigint
+    multiplierBps: bigint
+    floorMarginUSD: bigint
+    nativeCap: bigint
+}
+
+export type ExecutorDstConfig = ExecutorDstConfigPre2_1_27 | ExecutorDstConfigPost2_1_27
 
 export interface ExecutorEdgeConfig {
     dstConfig: ExecutorDstConfig
