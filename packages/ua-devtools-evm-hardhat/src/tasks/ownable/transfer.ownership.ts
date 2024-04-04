@@ -1,13 +1,7 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP } from '@/constants/tasks'
-import {
-    createLogger,
-    setDefaultLogLevel,
-    printJson,
-    pluralizeNoun,
-    createConfigLoader,
-} from '@layerzerolabs/io-devtools'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP } from '@/constants/tasks'
+import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
 import { OwnableOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
@@ -17,12 +11,12 @@ import {
     createGnosisSignerFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { type SignAndSendResult } from '@layerzerolabs/devtools'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 import { OwnableOmniGraphHardhatSchema } from '@/ownable'
 import { configureOwnable } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory, createOwnableFactory } from '@layerzerolabs/ua-devtools-evm'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
 
 interface TaskArgs {
     oappConfig: string
@@ -43,11 +37,13 @@ const action: ActionType<TaskArgs> = async (
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OwnableOmniGraph = await validateAndTransformOappConfig(
-        oappConfigPath,
-        createConfigLoader(OwnableOmniGraphHardhatSchema),
-        logger
-    )
+
+    // Now we load the graph
+    const graph: OwnableOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfigPath,
+        schema: OwnableOmniGraphHardhatSchema,
+        task: TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
+    } satisfies SubtaskLoadConfigTaskArgs)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of ownership transferring transactions`)

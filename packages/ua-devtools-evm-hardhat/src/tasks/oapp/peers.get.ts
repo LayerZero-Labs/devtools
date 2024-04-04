@@ -1,29 +1,23 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import {
-    createConfigLoader,
-    createLogger,
-    printBoolean,
-    printCrossTable,
-    setDefaultLogLevel,
-} from '@layerzerolabs/io-devtools'
-import { TASK_LZ_OAPP_PEERS_GET } from '@/constants/tasks'
+import { createLogger, printBoolean, printCrossTable, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_PEERS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
-import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual } from '@layerzerolabs/devtools'
 import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
 
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
 }
 
-const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }, hre) => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -31,11 +25,13 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
-        oappConfigPath,
-        createConfigLoader(OAppOmniGraphHardhatSchema),
-        logger
-    )
+
+    // Now we load the graph
+    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfigPath,
+        schema: OAppOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_PEERS_GET,
+    } satisfies SubtaskLoadConfigTaskArgs)
 
     // need points for OApp Peer Matrix
     const points = graph.contracts

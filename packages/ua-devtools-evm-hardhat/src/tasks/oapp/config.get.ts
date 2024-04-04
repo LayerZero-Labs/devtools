@@ -1,31 +1,32 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createConfigLoader, createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
-import { getReceiveConfig, getSendConfig, validateAndTransformOappConfig } from '@/utils/taskHelpers'
-import { TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
+import { printCrossTable } from '@layerzerolabs/io-devtools'
+import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import assert from 'assert'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import type { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
+import type { SubtaskLoadConfigTaskArgs } from './subtask.config.load'
 
 interface TaskArgs {
     logLevel?: string
     oappConfig: string
 }
 
-const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }) => {
+const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, hre) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
     const networks: string[] = []
     const addresses: string[] = []
-    const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
-        oappConfig,
-        createConfigLoader(OAppOmniGraphHardhatSchema),
-        logger
-    )
+    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfig,
+        schema: OAppOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_CONFIG_GET,
+    } satisfies SubtaskLoadConfigTaskArgs)
+
     graph.contracts.forEach((contract) => {
         networks.push(getNetworkNameForEid(contract.point.eid))
         addresses.push(contract.point.address)
