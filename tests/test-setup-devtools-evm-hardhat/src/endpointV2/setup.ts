@@ -75,7 +75,7 @@ const defaultPriceData: PriceData = {
 }
 
 export const defaultExecutorDstConfig: ExecutorDstConfig = {
-    lzComposeBaseGas: BigInt(200_000),
+    lzComposeBaseGas: BigInt(0),
     lzReceiveBaseGas: BigInt(200_000),
     multiplierBps: BigInt(0),
     floorMarginUSD: BigInt(0),
