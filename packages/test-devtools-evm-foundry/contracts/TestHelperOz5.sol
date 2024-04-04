@@ -192,7 +192,8 @@ contract TestHelperOz5 is Test, OptionsHelper {
                     // executor config
                     dstConfigParams[j] = IExecutor.DstConfigParam({
                         dstEid: dstEid,
-                        baseGas: 5000,
+                        lzReceiveBaseGas: 5000,
+                        lzComposeBaseGas: 0,
                         multiplierBps: 10000,
                         floorMarginUSD: 1e10,
                         nativeCap: executorValueCap
