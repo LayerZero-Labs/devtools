@@ -1,5 +1,12 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.6
+
+### Patch Changes
+
+- e16c864: Update @LayerZero-Labs dependencies to 2.1.27
+- e16c864: Update executor config schema & types after update to 2.1.27
+
 ## 0.0.5
 
 ### Patch Changes

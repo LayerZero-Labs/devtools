@@ -1,5 +1,12 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.2.2
+
+### Patch Changes
+
+- e16c864: Update @LayerZero-Labs dependencies to 2.1.27
+- e16c864: Update executor config schema & types after update to 2.1.27
+
 ## 0.2.1
 
 ### Patch Changes

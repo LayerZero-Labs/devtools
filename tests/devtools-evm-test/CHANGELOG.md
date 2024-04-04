@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-test
 
+## 0.1.2
+
+### Patch Changes
+
+- e16c864: Update @LayerZero-Labs dependencies to 2.1.27
+- e16c864: Update executor config schema & types after update to 2.1.27
+
 ## 0.1.1
 
 ### Patch Changes
