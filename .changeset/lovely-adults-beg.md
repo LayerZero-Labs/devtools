@@ -27,4 +27,4 @@
 "@layerzerolabs/oft-example": patch
 ---
 
-Update monorepo dependencies
+Update @LayerZero-Labs dependencies to 2.1.27
