@@ -30,10 +30,11 @@ interface TaskArgs {
     ci?: boolean
     safe?: boolean
     signer?: string
+    tag?: string
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer },
+    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer, tag },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -83,6 +84,7 @@ const action: ActionType<TaskArgs> = async (
         transactions,
         ci,
         createSigner,
+        tag,
     } satisfies SignAndSendTaskArgs)
 
     // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
@@ -100,3 +102,10 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP, 'Transfer ownable contract ownership', 
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
+    .addParam(
+        'tag',
+        'Custom tag to pass to subtasks. Useful for complex projects with multiple custom configurations',
+        undefined,
+        types.string,
+        true
+    )

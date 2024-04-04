@@ -25,18 +25,22 @@ export interface SignAndSendTaskArgs {
     ci?: boolean
     transactions: OmniTransaction[]
     createSigner: OmniSignerFactory
+    tag?: string
 }
 
 const action: ActionType<SignAndSendTaskArgs> = async ({
     ci,
     transactions,
     createSigner,
+    tag,
 }): Promise<SignAndSendResult> => {
     // We only want to be asking users for input if we are not in interactive mode
     const isInteractive = !ci
 
-    const logger = createLogger()
-    const subtaskLogger = createModuleLogger(SUBTASK_LZ_SIGN_AND_SEND)
+    const logger = tag == null ? createLogger() : createModuleLogger(tag)
+    const subtaskLogger = createModuleLogger(
+        tag == null ? SUBTASK_LZ_SIGN_AND_SEND : `${SUBTASK_LZ_SIGN_AND_SEND}@${tag}`
+    )
 
     // Ask them whether they want to see them
     const previewTransactions = isInteractive
@@ -168,3 +172,10 @@ subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign and send a list of transactions using a 
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addParam('transactions', 'List of OmniTransaction objects', undefined, types.any)
     .addParam('createSigner', 'Function that creates a signer for a particular network', undefined, types.fn)
+    .addParam(
+        'tag',
+        'Custom tag to pass to subtasks. Useful for complex projects with multiple custom configurations',
+        undefined,
+        types.string,
+        true
+    )

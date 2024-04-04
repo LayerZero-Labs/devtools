@@ -11,14 +11,18 @@ export interface SubtaskConfigureTaskArgs {
     graph: OAppOmniGraph
     configurator?: OAppConfigurator
     oappFactory?: OAppFactory
+    tag?: string
 }
 
 const action: ActionType<SubtaskConfigureTaskArgs> = async ({
     graph,
     configurator = configureOApp,
     oappFactory = createOAppFactory(createConnectedContractFactory()),
+    tag,
 }): Promise<OmniTransaction[]> => {
-    const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
+    const logger = createModuleLogger(
+        tag == null ? SUBTASK_LZ_OAPP_WIRE_CONFIGURE : `${SUBTASK_LZ_OAPP_WIRE_CONFIGURE}@${tag}`
+    )
 
     logger.verbose(`Running with graph:\n\n${printJson(graph)}`)
 
@@ -53,3 +57,10 @@ subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that 
     .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph', undefined, types.any)
     .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, types.any, true)
     .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, types.any, true)
+    .addParam(
+        'tag',
+        'Custom tag to pass to subtasks. Useful for complex projects with multiple custom configurations',
+        undefined,
+        types.string,
+        true
+    )
