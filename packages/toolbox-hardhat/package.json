@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-hardhat",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "One-stop-shop for developing LayerZero applications using hardhat",
   "repository": {
     "type": "git",

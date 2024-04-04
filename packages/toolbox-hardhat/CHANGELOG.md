@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.6
+
+### Patch Changes
+
+- bf08be2: Add more type exports to toolbox-hardhat
+
 ## 0.2.5
 
 ### Patch Changes
