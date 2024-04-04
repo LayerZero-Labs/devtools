@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IExecutor, ExecutorDstConfig } from '@layerzerolabs/protocol-devtools'
+import { type IExecutor, type ExecutorDstConfig } from '@layerzerolabs/protocol-devtools'
 import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
@@ -18,20 +18,33 @@ export class Executor extends OmniSDK implements IExecutor {
 
     async setDstConfig(eid: EndpointId, value: ExecutorDstConfig): Promise<OmniTransaction> {
         const data = this.contract.contract.interface.encodeFunctionData('setDstConfig', [
-            [
-                {
-                    dstEid: eid,
-                    baseGas: value.baseGas,
-                    multiplierBps: value.multiplierBps,
-                    floorMarginUSD: value.floorMarginUSD,
-                    nativeCap: value.nativeCap,
-                },
-            ],
+            [this.serializeExecutorConfig(eid, value)],
         ])
 
         return {
             ...this.createTransaction(data),
             description: `Setting dstConfig for ${formatEid(eid)}: ${printJson(value)}`,
+        }
+    }
+
+    private serializeExecutorConfig(eid: EndpointId, value: ExecutorDstConfig) {
+        if (typeof value.baseGas === 'bigint') {
+            return {
+                dstEid: eid,
+                baseGas: value.baseGas,
+                multiplierBps: value.multiplierBps,
+                floorMarginUSD: value.floorMarginUSD,
+                nativeCap: value.nativeCap,
+            }
+        }
+
+        return {
+            dstEid: eid,
+            lzComposeBaseGas: value.lzComposeBaseGas,
+            lzReceiveBaseGas: value.lzReceiveBaseGas,
+            multiplierBps: value.multiplierBps,
+            floorMarginUSD: value.floorMarginUSD,
+            nativeCap: value.nativeCap,
         }
     }
 }

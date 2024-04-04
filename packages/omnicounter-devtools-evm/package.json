@@ -35,7 +35,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.3.3",
     "@layerzerolabs/devtools-evm": "~0.3.2",
-    "@layerzerolabs/lz-definitions": "~2.1.25",
+    "@layerzerolabs/lz-definitions": "~2.1.27",
     "@layerzerolabs/omnicounter-devtools": "~0.3.1",
     "@layerzerolabs/protocol-devtools": "~0.3.2",
     "@layerzerolabs/protocol-devtools-evm": "~0.3.1",
