@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.6
+
+### Patch Changes
+
+- 5ef3952: Add delegate configuration
+- Updated dependencies [5ef3952]
+  - @layerzerolabs/protocol-devtools-evm@0.3.3
+  - @layerzerolabs/protocol-devtools@0.3.4
+  - @layerzerolabs/ua-devtools-evm@0.3.4
+  - @layerzerolabs/ua-devtools@0.3.4
+
 ## 0.3.5
 
 ### Patch Changes

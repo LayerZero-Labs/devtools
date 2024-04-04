@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.3.4
+
+### Patch Changes
+
+- 5ef3952: Add delegate configuration
+
 ## 0.3.3
 
 ### Patch Changes
