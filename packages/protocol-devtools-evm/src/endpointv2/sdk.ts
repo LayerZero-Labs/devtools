@@ -48,7 +48,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return ignoreZero(await this.contract.contract.delegates(oapp))
     }
 
-    async hasDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean> {
+    async isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate for OApp ${oapp}`)
 
         return areBytes32Equal(await this.getDelegate(oapp), delegate)

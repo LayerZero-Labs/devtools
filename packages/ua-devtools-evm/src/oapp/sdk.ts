@@ -122,16 +122,16 @@ export class OApp extends OmniSDK implements IOApp {
         return this.logger.debug(delegate ? `Got delegate ${delegate}` : `OApp has no delegate`), delegate
     }
 
-    async hasDelegate(delegate: OmniAddress): Promise<boolean> {
+    async isDelegate(delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate`)
 
         const endpointSdk = await this.getEndpointSDK()
-        const hasDelegate = await mapError(
-            () => endpointSdk.hasDelegate(this.contract.contract.address, delegate),
+        const isDelegate = await mapError(
+            () => endpointSdk.isDelegate(this.contract.contract.address, delegate),
             (error) => new Error(`Failed to check delegate for OApp ${this.label}: ${error}`)
         )
 
-        return this.logger.debug(`${delegate} ${hasDelegate ? 'is a delegate' : 'is not a delegate'}`), hasDelegate
+        return this.logger.debug(`${delegate} ${isDelegate ? 'is a delegate' : 'is not a delegate'}`), isDelegate
     }
 
     async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {

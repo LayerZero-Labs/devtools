@@ -57,10 +57,10 @@ export const configureOAppDelegates: OAppConfigurator = async (graph, createSdk)
                 logger.verbose(`Checking delegate for ${label}`)
 
                 const sdk = await createSdk(point)
-                const hasDelegate = await sdk.hasDelegate(config.delegate)
+                const isDelegate = await sdk.isDelegate(config.delegate)
 
-                logger.verbose(`Delegate ${config.delegate} set for ${label}: ${printBoolean(hasDelegate)}`)
-                if (hasDelegate) {
+                logger.verbose(`Delegate ${config.delegate} set for ${label}: ${printBoolean(isDelegate)}`)
+                if (isDelegate) {
                     return logger.verbose(`Delegate ${config.delegate} already set for ${label}`), []
                 }
 

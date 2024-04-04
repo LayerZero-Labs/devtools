@@ -15,7 +15,7 @@ export interface IEndpointV2 extends IOmniSDK {
     getUln302SDK(address: OmniAddress): Promise<IUln302>
 
     getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined>
-    hasDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean>
+    isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean>
 
     getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined>
     setDefaultReceiveLibrary(

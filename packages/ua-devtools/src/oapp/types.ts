@@ -20,7 +20,7 @@ export interface IOApp extends IOmniSDK, IOwnable {
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
     setPeer(eid: EndpointId, peer: OmniAddress | null | undefined): Promise<OmniTransaction>
     getDelegate(): Promise<OmniAddress | undefined>
-    hasDelegate(address: OmniAddress): Promise<boolean>
+    isDelegate(address: OmniAddress): Promise<boolean>
     setDelegate(address: OmniAddress): Promise<OmniTransaction>
     getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes>
     setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction>
