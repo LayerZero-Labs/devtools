@@ -33,11 +33,12 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
         IExecutor.DstConfig calldata _dstConfig,
         bytes calldata _options
     ) external returns (uint256 fee) {
-        if (_dstConfig.baseGas == 0) revert Executor_EidNotSupported(_params.dstEid);
+        if (_dstConfig.lzReceiveBaseGas == 0) revert Executor_EidNotSupported(_params.dstEid);
 
         (uint256 totalDstAmount, uint256 totalGas) = _decodeExecutorOptions(
             _isV1Eid(_params.dstEid),
-            _dstConfig.baseGas,
+            _dstConfig.lzReceiveBaseGas,
+            _dstConfig.lzComposeBaseGas,
             _dstConfig.nativeCap,
             _options
         );
@@ -71,11 +72,12 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
         IExecutor.DstConfig calldata _dstConfig,
         bytes calldata _options
     ) external view returns (uint256 fee) {
-        if (_dstConfig.baseGas == 0) revert Executor_EidNotSupported(_params.dstEid);
+        if (_dstConfig.lzReceiveBaseGas == 0) revert Executor_EidNotSupported(_params.dstEid);
 
         (uint256 totalDstAmount, uint256 totalGas) = _decodeExecutorOptions(
             _isV1Eid(_params.dstEid),
-            _dstConfig.baseGas,
+            _dstConfig.lzReceiveBaseGas,
+            _dstConfig.lzComposeBaseGas,
             _dstConfig.nativeCap,
             _options
         );
@@ -106,7 +108,8 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
     // @dev decode executor options into dstAmount and totalGas
     function _decodeExecutorOptions(
         bool _v1Eid,
-        uint64 _baseGas,
+        uint64 _lzReceiveBaseGas,
+        uint64 _lzComposeBaseGas,
         uint128 _nativeCap,
         bytes calldata _options
     ) internal pure returns (uint256 dstAmount, uint256 totalGas) {
@@ -116,8 +119,9 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
 
         uint256 cursor = 0;
         bool ordered = false;
-        totalGas = _baseGas;
+        totalGas = _lzReceiveBaseGas; // lz receive only called once
 
+        bool v1Eid = _v1Eid; // stack too deep
         uint256 lzReceiveGas;
         while (cursor < _options.length) {
             (uint8 optionType, bytes calldata option, uint256 newCursor) = _options.nextExecutorOption(cursor);
@@ -127,7 +131,7 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
                 (uint128 gas, uint128 value) = ExecutorOptions.decodeLzReceiveOption(option);
 
                 // endpoint v1 does not support lzReceive with value
-                if (_v1Eid && value > 0) revert Executor_UnsupportedOptionType(optionType);
+                if (v1Eid && value > 0) revert Executor_UnsupportedOptionType(optionType);
 
                 dstAmount += value;
                 lzReceiveGas += gas;
@@ -136,11 +140,16 @@ contract ExecutorFeeLibMock is Ownable, IExecutorFeeLib {
                 dstAmount += nativeDropAmount;
             } else if (optionType == ExecutorOptions.OPTION_TYPE_LZCOMPOSE) {
                 // endpoint v1 does not support lzCompose
-                if (_v1Eid) revert Executor_UnsupportedOptionType(optionType);
+                if (v1Eid) revert Executor_UnsupportedOptionType(optionType);
 
                 (, uint128 gas, uint128 value) = ExecutorOptions.decodeLzComposeOption(option);
+                if (gas == 0) revert Executor_ZeroLzComposeGasProvided();
+
                 dstAmount += value;
-                totalGas += gas;
+                // lz compose can be called multiple times, based on unique index
+                // to simplify the quoting, we add lzComposeBaseGas for each lzComposeOption received
+                // if the same index has multiple compose options, the gas will be added multiple times
+                totalGas += gas + _lzComposeBaseGas;
             } else if (optionType == ExecutorOptions.OPTION_TYPE_ORDERED_EXECUTION) {
                 ordered = true;
             } else {
