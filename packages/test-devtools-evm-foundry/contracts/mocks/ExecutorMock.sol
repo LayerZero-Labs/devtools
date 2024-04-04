@@ -43,10 +43,11 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
         for (uint256 i = 0; i < _params.length; i++) {
             DstConfigParam memory param = _params[i];
             dstConfig[param.dstEid] = DstConfig(
-                param.baseGas,
+                param.lzReceiveBaseGas,
                 param.multiplierBps,
                 param.floorMarginUSD,
-                param.nativeCap
+                param.nativeCap,
+                param.lzComposeBaseGas
             );
         }
         emit DstConfigSet(_params);
