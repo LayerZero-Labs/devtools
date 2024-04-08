@@ -10,6 +10,7 @@ import {
     createSignerFactory,
     SUBTASK_LZ_SIGN_AND_SEND,
 } from '@layerzerolabs/devtools-evm-hardhat'
+import { spawnSync } from 'child_process'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
     const original = jest.requireActual('@layerzerolabs/io-devtools')
@@ -485,6 +486,27 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                         1
                 )
             })
+        })
+    })
+
+    describe('expectations', () => {
+        const EXPECTATIONS_DIRECTORY = join('test', 'task', 'oapp', 'config.test.expectations')
+        const expectationPath = (name: string) => join(EXPECTATIONS_DIRECTORY, `${name}.exp`)
+        const runExpect = (name: string) =>
+            spawnSync(expectationPath(name), {
+                encoding: 'utf8',
+                stdio: 'inherit',
+            })
+
+        beforeEach(async () => {
+            await deployContract('EndpointV2', true)
+            await setupDefaultEndpointV2()
+        })
+
+        it('should use custom config loading task', async () => {
+            const result = runExpect('config-custom-config-loading')
+
+            expect(result.status).toBe(0)
         })
     })
 })

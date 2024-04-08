@@ -12,12 +12,12 @@ import {
 import { OmniTransaction } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
-import type { SubtaskConfigureTaskArgs } from './subtask.configure'
+import type { SubtaskConfigureTaskArgs } from './types'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
 import './subtask.configure'
-import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
+import { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 
 interface TaskArgs {
     oappConfig: string
@@ -25,10 +25,34 @@ interface TaskArgs {
     ci?: boolean
     safe?: boolean
     signer?: string
+    /**
+     * Name of a custom config loading subtask
+     *
+     * This can be useful in situations where s single project
+     * requires multiple custom configurations with their own config validation schemas
+     */
+    loadConfigSubtask?: string
+    /**
+     * Name of a custom configuration subtask
+     *
+     * This can be useful in situations where s single project
+     * requires multiple custom configurations with their own configurators
+     */
+    configureSubtask?: string
+    signAndSendSubtask?: string
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer },
+    {
+        oappConfig: oappConfigPath,
+        logLevel = 'info',
+        ci = false,
+        safe = false,
+        signer,
+        loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
+        configureSubtask = SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
+        signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
+    },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -40,7 +64,8 @@ const action: ActionType<TaskArgs> = async (
     const logger = createLogger()
 
     // Now we can load and validate the config
-    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+    logger.debug(`Using ${loadConfigSubtask} subtask to load the config`)
+    const graph: OAppOmniGraph = await hre.run(loadConfigSubtask, {
         configPath: oappConfigPath,
         schema: OAppOmniGraphHardhatSchema,
         task: TASK_LZ_OAPP_WIRE,
@@ -51,7 +76,8 @@ const action: ActionType<TaskArgs> = async (
 
     // We'll get the list of OmniTransactions using a subtask to allow for developers
     // to use this as a hook and extend the configuration
-    const transactions: OmniTransaction[] = await hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
+    logger.debug(`Using ${configureSubtask} subtask to get the configuration`)
+    const transactions: OmniTransaction[] = await hre.run(configureSubtask, {
         graph,
     } satisfies SubtaskConfigureTaskArgs)
 
@@ -79,7 +105,8 @@ const action: ActionType<TaskArgs> = async (
     const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
 
     // Now sign & send the transactions
-    const signAndSendResult: SignAndSendResult = await hre.run(SUBTASK_LZ_SIGN_AND_SEND, {
+    logger.debug(`Using ${signAndSendSubtask} subtask to sign & send the transactions`)
+    const signAndSendResult: SignAndSendResult = await hre.run(signAndSendSubtask, {
         transactions,
         ci,
         createSigner,
@@ -97,6 +124,27 @@ const action: ActionType<TaskArgs> = async (
 task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addParam(
+        'loadConfigSubtask',
+        'Override the default config loading subtask',
+        SUBTASK_LZ_OAPP_CONFIG_LOAD,
+        types.string,
+        true
+    )
+    .addParam(
+        'configureSubtask',
+        'Override the default configuration subtask',
+        SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
+        types.string,
+        true
+    )
+    .addParam(
+        'signAndSendSubtask',
+        'Override the default sign & send subtask',
+        SUBTASK_LZ_SIGN_AND_SEND,
+        types.string,
+        true
+    )
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
