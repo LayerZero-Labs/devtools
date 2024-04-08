@@ -28,17 +28,22 @@ interface TaskArgs {
     /**
      * Name of a custom config loading subtask
      *
-     * This can be useful in situations where s single project
+     * This can be useful in situations where a single project
      * requires multiple custom configurations with their own config validation schemas
      */
     loadConfigSubtask?: string
     /**
      * Name of a custom configuration subtask
      *
-     * This can be useful in situations where s single project
+     * This can be useful in situations where a single project
      * requires multiple custom configurations with their own configurators
      */
     configureSubtask?: string
+    /**
+     * Name of a custom sign & send subtask
+     *
+     * This can be useful in situations where a completely sifferent signing logic is required
+     */
     signAndSendSubtask?: string
 }
 
