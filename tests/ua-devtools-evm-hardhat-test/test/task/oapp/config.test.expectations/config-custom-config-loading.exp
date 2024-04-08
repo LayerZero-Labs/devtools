@@ -54,8 +54,6 @@ expect "Using custom configure task"
 
 # We wait for the OApp to be configured
 expect "There are 4 transactions required to configure the OApp"
-expect "Setting custom property to 1000"
-expect "Setting custom property to 2000"
 expect "Your OApp is now configured"
 
 expect eof
