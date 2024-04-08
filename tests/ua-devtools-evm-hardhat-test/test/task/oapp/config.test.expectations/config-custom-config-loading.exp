@@ -46,8 +46,6 @@ spawn npx hardhat --config hardhat.config.with-custom-configuration.ts lz:oapp:w
 	--oapp-config layerzero.config.with-custom-configuration.ts \
 	--ci
 
-match_max 100000
-
 # We check that our tasks are logging something
 expect "Using custom config loading task"
 expect "Using custom configure task"
