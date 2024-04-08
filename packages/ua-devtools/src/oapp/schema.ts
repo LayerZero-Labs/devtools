@@ -71,8 +71,10 @@ export const OAppEnforcedOptionsSchema = z.array(OAppEnforcedOptionConfigSchema)
 >
 
 export const OAppNodeConfigSchema = OwnableNodeConfigSchema.extend({
-    delegate: AddressSchema.optional(),
-}) satisfies z.ZodSchema<OAppNodeConfig, z.ZodTypeDef, unknown>
+    delegate: AddressSchema.nullish(),
+})
+    // We'll pass all unknown properties through without validating them
+    .passthrough() satisfies z.ZodSchema<OAppNodeConfig, z.ZodTypeDef, unknown>
 
 export const OAppEdgeConfigSchema = z
     .object({
@@ -83,5 +85,6 @@ export const OAppEdgeConfigSchema = z
         receiveConfig: OAppReceiveConfigSchema,
         enforcedOptions: OAppEnforcedOptionsSchema,
     })
+    // We'll pass all unknown properties through without validating them
     .passthrough()
     .partial() satisfies z.ZodSchema<OAppEdgeConfig, z.ZodTypeDef, unknown>

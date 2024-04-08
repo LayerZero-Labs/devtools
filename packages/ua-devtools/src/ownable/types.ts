@@ -7,7 +7,7 @@ export interface IOwnable {
 }
 
 export interface OwnableNodeConfig {
-    owner?: OmniAddress
+    owner?: OmniAddress | null
 }
 
 export type OwnableOmniGraph = OmniGraph<OwnableNodeConfig | undefined>
