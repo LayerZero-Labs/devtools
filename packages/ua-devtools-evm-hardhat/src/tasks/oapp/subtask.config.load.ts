@@ -1,16 +1,10 @@
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD } from '@/constants/tasks'
 import type { OmniGraph } from '@layerzerolabs/devtools'
-import { OmniGraphBuilderHardhat, OmniGraphHardhat, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { OmniGraphBuilderHardhat, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createConfigLoader, createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
 import { subtask } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { z } from 'zod'
-
-export interface SubtaskLoadConfigTaskArgs {
-    configPath: string
-    schema: z.ZodType<OmniGraphHardhat, z.ZodTypeDef, OmniGraphHardhat>
-    task: string
-}
+import type { SubtaskLoadConfigTaskArgs } from './types'
 
 const action: ActionType<SubtaskLoadConfigTaskArgs> = async ({
     configPath,

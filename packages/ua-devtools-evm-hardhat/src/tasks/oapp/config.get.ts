@@ -8,7 +8,7 @@ import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import type { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
-import type { SubtaskLoadConfigTaskArgs } from './subtask.config.load'
+import type { SubtaskLoadConfigTaskArgs } from './types'
 
 interface TaskArgs {
     logLevel?: string
