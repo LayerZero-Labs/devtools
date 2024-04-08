@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.5
+
+### Patch Changes
+
+- 83df1c6: Pass additional OApp node configuration properties through schema; Make properties nullable & optional
+- Updated dependencies [83df1c6]
+  - @layerzerolabs/ua-devtools@0.3.5
+
 ## 0.3.4
 
 ### Patch Changes

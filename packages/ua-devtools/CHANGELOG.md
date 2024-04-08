@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.5
+
+### Patch Changes
+
+- 83df1c6: Pass additional OApp node configuration properties through schema; Make properties nullable & optional
+
 ## 0.3.4
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.7
+
+### Patch Changes
+
+- 83df1c6: Pass additional OApp node configuration properties through schema; Make properties nullable & optional
+- 3d23fe8: Make config loading and validation pluggable
+- Updated dependencies [83df1c6]
+- Updated dependencies [3d23fe8]
+  - @layerzerolabs/ua-devtools@0.3.5
+  - @layerzerolabs/ua-devtools-evm@0.3.5
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.7
+
 ## 0.2.6
 
 ### Patch Changes
