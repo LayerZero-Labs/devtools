@@ -1,13 +1,7 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
-import {
-    createLogger,
-    setDefaultLogLevel,
-    printJson,
-    pluralizeNoun,
-    createConfigLoader,
-} from '@layerzerolabs/io-devtools'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
+import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
@@ -17,13 +11,13 @@ import {
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { OmniTransaction } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
 import type { SubtaskConfigureTaskArgs } from './subtask.configure'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
 import './subtask.configure'
-import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
+import { OAppOmniGraphHardhatSchema } from '@/oapp'
 
 interface TaskArgs {
     oappConfig: string
@@ -44,11 +38,13 @@ const action: ActionType<TaskArgs> = async (
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
-        oappConfigPath,
-        createConfigLoader(OAppOmniGraphHardhatSchema),
-        logger
-    )
+
+    // Now we can load and validate the config
+    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfigPath,
+        schema: OAppOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_WIRE,
+    } satisfies SubtaskLoadConfigTaskArgs)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)

@@ -1,42 +1,34 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import {
-    createConfigLoader,
-    createLogger,
-    printCrossTable,
-    printRecord,
-    setDefaultLogLevel,
-} from '@layerzerolabs/io-devtools'
-import { TASK_LZ_OAPP_ENFORCED_OPTS_GET } from '@/constants/tasks'
+import { printCrossTable, printRecord, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_ENFORCED_OPTS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { EncodedOption, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppEnforcedOptions } from '@layerzerolabs/ua-devtools'
-import { validateAndTransformOappConfig } from '@/utils/taskHelpers'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual, isZero } from '@layerzerolabs/devtools'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
 
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
 }
 
-const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }) => {
+const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLevel = 'info' }, hre) => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
-    // And we'll create a logger for ourselves
-    const logger = createLogger()
-    const graph: OAppOmniGraph = await validateAndTransformOappConfig(
-        oappConfigPath,
-        createConfigLoader(OAppOmniGraphHardhatSchema),
-        logger
-    )
+    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+        configPath: oappConfigPath,
+        schema: OAppOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_ENFORCED_OPTS_GET,
+    } satisfies SubtaskLoadConfigTaskArgs)
 
     // need points for OApp Enforced Option Matrix
     const points = graph.contracts

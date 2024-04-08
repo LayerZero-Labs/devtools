@@ -1,14 +1,12 @@
-import { OmniAddress, OmniGraph } from '@layerzerolabs/devtools'
-import { ExecutorDstConfig, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
-import {
-    createConnectedContractFactory,
-    getEidForNetworkName,
-    OmniGraphBuilderHardhat,
-    OmniGraphHardhat,
-} from '@layerzerolabs/devtools-evm-hardhat'
-import { printJson } from '@layerzerolabs/io-devtools'
+import type { OmniAddress } from '@layerzerolabs/devtools'
+import type {
+    ExecutorDstConfig,
+    Timeout,
+    Uln302ExecutorConfig,
+    Uln302UlnConfig,
+} from '@layerzerolabs/protocol-devtools'
+import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
-import { Logger } from '@layerzerolabs/io-devtools'
 
 export async function getSendConfig(
     localNetworkName: string,
@@ -169,47 +167,4 @@ export async function getExecutorDstConfig(
     const executorFactory = createExecutorFactory(contractFactory)
     const localExecutorSDK = await executorFactory({ eid: localEid, contractName: 'Executor' })
     return await localExecutorSDK.getDstConfig(remoteEid)
-}
-
-export async function validateAndTransformOappConfig<TNodeConfig, TEdgeConfig>(
-    oappConfigPath: string,
-    configLoader: (path: string) => Promise<OmniGraphHardhat<TNodeConfig, TEdgeConfig>>,
-    logger: Logger
-): Promise<OmniGraph<TNodeConfig, TEdgeConfig>> {
-    /**
-     * At this point we have a correctly typed config in the hardhat format
-     */
-    const hardhatGraph = await configLoader(oappConfigPath)
-    /**
-     * We'll also print out the whole config for verbose loggers
-     */
-    logger.verbose(`Config file '${oappConfigPath}' has correct structure`)
-    logger.debug(`The hardhat config is:\n\n${printJson(hardhatGraph)}`)
-    /**
-     * What we need to do now is transform the config from hardhat format to the generic format
-     * with addresses instead of contractNames
-     */
-    logger.verbose(`Transforming '${oappConfigPath}' from hardhat-specific format to generic format`)
-
-    try {
-        /**
-         * The transformation is achieved using a builder that also validates the resulting graph
-         * (i.e. makes sure that all the contracts exist and connections are valid)
-         */
-        const builder = await OmniGraphBuilderHardhat.fromConfig(hardhatGraph)
-        /**
-         * We only need the graph so we throw away the builder
-         */
-        const graph = builder.graph
-
-        /**
-         * Show more detailed logs to interested users
-         */
-        logger.verbose(`Transformed '${oappConfigPath}' from hardhat-specific format to generic format`)
-        logger.debug(`The resulting config is:\n\n${printJson(graph)}`)
-
-        return graph
-    } catch (error) {
-        throw new Error(`Config from file '${oappConfigPath}' is invalid: ${error}`)
-    }
 }
