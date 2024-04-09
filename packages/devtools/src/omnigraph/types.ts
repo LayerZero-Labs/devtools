@@ -1,5 +1,6 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { Factory, OmniAddress, WithOptionals } from '@/types'
+import { OmniTransaction } from '..'
 
 /**
  * OmniPoint identifies a point in omniverse, an omnichain universe.
@@ -73,7 +74,12 @@ export interface IOmniSDK {
 /**
  * Base factory for all SDK factories
  */
-export type OmniSDKFactory<TOmniSDK extends IOmniSDK = IOmniSDK, TOmniPoint = OmniPoint> = Factory<
-    [TOmniPoint],
-    TOmniSDK
->
+export type OmniSDKFactory<TOmniSDK = IOmniSDK, TOmniPoint = OmniPoint> = Factory<[TOmniPoint], TOmniSDK>
+
+/**
+ * Helper type for configuration functions
+ */
+export type Configurator<TOmniGraph extends OmniGraph = OmniGraph, TOmniSDK = IOmniSDK> = (
+    graph: TOmniGraph,
+    createSdk: OmniSDKFactory<TOmniSDK>
+) => Promise<OmniTransaction[]>

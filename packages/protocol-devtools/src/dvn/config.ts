@@ -1,7 +1,5 @@
 import { flattenTransactions, isDeepEqual, type OmniTransaction } from '@layerzerolabs/devtools'
-import type { DVNFactory, DVNOmniGraph } from './types'
-
-export type DVNConfigurator = (graph: DVNOmniGraph, createSdk: DVNFactory) => Promise<OmniTransaction[]>
+import type { DVNConfigurator } from './types'
 
 export const configureDVN: DVNConfigurator = async (graph, createSdk) =>
     flattenTransactions([await configureDVNDstConfig(graph, createSdk)])

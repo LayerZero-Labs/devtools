@@ -5,12 +5,10 @@ import {
     type OmniTransaction,
     sequence,
 } from '@layerzerolabs/devtools'
-import { LzAppFactory, LzAppOmniGraph } from './types'
+import { LzAppConfigurator } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 
-export type LzAppConfigurator = (graph: LzAppOmniGraph, createSdk: LzAppFactory) => Promise<OmniTransaction[]>
-
-export const configureLzApp: LzAppConfigurator = async (graph: LzAppOmniGraph, createSdk: LzAppFactory) => {
+export const configureLzApp: LzAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('LzApp')
     const tasks = [() => configureLzAppTrustedRemotes(graph, createSdk)]
     // For now we keep the parallel execution as an opt-in feature flag

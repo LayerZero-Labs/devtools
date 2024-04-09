@@ -1,10 +1,5 @@
 import { flattenTransactions, type OmniTransaction, OmniPointMap, Bytes32 } from '@layerzerolabs/devtools'
-import type { EndpointV2Factory, EndpointV2OmniGraph, IEndpointV2 } from './types'
-
-export type EndpointV2Configurator = (
-    graph: EndpointV2OmniGraph,
-    createSdk: EndpointV2Factory
-) => Promise<OmniTransaction[]>
+import type { EndpointV2Configurator, IEndpointV2 } from './types'
 
 export const configureEndpointV2: EndpointV2Configurator = async (graph, createSdk) =>
     flattenTransactions([

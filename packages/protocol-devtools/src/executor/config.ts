@@ -1,7 +1,5 @@
 import { flattenTransactions, isDeepEqual, type OmniTransaction } from '@layerzerolabs/devtools'
-import type { ExecutorFactory, ExecutorOmniGraph } from './types'
-
-export type ExecutorConfigurator = (graph: ExecutorOmniGraph, createSdk: ExecutorFactory) => Promise<OmniTransaction[]>
+import type { ExecutorConfigurator } from './types'
 
 export const configureExecutor: ExecutorConfigurator = async (graph, createSdk) =>
     flattenTransactions([await configureExecutorDstConfig(graph, createSdk)])

@@ -1,10 +1,5 @@
 import { flattenTransactions, isDeepEqual, type OmniTransaction } from '@layerzerolabs/devtools'
-import type { PriceFeedFactory, PriceFeedOmniGraph } from './types'
-
-export type PriceFeedConfigurator = (
-    graph: PriceFeedOmniGraph,
-    createSdk: PriceFeedFactory
-) => Promise<OmniTransaction[]>
+import type { PriceFeedConfigurator } from './types'
 
 export const configurePriceFeed: PriceFeedConfigurator = async (graph, createSdk) =>
     flattenTransactions([await configurePriceFeedPriceData(graph, createSdk)])

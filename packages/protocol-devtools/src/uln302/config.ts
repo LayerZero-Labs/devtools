@@ -1,7 +1,5 @@
 import { flattenTransactions, type OmniTransaction } from '@layerzerolabs/devtools'
-import type { Uln302Factory, Uln302OmniGraph } from './types'
-
-export type Uln302Configurator = (graph: Uln302OmniGraph, createSdk: Uln302Factory) => Promise<OmniTransaction[]>
+import type { Uln302Configurator } from './types'
 
 export const configureUln302: Uln302Configurator = async (graph, createSdk) =>
     flattenTransactions([

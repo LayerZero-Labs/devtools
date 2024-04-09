@@ -1,8 +1,6 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import type { OwnableFactory, OwnableOmniGraph } from './types'
-import { flattenTransactions, formatOmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
-
-export type OwnableConfigurator = (graph: OwnableOmniGraph, createSdk: OwnableFactory) => Promise<OmniTransaction[]>
+import type { OwnableConfigurator } from './types'
+import { flattenTransactions, formatOmniPoint } from '@layerzerolabs/devtools'
 
 export const configureOwnable: OwnableConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('Ownable')
