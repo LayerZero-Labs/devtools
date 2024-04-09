@@ -104,9 +104,9 @@ const createContract = createConnectedContractFactory();
 
 const eid = EndpointId.BST_MAINNET;
 
-// We can ask for the contract by its name and eid
-const contract = await createContract({ eid: address: '0x' })
+// We can ask for the contract by its address and eid
+const contract = await createContract({ eid, address: "0x" });
 
-// Or its name
-const contract = await createContract({ eid: contractName: 'MyOApp' })
+// Or its name and eid
+const contract = await createContract({ eid, contractName: "MyOApp" });
 ```
