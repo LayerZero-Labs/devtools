@@ -51,6 +51,19 @@ export interface OmniGraphHardhat<TNodeConfig = unknown, TEdgeConfig = unknown> 
     connections: OmniEdgeHardhat<TEdgeConfig>[]
 }
 
+/**
+ * Helper type to convert OmniGraphHardhat to OmniGraph
+ *
+ * ```
+ * type MyOmniGraphHardhat = OmniGraphHardhat<MyNodeConfig, MyEdgeConfig>
+ * type MyOmniGraph = InferOmniGraph<MyOmniGraphHardhat>
+ * ```
+ */
+export type InferOmniGraph<TOmniGraphHardhat extends OmniGraphHardhat> =
+    TOmniGraphHardhat extends OmniGraphHardhat<infer TNodeConfig, infer TEdgeConfig>
+        ? OmniGraph<TNodeConfig, TEdgeConfig>
+        : never
+
 export type OmniContractFactoryHardhat = OmniContractFactory<OmniPointHardhat>
 
 export type OmniPointHardhatTransformer = Factory<[OmniPointHardhat | OmniPoint], OmniPoint>
