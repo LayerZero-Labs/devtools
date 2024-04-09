@@ -20,12 +20,15 @@ describe('oapp/schema', () => {
 
         it('should pass any additional properties through', () => {
             fc.assert(
-                fc.property(oappNodeConfigArbitrary, fc.object(), (config, extraProperties) => {
-                    expect(OAppNodeConfigSchema.parse({ ...extraProperties, ...config })).toEqual({
-                        ...extraProperties,
-                        ...config,
-                    })
-                })
+                fc.property(
+                    oappNodeConfigArbitrary,
+                    fc.dictionary(fc.string(), fc.anything()),
+                    (config, extraProperties) => {
+                        const combined = Object.assign({}, extraProperties, config)
+
+                        expect(combined).toMatchObject(OAppNodeConfigSchema.parse(combined))
+                    }
+                )
             )
         })
     })
