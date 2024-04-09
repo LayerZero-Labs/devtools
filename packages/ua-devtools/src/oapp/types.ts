@@ -2,6 +2,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
 import type {
     Bytes,
+    Configurator,
     IOmniSDK,
     OmniAddress,
     OmniGraph,
@@ -112,3 +113,5 @@ export interface OAppEnforcedOptions {
 export type OAppOmniGraph = OmniGraph<OAppNodeConfig | undefined, OAppEdgeConfig | undefined>
 
 export type OAppFactory<TOApp extends IOApp = IOApp, TOmniPoint = OmniPoint> = OmniSDKFactory<TOApp, TOmniPoint>
+
+export type OAppConfigurator<TOApp extends IOApp = IOApp> = Configurator<OAppOmniGraph, TOApp>

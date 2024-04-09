@@ -1,4 +1,5 @@
 import type {
+    Configurator,
     IOmniSDK,
     OmniAddress,
     OmniGraph,
@@ -17,3 +18,5 @@ export interface ILzApp extends IOmniSDK {
 export type LzAppOmniGraph = OmniGraph<unknown, unknown>
 
 export type LzAppFactory<TLzApp extends ILzApp = ILzApp, TOmniPoint = OmniPoint> = OmniSDKFactory<TLzApp, TOmniPoint>
+
+export type LzAppConfigurator<TLzApp extends ILzApp = ILzApp> = Configurator<LzAppOmniGraph, TLzApp>

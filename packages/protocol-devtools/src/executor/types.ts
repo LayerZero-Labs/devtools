@@ -1,4 +1,11 @@
-import type { IOmniSDK, OmniGraph, OmniPoint, OmniSDKFactory, OmniTransaction } from '@layerzerolabs/devtools'
+import type {
+    Configurator,
+    IOmniSDK,
+    OmniGraph,
+    OmniPoint,
+    OmniSDKFactory,
+    OmniTransaction,
+} from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface IExecutor extends IOmniSDK {
@@ -36,3 +43,5 @@ export type ExecutorFactory<TExecutor extends IExecutor = IExecutor, TOmniPoint 
     TExecutor,
     TOmniPoint
 >
+
+export type ExecutorConfigurator<TExecutor extends IExecutor = IExecutor> = Configurator<ExecutorOmniGraph, TExecutor>

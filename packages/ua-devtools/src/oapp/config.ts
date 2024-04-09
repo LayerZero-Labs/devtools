@@ -10,15 +10,13 @@ import {
     sequence,
     formatOmniPoint,
 } from '@layerzerolabs/devtools'
-import { OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory, OAppOmniGraph } from './types'
+import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
-import { SetConfigParam } from '@layerzerolabs/protocol-devtools'
+import type { SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
-export type OAppConfigurator = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OmniTransaction[]>
-
-export const configureOApp: OAppConfigurator = async (graph: OAppOmniGraph, createSdk: OAppFactory) => {
+export const configureOApp: OAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('OApp')
     const tasks = [
         () => configureOAppPeers(graph, createSdk),

@@ -5,6 +5,7 @@ import type {
     IOmniSDK,
     OmniPoint,
     OmniSDKFactory,
+    Configurator,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
@@ -126,3 +127,5 @@ export type Uln302Factory<TUln302 extends IUln302 = IUln302, TOmniPoint = OmniPo
     TUln302,
     TOmniPoint
 >
+
+export type Uln302Configurator<TUln302 extends IUln302 = IUln302> = Configurator<Uln302OmniGraph, TUln302>

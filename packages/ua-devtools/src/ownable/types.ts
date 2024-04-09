@@ -1,4 +1,4 @@
-import type { Factory, OmniAddress, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import type { Configurator, Factory, OmniAddress, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 
 export interface IOwnable {
     getOwner(): Promise<OmniAddress>
@@ -16,3 +16,5 @@ export type OwnableFactory<TOwnable extends IOwnable = IOwnable, TOmniPoint = Om
     [TOmniPoint],
     TOwnable
 >
+
+export type OwnableConfigurator<TOwnable extends IOwnable = IOwnable> = Configurator<OwnableOmniGraph, TOwnable>

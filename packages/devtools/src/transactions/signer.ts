@@ -12,6 +12,16 @@ export type SignAndSendResult = [
     pending: OmniTransaction[],
 ]
 
+export type OnSignAndSendProgress = (
+    result: OmniTransactionWithReceipt,
+    results: OmniTransactionWithReceipt[]
+) => unknown
+
+export type SignAndSend = (
+    transactions: OmniTransaction[],
+    onProgress?: OnSignAndSendProgress
+) => Promise<SignAndSendResult>
+
 /**
  * Creates a sign & send utility for a list of transaction
  * with a help of `OmniSignerFactory`
@@ -19,11 +29,8 @@ export type SignAndSendResult = [
  * @param {OmniSignerFactory} createSigner
  */
 export const createSignAndSend =
-    (createSigner: OmniSignerFactory) =>
-    async (
-        transactions: OmniTransaction[],
-        onProgress?: (result: OmniTransactionWithReceipt, results: OmniTransactionWithReceipt[]) => unknown
-    ): Promise<SignAndSendResult> => {
+    (createSigner: OmniSignerFactory): SignAndSend =>
+    async (transactions, onProgress): Promise<SignAndSendResult> => {
         const logger = createModuleLogger('sign & send')
 
         // Put it here so that we don't need to type like seven toilet rolls of variable names
