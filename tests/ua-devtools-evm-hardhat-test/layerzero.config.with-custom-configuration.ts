@@ -1,10 +1,11 @@
-import { OmniGraph, OmniPoint, OmniTransaction, UIntBigIntSchema, flattenTransactions } from '@layerzerolabs/devtools'
+import { OmniPoint, OmniTransaction, UIntBigIntSchema, flattenTransactions } from '@layerzerolabs/devtools'
 import { BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import {
     createOmniEdgeHardhatSchema,
     createOmniGraphHardhatSchema,
     createOmniNodeHardhatSchema,
     type OmniGraphHardhat,
+    type InferOmniGraph,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
@@ -32,7 +33,7 @@ export interface MyCustomNodeConfig extends OAppNodeConfig {
 
 export type MyCustomOmniGraphHardhat = OmniGraphHardhat<MyCustomNodeConfig, OAppEdgeConfig | undefined>
 
-export type MyCustomOmniGraph = OmniGraph<MyCustomNodeConfig, OAppEdgeConfig | undefined>
+export type MyCustomOmniGraph = InferOmniGraph<MyCustomOmniGraphHardhat>
 
 export type MyCustomOAppConfigurator = (
     graph: MyCustomOmniGraph,
