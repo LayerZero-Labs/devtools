@@ -5,6 +5,7 @@ import type { CLIArgumentType } from 'hardhat/types'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
 import { isEVMAddress } from '@layerzerolabs/devtools-evm'
 import { isLogLevel, LogLevel } from '@layerzerolabs/io-devtools'
+import { Environment, Stage } from '@layerzerolabs/lz-definitions'
 
 /**
  * Hardhat CLI type for a comma separated list of arbitrary strings
@@ -13,6 +14,52 @@ const csv: CLIArgumentType<string[]> = {
     name: 'csv',
     parse(name: string, value: string) {
         return splitCommaSeparated(value)
+    },
+    validate() {},
+}
+
+const isEnvironment = (value: string): value is Environment => Object.values<string>(Environment).includes(value)
+
+/**
+ * Hardhat CLI type for a LayzerZero chain environment
+ *
+ * @see {@link Environment}
+ */
+const environment: CLIArgumentType<Environment> = {
+    name: 'environment',
+    parse(name: string, value: string) {
+        if (!isEnvironment(value)) {
+            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+                value,
+                name: name,
+                type: 'environment',
+            })
+        }
+
+        return value
+    },
+    validate() {},
+}
+
+const isStage = (value: string): value is Stage => Object.values<string>(Stage).includes(value)
+
+/**
+ * Hardhat CLI type for a LayzerZero chain stage
+ *
+ * @see {@link Stage}
+ */
+const stage: CLIArgumentType<Stage> = {
+    name: 'stage',
+    parse(name: string, value: string) {
+        if (!isStage(value)) {
+            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+                value,
+                name: name,
+                type: 'stage',
+            })
+        }
+
+        return value
     },
     validate() {},
 }
@@ -93,4 +140,4 @@ export const signer: CLIArgumentType<string | number> = {
     validate() {},
 }
 
-export const types = { csv, logLevel, fn, signer, ...builtInTypes }
+export const types = { csv, logLevel, fn, signer, environment, stage, ...builtInTypes }

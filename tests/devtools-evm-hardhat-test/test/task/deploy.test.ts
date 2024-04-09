@@ -101,6 +101,40 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
             expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
         })
+
+        it('should preselect no networks if there is not network with given stage', async () => {
+            const result = runExpect('deploy-all-missing-stage-interactive')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+
+        it('should not deploy anything if there is not network with given stage', async () => {
+            const result = runExpect('deploy-all-missing-stage-ci')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+
+        it('should ignore --stage if --networks were provided', async () => {
+            const result = runExpect('deploy-vengaboys-sandbox')
+
+            expect(result.status).toBe(0)
+
+            const vengaboysDeploymentPath = deploymentPath('vengaboys')
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+
+            expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
+            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeFalsy()
+        })
     })
 
     const expectDeployment = expect.objectContaining({

@@ -21,9 +21,11 @@ import { Deployment } from 'hardhat-deploy/dist/types'
 import { assertDefinedNetworks, assertHardhatDeploy } from '@/internal/assertions'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
 import { isDeepEqual } from '@layerzerolabs/devtools'
+import { Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 interface TaskArgs {
     networks?: string[]
+    stage?: Stage
     tags?: string[]
     logLevel?: string
     ci?: boolean
@@ -57,7 +59,7 @@ type NetworkDeployResult =
       }
 
 const action: ActionType<TaskArgs> = async (
-    { networks: networksArgument, tags: tagsArgument = [], logLevel = 'info', ci = false, reset = false },
+    { networks: networksArgument, tags: tagsArgument = [], logLevel = 'info', ci = false, reset = false, stage },
     hre
 ): Promise<DeployResults> => {
     printLogo()
@@ -85,9 +87,20 @@ const action: ActionType<TaskArgs> = async (
         logger.warn(`Failed to compile the project: ${error}`)
     }
 
+    // We'll warn the user that sending both stage & networks is not supported
+    // and that the --stage will be ignored
+    if (networksArgument != null && stage !== null) {
+        logger.warn(`--stage ${stage} will be ignored since --networks argument has been passed`)
+    }
+
     // We grab a mapping between network names and endpoint IDs
     const eidsByNetworks = Object.entries(getEidsByNetworkName())
-    const configuredNetworkNames = eidsByNetworks.flatMap(([name, eid]) => (eid == null ? [] : [name]))
+    // If a stage argument is passed, we'll filter out the networks for that stage
+    const filteredEidsByNetworks =
+        stage == null
+            ? eidsByNetworks
+            : eidsByNetworks.filter(([, eid]) => eid != null && endpointIdToStage(eid) === stage)
+    const configuredNetworkNames = filteredEidsByNetworks.flatMap(([name, eid]) => (eid == null ? [] : [name]))
 
     // We'll use all the configured network names as the default for the networks argument
     const networks: string[] = networksArgument ?? configuredNetworkNames
@@ -290,5 +303,6 @@ task(TASK_LZ_DEPLOY, 'Deploy LayerZero contracts', action)
         true
     )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addParam('stage', 'Chain stage. One of: mainnet, testnet, sandbox', undefined, types.stage, true)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addFlag('reset', 'Delete existing deployments')
