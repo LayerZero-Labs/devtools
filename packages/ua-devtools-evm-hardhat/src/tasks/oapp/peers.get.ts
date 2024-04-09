@@ -10,7 +10,7 @@ import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual } from '@layerzerolabs/devtools'
 import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
-import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
+import type { SubtaskLoadConfigTaskArgs } from './types'
 
 interface TaskArgs {
     oappConfig: string

@@ -11,7 +11,7 @@ import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { areVectorsEqual, isZero } from '@layerzerolabs/devtools'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { OAppOmniGraphHardhatSchema } from '@/oapp/schema'
-import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 
 interface TaskArgs {
     oappConfig: string

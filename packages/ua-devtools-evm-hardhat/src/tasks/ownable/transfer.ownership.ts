@@ -16,7 +16,7 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
 import { OwnableOmniGraphHardhatSchema } from '@/ownable'
 import { configureOwnable } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory, createOwnableFactory } from '@layerzerolabs/ua-devtools-evm'
-import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/subtask.config.load'
+import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 
 interface TaskArgs {
     oappConfig: string
