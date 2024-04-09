@@ -26,6 +26,7 @@ export const configureOApp: OAppConfigurator = async (graph, createSdk) => {
         () => configureSendConfig(graph, createSdk),
         () => configureReceiveConfig(graph, createSdk),
         () => configureEnforcedOptions(graph, createSdk),
+        () => configureOAppDelegates(graph, createSdk),
     ]
 
     // For now we keep the parallel execution as an opt-in feature flag
