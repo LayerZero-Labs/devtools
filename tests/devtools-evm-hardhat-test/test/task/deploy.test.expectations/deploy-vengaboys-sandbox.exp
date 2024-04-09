@@ -31,24 +31,7 @@ set timeout 60
 spawn npx hardhat lz:deploy --stage sandbox --networks vengaboys
 match_max 100000
 
-# We expect the stage to be ignored
+# We expect the script to error out
 # 
 # Without the leading "--" here expect would think think "--stage" is a CLI flag
-expect -- "--stage sandbox will be ignored since --networks argument has been passed"
-
-# We preselected vengaboys so we just confirm
-expect "Which networks would you like to deploy?"
-send -- "\r"
-
-expect "Which deploy script tags would you like to use?"
-send -- "\r"
-
-expect "Will deploy 1 network: vengaboys"
-expect "Will use all deployment scripts"
-expect "Do you want to continue?"
-send -- "\r"
-
-expect "Deploying..."
-expect "Your contracts are now deployed"
-
-expect eof
+expect -- "--stage CLI argument cannot be used in conjunction with --networks vengaboys"

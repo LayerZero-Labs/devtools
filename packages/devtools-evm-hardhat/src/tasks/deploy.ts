@@ -87,10 +87,11 @@ const action: ActionType<TaskArgs> = async (
         logger.warn(`Failed to compile the project: ${error}`)
     }
 
-    // We'll warn the user that sending both stage & networks is not supported
-    // and that the --stage will be ignored
+    // --stage cannot be used in conjunction with --networks
     if (networksArgument != null && stage != null) {
-        logger.warn(`--stage ${stage} will be ignored since --networks argument has been passed`)
+        logger.error(`--stage ${stage} cannot be used in conjunction with --networks ${networksArgument.join(',')}`)
+
+        process.exit(1)
     }
 
     // We grab a mapping between network names and endpoint IDs

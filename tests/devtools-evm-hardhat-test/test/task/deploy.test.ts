@@ -122,18 +122,14 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
         })
 
-        it('should ignore --stage if --networks were provided', async () => {
+        it('should fail if both --stage and --networks were provided', async () => {
             const result = runExpect('deploy-vengaboys-sandbox')
 
             expect(result.status).toBe(0)
 
-            const vengaboysDeploymentPath = deploymentPath('vengaboys')
-
             expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
             expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
-
-            expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
-            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeTruthy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
         })
 
         it('should fail if an invalid --stage has been provided', async () => {
