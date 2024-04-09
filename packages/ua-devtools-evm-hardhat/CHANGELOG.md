@@ -1,5 +1,22 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.9
+
+### Patch Changes
+
+- 947a9aa: Add InferOmniGraph helper type
+- 947a9aa: Add Configurator helper type
+- Updated dependencies [947a9aa]
+- Updated dependencies [947a9aa]
+- Updated dependencies [947a9aa]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.4
+  - @layerzerolabs/devtools@0.3.5
+  - @layerzerolabs/protocol-devtools@0.3.5
+  - @layerzerolabs/ua-devtools@0.3.6
+  - @layerzerolabs/devtools-evm@0.3.4
+  - @layerzerolabs/protocol-devtools-evm@0.3.4
+  - @layerzerolabs/ua-devtools-evm@0.3.6
+
 ## 0.3.8
 
 ### Patch Changes
