@@ -101,6 +101,46 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
             expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
         })
+
+        it('should preselect no networks if there is not network with given stage', async () => {
+            const result = runExpect('deploy-all-missing-stage-interactive')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+
+        it('should not deploy anything if there is not network with given stage', async () => {
+            const result = runExpect('deploy-all-missing-stage-ci')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+
+        it('should fail if both --stage and --networks were provided', async () => {
+            const result = runExpect('deploy-vengaboys-sandbox')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
+
+        it('should fail if an invalid --stage has been provided', async () => {
+            const result = runExpect('deploy-all-wrong-stage')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
+        })
     })
 
     const expectDeployment = expect.objectContaining({
