@@ -133,7 +133,17 @@ describe(`task ${TASK_LZ_DEPLOY}`, () => {
             expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
 
             expect(isFile(vengaboysDeploymentPath('Thrower'))).toBeTruthy()
-            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeFalsy()
+            expect(isFile(vengaboysDeploymentPath('TestProxy'))).toBeTruthy()
+        })
+
+        it('should fail if an invalid --stage has been provided', async () => {
+            const result = runExpect('deploy-all-wrong-stage')
+
+            expect(result.status).toBe(0)
+
+            expect(isDirectory(deploymentsPath('britney'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('tango'))).toBeFalsy()
+            expect(isDirectory(deploymentsPath('vengaboys'))).toBeFalsy()
         })
     })
 

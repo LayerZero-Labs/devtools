@@ -89,7 +89,7 @@ const action: ActionType<TaskArgs> = async (
 
     // We'll warn the user that sending both stage & networks is not supported
     // and that the --stage will be ignored
-    if (networksArgument != null && stage !== null) {
+    if (networksArgument != null && stage != null) {
         logger.warn(`--stage ${stage} will be ignored since --networks argument has been passed`)
     }
 

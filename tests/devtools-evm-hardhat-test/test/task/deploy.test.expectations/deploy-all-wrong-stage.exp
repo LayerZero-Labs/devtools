@@ -28,27 +28,9 @@ if {$force_conservative} {
 
 
 set timeout 60
-spawn npx hardhat lz:deploy --stage sandbox --networks vengaboys
+spawn npx hardhat lz:deploy --stage broadway --ci
 match_max 100000
 
-# We expect the stage to be ignored
-# 
-# Without the leading "--" here expect would think think "--stage" is a CLI flag
-expect -- "--stage sandbox will be ignored since --networks argument has been passed"
-
-# We preselected vengaboys so we just confirm
-expect "Which networks would you like to deploy?"
-send -- "\r"
-
-expect "Which deploy script tags would you like to use?"
-send -- "\r"
-
-expect "Will deploy 1 network: vengaboys"
-expect "Will use all deployment scripts"
-expect "Do you want to continue?"
-send -- "\r"
-
-expect "Deploying..."
-expect "Your contracts are now deployed"
+expect "Invalid value broadway for argument stage of type stage"
 
 expect eof
