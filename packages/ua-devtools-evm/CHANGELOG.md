@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.6
+
+### Patch Changes
+
+- 947a9aa: Add Configurator helper type
+- Updated dependencies [947a9aa]
+- Updated dependencies [947a9aa]
+  - @layerzerolabs/devtools@0.3.5
+  - @layerzerolabs/protocol-devtools@0.3.5
+  - @layerzerolabs/ua-devtools@0.3.6
+  - @layerzerolabs/devtools-evm@0.3.4
+  - @layerzerolabs/protocol-devtools-evm@0.3.4
+
 ## 0.3.5
 
 ### Patch Changes

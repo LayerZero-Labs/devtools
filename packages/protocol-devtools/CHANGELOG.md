@@ -1,5 +1,14 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.3.5
+
+### Patch Changes
+
+- 947a9aa: Add Configurator helper type
+- Updated dependencies [947a9aa]
+- Updated dependencies [947a9aa]
+  - @layerzerolabs/devtools@0.3.5
+
 ## 0.3.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.7
+
+### Patch Changes
+
+- 947a9aa: Add Configurator helper type
+
 ## 0.2.6
 
 ### Patch Changes
