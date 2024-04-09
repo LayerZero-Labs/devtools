@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.7
+
+### Patch Changes
+
+- 382529a: Add missing delegate configuration
+
 ## 0.3.6
 
 ### Patch Changes
