@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.8
+
+### Patch Changes
+
+- ba7ce13: Add the ability to override subtasks
+- Updated dependencies [ba7ce13]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.8
+
 ## 0.2.7
 
 ### Patch Changes

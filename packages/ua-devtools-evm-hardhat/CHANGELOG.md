@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.8
+
+### Patch Changes
+
+- ba7ce13: Add the ability to override subtasks
+
 ## 0.3.7
 
 ### Patch Changes
