@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.1.3
+
+### Patch Changes
+
+- 7f2ebc6: Add --stage CLI argument to lz:deploy task
+
 ## 0.1.2
 
 ### Patch Changes
