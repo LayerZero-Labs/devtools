@@ -1,4 +1,4 @@
-import { OmniPoint, OmniTransaction, UIntBigIntSchema, flattenTransactions } from '@layerzerolabs/devtools'
+import { Configurator, OmniTransaction, UIntBigIntSchema, flattenTransactions } from '@layerzerolabs/devtools'
 import { BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import {
     createOmniEdgeHardhatSchema,
@@ -35,10 +35,7 @@ export type MyCustomOmniGraphHardhat = OmniGraphHardhat<MyCustomNodeConfig, OApp
 
 export type MyCustomOmniGraph = InferOmniGraph<MyCustomOmniGraphHardhat>
 
-export type MyCustomOAppConfigurator = (
-    graph: MyCustomOmniGraph,
-    createSdk: (point: OmniPoint) => Promise<MyCustomOAppSDK>
-) => Promise<OmniTransaction[]>
+export type MyCustomOAppConfigurator = Configurator<MyCustomOmniGraph, MyCustomOAppSDK>
 
 //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 //  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
