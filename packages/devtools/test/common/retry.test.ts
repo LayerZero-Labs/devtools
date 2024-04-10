@@ -128,9 +128,9 @@ describe('common/retry', () => {
                 await expect(withAsyncRetriable.iAlwaysFail('y')).rejects.toBe(error)
 
                 expect(handleRetry).toHaveBeenCalledTimes(3)
-                expect(handleRetry).toHaveBeenNthCalledWith(1, 1, error, withAsyncRetriable, ['y'])
-                expect(handleRetry).toHaveBeenNthCalledWith(2, 2, error, withAsyncRetriable, ['y'])
-                expect(handleRetry).toHaveBeenNthCalledWith(3, 3, error, withAsyncRetriable, ['y'])
+                expect(handleRetry).toHaveBeenNthCalledWith(1, 1, 3, error, withAsyncRetriable, 'iAlwaysFail', ['y'])
+                expect(handleRetry).toHaveBeenNthCalledWith(2, 2, 3, error, withAsyncRetriable, 'iAlwaysFail', ['y'])
+                expect(handleRetry).toHaveBeenNthCalledWith(3, 3, 3, error, withAsyncRetriable, 'iAlwaysFail', ['y'])
             })
 
             it('should resolve if the method resolves within the specified number of attempts', async () => {
@@ -155,8 +155,8 @@ describe('common/retry', () => {
                 await expect(withAsyncRetriable.iAlwaysFail('y')).resolves.toBe(value)
 
                 expect(handleRetry).toHaveBeenCalledTimes(2)
-                expect(handleRetry).toHaveBeenNthCalledWith(1, 1, error, withAsyncRetriable, ['y'])
-                expect(handleRetry).toHaveBeenNthCalledWith(2, 2, error, withAsyncRetriable, ['y'])
+                expect(handleRetry).toHaveBeenNthCalledWith(1, 1, 3, error, withAsyncRetriable, 'iAlwaysFail', ['y'])
+                expect(handleRetry).toHaveBeenNthCalledWith(2, 2, 3, error, withAsyncRetriable, 'iAlwaysFail', ['y'])
             })
         })
     })

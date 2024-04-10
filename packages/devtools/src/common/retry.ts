@@ -1,5 +1,15 @@
+import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
 import assert from 'assert'
 import { backOff } from 'exponential-backoff'
+
+export type OnRetry<TInstance, TArgs extends unknown[] = unknown[]> = (
+    attempt: number,
+    numAttempts: number,
+    error: unknown,
+    target: TInstance,
+    method: string,
+    args: TArgs
+) => boolean | void | undefined
 
 export interface RetriableConfig<TInstance = unknown> {
     /**
@@ -26,12 +36,19 @@ export interface RetriableConfig<TInstance = unknown> {
      * @param {this} target
      * @returns {boolean | undefined} This function can stop the retry train by returning false
      */
-    onRetry?: <TArgs extends unknown[] = unknown[]>(
-        attempt: number,
-        error: unknown,
-        target: TInstance,
-        args: TArgs
-    ) => boolean | void | undefined
+    onRetry?: OnRetry<TInstance>
+}
+
+/**
+ * Helper function that creates a default debug logger for the `onRetry`
+ * callback of `AsyncRetriable`
+ */
+export const createDefaultRetryHandler = (loggerName: string = 'AsyncRetriable'): OnRetry<unknown> => {
+    const logger = createModuleLogger(loggerName)
+
+    return (attempt, numAttempts, error, target, method, args) => {
+        logger.debug(`Attempt ${attempt}/${numAttempts}: ${method}() with arguments: ${printJson(args)}: ${error}`)
+    }
 }
 
 export const AsyncRetriable = ({
@@ -39,7 +56,7 @@ export const AsyncRetriable = ({
     enabled = !!process.env.LZ_EXPERIMENTAL_ENABLE_RETRY,
     maxDelay,
     numAttempts = 3,
-    onRetry,
+    onRetry = createDefaultRetryHandler(),
 }: RetriableConfig = {}) => {
     return function AsyncRetriableDecorator<TArgs extends unknown[], TResult>(
         target: unknown,
@@ -68,7 +85,7 @@ export const AsyncRetriable = ({
         const handleRetry =
             (args: TArgs) =>
             (error: unknown, attempt: number): boolean =>
-                onRetry?.(attempt, error, target, args) ?? true
+                onRetry?.(attempt, numAttempts, error, target, propertyKey, args) ?? true
 
         // Create the retried method
         const retriedMethod = (...args: TArgs): Promise<TResult> =>
