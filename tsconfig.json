@@ -7,6 +7,7 @@
     "importHelpers": true,
     "noEmit": true,
     "declaration": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "strict": true,
@@ -31,6 +32,6 @@
     "resolveJsonModule": true,
     "types": ["node"],
     "skipLibCheck": true,
-    "stripInternal": true,
-  },
+    "stripInternal": true
+  }
 }
