@@ -77,4 +77,5 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['mode', 'https://explorer.mode.network/api'],
     ['etherlink', 'https://explorer.etherlink.com/api'],
     ['blast', 'https://api.blastscan.io/api'],
+    ['manta', 'https://pacific-explorer.manta.network/api'],
 ])
