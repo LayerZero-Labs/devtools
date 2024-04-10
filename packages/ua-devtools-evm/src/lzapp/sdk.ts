@@ -6,6 +6,7 @@ import {
     areBytes32Equal,
     ignoreZero,
     makeBytes32,
+    AsyncRetriable,
 } from '@layerzerolabs/devtools'
 import { type OmniContract, parseGenericError } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -16,6 +17,7 @@ export class LzApp extends OmniSDK implements ILzApp {
         super(contract)
     }
 
+    @AsyncRetriable()
     async getTrustedRemote(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting trusted remote for eid ${eid} (${formatEid(eid)})`)
 

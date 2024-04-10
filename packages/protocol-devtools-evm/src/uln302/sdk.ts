@@ -15,13 +15,14 @@ import {
 import { Uln302ExecutorConfigSchema, Uln302UlnConfigSchema } from './schema'
 import assert from 'assert'
 import { printJson } from '@layerzerolabs/io-devtools'
-import { isZero } from '@layerzerolabs/devtools'
+import { isZero, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK, addChecksum, makeZeroAddress } from '@layerzerolabs/devtools-evm'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.getUlnConfig}
      */
+    @AsyncRetriable()
     async getUlnConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
@@ -38,6 +39,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.getAppUlnConfig}
      */
+    @AsyncRetriable()
     async getAppUlnConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302UlnConfig> {
         this.logger.debug(
             `Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${makeZeroAddress(address)}`
@@ -73,6 +75,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.getExecutorConfig}
      */
+    @AsyncRetriable()
     async getExecutorConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.getExecutorConfig(makeZeroAddress(address), eid)
 
@@ -86,6 +89,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.getAppExecutorConfig}
      */
+    @AsyncRetriable()
     async getAppExecutorConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302ExecutorConfig> {
         const config = await this.contract.contract.executorConfigs(makeZeroAddress(address), eid)
 

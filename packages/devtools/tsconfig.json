@@ -3,6 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "include": ["src", "test"],
   "compilerOptions": {
+    "experimentalDecorators": true,
     "types": ["node", "jest"],
     "paths": {
       "@/*": ["./src/*"]

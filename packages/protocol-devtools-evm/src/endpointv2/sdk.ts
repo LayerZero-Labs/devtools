@@ -18,6 +18,7 @@ import {
     isZero,
     ignoreZero,
     areBytes32Equal,
+    AsyncRetriable,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/devtools-evm'
@@ -42,6 +43,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         super(contract)
     }
 
+    @AsyncRetriable()
     async getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting delegate for OApp ${oapp}`)
 
@@ -67,18 +69,21 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return await this.uln302Factory({ eid: this.point.eid, address })
     }
 
+    @AsyncRetriable()
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default receive library for eid ${eid} (${formatEid(eid)})`)
 
         return ignoreZero(await this.contract.contract.defaultReceiveLibrary(eid))
     }
 
+    @AsyncRetriable()
     async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`)
 
         return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
     }
 
+    @AsyncRetriable()
     async getReceiveLibrary(
         receiver: OmniAddress,
         srcEid: EndpointId
@@ -109,12 +114,14 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }
     }
 
+    @AsyncRetriable()
     async getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default send library for eid ${eid} (${formatEid(eid)})`)
 
         return ignoreZero(await this.contract.contract.defaultSendLibrary(eid))
     }
 
+    @AsyncRetriable()
     async isDefaultSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<boolean> {
         this.logger.debug(
             `Checking default send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`
@@ -179,6 +186,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }
     }
 
+    @AsyncRetriable()
     async getReceiveLibraryTimeout(receiver: OmniAddress, srcEid: EndpointId): Promise<Timeout> {
         this.logger.debug(
             `Getting receive library timeout for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`
@@ -189,6 +197,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return TimeoutSchema.parse({ ...timeout })
     }
 
+    @AsyncRetriable()
     async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<Timeout> {
         this.logger.debug(`Getting default receive library timeout for eid ${eid} (${formatEid(eid)})`)
 
@@ -321,6 +330,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return ulnSdk.hasAppUlnConfig(eid, oapp, config)
     }
 
+    @AsyncRetriable()
     isRegisteredLibrary(uln: OmniAddress): Promise<boolean> {
         return this.contract.contract.isRegisteredLibrary(uln)
     }
@@ -334,6 +344,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }
     }
 
+    @AsyncRetriable()
     public async quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee> {
         const { nativeFee, lzTokenFee } = await this.contract.contract.quote(params, sender)
         return {
