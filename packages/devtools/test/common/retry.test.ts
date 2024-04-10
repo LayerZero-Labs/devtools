@@ -3,6 +3,11 @@ import { AsyncRetriable } from '@/common/retry'
 describe('common/retry', () => {
     describe('AsyncRetriable', () => {
         describe('when LZ_EXPERIMENTAL_ENABLE_RETRY is off', () => {
+            beforeAll(() => {
+                // We'll enable the AsyncRetriable for these tests
+                process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = ''
+            })
+
             it('shoult not retry', async () => {
                 const error = new Error('Told ya')
                 const handleRetry = jest.fn()
@@ -42,12 +47,12 @@ describe('common/retry', () => {
         })
 
         describe('when LZ_EXPERIMENTAL_ENABLE_RETRY is on', () => {
-            beforeEach(() => {
+            beforeAll(() => {
                 // We'll enable the AsyncRetriable for these tests
                 process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = '1'
             })
 
-            afterEach(() => {
+            afterAll(() => {
                 process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = ''
             })
 
