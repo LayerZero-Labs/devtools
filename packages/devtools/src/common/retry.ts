@@ -31,9 +31,12 @@ export interface RetriableConfig<TInstance = unknown> {
     /**
      * Callback called on every failed attempt.
      *
-     * @param {number} attempt
-     * @param {unknown} error
-     * @param {this} target
+     * @param {number} attempt 1-indexed number of attempt of executing the method
+     * @param {number} numAttempts Maximum/total number of attempts that will be executed
+     * @param {unknown} error The error that caused the function to be retried
+     * @param {unknown} target The object whose method is being retried
+     * @param {string} method The method name
+     * @param {unknown[]} args The method parameters
      * @returns {boolean | undefined} This function can stop the retry train by returning false
      */
     onRetry?: OnRetry<TInstance>
