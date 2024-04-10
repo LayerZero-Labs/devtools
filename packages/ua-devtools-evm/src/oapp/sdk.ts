@@ -15,7 +15,7 @@ import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
-import { mapError } from '@layerzerolabs/devtools'
+import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OwnableMixin } from '@/ownable/mixin'
 
 export class OApp extends OmniSDK implements IOApp {
@@ -26,6 +26,7 @@ export class OApp extends OmniSDK implements IOApp {
         super(contract)
     }
 
+    @AsyncRetriable()
     getOwner(): Promise<string> {
         // TODO This is a quick and dirty way of applying OwnableMixin
         //
@@ -38,6 +39,7 @@ export class OApp extends OmniSDK implements IOApp {
         return OwnableMixin.getOwner.call(this)
     }
 
+    @AsyncRetriable()
     hasOwner(address: string): Promise<boolean> {
         // TODO This is a quick and dirty way of applying OwnableMixin
         //
@@ -62,6 +64,7 @@ export class OApp extends OmniSDK implements IOApp {
         return OwnableMixin.setOwner.call(this, address)
     }
 
+    @AsyncRetriable()
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
@@ -84,6 +87,7 @@ export class OApp extends OmniSDK implements IOApp {
         return await this.endpointV2Factory({ address, eid: this.contract.eid })
     }
 
+    @AsyncRetriable()
     async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
         const eidLabel = `eid ${eid} (${formatEid(eid)})`
 
@@ -110,6 +114,7 @@ export class OApp extends OmniSDK implements IOApp {
         }
     }
 
+    @AsyncRetriable()
     async getDelegate(): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting delegate`)
 
@@ -122,6 +127,7 @@ export class OApp extends OmniSDK implements IOApp {
         return this.logger.debug(delegate ? `Got delegate ${delegate}` : `OApp has no delegate`), delegate
     }
 
+    @AsyncRetriable()
     async isDelegate(delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate`)
 
@@ -145,6 +151,7 @@ export class OApp extends OmniSDK implements IOApp {
         }
     }
 
+    @AsyncRetriable()
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
         const eidLabel = `eid ${eid} (${formatEid(eid)})`
 
