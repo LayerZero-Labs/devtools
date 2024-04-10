@@ -23,7 +23,7 @@ export interface RetriableConfig<TInstance = unknown> {
      */
     maxDelay?: number
     /**
-     * Number of time the method call will be retried. The default is 3
+     * Number of times the method call will be retried. The default is 3
      *
      * @default 3
      */
