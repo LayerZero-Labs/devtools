@@ -2,10 +2,10 @@ import { AsyncRetriable } from '@/common/retry'
 
 describe('common/retry', () => {
     describe('AsyncRetriable', () => {
-        describe('when LZ_EXPERIMENTAL_ENABLE_RETRY is off', () => {
+        describe('when LZ_ENABLE_EXPERIMENTAL_RETRY is off', () => {
             beforeAll(() => {
                 // We'll enable the AsyncRetriable for these tests
-                process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = ''
+                process.env.LZ_ENABLE_EXPERIMENTAL_RETRY = ''
             })
 
             it('shoult not retry', async () => {
@@ -46,14 +46,14 @@ describe('common/retry', () => {
             })
         })
 
-        describe('when LZ_EXPERIMENTAL_ENABLE_RETRY is on', () => {
+        describe('when LZ_ENABLE_EXPERIMENTAL_RETRY is on', () => {
             beforeAll(() => {
                 // We'll enable the AsyncRetriable for these tests
-                process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = '1'
+                process.env.LZ_ENABLE_EXPERIMENTAL_RETRY = '1'
             })
 
             afterAll(() => {
-                process.env.LZ_EXPERIMENTAL_ENABLE_RETRY = ''
+                process.env.LZ_ENABLE_EXPERIMENTAL_RETRY = ''
             })
 
             it('should retry a method call 3 times by default', async () => {
