@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.17
+
+### Patch Changes
+
+- c4dcf5c: Add a default verify url for Manta
+
 ## 1.1.16
 
 ### Patch Changes

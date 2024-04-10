@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.8
+
+### Patch Changes
+
+- 0f853ed: Adding `AsyncRetriable` to SDKs
+- Updated dependencies [0f853ed]
+- Updated dependencies [958ae04]
+  - @layerzerolabs/protocol-devtools-evm@0.3.5
+  - @layerzerolabs/devtools@0.3.6
+  - @layerzerolabs/devtools-evm@0.3.5
+
 ## 0.3.7
 
 ### Patch Changes
