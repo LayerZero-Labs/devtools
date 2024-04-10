@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.6
+
+### Patch Changes
+
+- 0f853ed: Adding `AsyncRetriable` to SDKs
+- Updated dependencies [0f853ed]
+- Updated dependencies [958ae04]
+  - @layerzerolabs/devtools@0.3.6
+  - @layerzerolabs/devtools-evm@0.3.5
+
 ## 0.3.5
 
 ### Patch Changes

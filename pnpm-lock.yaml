@@ -516,7 +516,7 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -601,10 +601,10 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -941,10 +941,10 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -1131,13 +1131,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -1158,7 +1158,7 @@ importers:
         specifier: ~0.3.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.2
@@ -1167,10 +1167,10 @@ importers:
         specifier: ~0.3.7
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~0.3.7
+        specifier: ~0.3.8
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.3.10
+        specifier: ~0.3.11
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -1295,10 +1295,10 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -1313,7 +1313,7 @@ importers:
         specifier: ~0.3.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools':
         specifier: ~0.2.2
@@ -1374,13 +1374,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.4
+        specifier: ~0.3.6
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
@@ -1398,13 +1398,13 @@ importers:
         specifier: ~0.3.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~0.3.4
+        specifier: ~0.3.5
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
         specifier: ~0.3.7
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~0.3.7
+        specifier: ~0.3.8
         version: link:../ua-devtools-evm
       '@swc/core':
         specifier: ^1.4.0

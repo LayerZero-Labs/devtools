@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.3.6
+
+### Patch Changes
+
+- 0f853ed: Adding `AsyncRetriable` to SDKs
+- 958ae04: Update name of the LZ_ENABLE_EXPERIMENTAL_RETRY feature flag
+
 ## 0.3.5
 
 ### Patch Changes
