@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.13
+
+### Patch Changes
+
+- cc080a9: Support local LayerZero environments
+- Updated dependencies [cc080a9]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.7
+
 ## 0.2.12
 
 ### Patch Changes

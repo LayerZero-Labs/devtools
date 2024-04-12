@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-hardhat",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "One-stop-shop for developing LayerZero applications using hardhat",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "@ethersproject/hash": "^5.7.0",
     "@layerzerolabs/devtools": "~0.3.6",
     "@layerzerolabs/devtools-evm": "~0.3.5",
-    "@layerzerolabs/devtools-evm-hardhat": "~0.3.6",
+    "@layerzerolabs/devtools-evm-hardhat": "~0.3.7",
     "@layerzerolabs/io-devtools": "~0.1.7",
     "@layerzerolabs/lz-definitions": "~2.1.27",
     "@layerzerolabs/lz-evm-sdk-v1": "~2.1.27",
