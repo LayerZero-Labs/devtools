@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.7
+
+### Patch Changes
+
+- cc080a9: Support local LayerZero environments
+
 ## 0.3.6
 
 ### Patch Changes
