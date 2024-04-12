@@ -79,6 +79,33 @@ describe('config', () => {
             })
         })
 
+        it('should append local deployments is isLocalEid is truthy', () => {
+            const config = {
+                networks: {
+                    'vengaboys-testnet': {
+                        eid: EndpointId.ARBITRUM_MAINNET,
+                        isLocalEid: true,
+                    },
+                },
+            }
+
+            expect(withLayerZeroDeployments('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
+                networks: {
+                    'vengaboys-testnet': {
+                        eid: EndpointId.ARBITRUM_MAINNET,
+                        isLocalEid: true,
+                    },
+                },
+                external: {
+                    deployments: {
+                        'vengaboys-testnet': [
+                            join(resolvedLzEvmSdkPackageJson, 'deployments', 'arbitrum-mainnet-local'),
+                        ],
+                    },
+                },
+            })
+        })
+
         it('should not append duplicate external deployments for all networks', () => {
             const config = {
                 networks: {

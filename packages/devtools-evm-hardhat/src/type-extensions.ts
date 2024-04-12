@@ -27,6 +27,17 @@ declare module 'hardhat/types/config' {
         eid?: EndpointId
 
         /**
+         * Use a "local" LayerZero environment for the network.
+         *
+         * Local environments are postfixed with `-local` in the deployment directories
+         * and represent contracts deployed to ephemerous development networks.
+         *
+         * Local environments cannot coexists with their non-local counterparts
+         * in hardhat configs since they share the same `eid`
+         */
+        isLocalEid?: boolean
+
+        /**
          * Optional gnosis safe config.
          */
         safeConfig?: SafeConfig
@@ -43,6 +54,17 @@ declare module 'hardhat/types/config' {
          * for LayerZero protocol contracts using the standard hardhat deploy methods
          */
         eid?: EndpointId
+
+        /**
+         * Use a "local" LayerZero environment for the network.
+         *
+         * Local environments are postfixed with `-local` in the deployment directories
+         * and represent contracts deployed to ephemerous development networks
+         *
+         * Local environments cannot coexists with their non-local counterparts
+         * in hardhat configs since they share the same `eid`
+         */
+        isLocalEid?: boolean
 
         /**
          * Optional gnosis safe config.

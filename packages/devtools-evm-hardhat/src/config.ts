@@ -75,7 +75,7 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
 
                     try {
                         // This operation is unsafe and can throw - let's make sure we don't explode with some unreadable error
-                        const layerZeroNetworkName = endpointIdToNetwork(eid)
+                        const layerZeroNetworkName = endpointIdToNetwork(eid, networkConfig?.isLocalEid)
                         const layerZeroNetworkDeploymentsDirectories = resolvedDeploymentsDirectories.map(
                             (deploymentsDirectory) => join(deploymentsDirectory, layerZeroNetworkName)
                         )
