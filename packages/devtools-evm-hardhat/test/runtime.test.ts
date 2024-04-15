@@ -6,10 +6,13 @@ import {
     getNetworkNameForEid,
     getHreByNetworkName,
     getEidsByNetworkName,
+    inheritTask,
 } from '@/runtime'
 import type { DeploymentSubmission } from 'hardhat-deploy/dist/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { subtask, task } from 'hardhat/config'
+import { types } from '@/cli'
 
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 
@@ -176,6 +179,56 @@ describe('runtime', () => {
             expect(() =>
                 getEidsByNetworkName(hre as unknown as HardhatRuntimeEnvironment)
             ).toThrowErrorMatchingSnapshot()
+        })
+    })
+
+    describe('inheritTask()', () => {
+        it('should fail if the parent task does not exist', () => {
+            expect(() => inheritTask('i-am-not-here')('i-wont-be-here-either')).toThrow(
+                `Missing task definition for i-am-not-here`
+            )
+        })
+
+        it('should not fail if the parent task exists', () => {
+            task('i-am-here', async () => {})
+                .addFlag('flag', 'Flag')
+                .addOptionalParam('optionalParam', 'Optional param', 'seven', types.csv)
+                .addOptionalPositionalParam('optionalPositionalParam', 'Optional positional param', 'yes', types.string)
+                .addOptionalVariadicPositionalParam(
+                    'optionalVariadicPositionalParam',
+                    'Optional positional variadic param',
+                    undefined,
+                    types.boolean
+                )
+
+            inheritTask('i-am-here')('i-will-be-here')
+
+            expect(hre.tasks['i-will-be-here']).toEqual({
+                ...hre.tasks['i-am-here'],
+                _task: 'i-will-be-here',
+                isSubtask: false,
+            })
+        })
+
+        it('should not fail if the parent subtask exists', () => {
+            subtask('i-am-here-subtask', async () => {})
+                .addFlag('flag', 'Flag')
+                .addOptionalParam('optionalParam', 'Optional param', 'seven', types.csv)
+                .addOptionalPositionalParam('optionalPositionalParam', 'Optional positional param', 'yes', types.string)
+                .addOptionalVariadicPositionalParam(
+                    'optionalVariadicPositionalParam',
+                    'Optional positional variadic param',
+                    undefined,
+                    types.boolean
+                )
+
+            inheritTask('i-am-here-subtask')('i-will-be-here-subtask')
+
+            expect(hre.tasks['i-will-be-here-subtask']).toEqual({
+                ...hre.tasks['i-am-here-subtask'],
+                _task: 'i-will-be-here-subtask',
+                isSubtask: true,
+            })
         })
     })
 })
