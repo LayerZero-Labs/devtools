@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.14
+
+### Patch Changes
+
+- 1047bcb: Add the ability to inherit task definitions
+- Updated dependencies [1047bcb]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.8
+
 ## 0.2.13
 
 ### Patch Changes

@@ -1137,7 +1137,7 @@ importers:
         specifier: ~0.3.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.7
+        specifier: ~0.3.8
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
