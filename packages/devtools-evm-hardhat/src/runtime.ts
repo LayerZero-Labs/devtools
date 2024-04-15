@@ -1,4 +1,4 @@
-import type { HardhatRuntimeEnvironment, EthereumProvider } from 'hardhat/types'
+import type { HardhatRuntimeEnvironment, EthereumProvider, ConfigurableTaskDefinition } from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
 import type { JsonRpcProvider } from '@ethersproject/providers'
@@ -10,6 +10,7 @@ import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/devtool
 import { EthersProviderWrapper } from '@nomiclabs/hardhat-ethers/internal/ethers-provider-wrapper'
 import assert from 'assert'
 import memoize from 'micro-memoize'
+import { subtask, task } from 'hardhat/config'
 
 /**
  * Helper type for when we need to grab something asynchronously by the network name
@@ -248,3 +249,70 @@ export const getEidsByNetworkName = memoize(
         )
     }
 )
+
+/**
+ * Helper utility that copies the whole task definition under a new name
+ *
+ * This is useful if a new task needs to have the same interface as an existing task,
+ * for example if we want to create a slightly modified version of a wire task
+ * without needing to retype all the `.addFlag` and `.addOption`
+ *
+ * @param {string} parentTaskName Task to inherit the options and the action from
+ * @param {HardhatRuntimeEnvironment} [hre]
+ * @returns {(taskName: string) => ConfigurableTaskDefinition}
+ */
+export const inheritTask =
+    (parentTaskName: string, context = getDefaultContext()) =>
+    (taskName: string): ConfigurableTaskDefinition => {
+        // For now we only support non-scoped tasks
+        const parentTaskDefinition = context.tasksDSL.getTaskDefinition(undefined, parentTaskName)
+        assert(parentTaskDefinition != null, `Missing task definition for ${parentTaskName}`)
+
+        // First we create the task definition itself
+        const creator = parentTaskDefinition.isSubtask ? subtask : task
+        const childTask = creator(taskName).setAction(parentTaskDefinition.action)
+
+        // Then we start setting properties
+        if (parentTaskDefinition.description != null) {
+            childTask.setDescription(parentTaskDefinition.description)
+        }
+
+        // Params go first (just because I said so, not for any particular reason)
+        for (const definition of Object.values(parentTaskDefinition.paramDefinitions)) {
+            // Params need to be treated based on their type (flag/param)
+            if (definition.isFlag) {
+                childTask.addFlag(definition.name, definition.description)
+            } else {
+                childTask.addParam(
+                    definition.name,
+                    definition.description,
+                    definition.defaultValue,
+                    definition.type,
+                    definition.isOptional
+                )
+            }
+        }
+
+        // Positional params go second
+        for (const definition of parentTaskDefinition.positionalParamDefinitions) {
+            if (definition.isVariadic) {
+                childTask.addVariadicPositionalParam(
+                    definition.name,
+                    definition.description,
+                    definition.defaultValue,
+                    definition.type,
+                    definition.isOptional
+                )
+            } else {
+                childTask.addPositionalParam(
+                    definition.name,
+                    definition.description,
+                    definition.defaultValue,
+                    definition.type,
+                    definition.isOptional
+                )
+            }
+        }
+
+        return childTask
+    }
