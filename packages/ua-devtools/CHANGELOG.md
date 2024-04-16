@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.8
+
+### Patch Changes
+
+- afa76ae: Add createConfigureMultiple helper function
+- Updated dependencies [d5c5297]
+- Updated dependencies [afa76ae]
+  - @layerzerolabs/devtools@0.3.7
+
 ## 0.3.7
 
 ### Patch Changes

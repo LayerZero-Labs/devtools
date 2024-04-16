@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.3.7
+
+### Patch Changes
+
+- d5c5297: Add boilerplate reducing helpers for configuration
+- afa76ae: Add createConfigureMultiple helper function
+
 ## 0.3.6
 
 ### Patch Changes
