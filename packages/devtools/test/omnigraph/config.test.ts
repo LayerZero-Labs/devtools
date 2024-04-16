@@ -1,12 +1,26 @@
-import { OmniEdge, OmniGraph, OmniNode, OmniPoint, createConfigureEdges, createConfigureNodes } from '@/omnigraph'
+import {
+    OmniEdge,
+    OmniGraph,
+    OmniNode,
+    OmniPoint,
+    createConfigureEdges,
+    createConfigureMultiple,
+    createConfigureNodes,
+} from '@/omnigraph'
 import { createEdgeArbitrary, createNodeArbitrary } from '../__utils__/arbitraries'
 import fc from 'fast-check'
+import { pointArbitrary } from '@layerzerolabs/test-devtools'
+import { OmniTransaction } from '@/transactions/types'
 
 describe('omnigraph/config', () => {
     const nodeArbitrary = createNodeArbitrary(fc.anything())
     const nodesArbitrary = fc.array(nodeArbitrary)
     const edgeArbitrary = createEdgeArbitrary(fc.anything())
     const edgesArbitrary = fc.array(edgeArbitrary)
+    const graphArbitrary: fc.Arbitrary<OmniGraph> = fc.record({
+        contracts: nodesArbitrary,
+        connections: edgesArbitrary,
+    })
 
     describe('createConfigureNodes', () => {
         it('should do nothing for a graph with no nodes', async () => {
@@ -165,6 +179,69 @@ describe('omnigraph/config', () => {
                     }
                 })
             )
+        })
+    })
+
+    describe('createConfigureMultiple', () => {
+        const transactionArbitrary: fc.Arbitrary<OmniTransaction> = fc.record({
+            point: pointArbitrary,
+            data: fc.hexaString(),
+        })
+
+        it('should return a configurator that does nothing with no configurators', async () => {
+            const createSdk = jest.fn()
+            const emptyConfigurator = createConfigureMultiple()
+
+            await fc.assert(
+                fc.asyncProperty(graphArbitrary, async (graph) => {
+                    expect(createSdk).not.toHaveBeenCalled()
+
+                    await expect(emptyConfigurator(graph, createSdk)).resolves.toEqual([])
+                })
+            )
+        })
+
+        describe.each([
+            ['in parallel mode', '1'],
+            ['in serial mode', ''],
+        ])(`%s`, (label, mode) => {
+            beforeAll(() => {
+                process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = mode
+            })
+
+            afterAll(() => {
+                process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION = ''
+            })
+
+            it('should call all configurators', async () => {
+                const createSdk = jest.fn()
+
+                await fc.assert(
+                    fc.asyncProperty(
+                        graphArbitrary,
+                        fc.array(transactionArbitrary),
+                        async (graph, transactionGroups) => {
+                            createSdk.mockClear()
+
+                            // We create a configurator for every group of transactions
+                            const configurators = transactionGroups.map((transactions) =>
+                                jest.fn().mockResolvedValue(transactions)
+                            )
+
+                            // Now we execute these configurators
+                            const multiConfigurator = createConfigureMultiple(...configurators)
+
+                            // And expect to get all the transactions back
+                            await expect(multiConfigurator(graph, createSdk)).resolves.toEqual(transactionGroups.flat())
+
+                            // We also check that every configurator has been called
+                            for (const configurator of configurators) {
+                                expect(configurator).toHaveBeenCalledOnce()
+                            }
+                        }
+                    )
+                )
+            })
         })
     })
 })
