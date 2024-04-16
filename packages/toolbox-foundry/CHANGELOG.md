@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.3
+
+### Patch Changes
+
+- d5c5297: Add boilerplate reducing helpers for configuration
+
 ## 0.1.2
 
 ### Patch Changes

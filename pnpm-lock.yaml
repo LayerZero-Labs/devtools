@@ -1131,7 +1131,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.6
+        specifier: ~0.3.7
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.5
@@ -1164,7 +1164,7 @@ importers:
         specifier: ~0.2.2
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.3.7
+        specifier: ~0.3.8
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.3.8
@@ -1231,7 +1231,7 @@ importers:
   packages/ua-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.5
+        specifier: ~0.3.7
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7

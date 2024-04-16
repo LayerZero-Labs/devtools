@@ -1,5 +1,16 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.15
+
+### Patch Changes
+
+- d5c5297: Add boilerplate reducing helpers for configuration
+- afa76ae: Add createConfigureMultiple helper function
+- Updated dependencies [d5c5297]
+- Updated dependencies [afa76ae]
+  - @layerzerolabs/devtools@0.3.7
+  - @layerzerolabs/ua-devtools@0.3.8
+
 ## 0.2.14
 
 ### Patch Changes
