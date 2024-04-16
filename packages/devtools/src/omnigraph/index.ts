@@ -1,4 +1,5 @@
 export * from './builder'
+export * from './config'
 export * from './coordinates'
 export * from './map'
 export * from './format'
