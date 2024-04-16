@@ -60,6 +60,16 @@ export interface OmniGraph<TNodeConfig = unknown, TEdgeConfig = unknown> {
 }
 
 /**
+ * Helper type for inferring the type of element in the `contracts` array of an `OmniGraph`
+ */
+export type InferOmniNode<TOmniGraph extends OmniGraph> = TOmniGraph['contracts'][number]
+
+/**
+ * Helper type for inferring the type of element in the `connections` array of an `OmniGraph`
+ */
+export type InferOmniEdge<TOmniGraph extends OmniGraph> = TOmniGraph['connections'][number]
+
+/**
  * Helper type that adds eid property to an underlying type
  */
 export type WithEid<TValue> = TValue & { eid: EndpointId }
