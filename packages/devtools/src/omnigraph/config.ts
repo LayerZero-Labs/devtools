@@ -2,6 +2,8 @@ import type { Factory } from '@/types'
 import type { Configurator, IOmniSDK, InferOmniEdge, InferOmniNode, OmniGraph, OmniSDKFactory } from './types'
 import type { OmniTransaction } from '@/transactions/types'
 import { flattenTransactions } from '@/transactions/utils'
+import { createModuleLogger } from '@layerzerolabs/io-devtools'
+import { parallel, sequence } from '@/common/promise'
 
 export type CreateTransactionsFromOmniNodes<TOmniGraph extends OmniGraph = OmniGraph, TOmniSDK = IOmniSDK> = Factory<
     [InferOmniNode<TOmniGraph>, TOmniSDK, TOmniGraph, OmniSDKFactory<TOmniSDK>],
@@ -82,3 +84,43 @@ export const createConfigureEdges =
                 })
             )
         )
+
+/**
+ * Helper function that takes multiple configurators and executes them
+ * (the execution is parallel or serial based on the LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+ * feature flag at the moment)
+ *
+ * ```
+ * const configureOApp = createConfigureMultiple(
+ *   configureOAppPeers
+ *   configureSendLibraries
+ *   configureReceiveLibraries
+ *   configureReceiveLibraryTimeouts
+ *   configureSendConfig
+ *   configureReceiveConfig
+ *   configureEnforcedOptions
+ *   configureOAppDelegates
+ * )
+ * ```
+ *
+ * @param {...Configurator<TOmniGraph, TOmniSDK>} configurators An array of configuration functions
+ * @returns {Configurator<TOmniGraph, TOmniSDK>}
+ */
+export const createConfigureMultiple =
+    <TOmniGraph extends OmniGraph = OmniGraph, TOmniSDK = IOmniSDK>(
+        ...configurators: Configurator<TOmniGraph, TOmniSDK>[]
+    ): Configurator<TOmniGraph, TOmniSDK> =>
+    async (graph, createSdk) => {
+        const logger = createModuleLogger('configuration')
+        const tasks = configurators.map((configurator) => () => configurator(graph, createSdk))
+
+        // For now we keep the parallel execution as an opt-in feature flag
+        // before we have a retry logic fully in place for the SDKs
+        //
+        // This is to avoid 429 too many requests errors from the RPCs
+        const applicative = process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+            ? (logger.warn(`You are using experimental parallel configuration`), parallel)
+            : sequence
+
+        return flattenTransactions(await applicative(tasks))
+    }
