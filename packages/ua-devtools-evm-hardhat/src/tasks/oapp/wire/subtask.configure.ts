@@ -11,7 +11,7 @@ import type { SubtaskConfigureTaskArgs } from './types'
 const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async ({
     graph,
     configurator = configureOApp,
-    oappFactory = createOAppFactory(createConnectedContractFactory()),
+    sdkFactory = createOAppFactory(createConnectedContractFactory()),
 }): Promise<OmniTransaction[]> => {
     const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
 
@@ -36,7 +36,7 @@ const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async
     // The only thing this task does is it uses the provided arguments
     // to compile a list of OmniTransactions
     try {
-        return await configurator(graph, oappFactory)
+        return await configurator(graph, sdkFactory)
     } catch (error) {
         logger.verbose(`Encountered an error: ${error}`)
 
@@ -45,6 +45,6 @@ const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async
 }
 
 subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp', action)
-    .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph', undefined, types.any)
-    .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, types.any, true)
-    .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, types.any, true)
+    .addParam('graph', 'Configuration graph', undefined, types.any)
+    .addParam('configurator', 'Configuration function matching the SDK factory', undefined, types.any, true)
+    .addParam('sdkFactory', 'SDK factory for an OmniSDK', undefined, types.any, true)

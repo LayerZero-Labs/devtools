@@ -3,5 +3,5 @@ import { Configurator, IOmniSDK, OmniGraph, OmniSDKFactory } from '@layerzerolab
 export interface SubtaskConfigureTaskArgs<TOmniGraph extends OmniGraph = OmniGraph, TSDK = IOmniSDK> {
     graph: TOmniGraph
     configurator?: Configurator<TOmniGraph, TSDK>
-    oappFactory?: OmniSDKFactory<TSDK>
+    sdkFactory?: OmniSDKFactory<TSDK>
 }
