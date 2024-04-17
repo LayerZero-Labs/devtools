@@ -1,5 +1,5 @@
-import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
-import { OmniVector, OmniPoint, OmniNode } from './types'
+import { EndpointId, endpointIdToStage } from '@layerzerolabs/lz-definitions'
+import { OmniVector, OmniPoint, OmniNode, WithEid } from './types'
 
 /**
  * Compares two points by value
@@ -71,3 +71,19 @@ export const serializeVector = ({ from, to }: OmniVector): string => `${serializ
  * @returns `OmniVector`
  */
 export const vectorFromNodes = (a: OmniNode, b: OmniNode): OmniVector => ({ from: a.point, to: b.point })
+
+/**
+ * Helper function to add an `eid` to arbitrary values, converting them to `WithEid`
+ *
+ * This is useful to reduce repetition when e.g. creating multiple `OmniPoint` instances on the same network:
+ *
+ * ```
+ * const onMainnet = withEid(EndpointId.ETHEREUM_V2_MAINNET)
+ *
+ * const onePoint = onMainnet({ address: '0x0' })
+ * const anotherPoint = onMainnet({ address: '0x1' })
+ * ```
+ */
+export const withEid =
+    (eid: EndpointId) =>
+    <T>(value: T): WithEid<T> => ({ ...value, eid })

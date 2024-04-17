@@ -6,6 +6,7 @@ import {
     serializeVector,
     areSameEndpoint,
     isVectorPossible,
+    withEid,
 } from '@/omnigraph/coordinates'
 import { addressArbitrary, endpointArbitrary, pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-devtools'
 import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
@@ -174,6 +175,16 @@ describe('omnigraph/vector', () => {
                     })
                 )
             })
+        })
+    })
+
+    describe('withEid', () => {
+        it('should append eid to a value', () => {
+            fc.assert(
+                fc.property(endpointArbitrary, fc.dictionary(fc.string(), fc.anything()), (eid, value) => {
+                    expect(withEid(eid)(value)).toEqual({ ...value, eid })
+                })
+            )
         })
     })
 })
