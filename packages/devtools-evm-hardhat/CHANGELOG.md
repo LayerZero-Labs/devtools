@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.9
+
+### Patch Changes
+
+- b20ba18: Add ability to use named signers
+- Updated dependencies [b20ba18]
+  - @layerzerolabs/devtools-evm@0.3.6
+
 ## 0.3.8
 
 ### Patch Changes
