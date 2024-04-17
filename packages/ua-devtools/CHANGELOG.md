@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.9
+
+### Patch Changes
+
+- dbbb331: Add withEid utility
+- Updated dependencies [dbbb331]
+  - @layerzerolabs/devtools@0.3.8
+
 ## 0.3.8
 
 ### Patch Changes

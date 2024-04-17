@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.8
+
+### Patch Changes
+
+- dbbb331: Add withEid utility
+
 ## 0.3.7
 
 ### Patch Changes
