@@ -1,7 +1,7 @@
-import type { OAppOmniGraph, OAppConfigurator, OAppFactory } from '@layerzerolabs/ua-devtools'
+import { Configurator, IOmniSDK, OmniGraph, OmniSDKFactory } from '@layerzerolabs/devtools'
 
-export interface SubtaskConfigureTaskArgs {
-    graph: OAppOmniGraph
-    configurator?: OAppConfigurator
-    oappFactory?: OAppFactory
+export interface SubtaskConfigureTaskArgs<TOmniGraph extends OmniGraph = OmniGraph, TSDK = IOmniSDK> {
+    graph: TOmniGraph
+    configurator?: Configurator<TOmniGraph, TSDK>
+    oappFactory?: OmniSDKFactory<TSDK>
 }

@@ -2,13 +2,13 @@ import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
 import { OmniGraphBuilder, OmniTransaction } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
-import { configureOApp } from '@layerzerolabs/ua-devtools'
+import { IOApp, OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { subtask } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import type { SubtaskConfigureTaskArgs } from './types'
 
-const action: ActionType<SubtaskConfigureTaskArgs> = async ({
+const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async ({
     graph,
     configurator = configureOApp,
     oappFactory = createOAppFactory(createConnectedContractFactory()),
