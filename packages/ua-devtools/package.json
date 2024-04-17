@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "test": "jest --ci"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.7",
+    "@layerzerolabs/devtools": "~0.3.8",
     "@layerzerolabs/io-devtools": "~0.1.7",
     "@layerzerolabs/lz-definitions": "~2.1.27",
     "@layerzerolabs/lz-v2-utilities": "~2.1.27",
@@ -49,7 +49,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.3.7",
+    "@layerzerolabs/devtools": "~0.3.8",
     "@layerzerolabs/io-devtools": "~0.1.5",
     "@layerzerolabs/lz-definitions": "~2.1.15",
     "@layerzerolabs/lz-v2-utilities": "~2.1.15",

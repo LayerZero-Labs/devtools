@@ -1231,7 +1231,7 @@ importers:
   packages/ua-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.7
+        specifier: ~0.3.8
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.7
