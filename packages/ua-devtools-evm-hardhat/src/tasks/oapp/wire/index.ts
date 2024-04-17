@@ -108,6 +108,9 @@ const action: ActionType<TaskArgs> = async (
     )
 
     // Now let's create the signer
+    logger.debug(
+        signer == null ? `Creating a default signer` : `Creating a signer based on definition: ${printJson(signer)}`
+    )
     const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
 
     // Now sign & send the transactions
