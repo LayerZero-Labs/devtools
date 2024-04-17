@@ -209,6 +209,34 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             expect(errors).toEqual([])
         })
 
+        it('should use a named signer if a signer name is passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+            const signer = { type: 'named', name: 'wombat' }
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer })
+
+            expect(createSignerFactoryMock).toHaveBeenCalledOnce()
+            expect(createSignerFactoryMock).toHaveBeenCalledWith(signer)
+        })
+
+        it('should use a named safe signer if a signer name is passed', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+            const signer = { type: 'named', name: 'wombat' }
+
+            promptToContinueMock
+                .mockResolvedValueOnce(false) // We don't want to see the list
+                .mockResolvedValueOnce(true) // We want to continue
+
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
+
+            expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
+            expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
+        })
+
         it('should use gnosis safe signer if --safe flag is passed', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 
@@ -245,10 +273,10 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer: { type: 'address', address: signer } })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
-            expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
+            expect(createGnosisSignerFactory).toHaveBeenCalledWith({ type: 'address', address: signer })
 
             // Get the created gnosis signer factory
             const createSigner = createGnosisSignerFactoryMock.mock.results[0]?.value

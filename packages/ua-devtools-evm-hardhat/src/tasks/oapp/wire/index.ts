@@ -18,13 +18,14 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
 import './subtask.configure'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
 import { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
+import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
 
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
     safe?: boolean
-    signer?: string
+    signer?: SignerDefinition
     /**
      * Name of a custom config loading subtask
      *
@@ -107,6 +108,9 @@ const action: ActionType<TaskArgs> = async (
     )
 
     // Now let's create the signer
+    logger.debug(
+        signer == null ? `Creating a default signer` : `Creating a signer based on definition: ${printJson(signer)}`
+    )
     const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
 
     // Now sign & send the transactions

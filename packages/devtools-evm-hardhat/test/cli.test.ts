@@ -4,8 +4,8 @@ import fc from 'fast-check'
 
 describe('cli', () => {
     describe('signer', () => {
-        it('should throw if invalid address is passed', () => {
-            expect(() => signer.parse('signer', 'wat')).toThrow()
+        it('should return a named definition if a non-address non-integer is passed', () => {
+            expect(signer.parse('signer', 'wat')).toEqual({ type: 'named', name: 'wat' })
         })
 
         it('should throw if negative index is passed', () => {
@@ -19,7 +19,7 @@ describe('cli', () => {
         it('should return the address if valid address is passed', () => {
             fc.assert(
                 fc.property(evmAddressArbitrary, (address) => {
-                    expect(signer.parse('signer', address)).toBe(address)
+                    expect(signer.parse('signer', address)).toEqual({ type: 'address', address })
                 })
             )
         })
@@ -27,7 +27,7 @@ describe('cli', () => {
         it('should return the index if non-negative index is passed', () => {
             fc.assert(
                 fc.property(fc.integer({ min: 0 }), (index) => {
-                    expect(signer.parse('signer', String(index))).toBe(index)
+                    expect(signer.parse('signer', String(index))).toEqual({ type: 'index', index })
                 })
             )
         })
