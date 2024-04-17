@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.6
+
+### Patch Changes
+
+- b20ba18: Add ability to use named signers
+
 ## 0.3.5
 
 ### Patch Changes

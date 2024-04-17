@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.8
+
+### Patch Changes
+
+- b20ba18: Add ability to use named signers
+
 ## 0.2.7
 
 ### Patch Changes
