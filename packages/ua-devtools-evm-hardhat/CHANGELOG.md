@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.13
+
+### Patch Changes
+
+- 1b7eb2a: Make SubtaskConfigureTaskArgs type generic
+
 ## 0.3.12
 
 ### Patch Changes
