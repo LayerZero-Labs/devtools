@@ -233,8 +233,8 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
 
-            expect(createSignerFactoryMock).toHaveBeenCalledOnce()
-            expect(createSignerFactoryMock).toHaveBeenCalledWith(signer)
+            expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
+            expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
         })
 
         it('should use gnosis safe signer if --safe flag is passed', async () => {
@@ -276,7 +276,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer: { type: 'address', address: signer } })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
-            expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
+            expect(createGnosisSignerFactory).toHaveBeenCalledWith({ type: 'address', address: signer })
 
             // Get the created gnosis signer factory
             const createSigner = createGnosisSignerFactoryMock.mock.results[0]?.value
