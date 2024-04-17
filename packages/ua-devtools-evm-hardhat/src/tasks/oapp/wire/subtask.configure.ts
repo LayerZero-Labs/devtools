@@ -2,16 +2,16 @@ import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
 import { OmniGraphBuilder, OmniTransaction } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
-import { configureOApp } from '@layerzerolabs/ua-devtools'
+import { IOApp, OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { subtask } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import type { SubtaskConfigureTaskArgs } from './types'
 
-const action: ActionType<SubtaskConfigureTaskArgs> = async ({
+const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async ({
     graph,
     configurator = configureOApp,
-    oappFactory = createOAppFactory(createConnectedContractFactory()),
+    sdkFactory = createOAppFactory(createConnectedContractFactory()),
 }): Promise<OmniTransaction[]> => {
     const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
 
@@ -36,7 +36,7 @@ const action: ActionType<SubtaskConfigureTaskArgs> = async ({
     // The only thing this task does is it uses the provided arguments
     // to compile a list of OmniTransactions
     try {
-        return await configurator(graph, oappFactory)
+        return await configurator(graph, sdkFactory)
     } catch (error) {
         logger.verbose(`Encountered an error: ${error}`)
 
@@ -45,6 +45,6 @@ const action: ActionType<SubtaskConfigureTaskArgs> = async ({
 }
 
 subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp', action)
-    .addParam('graph', 'Configuration of you OApp of type OAppOmniGraph', undefined, types.any)
-    .addParam('configurator', 'Configuration function of type OAppConfigurator', undefined, types.any, true)
-    .addParam('oappFactory', 'SDK factory for OApp SDK of type OAppFactory', undefined, types.any, true)
+    .addParam('graph', 'Configuration graph', undefined, types.any)
+    .addParam('configurator', 'Configuration function matching the SDK factory', undefined, types.any, true)
+    .addParam('sdkFactory', 'SDK factory for an OmniSDK', undefined, types.any, true)

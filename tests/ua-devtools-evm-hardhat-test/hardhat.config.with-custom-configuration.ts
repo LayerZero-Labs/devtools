@@ -60,11 +60,11 @@ task(SUBTASK_CUSTOM_CONFIGURE, 'Custom configuration subtask', async (args: Subt
     // Here we create the SDK factory
     const contractFactory = createConnectedContractFactory()
     const endpointV2Factory = createEndpointV2Factory(contractFactory)
-    const oappFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point), endpointV2Factory)
+    const sdkFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point), endpointV2Factory)
 
     return hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
         ...args,
-        oappFactory,
+        sdkFactory,
         configurator: myCustomOAppConfigurator as OAppConfigurator,
     } satisfies SubtaskConfigureTaskArgs)
 })
