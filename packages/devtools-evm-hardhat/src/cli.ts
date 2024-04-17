@@ -3,7 +3,7 @@ import { HardhatError } from 'hardhat/internal/core/errors'
 import { ERRORS } from 'hardhat/internal/core/errors-list'
 import type { CLIArgumentType } from 'hardhat/types'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
-import { isEVMAddress } from '@layerzerolabs/devtools-evm'
+import { isEVMAddress, SignerDefinition } from '@layerzerolabs/devtools-evm'
 import { isLogLevel, LogLevel } from '@layerzerolabs/io-devtools'
 import { Environment, Stage } from '@layerzerolabs/lz-definitions'
 
@@ -111,31 +111,30 @@ export const fn: CLIArgumentType<string> = {
  * Signer-specific CLI argument (either a non-negative index
  * or a signer EVM address)
  */
-export const signer: CLIArgumentType<string | number> = {
+export const signer: CLIArgumentType<SignerDefinition> = {
     name: 'signer',
     parse: (argName, value) => {
+        // If the value looks like an EVM address, we'll return an address definition
         if (isEVMAddress(value)) {
-            return value
+            return { type: 'address', address: value }
         }
 
+        // If the value parses to an integer, we'll return an index definition
         const parsed = parseInt(value, 10)
-        if (isNaN(parsed)) {
-            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
-                value,
-                name: argName,
-                type: signer.name,
-            })
+        if (!isNaN(parsed)) {
+            if (parsed < 0) {
+                throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+                    value,
+                    name: argName,
+                    type: signer.name,
+                })
+            }
+
+            return { type: 'index', index: parsed }
         }
 
-        if (parsed < 0) {
-            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
-                value,
-                name: argName,
-                type: signer.name,
-            })
-        }
-
-        return parsed
+        // In any other case we'll return a named definition
+        return { type: 'named', name: value }
     },
     validate() {},
 }

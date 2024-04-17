@@ -245,7 +245,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
+            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer: { type: 'address', address: signer } })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
             expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)

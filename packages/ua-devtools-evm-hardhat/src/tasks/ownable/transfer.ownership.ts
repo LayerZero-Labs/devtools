@@ -17,13 +17,14 @@ import { OwnableOmniGraphHardhatSchema } from '@/ownable'
 import { configureOwnable } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory, createOwnableFactory } from '@layerzerolabs/ua-devtools-evm'
 import type { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
+import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
 
 interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
     safe?: boolean
-    signer?: string
+    signer?: SignerDefinition
 }
 
 const action: ActionType<TaskArgs> = async (
