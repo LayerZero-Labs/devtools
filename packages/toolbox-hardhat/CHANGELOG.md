@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.16
+
+### Patch Changes
+
+- 9ff719a: Fogotten version bump after the introduction of named signers
+
 ## 0.2.15
 
 ### Patch Changes
