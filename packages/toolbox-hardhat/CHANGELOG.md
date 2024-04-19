@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.17
+
+### Patch Changes
+
+- c41c6be: Fix problems with missing deployments
+- Updated dependencies [c41c6be]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.10
+
 ## 0.2.16
 
 ### Patch Changes
