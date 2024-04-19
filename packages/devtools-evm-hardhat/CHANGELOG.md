@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.10
+
+### Patch Changes
+
+- c41c6be: Fix problems with missing deployments
+
 ## 0.3.9
 
 ### Patch Changes
