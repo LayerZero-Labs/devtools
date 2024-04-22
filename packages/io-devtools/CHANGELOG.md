@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.8
+
+### Patch Changes
+
+- 9af95ca: Add createWithAsyncLogger logging utility for async functions
+
 ## 0.1.7
 
 ### Patch Changes
