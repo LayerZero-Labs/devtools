@@ -8,19 +8,22 @@ import {
     type OmniTransaction,
     formatOmniPoint,
     createConfigureMultiple,
+    createConfigureNodes,
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
-import { createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
+import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import type { SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
-export const configureOAppDelegates: OAppConfigurator = async (graph, createSdk) => {
-    const logger = createModuleLogger('OApp')
+const createOAppLogger = () => createModuleLogger('OApp')
+const withOAppLogger = createWithAsyncLogger(createOAppLogger)
 
-    return flattenTransactions(
-        await Promise.all(
-            graph.contracts.map(async ({ point, config }): Promise<OmniTransaction[]> => {
+export const configureOAppDelegates: OAppConfigurator = withOAppLogger(
+    createConfigureNodes(
+        withOAppLogger(
+            async ({ config, point }, sdk) => {
+                const logger = createOAppLogger()
                 const label = formatOmniPoint(point)
 
                 // Don't do anything if delegate is not set
@@ -28,9 +31,6 @@ export const configureOAppDelegates: OAppConfigurator = async (graph, createSdk)
                     return logger.verbose(`Delegate not set for ${label}, skipping`), []
                 }
 
-                logger.verbose(`Checking delegate for ${label}`)
-
-                const sdk = await createSdk(point)
                 const isDelegate = await sdk.isDelegate(config.delegate)
 
                 logger.verbose(`Delegate ${config.delegate} set for ${label}: ${printBoolean(isDelegate)}`)
@@ -40,10 +40,22 @@ export const configureOAppDelegates: OAppConfigurator = async (graph, createSdk)
 
                 logger.verbose(`Setting delegate ${config.delegate} for ${label}`)
                 return [await sdk.setDelegate(config.delegate)]
-            })
+            },
+            {
+                onStart: (logger, [{ point }]) =>
+                    logger.verbose(`Checking OApp delegate configuration for ${formatOmniPoint(point)}`),
+                onSuccess: (logger, [{ point }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked OApp delegate for ${formatOmniPoint(point)}`),
+                onError: (logger, [{ point }], error) =>
+                    logger.error(`Failed to check OApp delegate for ${formatOmniPoint(point)}: ${error}`),
+            }
         )
-    )
-}
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking OApp delegates configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp delegates`),
+    }
+)
 
 export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
     const logger = createModuleLogger('OApp')
@@ -390,13 +402,20 @@ const enforcedOptionsReducer = (
     }
 }
 
-export const configureOApp: OAppConfigurator = createConfigureMultiple(
-    configureOAppPeers,
-    configureSendLibraries,
-    configureReceiveLibraries,
-    configureReceiveLibraryTimeouts,
-    configureSendConfig,
-    configureReceiveConfig,
-    configureEnforcedOptions,
-    configureOAppDelegates
+export const configureOApp: OAppConfigurator = createWithAsyncLogger(createOAppLogger)(
+    createConfigureMultiple(
+        configureOAppPeers,
+        configureSendLibraries,
+        configureReceiveLibraries,
+        configureReceiveLibraryTimeouts,
+        configureSendConfig,
+        configureReceiveConfig,
+        configureEnforcedOptions,
+        configureOAppDelegates
+    ),
+    {
+        onStart: (logger) => logger.info(`Checking OApp configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked OApp configuration`),
+        onError: (logger, args, error) => logger.error(`Failed to check OApp configuration: ${error}`),
+    }
 )
