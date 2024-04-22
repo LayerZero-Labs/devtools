@@ -12,8 +12,8 @@ const fujiContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const mumbaiContract: OmniPointHardhat = {
-    eid: EndpointId.POLYGON_V2_TESTNET,
+const amoyContract: OmniPointHardhat = {
+    eid: EndpointId.AMOY_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
@@ -26,7 +26,7 @@ const config: OAppOmniGraphHardhat = {
             contract: sepoliaContract,
         },
         {
-            contract: mumbaiContract,
+            contract: amoyContract,
         },
     ],
     connections: [
@@ -36,7 +36,7 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: fujiContract,
-            to: mumbaiContract,
+            to: amoyContract,
         },
         {
             from: sepoliaContract,
@@ -44,14 +44,14 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: sepoliaContract,
-            to: mumbaiContract,
+            to: amoyContract,
         },
         {
-            from: mumbaiContract,
+            from: amoyContract,
             to: sepoliaContract,
         },
         {
-            from: mumbaiContract,
+            from: amoyContract,
             to: fujiContract,
         },
     ],

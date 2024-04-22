@@ -32,7 +32,7 @@ describe('simulation/compose', () => {
     // - network named rpc will collide with the RPC proxy container defined in the spec
     //
     // Because of this we'll filter down on the possibilities when it comes to service names
-    const serviceNameArbitrary = fc.constantFrom('mumbai', 'sepolia-testnet', 'someNetwork', 'someNetwork.V2')
+    const serviceNameArbitrary = fc.constantFrom('amoy', 'sepolia-testnet', 'someNetwork', 'someNetwork.V2')
 
     const SPEC_FILE_PATH = join(__dirname, 'docker-compose.yaml')
 

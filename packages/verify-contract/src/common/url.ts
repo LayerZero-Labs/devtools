@@ -38,6 +38,7 @@ export const tryCreateScanContractUrl = (scanBrowserUrl: string, address: string
 }
 
 const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
+    ['amoy', 'https://amoy.polygonscan.com/api'],
     ['avalanche', 'https://api.snowtrace.io/api'],
     ['avalanche-mainnet', 'https://api.snowtrace.io/api'],
     ['fuji', 'https://api-testnet.snowtrace.io/api'],
@@ -55,7 +56,6 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['kava-mainnet', 'https://kavascan.com/api'],
     ['kava-testnet', 'https://testnet.kavascan.com/api'],
     ['polygon', 'https://api.polygonscan.com/api'],
-    ['mumbai', 'https://api-testnet.polygonscan.com/api'],
     ['optimism', 'https://api-optimistic.etherscan.io/api'],
     ['optimism-goerli', 'https://api-goerli-optimistic.etherscan.io/api'],
     ['gnosis', 'https://api.gnosisscan.io/api'],
