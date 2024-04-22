@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.4
+
+### Patch Changes
+
+- 835cdbe: Replace Mumbai with Amoy
+
 ## 0.2.3
 
 ### Patch Changes

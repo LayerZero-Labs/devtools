@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.4
+
+### Patch Changes
+
+- 835cdbe: Replace Mumbai with Amoy
+
 ## 0.1.3
 
 ### Patch Changes
