@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.18
+
+### Patch Changes
+
+- 835cdbe: Replace Mumbai with Amoy
+
 ## 1.1.17
 
 ### Patch Changes

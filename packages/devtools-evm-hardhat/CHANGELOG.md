@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.11
+
+### Patch Changes
+
+- 835cdbe: Replace Mumbai with Amoy
+
 ## 0.3.10
 
 ### Patch Changes
