@@ -99,6 +99,84 @@ export const createModuleInteractionLogger = (
 ): Logger =>
     createLogger(level, format.combine(prefix({ label: `${sourceModule} ➝ ${destinationModule}` }), format.cli()))
 
+export interface CreateWithAsyncLoggerOptions<TArgs extends unknown[], TReturnValue> {
+    onStart?: (logger: Logger, args: TArgs) => unknown
+    onSuccess?: (logger: Logger, args: TArgs, returnValue: TReturnValue) => unknown
+    onError?: (logger: Logger, args: TArgs, error: unknown) => unknown
+}
+
+/**
+ * Helper higher order function for creating wrappers that log
+ * execution of async functions.
+ *
+ * ```
+ * const myAsyncFunction = async (name: string): Promise<number> => 6;
+ *
+ * // We can go with the default logger
+ * const withAsyncLogger = createWithAsyncLogger()
+ *
+ * // Or supply our own
+ * const withAsyncLogger = createWithAsyncLogger(() => createModuleLogger('my-module'))
+ *
+ * const myAsyncFunctionWithLogging = withAsyncLogger(myAsyncFunction, {
+ *   onStart: (logger, [name]) => logger.info(`Starting myAsyncFunction with argument ${name}`)
+ *   onSuccess: (logger, [name], retrurnValue) => logger.info(`Finished myAsyncFunction with argument ${name}, will return ${returnValue}`)
+ *   onError: (logger, [name], error) => logger.info(`myAsyncFunction errored out with argument ${name}: ${error}`)
+ * })
+ *
+ * // The wrapper function has the same signature as the wrapped function
+ * await myAsyncFunctionWithLogging('Boris')
+ * ```
+ *
+ * @param {() => Logger} [loggerFactory] Function that returns a `Logger` instance
+ * @returns
+ */
+export const createWithAsyncLogger =
+    (loggerFactory: () => Logger = createLogger) =>
+    <TArgs extends unknown[], TReturnValue>(
+        fn: (...args: TArgs) => Promise<TReturnValue>,
+        { onStart, onSuccess, onError }: CreateWithAsyncLoggerOptions<TArgs, TReturnValue> = {}
+    ) => {
+        // We'll create the logger only when needed
+        let logger: Logger
+
+        return async (...args: TArgs): Promise<TReturnValue> => {
+            // If we don't have a logger yet, now is a great time to make one
+            logger = logger ?? loggerFactory()
+
+            // Let the consumer know that the execution has started
+            onStart?.(logger, args)
+
+            // Now try executing the actual function
+            try {
+                // In the happy case, the function gives us a return value back
+                const returnValue = await fn(...args)
+
+                // We try logging the return value
+                try {
+                    onSuccess?.(logger, args, returnValue)
+                } catch {
+                    // If the logger errors out, we ignore it
+                }
+
+                // And we return it
+                return returnValue
+            } catch (error) {
+                // In the unhappy, saddening and most disappointing case the function errors out
+
+                // We try logging the error
+                try {
+                    onError?.(logger, args, error)
+                } catch {
+                    // If the logger errors out, we ignore it
+                }
+
+                // And we rethrow
+                throw error
+            }
+        }
+    }
+
 /**
  * Helper utility that prefixes logged messages
  * with label (wrapped in square brackets)

@@ -3,6 +3,7 @@ module.exports = {
     cache: false,
     reporters: [['github-actions', { silent: false }], 'default'],
     testEnvironment: 'node',
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
     },
