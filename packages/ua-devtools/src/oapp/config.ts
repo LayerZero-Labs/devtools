@@ -402,7 +402,7 @@ const enforcedOptionsReducer = (
     }
 }
 
-export const configureOApp: OAppConfigurator = createWithAsyncLogger(createOAppLogger)(
+export const configureOApp: OAppConfigurator = withOAppLogger(
     createConfigureMultiple(
         configureOAppPeers,
         configureSendLibraries,
