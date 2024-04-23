@@ -28,11 +28,11 @@ In general, we recommend combining this feature with <a href="#automatic-retries
 
 ### To enable
 
-`LZ_EXPERIMENTAL_ENABLE_PARALLEL_EXECUTION=1`
+`LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION=1`
 
 ### To disable
 
-`LZ_EXPERIMENTAL_ENABLE_PARALLEL_EXECUTION=`
+`LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION=`
 
 ## Automatic retries <a id="automatic-retries"></a>
 
