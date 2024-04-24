@@ -45,3 +45,19 @@ By default, the RPC calls that check the current state of your contracts are exe
 ### To disable
 
 `LZ_ENABLE_EXPERIMENTAL_RETRY=`
+
+## Batched transaction awaiting <a id="batched-wait"></a>
+
+By default, the transactions are submitted and awaited one by one. This means a transaction will only be submitted once the previous transaction has been mined (which results in transactions being mined in consecutive blocks, one transaction per block).
+
+This feature flag changes this behavior and allows all transactions to be submitted first to potentially the same block. Only after all of the transactions have been submitted will the code wait for them to be mined.
+
+**Important** Enabling this behavior can incur higher costs of transaction reverts since a failing transaction can result in more than one revert.
+
+### To enable
+
+`LZ_ENABLE_EXPERIMENTAL_BATCHED_WAIT=1`
+
+### To disable
+
+`LZ_ENABLE_EXPERIMENTAL_BATCHED_WAIT=`
