@@ -91,8 +91,10 @@ export const AsyncRetriable = ({
                 onRetry?.(attempt, numAttempts, error, target, propertyKey, args) ?? true
 
         // Create the retried method
-        const retriedMethod = (...args: TArgs): Promise<TResult> =>
-            backOff(() => originalMethod.apply(target, args), {
+        const retriedMethod = function (this: unknown, ...args: TArgs): Promise<TResult> {
+            // We need to call the original method with the current this context
+            // rather than the target, target can point to a prototype rather than the instance
+            return backOff(() => originalMethod.apply(this, args), {
                 // A typical problem in our case is 429 Too many requests
                 // which would still happen if we didn't introduce a bit of randomness into the delay
                 jitter: 'full',
@@ -100,6 +102,7 @@ export const AsyncRetriable = ({
                 numOfAttempts: numAttempts,
                 retry: handleRetry(args),
             })
+        }
 
         // return our new descriptor
         return (descriptor.value = retriedMethod), descriptor

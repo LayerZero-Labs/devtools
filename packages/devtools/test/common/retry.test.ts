@@ -44,6 +44,24 @@ describe('common/retry', () => {
                 expect(mock).toHaveBeenNthCalledWith(2, 'y')
                 expect(mock).toHaveBeenNthCalledWith(3, 'y')
             })
+
+            it('should have access to non-prototype properties', async () => {
+                const mock = jest.fn().mockResolvedValue(true)
+
+                class WithAsyncRetriable {
+                    constructor(protected readonly property = 7) {}
+
+                    @AsyncRetriable({ enabled: true })
+                    async iHaveAccessToProperties() {
+                        return mock(this.property)
+                    }
+                }
+
+                await expect(new WithAsyncRetriable().iHaveAccessToProperties()).resolves.toBe(true)
+
+                expect(mock).toHaveBeenCalledTimes(1)
+                expect(mock).toHaveBeenNthCalledWith(1, 7)
+            })
         })
 
         describe('when LZ_ENABLE_EXPERIMENTAL_RETRY is on', () => {
