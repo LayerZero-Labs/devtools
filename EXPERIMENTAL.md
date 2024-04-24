@@ -46,7 +46,7 @@ By default, the RPC calls that check the current state of your contracts are exe
 
 `LZ_ENABLE_EXPERIMENTAL_RETRY=`
 
-## Automatic retries <a id="batched-wait"></a>
+## Batched transaction awating <a id="batched-wait"></a>
 
 By default, the transactions are submitted and awaited one by one. This means a transaction will only be submitted once the previous transaction has been mined (which results in transactions being mined in consecutive blocks, one transaction per block).
 
