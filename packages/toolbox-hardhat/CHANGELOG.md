@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.18
+
+### Patch Changes
+
+- edc6223: Fix AsyncRetriable for non-prototype properties
+- 76df496: Add feature-flagged batched transaction waits
+- Updated dependencies [edc6223]
+- Updated dependencies [76df496]
+  - @layerzerolabs/devtools@0.3.9
+
 ## 0.2.17
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.3.9
+
+### Patch Changes
+
+- edc6223: Fix AsyncRetriable for non-prototype properties
+- 76df496: Add feature-flagged batched transaction waits
+
 ## 0.3.8
 
 ### Patch Changes
