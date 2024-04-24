@@ -3,4 +3,4 @@
 "@layerzerolabs/toolbox-hardhat": patch
 ---
 
-Add feature-glagged batched transaction waits
+Add feature-flagged batched transaction waits
