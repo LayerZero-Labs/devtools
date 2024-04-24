@@ -296,7 +296,7 @@ describe('transactions/signer', () => {
                 process.env.LZ_ENABLE_EXPERIMENTAL_BATCHED_WAIT = '1'
             })
 
-            it('should bail on the first wait error', async () => {
+            it('should not bail on the first wait error', async () => {
                 await fc.assert(
                     fc.asyncProperty(
                         fc.array(transactionArbitrary),
@@ -336,13 +336,9 @@ describe('transactions/signer', () => {
                             const expectedSuccessful = [
                                 // The first batch should all go through
                                 ...firstBatch,
-                                // The transactions that are not on the chain affected by the failed transaction should also pass
-                                ...secondBatch.filter(({ point }) => point.eid !== failedTransaction.point.eid),
+                                // The second batch should all go through since they all were submitted and will all be mined
+                                ...secondBatch,
                             ]
-
-                            const expectedPending = secondBatch.filter(
-                                ({ point }) => point.eid === failedTransaction.point.eid
-                            )
 
                             // Our signAndSend will then use the map to resolve/reject transactions
                             const signAndSend = jest.fn().mockImplementation((t) => implementations.get(t))
@@ -360,7 +356,7 @@ describe('transactions/signer', () => {
                                 expectedSuccessful.map((transaction) => ({ transaction, receipt }))
                             )
                             expect(errors).toEqual([{ transaction: failedTransaction, error }])
-                            expect(pending).toEqual([failedTransaction, ...expectedPending])
+                            expect(pending).toEqual([failedTransaction])
 
                             // What needs to match though is the order of successful transactions within groups
                             //

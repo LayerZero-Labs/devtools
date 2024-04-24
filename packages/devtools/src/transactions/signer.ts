@@ -200,6 +200,9 @@ const waitAfterSendingAll: TransactionSignerLogic = async (eid, logger, signer, 
 
             // Update the error state
             onError({ transaction, error })
+
+            // Stop submitting any other transactions
+            break
         }
     }
 
