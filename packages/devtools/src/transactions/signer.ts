@@ -193,14 +193,13 @@ const waitAfterSendingAll: TransactionSignerLogic = async (eid, logger, signer, 
             const response = await signer.signAndSend(transaction)
 
             logger.debug(`Signed ${ordinal} transaction for ${eidName}, got hash ${response.transactionHash}`)
+
+            responses.push({ transaction, response })
         } catch (error) {
             logger.debug(`Failed to sign ${ordinal} transaction for ${eidName}: ${error}`)
 
             // Update the error state
             onError({ transaction, error })
-
-            // We want to stop the moment we hit an error
-            return
         }
     }
 
@@ -220,9 +219,6 @@ const waitAfterSendingAll: TransactionSignerLogic = async (eid, logger, signer, 
 
             // Update the error state
             onError({ transaction, error })
-
-            // We want to stop the moment we hit an error
-            return
         }
     }
 }
