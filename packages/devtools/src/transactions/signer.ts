@@ -1,7 +1,15 @@
-import { createModuleLogger, pluralizeNoun, pluralizeOrdinal } from '@layerzerolabs/io-devtools'
-import type { OmniSignerFactory, OmniTransaction, OmniTransactionWithError, OmniTransactionWithReceipt } from './types'
+import { Logger, createModuleLogger, pluralizeNoun, pluralizeOrdinal } from '@layerzerolabs/io-devtools'
+import type {
+    OmniSigner,
+    OmniSignerFactory,
+    OmniTransaction,
+    OmniTransactionWithError,
+    OmniTransactionWithReceipt,
+    OmniTransactionWithResponse,
+} from './types'
 import { formatEid, formatOmniPoint } from '@/omnigraph/format'
 import { groupTransactionsByEid } from './utils'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export type SignAndSendResult = [
     // All the successful transactions
@@ -50,6 +58,28 @@ export const createSignAndSend =
         const successful: OmniTransactionWithReceipt[] = []
         const errors: OmniTransactionWithError[] = []
 
+        const handleSuccess = (result: OmniTransactionWithReceipt) => {
+            // Here we want to update the global state of the signing
+            successful.push(result)
+
+            // We'll create a clone of the successful array so that the consumers can't mutate it
+            onProgress?.(result, [...successful])
+        }
+
+        const handleError = (error: OmniTransactionWithError) => {
+            // Update the error state
+            errors.push(error)
+        }
+
+        // Based on this feature flag we'll either wait for every transaction before sending the next one
+        // or we submit them all and wait at the very end
+        const useBatchedWait = !!process.env.LZ_ENABLE_EXPERIMENTAL_BATCHED_WAIT
+        if (useBatchedWait) {
+            logger.warn(`You are using experimental batched transaction waiting`)
+        }
+
+        const signerLogic: TransactionSignerLogic = useBatchedWait ? waitAfterSendingAll : waitBeforeSubmittingNext
+
         await Promise.allSettled(
             transactionGroups.map(async ([eid, eidTransactions]): Promise<void> => {
                 const eidName = formatEid(eid)
@@ -61,40 +91,7 @@ export const createSignAndSend =
                 logger.debug(`Creating signer for ${eidName}`)
                 const signer = await createSigner(eid)
 
-                for (const [index, transaction] of eidTransactions.entries()) {
-                    // We want to refer to this transaction by index so we create an ordinal for it (1st, 2nd etc)
-                    const ordinal = pluralizeOrdinal(index + 1)
-
-                    try {
-                        logger.debug(
-                            `Signing ${ordinal} transaction for ${eidName} to ${formatOmniPoint(transaction.point)}`
-                        )
-                        const response = await signer.signAndSend(transaction)
-
-                        logger.debug(
-                            `Signed ${ordinal} transaction for ${eidName}, got hash ${response.transactionHash}`
-                        )
-
-                        const receipt = await response.wait()
-                        logger.debug(`Finished ${ordinal} transaction for ${eidName}`)
-
-                        const result: OmniTransactionWithReceipt = { transaction, receipt }
-
-                        // Here we want to update the global state of the signing
-                        successful.push(result)
-
-                        // We'll create a clone of the successful array so that the consumers can't mutate it
-                        onProgress?.(result, [...successful])
-                    } catch (error) {
-                        logger.debug(`Failed to process ${ordinal} transaction for ${eidName}: ${error}`)
-
-                        // Update the error state
-                        errors.push({ transaction, error })
-
-                        // We want to stop the moment we hit an error
-                        return
-                    }
-                }
+                await signerLogic(eid, logger, signer, eidTransactions, handleSuccess, handleError)
 
                 // Tell the inquisitive user what a good job we did
                 logger.debug(`Successfully signed ${n} ${pluralizeNoun(n, 'transaction')} for ${eidName}`)
@@ -114,3 +111,118 @@ export const createSignAndSend =
 
         return [successful, errors, pending]
     }
+
+type TransactionSignerLogic = (
+    eid: EndpointId,
+    logger: Logger,
+    signer: OmniSigner,
+    transactions: OmniTransaction[],
+    onSuccess: (resut: OmniTransactionWithReceipt) => void,
+    onError: (error: OmniTransactionWithError) => void
+) => Promise<void>
+
+/**
+ * This transaction submitting logic will wait for every single transaction
+ * before submitting the next one. This is the default logic, it results in transactions
+ * being submitted in separate blocks.
+ *
+ * This is a safer yet slower strategy since:
+ *
+ * - A revert will only incur costs on the reverted transaction.
+ * - A revert will stop the submitting, especially important if the transactions later on in the list
+ *   rely heavily on the earlier ones without this reliance being coded into the contract
+ */
+const waitBeforeSubmittingNext: TransactionSignerLogic = async (
+    eid,
+    logger,
+    signer,
+    transactions,
+    onSuccess,
+    onError
+) => {
+    const eidName = formatEid(eid)
+
+    for (const [index, transaction] of transactions.entries()) {
+        // We want to refer to this transaction by index so we create an ordinal for it (1st, 2nd etc)
+        const ordinal = pluralizeOrdinal(index + 1)
+
+        try {
+            logger.debug(`Signing ${ordinal} transaction for ${eidName} to ${formatOmniPoint(transaction.point)}`)
+            const response = await signer.signAndSend(transaction)
+
+            logger.debug(`Signed ${ordinal} transaction for ${eidName}, got hash ${response.transactionHash}`)
+
+            const receipt = await response.wait()
+            logger.debug(`Finished ${ordinal} transaction for ${eidName}`)
+
+            onSuccess({ transaction, receipt })
+        } catch (error) {
+            logger.debug(`Failed to process ${ordinal} transaction for ${eidName}: ${error}`)
+
+            // Update the error state
+            onError({ transaction, error })
+
+            // We want to stop the moment we hit an error
+            return
+        }
+    }
+}
+
+/**
+ * This transaction submitting logic will submit all transactions first,
+ * then wait for them once they all have been submitted. This is an experimental logic, it results in transactions
+ * being submitted in potentially the same block.
+ *
+ * This is a more adventuurous yet faster strategy since:
+ *
+ * - A revert might incur costs on not only the reverted transaction but on the subsequent transactions as well
+ * - A revert will not stop the submitting, especially important if the transactions later on in the list
+ *   rely heavily on the earlier ones without this reliance being coded into the contract
+ */
+const waitAfterSendingAll: TransactionSignerLogic = async (eid, logger, signer, transactions, onSuccess, onError) => {
+    const eidName = formatEid(eid)
+
+    const responses: OmniTransactionWithResponse[] = []
+
+    for (const [index, transaction] of transactions.entries()) {
+        // We want to refer to this transaction by index so we create an ordinal for it (1st, 2nd etc)
+        const ordinal = pluralizeOrdinal(index + 1)
+
+        try {
+            logger.debug(`Signing ${ordinal} transaction for ${eidName} to ${formatOmniPoint(transaction.point)}`)
+            const response = await signer.signAndSend(transaction)
+
+            logger.debug(`Signed ${ordinal} transaction for ${eidName}, got hash ${response.transactionHash}`)
+        } catch (error) {
+            logger.debug(`Failed to sign ${ordinal} transaction for ${eidName}: ${error}`)
+
+            // Update the error state
+            onError({ transaction, error })
+
+            // We want to stop the moment we hit an error
+            return
+        }
+    }
+
+    for (const [index, { response, transaction }] of responses.entries()) {
+        // We want to refer to this transaction by index so we create an ordinal for it (1st, 2nd etc)
+        const ordinal = pluralizeOrdinal(index + 1)
+
+        try {
+            logger.debug(`Waiting for ${ordinal} transaction for ${eidName} to ${formatOmniPoint(transaction.point)}`)
+
+            const receipt = await response.wait()
+            logger.debug(`Finished ${ordinal} transaction for ${eidName}`)
+
+            onSuccess({ transaction, receipt })
+        } catch (error) {
+            logger.debug(`Failed to process ${ordinal} transaction for ${eidName}: ${error}`)
+
+            // Update the error state
+            onError({ transaction, error })
+
+            // We want to stop the moment we hit an error
+            return
+        }
+    }
+}
