@@ -13,55 +13,16 @@ import {
 import { type OmniContract, formatOmniContract } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
-import { OwnableMixin } from '@/ownable/mixin'
+import { Ownable } from '@/ownable/sdk'
 
-export class OApp extends OmniSDK implements IOApp {
+export class OApp extends Ownable implements IOApp {
     constructor(
         contract: OmniContract,
         protected readonly endpointV2Factory: EndpointV2Factory
     ) {
         super(contract)
-    }
-
-    @AsyncRetriable()
-    getOwner(): Promise<string> {
-        // TODO This is a quick and dirty way of applying OwnableMixin
-        //
-        // The proper solution involves :
-        // - Option A: Using class decorators
-        // - Option B: Using dynamic classes
-        //
-        // TypeScript support for these is still lacking and the resulting code would slow
-        // down the development at this point
-        return OwnableMixin.getOwner.call(this)
-    }
-
-    @AsyncRetriable()
-    hasOwner(address: string): Promise<boolean> {
-        // TODO This is a quick and dirty way of applying OwnableMixin
-        //
-        // The proper solution involves :
-        // - Option A: Using class decorators
-        // - Option B: Using dynamic classes
-        //
-        // TypeScript support for these is still lacking and the resulting code would slow
-        // down the development at this point
-        return OwnableMixin.hasOwner.call(this, address)
-    }
-
-    setOwner(address: string): Promise<OmniTransaction> {
-        // TODO This is a quick and dirty way of applying OwnableMixin
-        //
-        // The proper solution involves :
-        // - Option A: Using class decorators
-        // - Option B: Using dynamic classes
-        //
-        // TypeScript support for these is still lacking and the resulting code would slow
-        // down the development at this point
-        return OwnableMixin.setOwner.call(this, address)
     }
 
     @AsyncRetriable()
