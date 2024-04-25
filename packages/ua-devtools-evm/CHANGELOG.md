@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.9
+
+### Patch Changes
+
+- 6b8ecc9: Add Ownable SDK for easy reuse
+- Updated dependencies [6b8ecc9]
+  - @layerzerolabs/ua-devtools@0.3.10
+
 ## 0.3.8
 
 ### Patch Changes
