@@ -1,7 +1,7 @@
 import type { Configurator, Factory, OmniAddress, OmniGraph, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
 
 export interface IOwnable {
-    getOwner(): Promise<OmniAddress>
+    getOwner(): Promise<OmniAddress | undefined>
     hasOwner(address: OmniAddress): Promise<boolean>
     setOwner(address: OmniAddress): Promise<OmniTransaction>
 }
