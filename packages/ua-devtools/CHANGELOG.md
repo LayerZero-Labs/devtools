@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.10
+
+### Patch Changes
+
+- 6b8ecc9: Add Ownable SDK for easy reuse
+
 ## 0.3.9
 
 ### Patch Changes
