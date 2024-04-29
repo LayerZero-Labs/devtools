@@ -132,6 +132,18 @@ exports[`omnigraph/format formatEid should format 263 correctly 1`] = `"MASA_MAI
 
 exports[`omnigraph/format formatEid should format 265 correctly 1`] = `"HOMEVERSE_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 266 correctly 1`] = `"MERLIN_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 267 correctly 1`] = `"DEGEN_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 273 correctly 1`] = `"SKALE_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 274 correctly 1`] = `"XLAYER_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 278 correctly 1`] = `"SANKO_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 279 correctly 1`] = `"BOB_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -302,8 +314,6 @@ exports[`omnigraph/format formatEid should format 10251 correctly 1`] = `"XAI_TE
 
 exports[`omnigraph/format formatEid should format 10252 correctly 1`] = `"TANGIBLE_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 10254 correctly 1`] = `"SKALE_TESTNET"`;
-
 exports[`omnigraph/format formatEid should format 10255 correctly 1`] = `"FRAXTAL_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10256 correctly 1`] = `"BERA_TESTNET"`;
@@ -329,6 +339,30 @@ exports[`omnigraph/format formatEid should format 10266 correctly 1`] = `"ZKASTA
 exports[`omnigraph/format formatEid should format 10267 correctly 1`] = `"AMOY_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10268 correctly 1`] = `"DEGEN_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10269 correctly 1`] = `"XLAYER_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10270 correctly 1`] = `"FORM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10271 correctly 1`] = `"LL1_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10272 correctly 1`] = `"MANTASEP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10273 correctly 1`] = `"SKALE_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10274 correctly 1`] = `"TAIKO_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10275 correctly 1`] = `"ZIRCUIT_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10276 correctly 1`] = `"CAMP_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10277 correctly 1`] = `"OLIVE_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10278 correctly 1`] = `"SANKO_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10279 correctly 1`] = `"BOB_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10280 correctly 1`] = `"CYBER_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
@@ -481,6 +515,18 @@ exports[`omnigraph/format formatEid should format 30260 correctly 1`] = `"MODE_V
 exports[`omnigraph/format formatEid should format 30263 correctly 1`] = `"MASA_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30265 correctly 1`] = `"HOMEVERSE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30266 correctly 1`] = `"MERLIN_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30267 correctly 1`] = `"DEGEN_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30273 correctly 1`] = `"SKALE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30274 correctly 1`] = `"XLAYER_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30278 correctly 1`] = `"SANKO_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30279 correctly 1`] = `"BOB_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -644,8 +690,6 @@ exports[`omnigraph/format formatEid should format 40251 correctly 1`] = `"XAI_V2
 
 exports[`omnigraph/format formatEid should format 40252 correctly 1`] = `"TANGIBLE_V2_TESTNET"`;
 
-exports[`omnigraph/format formatEid should format 40254 correctly 1`] = `"SKALE_V2_TESTNET"`;
-
 exports[`omnigraph/format formatEid should format 40255 correctly 1`] = `"FRAXTAL_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40256 correctly 1`] = `"BERA_V2_TESTNET"`;
@@ -671,6 +715,30 @@ exports[`omnigraph/format formatEid should format 40266 correctly 1`] = `"ZKASTA
 exports[`omnigraph/format formatEid should format 40267 correctly 1`] = `"AMOY_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40268 correctly 1`] = `"DEGEN_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40269 correctly 1`] = `"XLAYER_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40270 correctly 1`] = `"FORM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40271 correctly 1`] = `"LL1_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40272 correctly 1`] = `"MANTASEP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40273 correctly 1`] = `"SKALE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40274 correctly 1`] = `"TAIKO_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40275 correctly 1`] = `"ZIRCUIT_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40276 correctly 1`] = `"CAMP_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40277 correctly 1`] = `"OLIVE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40278 correctly 1`] = `"SANKO_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40279 correctly 1`] = `"BOB_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40280 correctly 1`] = `"CYBER_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 

@@ -32,8 +32,8 @@
     "test": "jest --ci"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.5",
-    "@layerzerolabs/lz-definitions": "~2.1.27",
+    "@layerzerolabs/devtools": "~0.3.9",
+    "@layerzerolabs/lz-definitions": "~2.3.3",
     "@layerzerolabs/test-devtools": "~0.2.2",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
