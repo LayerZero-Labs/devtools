@@ -1,5 +1,21 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.20
+
+### Patch Changes
+
+- f865318: Update @LayerZero-Labs dependencies to 2.3.3
+- Updated dependencies [f865318]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.3
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.14
+  - @layerzerolabs/protocol-devtools-evm@0.3.6
+  - @layerzerolabs/devtools-evm-hardhat@0.3.12
+  - @layerzerolabs/protocol-devtools@0.3.6
+  - @layerzerolabs/ua-devtools-evm@0.3.10
+  - @layerzerolabs/devtools-evm@0.3.7
+  - @layerzerolabs/ua-devtools@0.3.11
+  - @layerzerolabs/devtools@0.3.10
+
 ## 0.2.19
 
 ### Patch Changes

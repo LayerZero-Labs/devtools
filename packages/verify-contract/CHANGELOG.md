@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.19
+
+### Patch Changes
+
+- f865318: Update @LayerZero-Labs dependencies to 2.3.3
+
 ## 1.1.18
 
 ### Patch Changes
