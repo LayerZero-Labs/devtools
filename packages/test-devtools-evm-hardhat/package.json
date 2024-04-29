@@ -40,7 +40,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "~2.3.3",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
-    "hardhat": "^2.19.5",
+    "hardhat": "^2.22.3",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
@@ -48,7 +48,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.22.3",
     "solidity-bytes-utils": "^0.8.2"
   },
   "publishConfig": {

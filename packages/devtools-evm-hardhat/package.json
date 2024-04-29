@@ -68,7 +68,7 @@
     "@types/jest": "^29.5.12",
     "fast-check": "^3.15.1",
     "fp-ts": "^2.16.2",
-    "hardhat": "^2.19.5",
+    "hardhat": "^2.22.3",
     "hardhat-deploy": "^0.12.1",
     "jest": "^29.7.0",
     "p-memoize": "~4.0.1",
@@ -89,7 +89,7 @@
     "@layerzerolabs/lz-definitions": "~2.1.15",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "fp-ts": "^2.16.2",
-    "hardhat": "^2.19.4",
+    "hardhat": "^2.22.3",
     "hardhat-deploy": "^0.11.45"
   },
   "publishConfig": {

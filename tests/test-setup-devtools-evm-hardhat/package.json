@@ -41,7 +41,7 @@
     "@layerzerolabs/ua-devtools-evm": "~0.3.9",
     "@types/jest": "^29.5.12",
     "ethers": "^5.7.2",
-    "hardhat": "^2.19.5",
+    "hardhat": "^2.22.3",
     "hardhat-deploy": "^0.12.1",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
@@ -59,7 +59,7 @@
     "@layerzerolabs/ua-devtools": "~0.3.3",
     "@layerzerolabs/ua-devtools-evm": "~0.3.3",
     "ethers": "^5.7.2",
-    "hardhat": "^2.19.5",
+    "hardhat": "^2.22.3",
     "hardhat-deploy": "^0.12.1"
   }
 }

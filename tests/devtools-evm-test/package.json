@@ -33,7 +33,7 @@
     "@types/jest": "^29.5.12",
     "ethers": "^5.7.2",
     "fast-check": "^3.15.1",
-    "hardhat": "^2.19.5",
+    "hardhat": "^2.22.3",
     "jest": "^29.7.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
