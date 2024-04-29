@@ -1,5 +1,19 @@
 # @layerzerolabs/test-setup-devtools-evm-hardhat
 
+## 0.0.4
+
+### Patch Changes
+
+- f865318: Update @LayerZero-Labs dependencies to 2.3.3
+- Updated dependencies [f865318]
+  - @layerzerolabs/protocol-devtools-evm@0.3.6
+  - @layerzerolabs/devtools-evm-hardhat@0.3.12
+  - @layerzerolabs/protocol-devtools@0.3.6
+  - @layerzerolabs/ua-devtools-evm@0.3.10
+  - @layerzerolabs/devtools-evm@0.3.7
+  - @layerzerolabs/ua-devtools@0.3.11
+  - @layerzerolabs/devtools@0.3.10
+
 ## 0.0.3
 
 ### Patch Changes

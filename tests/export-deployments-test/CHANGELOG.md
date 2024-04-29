@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.2.3
+
+### Patch Changes
+
+- f865318: Update @LayerZero-Labs dependencies to 2.3.3
+
 ## 0.2.2
 
 ### Patch Changes

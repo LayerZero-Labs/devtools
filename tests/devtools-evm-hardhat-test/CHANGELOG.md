@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.1.4
+
+### Patch Changes
+
+- f865318: Update @LayerZero-Labs dependencies to 2.3.3
+
 ## 0.1.3
 
 ### Patch Changes
