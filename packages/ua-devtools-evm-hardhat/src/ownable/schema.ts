@@ -16,4 +16,4 @@ import { OwnableNodeConfigSchema } from '@layerzerolabs/ua-devtools'
 export const OwnableOmniGraphHardhatSchema = createOmniGraphHardhatSchema(
     createOmniNodeHardhatSchema(OwnableNodeConfigSchema),
     createOmniEdgeHardhatSchema(z.unknown())
-) satisfies z.ZodSchema<OwnableOmniGraphHardhat>
+) satisfies z.ZodSchema<OwnableOmniGraphHardhat, z.ZodTypeDef, unknown>

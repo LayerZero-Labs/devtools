@@ -16,4 +16,4 @@ import { OAppEdgeConfigSchema, OAppNodeConfigSchema } from '@layerzerolabs/ua-de
 export const OAppOmniGraphHardhatSchema = createOmniGraphHardhatSchema(
     createOmniNodeHardhatSchema(OAppNodeConfigSchema.optional()),
     createOmniEdgeHardhatSchema(OAppEdgeConfigSchema.optional())
-) satisfies z.ZodSchema<OAppOmniGraphHardhat>
+) satisfies z.ZodSchema<OAppOmniGraphHardhat, z.ZodTypeDef, unknown>
