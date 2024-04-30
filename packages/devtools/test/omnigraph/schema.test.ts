@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-devtools'
-import { createOmniEdgeSchema, createOmniNodeSchema } from '@/omnigraph/schema'
-import { z } from 'zod'
+import { UIntBigIntSchema, UIntNumberSchema, createOmniEdgeSchema, createOmniNodeSchema } from '@/omnigraph/schema'
+import { ZodError, z } from 'zod'
 
 describe('omnigraph/schema', () => {
     interface TestCase {
@@ -64,6 +64,136 @@ describe('omnigraph/schema', () => {
                     })
                 )
             })
+        })
+    })
+
+    describe('UIntBigIntSchema', () => {
+        it('should work for non-negative bigints', () => {
+            fc.assert(
+                fc.property(fc.bigInt({ min: BigInt(0) }), (value) => {
+                    expect(UIntBigIntSchema.parse(value)).toBe(value)
+                })
+            )
+        })
+
+        it('should not work for negative bigints', () => {
+            fc.assert(
+                fc.property(fc.bigInt({ max: BigInt(-1) }), (value) => {
+                    expect(() => UIntBigIntSchema.parse(value)).toThrow()
+                })
+            )
+        })
+
+        it('should work for non-negative bigint strings', () => {
+            fc.assert(
+                fc.property(fc.bigInt({ min: BigInt(0) }), (value) => {
+                    expect(UIntBigIntSchema.parse(String(value))).toBe(value)
+                })
+            )
+        })
+
+        it('should not work for negative bigint strings', () => {
+            fc.assert(
+                fc.property(fc.bigInt({ max: BigInt(-1) }), (value) => {
+                    expect(() => UIntBigIntSchema.parse(String(value))).toThrow()
+                })
+            )
+        })
+
+        it('should work for non-negative integers', () => {
+            fc.assert(
+                fc.property(fc.integer({ min: 0 }), (value) => {
+                    expect(UIntBigIntSchema.parse(value)).toBe(BigInt(value))
+                })
+            )
+        })
+
+        it('should not work for negative integers', () => {
+            fc.assert(
+                fc.property(fc.integer({ max: -1 }), (value) => {
+                    expect(() => UIntBigIntSchema.parse(value)).toThrow()
+                })
+            )
+        })
+
+        it('should work for non-negative integer strings', () => {
+            fc.assert(
+                fc.property(fc.integer({ min: 0 }), (value) => {
+                    expect(UIntBigIntSchema.parse(String(value))).toBe(BigInt(value))
+                })
+            )
+        })
+
+        it('should not work for negative integer strings', () => {
+            fc.assert(
+                fc.property(fc.integer({ max: -1 }), (value) => {
+                    expect(() => UIntBigIntSchema.parse(String(value))).toThrow()
+                })
+            )
+        })
+
+        it('should throw a ZodError for invalid values', () => {
+            fc.assert(
+                fc.property(fc.anything(), (value) => {
+                    fc.pre(!UIntBigIntSchema.safeParse(value).success)
+
+                    // Here we expect that whatever we got, we'll not receive a SyntaxError
+                    // (coming from a BigInt() constructor) but a ZodError
+                    expect(() => UIntBigIntSchema.parse(value)).toThrow(ZodError)
+                })
+            )
+        })
+
+        it('should mention the object path for undefined values', () => {
+            const ObjectSchema = z.object({ value: UIntBigIntSchema })
+
+            expect(() => ObjectSchema.parse({ value: undefined })).toThrowErrorMatchingSnapshot()
+        })
+    })
+
+    describe('UIntNumberSchema', () => {
+        it('should work for non-negative integers', () => {
+            fc.assert(
+                fc.property(fc.integer({ min: 0 }), (value) => {
+                    expect(UIntNumberSchema.parse(value)).toBe(value)
+                })
+            )
+        })
+
+        it('should not work for negative integers', () => {
+            fc.assert(
+                fc.property(fc.integer({ max: -1 }), (value) => {
+                    expect(() => UIntNumberSchema.parse(value)).toThrow()
+                })
+            )
+        })
+
+        it('should work for non-negative integer strings', () => {
+            fc.assert(
+                fc.property(fc.integer({ min: 0 }), (value) => {
+                    expect(UIntNumberSchema.parse(String(value))).toBe(value)
+                })
+            )
+        })
+
+        it('should not work for negative integer strings', () => {
+            fc.assert(
+                fc.property(fc.integer({ max: -1 }), (value) => {
+                    expect(() => UIntNumberSchema.parse(String(value))).toThrow()
+                })
+            )
+        })
+
+        it('should throw a ZodError for invalid values', () => {
+            fc.assert(
+                fc.property(fc.anything(), (value) => {
+                    fc.pre(!UIntNumberSchema.safeParse(value).success)
+
+                    // Here we expect that whatever we got, we'll not receive a SyntaxError
+                    // (coming from a BigInt() constructor) but a ZodError
+                    expect(() => UIntNumberSchema.parse(value)).toThrow(ZodError)
+                })
+            )
         })
     })
 })
