@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.8
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+
 ## 0.0.7
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.12
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/io-devtools@0.1.9
+  - @layerzerolabs/devtools@0.3.11
+  - @layerzerolabs/protocol-devtools@0.3.7
+
 ## 0.3.11
 
 ### Patch Changes

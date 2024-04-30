@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.13
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/io-devtools@0.1.9
+  - @layerzerolabs/devtools@0.3.11
+  - @layerzerolabs/devtools-evm@0.3.8
+  - @layerzerolabs/export-deployments@0.0.8
+
 ## 0.3.12
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.5
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+
 ## 0.1.4
 
 ### Patch Changes
