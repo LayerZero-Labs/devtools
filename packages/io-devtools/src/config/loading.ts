@@ -5,7 +5,7 @@ import { resolve } from 'path'
 import { z } from 'zod'
 
 export const createConfigLoader =
-    <TConfig>(schema: z.ZodSchema<TConfig>, logger = createModuleLogger('config loader')) =>
+    <TConfig>(schema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>, logger = createModuleLogger('config loader')) =>
     async (path: string): Promise<TConfig> => {
         const absolutePath = resolve(path)
         logger.verbose(`Resolved config file location for '${path}': '${absolutePath}'`)

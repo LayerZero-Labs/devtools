@@ -18,8 +18,8 @@ const OmniPointOrOmniPointHardhatSchema = z.union([OmniPointHardhatSchema, OmniP
  * @returns {z.ZodSchema<OmniNodeHardhat<TConfig>>} schema for a node with the particular config type
  */
 export const createOmniNodeHardhatSchema = <TConfig = unknown>(
-    configSchema: z.ZodSchema<TConfig, z.ZodTypeDef>
-): z.ZodSchema<OmniNodeHardhat<TConfig>, z.ZodTypeDef> =>
+    configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
+): z.ZodSchema<OmniNodeHardhat<TConfig>, z.ZodTypeDef, unknown> =>
     z.object({
         contract: OmniPointOrOmniPointHardhatSchema,
         config: configSchema,
@@ -33,8 +33,8 @@ export const createOmniNodeHardhatSchema = <TConfig = unknown>(
  * @returns {z.ZodSchema<OmniEdgeHardhat<TConfig>>} Schema for an edge with the particular config type
  */
 export const createOmniEdgeHardhatSchema = <TConfig = unknown>(
-    configSchema: z.ZodSchema<TConfig, z.ZodTypeDef>
-): z.ZodSchema<OmniEdgeHardhat<TConfig>, z.ZodTypeDef> =>
+    configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
+): z.ZodSchema<OmniEdgeHardhat<TConfig>, z.ZodTypeDef, unknown> =>
     z.object({
         from: OmniPointOrOmniPointHardhatSchema,
         to: OmniPointOrOmniPointHardhatSchema,
@@ -50,9 +50,9 @@ export const createOmniEdgeHardhatSchema = <TConfig = unknown>(
  * @returns {z.ZodSchema<OmniGraphHardhat<TNodeConfig, TEdgeConfig>>}
  */
 export const createOmniGraphHardhatSchema = <TNodeConfig = unknown, TEdgeConfig = unknown>(
-    nodeSchema: z.ZodSchema<OmniNodeHardhat<TNodeConfig>, z.ZodTypeDef>,
-    edgeSchema: z.ZodSchema<OmniEdgeHardhat<TEdgeConfig>, z.ZodTypeDef>
-): z.ZodSchema<OmniGraphHardhat<TNodeConfig, TEdgeConfig>, z.ZodTypeDef> =>
+    nodeSchema: z.ZodSchema<OmniNodeHardhat<TNodeConfig>, z.ZodTypeDef, unknown>,
+    edgeSchema: z.ZodSchema<OmniEdgeHardhat<TEdgeConfig>, z.ZodTypeDef, unknown>
+): z.ZodSchema<OmniGraphHardhat<TNodeConfig, TEdgeConfig>, z.ZodTypeDef, unknown> =>
     z.object({
         contracts: z.array(nodeSchema),
         connections: z.array(edgeSchema),

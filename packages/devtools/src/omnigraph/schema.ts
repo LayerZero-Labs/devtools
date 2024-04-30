@@ -2,7 +2,30 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { z } from 'zod'
 import type { OmniPoint, OmniNode, OmniVector, OmniEdge, OmniGraph } from './types'
 
-export const UIntBigIntSchema = z.coerce.bigint().nonnegative()
+/**
+ * Schema for parsing strings, bigints and numbers to uint backed by bigint
+ *
+ * It does not use z.coerce in order to avoid errors coming from BigInt() constructor
+ */
+export const UIntBigIntSchema = z
+    .unknown()
+    .transform((value, ctx): bigint => {
+        if (typeof value === 'bigint') {
+            return value
+        }
+
+        try {
+            return BigInt(String(value))
+        } catch {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Invalid BigInt-like value`,
+            })
+
+            return z.NEVER
+        }
+    })
+    .pipe(z.bigint().nonnegative())
 
 export const UIntNumberSchema = z.coerce.number().nonnegative().int()
 
@@ -59,7 +82,7 @@ export const isOmniGraphEmpty = ({ contracts, connections }: OmniGraph): boolean
  */
 export const createOmniNodeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
-): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef> =>
+): z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef, unknown> =>
     EmptyOmniNodeSchema.extend({
         config: configSchema,
     }) as z.ZodSchema<OmniNode<TConfig>, z.ZodTypeDef>
@@ -73,7 +96,7 @@ export const createOmniNodeSchema = <TConfig = unknown>(
  */
 export const createOmniEdgeSchema = <TConfig = unknown>(
     configSchema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>
-): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef> =>
+): z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef, unknown> =>
     EmptyOmniEdgeSchema.extend({
         config: configSchema,
     }) as z.ZodSchema<OmniEdge<TConfig>, z.ZodTypeDef>
