@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.6
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+
 ## 0.2.5
 
 ### Patch Changes

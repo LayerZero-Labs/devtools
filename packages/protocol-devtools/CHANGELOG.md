@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.3.7
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/devtools@0.3.11
+
 ## 0.3.6
 
 ### Patch Changes

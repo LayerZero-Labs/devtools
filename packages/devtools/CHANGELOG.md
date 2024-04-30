@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools
 
+## 0.3.11
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/io-devtools@0.1.9
+
 ## 0.3.10
 
 ### Patch Changes

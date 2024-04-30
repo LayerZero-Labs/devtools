@@ -1,5 +1,21 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.21
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.15
+  - @layerzerolabs/devtools-evm-hardhat@0.3.13
+  - @layerzerolabs/io-devtools@0.1.9
+  - @layerzerolabs/devtools@0.3.11
+  - @layerzerolabs/devtools-evm@0.3.8
+  - @layerzerolabs/protocol-devtools@0.3.7
+  - @layerzerolabs/protocol-devtools-evm@0.3.7
+  - @layerzerolabs/ua-devtools@0.3.12
+  - @layerzerolabs/ua-devtools-evm@0.3.11
+
 ## 0.2.20
 
 ### Patch Changes

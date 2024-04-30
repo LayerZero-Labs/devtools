@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 0.3.5
+
+### Patch Changes
+
+- 938ac3d: Improve error reporting on UIntBigIntSchema
+- Updated dependencies [938ac3d]
+  - @layerzerolabs/devtools@0.3.11
+  - @layerzerolabs/devtools-evm@0.3.8
+  - @layerzerolabs/omnicounter-devtools@0.3.5
+  - @layerzerolabs/protocol-devtools@0.3.7
+  - @layerzerolabs/protocol-devtools-evm@0.3.7
+  - @layerzerolabs/ua-devtools@0.3.12
+  - @layerzerolabs/ua-devtools-evm@0.3.11
+
 ## 0.3.4
 
 ### Patch Changes
