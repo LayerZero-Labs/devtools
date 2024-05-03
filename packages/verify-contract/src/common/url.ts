@@ -78,4 +78,5 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['etherlink', 'https://explorer.etherlink.com/api'],
     ['blast', 'https://api.blastscan.io/api'],
     ['manta', 'https://pacific-explorer.manta.network/api'],
+    ['xlayer', 'https://www.oklink.com/api/v5/explorer/contract/verify-source-code-plugin/XLAYER'],
 ])
