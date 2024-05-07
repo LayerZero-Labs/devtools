@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.20
+
+### Patch Changes
+
+- 5b637fc: Add xlayer default url
+
 ## 1.1.19
 
 ### Patch Changes
