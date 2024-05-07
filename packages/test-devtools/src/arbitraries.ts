@@ -28,6 +28,7 @@ export const mnemonicArbitrary: fc.Arbitrary<string> = fc
 export const pointArbitrary = fc.record({
     eid: endpointArbitrary,
     address: evmAddressArbitrary,
+    contractName: nullableArbitrary(fc.string()),
 })
 
 export const vectorArbitrary = fc.record({

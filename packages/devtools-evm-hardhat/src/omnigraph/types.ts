@@ -19,6 +19,7 @@ export type OmniDeployment = WithEid<{
 export type OmniPointHardhat = WithEid<{
     contractName?: string | null
     address?: string | null
+    proxyAddress?: string | null
 }>
 
 export type WithContractName<T> = T & { contractName: string }

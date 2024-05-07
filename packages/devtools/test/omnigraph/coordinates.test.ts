@@ -8,7 +8,13 @@ import {
     isVectorPossible,
     withEid,
 } from '@/omnigraph/coordinates'
-import { addressArbitrary, endpointArbitrary, pointArbitrary, vectorArbitrary } from '@layerzerolabs/test-devtools'
+import {
+    addressArbitrary,
+    endpointArbitrary,
+    nullableArbitrary,
+    pointArbitrary,
+    vectorArbitrary,
+} from '@layerzerolabs/test-devtools'
 import { endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 describe('omnigraph/vector', () => {
@@ -46,6 +52,16 @@ describe('omnigraph/vector', () => {
                         fc.pre(point.eid !== eid)
 
                         expect(arePointsEqual(point, { ...point, eid })).toBeFalsy()
+                    })
+                )
+            })
+
+            it("should be false when contract names don't match", () => {
+                fc.assert(
+                    fc.property(pointArbitrary, nullableArbitrary(fc.string()), (point, contractName) => {
+                        fc.pre(point.contractName !== contractName)
+
+                        expect(arePointsEqual(point, { ...point, contractName })).toBeFalsy()
                     })
                 )
             })
