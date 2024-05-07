@@ -246,7 +246,7 @@ const action: ActionType<TaskArgs> = async (
                     createProgressBar({
                         before: 'Deploying... ',
                         after: ` ${numProcessed}/${selectedNetworks.length}`,
-                        progress: numProcessed,
+                        progress: numProcessed / selectedNetworks.length,
                     })
                 )
             }
