@@ -23,7 +23,7 @@ describe('omnigraph/format', () => {
         it('should work without contract name innit', () => {
             fc.assert(
                 fc.property(pointArbitrary, (point) => {
-                    fc.pre(point.contractName == null)
+                    fc.pre(!point.contractName)
 
                     expect(formatOmniPoint(point)).toBe(`[${point.address} @ ${formatEid(point.eid)}]`)
                 })
@@ -33,7 +33,7 @@ describe('omnigraph/format', () => {
         it('should work with contract name innit', () => {
             fc.assert(
                 fc.property(pointArbitrary, (point) => {
-                    fc.pre(point.contractName != null)
+                    fc.pre(!!point.contractName)
 
                     expect(formatOmniPoint(point)).toBe(
                         `[${point.address} (${point.contractName}) @ ${formatEid(point.eid)}]`
