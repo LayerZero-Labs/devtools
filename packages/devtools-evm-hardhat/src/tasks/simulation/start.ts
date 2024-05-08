@@ -15,15 +15,17 @@ import { getEidsByNetworkName } from '@/runtime'
 import { getAnvilOptionsFromHardhatNetworks, pickNetworkConfigs, resolveSimulationConfig } from '@/simulation'
 import { dockerfile, nginxConf } from '@/simulation/assets'
 import { spawnSync } from 'child_process'
+import { EndpointId, Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
 
 export interface SimulationStartTaskArgs {
     logLevel?: LogLevel
     networks?: string[]
     daemon?: boolean
+    stage?: Stage
 }
 
 const action: ActionType<SimulationStartTaskArgs> = async (
-    { networks: networksArgument, daemon = false, logLevel = 'info' },
+    { networks: networksArgument, daemon = false, logLevel = 'info', stage },
     hre
 ) => {
     setDefaultLogLevel(logLevel)
@@ -32,12 +34,24 @@ const action: ActionType<SimulationStartTaskArgs> = async (
 
     const logger = createLogger()
 
+    // --stage cannot be used in conjunction with --networks
+    if (networksArgument != null && stage != null) {
+        logger.error(`--stage ${stage} cannot be used in conjunction with --networks ${networksArgument.join(',')}`)
+
+        process.exit(1)
+    }
+
+    // And we create a filtering predicate for the stage argument
+    const isOnStage = stage == null ? () => true : (eid: EndpointId) => endpointIdToStage(eid) === stage
+
     // Let's grab the networks that will be included in the simulation
     const networks = networksArgument
         ? // Here we need to check whether the networks have been defined in hardhat config
           assertDefinedNetworks(networksArgument)
         : //  But here we are taking them from hardhat config so no assertion is necessary
-          Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
+          Object.entries(getEidsByNetworkName()).flatMap(([networkName, eid]) =>
+              eid != null && isOnStage(eid) ? [networkName] : []
+          )
 
     // We only continue if we have any networks with eid
     //
@@ -121,5 +135,6 @@ if (process.env.LZ_ENABLE_EXPERIMENTAL_SIMULATION) {
     task(TASK_LZ_TEST_SIMULATION_START, 'Start LayzerZero omnichain simulation', action)
         .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
         .addParam('networks', 'Comma-separated list of networks to simulate', undefined, types.csv, true)
+        .addParam('stage', 'Chain stage. One of: mainnet, testnet, sandbox', undefined, types.stage, true)
         .addFlag('daemon', 'Start the simulation in the background')
 }
