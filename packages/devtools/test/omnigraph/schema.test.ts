@@ -135,7 +135,16 @@ describe('omnigraph/schema', () => {
         it('should throw a ZodError for invalid values', () => {
             fc.assert(
                 fc.property(fc.anything(), (value) => {
-                    fc.pre(!UIntBigIntSchema.safeParse(value).success)
+                    let isValid = false
+
+                    try {
+                        isValid = UIntBigIntSchema.safeParse(value).success
+                    } catch {
+                        // This catch block is designed to catch errors caused by messed up standard methods
+                        // like toString or toValue that fast check throws at us
+                    }
+
+                    fc.pre(!isValid)
 
                     // Here we expect that whatever we got, we'll not receive a SyntaxError
                     // (coming from a BigInt() constructor) but a ZodError
@@ -187,7 +196,16 @@ describe('omnigraph/schema', () => {
         it('should throw a ZodError for invalid values', () => {
             fc.assert(
                 fc.property(fc.anything(), (value) => {
-                    fc.pre(!UIntNumberSchema.safeParse(value).success)
+                    let isValid = false
+
+                    try {
+                        isValid = UIntNumberSchema.safeParse(value).success
+                    } catch {
+                        // This catch block is designed to catch errors caused by messed up standard methods
+                        // like toString or toValue that fast check throws at us
+                    }
+
+                    fc.pre(!isValid)
 
                     // Here we expect that whatever we got, we'll not receive a SyntaxError
                     // (coming from a BigInt() constructor) but a ZodError
