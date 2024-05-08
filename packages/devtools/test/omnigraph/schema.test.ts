@@ -135,12 +135,16 @@ describe('omnigraph/schema', () => {
         it('should throw a ZodError for invalid values', () => {
             fc.assert(
                 fc.property(fc.anything(), (value) => {
+                    let isValid = false
+
                     try {
-                        fc.pre(!UIntBigIntSchema.safeParse(value).success)
+                        isValid = UIntBigIntSchema.safeParse(value).success
                     } catch {
-                        // If the parsing above fails (e.g. because the value is missing a toString or toValue methods),
-                        // we want to continue with the test since we want to check that an invalid value will fail
+                        // This catch block is designed to catch errors caused by messed up standard methods
+                        // like toString or toValue that fast check throws at us
                     }
+
+                    fc.pre(!isValid)
 
                     // Here we expect that whatever we got, we'll not receive a SyntaxError
                     // (coming from a BigInt() constructor) but a ZodError
@@ -192,12 +196,16 @@ describe('omnigraph/schema', () => {
         it('should throw a ZodError for invalid values', () => {
             fc.assert(
                 fc.property(fc.anything(), (value) => {
+                    let isValid = false
+
                     try {
-                        fc.pre(!UIntNumberSchema.safeParse(value).success)
+                        isValid = UIntNumberSchema.safeParse(value).success
                     } catch {
-                        // If the parsing above fails (e.g. because the value is missing a toString or toValue methods),
-                        // we want to continue with the test since we want to check that an invalid value will fail
+                        // This catch block is designed to catch errors caused by messed up standard methods
+                        // like toString or toValue that fast check throws at us
                     }
+
+                    fc.pre(!isValid)
 
                     // Here we expect that whatever we got, we'll not receive a SyntaxError
                     // (coming from a BigInt() constructor) but a ZodError
