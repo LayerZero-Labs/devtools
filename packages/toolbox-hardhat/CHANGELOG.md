@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.22
+
+### Patch Changes
+
+- 71d6101: Fix a display issue with deployment progressbar
+- c190bf5: Add --stage CLI argument to the simulation task
+- Updated dependencies [71d6101]
+- Updated dependencies [c190bf5]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.14
+
 ## 0.2.21
 
 ### Patch Changes
