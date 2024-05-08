@@ -48,7 +48,7 @@ const action: ActionType<SimulationStartTaskArgs> = async (
     const isOnStage = stage == null ? () => true : (eid: EndpointId) => endpointIdToStage(eid) === stage
 
     // Let's grab the networks that will be included in the simulation
-    const networks: string[] = networksArgument
+    const networks = networksArgument
         ? // Here we need to check whether the networks have been defined in hardhat config
           assertDefinedNetworks(networksArgument)
         : //  But here we are taking them from hardhat config so no assertion is necessary
