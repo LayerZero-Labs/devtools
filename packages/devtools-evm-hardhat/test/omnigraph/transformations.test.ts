@@ -56,7 +56,7 @@ describe('omnigraph/transformations', () => {
 
                     const transformed = await transformer(point)
 
-                    expect(transformed).toEqual({ eid: point.eid, address })
+                    expect(transformed).toEqual({ ...point, address })
                     expect(contractFactory).toHaveBeenCalledTimes(1)
                     expect(contractFactory).toHaveBeenCalledWith(point)
                 })
