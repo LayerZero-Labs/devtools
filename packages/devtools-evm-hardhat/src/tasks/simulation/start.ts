@@ -41,9 +41,6 @@ const action: ActionType<SimulationStartTaskArgs> = async (
         process.exit(1)
     }
 
-    // We grab a mapping between network names and endpoint IDs
-    const eidsByNetworks = Object.entries(getEidsByNetworkName())
-
     // And we create a filtering predicate for the stage argument
     const isOnStage = stage == null ? () => true : (eid: EndpointId) => endpointIdToStage(eid) === stage
 
@@ -52,7 +49,9 @@ const action: ActionType<SimulationStartTaskArgs> = async (
         ? // Here we need to check whether the networks have been defined in hardhat config
           assertDefinedNetworks(networksArgument)
         : //  But here we are taking them from hardhat config so no assertion is necessary
-          eidsByNetworks.flatMap(([networkName, eid]) => (eid != null && isOnStage(eid) ? [networkName] : []))
+          Object.entries(getEidsByNetworkName()).flatMap(([networkName, eid]) =>
+              eid != null && isOnStage(eid) ? [networkName] : []
+          )
 
     // We only continue if we have any networks with eid
     //
