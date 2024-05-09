@@ -27,7 +27,21 @@ export const UIntBigIntSchema = z
     })
     .pipe(z.bigint().nonnegative())
 
-export const UIntNumberSchema = z.coerce.number().nonnegative().int()
+export const UIntNumberSchema = z
+    .unknown()
+    .transform((value, ctx): number => {
+        try {
+            return Number(value)
+        } catch {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Invalid Number-like value`,
+            })
+
+            return z.NEVER
+        }
+    })
+    .pipe(z.number().nonnegative().int())
 
 export const AddressSchema = z.string()
 
