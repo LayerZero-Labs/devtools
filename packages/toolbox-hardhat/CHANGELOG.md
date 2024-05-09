@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.23
+
+### Patch Changes
+
+- 1e9b652: Exit with error code when simulation fails to start
+- Updated dependencies [f3ab6c6]
+- Updated dependencies [1e9b652]
+  - @layerzerolabs/devtools@0.3.12
+  - @layerzerolabs/devtools-evm-hardhat@0.3.15
+
 ## 0.2.22
 
 ### Patch Changes

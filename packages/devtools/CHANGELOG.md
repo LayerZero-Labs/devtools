@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.12
+
+### Patch Changes
+
+- f3ab6c6: Update UIntNumberSchema to handle silly cases (like invalid toString() implementation)
+
 ## 0.3.11
 
 ### Patch Changes
