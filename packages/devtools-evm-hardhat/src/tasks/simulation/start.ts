@@ -119,9 +119,13 @@ const action: ActionType<SimulationStartTaskArgs> = async (
         // This is a very quick and dirty way to pass an optional --wait argument to docker compose up
         const additionalUpArgs: string[] = daemon ? ['--wait'] : []
 
-        spawnSync('docker', ['compose', '-f', dockerComposePath, 'up', ...additionalUpArgs], {
+        const result = spawnSync('docker', ['compose', '-f', dockerComposePath, 'up', ...additionalUpArgs], {
             stdio: 'inherit',
         })
+
+        if (result.status !== 0) {
+            throw new Error(`docker compose up command failed with exit code ${result.status}`)
+        }
     } catch (error) {
         logger.error(`Failed to spawn docker compose up command for ${dockerComposePath}: ${error}`)
 
