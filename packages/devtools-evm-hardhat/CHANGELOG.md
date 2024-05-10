@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.16
+
+### Patch Changes
+
+- aef7c85: Only load all deployments if a deployment could not be found
+
 ## 0.3.15
 
 ### Patch Changes
