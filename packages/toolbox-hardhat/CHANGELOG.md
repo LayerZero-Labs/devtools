@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.24
+
+### Patch Changes
+
+- aef7c85: Only load all deployments if a deployment could not be found
+- Updated dependencies [aef7c85]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.16
+
 ## 0.2.23
 
 ### Patch Changes
