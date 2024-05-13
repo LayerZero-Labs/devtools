@@ -18,12 +18,9 @@ export const OutputOptions: React.FC<{ config: OutputOptionsType }> = ({
   config,
 }) => {
   return (
-    <Box flexDirection="column">
-      <Text>
-        <Text bold>Result:</Text>
-        {"\n"}
-        <Text color="green">{printJson(config)}</Text>
-      </Text>
+    <Box flexDirection="column" padding={1}>
+      <Text bold>Result:</Text>
+      <Text color="green">{printJson(config)}</Text>
     </Box>
   );
 };
