@@ -311,29 +311,38 @@ contract TestHelperOz5 is Test, OptionsHelper {
     }
 
     /**
-     * @notice Verifies and processes packets destined for a specific chain and user address.
-     * @dev Calls an overloaded version of verifyPackets with default values for packet amount and composer address.
+     * @notice Verifies and executes packets destined for a specific chain and user address.
+     * @dev Calls an overloaded version of verifyAndExecutePackets with default values for packet amount and composer address.
      * @param _dstEid The destination chain's endpoint ID.
      * @param _dstAddress The destination address in bytes32 format.
      */
-    function verifyPackets(uint32 _dstEid, bytes32 _dstAddress) public {
-        verifyPackets(_dstEid, _dstAddress, 0, address(0x0));
+    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress) public {
+        verifyAndExecutePackets(_dstEid, _dstAddress, 0, address(0x0));
     }
 
     /**
-     * @dev verify packets to destination chain's OApp address.
+     * @dev verify and execute packets to destination chain's OApp address.
      * @param _dstEid The destination endpoint ID.
      * @param _dstAddress The destination address.
      */
-    function verifyPackets(uint32 _dstEid, address _dstAddress) public {
-        verifyPackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0));
+    function verifyAndExecutePackets(uint32 _dstEid, address _dstAddress) public {
+        verifyAndExecutePackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), bytes4(0));
+    }
+
+     /**
+     * @dev verify and execute packets to destination chain's OApp address.
+     * @param _dstEid The destination endpoint ID.
+     * @param _dstAddress The destination address.
+     */
+    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer) public {
+        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, address(0x0), bytes4(0));
     }
 
     /**
      * @dev dst UA receive/execute packets
      * @dev will NOT work calling this directly with composer IF the composed payload is different from the lzReceive msg payload
      */
-    function verifyPackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer) public {
+    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer, bytes4 _expectedReceiveRevertData) public {
         require(endpoints[_dstEid] != address(0), "endpoint not yet registered");
 
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[_dstEid][_dstAddress];
@@ -360,6 +369,10 @@ contract TestHelperOz5 is Test, OptionsHelper {
                 require(sent, "Failed to send Ether");
             }
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZRECEIVE)) {
+                if (_expectedReceiveRevertData != bytes4(0)) {
+                    vm.expectRevert(_expectedReceiveRevertData);
+                }
+
                 this.lzReceive(packetBytes, options);
             }
             if (_composer != address(0) && _executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZCOMPOSE)) {
@@ -398,7 +411,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         );
     }
 
-    // @dev the verifyPackets does not know the composeMsg if it is NOT the same as the original lzReceive payload
+    // @dev the verifyAndExecutePackets does not know the composeMsg if it is NOT the same as the original lzReceive payload
     // Can call this directly from your test to lzCompose those types of packets
     function lzCompose(
         uint32 _dstEid,
