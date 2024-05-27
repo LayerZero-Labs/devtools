@@ -89,10 +89,12 @@ describe('omnigraph/coordinates', () => {
 
                 const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
                 jest.spyOn(env.deployments, 'getArtifact').mockRejectedValue(new Error(`oh no`))
-                jest.spyOn(env.deployments, 'getOrNull').mockResolvedValue({
-                    address: makeZeroAddress(undefined),
-                    abi: [],
-                })
+                jest.spyOn(env.deployments, 'getDeploymentsFromAddress').mockResolvedValue([
+                    {
+                        address: makeZeroAddress(undefined),
+                        abi: [],
+                    },
+                ])
 
                 // Then check whether the factory will get it for us
                 const deployment = await contractFactory({
