@@ -8,6 +8,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Contract } from '@ethersproject/contracts'
 import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { createGetHreByEid } from '@/runtime'
+import { Artifact } from 'hardhat/types'
 
 jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
 
@@ -56,6 +57,55 @@ describe('omnigraph/coordinates', () => {
                 await expect(() =>
                     contractFactory({ eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'MyContract' })
                 ).rejects.toBeTruthy()
+            })
+
+            it('should resolve with bound artifact if found', async () => {
+                const environmentFactory = createGetHreByEid(hre)
+                const contractFactory = createContractFactory(environmentFactory)
+
+                const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+                const artifact: Artifact = {
+                    abi: [],
+                } as unknown as Artifact
+                jest.spyOn(env.deployments, 'getArtifact').mockResolvedValue(artifact)
+
+                // Then check whether the factory will get it for us
+                const deployment = await contractFactory({
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    address: makeZeroAddress(),
+                    contractName: 'MyContract',
+                })
+
+                expect(deployment).toEqual({
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    contract: expect.any(Contract),
+                })
+                expect(env.deployments.getArtifact).toHaveBeenCalledWith('MyContract')
+            })
+
+            it('should fall back on getting the artifact based on the deployments if artifact not found', async () => {
+                const environmentFactory = createGetHreByEid(hre)
+                const contractFactory = createContractFactory(environmentFactory)
+
+                const env = await environmentFactory(EndpointId.ETHEREUM_V2_MAINNET)
+                jest.spyOn(env.deployments, 'getArtifact').mockRejectedValue(new Error(`oh no`))
+                jest.spyOn(env.deployments, 'getOrNull').mockResolvedValue({
+                    address: makeZeroAddress(undefined),
+                    abi: [],
+                })
+
+                // Then check whether the factory will get it for us
+                const deployment = await contractFactory({
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    address: makeZeroAddress(),
+                    contractName: 'MyContract',
+                })
+
+                expect(deployment).toEqual({
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    contract: expect.any(Contract),
+                })
+                expect(env.deployments.getOrNull).toHaveBeenCalledWith('MyContract')
             })
 
             it('should resolve when contract has been deployed', async () => {
