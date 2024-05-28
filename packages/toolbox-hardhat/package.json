@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/toolbox-hardhat",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "description": "One-stop-shop for developing LayerZero applications using hardhat",
   "repository": {
     "type": "git",
@@ -48,7 +48,7 @@
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.2.3",
     "@layerzerolabs/ua-devtools": "~0.3.12",
     "@layerzerolabs/ua-devtools-evm": "~0.3.11",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "~0.3.15",
+    "@layerzerolabs/ua-devtools-evm-hardhat": "~0.3.16",
     "fp-ts": "^2.16.2",
     "ink": "^3.2.0",
     "ink-gradient": "^2.0.0",

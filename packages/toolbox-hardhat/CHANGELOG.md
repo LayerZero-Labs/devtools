@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.25
+
+### Patch Changes
+
+- 8001592: Add support for dry run mode in the wire task
+- Updated dependencies [8001592]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.16
+
 ## 0.2.24
 
 ### Patch Changes
