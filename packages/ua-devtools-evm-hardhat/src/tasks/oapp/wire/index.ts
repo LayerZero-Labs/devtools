@@ -8,9 +8,10 @@ import {
     SUBTASK_LZ_SIGN_AND_SEND,
     createGnosisSignerFactory,
     createSignerFactory,
+    formatOmniTransaction,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { OmniTransaction } from '@layerzerolabs/devtools'
-import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
 import type { SubtaskConfigureTaskArgs } from './types'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
@@ -24,6 +25,7 @@ interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
+    dryRun?: boolean
     safe?: boolean
     signer?: SignerDefinition
     /**
@@ -53,6 +55,7 @@ const action: ActionType<TaskArgs> = async (
         oappConfig: oappConfigPath,
         logLevel = 'info',
         ci = false,
+        dryRun = false,
         safe = false,
         signer,
         loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
@@ -96,6 +99,13 @@ const action: ActionType<TaskArgs> = async (
         logger.info(`The OApp is wired, no action is necessary`)
 
         return [[], [], []]
+    }
+
+    // If we are in dry run mode, we'll just print the transactions and exit
+    if (dryRun) {
+        printRecords(transactions.map(formatOmniTransaction))
+
+        return [[], [], transactions]
     }
 
     // Tell the user about the transactions
@@ -155,5 +165,6 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
         true
     )
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
+    .addFlag('dryRun', 'Will not execute any transactions')
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
