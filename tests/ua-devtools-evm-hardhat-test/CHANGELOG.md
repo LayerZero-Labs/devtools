@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.10
+
+### Patch Changes
+
+- 8001592: Add support for dry run mode in the wire task
+
 ## 0.2.9
 
 ### Patch Changes
