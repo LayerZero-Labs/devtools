@@ -1,5 +1,5 @@
 import fc from 'fast-check'
-import { endpointArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
+import { endpointArbitrary, evmAddressArbitrary, pointArbitrary } from '@layerzerolabs/test-devtools'
 import { Signer } from '@ethersproject/abstract-signer'
 import { GnosisOmniSignerEVM, OmniSignerEVM } from '@/signer'
 import Safe, { SafeConfig } from '@safe-global/protocol-kit'
@@ -108,18 +108,17 @@ describe('signer/ethers', () => {
             it('should send the transaction using the signer if the eids match', async () => {
                 await fc.assert(
                     fc.asyncProperty(
+                        evmAddressArbitrary,
                         transactionArbitrary,
                         transactionHashArbitrary,
-                        async (transaction, transactionHash) => {
+                        async (safeAddress, transaction, transactionHash) => {
                             const sendTransaction = jest.fn()
                             const getAddress = jest.fn()
                             const signer = { getAddress, sendTransaction } as unknown as Signer
-                            const omniSigner = new GnosisOmniSignerEVM(
-                                transaction.point.eid,
-                                signer,
-                                '',
-                                {} as SafeConfig
-                            )
+                            const omniSigner = new GnosisOmniSignerEVM(transaction.point.eid, signer, '', {
+                                safeAddress,
+                            })
+                            // TODO These should be mocked using jest.mock
                             omniSigner['safeSdk'] = {
                                 createTransaction: jest.fn().mockResolvedValue({ data: 'transaction' }),
                                 getTransactionHash: jest.fn().mockResolvedValue(transactionHash),
@@ -128,13 +127,15 @@ describe('signer/ethers', () => {
                             } as unknown as Safe
                             const safeService = (omniSigner['apiKit'] = {
                                 proposeTransaction: jest.fn(),
+                                getNextNonce: jest.fn(),
                             } as unknown as SafeApiKit)
 
                             const result = await omniSigner.signAndSend(transaction)
                             expect(result.transactionHash).toEqual(transactionHash)
                             expect(await result.wait()).toEqual({ transactionHash })
+                            expect(safeService.getNextNonce).toHaveBeenCalledWith(safeAddress)
                             expect(safeService.proposeTransaction).toHaveBeenCalledWith({
-                                safeAddress: undefined,
+                                safeAddress,
                                 safeTransactionData: 'transaction',
                                 safeTxHash: transactionHash,
                                 senderAddress: undefined,

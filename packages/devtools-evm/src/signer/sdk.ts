@@ -134,23 +134,20 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     }
 
     async #initSafe() {
-        if (this.safeConfig && (!this.safeSdk || !this.apiKit)) {
+        if (!this.safeSdk || !this.apiKit) {
             const ethAdapter = new EthersAdapter({
                 ethers,
                 signerOrProvider: this.signer,
             })
             this.apiKit = new SafeApiKit({ txServiceUrl: this.safeUrl, ethAdapter })
 
-            const contractNetworks = this.safeConfig.contractNetworks
             this.safeSdk = await Safe.create({
                 ethAdapter,
                 safeAddress: this.safeConfig.safeAddress!,
-                ...(!!contractNetworks && { contractNetworks }),
+                contractNetworks: this.safeConfig.contractNetworks,
             })
         }
-        if (!this.safeSdk || !this.apiKit) {
-            throw new Error('Safe SDK not initialized')
-        }
+
         return { safeSdk: this.safeSdk, apiKit: this.apiKit }
     }
 }
