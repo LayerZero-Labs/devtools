@@ -122,7 +122,7 @@ describe('signer/ethers', () => {
                             omniSigner['safeSdk'] = {
                                 createTransaction: jest.fn().mockResolvedValue({ data: 'transaction' }),
                                 getTransactionHash: jest.fn().mockResolvedValue(transactionHash),
-                                getAddress: jest.fn(),
+                                getAddress: jest.fn().mockResolvedValue(safeAddress),
                                 signTransactionHash: jest.fn().mockResolvedValue({ data: 'signature' }),
                             } as unknown as Safe
                             const safeService = (omniSigner['apiKit'] = {
