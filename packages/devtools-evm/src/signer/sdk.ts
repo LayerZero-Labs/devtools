@@ -96,13 +96,17 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
     async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse> {
         this.assertTransaction(transaction)
         const { safeSdk, apiKit } = await this.#initSafe()
+        const safeAddress = await safeSdk.getAddress()
         const safeTransaction = await safeSdk.createTransaction({
             safeTransactionData: [this.#serializeTransaction(transaction)],
+            options: {
+                nonce: await apiKit.getNextNonce(safeAddress),
+            },
         })
         const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
         const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
-        const safeAddress = await safeSdk.getAddress()
         const senderAddress = await this.signer.getAddress()
+
         await apiKit.proposeTransaction({
             senderSignature: senderSignature.data,
             safeAddress,
