@@ -581,7 +581,7 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.3.11
+        specifier: ~0.3.13
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.9
@@ -1199,10 +1199,10 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.12
+        specifier: ~0.3.13
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.8
+        specifier: ~0.3.9
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~0.3.16
