@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.9
+
+### Patch Changes
+
+- 8935369: Add experimental support for batched sending
+- c13cee5: Use getNextNonce when proposing transactions to gnosis
+- Updated dependencies [8935369]
+  - @layerzerolabs/devtools@0.3.13
+
 ## 0.3.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.13
+
+### Patch Changes
+
+- 8935369: Add experimental support for batched sending
+
 ## 0.3.12
 
 ### Patch Changes

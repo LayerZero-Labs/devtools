@@ -1,5 +1,16 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.26
+
+### Patch Changes
+
+- 8935369: Add experimental support for batched sending
+- c13cee5: Use getNextNonce when proposing transactions to gnosis
+- Updated dependencies [8935369]
+- Updated dependencies [c13cee5]
+  - @layerzerolabs/devtools-evm@0.3.9
+  - @layerzerolabs/devtools@0.3.13
+
 ## 0.2.25
 
 ### Patch Changes
