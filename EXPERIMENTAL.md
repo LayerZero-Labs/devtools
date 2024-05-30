@@ -46,6 +46,20 @@ By default, the RPC calls that check the current state of your contracts are exe
 
 `LZ_ENABLE_EXPERIMENTAL_RETRY=`
 
+## Batched transaction sending <a id="batched-send"></a>
+
+Some signers might support batched transaction sending (e.g. Gnosis Safe signer). If turned on, this feature flag will make use of the batched sending. If this feature flag is on and batched sending is not available, regular sending will be used instead.
+
+If the signer used does not support batch sending, <a href="#batched-wait">batched awaiting</a> feature flag will be used to determine which signing strategy to use.
+
+### To enable
+
+`LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND=1`
+
+### To disable
+
+`LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND=`
+
 ## Batched transaction awaiting <a id="batched-wait"></a>
 
 By default, the transactions are submitted and awaited one by one. This means a transaction will only be submitted once the previous transaction has been mined (which results in transactions being mined in consecutive blocks, one transaction per block).
