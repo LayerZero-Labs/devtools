@@ -376,5 +376,133 @@ describe('transactions/signer', () => {
                 )
             })
         })
+
+        describe(`when LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND environment variable is set to '1'`, () => {
+            beforeAll(() => {
+                process.env.LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND = '1'
+            })
+
+            afterAll(() => {
+                process.env.LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND = ''
+            })
+
+            describe('when signAndSendBatch is supported', () => {
+                it('should only return errors if the submission fails', async () => {
+                    await fc.assert(
+                        fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                            // We'll prepare some mock objects for this test
+                            // to mock the transaction responses and receipts
+                            const error = new Error('Failed transaction')
+
+                            // Our signAndSend will then use the map to resolve/reject transactions
+                            const signAndSendBatch = jest.fn().mockRejectedValue(error)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            // Now we send all the transactions to the flow and observe the output
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Since we are executing groups of transactions in parallel,
+                            // in general the order of successful transaction will not match the order of input transactions
+                            expect(successful).toEqual([])
+                            expect(errors).toContainAllValues(
+                                transactions.map((transaction) => ({ transaction, error }))
+                            )
+                            expect(pending).toContainAllValues(transactions)
+
+                            // We also check that the signer factory has been called with the eids
+                            for (const transaction of transactions) {
+                                expect(signerFactory).toHaveBeenCalledWith(transaction.point.eid)
+                            }
+                        })
+                    )
+                })
+
+                it('should only return errors if the waiting fails', async () => {
+                    await fc.assert(
+                        fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                            // We'll prepare some mock objects for this test
+                            // to mock the transaction responses and receipts
+                            const error = new Error('Failed transaction')
+                            // Our unsuccessful wait will throw an error
+                            const wait = jest.fn().mockRejectedValue(error)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            // Our signAndSend will then use the map to resolve/reject transactions
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            // Now we send all the transactions to the flow and observe the output
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Since we are executing groups of transactions in parallel,
+                            // in general the order of successful transaction will not match the order of input transactions
+                            expect(successful).toEqual([])
+                            expect(errors).toContainAllValues(
+                                transactions.map((transaction) => ({ transaction, error }))
+                            )
+                            expect(pending).toContainAllValues(transactions)
+
+                            // We also check that the signer factory has been called with the eids
+                            for (const transaction of transactions) {
+                                expect(signerFactory).toHaveBeenCalledWith(transaction.point.eid)
+                            }
+                        })
+                    )
+                })
+
+                it('should only return successes if waiting succeeds', async () => {
+                    await fc.assert(
+                        fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                            const receipt = { transactionHash: '0x0' }
+
+                            // Our successful wait will produce a receipt
+                            const wait = jest.fn().mockResolvedValue(receipt)
+                            const response: OmniTransactionResponse = {
+                                transactionHash: '0x0',
+                                wait,
+                            }
+
+                            // Our signAndSend will then use the map to resolve/reject transactions
+                            const signAndSendBatch = jest.fn().mockResolvedValue(response)
+                            const signAndSend = jest.fn().mockRejectedValue('Oh god no')
+                            const sign = jest.fn().mockRejectedValue('Oh god no')
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockResolvedValue({ signAndSend, signAndSendBatch, sign })
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            // Now we send all the transactions to the flow and observe the output
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            // Since we are executing groups of transactions in parallel,
+                            // in general the order of successful transaction will not match the order of input transactions
+                            expect(successful).toContainAllValues(
+                                transactions.map((transaction) => ({ transaction, receipt }))
+                            )
+                            expect(errors).toEqual([])
+                            expect(pending).toEqual([])
+
+                            // We also check that the signer factory has been called with the eids
+                            for (const transaction of transactions) {
+                                expect(signerFactory).toHaveBeenCalledWith(transaction.point.eid)
+                            }
+                        })
+                    )
+                })
+            })
+        })
     })
 })
