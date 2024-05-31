@@ -55,8 +55,7 @@ export const createDefaultRetryHandler = (loggerName: string = 'AsyncRetriable')
 }
 
 export const AsyncRetriable = ({
-    // We'll feature flag this functionality for the time being
-    enabled = !!process.env.LZ_ENABLE_EXPERIMENTAL_RETRY,
+    enabled = true,
     maxDelay,
     numAttempts = 3,
     onRetry = createDefaultRetryHandler(),
