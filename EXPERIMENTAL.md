@@ -24,8 +24,6 @@ By default, the RPC calls that check the current state of your contracts are exe
 
 Parallel execution can improve the speed of this process significantly. However, since it requires a large number of RPC calls to be executed simultaneously, it can result in `HTTP 429 Too Many Requests` RPC errors when used with public RPCs.
 
-In general, we recommend combining this feature with <a href="#automatic-retries">automatic retries</a>.
-
 ### To enable
 
 `LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION=1`
@@ -33,18 +31,6 @@ In general, we recommend combining this feature with <a href="#automatic-retries
 ### To disable
 
 `LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION=`
-
-## Automatic retries <a id="automatic-retries"></a>
-
-By default, the RPC calls that check the current state of your contracts are executed without retrying any failed requests. This feature flag enables an exponential backoff retry functionality on the RPC reads.
-
-### To enable
-
-`LZ_ENABLE_EXPERIMENTAL_RETRY=1`
-
-### To disable
-
-`LZ_ENABLE_EXPERIMENTAL_RETRY=`
 
 ## Batched transaction sending <a id="batched-send"></a>
 
