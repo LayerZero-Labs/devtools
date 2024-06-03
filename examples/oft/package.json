@@ -63,12 +63,14 @@
   "pnpm": {
     "overrides": {
       "@nomicfoundation/edr": "0.3.5",
+      "@solana/web3.js": "1.91.9",
       "ethers": "^5.7.2",
       "hardhat-deploy": "^0.12.1"
     }
   },
   "overrides": {
     "@nomicfoundation/edr": "0.3.5",
+    "@solana/web3.js": "1.91.9",
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   }

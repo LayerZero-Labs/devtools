@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@nomicfoundation/edr': 0.3.5
+  '@solana/web3.js': 1.91.9
   es5-ext: https://github.com/LayerZero-Labs/es5-ext
   ethers: ^5.7.2
   hardhat-deploy: ^0.12.1
@@ -2484,8 +2485,8 @@ packages:
       regenerator-runtime: 0.14.1
     dev: true
 
-  /@babel/runtime@7.24.4:
-    resolution: {integrity: sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==}
+  /@babel/runtime@7.24.6:
+    resolution: {integrity: sha512-Ja18XcETdEl5mzzACGd+DKgaGJzPTCow7EglgwTmHdwokzDFYh/MHua6lU6DV/hjF2IaOJ4oX2nqnjG7RElKOw==}
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
@@ -4323,7 +4324,7 @@ packages:
       '@ethersproject/keccak256': 5.7.0
       '@ethersproject/solidity': 5.7.0
       '@layerzerolabs/lz-evm-sdk-v2': 2.3.3
-      '@solana/web3.js': 1.91.7
+      '@solana/web3.js': 1.91.9
       tiny-invariant: 1.3.3
     transitivePeerDependencies:
       - bufferutil
@@ -5027,10 +5028,10 @@ packages:
     dependencies:
       buffer: 6.0.3
 
-  /@solana/web3.js@1.91.7:
-    resolution: {integrity: sha512-HqljZKDwk6Z4TajKRGhGLlRsbGK4S8EY27DA7v1z6yakewiUY3J7ZKDZRxcqz2MYV/ZXRrJ6wnnpiHFkPdv0WA==}
+  /@solana/web3.js@1.91.9:
+    resolution: {integrity: sha512-olUNGVrd7ap6pRnbZW+HJZv2GBGoOMEPufv7UrVHiH4xY0TxQhUIj1Lr+OXOvo5ALqUFW72jGrfeM4zJA3nr3Q==}
     dependencies:
-      '@babel/runtime': 7.24.4
+      '@babel/runtime': 7.24.6
       '@noble/curves': 1.4.0
       '@noble/hashes': 1.4.0
       '@solana/buffer-layout': 4.0.1
@@ -5043,8 +5044,8 @@ packages:
       fast-stable-stringify: 1.0.0
       jayson: 4.1.0
       node-fetch: 2.7.0
-      rpc-websockets: 7.10.0
-      superstruct: 0.14.2
+      rpc-websockets: 7.11.1
+      superstruct: 1.0.4
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -8340,6 +8341,7 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
+    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
@@ -12250,10 +12252,9 @@ packages:
       fsevents: 2.3.3
     dev: true
 
-  /rpc-websockets@7.10.0:
-    resolution: {integrity: sha512-cemZ6RiDtYZpPiBzYijdOrkQQzmBCmug0E9SdRH2gIUNT15ql4mwCYWIp0VnSZq6Qrw/JkGUygp4PrK1y9KfwQ==}
+  /rpc-websockets@7.11.1:
+    resolution: {integrity: sha512-ePm9GVlk1D1p1B35iU1AiAr9lMKUpSqU9wjYoUb9YaoabfLAcQ7DG6IfQvyam2nDJ0FOSB00AgEA4pGm/wSD5A==}
     dependencies:
-      '@babel/runtime': 7.24.4
       eventemitter3: 4.0.7
       uuid: 8.3.2
       ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -12919,8 +12920,9 @@ packages:
       ts-interface-checker: 0.1.13
     dev: true
 
-  /superstruct@0.14.2:
-    resolution: {integrity: sha512-nPewA6m9mR3d6k7WkZ8N8zpTWfenFH3q9pA2PkuiZxINr9DKB2+40wEQf0ixn8VaGuJ78AB6iWOtStI+/4FKZQ==}
+  /superstruct@1.0.4:
+    resolution: {integrity: sha512-7JpaAoX2NGyoFlI9NBh66BQXGONc+uE+MRS5i2iOBKuS4e+ccgMDjATgZldkah+33DakBxDHiss9kvUcGAO8UQ==}
+    engines: {node: '>=14.0.0'}
 
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
