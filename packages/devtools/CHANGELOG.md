@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.14
+
+### Patch Changes
+
+- 87e1704: Remove LZ_ENABLE_EXPERIMENTAL_RETRY feature flag
+
 ## 0.3.13
 
 ### Patch Changes

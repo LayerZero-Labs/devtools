@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.27
+
+### Patch Changes
+
+- 87e1704: Remove LZ_ENABLE_EXPERIMENTAL_RETRY feature flag
+- Updated dependencies [87e1704]
+  - @layerzerolabs/devtools@0.3.14
+
 ## 0.2.26
 
 ### Patch Changes
