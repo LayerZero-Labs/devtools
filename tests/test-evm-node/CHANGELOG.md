@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.7
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 0.0.6
 
 ### Patch Changes

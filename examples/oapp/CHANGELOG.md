@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.2.7
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 0.2.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.10
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 0.1.9
 
 ### Patch Changes

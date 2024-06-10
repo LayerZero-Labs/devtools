@@ -1,5 +1,22 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.28
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.4
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.17
+  - @layerzerolabs/protocol-devtools-evm@0.3.8
+  - @layerzerolabs/devtools-evm-hardhat@0.3.17
+  - @layerzerolabs/protocol-devtools@0.3.8
+  - @layerzerolabs/ua-devtools-evm@0.3.12
+  - @layerzerolabs/devtools-evm@0.3.10
+  - @layerzerolabs/ua-devtools@0.3.13
+  - @layerzerolabs/devtools@0.3.15
+  - @layerzerolabs/io-devtools@0.1.10
+
 ## 0.2.27
 
 ### Patch Changes

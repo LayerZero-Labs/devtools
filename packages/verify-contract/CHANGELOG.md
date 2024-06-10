@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.21
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 1.1.20
 
 ### Patch Changes

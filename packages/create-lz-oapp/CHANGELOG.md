@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.20
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 0.1.19
 
 ### Patch Changes
