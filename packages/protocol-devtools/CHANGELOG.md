@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.3.8
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/devtools@0.3.15
+
 ## 0.3.7
 
 ### Patch Changes

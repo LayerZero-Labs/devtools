@@ -1,5 +1,14 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 0.3.6
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/protocol-devtools@0.3.8
+  - @layerzerolabs/devtools@0.3.15
+
 ## 0.3.5
 
 ### Patch Changes

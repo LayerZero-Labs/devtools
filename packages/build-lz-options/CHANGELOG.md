@@ -1,5 +1,11 @@
 # build-lz-options
 
+## 0.2.4
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
 ## 0.2.3
 
 ### Patch Changes
