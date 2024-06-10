@@ -90,7 +90,7 @@ describe(`task ${TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP}`, () => {
         })
 
         it('should return a list of pending transactions if running in dry run mode', async () => {
-            const oappConfig = configPathFixture('valid.config.connected.js')
+            const oappConfig = configPathFixture('valid.config.with-owners.js')
 
             const [successful, errors, pending] = await hre.run(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP, {
                 oappConfig,
@@ -104,7 +104,7 @@ describe(`task ${TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP}`, () => {
         })
 
         it('should set a failure exit code and return a list of pending transactions if running in assert mode', async () => {
-            const oappConfig = configPathFixture('valid.config.connected.js')
+            const oappConfig = configPathFixture('valid.config.with-owners.js')
 
             const [successful, errors, pending] = await hre.run(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP, {
                 oappConfig,

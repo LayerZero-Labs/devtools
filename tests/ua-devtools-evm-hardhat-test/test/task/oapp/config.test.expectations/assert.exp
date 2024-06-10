@@ -53,7 +53,7 @@ expect "The OApp is not fully wired, following transactions are necessary:"
 lassign [wait] pid spawn_id os_error wire_exit_code
 
 # And we check that the exit code we got is 1
-if {$os_error != 1} {
+if {$wire_exit_code != 1} {
     puts "Wiring script exited with code $wire_exit_code, expected exit code 1"
 	
 	exit 1
