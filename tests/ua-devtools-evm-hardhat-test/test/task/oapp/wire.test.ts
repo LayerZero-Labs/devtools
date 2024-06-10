@@ -205,6 +205,19 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
+        it('should set a failure exit code and return a list of pending transactions if running in assert mode', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, assert: true })
+
+            expect(successful).toEqual([])
+            expect(errors).toEqual([])
+            expect(pending).toHaveLength(2)
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+
+            expect(process.exitCode).toBe(1)
+        })
+
         it('should return a list of transactions if the user decides to continue', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 
@@ -544,6 +557,12 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
         it('should use custom config loading task', async () => {
             const result = runExpect('config-custom-config-loading')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should exit with code 1 if in assert mode', async () => {
+            const result = runExpect('assert')
 
             expect(result.status).toBe(0)
         })
