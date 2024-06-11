@@ -1,5 +1,25 @@
 # @layerzerolabs/devtools
 
+## 0.3.15
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/io-devtools@0.1.10
+
+## 0.3.14
+
+### Patch Changes
+
+- 87e1704: Remove LZ_ENABLE_EXPERIMENTAL_RETRY feature flag
+
+## 0.3.13
+
+### Patch Changes
+
+- 8935369: Add experimental support for batched sending
+
 ## 0.3.12
 
 ### Patch Changes

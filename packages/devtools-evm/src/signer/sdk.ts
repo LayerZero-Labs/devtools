@@ -2,7 +2,7 @@ import type { TransactionReceipt, TransactionRequest } from '@ethersproject/abst
 import type { Signer } from '@ethersproject/abstract-signer'
 import Safe, { ConnectSafeConfig, EthersAdapter } from '@safe-global/protocol-kit'
 import SafeApiKit from '@safe-global/api-kit'
-import { MetaTransactionData, OperationType } from '@safe-global/safe-core-sdk-types'
+import { MetaTransactionData, OperationType, SafeTransaction } from '@safe-global/safe-core-sdk-types'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     formatEid,
@@ -67,8 +67,8 @@ export class OmniSignerEVM extends OmniSignerEVMBase {
             data: transaction.data,
 
             // optional
-            ...(transaction.gasLimit && { gasLimit: transaction.gasLimit }),
-            ...(transaction.value && { value: transaction.value }),
+            ...(transaction.gasLimit != null && { gasLimit: transaction.gasLimit }),
+            ...(transaction.value != null && { value: transaction.value }),
         }
     }
 }
@@ -77,39 +77,56 @@ export class OmniSignerEVM extends OmniSignerEVMBase {
  * Implements an OmniSigner interface for EVM-compatible chains using Gnosis Safe.
  */
 export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends OmniSignerEVMBase {
-    protected safeSdk: Safe | undefined
-    protected apiKit: SafeApiKit | undefined
-
     constructor(
         eid: EndpointId,
         signer: Signer,
         protected readonly safeUrl: string,
-        protected readonly safeConfig: TSafeConfig
+        protected readonly safeConfig: TSafeConfig,
+        protected readonly ethAdapter = new EthersAdapter({
+            ethers,
+            signerOrProvider: signer,
+        }),
+        protected readonly apiKit = new SafeApiKit({ txServiceUrl: safeUrl, ethAdapter }),
+        protected readonly safeSdkPromise: Safe | Promise<Safe> = Safe.create({
+            ethAdapter,
+            safeAddress: safeConfig.safeAddress!,
+            contractNetworks: safeConfig.contractNetworks,
+        })
     ) {
         super(eid, signer)
     }
 
-    async sign(_transaction: OmniTransaction): Promise<string> {
-        throw new Error('Method not implemented.')
+    async sign(_: OmniTransaction): Promise<string> {
+        throw new Error(`Signing transactions with safe is currently not supported, use signAndSend instead`)
     }
 
     async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse> {
-        this.assertTransaction(transaction)
-        const { safeSdk, apiKit } = await this.#initSafe()
-        const safeTransaction = await safeSdk.createTransaction({
-            safeTransactionData: [this.#serializeTransaction(transaction)],
-        })
+        return this.signAndSendBatch([transaction])
+    }
+
+    async signAndSendBatch(transactions: OmniTransaction[]): Promise<OmniTransactionResponse> {
+        assert(transactions.length > 0, `signAndSendBatch received 0 transactions`)
+
+        const safeTransaction = await this.#createSafeTransaction(transactions)
+
+        return this.#proposeSafeTransaction(safeTransaction)
+    }
+
+    async #proposeSafeTransaction(safeTransaction: SafeTransaction): Promise<OmniTransactionResponse> {
+        const safeSdk = await this.safeSdkPromise
+        const safeAddress = await safeSdk.getAddress()
         const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
         const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
-        const safeAddress = await safeSdk.getAddress()
         const senderAddress = await this.signer.getAddress()
-        await apiKit.proposeTransaction({
+
+        await this.apiKit.proposeTransaction({
             senderSignature: senderSignature.data,
             safeAddress,
             safeTransactionData: safeTransaction.data,
             safeTxHash,
             senderAddress,
         })
+
         return {
             transactionHash: safeTxHash,
             wait: async (_confirmations?: number) => {
@@ -120,33 +137,25 @@ export class GnosisOmniSignerEVM<TSafeConfig extends ConnectSafeConfig> extends 
         }
     }
 
+    async #createSafeTransaction(transactions: OmniTransaction[]): Promise<SafeTransaction> {
+        transactions.forEach((transaction) => this.assertTransaction(transaction))
+
+        const safeSdk = await this.safeSdkPromise
+        const safeAddress = await safeSdk.getAddress()
+        const nonce = await this.apiKit.getNextNonce(safeAddress)
+
+        return safeSdk.createTransaction({
+            safeTransactionData: transactions.map((transaction) => this.#serializeTransaction(transaction)),
+            options: { nonce },
+        })
+    }
+
     #serializeTransaction(transaction: OmniTransaction): MetaTransactionData {
         return {
             to: transaction.point.address,
             data: transaction.data,
-            value: '0',
+            value: String(transaction.value ?? 0),
             operation: OperationType.Call,
         }
-    }
-
-    async #initSafe() {
-        if (this.safeConfig && (!this.safeSdk || !this.apiKit)) {
-            const ethAdapter = new EthersAdapter({
-                ethers,
-                signerOrProvider: this.signer,
-            })
-            this.apiKit = new SafeApiKit({ txServiceUrl: this.safeUrl, ethAdapter })
-
-            const contractNetworks = this.safeConfig.contractNetworks
-            this.safeSdk = await Safe.create({
-                ethAdapter,
-                safeAddress: this.safeConfig.safeAddress!,
-                ...(!!contractNetworks && { contractNetworks }),
-            })
-        }
-        if (!this.safeSdk || !this.apiKit) {
-            throw new Error('Safe SDK not initialized')
-        }
-        return { safeSdk: this.safeSdk, apiKit: this.apiKit }
     }
 }

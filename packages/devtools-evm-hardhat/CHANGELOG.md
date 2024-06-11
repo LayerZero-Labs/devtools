@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.17
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/devtools-evm@0.3.10
+  - @layerzerolabs/devtools@0.3.15
+  - @layerzerolabs/export-deployments@0.0.9
+  - @layerzerolabs/io-devtools@0.1.10
+
 ## 0.3.16
 
 ### Patch Changes

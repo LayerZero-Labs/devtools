@@ -36,6 +36,16 @@ export interface OmniTransactionReceipt {
 export interface OmniSigner<TResponse extends OmniTransactionResponse = OmniTransactionResponse> {
     sign: (transaction: OmniTransaction) => Promise<string>
     signAndSend: (transaction: OmniTransaction) => Promise<TResponse>
+
+    /**
+     * Signers can support multi send / batch mode
+     * where multiple transactions get submitted together.
+     *
+     * Examples of this are Gnosis Safe signer or a signer using an EVM multicall contract.
+     *
+     * @param {OmniTransaction[]} transactions
+     */
+    signAndSendBatch?: (transactions: OmniTransaction[]) => Promise<TResponse>
 }
 
 export type OmniSignerFactory<TSigner extends OmniSigner = OmniSigner> = EndpointBasedFactory<TSigner>

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-foundry",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
@@ -16,10 +16,10 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-oapp-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-protocol-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-v1-0.7": "~2.3.3",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
     "@openzeppelin/contracts": "^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^5.0.0",
     "@types/node": "~18.18.14",
@@ -27,10 +27,10 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-oapp-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-protocol-v2": "~2.3.3",
-    "@layerzerolabs/lz-evm-v1-0.7": "~2.3.3",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
     "@openzeppelin/contracts": "^4.9.5 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.9.5 || ^5.0.0"
   },

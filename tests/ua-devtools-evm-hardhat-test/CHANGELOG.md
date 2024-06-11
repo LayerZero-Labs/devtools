@@ -1,5 +1,17 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.11
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+
+## 0.2.10
+
+### Patch Changes
+
+- 8001592: Add support for dry run mode in the wire task
+
 ## 0.2.9
 
 ### Patch Changes

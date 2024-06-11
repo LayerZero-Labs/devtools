@@ -1,5 +1,49 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.28
+
+### Patch Changes
+
+- 8b32a79: Use less strict version requirements for layerzero peer dependencies
+- Updated dependencies [8b32a79]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.4
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.17
+  - @layerzerolabs/protocol-devtools-evm@0.3.8
+  - @layerzerolabs/devtools-evm-hardhat@0.3.17
+  - @layerzerolabs/protocol-devtools@0.3.8
+  - @layerzerolabs/ua-devtools-evm@0.3.12
+  - @layerzerolabs/devtools-evm@0.3.10
+  - @layerzerolabs/ua-devtools@0.3.13
+  - @layerzerolabs/devtools@0.3.15
+  - @layerzerolabs/io-devtools@0.1.10
+
+## 0.2.27
+
+### Patch Changes
+
+- 87e1704: Remove LZ_ENABLE_EXPERIMENTAL_RETRY feature flag
+- Updated dependencies [87e1704]
+  - @layerzerolabs/devtools@0.3.14
+
+## 0.2.26
+
+### Patch Changes
+
+- 8935369: Add experimental support for batched sending
+- c13cee5: Use getNextNonce when proposing transactions to gnosis
+- Updated dependencies [8935369]
+- Updated dependencies [c13cee5]
+  - @layerzerolabs/devtools-evm@0.3.9
+  - @layerzerolabs/devtools@0.3.13
+
+## 0.2.25
+
+### Patch Changes
+
+- 8001592: Add support for dry run mode in the wire task
+- Updated dependencies [8001592]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.16
+
 ## 0.2.24
 
 ### Patch Changes

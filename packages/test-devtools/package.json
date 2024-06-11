@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Internal utilities for testing LayerZero packages",
   "repository": {
     "type": "git",
@@ -33,7 +33,7 @@
     "@scure/bip39": "~1.2.2"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.3.3",
+    "@layerzerolabs/lz-definitions": "^2.3.3",
     "fast-check": "^3.15.1",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
@@ -41,7 +41,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "~2.1.15",
+    "@layerzerolabs/lz-definitions": "^2.3.3",
     "fast-check": "^3.14.0"
   },
   "publishConfig": {

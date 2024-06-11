@@ -194,6 +194,17 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
 
+        it('should return a list of pending transactions if running in dry run mode', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.js')
+
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, dryRun: true })
+
+            expect(successful).toEqual([])
+            expect(errors).toEqual([])
+            expect(pending).toHaveLength(2)
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
         it('should return a list of transactions if the user decides to continue', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 

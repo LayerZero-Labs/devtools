@@ -78,7 +78,18 @@ export const createSignAndSend =
             logger.warn(`You are using experimental batched transaction waiting`)
         }
 
-        const signerLogic: TransactionSignerLogic = useBatchedWait ? waitAfterSendingAll : waitBeforeSubmittingNext
+        const useBatchedSend = !!process.env.LZ_ENABLE_EXPERIMENTAL_BATCHED_SEND
+        if (useBatchedSend) {
+            logger.warn(`You are using experimental batched transaction sending`)
+        }
+
+        // First we create a signer logic based on the batched wait feature flag
+        const fallbackSignerLogic: TransactionSignerLogic = useBatchedWait
+            ? waitAfterSendingAll
+            : waitBeforeSubmittingNext
+        // Then we create the final signer logic based on the batched send feature flag
+        // The batched send logic will fall back on the default logic if batched send is not available
+        const signerLogic = useBatchedSend ? sendBatchedIfAvailable(fallbackSignerLogic) : fallbackSignerLogic
 
         await Promise.allSettled(
             transactionGroups.map(async ([eid, eidTransactions]): Promise<void> => {
@@ -120,6 +131,49 @@ type TransactionSignerLogic = (
     onSuccess: (resut: OmniTransactionWithReceipt) => void,
     onError: (error: OmniTransactionWithError) => void
 ) => Promise<void>
+
+const sendBatchedIfAvailable =
+    (fallbackLogic: TransactionSignerLogic): TransactionSignerLogic =>
+    async (eid, logger, signer, transactions, onSuccess, onError) => {
+        const eidName = formatEid(eid)
+
+        // First we check that we can send batched transactions
+        //
+        // If we can't we fall back on the fallback logic
+        if (signer.signAndSendBatch == null) {
+            logger.warn(`Batched transaction sending is not available for ${eidName}, falling back on regular sending`)
+
+            return await fallbackLogic(eid, logger, signer, transactions, onSuccess, onError)
+        }
+
+        // For brevity we'll create a variable that holds a string with pluralized label for the transactions
+        // e.g. "0 transactions" or "1 transaction"
+        const transactionsName = pluralizeNoun(
+            transactions.length,
+            `1 transaction`,
+            `${transactions.length} transactions`
+        )
+
+        try {
+            logger.debug(`Signing a batch of ${transactionsName} for ${eidName}`)
+            const response = await signer.signAndSendBatch(transactions)
+
+            logger.debug(`Signed a batch of ${transactionsName} for ${eidName}, got hash ${response.transactionHash}`)
+            const receipt = await response.wait()
+
+            logger.debug(`Finished a batch of ${transactionsName} for ${eidName}`)
+
+            for (const transaction of transactions) {
+                onSuccess({ transaction, receipt })
+            }
+        } catch (error) {
+            logger.debug(`Failed to process a batch of ${transactionsName} for ${eidName}: ${error}`)
+
+            for (const transaction of transactions) {
+                onError({ transaction, error })
+            }
+        }
+    }
 
 /**
  * This transaction submitting logic will wait for every single transaction
