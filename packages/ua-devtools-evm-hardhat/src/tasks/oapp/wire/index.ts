@@ -26,6 +26,7 @@ interface TaskArgs {
     logLevel?: string
     ci?: boolean
     dryRun?: boolean
+    assert?: boolean
     safe?: boolean
     signer?: SignerDefinition
     /**
@@ -56,6 +57,7 @@ const action: ActionType<TaskArgs> = async (
         logLevel = 'info',
         ci = false,
         dryRun = false,
+        assert = false,
         safe = false,
         signer,
         loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
@@ -71,6 +73,12 @@ const action: ActionType<TaskArgs> = async (
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
+
+    if (assert) {
+        logger.info(`Running in assertion mode`)
+    } else if (dryRun) {
+        logger.info(`Running in dry run mode`)
+    }
 
     // Now we can load and validate the config
     logger.debug(`Using ${loadConfigSubtask} subtask to load the config`)
@@ -99,6 +107,18 @@ const action: ActionType<TaskArgs> = async (
         logger.info(`The OApp is wired, no action is necessary`)
 
         return [[], [], []]
+    } else if (assert) {
+        // If we are in assertion mode, we'll print out the transactions and exit with code 1
+        // if there is anything left to configure
+        logger.error(`The OApp is not fully wired, following transactions are necessary:`)
+
+        // Print the outstanding transactions
+        printRecords(transactions.map(formatOmniTransaction))
+
+        // And set the exit code to failure
+        process.exitCode = process.exitCode || 1
+
+        return [[], [], transactions]
     }
 
     // If we are in dry run mode, we'll just print the transactions and exit
@@ -166,5 +186,9 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     )
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addFlag('dryRun', 'Will not execute any transactions')
+    .addFlag(
+        'assert',
+        'Will not execute any transactions and fail if there are any transactions required to configure the OApp'
+    )
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)

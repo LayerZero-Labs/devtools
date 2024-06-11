@@ -9,8 +9,9 @@ import {
     createConnectedContractFactory,
     createSignerFactory,
     createGnosisSignerFactory,
+    formatOmniTransaction,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
 import { type SignAndSendResult } from '@layerzerolabs/devtools'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 import { OwnableOmniGraphHardhatSchema } from '@/ownable'
@@ -23,12 +24,14 @@ interface TaskArgs {
     oappConfig: string
     logLevel?: string
     ci?: boolean
+    dryRun?: boolean
+    assert?: boolean
     safe?: boolean
     signer?: SignerDefinition
 }
 
 const action: ActionType<TaskArgs> = async (
-    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, safe = false, signer },
+    { oappConfig: oappConfigPath, logLevel = 'info', ci = false, dryRun = false, assert = false, safe = false, signer },
     hre
 ): Promise<SignAndSendResult> => {
     printLogo()
@@ -38,6 +41,12 @@ const action: ActionType<TaskArgs> = async (
 
     // And we'll create a logger for ourselves
     const logger = createLogger()
+
+    if (assert) {
+        logger.info(`Running in assertion mode`)
+    } else if (dryRun) {
+        logger.info(`Running in dry run mode`)
+    }
 
     // Now we load the graph
     const graph: OwnableOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
@@ -61,6 +70,25 @@ const action: ActionType<TaskArgs> = async (
         logger.info(`The ownership is correct, no action is necessary`)
 
         return [[], [], []]
+    } else if (assert) {
+        // If we are in assertion mode, we'll print out the transactions and exit with code 1
+        // if there is anything left to configure
+        logger.error(`The ownership is not fully transferred, following transactions are necessary:`)
+
+        // Print the outstanding transactions
+        printRecords(transactions.map(formatOmniTransaction))
+
+        // And set the exit code to failure
+        process.exitCode = process.exitCode || 1
+
+        return [[], [], transactions]
+    }
+
+    // If we are in dry run mode, we'll just print the transactions and exit
+    if (dryRun) {
+        printRecords(transactions.map(formatOmniTransaction))
+
+        return [[], [], transactions]
     }
 
     // Tell the user about the transactions
@@ -96,4 +124,9 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP, 'Transfer ownable contract ownership', 
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addFlag('ci', 'Continuous integration (non-interactive) mode. Will not ask for any input from the user')
     .addFlag('safe', 'Use gnosis safe to sign transactions')
+    .addFlag('dryRun', 'Will not execute any transactions')
+    .addFlag(
+        'assert',
+        'Will not execute any transactions and fail if there are any transactions required to transfer the ownership'
+    )
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
