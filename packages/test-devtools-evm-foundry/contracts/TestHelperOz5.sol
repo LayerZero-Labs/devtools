@@ -326,7 +326,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
      * @param _dstAddress The destination address.
      */
     function verifyAndExecutePackets(uint32 _dstEid, address _dstAddress) public {
-        verifyAndExecutePackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), bytes4(0), bytes4(0));
+        verifyAndExecutePackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), "", "");
     }
 
      /**
@@ -337,14 +337,14 @@ contract TestHelperOz5 is Test, OptionsHelper {
      * @param _composer The lzCompose composer address.
      */
     function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer) public {
-        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, bytes4(0), bytes4(0));
+        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, "", "");
     }
 
     /**
      * @dev dst UA receive/execute packets
      * @dev will NOT work calling this directly with composer IF the composed payload is different from the lzReceive msg payload
      */
-    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer, bytes4 _expectedReceiveRevertData, bytes4 _expectedComposeRevertData) public {
+    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer, bytes memory _expectedReceiveRevertData, bytes memory _expectedComposeRevertData) public {
         require(endpoints[_dstEid] != address(0), "endpoint not yet registered");
 
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[_dstEid][_dstAddress];
@@ -371,14 +371,14 @@ contract TestHelperOz5 is Test, OptionsHelper {
                 require(sent, "Failed to send Ether");
             }
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZRECEIVE)) {
-                if (_expectedReceiveRevertData != bytes4(0)) {
+                if (_expectedReceiveRevertData.length != 0) {
                     vm.expectRevert(_expectedReceiveRevertData);
                 }
 
                 this.lzReceive(packetBytes, options);
             }
             if (_composer != address(0) && _executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZCOMPOSE)) {
-                if (_expectedComposeRevertData != bytes4(0)) {
+                if (_expectedComposeRevertData.length != 0) {
                     vm.expectRevert(_expectedComposeRevertData);
                 }
                 this.lzCompose(packetBytes, options, guid, _composer);
