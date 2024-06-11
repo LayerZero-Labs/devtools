@@ -75,6 +75,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     function setExecutorValueCap(uint128 _valueCap) public {
         executorValueCap = _valueCap;
     }
+
     /**
      * @notice Sets up endpoints for testing.
      * @param _endpointNum The number of endpoints to create.
@@ -258,6 +259,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         // config
         wireOApps(oapps);
     }
+
     /**
      * @notice Configures the peers between multiple OApp instances.
      * @dev Sets each OApp as a peer to every other OApp in the provided array, except itself.
@@ -317,7 +319,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
      * @param _dstAddress The destination address in bytes32 format.
      */
     function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress) public {
-        verifyAndExecutePackets(_dstEid, _dstAddress, 0, address(0x0));
+        verifyAndExecutePackets(_dstEid, _dstAddress, 0, address(0x0), "", "", bytes4(0), bytes4(0));
     }
 
     /**
@@ -326,10 +328,10 @@ contract TestHelperOz5 is Test, OptionsHelper {
      * @param _dstAddress The destination address.
      */
     function verifyAndExecutePackets(uint32 _dstEid, address _dstAddress) public {
-        verifyAndExecutePackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), "", "");
+        verifyAndExecutePackets(_dstEid, bytes32(uint256(uint160(_dstAddress))), 0, address(0x0), "", "", bytes4(0), bytes4(0));
     }
 
-     /**
+    /**
      * @dev verify and execute packets to destination chain's OApp address.
      * @param _dstEid The destination endpoint ID.
      * @param _dstAddress The destination address.
@@ -337,14 +339,70 @@ contract TestHelperOz5 is Test, OptionsHelper {
      * @param _composer The lzCompose composer address.
      */
     function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer) public {
-        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, "", "");
+        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, "", "", bytes4(0), bytes4(0));
     }
 
     /**
-     * @dev dst UA receive/execute packets
-     * @dev will NOT work calling this directly with composer IF the composed payload is different from the lzReceive msg payload
+     * @dev verify and execute packets to destination chain's OApp address.
+     * @param _dstEid The destination endpoint ID.
+     * @param _dstAddress The destination address.
+     * @param _packetAmount Amount of packets to process.
+     * @param _composer The lzCompose composer address.
+     * @param _expectedReceiveRevertData Expected revert data for lzReceive.
+     * @param _expectedComposeRevertData Expected revert data for lzCompose.
      */
-    function verifyAndExecutePackets(uint32 _dstEid, bytes32 _dstAddress, uint256 _packetAmount, address _composer, bytes memory _expectedReceiveRevertData, bytes memory _expectedComposeRevertData) public {
+    function verifyAndExecutePackets(
+        uint32 _dstEid,
+        bytes32 _dstAddress,
+        uint256 _packetAmount,
+        address _composer,
+        bytes memory _expectedReceiveRevertData,
+        bytes memory _expectedComposeRevertData
+    ) public {
+        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, _expectedReceiveRevertData, _expectedComposeRevertData, bytes4(0), bytes4(0));
+    }
+
+    /**
+     * @dev verify and execute packets to destination chain's OApp address.
+     * @param _dstEid The destination endpoint ID.
+     * @param _dstAddress The destination address.
+     * @param _packetAmount Amount of packets to process.
+     * @param _composer The lzCompose composer address.
+     * @param _expectedReceiveRevertData Expected revert data for lzReceive.
+     * @param _expectedComposeRevertData Expected revert data for lzCompose.
+     */
+    function verifyAndExecutePackets(
+        uint32 _dstEid,
+        bytes32 _dstAddress,
+        uint256 _packetAmount,
+        address _composer,
+        bytes4 _expectedReceiveRevertData,
+        bytes4 _expectedComposeRevertData
+    ) public {
+        verifyAndExecutePackets(_dstEid, _dstAddress, _packetAmount, _composer, "", "", _expectedReceiveRevertData, _expectedComposeRevertData);
+    }
+
+    /**
+     * @dev verify and execute packets to destination chain's OApp address.
+     * @param _dstEid The destination endpoint ID.
+     * @param _dstAddress The destination address.
+     * @param _packetAmount Amount of packets to process.
+     * @param _composer The lzCompose composer address.
+     * @param _expectedReceiveRevertData Expected revert data for lzReceive in bytes.
+     * @param _expectedComposeRevertData Expected revert data for lzCompose in bytes.
+     * @param _expectedReceiveRevertData4 Expected revert data for lzReceive in bytes4.
+     * @param _expectedComposeRevertData4 Expected revert data for lzCompose in bytes4.
+     */
+    function verifyAndExecutePackets(
+        uint32 _dstEid,
+        bytes32 _dstAddress,
+        uint256 _packetAmount,
+        address _composer,
+        bytes memory _expectedReceiveRevertData,
+        bytes memory _expectedComposeRevertData,
+        bytes4 _expectedReceiveRevertData4,
+        bytes4 _expectedComposeRevertData4
+    ) public {
         require(endpoints[_dstEid] != address(0), "endpoint not yet registered");
 
         DoubleEndedQueue.Bytes32Deque storage queue = packetsQueue[_dstEid][_dstAddress];
@@ -373,6 +431,8 @@ contract TestHelperOz5 is Test, OptionsHelper {
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZRECEIVE)) {
                 if (_expectedReceiveRevertData.length != 0) {
                     vm.expectRevert(_expectedReceiveRevertData);
+                } else if (_expectedReceiveRevertData4 != bytes4(0)) {
+                    vm.expectRevert(_expectedReceiveRevertData4);
                 }
 
                 this.lzReceive(packetBytes, options);
@@ -380,6 +440,8 @@ contract TestHelperOz5 is Test, OptionsHelper {
             if (_composer != address(0) && _executorOptionExists(options, ExecutorOptions.OPTION_TYPE_LZCOMPOSE)) {
                 if (_expectedComposeRevertData.length != 0) {
                     vm.expectRevert(_expectedComposeRevertData);
+                } else if (_expectedComposeRevertData4 != bytes4(0)) {
+                    vm.expectRevert(_expectedComposeRevertData4);
                 }
                 this.lzCompose(packetBytes, options, guid, _composer);
             }

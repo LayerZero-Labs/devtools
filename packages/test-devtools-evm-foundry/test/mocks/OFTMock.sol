@@ -27,7 +27,7 @@ contract OFTMock is OFT {
         if (_amountLD > 10 ether) {
             revert DummyLzReceiveError(_amountLD);
         }
-
+        
         // @dev Default OFT mints on dst.
         _mint(_to, _amountLD);
         // @dev In the case of NON-default OFT, the _amountLD MIGHT not be == amountReceivedLD.
