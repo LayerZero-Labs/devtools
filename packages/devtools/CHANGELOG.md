@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.16
+
+### Patch Changes
+
+- 94e6bf8: Support contractName on OmniPoint
+
 ## 0.3.15
 
 ### Patch Changes

@@ -505,7 +505,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3
       '@layerzerolabs/test-devtools':
-        specifier: ~0.2.4
+        specifier: ~0.2.5
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -666,7 +666,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.15
+        specifier: ~0.3.16
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.10
@@ -681,7 +681,7 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3
       '@layerzerolabs/test-devtools':
-        specifier: ~0.2.4
+        specifier: ~0.2.5
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.2.4
@@ -1199,13 +1199,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.15
+        specifier: ~0.3.16
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.10
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.17
+        specifier: ~0.3.18
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.10
@@ -1238,7 +1238,7 @@ importers:
         specifier: ~0.3.12
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.3.17
+        specifier: ~0.3.18
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -1442,13 +1442,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.15
+        specifier: ~0.3.16
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.10
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.17
+        specifier: ~0.3.18
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.10
@@ -1913,13 +1913,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.15
+        specifier: ~0.3.16
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.10
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.17
+        specifier: ~0.3.18
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.10
@@ -1964,7 +1964,7 @@ importers:
         specifier: ~0.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.2.28
+        specifier: ~0.2.29
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~0.3.13
@@ -1973,7 +1973,7 @@ importers:
         specifier: ~0.3.12
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~0.3.17
+        specifier: ~0.3.18
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5

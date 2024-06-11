@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.18
+
+### Patch Changes
+
+- 87ed6f5: Add --assert flag to lz:oapp:wire task
+- Updated dependencies [94e6bf8]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.18
+  - @layerzerolabs/devtools@0.3.16
+
 ## 0.3.17
 
 ### Patch Changes
