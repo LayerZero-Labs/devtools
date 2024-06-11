@@ -21,7 +21,7 @@ import { parallel } from '@layerzerolabs/devtools'
 export const createOmniPointHardhatTransformer =
     (contractFactory: OmniContractFactoryHardhat = createContractFactory()): OmniPointHardhatTransformer =>
     async (point) =>
-        isOmniPoint(point) ? point : omniContractToPoint(await contractFactory(point))
+        isOmniPoint(point) ? point : { ...point, ...omniContractToPoint(await contractFactory(point)) }
 
 /**
  * Create a function capable of transforming `OmniNodeHardhat` to a regular `OmniNode`

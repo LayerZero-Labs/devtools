@@ -56,7 +56,27 @@ describe('omnigraph/transformations', () => {
 
                     const transformed = await transformer(point)
 
-                    expect(transformed).toEqual({ eid: point.eid, address })
+                    expect(transformed).toEqual({ ...point, address })
+                    expect(contractFactory).toHaveBeenCalledTimes(1)
+                    expect(contractFactory).toHaveBeenCalledWith(point)
+                })
+            )
+        })
+
+        it('should add the contractName if point is not an OmniPoint', async () => {
+            await fc.assert(
+                fc.asyncProperty(pointHardhatArbitrary, evmAddressArbitrary, async (point, address) => {
+                    fc.pre(!isOmniPoint(point))
+
+                    const contract = new Contract(address, [])
+                    const contractFactory = jest
+                        .fn()
+                        .mockImplementation(async (point: OmniPointHardhat) => ({ eid: point.eid, contract }))
+                    const transformer = createOmniPointHardhatTransformer(contractFactory)
+
+                    const transformed = await transformer(point)
+
+                    expect(transformed).toEqual({ eid: point.eid, address, contractName: point.contractName })
                     expect(contractFactory).toHaveBeenCalledTimes(1)
                     expect(contractFactory).toHaveBeenCalledWith(point)
                 })

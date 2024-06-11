@@ -9,7 +9,8 @@ import { OmniVector, OmniPoint, OmniNode, WithEid } from './types'
  *
  * @returns `true` if the vector point to the same point in omniverse
  */
-export const arePointsEqual = (a: OmniPoint, b: OmniPoint): boolean => a.address === b.address && a.eid === b.eid
+export const arePointsEqual = (a: OmniPoint, b: OmniPoint): boolean =>
+    a.address === b.address && a.eid === b.eid && a.contractName === b.contractName
 
 /**
  * Checks if two points are on the same endpoint
