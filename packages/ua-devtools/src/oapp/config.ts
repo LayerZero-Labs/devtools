@@ -92,16 +92,15 @@ export const configureOAppPeers: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureSendLibraries: OAppConfigurator = async (graph, createSdk) =>
-    flattenTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+export const configureSendLibraries: OAppConfigurator = withOAppLogger(
+    createConfigureEdges(
+        withOAppLogger(
+            async ({ vector: { from, to }, config }, sdk): Promise<OmniTransaction[]> => {
                 if (!config?.sendLibrary) {
                     return []
                 }
 
-                const oappSdk = await createSdk(from)
-                const endpointSdk = await oappSdk.getEndpointSDK()
+                const endpointSdk = await sdk.getEndpointSDK()
                 const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
@@ -109,9 +108,22 @@ export const configureSendLibraries: OAppConfigurator = async (graph, createSdk)
                     return []
                 }
                 return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
-            })
+            },
+            {
+                onStart: (logger, [{ vector }]) =>
+                    logger.verbose(`Checking send libraries for ${formatOmniVector(vector)}`),
+                onSuccess: (logger, [{ vector }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked send libraries for ${formatOmniVector(vector)}`),
+                onError: (logger, [{ vector }], error) =>
+                    logger.error(`Failed to check send libraries for ${formatOmniVector(vector)}: ${error}`),
+            }
         )
-    )
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking send libraries configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked send libraries configuration`),
+    }
+)
 
 export const configureReceiveLibraries: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
