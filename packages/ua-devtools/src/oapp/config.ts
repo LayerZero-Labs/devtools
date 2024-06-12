@@ -144,7 +144,7 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
 
                 if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
                     logger.verbose(
-                        `Current recieveLibrary is not default library and is already set to receiveLibraryConfig.receive library for ${formatOmniVector({ from, to })}, skipping`
+                        `Current recieveLibrary is not default and is already set to receiveLibraryConfig.receiveLibrary for ${formatOmniVector({ from, to })}, skipping`
                     )
                     return []
                 }
