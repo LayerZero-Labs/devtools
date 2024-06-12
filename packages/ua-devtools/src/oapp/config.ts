@@ -109,12 +109,12 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
 
                 if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) {
                     logger.verbose(
-                        `Current sendLibrary is not default library and is already set to config.sendLibrary for ${formatOmniVector({ from, to })}, skipping`
+                        `Current sendLibrary is not default library and is already set to ${config.sendLibrary} for ${formatOmniVector({ from, to })}, skipping`
                     )
                     return []
                 }
 
-                logger.verbose(`Setting sendLibrary for ${formatOmniVector({ from, to })}`)
+                logger.verbose(`Setting sendLibrary ${config.sendLibrary} for ${formatOmniVector({ from, to })}`)
                 return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
             },
             {
