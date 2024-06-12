@@ -64,6 +64,8 @@ export const configureOAppPeers: OAppConfigurator = withOAppLogger(
             async ({ vector: { from, to } }, sdk): Promise<OmniTransaction[]> => {
                 const logger = createOAppLogger()
 
+                logger.verbose(`Checking connection ${formatOmniVector({ from, to })}`)
+
                 const hasPeer = await sdk.hasPeer(to.eid, to.address)
 
                 logger.verbose(`Checked connection ${formatOmniVector({ from, to })}: ${printBoolean(hasPeer)}`)
@@ -75,37 +77,18 @@ export const configureOAppPeers: OAppConfigurator = withOAppLogger(
                 return [await sdk.setPeer(to.eid, to.address)]
             },
             {
-                onStart: (
-                    logger,
-                    [
-                        {
-                            vector: { from, to },
-                        },
-                    ]
-                ) => logger.verbose(`Checking connection for ${formatOmniVector({ from, to })}`),
-                onSuccess: (
-                    logger,
-                    [
-                        {
-                            vector: { from, to },
-                        },
-                    ]
-                ) => logger.verbose(`${printBoolean(true)} Created connection for ${formatOmniVector({ from, to })}`),
-                onError: (
-                    logger,
-                    [
-                        {
-                            vector: { from, to },
-                        },
-                    ],
-                    error
-                ) => logger.error(`Failed to create connection for ${formatOmniVector({ from, to })}: ${error}`),
+                onStart: (logger, [{ vector }]) =>
+                    logger.verbose(`Checking OApp peers for ${formatOmniVector(vector)}`),
+                onSuccess: (logger, [{ vector }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked OApp peers for ${formatOmniVector(vector)}`),
+                onError: (logger, [{ vector }], error) =>
+                    logger.error(`Failed to check OApp peers for ${formatOmniVector(vector)}: ${error}`),
             }
         )
     ),
     {
         onStart: (logger) => logger.verbose(`Checking OApp peers configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Created OApp peers`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp peers configuration`),
     }
 )
 
