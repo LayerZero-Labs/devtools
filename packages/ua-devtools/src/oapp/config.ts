@@ -1,6 +1,5 @@
 import {
     Bytes,
-    flattenTransactions,
     formatOmniVector,
     isDeepEqual,
     OmniAddress,
@@ -176,22 +175,34 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, createSdk) =>
-    flattenTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+export const configureReceiveLibraryTimeouts: OAppConfigurator = withOAppLogger(
+    createConfigureEdges(
+        withOAppLogger(
+            async ({ vector: { from, to }, config }, sdk): Promise<OmniTransaction[]> => {
+                const logger = createOAppLogger()
+
                 if (config?.receiveLibraryTimeoutConfig == null) {
+                    logger.verbose(
+                        `receiveLibraryTimeoutConfig not set for ${formatOmniVector({ from, to })}, skipping`
+                    )
                     return []
                 }
 
                 const { receiveLibraryTimeoutConfig } = config
-                const oappSdk = await createSdk(from)
-                const endpointSdk = await oappSdk.getEndpointSDK()
+                const endpointSdk = await sdk.getEndpointSDK()
                 const timeout = await endpointSdk.getReceiveLibraryTimeout(from.address, to.eid)
 
                 if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) {
+                    logger.verbose(
+                        `Current timeout for ${receiveLibraryTimeoutConfig.lib} is already set to ${receiveLibraryTimeoutConfig.expiry} for ${formatOmniVector({ from, to })}, skipping`
+                    )
                     return []
                 }
+
+                logger.verbose(
+                    `Setting timeout for ${receiveLibraryTimeoutConfig.lib} to ${receiveLibraryTimeoutConfig.expiry} for ${formatOmniVector({ from, to })}`
+                )
+
                 return [
                     await endpointSdk.setReceiveLibraryTimeout(
                         from.address,
@@ -200,9 +211,24 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, c
                         receiveLibraryTimeoutConfig.expiry
                     ),
                 ]
-            })
+            },
+            {
+                onStart: (logger, [{ vector }]) =>
+                    logger.verbose(`Checking receive library timeouts for ${formatOmniVector(vector)}`),
+                onSuccess: (logger, [{ vector }]) =>
+                    logger.verbose(
+                        `${printBoolean(true)} Checked receive library timeouts for ${formatOmniVector(vector)}`
+                    ),
+                onError: (logger, [{ vector }], error) =>
+                    logger.error(`Failed to check receive library timeouts for ${formatOmniVector(vector)}: ${error}`),
+            }
         )
-    )
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking receive library timeout configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive library timeout configuration`),
+    }
+)
 
 export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
     // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
