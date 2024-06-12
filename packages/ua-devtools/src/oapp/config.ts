@@ -96,7 +96,10 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
     createConfigureEdges(
         withOAppLogger(
             async ({ vector: { from, to }, config }, sdk): Promise<OmniTransaction[]> => {
+                const logger = createOAppLogger()
+
                 if (!config?.sendLibrary) {
+                    logger.verbose(`sendLibrary configuration not set for ${formatOmniVector({ from, to })}, skipping`)
                     return []
                 }
 
@@ -105,8 +108,13 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                 const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
                 if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) {
+                    logger.verbose(
+                        `Current sendLibrary is not default library and is already set to config.sendLibrary for ${formatOmniVector({ from, to })}, skipping`
+                    )
                     return []
                 }
+
+                logger.verbose(`Setting sendLibrary for ${formatOmniVector({ from, to })}`)
                 return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
             },
             {
