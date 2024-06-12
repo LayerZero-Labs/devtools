@@ -9,6 +9,7 @@ import {
     formatOmniPoint,
     createConfigureMultiple,
     createConfigureNodes,
+    createConfigureEdges,
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -57,15 +58,14 @@ export const configureOAppDelegates: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => {
-    const logger = createModuleLogger('OApp')
+export const configureOAppPeers: OAppConfigurator = withOAppLogger(
+    createConfigureEdges(
+        withOAppLogger(
+            async ({ vector: { from, to } }, sdk): Promise<OmniTransaction[]> => {
+                const logger = createOAppLogger()
 
-    return flattenTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector: { from, to } }): Promise<OmniTransaction[]> => {
                 logger.verbose(`Checking connection ${formatOmniVector({ from, to })}`)
 
-                const sdk = await createSdk(from)
                 const hasPeer = await sdk.hasPeer(to.eid, to.address)
 
                 logger.verbose(`Checked connection ${formatOmniVector({ from, to })}: ${printBoolean(hasPeer)}`)
@@ -75,10 +75,22 @@ export const configureOAppPeers: OAppConfigurator = async (graph, createSdk) => 
 
                 logger.verbose(`Creating a connection ${formatOmniVector({ from, to })}`)
                 return [await sdk.setPeer(to.eid, to.address)]
-            })
+            },
+            {
+                onStart: (logger, [{ vector }]) =>
+                    logger.verbose(`Checking OApp peers for ${formatOmniVector(vector)}`),
+                onSuccess: (logger, [{ vector }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked OApp peers for ${formatOmniVector(vector)}`),
+                onError: (logger, [{ vector }], error) =>
+                    logger.error(`Failed to check OApp peers for ${formatOmniVector(vector)}: ${error}`),
+            }
         )
-    )
-}
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking OApp peers`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp peers`),
+    }
+)
 
 export const configureSendLibraries: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
