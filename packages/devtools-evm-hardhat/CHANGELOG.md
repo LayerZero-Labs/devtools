@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.19
+
+### Patch Changes
+
+- 2746ede: Add --follow flag to simulation logs task
+
 ## 0.3.18
 
 ### Patch Changes
