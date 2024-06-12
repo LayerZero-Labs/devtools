@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.30
+
+### Patch Changes
+
+- 2746ede: Add --follow flag to simulation logs task
+- Updated dependencies [2746ede]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.19
+
 ## 0.2.29
 
 ### Patch Changes
