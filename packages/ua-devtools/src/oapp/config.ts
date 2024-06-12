@@ -133,24 +133,32 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureReceiveLibraries: OAppConfigurator = async (graph, createSdk) =>
-    flattenTransactions(
-        await Promise.all(
-            graph.connections.map(async ({ vector: { from, to }, config }): Promise<OmniTransaction[]> => {
+export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
+    createConfigureEdges(
+        withOAppLogger(
+            async ({ vector: { from, to }, config }, sdk): Promise<OmniTransaction[]> => {
+                const logger = createOAppLogger()
+
                 if (config?.receiveLibraryConfig == null) {
+                    logger.verbose(`receiveLibraryConfig not set for ${formatOmniVector({ from, to })}, skipping`)
                     return []
                 }
 
-                const oappSdk = await createSdk(from)
-                const endpointSdk = await oappSdk.getEndpointSDK()
+                const endpointSdk = await sdk.getEndpointSDK()
                 const [currentReceiveLibrary, isDefaultLibrary] = await endpointSdk.getReceiveLibrary(
                     from.address,
                     to.eid
                 )
 
                 if (!isDefaultLibrary && currentReceiveLibrary === config.receiveLibraryConfig.receiveLibrary) {
+                    logger.verbose(
+                        `Current recieveLibrary is not default library and is already set to receiveLibraryConfig.receive library for ${formatOmniVector({ from, to })}, skipping`
+                    )
                     return []
                 }
+
+                logger.verbose(`Setting recieveLibrary for ${formatOmniVector({ from, to })}`)
+
                 return [
                     await endpointSdk.setReceiveLibrary(
                         from.address,
@@ -159,9 +167,22 @@ export const configureReceiveLibraries: OAppConfigurator = async (graph, createS
                         config.receiveLibraryConfig.gracePeriod
                     ),
                 ]
-            })
+            },
+            {
+                onStart: (logger, [{ vector }]) =>
+                    logger.verbose(`Checking receive libraries for ${formatOmniVector(vector)}`),
+                onSuccess: (logger, [{ vector }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked receive libraries for ${formatOmniVector(vector)}`),
+                onError: (logger, [{ vector }], error) =>
+                    logger.error(`Failed to check receive libraries for ${formatOmniVector(vector)}: ${error}`),
+            }
         )
-    )
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking receive libraries configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive libraries configuration`),
+    }
+)
 
 export const configureReceiveLibraryTimeouts: OAppConfigurator = async (graph, createSdk) =>
     flattenTransactions(
