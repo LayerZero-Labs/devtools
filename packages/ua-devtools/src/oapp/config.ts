@@ -356,8 +356,8 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
         return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
     },
     {
-        onStart: (logger) => logger.info(`Checking send configuration`), // TODO just checking if info will make it appear in tests vs verbose
-        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked send configuration`),
+        onStart: (logger) => logger.verbose(`Checking send configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked send configuration`),
     }
 )
 
