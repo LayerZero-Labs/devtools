@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
