@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.15
+
+### Patch Changes
+
+- 4628f1f: Added logging for configureReceiveLibraries and configureReceiveLibraryTimeouts
+
 ## 0.3.14
 
 ### Patch Changes
