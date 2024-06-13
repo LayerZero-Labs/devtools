@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.31
+
+### Patch Changes
+
+- 744e6f2: Add --prune-history flag to AnvilOptions for simulation
+- Updated dependencies [744e6f2]
+  - @layerzerolabs/devtools-evm@0.3.11
+
 ## 0.2.30
 
 ### Patch Changes

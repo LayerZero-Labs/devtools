@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.11
+
+### Patch Changes
+
+- 744e6f2: Add --prune-history flag to AnvilOptions for simulation
+
 ## 0.3.10
 
 ### Patch Changes

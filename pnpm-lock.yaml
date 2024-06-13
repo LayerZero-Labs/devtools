@@ -1202,7 +1202,7 @@ importers:
         specifier: ~0.3.16
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~0.3.10
+        specifier: ~0.3.11
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~0.3.19
