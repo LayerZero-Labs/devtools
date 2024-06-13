@@ -4,4 +4,4 @@
 "@layerzerolabs/toolbox-hardhat": patch
 ---
 
-Check for LZ_DefaultReceiveLibUnavailable on EndpointV2 when configuring receive libraries
+Check for LZ_DefaultReceiveLibUnavailable/LZ_DefaultSendLibUnavailable on EndpointV2 when receive libraries
