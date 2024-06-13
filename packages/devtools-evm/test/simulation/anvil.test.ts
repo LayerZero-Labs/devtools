@@ -49,6 +49,13 @@ describe('simulation/anvil', () => {
                 forkUrl: 'http://hotmail.com/mainnet',
                 blockTime: 1,
             },
+            {
+                forkUrl: 'http://hotmail.com/mainnet',
+                pruneHistory: false,
+            },
+            {
+                pruneHistory: true,
+            },
         ]
 
         TEST_CASES.forEach((testCase) => {
