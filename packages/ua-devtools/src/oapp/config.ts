@@ -435,46 +435,72 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) => {
-    // This function builds a map to find all OAppEnforcedOptionParam[] to execute for a given OApp
-    const setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]> = new OmniPointMap()
+export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
+    async (graph, createSdk) => {
+        const logger = createOAppLogger()
+        // This function builds a map to find all OAppEnforcedOptionParam[] to execute for a given OApp
+        const setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]> = new OmniPointMap()
 
-    for (const {
-        vector: { from, to },
-        config,
-    } of graph.connections) {
-        if (config?.enforcedOptions == null) {
-            continue
-        }
-        const oappSdk = await createSdk(from)
+        for (const {
+            vector: { from, to },
+            config,
+        } of graph.connections) {
+            if (config?.enforcedOptions == null) {
+                logger.verbose(`Enforced options not set for ${formatOmniVector({ from, to })}, skipping`)
+                continue
+            }
+            const oappSdk = await createSdk(from)
 
-        // combines enforced options together by msgType
-        const enforcedOptionsByMsgType = config.enforcedOptions.reduce(
-            enforcedOptionsReducer,
-            new Map<number, Options>()
-        )
+            // combines enforced options together by msgType
+            const enforcedOptionsByMsgType = config.enforcedOptions.reduce(
+                enforcedOptionsReducer,
+                new Map<number, Options>()
+            )
 
-        // We ask the oapp SDK whether this config has already been applied
-        for (const [msgType, options] of enforcedOptionsByMsgType) {
-            const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
-            if (currentEnforcedOption !== options.toHex()) {
-                // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
-                const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
-                setConfigsByLibrary.push({
-                    eid: to.eid,
-                    option: {
-                        msgType,
-                        options: options.toHex(),
-                    },
-                })
-                setEnforcedOptionsByEndpoint.set(from, setConfigsByLibrary)
+            // We ask the oapp SDK whether this config has already been applied
+            for (const [msgType, options] of enforcedOptionsByMsgType) {
+                const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
+                logger.verbose(
+                    `Checked current enforced options for ${formatOmniVector({ from, to })}: ${currentEnforcedOption}`
+                )
+                if (currentEnforcedOption !== options.toHex()) {
+                    // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
+                    const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
+                    setConfigsByLibrary.push({
+                        eid: to.eid,
+                        option: {
+                            msgType,
+                            options: options.toHex(),
+                        },
+                    })
+                    setEnforcedOptionsByEndpoint.set(from, setConfigsByLibrary)
+
+                    const updatedEnforcedOptionsCsv = setEnforcedOptionsByEndpoint
+                        .getOrElse(from, () => [])
+                        .map(
+                            (enforcedOption) =>
+                                '{msgType: ' +
+                                enforcedOption.option?.msgType +
+                                ', options: ' +
+                                enforcedOption.option?.options +
+                                '}'
+                        )
+                        .join(', ')
+                    logger.verbose(
+                        `Set enforced options ${updatedEnforcedOptionsCsv} for ${formatOmniVector({ from, to })}`
+                    )
+                }
             }
         }
-    }
 
-    // This function iterates over the map (OApp -> OAppEnforcedOptionParam[]) to execute setEnforcedOptions
-    return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
-}
+        // This function iterates over the map (OApp -> OAppEnforcedOptionParam[]) to execute setEnforcedOptions
+        return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
+    },
+    {
+        onStart: (logger) => logger.verbose(`Checking enforced options`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked enforced options`),
+    }
+)
 
 const buildOmniTransactions = async (
     setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
