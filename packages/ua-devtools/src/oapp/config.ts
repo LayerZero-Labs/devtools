@@ -299,7 +299,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     const updatedConfigListCsv = updatedConfigList
                         .map(
                             (setConfigParam) =>
-                                '{configType: ' + setConfigParam.configType + ', config: setConfigParam.config}'
+                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
                         )
                         .join(', ')
                     logger.verbose(
@@ -342,7 +342,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     const updatedConfigListCsv = updatedConfigList
                         .map(
                             (setConfigParam) =>
-                                '{configType: ' + setConfigParam.configType + ', config: setConfigParam.config}'
+                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
                         )
                         .join(', ')
                     logger.verbose(
