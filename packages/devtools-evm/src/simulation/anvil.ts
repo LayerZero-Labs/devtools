@@ -1,4 +1,4 @@
-import { pipe } from 'fp-ts/lib/function'
+import { identity, pipe } from 'fp-ts/lib/function'
 import * as A from 'fp-ts/Array'
 import * as O from 'fp-ts/Option'
 
@@ -39,6 +39,12 @@ export interface AnvilOptions {
 
     state?: string
     stateInterval?: number
+
+    //
+    // History
+    //
+
+    pruneHistory?: boolean
 }
 
 /**
@@ -61,6 +67,7 @@ export const createAnvilCliOptions = ({
     derivationPath,
     state,
     stateInterval,
+    pruneHistory,
 }: AnvilOptions): string[] =>
     pipe(
         [
@@ -111,6 +118,11 @@ export const createAnvilCliOptions = ({
             pipe(
                 O.fromNullable(stateInterval),
                 O.map((stateInterval) => ['--state-interval', String(stateInterval)])
+            ),
+            pipe(
+                O.fromNullable(pruneHistory),
+                O.filter(identity),
+                O.map(() => ['--prune-history'])
             ),
         ],
         A.compact,
