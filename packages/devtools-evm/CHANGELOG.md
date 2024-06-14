@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.12
+
+### Patch Changes
+
+- ab58b00: Check for LZ_DefaultReceiveLibUnavailable/LZ_DefaultSendLibUnavailable on EndpointV2 when receive libraries
+
 ## 0.3.11
 
 ### Patch Changes

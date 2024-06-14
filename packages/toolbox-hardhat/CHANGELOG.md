@@ -1,5 +1,14 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.32
+
+### Patch Changes
+
+- ab58b00: Check for LZ_DefaultReceiveLibUnavailable/LZ_DefaultSendLibUnavailable on EndpointV2 when receive libraries
+- Updated dependencies [ab58b00]
+  - @layerzerolabs/protocol-devtools-evm@0.3.9
+  - @layerzerolabs/devtools-evm@0.3.12
+
 ## 0.2.31
 
 ### Patch Changes
