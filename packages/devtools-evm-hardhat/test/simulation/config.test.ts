@@ -6,6 +6,7 @@ import {
 import { mnemonicArbitrary } from '@layerzerolabs/test-devtools'
 import fc from 'fast-check'
 import hre from 'hardhat'
+import { HttpNetworkConfig } from 'hardhat/types'
 import { resolve } from 'path'
 
 describe('simulation/config', () => {
@@ -111,9 +112,19 @@ describe('simulation/config', () => {
 
         it('should return an object with networks mapped to anvil options if there are http networks', () => {
             const localhost = hre.config.networks.localhost
-            const networkA = { ...localhost, url: 'http://network.a' }
-            const networkB = { ...localhost, url: 'http://network.b' }
-            const networkC = { ...localhost, url: 'http://network.c' }
+            const networkA: HttpNetworkConfig = { ...localhost, url: 'http://network.a', accounts: [] }
+            const networkB: HttpNetworkConfig = {
+                ...localhost,
+                url: 'http://network.b',
+                accounts: {
+                    count: 10,
+                    initialIndex: 0,
+                    passphrase: '',
+                    path: "m/44'/60'/0'/0/",
+                    mnemonic: 'tomato potato',
+                },
+            }
+            const networkC: HttpNetworkConfig = { ...localhost, url: 'http://network.c', accounts: 'remote' }
             const simulationConfig = resolveSimulationConfig({}, hre.config)
 
             expect(
@@ -126,67 +137,14 @@ describe('simulation/config', () => {
                 networkA: {
                     ...networkA,
                     url: `http://localhost:${simulationConfig.port}/networkA`,
-                    accounts: {
-                        count: 10,
-                        initialIndex: 0,
-                        passphrase: '',
-                        path: "m/44'/60'/0'/0/",
-                        mnemonic: simulationConfig.anvil.mnemonic,
-                    },
                 },
                 networkB: {
                     ...networkB,
                     url: `http://localhost:${simulationConfig.port}/networkB`,
-                    accounts: {
-                        count: 10,
-                        initialIndex: 0,
-                        passphrase: '',
-                        path: "m/44'/60'/0'/0/",
-                        mnemonic: simulationConfig.anvil.mnemonic,
-                    },
                 },
                 networkC: {
                     ...networkC,
                     url: `http://localhost:${simulationConfig.port}/networkC`,
-                    accounts: {
-                        count: 10,
-                        initialIndex: 0,
-                        passphrase: '',
-                        path: "m/44'/60'/0'/0/",
-                        mnemonic: simulationConfig.anvil.mnemonic,
-                    },
-                },
-            })
-        })
-
-        it('should respect anvil accounts options', () => {
-            const localhost = hre.config.networks.localhost
-            const networkA = { ...localhost, url: 'http://network.a' }
-            const simulationConfig = resolveSimulationConfig(
-                {
-                    anvil: {
-                        count: 20,
-                        derivationPath: "m/44'/60'/0'/16/",
-                    },
-                },
-                hre.config
-            )
-
-            expect(
-                getHardhatNetworkOverrides(simulationConfig, {
-                    networkA,
-                })
-            ).toStrictEqual({
-                networkA: {
-                    ...networkA,
-                    url: `http://localhost:${simulationConfig.port}/networkA`,
-                    accounts: {
-                        count: simulationConfig.anvil.count,
-                        initialIndex: 0,
-                        passphrase: '',
-                        path: simulationConfig.anvil.derivationPath,
-                        mnemonic: simulationConfig.anvil.mnemonic,
-                    },
                 },
             })
         })
