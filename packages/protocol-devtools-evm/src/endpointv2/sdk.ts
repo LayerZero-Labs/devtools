@@ -26,6 +26,7 @@ import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302 } from '@/uln302'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
+import { ReceiveLibrarySchema } from './schema'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -80,7 +81,20 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`)
 
-        return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
+        try {
+            return ignoreZero(await this.contract.contract.getSendLibrary(sender, dstEid))
+        } catch (error) {
+            // If a default receive library is not available, this call will throw
+            // in which case we need to check whether a default library is available
+            const parsedError = await this.parseError(error)
+            if (parsedError.reason === 'LZ_DefaultSendLibUnavailable') {
+                this.logger.warn(`Send library not set and default not available for eid ${formatEid(dstEid)}`)
+
+                return undefined
+            }
+
+            throw error
+        }
     }
 
     @AsyncRetriable()
@@ -90,7 +104,20 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     ): Promise<[address: OmniAddress | undefined, isDefault: boolean]> {
         this.logger.debug(`Getting receive library for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`)
 
-        return await this.contract.contract.getReceiveLibrary(receiver, srcEid)
+        try {
+            return ReceiveLibrarySchema.parse(await this.contract.contract.getReceiveLibrary(receiver, srcEid))
+        } catch (error) {
+            // If a default receive library is not available, this call will throw
+            // in which case we need to check whether a default library is available
+            const parsedError = await this.parseError(error)
+            if (parsedError.reason === 'LZ_DefaultReceiveLibUnavailable') {
+                this.logger.warn(`Receive library not set and default not available for eid ${formatEid(srcEid)}`)
+
+                return [undefined, true]
+            }
+
+            throw error
+        }
     }
 
     async setDefaultReceiveLibrary(
