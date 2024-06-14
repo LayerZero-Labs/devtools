@@ -26,6 +26,17 @@ export interface SimulationUserConfig {
     directory?: string
 
     /**
+     * Simulation will by default overwrite the network accounts by values
+     * provided in Anvil config (or defaults if not present).
+     *
+     * The mnemonic will default to "test test test test test test test test test test test junk"
+     * and the number of funded accounts to 10.
+     *
+     * @default true
+     */
+    overwriteAccounts?: boolean
+
+    /**
      * Anvil overrides for the underlying EVM nodes.
      */
     anvil?: SimulationAnvilUserConfig
@@ -37,6 +48,7 @@ export interface SimulationUserConfig {
 export interface SimulationConfig {
     port: number
     directory: string
+    overwriteAccounts: boolean
     anvil: SimulationAnvilConfig
 }
 
