@@ -15,6 +15,7 @@ describe('simulation/config', () => {
             expect(resolveSimulationConfig({}, hre.config)).toEqual({
                 port: 8545,
                 directory: resolve(hre.config.paths.root, '.layerzero'),
+                overwriteAccounts: true,
                 anvil: {
                     host: '0.0.0.0',
                     port: 8545,
@@ -25,17 +26,29 @@ describe('simulation/config', () => {
 
         it('should not override user values if provided', () => {
             fc.assert(
-                fc.property(fc.integer(), fc.string(), mnemonicArbitrary, (port, directory, mnemonic) => {
-                    expect(resolveSimulationConfig({ port, directory, anvil: { mnemonic } }, hre.config)).toEqual({
-                        port,
-                        directory: resolve(hre.config.paths.root, directory),
-                        anvil: {
-                            host: '0.0.0.0',
-                            port: 8545,
-                            mnemonic,
-                        },
-                    })
-                })
+                fc.property(
+                    fc.integer(),
+                    fc.string(),
+                    mnemonicArbitrary,
+                    fc.boolean(),
+                    (port, directory, mnemonic, overwriteAccounts) => {
+                        expect(
+                            resolveSimulationConfig(
+                                { port, directory, overwriteAccounts, anvil: { mnemonic } },
+                                hre.config
+                            )
+                        ).toEqual({
+                            port,
+                            directory: resolve(hre.config.paths.root, directory),
+                            overwriteAccounts,
+                            anvil: {
+                                host: '0.0.0.0',
+                                port: 8545,
+                                mnemonic,
+                            },
+                        })
+                    }
+                )
             )
         })
     })
