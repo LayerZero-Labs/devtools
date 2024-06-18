@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.20
+
+### Patch Changes
+
+- cd963d1: Don't overwrite hardhat network accounts for the simulation
+
 ## 0.3.19
 
 ### Patch Changes
