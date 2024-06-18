@@ -9,7 +9,8 @@
   },
   "license": "MIT",
   "files": [
-    "contracts/"
+    "contracts/",
+    "artifacts/"
   ],
   "scripts": {
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
