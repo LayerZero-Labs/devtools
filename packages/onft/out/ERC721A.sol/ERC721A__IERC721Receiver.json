@@ -1,0 +1,89 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "onERC721Received",
+      "inputs": [
+        { "name": "operator", "type": "address", "internalType": "address" },
+        { "name": "from", "type": "address", "internalType": "address" },
+        { "name": "tokenId", "type": "uint256", "internalType": "uint256" },
+        { "name": "data", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes4", "internalType": "bytes4" }],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "onERC721Received(address,address,uint256,bytes)": "150b7a02"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Interface of ERC721 token receiver.\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/erc721a/contracts/ERC721A.sol\":\"ERC721A__IERC721Receiver\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":erc721a/=node_modules/erc721a/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/erc721a/contracts/ERC721A.sol\":{\"keccak256\":\"0xede758d13ccce2f54a4bcd16816456109b290759d43988205539cf632f4c8a55\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b63befef8f79ec44ebe5db096767cab6772485c2b01a431759e7fcdcf7fd0bb1\",\"dweb:/ipfs/QmV45KT2ai7PnVRhpJKjB29A15VGnhsvxxBFrrUSwhe2fr\"]},\"node_modules/erc721a/contracts/IERC721A.sol\":{\"keccak256\":\"0xc9a2a00612e0d121aef3f716877ada17177d5b2d5a4c780d22cade46da2ff294\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1435542fc553d2fb9181191f126a1f97e2cc5570c2459c862f54ba415a22bf02\",\"dweb:/ipfs/QmaQJ14ajkHgymY5TtoxHnpiN5u4TpwXCqKr2B6DM8SHkn\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "from", "type": "address" },
+            { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+            { "internalType": "bytes", "name": "data", "type": "bytes" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "onERC721Received",
+          "outputs": [
+            { "internalType": "bytes4", "name": "", "type": "bytes4" }
+          ]
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "erc721a/=node_modules/erc721a/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/erc721a/contracts/ERC721A.sol": "ERC721A__IERC721Receiver"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/erc721a/contracts/ERC721A.sol": {
+        "keccak256": "0xede758d13ccce2f54a4bcd16816456109b290759d43988205539cf632f4c8a55",
+        "urls": [
+          "bzz-raw://b63befef8f79ec44ebe5db096767cab6772485c2b01a431759e7fcdcf7fd0bb1",
+          "dweb:/ipfs/QmV45KT2ai7PnVRhpJKjB29A15VGnhsvxxBFrrUSwhe2fr"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/erc721a/contracts/IERC721A.sol": {
+        "keccak256": "0xc9a2a00612e0d121aef3f716877ada17177d5b2d5a4c780d22cade46da2ff294",
+        "urls": [
+          "bzz-raw://1435542fc553d2fb9181191f126a1f97e2cc5570c2459c862f54ba415a22bf02",
+          "dweb:/ipfs/QmaQJ14ajkHgymY5TtoxHnpiN5u4TpwXCqKr2B6DM8SHkn"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 132
+}

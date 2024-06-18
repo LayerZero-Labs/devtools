@@ -1,0 +1,63 @@
+{
+  "abi": [
+    { "type": "error", "name": "QueueEmpty", "inputs": [] },
+    { "type": "error", "name": "QueueFull", "inputs": [] },
+    { "type": "error", "name": "QueueOutOfBounds", "inputs": [] }
+  ],
+  "bytecode": {
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220a754e04f4d43f1b7ebaa2a2c96911034cb9ed151b1b588798d6af16f65ec492964736f6c63430008160033",
+    "sourceMap": "782:5071:131:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;782:5071:131;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220a754e04f4d43f1b7ebaa2a2c96911034cb9ed151b1b588798d6af16f65ec492964736f6c63430008160033",
+    "sourceMap": "782:5071:131:-:0;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"QueueEmpty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"QueueFull\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"QueueOutOfBounds\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"A sequence of items with the ability to efficiently push and pop items (i.e. insert and remove) on both ends of the sequence (called front and back). Among other access patterns, it can be used to implement efficient LIFO and FIFO queues. Storage use is optimized, and all operations are O(1) constant time. This includes {clear}, given that the existing queue contents are left in storage. The struct is called `Bytes32Deque`. Other types can be cast to and from `bytes32`. This data structure can only be used in storage, and not in memory. ```solidity DoubleEndedQueue.Bytes32Deque queue; ```\",\"errors\":{\"QueueEmpty()\":[{\"details\":\"An operation (e.g. {front}) couldn't be completed due to the queue being empty.\"}],\"QueueFull()\":[{\"details\":\"A push operation couldn't be completed due to the queue being full.\"}],\"QueueOutOfBounds()\":[{\"details\":\"An operation (e.g. {at}) couldn't be completed due to an index being out of bounds.\"}]},\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol\":\"DoubleEndedQueue\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":erc721a/=node_modules/erc721a/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol\":{\"keccak256\":\"0xed6b702230a66640a0f1dd96106dd697e821b6b0fbb2eeab1c09d88d7c411a67\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://766996a7c9fb936ae08fc451c6bf6c3a9b49aca26002fb76c7fd1833fca459d8\",\"dweb:/ipfs/QmaFKhhPJCNxESLDoio7aR2KSvi4Y8YKirrb9tu4LM1vDp\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "QueueEmpty" },
+        { "inputs": [], "type": "error", "name": "QueueFull" },
+        { "inputs": [], "type": "error", "name": "QueueOutOfBounds" }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "erc721a/=node_modules/erc721a/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol": "DoubleEndedQueue"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol": {
+        "keccak256": "0xed6b702230a66640a0f1dd96106dd697e821b6b0fbb2eeab1c09d88d7c411a67",
+        "urls": [
+          "bzz-raw://766996a7c9fb936ae08fc451c6bf6c3a9b49aca26002fb76c7fd1833fca459d8",
+          "dweb:/ipfs/QmaFKhhPJCNxESLDoio7aR2KSvi4Y8YKirrb9tu4LM1vDp"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 131
+}
