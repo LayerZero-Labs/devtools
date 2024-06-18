@@ -1,0 +1,86 @@
+{
+  "name": "onft-evm",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LayerZero-Labs/devtools.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "artifacts/contracts/**/!(*.dbg).json",
+    "contracts/**/*"
+  ],
+  "scripts": {
+    "build": "forge build && $npm_execpath build-hardhat",
+    "build-contracts": "forge build && $npm_execpath hardhat compile --no-typechain --no-copy-artifacts && $npm_execpath hardhat size-contracts --no-compile",
+    "build-hardhat": "$npm_execpath hardhat compile",
+    "coverage:foundry": "forge coverage",
+    "debugpublish": "$npm_execpath publish --registry http://localhost:4873/",
+    "prepack": "node ./scripts/pack.mjs --prepack",
+    "postpack": "node ./scripts/pack.mjs --postpack",
+    "test": "forge test",
+    "test-contracts": "forge test && $npm_execpath hardhat test --no-compile",
+    "test-static-analyze": "$npm_execpath hardhat clean && $npm_execpath build-hardhat && python3 -m slither evm --ignore-compile --compile-force-framework hardhat --npx-disable",
+    "test_onft721_batch_0": "forge test --match-test test_onft721_batch_zero --gas-report",
+    "test_onft721_batch_1": "forge test --match-test test_onft721_batch_one --gas-report",
+    "test_onft721_batch_10": "forge test --match-test test_onft721_batch_ten --gas-report",
+    "test_onft721_batch_100": "forge test --match-test test_onft721_batch_hundred --gas-report",
+    "test_onft721_batch_250": "forge test --match-test test_onft721_batch_two_hundred_fifty --gas-report",
+    "test_onft721_batch_3": "forge test --match-test test_onft721_batch_three --gas-report",
+    "test_onft721_batch_only_2": "forge test --match-test test_onft721_batch_only_two --gas-report",
+    "test_onft721_double": "forge test --match-test test_onft721_double --gas-report",
+    "test_onft721_single": "forge test --match-test test_onft721_single --gas-report",
+    "test_onft721_triple": "forge test --match-test test_onft721_triple --gas-report"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@layerzerolabs/eslint-config-next": "~2.3.3",
+    "@layerzerolabs/lz-definitions": "^2.3.3",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.3",
+    "@layerzerolabs/prettier-config-next": "^2.3.3",
+    "@layerzerolabs/solhint-config": "^2.3.3",
+    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.3",
+    "@layerzerolabs/toolbox-foundry": "~0.1.5",
+    "@layerzerolabs/toolbox-hardhat": "~0.2.21",
+    "@nomicfoundation/hardhat-ethers": "^3.0.5",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.0.1",
+    "@openzeppelin/contracts-upgradeable": "^5.0.1",
+    "@rushstack/eslint-patch": "^1.7.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "~18.18.14",
+    "chai": "^4.4.1",
+    "dotenv": "^16.4.1",
+    "erc721a": "https://github.com/chiru-labs/ERC721A",
+    "eslint-plugin-jest-extended": "~2.0.0",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.3",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-deploy": "^0.12.1",
+    "mocha": "^10.2.0",
+    "prettier": "^3.2.5",
+    "solhint": "^4.1.1",
+    "solidity-bytes-utils": "^0.8.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  }
+}
