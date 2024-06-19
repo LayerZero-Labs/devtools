@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.16
+
+### Patch Changes
+
+- 4ba3b17: Added logging to configureSendConfig, configureReceiveConfig, and configureEnforcedOptions
+
 ## 0.3.15
 
 ### Patch Changes
