@@ -240,176 +240,267 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = withOAppLogger(
     }
 )
 
-export const configureSendConfig: OAppConfigurator = async (graph, createSdk) => {
-    // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
+export const configureSendConfig: OAppConfigurator = withOAppLogger(
+    async (graph, createSdk) => {
+        const logger = createOAppLogger()
 
-    for (const {
-        vector: { from, to },
-        config,
-    } of graph.connections) {
-        if (config?.sendConfig?.executorConfig == null && config?.sendConfig?.ulnConfig == null) {
-            continue
-        }
+        // This function builds a map to find all SetConfigParam[] to execute for a given OApp and SendLibrary
+        const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
 
-        const oappSdk = await createSdk(from)
-        const endpointSdk = await oappSdk.getEndpointSDK()
-        const currentSendLibrary = config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
-        assert(
-            currentSendLibrary !== undefined,
-            'sendLibrary has not been set in your config and no default value exists'
-        )
+        for (const {
+            vector: { from, to },
+            config,
+        } of graph.connections) {
+            if (config?.sendConfig?.executorConfig == null && config?.sendConfig?.ulnConfig == null) {
+                logger.verbose(`executorConfig and ulnConfig not set for ${formatOmniVector({ from, to })}, skipping`)
+                continue
+            }
 
-        if (config.sendConfig.executorConfig != null) {
-            // We ask the endpoint SDK whether this config has already been applied
-            //
-            // We need to ask not for the final config formed of the default config and the app config,
-            // we only need to check the app config
-            const hasExecutorConfig = await endpointSdk.hasAppExecutorConfig(
-                from.address,
-                currentSendLibrary,
-                to.eid,
-                config.sendConfig.executorConfig
+            const oappSdk = await createSdk(from)
+            const endpointSdk = await oappSdk.getEndpointSDK()
+            const currentSendLibrary = config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
+            assert(
+                currentSendLibrary !== undefined,
+                'sendLibrary has not been set in your config and no default value exists'
             )
 
-            if (!hasExecutorConfig) {
-                const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(currentSendLibrary, [
-                    { eid: to.eid, executorConfig: config.sendConfig.executorConfig },
-                ])
-
-                // Updates map with new configs for that OApp and Send Library
-                const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
-                const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
-                setConfigsByEndpointAndLibrary.set(
-                    from,
-                    setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+            if (config.sendConfig.executorConfig != null) {
+                // We ask the endpoint SDK whether this config has already been applied
+                //
+                // We need to ask not for the final config formed of the default config and the app config,
+                // we only need to check the app config
+                const hasExecutorConfig = await endpointSdk.hasAppExecutorConfig(
+                    from.address,
+                    currentSendLibrary,
+                    to.eid,
+                    config.sendConfig.executorConfig
                 )
+
+                logger.verbose(
+                    `Checked executor configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasExecutorConfig)}`
+                )
+
+                if (!hasExecutorConfig) {
+                    const newSetConfigs: SetConfigParam[] = await endpointSdk.getExecutorConfigParams(
+                        currentSendLibrary,
+                        [{ eid: to.eid, executorConfig: config.sendConfig.executorConfig }]
+                    )
+
+                    // Updates map with nw configs for that OApp and Send Library
+                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
+                    const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
+                    setConfigsByEndpointAndLibrary.set(
+                        from,
+                        setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+                    )
+
+                    const updatedConfigList =
+                        setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
+                    const updatedConfigListCsv = updatedConfigList
+                        .map(
+                            (setConfigParam) =>
+                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
+                        )
+                        .join(', ')
+                    logger.verbose(
+                        `Set executor configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`
+                    )
+                }
+            }
+
+            if (config.sendConfig.ulnConfig != null) {
+                // We ask the endpoint SDK whether this config has already been applied
+                //
+                // We need to ask not for the final config formed of the default config and the app config,
+                // we only need to check the app config
+                const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
+                    from.address,
+                    currentSendLibrary,
+                    to.eid,
+                    config.sendConfig.ulnConfig
+                )
+
+                logger.verbose(
+                    `Checked Uln configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasUlnConfig)}`
+                )
+
+                if (!hasUlnConfig) {
+                    const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
+                        { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                    ])
+
+                    // Updates map with new configs for that OApp and Send Library
+                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
+                    const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
+                    setConfigsByEndpointAndLibrary.set(
+                        from,
+                        setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+                    )
+
+                    const updatedConfigList =
+                        setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
+                    const updatedConfigListCsv = updatedConfigList
+                        .map(
+                            (setConfigParam) =>
+                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
+                        )
+                        .join(', ')
+                    logger.verbose(
+                        `Set Uln configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`
+                    )
+                }
             }
         }
 
-        if (config.sendConfig.ulnConfig != null) {
+        // This function iterates over the map (OApp -> SendLibrary -> SetConfigParam[]) to execute setConfig
+        return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
+    },
+    {
+        onStart: (logger) => logger.verbose(`Checking send configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked send configuration`),
+    }
+)
+
+export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
+    async (graph, createSdk) => {
+        const logger = createOAppLogger()
+
+        // This function builds a map to find all SetConfigParam[] to execute for a given OApp and ReceiveLibrary
+        const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
+        for (const {
+            vector: { from, to },
+            config,
+        } of graph.connections) {
+            if (config?.receiveConfig?.ulnConfig == null) {
+                logger.verbose(`ulnConfig not set for ${formatOmniVector({ from, to })}, skipping`)
+                continue
+            }
+
+            const oappSdk = await createSdk(from)
+            const endpointSdk = await oappSdk.getEndpointSDK()
+            const [currentReceiveLibrary] = config?.receiveLibraryConfig?.receiveLibrary
+                ? [config.receiveLibraryConfig?.receiveLibrary, false]
+                : await endpointSdk.getReceiveLibrary(from.address, to.eid)
+            assert(
+                currentReceiveLibrary !== undefined,
+                'receiveLibrary has not been set in your config and no default value exists'
+            )
+
             // We ask the endpoint SDK whether this config has already been applied
             //
             // We need to ask not for the final config formed of the default config and the app config,
             // we only need to check the app config
             const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
                 from.address,
-                currentSendLibrary,
+                currentReceiveLibrary,
                 to.eid,
-                config.sendConfig.ulnConfig
+                config.receiveConfig.ulnConfig
+            )
+
+            logger.verbose(
+                `Checked Uln configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasUlnConfig)}`
             )
 
             if (!hasUlnConfig) {
-                const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
-                    { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
+                    { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
                 ])
 
-                // Updates map with new configs for that OApp and Send Library
+                // Updates map with new configs for that OApp and Receive Library
                 const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
-                const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
+                const existingSetConfigs = setConfigsByLibrary.get(currentReceiveLibrary) ?? []
                 setConfigsByEndpointAndLibrary.set(
                     from,
-                    setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
+                    setConfigsByLibrary.set(currentReceiveLibrary, [...existingSetConfigs, ...newSetConfigs])
                 )
+
+                const updatedConfigList =
+                    setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentReceiveLibrary) ?? []
+                const updatedConfigListCsv = updatedConfigList
+                    .map(
+                        (setConfigParam) =>
+                            '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
+                    )
+                    .join(', ')
+                logger.verbose(`Set Uln configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`)
             }
         }
+
+        // This function iterates over the map (OApp -> ReceiveLibrary -> SetConfigParam[]) to execute setConfig
+        return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
+    },
+    {
+        onStart: (logger) => logger.verbose(`Checking receive configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive configuration`),
     }
+)
 
-    // This function iterates over the map (OApp -> SendLibrary -> SetConfigParam[]) to execute setConfig
-    return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
-}
+export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
+    async (graph, createSdk) => {
+        const logger = createOAppLogger()
+        // This function builds a map to find all OAppEnforcedOptionParam[] to execute for a given OApp
+        const setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]> = new OmniPointMap()
 
-export const configureReceiveConfig: OAppConfigurator = async (graph, createSdk) => {
-    // This function builds a map to find all SetConfigParam[] to execute for a given OApp and ReceiveLibrary
-    const setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>> = new OmniPointMap()
-    for (const {
-        vector: { from, to },
-        config,
-    } of graph.connections) {
-        if (config?.receiveConfig?.ulnConfig == null) {
-            continue
-        }
+        for (const {
+            vector: { from, to },
+            config,
+        } of graph.connections) {
+            if (config?.enforcedOptions == null) {
+                logger.verbose(`Enforced options not set for ${formatOmniVector({ from, to })}, skipping`)
+                continue
+            }
+            const oappSdk = await createSdk(from)
 
-        const oappSdk = await createSdk(from)
-        const endpointSdk = await oappSdk.getEndpointSDK()
-        const [currentReceiveLibrary] = config?.receiveLibraryConfig?.receiveLibrary
-            ? [config.receiveLibraryConfig?.receiveLibrary, false]
-            : await endpointSdk.getReceiveLibrary(from.address, to.eid)
-        assert(
-            currentReceiveLibrary !== undefined,
-            'receiveLibrary has not been set in your config and no default value exists'
-        )
-
-        // We ask the endpoint SDK whether this config has already been applied
-        //
-        // We need to ask not for the final config formed of the default config and the app config,
-        // we only need to check the app config
-        const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
-            from.address,
-            currentReceiveLibrary,
-            to.eid,
-            config.receiveConfig.ulnConfig
-        )
-
-        if (!hasUlnConfig) {
-            const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
-                { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
-            ])
-
-            // Updates map with new configs for that OApp and Receive Library
-            const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
-            const existingSetConfigs = setConfigsByLibrary.get(currentReceiveLibrary) ?? []
-            setConfigsByEndpointAndLibrary.set(
-                from,
-                setConfigsByLibrary.set(currentReceiveLibrary, [...existingSetConfigs, ...newSetConfigs])
+            // combines enforced options together by msgType
+            const enforcedOptionsByMsgType = config.enforcedOptions.reduce(
+                enforcedOptionsReducer,
+                new Map<number, Options>()
             )
-        }
-    }
 
-    // This function iterates over the map (OApp -> ReceiveLibrary -> SetConfigParam[]) to execute setConfig
-    return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
-}
+            // We ask the oapp SDK whether this config has already been applied
+            for (const [msgType, options] of enforcedOptionsByMsgType) {
+                const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
+                logger.verbose(
+                    `Checked current enforced options for ${formatOmniVector({ from, to })}: ${currentEnforcedOption}`
+                )
+                if (currentEnforcedOption !== options.toHex()) {
+                    // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
+                    const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
+                    setConfigsByLibrary.push({
+                        eid: to.eid,
+                        option: {
+                            msgType,
+                            options: options.toHex(),
+                        },
+                    })
+                    setEnforcedOptionsByEndpoint.set(from, setConfigsByLibrary)
 
-export const configureEnforcedOptions: OAppConfigurator = async (graph, createSdk) => {
-    // This function builds a map to find all OAppEnforcedOptionParam[] to execute for a given OApp
-    const setEnforcedOptionsByEndpoint: OmniPointMap<OAppEnforcedOptionParam[]> = new OmniPointMap()
-
-    for (const {
-        vector: { from, to },
-        config,
-    } of graph.connections) {
-        if (config?.enforcedOptions == null) {
-            continue
-        }
-        const oappSdk = await createSdk(from)
-
-        // combines enforced options together by msgType
-        const enforcedOptionsByMsgType = config.enforcedOptions.reduce(
-            enforcedOptionsReducer,
-            new Map<number, Options>()
-        )
-
-        // We ask the oapp SDK whether this config has already been applied
-        for (const [msgType, options] of enforcedOptionsByMsgType) {
-            const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
-            if (currentEnforcedOption !== options.toHex()) {
-                // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
-                const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
-                setConfigsByLibrary.push({
-                    eid: to.eid,
-                    option: {
-                        msgType,
-                        options: options.toHex(),
-                    },
-                })
-                setEnforcedOptionsByEndpoint.set(from, setConfigsByLibrary)
+                    const updatedEnforcedOptionsCsv = setEnforcedOptionsByEndpoint
+                        .getOrElse(from, () => [])
+                        .map(
+                            (enforcedOption) =>
+                                '{msgType: ' +
+                                enforcedOption.option?.msgType +
+                                ', options: ' +
+                                enforcedOption.option?.options +
+                                '}'
+                        )
+                        .join(', ')
+                    logger.verbose(
+                        `Set enforced options ${updatedEnforcedOptionsCsv} for ${formatOmniVector({ from, to })}`
+                    )
+                }
             }
         }
-    }
 
-    // This function iterates over the map (OApp -> OAppEnforcedOptionParam[]) to execute setEnforcedOptions
-    return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
-}
+        // This function iterates over the map (OApp -> OAppEnforcedOptionParam[]) to execute setEnforcedOptions
+        return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
+    },
+    {
+        onStart: (logger) => logger.verbose(`Checking enforced options`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked enforced options`),
+    }
+)
 
 const buildOmniTransactions = async (
     setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
