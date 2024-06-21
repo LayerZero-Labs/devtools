@@ -1,0 +1,25 @@
+{
+  "name": "@layerzerolabs/oft",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
+  "scripts": {
+    "build": "$npm_execpath workspaces foreach --all run build",
+    "clean": "$npm_execpath workspaces foreach --all run clean",
+    "test": "$npm_execpath workspaces foreach --all run test"
+  },
+  "devDependencies": {
+    "@layerzerolabs/prettier-config-next": "^2.0.1",
+    "@layerzerolabs/solhint-config": "^2.0.1",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "solhint": "^4.0.0",
+    "typescript": "^4.3.5"
+  },
+  "packageManager": "yarn@4.0.2",
+  "engines": {
+    "node": ">=18.12.0"
+  }
+}
