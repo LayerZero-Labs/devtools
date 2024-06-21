@@ -18,6 +18,7 @@ export const resolveSimulationConfig = (
 ): SimulationConfig => ({
     port: userConfig.port ?? 8545,
     directory: resolve(hardhatConfig.paths.root, userConfig.directory ?? '.layerzero'),
+    overwriteAccounts: userConfig.overwriteAccounts ?? true,
     anvil: {
         // For now we'll hardcode the mnemonic we'll use to seed the accounts on the simulation networks
         mnemonic: 'test test test test test test test test test test test junk',
@@ -88,6 +89,22 @@ export const getHardhatNetworkOverrides = (
                 //
                 // This is the nginx server listening on the port we configured in the simulation configuration
                 url: new URL(networkName, `http://localhost:${config.port}`).toString(),
+                accounts: config.overwriteAccounts
+                    ? // When overwriting accounts, all the accounts will be switched to the anvil config
+                      // (or reasonable defaults if not provided)
+                      {
+                          mnemonic: config.anvil.mnemonic,
+                          // These need to be defaulted to the anvil options
+                          // (or the anvil defaults)
+                          //
+                          // See https://book.getfoundry.sh/reference/cli/anvil for anvil defaults
+                          count: config.anvil.count ?? 10,
+                          path: config.anvil.derivationPath ?? "m/44'/60'/0'/0/",
+                          // These will be hardcoded for now as anvil does not support setting these
+                          initialIndex: 0,
+                          passphrase: '',
+                      }
+                    : networkConfig.accounts,
             })
         )
     )
