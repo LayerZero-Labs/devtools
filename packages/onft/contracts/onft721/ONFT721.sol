@@ -20,6 +20,7 @@ abstract contract ONFT721 is ONFT721Core, ERC721 {
         address _delegate
     ) ERC721(_name, _symbol) ONFT721Core(_lzEndpoint, _delegate) {}
 
+    /// @notice Retrieves the address of the underlying ERC721 implementation (this contract).
     function token() external view returns (address tokenAddress) {
         tokenAddress = address(this);
     }

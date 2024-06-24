@@ -61,7 +61,11 @@ contract ONFT721Test is ONFT721Base {
 
     function batch_helper(uint256 numIds, uint16 batchSize) internal {
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
-        enforcedOptions[0] = EnforcedOptionParam(B_EID, 1, OptionsBuilder.newOptions().addExecutorLzReceiveOption(100_000, 0));
+        enforcedOptions[0] = EnforcedOptionParam(
+            B_EID,
+            1,
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(100_000, 0)
+        );
         OAppOptionsType3(address(aONFT)).setEnforcedOptions(enforcedOptions);
         uint256[] memory ids = createIds(numIds);
 
@@ -85,6 +89,4 @@ contract ONFT721Test is ONFT721Base {
     function test_onft721_batch_one() public {
         batch_helper(10_000, 1);
     }
-
-    // TODO test that fails due to LZ_MessageLib_InvalidMessageSize (~300-310)
 }
