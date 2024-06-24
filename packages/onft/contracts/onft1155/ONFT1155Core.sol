@@ -26,7 +26,7 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
     // @dev This can be extended in child contracts for non-default oft operations
     // @dev These values are used in combineOptions() and OAppOptionsType3.sol.
     uint16 public constant SEND = 1;
-    uint16 public constant SEND_AND_CALL = 2;
+    uint16 public constant SEND_AND_COMPOSE = 2;
 
     constructor(address _lzEndpoint, address _delegate) Ownable(_delegate) OApp(_lzEndpoint, _delegate) {}
 
@@ -69,7 +69,7 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
             _sendParam.composeMessage
         );
 
-        uint16 msgType = hasCompose ? SEND_AND_CALL : SEND;
+        uint16 msgType = hasCompose ? SEND_AND_COMPOSE : SEND;
         // TODO: look at how gasLimit is done in StargateV2 for batch sending. First, profile gas as this might be a little different.
         options = combineOptions(_sendParam.dstEid, msgType, _sendParam.extraOptions);
 
@@ -84,7 +84,6 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt) {
         // TODO checks on _sendParam
-
         _debit(_sendParam.tokenIds, _sendParam.amounts, _sendParam.dstEid);
 
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
