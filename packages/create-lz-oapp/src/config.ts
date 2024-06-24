@@ -31,6 +31,13 @@ export const EXAMPLES: Example[] = [
         directory: 'examples/oapp',
         ref,
     },
+    {
+        id: 'onft721',
+        label: 'ONFT721',
+        repository: 'file:/Users/ryandgoulding/WebstormProjects/devtools',
+        directory: 'examples/onft721',
+        ref,
+    },
 ]
 
 export const PACKAGE_MANAGERS: PackageManager[] = [
