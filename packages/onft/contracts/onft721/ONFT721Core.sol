@@ -29,7 +29,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
     // @dev This can be extended in child contracts for non-default oft operations
     // @dev These values are used in things like combineOptions() in OAppOptionsType3.sol.
     uint16 public constant SEND = 1;
-    uint16 public constant SEND_AND_CALL = 2;
+    uint16 public constant SEND_AND_COMPOSE = 2;
 
     // Address of an optional contract to inspect both 'message' and 'options'
     address public msgInspector;
@@ -83,7 +83,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
     ) internal view virtual returns (bytes memory message, bytes memory options) {
         bool hasCompose;
         (message, hasCompose) = ONFT721MsgCodec.encode(_sendParam.to, _sendParam.tokenIds[0], _sendParam.composeMsg);
-        uint16 msgType = hasCompose ? SEND_AND_CALL : SEND;
+        uint16 msgType = hasCompose ? SEND_AND_COMPOSE : SEND;
 
         options = combineOptions(_sendParam.dstEid, msgType, _sendParam.extraOptions);
 

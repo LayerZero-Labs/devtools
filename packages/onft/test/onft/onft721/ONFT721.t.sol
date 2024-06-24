@@ -81,13 +81,8 @@ contract ONFT721Test is ONFT721Base {
     }
 
     function test_send_onft(uint8 _tokenToSend) public {
-        SendParam memory sendParam = SendParam(
-            B_EID,
-            addressToBytes32(bob),
-            toSingletonArray(_tokenToSend),
-            _createDefaultExecutorLzReceiveOptions(),
-            ""
-        );
+        _setMeshDefaultEnforcedSendOption();
+        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(bob), toSingletonArray(_tokenToSend), "", "");
         MessagingFee memory fee = aONFT.quoteSend(sendParam, false);
 
         assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
@@ -258,46 +253,70 @@ contract ONFT721Test is ONFT721Base {
         composeMsg = ONFT721MsgCodec.composeMsg(_message);
     }
 
-    function test_onft_build_msg(uint256 _tokenId, bytes memory _composeMsg) public {
-        uint32 dstEid = B_EID;
-        bytes32 to = addressToBytes32(alice);
+    function test_onft_build_msg(
+        uint256 _tokenId,
+        bytes memory _composeMsg,
+        uint128 _baseGas,
+        uint128 _value,
+        uint128 _composeGas
+    ) public {
+        vm.assume(_baseGas > 0);
+        vm.assume(_composeGas > 0);
 
-        bytes memory extraOptions = _createDefaultExecutorLzReceiveOptions();
-        SendParam memory sendParam = SendParam(dstEid, to, toSingletonArray(_tokenId), extraOptions, _composeMsg);
+        bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(_baseGas, _value);
+        if (_composeMsg.length > 0) extraOptions = extraOptions.addExecutorLzComposeOption(0, _composeGas, _value);
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(alice),
+            toSingletonArray(_tokenId),
+            extraOptions,
+            _composeMsg
+        );
 
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
 
         assertEq(options, extraOptions);
-        (bool isComposed, bytes32 sendTo, uint256 tokenId, bytes memory composeMsg) = this.decodeONFTMsgCodec(
-            message
-        );
+        (bool isComposed, bytes32 sendTo, uint256 tokenId, bytes memory composeMsg) = this.decodeONFTMsgCodec(message);
         assertEq(isComposed, _composeMsg.length > 0);
-        assertEq(sendTo, to);
+        assertEq(sendTo, addressToBytes32(alice));
         assertEq(tokenId, _tokenId);
         bytes memory expectedComposeMsg = abi.encodePacked(addressToBytes32(address(this)), _composeMsg);
         assertEq(composeMsg, _composeMsg.length > 0 ? expectedComposeMsg : bytes(""));
     }
 
-    function test_onft_build_msg_no_compose_msg(uint256 _tokenId) public {
-        uint32 dstEid = B_EID;
-        bytes32 to = addressToBytes32(alice);
-
-        bytes memory extraOptions = _createDefaultExecutorLzReceiveOptions();
-        SendParam memory sendParam = SendParam(dstEid, to, toSingletonArray(_tokenId), extraOptions, "");
+    function test_onft_build_msg_no_compose_msg(
+        uint256 _tokenId,
+        bool _useEnforcedOptions,
+        bool _useExtraOptions,
+        uint128 _lzReceiveGas,
+        uint128 _lzReceiveValue
+    ) public {
+        if (_useEnforcedOptions) _setMeshDefaultEnforcedSendOption();
+        bytes memory extraOptions = _useExtraOptions
+            ? OptionsBuilder.newOptions().addExecutorLzReceiveOption(_lzReceiveGas, _lzReceiveValue)
+            : bytes("");
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(alice),
+            toSingletonArray(_tokenId),
+            extraOptions,
+            ""
+        );
 
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
-
-        assertEq(options, extraOptions);
-        (bool isComposed_, bytes32 sendTo_, uint256 tokenId_, bytes memory composeMsg_) = this
-            .decodeONFTMsgCodec(message);
+        assertEq(options, aONFT.combineOptions(B_EID, 1, extraOptions));
+        (bool isComposed_, bytes32 sendTo_, uint256 tokenId_, bytes memory composeMsg_) = this.decodeONFTMsgCodec(
+            message
+        );
         assertEq(isComposed_, false);
-        assertEq(sendTo_, to);
+        assertEq(sendTo_, addressToBytes32(alice));
         assertEq(tokenId_, _tokenId);
         assertEq(composeMsg_.length, 0);
         assertEq(composeMsg_, "");
     }
 
     function test_set_enforced_options(
+        uint32 _eid,
         uint128 _optionTypeOneGas,
         uint128 _optionTypeOneValue,
         uint128 _optionTypeTwoGas,
@@ -309,7 +328,6 @@ contract ONFT721Test is ONFT721Base {
                 _optionTypeTwoGas > 0 &&
                 _optionTypeTwoGas < type(uint128).max
         );
-        uint32 eid = 1;
 
         bytes memory optionsTypeOne = OptionsBuilder.newOptions().addExecutorLzReceiveOption(
             _optionTypeOneGas,
@@ -321,32 +339,31 @@ contract ONFT721Test is ONFT721Base {
         );
 
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](2);
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, optionsTypeOne);
-        enforcedOptions[1] = EnforcedOptionParam(eid, 2, optionsTypeTwo);
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, optionsTypeOne);
+        enforcedOptions[1] = EnforcedOptionParam(_eid, 2, optionsTypeTwo);
 
         aONFT.setEnforcedOptions(enforcedOptions);
 
-        assertEq(aONFT.enforcedOptions(eid, 1), optionsTypeOne);
-        assertEq(aONFT.enforcedOptions(eid, 2), optionsTypeTwo);
+        assertEq(aONFT.enforcedOptions(_eid, 1), optionsTypeOne);
+        assertEq(aONFT.enforcedOptions(_eid, 2), optionsTypeTwo);
     }
 
-    function test_assert_options_type3_revert() public {
-        uint32 eid = 1;
+    function test_assert_options_type3_revert(uint32 _eid) public {
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
 
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0004"); // not type 3
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0004"); // not type 3
         vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0004"));
         aONFT.setEnforcedOptions(enforcedOptions);
 
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0002"); // not type 3
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0002"); // not type 3
         vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0002"));
         aONFT.setEnforcedOptions(enforcedOptions);
 
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0001"); // not type 3
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0001"); // not type 3
         vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0001"));
         aONFT.setEnforcedOptions(enforcedOptions);
 
-        enforcedOptions[0] = EnforcedOptionParam(eid, 1, hex"0003"); // IS type 3
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0003"); // IS type 3
         aONFT.setEnforcedOptions(enforcedOptions); // doesnt revert because option type 3
     }
 

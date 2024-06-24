@@ -22,7 +22,7 @@
     "contracts/**/*"
   ],
   "scripts": {
-    "build": "forge build && $npm_execpath build-hardhat",
+    "build": "forge build",
     "build-contracts": "forge build && $npm_execpath hardhat compile --no-typechain --no-copy-artifacts && $npm_execpath hardhat size-contracts --no-compile",
     "build-hardhat": "$npm_execpath hardhat compile",
     "coverage:foundry": "forge coverage",
@@ -59,8 +59,8 @@
     "@layerzerolabs/toolbox-hardhat": "~0.2.21",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "@openzeppelin/contracts": "^5.0.1",
-    "@openzeppelin/contracts-upgradeable": "^5.0.1",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@rushstack/eslint-patch": "^1.7.0",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",

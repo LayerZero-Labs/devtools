@@ -4,9 +4,7 @@ pragma solidity >=0.8.0;
 
 import { MessagingFee, MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol";
 
-/**
- * @dev Struct representing token parameters for the ONFT send() operation.
- */
+/// @dev Struct representing token parameters for the ONFT send() operation.
 struct SendParam {
     uint32 dstEid; // Destination endpoint ID.
     bytes32 to; // Recipient address.
@@ -15,11 +13,9 @@ struct SendParam {
     bytes composeMsg; // The composed message for the send() operation.
 }
 
-/**
- * @title IONFT
- * @dev Interface for the ONFT721 token.
- * @dev Does not inherit ERC721 to accommodate usage by OFT721Adapter.
- */
+/// @title IONFT
+/// @dev Interface for the ONFT721 token.
+/// @dev Does not inherit ERC721 to accommodate usage by OFT721Adapter.
 interface IONFT721 {
     // Custom error messages
     error UnapprovedSender(address caller);
@@ -39,59 +35,45 @@ interface IONFT721 {
         uint256[] tokenId // ONFT IDs received.
     );
 
-    /**
-     * @notice Retrieves interfaceID and the version of the ONFT.
-     * @return interfaceId The interface ID.
-     * @return version The version.
-     *
-     * @dev interfaceId: This specific interface ID is '0x94642228'.
-     * @dev version: Indicates a cross-chain compatible msg encoding with other ONFTs.
-     * @dev If a new feature is added to the ONFT cross-chain msg encoding, the version will be incremented.
-     * ie. localONFT version(x,1) CAN send messages to remoteONFT version(x,1)
-     */
+    /// @notice Retrieves interfaceID and the version of the ONFT.
+    /// @return interfaceId The interface ID.
+    /// @return version The version.
+    /// @dev interfaceId: This specific interface ID is '0x94642228'.
+    /// @dev version: Indicates a cross-chain compatible msg encoding with other ONFTs.
+    /// @dev If a new feature is added to the ONFT cross-chain msg encoding, the version will be incremented.
+    /// ie. localONFT version(x,1) CAN send messages to remoteONFT version(x,1)
     function onftVersion() external view returns (bytes4 interfaceId, uint64 version);
 
-    /**
-     * @notice Retrieves the address of the token associated with the ONFT.
-     * @return token The address of the ERC721 token implementation.
-     */
+    /// @notice Retrieves the address of the token associated with the ONFT.
+    /// @return token The address of the ERC721 token implementation.
     function token() external view returns (address);
 
-    /**
-     * @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
-     * @return requiresApproval Needs approval of the underlying token implementation.
-     *
-     * @dev Allows things like wallet implementers to determine integration requirements,
-     * without understanding the underlying token implementation.
-     */
+    /// @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
+    /// @return requiresApproval Needs approval of the underlying token implementation.
+    /// @dev Allows things like wallet implementers to determine integration requirements,
+    /// without understanding the underlying token implementation.
     function approvalRequired() external view returns (bool);
 
-    /**
-     * @notice Provides a quote for the send() operation.
-     * @param _sendParam The parameters for the send() operation.
-     * @param _payInLzToken Flag indicating whether the caller is paying in the LZ token.
-     * @return fee The calculated LayerZero messaging fee from the send() operation.
-     *
-     * @dev MessagingFee: LayerZero msg fee
-     *  - nativeFee: The native fee.
-     *  - lzTokenFee: The lzToken fee.
-     */
+    /// @notice Provides a quote for the send() operation.
+    /// @param _sendParam The parameters for the send() operation.
+    /// @param _payInLzToken Flag indicating whether the caller is paying in the LZ token.
+    /// @return fee The calculated LayerZero messaging fee from the send() operation.
+    /// @dev MessagingFee: LayerZero msg fee
+    ///  - nativeFee: The native fee.
+    ///  - lzTokenFee: The lzToken fee.
     function quoteSend(SendParam calldata _sendParam, bool _payInLzToken) external view returns (MessagingFee memory);
 
-    /**
-     * @notice Executes the send() operation.
-     * @param _sendParam The parameters for the send operation.
-     * @param _fee The fee information supplied by the caller.
-     *      - nativeFee: The native fee.
-     *      - lzTokenFee: The lzToken fee.
-     * @param _refundAddress The address to receive any excess funds from fees etc. on the src.
-     * @return receipt The LayerZero messaging receipt from the send() operation.
-     *
-     * @dev MessagingReceipt: LayerZero msg receipt
-     *  - guid: The unique identifier for the sent message.
-     *  - nonce: The nonce of the sent message.
-     *  - fee: The LayerZero fee incurred for the message.
-     */
+    /// @notice Executes the send() operation.
+    /// @param _sendParam The parameters for the send operation.
+    /// @param _fee The fee information supplied by the caller.
+    ///      - nativeFee: The native fee.
+    ///      - lzTokenFee: The lzToken fee.
+    /// @param _refundAddress The address to receive any excess funds from fees etc. on the src.
+    /// @return receipt The LayerZero messaging receipt from the send() operation.
+    /// @dev MessagingReceipt: LayerZero msg receipt
+    ///  - guid: The unique identifier for the sent message.
+    ///  - nonce: The nonce of the sent message.
+    ///  - fee: The LayerZero fee incurred for the message.
     function send(
         SendParam calldata _sendParam,
         MessagingFee calldata _fee,
