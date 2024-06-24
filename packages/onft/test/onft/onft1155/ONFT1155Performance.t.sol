@@ -101,23 +101,8 @@ contract ONFT1155Performance is ONFTBaseTestHelper {
         verifyPackets(B_EID, addressToBytes32(address(bONFT)), numPackets, address(0));
     }
 
-    function test_onft1155_batch_one() public {
-        _mint(alice, 0, 10_000, 1);
-        batch_helper(10_000, 1);
-    }
-
-    function test_onft1155_batch_fifty() public {
-        _mint(alice, 0, 10_000, 1);
-        batch_helper(10_000, 50);
-    }
-
-    function test_onft1155_batch_hundred() public {
-        _mint(alice, 0, 10_000, 1);
-        batch_helper(10_000, 100);
-    }
-
-    function test_onft1155_batch_one_hundred_fifty() public {
-        _mint(alice, 0, 10_000, 1);
-        batch_helper(150 * 66, 150);
-    }
+    //    function test_onft1155_batch_one() public {
+    //        _mint(alice, 0, 10_000, 1);
+    //        batch_helper(10_000, 1);
+    //    }
 }

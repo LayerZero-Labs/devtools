@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
+import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
+import { EnforcedOptionParam, OAppOptionsType3 } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
+
 import { ERC721Mock } from "./mocks/ERC721Mock.sol";
 import { ONFT721Mock } from "./mocks/ONFT721Mock.sol";
 import { ONFT721AdapterMock } from "./mocks/ONFT721AdapterMock.sol";
@@ -9,6 +12,8 @@ import { InspectorMock, IOAppMsgInspector } from "../../mocks/InspectorMock.sol"
 import { ONFTBaseTestHelper } from "../ONFTBaseTestHelper.sol";
 
 abstract contract ONFT721Base is ONFTBaseTestHelper {
+    using OptionsBuilder for bytes;
+
     string internal constant A_ONFT_NAME = "aONFT";
     string internal constant A_ONFT_SYMBOL = "aONFT";
     string internal constant B_ONFT_NAME = "bONFT";
@@ -30,6 +35,7 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
 
         _deployONFTs();
         _wireAndMintInitial();
+//        _setMeshDefaultEnforcedSendOption();
     }
 
     /// @dev deploy ONFTs
@@ -63,5 +69,27 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
         for (uint256 i = numONFTsPerEID * 2; i < numONFTsPerEID * 3; i++) {
             cERC721Mock.mint(charlie, i);
         }
+    }
+
+    function _setMeshDefaultEnforcedSendOption() internal {
+        for (uint32 i = 0; i <= 3; i++) {
+            _setDefaultEnforcedSendOption(address(aONFT), i);
+            _setDefaultEnforcedSendOption(address(bONFT), i);
+            _setDefaultEnforcedSendOption(address(cONFTAdapter), i);
+        }
+    }
+
+    function _setDefaultEnforcedSendOption(address _onft, uint32 _eid) internal {
+        _setEnforcedSendOption(_onft, _eid, 200_000);
+    }
+
+    function _setEnforcedSendOption(address _onft, uint32 _eid, uint128 _gas) internal {
+        _setEnforcedOption(_onft, _eid, 1, OptionsBuilder.newOptions().addExecutorLzReceiveOption(_gas, 0));
+    }
+
+    function _setEnforcedOption(address _onft, uint32 _eid, uint16 _optionId, bytes memory _options) internal {
+        EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
+        enforcedOptions[0] = EnforcedOptionParam(_eid, _optionId, _options);
+        OAppOptionsType3(_onft).setEnforcedOptions(enforcedOptions);
     }
 }

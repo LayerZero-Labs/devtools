@@ -985,10 +985,10 @@ importers:
         specifier: ^2.2.3
         version: 2.2.3(ethers@5.7.2)(hardhat@2.22.3)
       '@openzeppelin/contracts':
-        specifier: ^5.0.1
+        specifier: ^5.0.2
         version: 5.0.2
       '@openzeppelin/contracts-upgradeable':
-        specifier: ^5.0.1
+        specifier: ^5.0.2
         version: 5.0.2(@openzeppelin/contracts@5.0.2)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
