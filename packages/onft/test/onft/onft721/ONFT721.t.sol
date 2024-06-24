@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
+import { IERC721Receiver } from "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
 import { ONFTComposeMsgCodec } from "../../../contracts/libs/ONFTComposeMsgCodec.sol";
+import { ONFT721Adapter } from "../../../contracts/onft721/ONFT721Adapter.sol";
 
+import { IONFT721 } from "../../../contracts/onft721/interfaces/IONFT721.sol";
 import { ERC721Mock } from "./mocks/ERC721Mock.sol";
 import { ONFT721MsgCodec } from "../../../contracts/onft721/libs/ONFT721MsgCodec.sol";
 import { ComposerMock } from "../../mocks/ComposerMock.sol";
@@ -22,43 +25,10 @@ import { ONFT721Base } from "./ONFT721Base.sol";
 contract ONFT721Test is ONFT721Base {
     using OptionsBuilder for bytes;
 
-    uint128 internal constant DEFAULT_EXTRA_OPTIONS_GAS = 200_000;
-    uint128 internal constant DEFAULT_EXTRA_OPTIONS_VALUE = 0;
     bytes4 internal constant EXPECTED_ONFT721_ID = 0x94642228;
     uint8 internal constant EXPECTED_ONFT721_VERSION = 1;
 
-    function _deployONFTs() internal override {
-        aONFT = ONFT721Mock(
-            _deployOApp(
-                type(ONFT721Mock).creationCode,
-                abi.encode(A_ONFT_NAME, A_ONFT_SYMBOL, address(endpoints[A_EID]), address(this))
-            )
-        );
-
-        bONFT = ONFT721Mock(
-            _deployOApp(
-                type(ONFT721Mock).creationCode,
-                abi.encode(B_ONFT_NAME, B_ONFT_SYMBOL, address(endpoints[B_EID]), address(this))
-            )
-        );
-
-        cERC721Mock = new ERC721Mock(C_TOKEN_NAME, C_TOKEN_SYMBOL);
-        cONFTAdapter = ONFT721AdapterMock(
-            _deployOApp(
-                type(ONFT721AdapterMock).creationCode,
-                abi.encode(address(cERC721Mock), address(endpoints[C_EID]), address(this))
-            )
-        );
-    }
-
-    function _createDefaultExecutorLzReceiveOptions() internal pure returns (bytes memory) {
-        return
-            OptionsBuilder.newOptions().addExecutorLzReceiveOption(
-                DEFAULT_EXTRA_OPTIONS_GAS,
-                DEFAULT_EXTRA_OPTIONS_VALUE
-            );
-    }
-
+    // also tests token() function
     function test_constructor() public {
         assertEq(aONFT.owner(), address(this));
         assertEq(bONFT.owner(), address(this));
@@ -73,6 +43,12 @@ contract ONFT721Test is ONFT721Base {
         assertEq(cONFTAdapter.token(), address(cERC721Mock));
     }
 
+    function test_approvalRequired() public {
+        assertFalse(aONFT.approvalRequired());
+        assertFalse(bONFT.approvalRequired());
+        assertTrue(cONFTAdapter.approvalRequired());
+    }
+
     function test_onftVersion() public {
         (bytes4 interfaceId, uint64 version) = aONFT.onftVersion();
         bytes4 expectedId = EXPECTED_ONFT721_ID;
@@ -80,24 +56,103 @@ contract ONFT721Test is ONFT721Base {
         assertEq(version, EXPECTED_ONFT721_VERSION);
     }
 
-    function test_send_onft(uint8 _tokenToSend) public {
-        _setMeshDefaultEnforcedSendOption();
-        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(bob), toSingletonArray(_tokenToSend), "", "");
-        MessagingFee memory fee = aONFT.quoteSend(sendParam, false);
+    function _sendAndCheck(
+        uint16 _tokenToSend,
+        uint32 _srcEid,
+        uint32 _dstEid,
+        address _from,
+        address _to,
+        uint256 _srcCount,
+        uint256 _dstCount,
+        bool _srcIsAdapter,
+        bool _dstIsAdapter
+    ) internal {
+        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _toSingletonArray(_tokenToSend), "", "");
+        MessagingFee memory fee = IONFT721(onfts[_srcEid - 1]).quoteSend(sendParam, false);
 
-        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
+        vm.prank(_from);
+        IONFT721(onfts[_srcEid - 1]).send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        verifyPackets(_dstEid, addressToBytes32(address(onfts[_dstEid - 1])));
 
-        vm.prank(alice);
-        aONFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
-        verifyPackets(B_EID, addressToBytes32(address(bONFT)));
-
-        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID - 1);
-        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID + 1);
-        assertEq(bONFT.ownerOf(_tokenToSend), bob);
+        assertEq(
+            IERC721(!_srcIsAdapter ? onfts[_srcEid - 1] : ONFT721Adapter(onfts[_srcEid - 1]).token()).balanceOf(_from),
+            _srcCount - 1
+        );
+        assertEq(
+            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).balanceOf(_to),
+            _dstCount + 1
+        );
+        assertEq(
+            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).ownerOf(
+                _tokenToSend
+            ),
+            _to
+        );
     }
 
-    function test_send_onft_compose_msg(uint8 _tokenToSend, bytes memory _composeMsg) public {
+    function test_send(uint16 _tokenToSend) public {
+        // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
+        vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
+
+        // 2. Set enforced options for SEND
+        _setMeshDefaultEnforcedSendOption();
+
+        // 3. Sanity check token balances and _tokenToSend ownership
+        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(IERC721(cONFTAdapter.token()).ownerOf(_tokenToSend), charlie);
+
+        // 4. Send the same ONFT in a circle 10 times.
+        //   a) C->A
+        //   b) A->B
+        //   c) B->C
+        for (uint8 i = 0; i < 10; i++) {
+            vm.startPrank(charlie);
+            IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), _tokenToSend);
+            vm.stopPrank();
+            _sendAndCheck(
+                _tokenToSend,
+                C_EID,
+                A_EID,
+                charlie,
+                alice,
+                DEFAULT_INITIAL_ONFTS_PER_EID,
+                DEFAULT_INITIAL_ONFTS_PER_EID,
+                true,
+                false
+            );
+            _sendAndCheck(
+                _tokenToSend,
+                A_EID,
+                B_EID,
+                alice,
+                bob,
+                DEFAULT_INITIAL_ONFTS_PER_EID + 1,
+                DEFAULT_INITIAL_ONFTS_PER_EID,
+                false,
+                false
+            );
+            _sendAndCheck(
+                _tokenToSend,
+                B_EID,
+                C_EID,
+                bob,
+                charlie,
+                DEFAULT_INITIAL_ONFTS_PER_EID + 1,
+                DEFAULT_INITIAL_ONFTS_PER_EID - 1,
+                false,
+                true
+            );
+        }
+
+        // 5. Check the final balances
+        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+    }
+
+    function test_sendAndCompose(uint8 _tokenToSend, bytes memory _composeMsg) public {
         vm.assume(_composeMsg.length > 0);
 
         assertEq(aONFT.ownerOf(_tokenToSend), alice);
@@ -110,7 +165,7 @@ contract ONFT721Test is ONFT721Base {
         SendParam memory sendParam = SendParam(
             B_EID,
             addressToBytes32(address(composer)),
-            toSingletonArray(_tokenToSend),
+            _toSingletonArray(_tokenToSend),
             options,
             _composeMsg
         );
@@ -144,7 +199,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(composer.extraData(), composerMsg_); // default to setting the extraData to the message as well to test
     }
 
-    function test_onft_compose_codec(uint64 _nonce, uint32 _srcEid, bytes memory _composeMsg) public {
+    function test_ONFTComposeMsgCodec(uint64 _nonce, uint32 _srcEid, bytes memory _composeMsg) public {
         vm.assume(_composeMsg.length > 0);
 
         bytes memory message = ONFTComposeMsgCodec.encode(
@@ -152,7 +207,7 @@ contract ONFT721Test is ONFT721Base {
             _srcEid,
             abi.encodePacked(addressToBytes32(msg.sender), _composeMsg)
         );
-        (uint64 nonce, uint32 srcEid, bytes32 composeFrom, bytes memory composeMsg) = this.decodeONFTComposeMsgCodec(
+        (uint64 nonce, uint32 srcEid, bytes32 composeFrom, bytes memory composeMsg) = this._decodeONFTComposeMsgCodec(
             message
         );
 
@@ -162,7 +217,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(composeMsg, _composeMsg);
     }
 
-    function decodeONFTComposeMsgCodec(
+    function _decodeONFTComposeMsgCodec(
         bytes calldata _message
     ) public pure returns (uint64 nonce, uint32 srcEid, bytes32 composeFrom, bytes memory composeMsg) {
         nonce = ONFTComposeMsgCodec.nonce(_message);
@@ -171,12 +226,12 @@ contract ONFT721Test is ONFT721Base {
         composeMsg = ONFTComposeMsgCodec.composeMsg(_message);
     }
 
-    function toSingletonArray(uint256 _element) public pure returns (uint256[] memory array) {
+    function _toSingletonArray(uint256 _element) internal pure returns (uint256[] memory array) {
         array = new uint256[](1);
         array[0] = _element;
     }
 
-    function test_onft_debit(uint256 _tokenId) public {
+    function test_debit(uint256 _tokenId) public {
         vm.assume(_tokenId < DEFAULT_INITIAL_ONFTS_PER_EID);
         vm.assume(aONFT.ownerOf(_tokenId) == alice);
 
@@ -193,7 +248,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(aONFT.balanceOf(address(this)), 0);
     }
 
-    function test_onft_credit(uint256 _tokenId) public {
+    function test_credit(uint256 _tokenId) public {
         vm.assume(_tokenId >= DEFAULT_INITIAL_ONFTS_PER_EID);
         uint32 srcEid = A_EID;
 
@@ -208,7 +263,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(aONFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_adapter_debit_credit(uint256 _tokenId) public {
+    function test_ONFTAdapter_debitAndCredit(uint256 _tokenId) public {
         // Ensure that the tokenId is owned by userC
         vm.assume(_tokenId > DEFAULT_INITIAL_ONFTS_PER_EID * 2 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 3);
         vm.assume(cERC721Mock.ownerOf(_tokenId) == charlie);
@@ -244,7 +299,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(cERC721Mock.ownerOf(_tokenId), bob);
     }
 
-    function decodeONFTMsgCodec(
+    function _decodeONFTMsgCodec(
         bytes calldata _message
     ) public pure returns (bool isComposed, bytes32 sendTo, uint256 tokenId, bytes memory composeMsg) {
         isComposed = ONFT721MsgCodec.isComposed(_message);
@@ -253,7 +308,7 @@ contract ONFT721Test is ONFT721Base {
         composeMsg = ONFT721MsgCodec.composeMsg(_message);
     }
 
-    function test_onft_build_msg(
+    function test_buildMsgAndOptions(
         uint256 _tokenId,
         bytes memory _composeMsg,
         uint128 _baseGas,
@@ -268,7 +323,7 @@ contract ONFT721Test is ONFT721Base {
         SendParam memory sendParam = SendParam(
             B_EID,
             addressToBytes32(alice),
-            toSingletonArray(_tokenId),
+            _toSingletonArray(_tokenId),
             extraOptions,
             _composeMsg
         );
@@ -276,7 +331,7 @@ contract ONFT721Test is ONFT721Base {
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
 
         assertEq(options, extraOptions);
-        (bool isComposed, bytes32 sendTo, uint256 tokenId, bytes memory composeMsg) = this.decodeONFTMsgCodec(message);
+        (bool isComposed, bytes32 sendTo, uint256 tokenId, bytes memory composeMsg) = this._decodeONFTMsgCodec(message);
         assertEq(isComposed, _composeMsg.length > 0);
         assertEq(sendTo, addressToBytes32(alice));
         assertEq(tokenId, _tokenId);
@@ -284,7 +339,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(composeMsg, _composeMsg.length > 0 ? expectedComposeMsg : bytes(""));
     }
 
-    function test_onft_build_msg_no_compose_msg(
+    function test_buildMsgAndOptions_noComposition(
         uint256 _tokenId,
         bool _useEnforcedOptions,
         bool _useExtraOptions,
@@ -298,14 +353,14 @@ contract ONFT721Test is ONFT721Base {
         SendParam memory sendParam = SendParam(
             B_EID,
             addressToBytes32(alice),
-            toSingletonArray(_tokenId),
+            _toSingletonArray(_tokenId),
             extraOptions,
             ""
         );
 
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
         assertEq(options, aONFT.combineOptions(B_EID, 1, extraOptions));
-        (bool isComposed_, bytes32 sendTo_, uint256 tokenId_, bytes memory composeMsg_) = this.decodeONFTMsgCodec(
+        (bool isComposed_, bytes32 sendTo_, uint256 tokenId_, bytes memory composeMsg_) = this._decodeONFTMsgCodec(
             message
         );
         assertEq(isComposed_, false);
@@ -315,7 +370,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(composeMsg_, "");
     }
 
-    function test_set_enforced_options(
+    function test_setEnforcedOptions(
         uint32 _eid,
         uint128 _optionTypeOneGas,
         uint128 _optionTypeOneValue,
@@ -348,26 +403,22 @@ contract ONFT721Test is ONFT721Base {
         assertEq(aONFT.enforcedOptions(_eid, 2), optionsTypeTwo);
     }
 
-    function test_assert_options_type3_revert(uint32 _eid) public {
+    function test_assertOptionsType3(uint32 _eid, bytes2 _prefix) public {
+        vm.assume(_prefix != bytes2(0x0003));
+
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
 
-        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0004"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0004"));
-        aONFT.setEnforcedOptions(enforcedOptions);
+        bytes memory options = new bytes(2);
+        assembly {
+            mstore(add(options, 32), _prefix)
+        }
 
-        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0002"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0002"));
+        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, options); // not type 3
+        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, options));
         aONFT.setEnforcedOptions(enforcedOptions);
-
-        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0001"); // not type 3
-        vm.expectRevert(abi.encodeWithSelector(IOAppOptionsType3.InvalidOptions.selector, hex"0001"));
-        aONFT.setEnforcedOptions(enforcedOptions);
-
-        enforcedOptions[0] = EnforcedOptionParam(_eid, 1, hex"0003"); // IS type 3
-        aONFT.setEnforcedOptions(enforcedOptions); // doesnt revert because option type 3
     }
 
-    function test_combine_options(
+    function test_combineOptions(
         uint32 _eid,
         uint16 _msgType,
         uint128 _enforcedOptionGas,
@@ -398,7 +449,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_extra_options(
+    function test_combineOptions_noExtraOptions(
         uint32 _eid,
         uint16 _msgType,
         uint128 _enforcedOptionGas,
@@ -421,7 +472,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_enforced_options(
+    function test_combineOptions_noEnforcedOptions(
         uint32 _eid,
         uint16 _msgType,
         uint128 _combinedOptionNativeDrop
@@ -440,22 +491,32 @@ contract ONFT721Test is ONFT721Base {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_oapp_inspector_inspect(uint256 _tokenId, bytes32 _to) public {
+    function test_OAppInspector_inspect(uint256 _tokenId, bytes32 _to) public {
         uint32 dstEid = B_EID;
+        _setMeshDefaultEnforcedSendOption();
 
-        bytes memory extraOptions = _createDefaultExecutorLzReceiveOptions();
-        SendParam memory sendParam = SendParam(dstEid, _to, toSingletonArray(_tokenId), extraOptions, "");
+        SendParam memory sendParam = SendParam(dstEid, _to, _toSingletonArray(_tokenId), "", "");
 
         // doesnt revert
         (bytes memory message, ) = aONFT.buildMsgAndOptions(sendParam);
 
         // deploy a universal inspector, it automatically reverts
         oAppInspector = new InspectorMock();
-        // set the inspector
         aONFT.setMsgInspector(address(oAppInspector));
 
         // does revert because inspector is set
-        vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IOAppMsgInspector.InspectionFailed.selector,
+                message,
+                aONFT.enforcedOptions(B_EID, 1)
+            )
+        );
         (message, ) = aONFT.buildMsgAndOptions(sendParam);
+    }
+
+    function test_onERC721Received(address _operator, address _from, uint256 _tokenId, bytes memory _data) public {
+        bytes4 selector = cONFTAdapter.onERC721Received(_operator, _from, _tokenId, _data);
+        assertEq(selector, _operator == address(cONFTAdapter) ? IERC721Receiver.onERC721Received.selector : bytes4(0));
     }
 }
