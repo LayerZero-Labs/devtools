@@ -291,6 +291,114 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
+  examples/onft721:
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.3
+        version: 2.3.3(typescript@5.4.5)
+      '@layerzerolabs/lz-definitions':
+        specifier: ^2.3.3
+        version: 2.3.3
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^2.3.3
+        version: 2.3.3(@axelar-network/axelar-gmp-sdk-solidity@5.8.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.3)(@layerzerolabs/lz-evm-v1-0.7@2.3.3)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-oapp-v2':
+        specifier: ^2.3.3
+        version: 2.3.3(@layerzerolabs/lz-evm-messagelib-v2@2.3.3)(@layerzerolabs/lz-evm-protocol-v2@2.3.3)(@layerzerolabs/lz-evm-v1-0.7@2.3.3)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^2.3.3
+        version: 2.3.3(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^2.3.3
+        version: 2.3.3(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^2.3.3
+        version: 2.3.3
+      '@layerzerolabs/onft-evm':
+        specifier: file:../../packages/onft-evm
+        version: file:packages/onft-evm
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.3
+        version: 2.3.3
+      '@layerzerolabs/solhint-config':
+        specifier: ^2.3.3
+        version: 2.3.3(typescript@5.4.5)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~0.2.3
+        version: link:../../packages/test-devtools-evm-foundry
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.5
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.2.33
+        version: link:../../packages/toolbox-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.3)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.3)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.1
+        version: 5.0.2
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.1
+        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.7.0
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.11
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.6
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      chai:
+        specifier: ^4.4.1
+        version: 4.4.1
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.5
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.0(eslint@8.57.0)(typescript@5.4.5)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      hardhat:
+        specifier: ^2.22.3
+        version: 2.22.3(ts-node@10.9.2)(typescript@5.4.5)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.3)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      solhint:
+        specifier: ^4.1.1
+        version: 4.1.1(typescript@5.4.5)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@18.18.14)(typescript@5.4.5)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.4.5
+
   packages/build-lz-options:
     dependencies:
       yoga-layout-prebuilt:
@@ -942,7 +1050,7 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
 
-  packages/onft:
+  packages/onft-evm:
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -14914,6 +15022,12 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+
+  file:packages/onft-evm:
+    resolution: {directory: packages/onft-evm, type: directory}
+    name: onft-evm
+    engines: {node: '>=18.16.0'}
+    dev: true
 
   github.com/LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
     resolution: {tarball: https://codeload.github.com/LayerZero-Labs/es5-ext/tar.gz/7e360296a7e27176e240bc063b32f5ada55f9aa6}
