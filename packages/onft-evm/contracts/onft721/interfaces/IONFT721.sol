@@ -6,9 +6,9 @@ import { MessagingFee, MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/co
 
 /// @dev Struct representing token parameters for the ONFT send() operation.
 struct SendParam {
-    uint32 dstEid; // Destination endpoint ID.
+    uint32 dstEid; // Destination LayerZero EndpointV2 ID.
     bytes32 to; // Recipient address.
-    uint256[] tokenIds; // token ids
+    uint256 tokenId;
     bytes extraOptions; // Additional options supplied by the caller to be used in the LayerZero message.
     bytes composeMsg; // The composed message for the send() operation.
 }
@@ -25,14 +25,14 @@ interface IONFT721 {
         bytes32 indexed guid, // GUID of the ONFT message.
         uint32 dstEid, // Destination Endpoint ID.
         address indexed fromAddress, // Address of the sender on the src chain.
-        uint256[] tokenIds // ONFT IDS sent.
+        uint256 tokenId // ONFT ID sent.
     );
 
     event ONFTReceived(
         bytes32 indexed guid, // GUID of the ONFT message.
         uint32 srcEid, // Source Endpoint ID.
         address indexed toAddress, // Address of the recipient on the dst chain.
-        uint256[] tokenId // ONFT IDs received.
+        uint256 tokenId // ONFT ID received.
     );
 
     /// @notice Retrieves interfaceID and the version of the ONFT.
