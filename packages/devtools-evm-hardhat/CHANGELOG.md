@@ -1,5 +1,25 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.20
+
+### Patch Changes
+
+- cd963d1: Don't overwrite hardhat network accounts for the simulation
+
+## 0.3.19
+
+### Patch Changes
+
+- 2746ede: Add --follow flag to simulation logs task
+
+## 0.3.18
+
+### Patch Changes
+
+- 94e6bf8: Support contractName on OmniPoint
+- Updated dependencies [94e6bf8]
+  - @layerzerolabs/devtools@0.3.16
+
 ## 0.3.17
 
 ### Patch Changes

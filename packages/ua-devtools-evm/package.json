@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@ethersproject/address": "~5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.3.15",

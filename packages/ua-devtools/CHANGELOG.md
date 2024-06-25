@@ -1,5 +1,23 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.16
+
+### Patch Changes
+
+- 4ba3b17: Added logging to configureSendConfig, configureReceiveConfig, and configureEnforcedOptions
+
+## 0.3.15
+
+### Patch Changes
+
+- 4628f1f: Added logging for configureReceiveLibraries and configureReceiveLibraryTimeouts
+
+## 0.3.14
+
+### Patch Changes
+
+- d5b9257: Added logging to configureSendLibraries
+
 ## 0.3.13
 
 ### Patch Changes

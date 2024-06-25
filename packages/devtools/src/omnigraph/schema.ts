@@ -52,6 +52,7 @@ export const EndpointIdSchema: z.ZodSchema<EndpointId, z.ZodTypeDef, string | nu
 export const OmniPointSchema: z.ZodSchema<OmniPoint, z.ZodTypeDef, unknown> = z.object({
     address: AddressSchema,
     eid: EndpointIdSchema,
+    contractName: z.string().nullish(),
 })
 
 export const OmniVectorSchema: z.ZodSchema<OmniVector, z.ZodTypeDef, unknown> = z.object({

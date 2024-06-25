@@ -1,5 +1,17 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.2.6
+
+### Patch Changes
+
+- 68e91c6: Fix: package artifacts
+
+## 0.2.5
+
+### Patch Changes
+
+- 2053f59: Package TestHelperOz5 artifact
+
 ## 0.2.4
 
 ### Patch Changes

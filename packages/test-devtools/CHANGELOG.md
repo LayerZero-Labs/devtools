@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.2.5
+
+### Patch Changes
+
+- 94e6bf8: Support contractName on OmniPoint
+
 ## 0.2.4
 
 ### Patch Changes

@@ -71,7 +71,7 @@ describe('MyOApp Test', function () {
 
         // Define native fee and quote for the message send operation
         let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(eidB, 'Nothing received yet.', options, false)
+        ;[nativeFee] = await myOAppA.quote(eidB, 'Test message.', options, false)
 
         // Execute send operation from myOAppA
         await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })

@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.13
+
+### Patch Changes
+
+- dfcdc01: Add basic ERC20 SDK
+
 ## 0.3.12
 
 ### Patch Changes

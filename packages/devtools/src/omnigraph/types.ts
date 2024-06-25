@@ -9,6 +9,7 @@ import { OmniTransaction } from '..'
  */
 export type OmniPoint = WithEid<{
     address: OmniAddress
+    contractName?: string | null
 }>
 
 /**

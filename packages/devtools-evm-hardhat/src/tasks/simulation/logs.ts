@@ -12,9 +12,10 @@ import { spawnSync } from 'child_process'
 
 export interface SimulationLogsTaskArgs {
     logLevel?: LogLevel
+    follow?: boolean
 }
 
-const action: ActionType<SimulationLogsTaskArgs> = async ({ logLevel = 'info' }, hre) => {
+const action: ActionType<SimulationLogsTaskArgs> = async ({ logLevel = 'info', follow = false }, hre) => {
     setDefaultLogLevel(logLevel)
 
     printLogo()
@@ -47,9 +48,9 @@ const action: ActionType<SimulationLogsTaskArgs> = async ({ logLevel = 'info' },
     try {
         logger.verbose(`Spawning docker compose logs command for ${dockerComposePath}`)
 
-        spawnSync('docker', ['compose', '-f', dockerComposePath, 'logs'], {
-            stdio: 'inherit',
-        })
+        const command = ['compose', '-f', dockerComposePath, 'logs', ...(follow ? ['--follow'] : [])]
+
+        spawnSync('docker', command, { stdio: 'inherit' })
     } catch (error) {
         logger.error(`Failed to spawn docker compose logs command for ${dockerComposePath}: ${error}`)
 
@@ -60,10 +61,7 @@ const action: ActionType<SimulationLogsTaskArgs> = async ({ logLevel = 'info' },
 }
 
 if (process.env.LZ_ENABLE_EXPERIMENTAL_SIMULATION) {
-    task(TASK_LZ_TEST_SIMULATION_LOGS, 'Show logs for LayerZero omnichain simulation', action).addParam(
-        'logLevel',
-        'Logging level. One of: error, warn, info, verbose, debug, silly',
-        'info',
-        types.logLevel
-    )
+    task(TASK_LZ_TEST_SIMULATION_LOGS, 'Show logs for LayerZero omnichain simulation', action)
+        .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+        .addFlag('follow', 'Follow log output')
 }

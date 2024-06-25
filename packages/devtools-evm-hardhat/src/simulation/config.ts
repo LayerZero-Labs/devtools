@@ -88,26 +88,6 @@ export const getHardhatNetworkOverrides = (
                 //
                 // This is the nginx server listening on the port we configured in the simulation configuration
                 url: new URL(networkName, `http://localhost:${config.port}`).toString(),
-                // For now the mnemonic in identical for all the networks and comes
-                // from the simulation configuration
-                //
-                // In future we could respect the mnemonics set in the original hardhat config
-                // but that comes with complexities:
-                //
-                // - Some networks / hardhat configs will not be using mnemonics
-                // - We don't want to be throwing production mnemonics around and storing them in json files
-                accounts: {
-                    mnemonic: config.anvil.mnemonic,
-                    // These need to be defaulted to the anvil options
-                    // (or the anvil defaults)
-                    //
-                    // See https://book.getfoundry.sh/reference/cli/anvil for anvil defaults
-                    count: config.anvil.count ?? 10,
-                    path: config.anvil.derivationPath ?? "m/44'/60'/0'/0/",
-                    // These will be hardcoded for now as anvil does not support setting these
-                    initialIndex: 0,
-                    passphrase: '',
-                },
             })
         )
     )

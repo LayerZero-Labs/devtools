@@ -1,5 +1,50 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.33
+
+### Patch Changes
+
+- cd963d1: Don't overwrite hardhat network accounts for the simulation
+- Updated dependencies [cd963d1]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.20
+
+## 0.2.32
+
+### Patch Changes
+
+- ab58b00: Check for LZ_DefaultReceiveLibUnavailable/LZ_DefaultSendLibUnavailable on EndpointV2 when receive libraries
+- Updated dependencies [ab58b00]
+  - @layerzerolabs/protocol-devtools-evm@0.3.9
+  - @layerzerolabs/devtools-evm@0.3.12
+
+## 0.2.31
+
+### Patch Changes
+
+- 744e6f2: Add --prune-history flag to AnvilOptions for simulation
+- Updated dependencies [744e6f2]
+  - @layerzerolabs/devtools-evm@0.3.11
+
+## 0.2.30
+
+### Patch Changes
+
+- 2746ede: Add --follow flag to simulation logs task
+- Updated dependencies [2746ede]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.19
+
+## 0.2.29
+
+### Patch Changes
+
+- 87ed6f5: Add --assert flag to lz:oapp:wire task
+- 94e6bf8: Support contractName on OmniPoint
+- Updated dependencies [87ed6f5]
+- Updated dependencies [94e6bf8]
+  - @layerzerolabs/ua-devtools-evm-hardhat@0.3.18
+  - @layerzerolabs/devtools-evm-hardhat@0.3.18
+  - @layerzerolabs/devtools@0.3.16
+
 ## 0.2.28
 
 ### Patch Changes

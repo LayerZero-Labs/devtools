@@ -74,7 +74,7 @@ RUN corepack enable
 
 # Output versions
 RUN node -v
-RUN pnpm -v
+RUN pnpm --version
 RUN git --version
 RUN forge --version
 RUN anvil --version
@@ -98,7 +98,7 @@ ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy
 
 WORKDIR /app
 
-COPY pnpm-*.yaml .npmrc ./
+COPY pnpm-*.yaml .npmrc package.json ./
 
 # Get the node_modules patches since we need them for installation
 COPY patches/ patches/

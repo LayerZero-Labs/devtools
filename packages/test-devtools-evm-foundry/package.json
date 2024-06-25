@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-foundry",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   },
   "license": "MIT",
   "files": [
-    "contracts/"
+    "contracts/",
+    "artifacts/"
   ],
   "scripts": {
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
@@ -21,9 +22,11 @@
     "@layerzerolabs/lz-evm-oapp-v2": "^2.3.3",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
+    "@layerzerolabs/toolbox-foundry": "^0.1.6",
     "@openzeppelin/contracts": "^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^5.0.0",
     "@types/node": "~18.18.14",
+    "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },

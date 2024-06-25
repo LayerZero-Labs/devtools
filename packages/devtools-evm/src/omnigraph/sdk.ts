@@ -12,7 +12,7 @@ import { formatOmniContract } from './format'
  * to reduce the boilerplate
  */
 export abstract class OmniSDK implements IOmniSDK {
-    static #errorParserFactory: OmniContractErrorParserFactory = createContractErrorParser
+    static errorParserFactory: OmniContractErrorParserFactory = createContractErrorParser
 
     /**
      * Registers a `OmniContractErrorParserFactory` function to be used when
@@ -26,7 +26,7 @@ export abstract class OmniSDK implements IOmniSDK {
      * @returns {void}
      */
     static registerErrorParserFactory(factory: OmniContractErrorParserFactory | undefined): void {
-        this.#errorParserFactory = factory ?? createContractErrorParser
+        this.errorParserFactory = factory ?? createContractErrorParser
     }
 
     /**
@@ -39,7 +39,7 @@ export abstract class OmniSDK implements IOmniSDK {
     static createErrorParser(
         contract: OmniContract | null | undefined
     ): OmniContractErrorParser | Promise<OmniContractErrorParser> {
-        return this.#errorParserFactory(contract)
+        return this.errorParserFactory(contract)
     }
 
     constructor(

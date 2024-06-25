@@ -9,6 +9,13 @@ exports[`simulation/anvil createAnvilCliOptions() it should work for {"forkUrl":
 ]
 `;
 
+exports[`simulation/anvil createAnvilCliOptions() it should work for {"forkUrl":"http://hotmail.com/mainnet","pruneHistory":false} 1`] = `
+[
+  "--fork-url",
+  "http://hotmail.com/mainnet",
+]
+`;
+
 exports[`simulation/anvil createAnvilCliOptions() it should work for {"host":"0.0.0.0"} 1`] = `
 [
   "--host",
@@ -45,5 +52,11 @@ exports[`simulation/anvil createAnvilCliOptions() it should work for {"port":777
 [
   "--port",
   "7777",
+]
+`;
+
+exports[`simulation/anvil createAnvilCliOptions() it should work for {"pruneHistory":true} 1`] = `
+[
+  "--prune-history",
 ]
 `;
