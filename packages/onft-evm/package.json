@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/onft-evm",
   "version": "0.0.1",
-  "private": true,
   "description": "",
   "repository": {
     "type": "git",
