@@ -94,7 +94,7 @@ contract MyOFTTest is TestHelperOz5 {
 
         vm.prank(userA);
         aOFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
-        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+        verifyAndExecutePackets(bEid, addressToBytes32(address(bOFT)));
 
         assertEq(aOFT.balanceOf(userA), initialBalance - tokensToSend);
         assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
@@ -130,7 +130,7 @@ contract MyOFTTest is TestHelperOz5 {
             fee,
             payable(address(this))
         );
-        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+        verifyAndExecutePackets(bEid, addressToBytes32(address(bOFT)));
 
         // lzCompose params
         uint32 dstEid_ = bEid;
