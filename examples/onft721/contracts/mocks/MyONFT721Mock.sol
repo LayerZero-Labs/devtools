@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-import { MyONFT721 } from "../MyOFT721.sol";
+import { MyONFT721 } from "../MyONFT721.sol";
 
 // @dev WARNING: This is for testing purposes only
 contract MyONFT721Mock is MyONFT721 {
