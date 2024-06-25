@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  anvil:
+    build:
+      dockerfile: Dockerfile
+      target: node-evm
+    command:
+      - anvil
+      - '--host'
+      - 6.253.177.248
+      - '--mnemonic'
+      - >-
+        gallery copper favorite easy crawl lesson gym rebuild also unique print
+        source
+      - '--block-time'
+      - '984122441'
