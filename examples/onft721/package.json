@@ -29,7 +29,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
     "@layerzerolabs/lz-v2-utilities": "^2.3.3",
-    "@layerzerolabs/onft-evm": "file:../../packages/onft-evm",
+    "@layerzerolabs/onft-evm": "0.0.1",
     "@layerzerolabs/prettier-config-next": "^2.3.3",
     "@layerzerolabs/solhint-config": "^2.3.3",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.3",
