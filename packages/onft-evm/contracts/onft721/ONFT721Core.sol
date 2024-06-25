@@ -54,7 +54,6 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         SendParam calldata _sendParam,
         bool _payInLzToken
     ) external view virtual returns (MessagingFee memory msgFee) {
-        if (_sendParam.tokenIds.length != 1) revert("ff");
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
         return _quote(_sendParam.dstEid, message, options, _payInLzToken);
     }
@@ -64,14 +63,13 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt) {
-        if (_sendParam.tokenIds.length != 1) revert("ff");
-        _debit(_sendParam.tokenIds[0], _sendParam.dstEid);
+        _debit(_sendParam.tokenId, _sendParam.dstEid);
 
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
 
         // @dev Sends the message to the LayerZero Endpoint, returning the MessagingReceipt.
         msgReceipt = _lzSend(_sendParam.dstEid, message, options, _fee, _refundAddress);
-        emit ONFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, _sendParam.tokenIds);
+        emit ONFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, _sendParam.tokenId);
     }
 
     /// @dev Internal function to build the message and options.
@@ -82,7 +80,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         SendParam calldata _sendParam
     ) internal view virtual returns (bytes memory message, bytes memory options) {
         bool hasCompose;
-        (message, hasCompose) = ONFT721MsgCodec.encode(_sendParam.to, _sendParam.tokenIds[0], _sendParam.composeMsg);
+        (message, hasCompose) = ONFT721MsgCodec.encode(_sendParam.to, _sendParam.tokenId, _sendParam.composeMsg);
         uint16 msgType = hasCompose ? SEND_AND_COMPOSE : SEND;
 
         options = combineOptions(_sendParam.dstEid, msgType, _sendParam.extraOptions);
@@ -118,7 +116,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
             endpoint.sendCompose(toAddress, _guid, 0 /* the index of composed message*/, composeMsg);
         }
 
-        emit ONFTReceived(_guid, _origin.srcEid, toAddress, toSingletonArray(tokenId));
+        emit ONFTReceived(_guid, _origin.srcEid, toAddress, tokenId);
     }
 
     /// @dev Internal function to handle the OAppPreCrimeSimulator simulated receive.
@@ -158,11 +156,6 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
     function setMsgInspector(address _msgInspector) public virtual onlyOwner {
         msgInspector = _msgInspector;
         emit MsgInspectorSet(_msgInspector);
-    }
-
-    function toSingletonArray(uint256 element) public pure returns (uint256[] memory array) {
-        array = new uint256[](1);
-        array[0] = element;
     }
 
     function _debit(uint256 _tokenId, uint32 /*_dstEid*/) internal virtual;
