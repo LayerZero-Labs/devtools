@@ -318,8 +318,8 @@ importers:
         specifier: ^2.3.3
         version: 2.3.3
       '@layerzerolabs/onft-evm':
-        specifier: file:../../packages/onft-evm
-        version: file:packages/onft-evm
+        specifier: 0.0.1
+        version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.3
         version: 2.3.3
@@ -15022,12 +15022,6 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-
-  file:packages/onft-evm:
-    resolution: {directory: packages/onft-evm, type: directory}
-    name: onft-evm
-    engines: {node: '>=18.16.0'}
-    dev: true
 
   github.com/LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
     resolution: {tarball: https://codeload.github.com/LayerZero-Labs/es5-ext/tar.gz/7e360296a7e27176e240bc063b32f5ada55f9aa6}

@@ -1,5 +1,5 @@
 {
-  "name": "onft-evm",
+  "name": "@layerzerolabs/onft-evm",
   "version": "0.0.1",
   "private": true,
   "description": "",
@@ -27,8 +27,6 @@
     "build-hardhat": "$npm_execpath hardhat compile",
     "coverage:foundry": "forge coverage",
     "debugpublish": "$npm_execpath publish --registry http://localhost:4873/",
-    "prepack": "node ./scripts/pack.mjs --prepack",
-    "postpack": "node ./scripts/pack.mjs --postpack",
     "test": "forge test",
     "test-contracts": "forge test && $npm_execpath hardhat test --no-compile",
     "test-static-analyze": "$npm_execpath hardhat clean && $npm_execpath build-hardhat && python3 -m slither evm --ignore-compile --compile-force-framework hardhat --npx-disable",
