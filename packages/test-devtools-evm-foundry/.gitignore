@@ -1,2 +1,4 @@
 cache
 out
+artifacts
+!artifacts/TestHelperOz5
