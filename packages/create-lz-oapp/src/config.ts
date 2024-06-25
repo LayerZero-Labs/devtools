@@ -34,9 +34,9 @@ export const EXAMPLES: Example[] = [
     {
         id: 'onft721',
         label: 'ONFT721',
-        repository: 'file:/Users/ryandgoulding/WebstormProjects/devtools',
+        repository,
         directory: 'examples/onft721',
-        ref,
+        ref: 'feat/onft',
     },
 ]
 
