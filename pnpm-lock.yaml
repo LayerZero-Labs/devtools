@@ -1086,10 +1086,6 @@ importers:
         version: 5.3.3
 
   packages/test-devtools-evm-foundry:
-    dependencies:
-      '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.6
-        version: link:../toolbox-foundry
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^2.3.3
