@@ -25,7 +25,7 @@ import { ONFT721Base } from "./ONFT721Base.sol";
 contract ONFT721Test is ONFT721Base {
     using OptionsBuilder for bytes;
 
-    bytes4 internal constant EXPECTED_ONFT721_ID = 0x94642228;
+    bytes4 internal constant EXPECTED_ONFT721_ID = 0x5dfb0822;
     uint8 internal constant EXPECTED_ONFT721_VERSION = 1;
 
     // also tests token() function
@@ -67,7 +67,7 @@ contract ONFT721Test is ONFT721Base {
         bool _srcIsAdapter,
         bool _dstIsAdapter
     ) internal {
-        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _toSingletonArray(_tokenToSend), "", "");
+        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _tokenToSend, "", "");
         MessagingFee memory fee = IONFT721(onfts[_srcEid - 1]).quoteSend(sendParam, false);
 
         vm.prank(_from);
@@ -165,7 +165,7 @@ contract ONFT721Test is ONFT721Base {
         SendParam memory sendParam = SendParam(
             B_EID,
             addressToBytes32(address(composer)),
-            _toSingletonArray(_tokenToSend),
+            _tokenToSend,
             options,
             _composeMsg
         );
@@ -224,11 +224,6 @@ contract ONFT721Test is ONFT721Base {
         srcEid = ONFTComposeMsgCodec.srcEid(_message);
         composeFrom = ONFTComposeMsgCodec.composeFrom(_message);
         composeMsg = ONFTComposeMsgCodec.composeMsg(_message);
-    }
-
-    function _toSingletonArray(uint256 _element) internal pure returns (uint256[] memory array) {
-        array = new uint256[](1);
-        array[0] = _element;
     }
 
     function test_debit(uint256 _tokenId) public {
@@ -320,13 +315,7 @@ contract ONFT721Test is ONFT721Base {
 
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(_baseGas, _value);
         if (_composeMsg.length > 0) extraOptions = extraOptions.addExecutorLzComposeOption(0, _composeGas, _value);
-        SendParam memory sendParam = SendParam(
-            B_EID,
-            addressToBytes32(alice),
-            _toSingletonArray(_tokenId),
-            extraOptions,
-            _composeMsg
-        );
+        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(alice), _tokenId, extraOptions, _composeMsg);
 
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
 
@@ -350,13 +339,7 @@ contract ONFT721Test is ONFT721Base {
         bytes memory extraOptions = _useExtraOptions
             ? OptionsBuilder.newOptions().addExecutorLzReceiveOption(_lzReceiveGas, _lzReceiveValue)
             : bytes("");
-        SendParam memory sendParam = SendParam(
-            B_EID,
-            addressToBytes32(alice),
-            _toSingletonArray(_tokenId),
-            extraOptions,
-            ""
-        );
+        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(alice), _tokenId, extraOptions, "");
 
         (bytes memory message, bytes memory options) = aONFT.buildMsgAndOptions(sendParam);
         assertEq(options, aONFT.combineOptions(B_EID, 1, extraOptions));
@@ -495,7 +478,7 @@ contract ONFT721Test is ONFT721Base {
         uint32 dstEid = B_EID;
         _setMeshDefaultEnforcedSendOption();
 
-        SendParam memory sendParam = SendParam(dstEid, _to, _toSingletonArray(_tokenId), "", "");
+        SendParam memory sendParam = SendParam(dstEid, _to, _tokenId, "", "");
 
         // doesnt revert
         (bytes memory message, ) = aONFT.buildMsgAndOptions(sendParam);
