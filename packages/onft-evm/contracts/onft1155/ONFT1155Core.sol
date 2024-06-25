@@ -22,24 +22,21 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
     address public msgInspector;
     event MsgInspectorSet(address inspector);
 
-    // @notice Msg types that are used to identify the various OFT operations.
-    // @dev This can be extended in child contracts for non-default oft operations
-    // @dev These values are used in combineOptions() and OAppOptionsType3.sol.
+    /// @notice Msg types that are used to identify the various OFT operations.
+    /// @dev This can be extended in child contracts for non-default oft operations
+    /// @dev These values are used in combineOptions() and OAppOptionsType3.sol.
     uint16 public constant SEND = 1;
     uint16 public constant SEND_AND_COMPOSE = 2;
 
     constructor(address _lzEndpoint, address _delegate) Ownable(_delegate) OApp(_lzEndpoint, _delegate) {}
 
-    /**
-     * @notice Retrieves interfaceID and the version of the ONFT.
-     * @return interfaceId The interface ID.
-     * @return version The version.
-     *
-     * @dev interfaceId: This specific interface ID is 'a72f5dd8'.
-     * @dev version: Indicates a cross-chain compatible msg encoding with other ONFTs.
-     * @dev If a new feature is added to the ONFT cross-chain msg encoding, the version will be incremented.
-     * ie. localONFT version(x,1) CAN send messages to remoteONFT version(x,1)
-     */
+    /// @notice Retrieves interfaceID and the version of the ONFT.
+    /// @return interfaceId The interface ID.
+    /// @return version The version.
+    /// @dev interfaceId: This specific interface ID is 'a72f5dd8'.
+    /// @dev version: Indicates a cross-chain compatible msg encoding with other ONFTs.
+    /// @dev If a new feature is added to the ONFT cross-chain msg encoding, the version will be incremented.
+    /// ie. localONFT version(x,1) CAN send messages to remoteONFT version(x,1)
     function onftVersion() external pure virtual returns (bytes4 interfaceId, uint64 version) {
         return (type(IONFT1155).interfaceId, 1);
     }
@@ -52,12 +49,10 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
         return _quote(_sendParam.dstEid, message, options, _payInLzToken);
     }
 
-    /**
-     * @dev Internal function to build the message and options.
-     * @param _sendParam The parameters for the send() operation.
-     * @return message The encoded message.
-     * @return options The encoded options.
-     */
+    /// @dev Internal function to build the message and options.
+    /// @param _sendParam The parameters for the send() operation.
+    /// @return message The encoded message.
+    /// @return options The encoded options.
     function _buildMsgAndOptions(
         SendParam calldata _sendParam
     ) internal view virtual returns (bytes memory message, bytes memory options) {
@@ -73,8 +68,8 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
         // TODO: look at how gasLimit is done in StargateV2 for batch sending. First, profile gas as this might be a little different.
         options = combineOptions(_sendParam.dstEid, msgType, _sendParam.extraOptions);
 
-        // @dev Optionally inspect the message and options depending if the OApp owner has set a msg inspector.
-        // @dev If it fails inspection, needs to revert in the implementation. ie. does not rely on return boolean
+        /// @dev Optionally inspect the message and options depending if the OApp owner has set a msg inspector.
+        /// @dev If it fails inspection, needs to revert in the implementation. ie. does not rely on return boolean
         if (msgInspector != address(0)) IOAppMsgInspector(msgInspector).inspect(message, options);
     }
 
@@ -93,13 +88,10 @@ abstract contract ONFT1155Core is IONFT1155, OApp, OAppPreCrimeSimulator, OAppOp
         //        emit ONFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, _sendParam.tokenIds);
     }
 
-    /**
-     * @dev Sets the message inspector address for the OFT.
-     * @param _msgInspector The address of the message inspector.
-     *
-     * @dev This is an optional contract that can be used to inspect both 'message' and 'options'.
-     * @dev Set it to address(0) to disable it, or set it to a contract address to enable it.
-     */
+    /// @dev Sets the message inspector address for the OFT.
+    /// @param _msgInspector The address of the message inspector.
+    /// @dev This is an optional contract that can be used to inspect both 'message' and 'options'.
+    /// @dev Set it to address(0) to disable it, or set it to a contract address to enable it.
     function setMsgInspector(address _msgInspector) public virtual onlyOwner {
         msgInspector = _msgInspector;
         emit MsgInspectorSet(_msgInspector);

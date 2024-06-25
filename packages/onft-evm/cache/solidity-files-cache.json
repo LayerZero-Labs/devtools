@@ -142,15 +142,15 @@
         "ONFT1155": {
           "0.8.22": {
             "path": "ONFT1155.sol/ONFT1155.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/ONFT1155Core.sol": {
-      "lastModificationDate": 1719236783521,
-      "contentHash": "dc26a12da024d82e2b3a17948f6694cc",
+      "lastModificationDate": 1719327583452,
+      "contentHash": "e94b1e7aa0b0388176f30829599031da",
       "sourceName": "contracts/onft1155/ONFT1155Core.sol",
       "compilerSettings": {
         "solc": {
@@ -223,15 +223,15 @@
         "ONFT1155Core": {
           "0.8.22": {
             "path": "ONFT1155Core.sol/ONFT1155Core.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/interfaces/IONFT1155.sol": {
-      "lastModificationDate": 1718976534753,
-      "contentHash": "790989174da36e5767883a16f298fc0a",
+      "lastModificationDate": 1719327455416,
+      "contentHash": "cb5a1198d61cec5104dffa35c661db1c",
       "sourceName": "contracts/onft1155/interfaces/IONFT1155.sol",
       "compilerSettings": {
         "solc": {
@@ -286,15 +286,15 @@
         "IONFT1155": {
           "0.8.22": {
             "path": "IONFT1155.sol/IONFT1155.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/libs/ONFT1155MsgCodec.sol": {
-      "lastModificationDate": 1718976534753,
-      "contentHash": "0cca68d0da0f790ccd91198f49d05fb7",
+      "lastModificationDate": 1719327969671,
+      "contentHash": "a7dada0c08e101a6cdf7d708befd6444",
       "sourceName": "contracts/onft1155/libs/ONFT1155MsgCodec.sol",
       "compilerSettings": {
         "solc": {
@@ -332,7 +332,7 @@
         "ONFT1155MsgCodec": {
           "0.8.22": {
             "path": "ONFT1155MsgCodec.sol/ONFT1155MsgCodec.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
@@ -7715,8 +7715,8 @@
       "seenByCompiler": true
     },
     "test/onft/onft1155/ONFT1155Performance.t.sol": {
-      "lastModificationDate": 1719242051394,
-      "contentHash": "3eaffa662b7b253be553dab0af3e39f9",
+      "lastModificationDate": 1719326910254,
+      "contentHash": "fa13dcc6f8ae6f89472737fc59d1521f",
       "sourceName": "test/onft/onft1155/ONFT1155Performance.t.sol",
       "compilerSettings": {
         "solc": {
@@ -7877,7 +7877,7 @@
         "ONFT1155Performance": {
           "0.8.22": {
             "path": "ONFT1155Performance.t.sol/ONFT1155Performance.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
@@ -7968,7 +7968,7 @@
         "ONFT1155Mock": {
           "0.8.22": {
             "path": "ONFT1155Mock.sol/ONFT1155Mock.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "2b3a01a7318d083905ade0342aec962b"
           }
         }
       },
@@ -8573,6 +8573,7 @@
   },
   "builds": [
     "1c436f8e307057766b5c985355b0b013",
+    "2b3a01a7318d083905ade0342aec962b",
     "77e6d7c9a70222cfee97d0dc3eb45693",
     "8c60ef1e98a1dfeed7ae431b57e1ccb8"
   ]

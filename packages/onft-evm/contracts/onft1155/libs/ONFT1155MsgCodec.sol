@@ -59,21 +59,6 @@ library ONFT1155MsgCodec {
                 );
             }
         }
-        // TODO:  why is this so inefficient?
-        //        bytes memory tokenIdData = _msg[NUM_TOKENS_OFFSET:NUM_TOKENS_OFFSET + numOfTokens * NUM_BYTES_FOR_UINT256];
-        //        bytes memory amountData = _msg[NUM_TOKENS_OFFSET + numOfTokens * NUM_BYTES_FOR_UINT256:];
-        //        unchecked {
-        //            for (
-        //                uint256 i = NUM_BYTES_FOR_UINT256;
-        //                i <= tokenIdData.length * NUM_BYTES_FOR_UINT256;
-        //                i += NUM_BYTES_FOR_UINT256
-        //            ) {
-        //                assembly {
-        //                    mstore(add(add(tokenIds, 0x20), mul(i, 0x20)), mload(add(add(tokenIdData, 0x20), mul(i, 0x20))))
-        //                    mstore(add(add(amounts, 0x20), mul(i, 0x20)), mload(add(add(amountData, 0x20), mul(i, 0x20))))
-        //                }
-        //            }
-        //        }
     }
 
     function isComposed(bytes calldata _msg) internal pure returns (bool) {
@@ -85,20 +70,16 @@ library ONFT1155MsgCodec {
         return _msg[NUM_TOKENS_OFFSET + NUM_BYTES_FOR_UINT256 * numOfTokens:];
     }
 
-    /**
-     * @dev Converts an address to bytes32.
-     * @param _addr The address to convert.
-     * @return The bytes32 representation of the address.
-     */
+    /// @dev Converts an address to bytes32.
+    /// @param _addr The address to convert.
+    /// @return The bytes32 representation of the address.
     function addressToBytes32(address _addr) internal pure returns (bytes32) {
         return bytes32(uint256(uint160(_addr)));
     }
 
-    /**
-     * @dev Converts bytes32 to an address.
-     * @param _b The bytes32 value to convert.
-     * @return The address representation of bytes32.
-     */
+    /// @dev Converts bytes32 to an address.
+    /// @param _b The bytes32 value to convert.
+    /// @return The address representation of bytes32.
     function bytes32ToAddress(bytes32 _b) internal pure returns (address) {
         return address(uint160(uint256(_b)));
     }

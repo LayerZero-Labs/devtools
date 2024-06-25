@@ -27,11 +27,6 @@ contract ONFT1155Performance is ONFTBaseTestHelper {
         bONFT = new ONFT1155Mock(B_URI, endpoints[B_EID], address(this));
         _wire();
 
-        //struct EnforcedOptionParam {
-        //    uint32 eid; // Endpoint ID
-        //    uint16 msgType; // Message Type
-        //    bytes options; // Additional options
-        //}
         EnforcedOptionParam[] memory enforcedOptions = new EnforcedOptionParam[](1);
         enforcedOptions[0] = EnforcedOptionParam(
             B_EID,
@@ -100,9 +95,4 @@ contract ONFT1155Performance is ONFTBaseTestHelper {
         uint256 numPackets = packetsQueue[B_EID][addressToBytes32(address(bONFT))].length();
         verifyPackets(B_EID, addressToBytes32(address(bONFT)), numPackets, address(0));
     }
-
-    //    function test_onft1155_batch_one() public {
-    //        _mint(alice, 0, 10_000, 1);
-    //        batch_helper(10_000, 1);
-    //    }
 }
