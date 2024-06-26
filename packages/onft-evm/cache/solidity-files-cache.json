@@ -13,8 +13,8 @@
   },
   "files": {
     "contracts/libs/ONFTComposeMsgCodec.sol": {
-      "lastModificationDate": 1718976534752,
-      "contentHash": "10638ca12c133e868b17dc6ffd5ccaf8",
+      "lastModificationDate": 1719410674806,
+      "contentHash": "2194c408707c2eadef805d14eaaaa7bb",
       "sourceName": "contracts/libs/ONFTComposeMsgCodec.sol",
       "compilerSettings": {
         "solc": {
@@ -47,20 +47,20 @@
         }
       },
       "imports": [],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFTComposeMsgCodec": {
           "0.8.22": {
             "path": "ONFTComposeMsgCodec.sol/ONFTComposeMsgCodec.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/ONFT1155.sol": {
-      "lastModificationDate": 1718976534752,
-      "contentHash": "cabc67d717ac3ba0c09cc5cb2da2998d",
+      "lastModificationDate": 1719410674819,
+      "contentHash": "7470e188736aa2dd479d5c26d1014798",
       "sourceName": "contracts/onft1155/ONFT1155.sol",
       "compilerSettings": {
         "solc": {
@@ -137,20 +137,20 @@
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/math/Math.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT1155": {
           "0.8.22": {
             "path": "ONFT1155.sol/ONFT1155.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/ONFT1155Core.sol": {
-      "lastModificationDate": 1719327583452,
-      "contentHash": "e94b1e7aa0b0388176f30829599031da",
+      "lastModificationDate": 1719410674822,
+      "contentHash": "145956e2ffd9af747b62b819e47a96d2",
       "sourceName": "contracts/onft1155/ONFT1155Core.sol",
       "compilerSettings": {
         "solc": {
@@ -218,20 +218,20 @@
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT1155Core": {
           "0.8.22": {
             "path": "ONFT1155Core.sol/ONFT1155Core.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/interfaces/IONFT1155.sol": {
-      "lastModificationDate": 1719327455416,
-      "contentHash": "cb5a1198d61cec5104dffa35c661db1c",
+      "lastModificationDate": 1719410674813,
+      "contentHash": "02f89fc9ad12a79d7e3e79a7c13ccb26",
       "sourceName": "contracts/onft1155/interfaces/IONFT1155.sol",
       "compilerSettings": {
         "solc": {
@@ -281,20 +281,20 @@
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
       ],
-      "versionRequirement": ">=0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "IONFT1155": {
           "0.8.22": {
             "path": "IONFT1155.sol/IONFT1155.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft1155/libs/ONFT1155MsgCodec.sol": {
-      "lastModificationDate": 1719327969671,
-      "contentHash": "a7dada0c08e101a6cdf7d708befd6444",
+      "lastModificationDate": 1719410674807,
+      "contentHash": "3dd1f1ae57db58b3dc10a878fc9b8915",
       "sourceName": "contracts/onft1155/libs/ONFT1155MsgCodec.sol",
       "compilerSettings": {
         "solc": {
@@ -327,20 +327,20 @@
         }
       },
       "imports": [],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT1155MsgCodec": {
           "0.8.22": {
             "path": "ONFT1155MsgCodec.sol/ONFT1155MsgCodec.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721.sol": {
-      "lastModificationDate": 1719244706233,
-      "contentHash": "28d9f7e6780dae38726472cc52f5b643",
+      "lastModificationDate": 1719410674816,
+      "contentHash": "c9ca1859a95d4415190cfc69d7564104",
       "sourceName": "contracts/onft721/ONFT721.sol",
       "compilerSettings": {
         "solc": {
@@ -424,20 +424,20 @@
         "node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": ">=0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721": {
           "0.8.22": {
             "path": "ONFT721.sol/ONFT721.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721A.sol": {
-      "lastModificationDate": 1718976534753,
-      "contentHash": "4a1642f7ad4c7ab0420dbf58dd57d5ad",
+      "lastModificationDate": 1719410674825,
+      "contentHash": "a74e70e0c6c6215601830b027a4c15c5",
       "sourceName": "contracts/onft721/ONFT721A.sol",
       "compilerSettings": {
         "solc": {
@@ -514,20 +514,20 @@
         "node_modules/erc721a/contracts/IERC721A.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": ">=0.8.4",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721A": {
           "0.8.22": {
             "path": "ONFT721A.sol/ONFT721A.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721Adapter.sol": {
-      "lastModificationDate": 1719254849920,
-      "contentHash": "357a9cb03ca6d30434c81bbd23b8cf3f",
+      "lastModificationDate": 1719410674821,
+      "contentHash": "56361d63146e08920cd94ea51de5b88d",
       "sourceName": "contracts/onft721/ONFT721Adapter.sol",
       "compilerSettings": {
         "solc": {
@@ -604,20 +604,20 @@
         "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": ">=0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721Adapter": {
           "0.8.22": {
             "path": "ONFT721Adapter.sol/ONFT721Adapter.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721Core.sol": {
-      "lastModificationDate": 1719326049016,
-      "contentHash": "bfb768e520864be30d4230e9036c968d",
+      "lastModificationDate": 1719410674818,
+      "contentHash": "a5a7569b84a0027c70529a3e604bdba4",
       "sourceName": "contracts/onft721/ONFT721Core.sol",
       "compilerSettings": {
         "solc": {
@@ -691,20 +691,20 @@
         "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": ">=0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721Core": {
           "0.8.22": {
             "path": "ONFT721Core.sol/ONFT721Core.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/interfaces/IONFT721.sol": {
-      "lastModificationDate": 1719325904815,
-      "contentHash": "576a9309a2397e01181a60a916c42c7c",
+      "lastModificationDate": 1719410674814,
+      "contentHash": "9f801be3028fed7e26e18ffb2740d3e2",
       "sourceName": "contracts/onft721/interfaces/IONFT721.sol",
       "compilerSettings": {
         "solc": {
@@ -752,20 +752,20 @@
         "node_modules/@openzeppelin/contracts/utils/Address.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol"
       ],
-      "versionRequirement": ">=0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "IONFT721": {
           "0.8.22": {
             "path": "IONFT721.sol/IONFT721.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/libs/ONFT721MsgCodec.sol": {
-      "lastModificationDate": 1718994146107,
-      "contentHash": "67000965a0bd127507f78cffe544faae",
+      "lastModificationDate": 1719410674808,
+      "contentHash": "d1b4cea081379d11205317a1c9ba8334",
       "sourceName": "contracts/onft721/libs/ONFT721MsgCodec.sol",
       "compilerSettings": {
         "solc": {
@@ -798,12 +798,12 @@
         }
       },
       "imports": [],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721MsgCodec": {
           "0.8.22": {
             "path": "ONFT721MsgCodec.sol/ONFT721MsgCodec.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
@@ -7471,8 +7471,8 @@
       "seenByCompiler": true
     },
     "test/mocks/ComposerMock.sol": {
-      "lastModificationDate": 1718976534806,
-      "contentHash": "51bab02c92e387841a2086c351b3b75e",
+      "lastModificationDate": 1719410674815,
+      "contentHash": "14985ecb474c37b7e0e50ce4b7e316d3",
       "sourceName": "test/mocks/ComposerMock.sol",
       "compilerSettings": {
         "solc": {
@@ -7508,20 +7508,20 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ComposerMock": {
           "0.8.22": {
             "path": "ComposerMock.sol/ComposerMock.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/mocks/InspectorMock.sol": {
-      "lastModificationDate": 1718976534806,
-      "contentHash": "cec7e7d890f347b2eb85f23452951715",
+      "lastModificationDate": 1719410674820,
+      "contentHash": "365c821d4618a02081717be8c13d3baf",
       "sourceName": "test/mocks/InspectorMock.sol",
       "compilerSettings": {
         "solc": {
@@ -7556,20 +7556,20 @@
       "imports": [
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppMsgInspector.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "InspectorMock": {
           "0.8.22": {
             "path": "InspectorMock.sol/InspectorMock.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/ONFTBaseTestHelper.sol": {
-      "lastModificationDate": 1718976534806,
-      "contentHash": "05b75053dc98fec02f946593e422a8e0",
+      "lastModificationDate": 1719410674810,
+      "contentHash": "7501c2ca7eebd4e76e9cf30313efae2b",
       "sourceName": "test/onft/ONFTBaseTestHelper.sol",
       "compilerSettings": {
         "solc": {
@@ -7703,20 +7703,20 @@
         "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFTBaseTestHelper": {
           "0.8.22": {
             "path": "ONFTBaseTestHelper.sol/ONFTBaseTestHelper.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft1155/ONFT1155Performance.t.sol": {
-      "lastModificationDate": 1719326910254,
-      "contentHash": "fa13dcc6f8ae6f89472737fc59d1521f",
+      "lastModificationDate": 1719410674804,
+      "contentHash": "5b5b8a80fba2ef68c34de1eeb5d057e4",
       "sourceName": "test/onft/onft1155/ONFT1155Performance.t.sol",
       "compilerSettings": {
         "solc": {
@@ -7872,20 +7872,20 @@
         "test/onft/ONFTBaseTestHelper.sol",
         "test/onft/onft1155/mocks/ONFT1155Mock.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT1155Performance": {
           "0.8.22": {
             "path": "ONFT1155Performance.t.sol/ONFT1155Performance.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft1155/mocks/ONFT1155Mock.sol": {
-      "lastModificationDate": 1718976534807,
-      "contentHash": "028ac3a0f17fc867a340d75d6c1a84b8",
+      "lastModificationDate": 1719410674805,
+      "contentHash": "982931e14e90d619a2a64eaad2290ccd",
       "sourceName": "test/onft/onft1155/mocks/ONFT1155Mock.sol",
       "compilerSettings": {
         "solc": {
@@ -7963,20 +7963,20 @@
         "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/math/Math.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT1155Mock": {
           "0.8.22": {
             "path": "ONFT1155Mock.sol/ONFT1155Mock.json",
-            "build_id": "2b3a01a7318d083905ade0342aec962b"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft721/ONFT721.t.sol": {
-      "lastModificationDate": 1719326281396,
-      "contentHash": "5f3a15f5545382f9af116558ef735332",
+      "lastModificationDate": 1719410674811,
+      "contentHash": "c144694dca70c8049ae3984e691bf412",
       "sourceName": "test/onft/onft721/ONFT721.t.sol",
       "compilerSettings": {
         "solc": {
@@ -8139,20 +8139,20 @@
         "test/onft/onft721/mocks/ONFT721AdapterMock.sol",
         "test/onft/onft721/mocks/ONFT721Mock.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721Test": {
           "0.8.22": {
             "path": "ONFT721.t.sol/ONFT721Test.json",
-            "build_id": "1c436f8e307057766b5c985355b0b013"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft721/ONFT721Base.sol": {
-      "lastModificationDate": 1719253070958,
-      "contentHash": "ea55776dbb951d4351a31f78776637c7",
+      "lastModificationDate": 1719410674824,
+      "contentHash": "ee81082895f4de13370b9d95e5d2bb30",
       "sourceName": "test/onft/onft721/ONFT721Base.sol",
       "compilerSettings": {
         "solc": {
@@ -8312,20 +8312,20 @@
         "test/onft/onft721/mocks/ONFT721AdapterMock.sol",
         "test/onft/onft721/mocks/ONFT721Mock.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721Base": {
           "0.8.22": {
             "path": "ONFT721Base.sol/ONFT721Base.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft721/mocks/ERC721Mock.sol": {
-      "lastModificationDate": 1718976534808,
-      "contentHash": "3b808b00e0c3165479cd672c28988753",
+      "lastModificationDate": 1719410674823,
+      "contentHash": "a879a74569f050d1b1f267083dfca19b",
       "sourceName": "test/onft/onft721/mocks/ERC721Mock.sol",
       "compilerSettings": {
         "solc": {
@@ -8370,20 +8370,20 @@
         "node_modules/@openzeppelin/contracts/utils/math/Math.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol"
       ],
-      "versionRequirement": "^0.8.20",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ERC721Mock": {
           "0.8.22": {
             "path": "ERC721Mock.sol/ERC721Mock.json",
-            "build_id": "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft721/mocks/ONFT721AdapterMock.sol": {
-      "lastModificationDate": 1718976534808,
-      "contentHash": "0e4f5be66c517596716e907e11cdcded",
+      "lastModificationDate": 1719410674817,
+      "contentHash": "de102f6b753236174e2b4c3513f8c68a",
       "sourceName": "test/onft/onft721/mocks/ONFT721AdapterMock.sol",
       "compilerSettings": {
         "solc": {
@@ -8461,20 +8461,20 @@
         "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721AdapterMock": {
           "0.8.22": {
             "path": "ONFT721AdapterMock.sol/ONFT721AdapterMock.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/onft/onft721/mocks/ONFT721Mock.sol": {
-      "lastModificationDate": 1718976534808,
-      "contentHash": "ef70dd4a56a319564f8146045ca2e520",
+      "lastModificationDate": 1719410674812,
+      "contentHash": "745760d8ad9516b70207d5c854bf2f82",
       "sourceName": "test/onft/onft721/mocks/ONFT721Mock.sol",
       "compilerSettings": {
         "solc": {
@@ -8559,12 +8559,12 @@
         "node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
-      "versionRequirement": "^0.8.0",
+      "versionRequirement": "^0.8.22",
       "artifacts": {
         "ONFT721Mock": {
           "0.8.22": {
             "path": "ONFT721Mock.sol/ONFT721Mock.json",
-            "build_id": "77e6d7c9a70222cfee97d0dc3eb45693"
+            "build_id": "8f38d93046861f05fac26c826b3651c7"
           }
         }
       },
@@ -8573,8 +8573,11 @@
   },
   "builds": [
     "1c436f8e307057766b5c985355b0b013",
+    "2a6b67a24ece3dc7d217463e5ab50669",
     "2b3a01a7318d083905ade0342aec962b",
     "77e6d7c9a70222cfee97d0dc3eb45693",
-    "8c60ef1e98a1dfeed7ae431b57e1ccb8"
+    "8c60ef1e98a1dfeed7ae431b57e1ccb8",
+    "8f38d93046861f05fac26c826b3651c7",
+    "dc38a16c034cefa320b82c98cb8ddffb"
   ]
 }

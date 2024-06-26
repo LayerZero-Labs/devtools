@@ -36,7 +36,7 @@ export const EXAMPLES: Example[] = [
         label: 'ONFT721',
         repository,
         directory: 'examples/onft721',
-        ref: 'feat/onft',
+        ref,
     },
 ]
 
