@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 /// @title ONFT721MsgCodec
 /// @notice Library for encoding and decoding ONFT721 LayerZero messages.

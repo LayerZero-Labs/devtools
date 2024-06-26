@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8.4;
+pragma solidity ^0.8.22;
 
 import { ERC721A, ERC721A__IERC721Receiver } from "erc721a/contracts/ERC721A.sol";
 import { ONFT721Core } from "./ONFT721Core.sol";

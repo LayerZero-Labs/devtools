@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.22;
 
 library ONFT1155MsgCodec {
     uint8 private constant NUM_BYTES_FOR_UINT256 = 32;
