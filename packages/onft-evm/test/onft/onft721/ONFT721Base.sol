@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
+import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
 import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
 import { EnforcedOptionParam, OAppOptionsType3 } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
+import { MessagingFee } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 
-import { IONFT721 } from "../../../contracts/onft721/interfaces/IONFT721.sol";
+import { IONFT721, SendParam } from "../../../contracts/onft721/interfaces/IONFT721.sol";
+import { ONFT721Adapter } from "../../../contracts/onft721/ONFT721Adapter.sol";
 
 import { ERC721Mock } from "./mocks/ERC721Mock.sol";
 import { ONFT721Mock } from "./mocks/ONFT721Mock.sol";
@@ -83,16 +87,105 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
         onfts[onftIndex++] = address(cONFTAdapter);
         wireOApps(onfts);
 
+        _mintOnAdapter();
+        _distributeAcrossMesh();
+    }
+
+    /// @dev mint ONFTs on the adapter
+    function _mintOnAdapter() internal {
         uint256 numONFTsPerEID = _initialNumONFTsPerEID();
-        for (uint256 i = 0; i < numONFTsPerEID; i++) {
-            aONFT.mint(alice, i);
-        }
-        for (uint256 i = numONFTsPerEID; i < numONFTsPerEID * 2; i++) {
-            bONFT.mint(bob, i);
-        }
-        for (uint256 i = numONFTsPerEID * 2; i < numONFTsPerEID * 3; i++) {
+        for (uint256 i = 0; i < numONFTsPerEID * 3; i++) {
             cERC721Mock.mint(charlie, i);
         }
+    }
+
+    /// @dev distribute ONFTs across the mesh, giving alice 256 on A_EID and bob 256 on B_EID.
+    function _distributeAcrossMesh() internal {
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200_000, 0);
+        uint256 numONFTsPerEID = _initialNumONFTsPerEID();
+        for (uint256 i = 0; i < numONFTsPerEID; i++) {
+            vm.startPrank(charlie);
+            IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), i);
+            vm.stopPrank();
+            _sendAndCheck(i, C_EID, A_EID, charlie, alice, options, numONFTsPerEID * 3 - i, i, true, false);
+        }
+        for (uint256 i = numONFTsPerEID; i < numONFTsPerEID * 2; i++) {
+            vm.startPrank(charlie);
+            IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), i);
+            vm.stopPrank();
+            _sendAndCheck(
+                i,
+                C_EID,
+                B_EID,
+                charlie,
+                bob,
+                options,
+                numONFTsPerEID * 3 - i,
+                i - numONFTsPerEID,
+                true,
+                false
+            );
+        }
+    }
+
+    function _sendAndCheck(
+        uint256 _tokenToSend,
+        uint32 _srcEid,
+        uint32 _dstEid,
+        address _from,
+        address _to,
+        uint256 _srcCount,
+        uint256 _dstCount,
+        bool _srcIsAdapter,
+        bool _dstIsAdapter
+    ) internal {
+        _sendAndCheck(
+            _tokenToSend,
+            _srcEid,
+            _dstEid,
+            _from,
+            _to,
+            "",
+            _srcCount,
+            _dstCount,
+            _srcIsAdapter,
+            _dstIsAdapter
+        );
+    }
+
+    function _sendAndCheck(
+        uint256 _tokenToSend,
+        uint32 _srcEid,
+        uint32 _dstEid,
+        address _from,
+        address _to,
+        bytes memory _options,
+        uint256 _srcCount,
+        uint256 _dstCount,
+        bool _srcIsAdapter,
+        bool _dstIsAdapter
+    ) internal {
+        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _tokenToSend, _options, "");
+        MessagingFee memory fee = IONFT721(onfts[_srcEid - 1]).quoteSend(sendParam, false);
+
+        vm.prank(_from);
+        IONFT721(onfts[_srcEid - 1]).send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        verifyPackets(_dstEid, addressToBytes32(address(onfts[_dstEid - 1])));
+
+        assertEq(
+            IERC721(!_srcIsAdapter ? onfts[_srcEid - 1] : ONFT721Adapter(onfts[_srcEid - 1]).token()).balanceOf(_from),
+            _srcCount - 1
+        );
+        assertEq(
+            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).balanceOf(_to),
+            _dstCount + 1
+        );
+        assertEq(
+            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).ownerOf(
+                _tokenToSend
+            ),
+            _to
+        );
     }
 
     function _setMeshDefaultEnforcedSendOption() internal {

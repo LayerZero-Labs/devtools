@@ -56,40 +56,6 @@ contract ONFT721Test is ONFT721Base {
         assertEq(version, EXPECTED_ONFT721_VERSION);
     }
 
-    function _sendAndCheck(
-        uint16 _tokenToSend,
-        uint32 _srcEid,
-        uint32 _dstEid,
-        address _from,
-        address _to,
-        uint256 _srcCount,
-        uint256 _dstCount,
-        bool _srcIsAdapter,
-        bool _dstIsAdapter
-    ) internal {
-        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _tokenToSend, "", "");
-        MessagingFee memory fee = IONFT721(onfts[_srcEid - 1]).quoteSend(sendParam, false);
-
-        vm.prank(_from);
-        IONFT721(onfts[_srcEid - 1]).send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
-        verifyPackets(_dstEid, addressToBytes32(address(onfts[_dstEid - 1])));
-
-        assertEq(
-            IERC721(!_srcIsAdapter ? onfts[_srcEid - 1] : ONFT721Adapter(onfts[_srcEid - 1]).token()).balanceOf(_from),
-            _srcCount - 1
-        );
-        assertEq(
-            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).balanceOf(_to),
-            _dstCount + 1
-        );
-        assertEq(
-            IERC721(!_dstIsAdapter ? onfts[_dstEid - 1] : ONFT721Adapter(onfts[_dstEid - 1]).token()).ownerOf(
-                _tokenToSend
-            ),
-            _to
-        );
-    }
-
     function test_send(uint16 _tokenToSend) public {
         // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
         vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
@@ -260,14 +226,14 @@ contract ONFT721Test is ONFT721Base {
 
     function test_ONFTAdapter_debitAndCredit(uint256 _tokenId) public {
         // Ensure that the tokenId is owned by userC
-        vm.assume(_tokenId > DEFAULT_INITIAL_ONFTS_PER_EID * 2 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 3);
+        vm.assume(_tokenId >= DEFAULT_INITIAL_ONFTS_PER_EID * 2 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 3);
         vm.assume(cERC721Mock.ownerOf(_tokenId) == charlie);
 
         uint32 dstEid = C_EID;
         uint32 srcEid = C_EID;
 
         assertEq(cERC721Mock.balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), 0);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2);
 
         vm.prank(charlie);
         cERC721Mock.approve(address(cONFTAdapter), _tokenId);
@@ -279,7 +245,7 @@ contract ONFT721Test is ONFT721Base {
         // 2. The Adapter balance is incremented by 1.
         // 3. The Adapter is the owner of the token
         assertEq(cERC721Mock.balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID - 1);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), 1);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2 + 1);
         assertEq(cERC721Mock.ownerOf(_tokenId), address(cONFTAdapter));
 
         vm.prank(charlie);
@@ -290,7 +256,7 @@ contract ONFT721Test is ONFT721Base {
         // 2. The Adapter balance is decremented by 1.
         // 3. userB owns the token
         assertEq(cERC721Mock.balanceOf(address(bob)), 1);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), 0);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2);
         assertEq(cERC721Mock.ownerOf(_tokenId), bob);
     }
 
