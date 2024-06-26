@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.22;
 
 import { ONFT721 } from "../../../../contracts/onft721/ONFT721.sol";
 import { SendParam } from "../../../../contracts/onft721/ONFT721Core.sol";

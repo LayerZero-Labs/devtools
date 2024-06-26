@@ -8,8 +8,7 @@
         "hh-cache*/**",
         "cache*/**",
         "src/typechain-types/**",
-        "out/**",
-        "node_modules/**"
+        "out/**"
       ]
     }
   }

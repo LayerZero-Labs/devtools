@@ -7,38 +7,18 @@
     "url": "https://github.com/LayerZero-Labs/devtools.git"
   },
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "artifacts/contracts/**/!(*.dbg).json",
     "contracts/**/*"
   ],
   "scripts": {
-    "build": "forge build",
-    "build-contracts": "forge build && $npm_execpath hardhat compile --no-typechain --no-copy-artifacts && $npm_execpath hardhat size-contracts --no-compile",
-    "build-hardhat": "$npm_execpath hardhat compile",
-    "coverage:foundry": "forge coverage",
-    "debugpublish": "$npm_execpath publish --registry http://localhost:4873/",
-    "test": "forge test",
-    "test-contracts": "forge test && $npm_execpath hardhat test --no-compile",
-    "test-static-analyze": "$npm_execpath hardhat clean && $npm_execpath build-hardhat && python3 -m slither evm --ignore-compile --compile-force-framework hardhat --npx-disable",
-    "test_onft721_batch_0": "forge test --match-test test_onft721_batch_zero --gas-report",
-    "test_onft721_batch_1": "forge test --match-test test_onft721_batch_one --gas-report",
-    "test_onft721_batch_10": "forge test --match-test test_onft721_batch_ten --gas-report",
-    "test_onft721_batch_100": "forge test --match-test test_onft721_batch_hundred --gas-report",
-    "test_onft721_batch_250": "forge test --match-test test_onft721_batch_two_hundred_fifty --gas-report",
-    "test_onft721_batch_3": "forge test --match-test test_onft721_batch_three --gas-report",
-    "test_onft721_batch_only_2": "forge test --match-test test_onft721_batch_only_two --gas-report",
-    "test_onft721_double": "forge test --match-test test_onft721_double --gas-report",
-    "test_onft721_single": "forge test --match-test test_onft721_single --gas-report",
-    "test_onft721_triple": "forge test --match-test test_onft721_triple --gas-report"
+    "compile": "$npm_execpath compile:forge",
+    "compile:forge": "forge build",
+    "test": "$npm_execpath test:forge",
+    "test:forge": "forge test"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -64,7 +44,7 @@
     "@types/node": "~18.18.14",
     "chai": "^4.4.1",
     "dotenv": "^16.4.1",
-    "erc721a": "https://github.com/chiru-labs/ERC721A",
+    "erc721a": "^4.3.0",
     "eslint-plugin-jest-extended": "~2.0.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.22.3",
