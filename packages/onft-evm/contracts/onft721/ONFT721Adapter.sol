@@ -32,7 +32,8 @@ abstract contract ONFT721Adapter is ONFT721Core, IERC721Receiver {
     }
 
     function _debit(address _from, uint256 _tokenId, uint32 /*_dstEid*/) internal virtual override {
-        innerToken.safeTransferFrom(_from, address(this), _tokenId);
+        // Dont need to check onERC721Received() when moving into this contract, ie. no 'safeTransferFrom' required
+        innerToken.transferFrom(_from, address(this), _tokenId);
     }
 
     function _credit(address _toAddress, uint256 _tokenId, uint32 /*_srcEid*/) internal virtual override {
