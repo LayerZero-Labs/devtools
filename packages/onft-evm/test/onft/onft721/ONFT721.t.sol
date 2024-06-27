@@ -466,6 +466,6 @@ contract ONFT721Test is ONFT721Base {
 
     function test_onERC721Received(address _operator, address _from, uint256 _tokenId, bytes memory _data) public {
         bytes4 selector = cONFTAdapter.onERC721Received(_operator, _from, _tokenId, _data);
-        assertEq(selector, _operator == address(cONFTAdapter) ? IERC721Receiver.onERC721Received.selector : bytes4(0));
+        assertEq(selector, IERC721Receiver.onERC721Received.selector);
     }
 }
