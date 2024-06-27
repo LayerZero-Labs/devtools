@@ -17,7 +17,7 @@ contract ONFT721Mock is ONFT721 {
     }
 
     function debit(uint256 _tokenId, uint32 _dstEid) public {
-        _debit(_tokenId, _dstEid);
+        _debit(msg.sender, _tokenId, _dstEid);
     }
 
     function exists(uint256 _tokenId) public view returns (bool) {
