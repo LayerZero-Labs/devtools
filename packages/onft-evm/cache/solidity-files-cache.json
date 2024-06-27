@@ -429,7 +429,7 @@
         "ONFT721": {
           "0.8.22": {
             "path": "ONFT721.sol/ONFT721.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
@@ -519,7 +519,7 @@
         "ONFT721A": {
           "0.8.22": {
             "path": "ONFT721A.sol/ONFT721A.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
@@ -609,15 +609,15 @@
         "ONFT721Adapter": {
           "0.8.22": {
             "path": "ONFT721Adapter.sol/ONFT721Adapter.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721Core.sol": {
-      "lastModificationDate": 1719447062034,
-      "contentHash": "66daeff4684b6697f9713a5c7fff3352",
+      "lastModificationDate": 1719447465102,
+      "contentHash": "95fe206548318a83506db1a7f609bd08",
       "sourceName": "contracts/onft721/ONFT721Core.sol",
       "compilerSettings": {
         "solc": {
@@ -696,7 +696,7 @@
         "ONFT721Core": {
           "0.8.22": {
             "path": "ONFT721Core.sol/ONFT721Core.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
@@ -7975,8 +7975,8 @@
       "seenByCompiler": true
     },
     "test/onft/onft721/ONFT721.t.sol": {
-      "lastModificationDate": 1719431232984,
-      "contentHash": "f5c606605a5a8ab6845a89ee1c07e876",
+      "lastModificationDate": 1719447577842,
+      "contentHash": "4c81b09ceb2c8b9de2f4a64a82a45ba9",
       "sourceName": "test/onft/onft721/ONFT721.t.sol",
       "compilerSettings": {
         "solc": {
@@ -8144,7 +8144,7 @@
         "ONFT721Test": {
           "0.8.22": {
             "path": "ONFT721.t.sol/ONFT721Test.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "b0096616c87eea1b5567880204765f46"
           }
         }
       },
@@ -8317,7 +8317,7 @@
         "ONFT721Base": {
           "0.8.22": {
             "path": "ONFT721Base.sol/ONFT721Base.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
@@ -8466,7 +8466,7 @@
         "ONFT721AdapterMock": {
           "0.8.22": {
             "path": "ONFT721AdapterMock.sol/ONFT721AdapterMock.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
@@ -8564,12 +8564,16 @@
         "ONFT721Mock": {
           "0.8.22": {
             "path": "ONFT721Mock.sol/ONFT721Mock.json",
-            "build_id": "8dea4f33bb6035f19fd9ee5a666aeab4"
+            "build_id": "a6ffd9fa4944d6d122874acfc499ad5b"
           }
         }
       },
       "seenByCompiler": true
     }
   },
-  "builds": ["8dea4f33bb6035f19fd9ee5a666aeab4"]
+  "builds": [
+    "8dea4f33bb6035f19fd9ee5a666aeab4",
+    "a6ffd9fa4944d6d122874acfc499ad5b",
+    "b0096616c87eea1b5567880204765f46"
+  ]
 }
