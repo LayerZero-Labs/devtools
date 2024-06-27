@@ -11,7 +11,7 @@ contract ONFT721AdapterMock is ONFT721Adapter {
     ) ONFT721Adapter(_token, _lzEndpoint, _delegate) {}
 
     function debit(uint256 _tokenId, uint32 _dstEid) public {
-        _debit(_tokenId, _dstEid);
+        _debit(msg.sender, _tokenId, _dstEid);
     }
 
     function credit(address _to, uint256 _tokenId, uint32 _srcEid) public {

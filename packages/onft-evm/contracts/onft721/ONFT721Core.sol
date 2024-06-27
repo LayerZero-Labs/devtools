@@ -63,7 +63,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt) {
-        _debit(_sendParam.tokenId, _sendParam.dstEid);
+        _debit(msg.sender, _sendParam.tokenId, _sendParam.dstEid);
 
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
 
@@ -158,7 +158,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         emit MsgInspectorSet(_msgInspector);
     }
 
-    function _debit(uint256 _tokenId, uint32 /*_dstEid*/) internal virtual;
+    function _debit(address /*_from*/, uint256 _tokenId, uint32 /*_dstEid*/) internal virtual;
 
-    function _credit(address _toAddress, uint256 _tokenId, uint32 /*_srcEid*/) internal virtual;
+    function _credit(address _to, uint256 _tokenId, uint32 /*_srcEid*/) internal virtual;
 }

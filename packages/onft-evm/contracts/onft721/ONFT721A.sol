@@ -22,12 +22,13 @@ abstract contract ONFT721A is ONFT721Core, ERC721A, ERC721A__IERC721Receiver {
     ) ERC721A(_name, _symbol) ONFT721Core(_lzEndpoint, _delegate) {}
 
     function _debit(
+        address _from,
         uint256 _tokenId,
         uint32 /*_dstEid*/ // Exposed to future-proof overriding.
     ) internal virtual override {
         // TODO: Think more about this.  With updates now, we can mint a spot (specific) id, but only in a certain range.
         // Thus, we may still need to use safeTransferFrom()
-        safeTransferFrom(msg.sender, address(this), _tokenId);
+        safeTransferFrom(_from, address(this), _tokenId);
     }
 
     function _credit(
