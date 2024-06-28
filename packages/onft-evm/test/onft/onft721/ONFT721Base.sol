@@ -165,7 +165,7 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
         bool _srcIsAdapter,
         bool _dstIsAdapter
     ) internal {
-        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _tokenToSend, _options, "");
+        SendParam memory sendParam = SendParam(_dstEid, addressToBytes32(_to), _tokenToSend, _options, "", "");
         MessagingFee memory fee = IONFT721(onfts[_srcEid - 1]).quoteSend(sendParam, false);
 
         vm.prank(_from);
