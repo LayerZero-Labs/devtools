@@ -429,7 +429,7 @@
         "ONFT721": {
           "0.8.22": {
             "path": "ONFT721.sol/ONFT721.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
@@ -519,7 +519,7 @@
         "ONFT721A": {
           "0.8.22": {
             "path": "ONFT721A.sol/ONFT721A.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
@@ -609,15 +609,15 @@
         "ONFT721Adapter": {
           "0.8.22": {
             "path": "ONFT721Adapter.sol/ONFT721Adapter.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721Core.sol": {
-      "lastModificationDate": 1719490155189,
-      "contentHash": "95fe206548318a83506db1a7f609bd08",
+      "lastModificationDate": 1719591568632,
+      "contentHash": "ea1a3d324b383ee522eb495ae20eaa42",
       "sourceName": "contracts/onft721/ONFT721Core.sol",
       "compilerSettings": {
         "solc": {
@@ -696,15 +696,15 @@
         "ONFT721Core": {
           "0.8.22": {
             "path": "ONFT721Core.sol/ONFT721Core.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/interfaces/IONFT721.sol": {
-      "lastModificationDate": 1719540073801,
-      "contentHash": "81fa356b94c37a108d61cfec0ddd578d",
+      "lastModificationDate": 1719591491223,
+      "contentHash": "bd146ce33b539c37d2bd3a4d02325dc4",
       "sourceName": "contracts/onft721/interfaces/IONFT721.sol",
       "compilerSettings": {
         "solc": {
@@ -757,7 +757,7 @@
         "IONFT721": {
           "0.8.22": {
             "path": "IONFT721.sol/IONFT721.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "d5c893728782ee0c5738356fa353a1c0"
           }
         }
       },
@@ -7975,8 +7975,8 @@
       "seenByCompiler": true
     },
     "test/onft/onft721/ONFT721.t.sol": {
-      "lastModificationDate": 1719540561802,
-      "contentHash": "c0d84f36f4d8c83a50d45a5fc4502730",
+      "lastModificationDate": 1719591726694,
+      "contentHash": "fb6df35dfa9576f8eec0cceb8b8660a1",
       "sourceName": "test/onft/onft721/ONFT721.t.sol",
       "compilerSettings": {
         "solc": {
@@ -8144,7 +8144,7 @@
         "ONFT721Test": {
           "0.8.22": {
             "path": "ONFT721.t.sol/ONFT721Test.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "b25c7489d41ce4494b60f8b9701be6b5"
           }
         }
       },
@@ -8317,7 +8317,7 @@
         "ONFT721Base": {
           "0.8.22": {
             "path": "ONFT721Base.sol/ONFT721Base.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
@@ -8466,7 +8466,7 @@
         "ONFT721AdapterMock": {
           "0.8.22": {
             "path": "ONFT721AdapterMock.sol/ONFT721AdapterMock.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
@@ -8564,12 +8564,26 @@
         "ONFT721Mock": {
           "0.8.22": {
             "path": "ONFT721Mock.sol/ONFT721Mock.json",
-            "build_id": "b1402bed17c2720dcd7877d88fedfc59"
+            "build_id": "053fad7cf956e57ca5bb57dae35443af"
           }
         }
       },
       "seenByCompiler": true
     }
   },
-  "builds": ["b1402bed17c2720dcd7877d88fedfc59"]
+  "builds": [
+    "053fad7cf956e57ca5bb57dae35443af",
+    "1247bb83e162a5cbb8514b92f362f287",
+    "1bf21f78486e732d5b6f317d8121dbb4",
+    "24d08f51644c3feceda3cbf334792082",
+    "30bdbd20a41af906a797f310a3e7ffbb",
+    "3e9e475b3507b46890bcc7171441a3bd",
+    "40741d5b39436f1b031c9aeb0d2f1e4e",
+    "9fb3a5fd3ab8db3258ed9ed3fb334b9a",
+    "a2ca0c2f9777eab0206870da7a445e1d",
+    "b1402bed17c2720dcd7877d88fedfc59",
+    "b25c7489d41ce4494b60f8b9701be6b5",
+    "d5c893728782ee0c5738356fa353a1c0",
+    "df8932d4151c43fa663bc02781d62bec"
+  ]
 }

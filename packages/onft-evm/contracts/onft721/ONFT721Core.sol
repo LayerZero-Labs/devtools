@@ -54,6 +54,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         SendParam calldata _sendParam,
         bool _payInLzToken
     ) external view virtual returns (MessagingFee memory msgFee) {
+        if (_sendParam.to == bytes32(0)) revert InvalidReceiver();
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
         return _quote(_sendParam.dstEid, message, options, _payInLzToken);
     }
@@ -63,6 +64,7 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable virtual returns (MessagingReceipt memory msgReceipt) {
+        if (_sendParam.to == bytes32(0)) revert InvalidReceiver();
         _debit(msg.sender, _sendParam.tokenId, _sendParam.dstEid);
 
         (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam);
