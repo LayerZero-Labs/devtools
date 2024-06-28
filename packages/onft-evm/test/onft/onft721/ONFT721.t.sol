@@ -118,6 +118,37 @@ contract ONFT721Test is ONFT721Base {
         assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
     }
 
+    /// @dev Test to ensure that the quoteSend function reverts when the receiver is invalid.
+    function test_quoteSend_InvalidReceiver(uint256 _tokenToSend) public {
+        // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
+        vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
+
+        // 2. Set enforced options for SEND
+        _setMeshDefaultEnforcedSendOption();
+
+        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(address(0)), _tokenToSend, "", "", "");
+        vm.expectRevert(IONFT721.InvalidReceiver.selector);
+        IONFT721(onfts[2]).quoteSend(sendParam, false);
+    }
+
+    /// @dev Test to ensure that the send function reverts when the receiver is invalid.
+    function test_send_InvalidReceiver(uint256 _tokenToSend) public {
+        // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
+        vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
+
+        // 2. Set enforced options for SEND
+        _setMeshDefaultEnforcedSendOption();
+
+        SendParam memory sendParam = SendParam(B_EID, addressToBytes32(address(0)), _tokenToSend, "", "", "");
+        MessagingFee memory fee = MessagingFee(200_000, 0);
+
+        vm.startPrank(charlie);
+        IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), _tokenToSend);
+        vm.expectRevert(IONFT721.InvalidReceiver.selector);
+        IONFT721(onfts[2]).send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        vm.stopPrank();
+    }
+
     function test_sendAndCompose(uint8 _tokenToSend, bytes memory _composeMsg) public {
         vm.assume(_composeMsg.length > 0);
 
