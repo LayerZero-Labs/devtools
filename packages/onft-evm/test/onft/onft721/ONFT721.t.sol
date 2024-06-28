@@ -25,7 +25,7 @@ import { ONFT721Base } from "./ONFT721Base.sol";
 contract ONFT721Test is ONFT721Base {
     using OptionsBuilder for bytes;
 
-    bytes4 internal constant EXPECTED_ONFT721_ID = 0x5dfb0822;
+    bytes4 internal constant EXPECTED_ONFT721_ID = 0x23e18da6;
     uint8 internal constant EXPECTED_ONFT721_VERSION = 1;
 
     // also tests token() function
