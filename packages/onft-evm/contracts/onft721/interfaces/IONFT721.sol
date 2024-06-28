@@ -11,6 +11,7 @@ struct SendParam {
     uint256 tokenId;
     bytes extraOptions; // Additional options supplied by the caller to be used in the LayerZero message.
     bytes composeMsg; // The composed message for the send() operation.
+    bytes onftCmd; // The ONFT command to be executed, unused in default ONFT implementations.
 }
 
 /// @title IONFT
