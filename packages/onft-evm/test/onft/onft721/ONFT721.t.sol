@@ -119,7 +119,7 @@ contract ONFT721Test is ONFT721Base {
     }
 
     /// @dev Test to ensure that the quoteSend function reverts when the receiver is invalid.
-    function test_quoteSend_InvalidReceiver(uint256 _tokenToSend) public {
+    function test_quoteSend_InvalidReceiver(uint16 _tokenToSend) public {
         // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
         vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
 
@@ -132,7 +132,7 @@ contract ONFT721Test is ONFT721Base {
     }
 
     /// @dev Test to ensure that the send function reverts when the receiver is invalid.
-    function test_send_InvalidReceiver(uint256 _tokenToSend) public {
+    function test_send_InvalidReceiver(uint16 _tokenToSend) public {
         // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
         vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
 
