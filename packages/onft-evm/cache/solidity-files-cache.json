@@ -7975,8 +7975,8 @@
       "seenByCompiler": true
     },
     "test/onft/onft721/ONFT721.t.sol": {
-      "lastModificationDate": 1719592511937,
-      "contentHash": "e95cd0f995074d08a5747825103c5c10",
+      "lastModificationDate": 1719593318271,
+      "contentHash": "e2cee34aa5b554a7a71c9411fd8a0897",
       "sourceName": "test/onft/onft721/ONFT721.t.sol",
       "compilerSettings": {
         "solc": {
@@ -8144,7 +8144,7 @@
         "ONFT721Test": {
           "0.8.22": {
             "path": "ONFT721.t.sol/ONFT721Test.json",
-            "build_id": "bacb888f8a5a5c86981684580ceb1811"
+            "build_id": "25c05f2f46e2b8bfd8d0f9be635ccbf7"
           }
         }
       },
@@ -8576,6 +8576,7 @@
     "1247bb83e162a5cbb8514b92f362f287",
     "1bf21f78486e732d5b6f317d8121dbb4",
     "24d08f51644c3feceda3cbf334792082",
+    "25c05f2f46e2b8bfd8d0f9be635ccbf7",
     "30bdbd20a41af906a797f310a3e7ffbb",
     "3e9e475b3507b46890bcc7171441a3bd",
     "40741d5b39436f1b031c9aeb0d2f1e4e",
