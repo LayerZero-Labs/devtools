@@ -388,23 +388,15 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
@@ -429,7 +421,7 @@
         "ONFT721": {
           "0.8.22": {
             "path": "ONFT721.sol/ONFT721.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -485,30 +477,21 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "node_modules/@openzeppelin/contracts/utils/Address.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
-        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/erc721a/contracts/ERC721A.sol",
         "node_modules/erc721a/contracts/IERC721A.sol",
@@ -519,7 +502,7 @@
         "ONFT721A": {
           "0.8.22": {
             "path": "ONFT721A.sol/ONFT721A.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -575,23 +558,15 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
@@ -609,15 +584,15 @@
         "ONFT721Adapter": {
           "0.8.22": {
             "path": "ONFT721Adapter.sol/ONFT721Adapter.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/onft721/ONFT721Core.sol": {
-      "lastModificationDate": 1719591568632,
-      "contentHash": "ea1a3d324b383ee522eb495ae20eaa42",
+      "lastModificationDate": 1719775682931,
+      "contentHash": "8515dcd0f13c5071cb8d46f129d6a82c",
       "sourceName": "contracts/onft721/ONFT721Core.sol",
       "compilerSettings": {
         "solc": {
@@ -664,30 +639,21 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "node_modules/@openzeppelin/contracts/utils/Address.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
-        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
         "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
         "node_modules/solidity-bytes-utils/contracts/BytesLib.sol"
       ],
@@ -696,7 +662,7 @@
         "ONFT721Core": {
           "0.8.22": {
             "path": "ONFT721Core.sol/ONFT721Core.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -8047,10 +8013,6 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingComposer.sol",
@@ -8144,7 +8106,7 @@
         "ONFT721Test": {
           "0.8.22": {
             "path": "ONFT721.t.sol/ONFT721Test.json",
-            "build_id": "25c05f2f46e2b8bfd8d0f9be635ccbf7"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -8222,10 +8184,6 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingComposer.sol",
@@ -8317,7 +8275,7 @@
         "ONFT721Base": {
           "0.8.22": {
             "path": "ONFT721Base.sol/ONFT721Base.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -8432,23 +8390,15 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
@@ -8466,7 +8416,7 @@
         "ONFT721AdapterMock": {
           "0.8.22": {
             "path": "ONFT721AdapterMock.sol/ONFT721AdapterMock.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -8523,23 +8473,15 @@
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol",
         "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IOAppPreCrimeSimulator.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/interfaces/IPreCrime.sol",
-        "node_modules/@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/libs/Packet.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/interfaces/draft-IERC6093.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
@@ -8564,7 +8506,7 @@
         "ONFT721Mock": {
           "0.8.22": {
             "path": "ONFT721Mock.sol/ONFT721Mock.json",
-            "build_id": "053fad7cf956e57ca5bb57dae35443af"
+            "build_id": "0e439916f1a04e71fb9da150cf04629d"
           }
         }
       },
@@ -8573,6 +8515,7 @@
   },
   "builds": [
     "053fad7cf956e57ca5bb57dae35443af",
+    "0e439916f1a04e71fb9da150cf04629d",
     "1247bb83e162a5cbb8514b92f362f287",
     "1bf21f78486e732d5b6f317d8121dbb4",
     "24d08f51644c3feceda3cbf334792082",
