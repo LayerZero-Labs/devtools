@@ -6,8 +6,6 @@ import { OApp, Origin } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.
 import { IOAppMsgInspector } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppMsgInspector.sol";
 import { OAppOptionsType3 } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
 
-import { OAppPreCrimeSimulator } from "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol";
-
 import { IONFT721, MessagingFee, MessagingReceipt, SendParam } from "./interfaces/IONFT721.sol";
 import { ONFT721MsgCodec } from "./libs/ONFT721MsgCodec.sol";
 import { ONFTComposeMsgCodec } from "../libs/ONFTComposeMsgCodec.sol";
@@ -19,7 +17,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title ONFT721Core
 /// @dev Abstract contract for an ONFT721 token.
-abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOptionsType3 {
+abstract contract ONFT721Core is IONFT721, OApp, OAppOptionsType3 {
     using ONFT721MsgCodec for bytes;
     using ONFT721MsgCodec for bytes32;
     using ONFT721MsgCodec for uint256;
@@ -121,33 +119,12 @@ abstract contract ONFT721Core is IONFT721, OApp, OAppPreCrimeSimulator, OAppOpti
         emit ONFTReceived(_guid, _origin.srcEid, toAddress, tokenId);
     }
 
-    /// @dev Internal function to handle the OAppPreCrimeSimulator simulated receive.
-    /// @param _origin The origin information.
-    ///  - srcEid: The source chain endpoint ID.
-    ///  - sender: The sender address from the src chain.
-    ///  - nonce: The nonce of the LayerZero message.
-    /// @param _guid The unique identifier for the received LayerZero message.
-    /// @param _message The LayerZero message.
-    /// @param _executor The address of the off-chain executor.
-    /// @param _extraData Arbitrary data passed by the msg executor.
-    /// @dev Enables the preCrime simulator to mock sending lzReceive() messages,
-    /// routes the msg down from the OAppPreCrimeSimulator, and back up to the OAppReceiver.
-    function _lzReceiveSimulate(
-        Origin calldata _origin,
-        bytes32 _guid,
-        bytes calldata _message,
-        address _executor,
-        bytes calldata _extraData
-    ) internal virtual override {
-        _lzReceive(_origin, _guid, _message, _executor, _extraData);
-    }
-
     /// @dev Check if the peer is considered 'trusted' by the OApp.
     /// @param _eid The endpoint ID to check.
     /// @param _peer The peer to check.
     /// @return Whether the peer passed is considered 'trusted' by the OApp.
     /// @dev Enables OAppPreCrimeSimulator to check whether a potential Inbound Packet is from a trusted source.
-    function isPeer(uint32 _eid, bytes32 _peer) public view virtual override returns (bool) {
+    function isPeer(uint32 _eid, bytes32 _peer) public view virtual returns (bool) {
         return peers[_eid] == _peer;
     }
 
