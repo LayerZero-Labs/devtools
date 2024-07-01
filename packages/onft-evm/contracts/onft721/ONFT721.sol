@@ -33,7 +33,7 @@ abstract contract ONFT721 is ONFT721Core, ERC721 {
     }
 
     function _debit(address _from, uint256 _tokenId, uint32 /*_dstEid*/) internal virtual override {
-        if (_from != ERC721.ownerOf(_tokenId)) revert OnlyNFTOwner(_from, ERC721.ownerOf(_tokenId));
+        if (_from != ERC721.ownerOf(_tokenId)) revert IONFT_OnlyOwner(_from, ERC721.ownerOf(_tokenId));
         _burn(_tokenId);
     }
 

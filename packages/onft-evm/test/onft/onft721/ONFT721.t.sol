@@ -127,7 +127,7 @@ contract ONFT721Test is ONFT721Base {
         _setMeshDefaultEnforcedSendOption();
 
         SendParam memory sendParam = SendParam(B_EID, addressToBytes32(address(0)), _tokenToSend, "", "", "");
-        vm.expectRevert(IONFT721.InvalidReceiver.selector);
+        vm.expectRevert(IONFT721.IONFT_InvalidReceiver.selector);
         IONFT721(onfts[2]).quoteSend(sendParam, false);
     }
 
@@ -144,7 +144,7 @@ contract ONFT721Test is ONFT721Base {
 
         vm.startPrank(charlie);
         IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), _tokenToSend);
-        vm.expectRevert(IONFT721.InvalidReceiver.selector);
+        vm.expectRevert(IONFT721.IONFT_InvalidReceiver.selector);
         IONFT721(onfts[2]).send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
         vm.stopPrank();
     }

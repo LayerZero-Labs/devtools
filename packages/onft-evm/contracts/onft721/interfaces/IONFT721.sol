@@ -19,8 +19,8 @@ struct SendParam {
 /// @dev Does not inherit ERC721 to accommodate usage by OFT721Adapter.
 interface IONFT721 {
     // Custom error messages
-    error InvalidReceiver();
-    error OnlyNFTOwner(address caller, address owner);
+    error IONFT_InvalidReceiver();
+    error IONFT_OnlyOwner(address caller, address owner);
 
     // Events
     event ONFTSent(
