@@ -2,7 +2,7 @@ import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { task } from 'hardhat/config'
 import { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'
 
-import { makeBytes32 } from '@layerzerolabs/devtools/src/common/bytes'
+import { makeBytes32 } from '@layerzerolabs/devtools'
 
 const DEFAULT_EXTRA_OPTIONS = '0x'
 const DEFAULT_COMPOSE_MSG = '0x'
