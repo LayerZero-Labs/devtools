@@ -58,8 +58,8 @@
     "@layerzerolabs/devtools": "~0.3.16",
     "@layerzerolabs/devtools-evm": "~0.3.10",
     "@layerzerolabs/io-devtools": "~0.1.10",
-    "@layerzerolabs/lz-definitions": "^2.3.3",
-    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.3",
+    "@layerzerolabs/lz-definitions": "^2.3.25",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.25",
     "@layerzerolabs/test-devtools": "~0.2.5",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.2.4",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
@@ -90,7 +90,7 @@
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "fp-ts": "^2.16.2",
     "hardhat": "^2.22.3",
-    "hardhat-deploy": "^0.11.45"
+    "hardhat-deploy": "^0.12.1"
   },
   "publishConfig": {
     "access": "public"
