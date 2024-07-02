@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools
 
+## 0.3.17
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+- Updated dependencies [3ec2912]
+  - @layerzerolabs/io-devtools@0.1.11
+
 ## 0.3.16
 
 ### Patch Changes

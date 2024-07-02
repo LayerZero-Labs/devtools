@@ -1,5 +1,12 @@
 # build-lz-options
 
+## 0.2.5
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+
 ## 0.2.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.10
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+
 ## 0.0.9
 
 ### Patch Changes

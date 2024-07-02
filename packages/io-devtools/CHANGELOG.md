@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.11
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+
 ## 0.1.10
 
 ### Patch Changes
