@@ -39,10 +39,10 @@
     "@layerzerolabs/devtools-evm": "~0.3.12",
     "@layerzerolabs/devtools-evm-hardhat": "~0.3.20",
     "@layerzerolabs/io-devtools": "~0.1.10",
-    "@layerzerolabs/lz-definitions": "^2.3.3",
-    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.3",
-    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.3",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.3",
+    "@layerzerolabs/lz-definitions": "^2.3.25",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.25",
+    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.25",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
     "@layerzerolabs/protocol-devtools": "~0.3.8",
     "@layerzerolabs/protocol-devtools-evm": "~0.3.9",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.2.4",
@@ -71,9 +71,9 @@
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.2",
-    "ethers": "^5.7.0",
+    "ethers": "^5.7.2",
     "hardhat": "^2.22.3",
-    "hardhat-deploy": "^0.11.45"
+    "hardhat-deploy": "^0.12.1"
   },
   "publishConfig": {
     "access": "public"
