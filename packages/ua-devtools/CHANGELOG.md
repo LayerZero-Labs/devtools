@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.17
+
+### Patch Changes
+
+- 0d98b83: Configure OApp delegates as the first thing
+
 ## 0.3.16
 
 ### Patch Changes

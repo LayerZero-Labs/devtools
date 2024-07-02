@@ -1238,7 +1238,7 @@ importers:
         specifier: ~0.2.4
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.3.13
+        specifier: ~0.3.17
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.3.12
@@ -8293,7 +8293,6 @@ packages:
     dependencies:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
-    bundledDependencies: false
 
   /eventemitter3@4.0.4:
     resolution: {integrity: sha512-rlaVLnVxtxvoyLsQQFBx53YmXHDxRIzzTLbdfxqi4yocpSjAxXwkU0cScM5JgSKMqEhrZpnvQ2D9gjylR0AimQ==}
