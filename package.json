@@ -62,10 +62,5 @@
   "packageManager": "pnpm@8.14.0",
   "engines": {
     "node": ">=18.16.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "bigint-buffer@1.1.5": "patches/bigint-buffer@1.1.5.patch"
-    }
   }
 }
