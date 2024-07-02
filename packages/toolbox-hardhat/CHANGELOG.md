@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.34
+
+### Patch Changes
+
+- 0d98b83: Configure OApp delegates as the first thing
+- Updated dependencies [0d98b83]
+  - @layerzerolabs/ua-devtools@0.3.17
+
 ## 0.2.33
 
 ### Patch Changes
