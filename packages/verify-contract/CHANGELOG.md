@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.22
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+
 ## 1.1.21
 
 ### Patch Changes

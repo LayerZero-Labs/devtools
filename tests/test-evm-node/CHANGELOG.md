@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.8
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+
 ## 0.0.7
 
 ### Patch Changes

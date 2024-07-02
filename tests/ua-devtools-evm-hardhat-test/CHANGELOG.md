@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.13
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+
 ## 0.2.12
 
 ### Patch Changes

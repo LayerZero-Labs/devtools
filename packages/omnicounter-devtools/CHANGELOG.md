@@ -1,5 +1,16 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 0.3.7
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+- Updated dependencies [3ec2912]
+- Updated dependencies [58cbd3e]
+  - @layerzerolabs/devtools@0.3.17
+  - @layerzerolabs/protocol-devtools@0.3.9
+
 ## 0.3.6
 
 ### Patch Changes

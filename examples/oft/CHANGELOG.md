@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-example
 
+## 0.2.7
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+
 ## 0.2.6
 
 ### Patch Changes

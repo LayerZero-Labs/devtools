@@ -1,5 +1,22 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 0.3.19
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+- Updated dependencies [3ec2912]
+- Updated dependencies [58cbd3e]
+  - @layerzerolabs/devtools@0.3.17
+  - @layerzerolabs/devtools-evm@0.3.13
+  - @layerzerolabs/devtools-evm-hardhat@0.3.21
+  - @layerzerolabs/io-devtools@0.1.11
+  - @layerzerolabs/protocol-devtools@0.3.9
+  - @layerzerolabs/protocol-devtools-evm@0.3.10
+  - @layerzerolabs/ua-devtools@0.3.18
+  - @layerzerolabs/ua-devtools-evm@0.3.14
+
 ## 0.3.18
 
 ### Patch Changes

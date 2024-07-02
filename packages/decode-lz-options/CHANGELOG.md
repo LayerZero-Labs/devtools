@@ -1,5 +1,12 @@
 # decode-lz-options
 
+## 0.0.3
+
+### Patch Changes
+
+- 3ec2912: Fixing changeset race condition in the PR's updating them all
+- 58cbd3e: Update to latest lz dependencies
+
 ## 0.0.2
 
 ### Patch Changes
