@@ -45,6 +45,7 @@ export interface OAppReceiveConfig {
 
 export interface OAppNodeConfig extends OwnableNodeConfig {
     delegate?: OmniAddress | null
+    callerBpsCap?: bigint
 }
 
 export interface OAppEdgeConfig {
