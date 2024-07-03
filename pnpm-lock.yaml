@@ -736,6 +736,10 @@ importers:
         version: 5.5.3
 
   examples/onft721:
+    dependencies:
+      '@layerzerolabs/devtools':
+        specifier: 0.3.24
+        version: link:../../packages/devtools
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
