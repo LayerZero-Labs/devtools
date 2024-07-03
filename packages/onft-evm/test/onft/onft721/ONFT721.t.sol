@@ -256,7 +256,7 @@ contract ONFT721Test is ONFT721Base {
         assertEq(aONFT.balanceOf(address(this)), 0);
     }
 
-    function test_ONFTAdapter_debitAndCredit(uint256 _tokenId) public {
+    function test_ONFTAdapter_debitAndCredit(uint16 _tokenId) public {
         // Ensure that the tokenId is owned by userC
         vm.assume(_tokenId >= DEFAULT_INITIAL_ONFTS_PER_EID * 2 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 3);
         vm.assume(cERC721Mock.ownerOf(_tokenId) == charlie);
