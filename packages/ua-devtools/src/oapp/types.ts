@@ -25,6 +25,8 @@ export interface IOApp extends IOmniSDK, IOwnable {
     setDelegate(address: OmniAddress): Promise<OmniTransaction>
     getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes>
     setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction>
+    getCallerBpsCap(): Promise<bigint>
+    setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction>
 }
 
 export interface OAppReceiveLibraryConfig {

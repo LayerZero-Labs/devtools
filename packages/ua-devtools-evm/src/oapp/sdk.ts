@@ -10,7 +10,7 @@ import {
     makeBytes32,
     Bytes,
 } from '@layerzerolabs/devtools'
-import { type OmniContract, formatOmniContract } from '@layerzerolabs/devtools-evm'
+import { type OmniContract, formatOmniContract, BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
@@ -136,6 +136,22 @@ export class OApp extends Ownable implements IOApp {
             ...this.createTransaction(data),
             description: `Setting enforced options to ${printJson(enforcedOptions)}`,
         }
+    }
+
+    async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction> {
+        const data = this.contract.contract.interface.encodeFunctionData('setCallerBpsCap', [callerBpsCap])
+
+        return {
+            ...this.createTransaction(data),
+            description: `Setting caller BPS cap to ${callerBpsCap}`,
+        }
+    }
+
+    @AsyncRetriable()
+    async getCallerBpsCap(): Promise<bigint> {
+        const callerBpsCap = await this.contract.contract.callerBpsCap()
+
+        return BigNumberishBigIntSchema.parse(callerBpsCap)
     }
 
     /**

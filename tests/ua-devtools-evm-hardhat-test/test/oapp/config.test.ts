@@ -2301,5 +2301,9 @@ describe('oapp/config', () => {
                 expect(transactionsAgain).toEqual([])
             })
         })
+
+        describe('configureCallerBpsCap', () => {
+            // TODO
+        })
     })
 })

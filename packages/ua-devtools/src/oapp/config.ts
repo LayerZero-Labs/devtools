@@ -502,6 +502,40 @@ export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
     }
 )
 
+export const configureCallerBpsCap: OAppConfigurator = withOAppLogger(
+    createConfigureNodes(
+        withOAppLogger(
+            async ({ config, point }, sdk) => {
+                const logger = createOAppLogger()
+                const label = formatOmniPoint(point)
+
+                if (config?.callerBpsCap == null) {
+                    return logger.verbose(`callerBpsCap not set for ${label}, skipping`), []
+                }
+
+                const callerBpsCap = await sdk.getCallerBpsCap()
+                if (callerBpsCap === config.callerBpsCap) {
+                    return logger.verbose(`callerBpsCap ${callerBpsCap} already set for ${label}, skipping`), []
+                }
+
+                return await sdk.setCallerBpsCap(config.callerBpsCap)
+            },
+            {
+                onStart: (logger, [{ point }]) =>
+                    logger.verbose(`Checking OApp callerBpsCap configuration for ${formatOmniPoint(point)}`),
+                onSuccess: (logger, [{ point }]) =>
+                    logger.verbose(`${printBoolean(true)} Checked OApp callerBpsCap for ${formatOmniPoint(point)}`),
+                onError: (logger, [{ point }], error) =>
+                    logger.error(`Failed to check OApp callerBpsCap for ${formatOmniPoint(point)}: ${error}`),
+            }
+        )
+    ),
+    {
+        onStart: (logger) => logger.verbose(`Checking OApp callerBpsCap configuration`),
+        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp callerBpsCap configuration`),
+    }
+)
+
 const buildOmniTransactions = async (
     setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
     createSdk: OAppFactory
@@ -583,6 +617,7 @@ export const configureOApp: OAppConfigurator = withOAppLogger(
         configureSendConfig,
         configureReceiveConfig,
         configureEnforcedOptions,
+        configureCallerBpsCap,
         configureOAppDelegates
     ),
     {

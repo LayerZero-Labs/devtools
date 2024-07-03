@@ -98,7 +98,8 @@ export const createConfigureEdges =
  *   configureReceiveLibraryTimeouts
  *   configureSendConfig
  *   configureReceiveConfig
- *   configureEnforcedOptions
+ *   configureEnforcedOptions,
+ *   configureCallerBpsCap,
  *   configureOAppDelegates
  * )
  * ```
