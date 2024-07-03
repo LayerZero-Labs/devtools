@@ -7,7 +7,14 @@ import {
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOApp, configureOAppDelegates, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import {
+    configureOApp,
+    configureOAppDelegates,
+    configureCallerBpsCap,
+    IOApp,
+    OAppFactory,
+    OAppOmniGraph,
+} from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     avaxReceiveUln,
@@ -2303,7 +2310,92 @@ describe('oapp/config', () => {
         })
 
         describe('configureCallerBpsCap', () => {
-            // TODO
+            it('should not return any transactions if configs are undefined', async () => {
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: undefined,
+                        },
+                        {
+                            point: ethPoint,
+                            config: undefined,
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should not return any transactions if callerBpsCap is undefined', async () => {
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: undefined,
+                            },
+                        },
+                        {
+                            point: ethPoint,
+                            config: {
+                                callerBpsCap: undefined,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should not set callerBpsCap that has already been set', async () => {
+                const avaxCallerBpsCap = 1000
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: avaxCallerBpsCap,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                const signAndSend = createSignAndSend(createSignerFactory())
+                await signAndSend([await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)])
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should return all setCallerBpsCap transactions if callerBpsCap is specified', async () => {
+                const avaxCallerBpsCap = 1000
+                const ethCallerBpsCap = 5000
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: avaxCallerBpsCap,
+                            },
+                        },
+                        {
+                            point: ethPoint,
+                            config: {
+                                callerBpsCap: ethCallerBpsCap,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([
+                    await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap),
+                    await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap),
+                ])
+            })
         })
     })
 })
