@@ -401,6 +401,10 @@ importers:
         version: 5.5.3
 
   examples/onft721:
+    dependencies:
+      '@layerzerolabs/devtools':
+        specifier: 0.3.17
+        version: 0.3.17(@ethersproject/bytes@5.7.0)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@2.3.31)(zod@3.22.4)
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -4713,6 +4717,22 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /@layerzerolabs/devtools@0.3.17(@ethersproject/bytes@5.7.0)(@layerzerolabs/io-devtools@packages+io-devtools)(@layerzerolabs/lz-definitions@2.3.31)(zod@3.22.4):
+    resolution: {integrity: sha512-G/NUnmInAJna5/gsqjVNdumH68eJGe3FGFHxMDQKKOUlffznZcOqwdObkYdjXDx7XdUiDdCSWTXmmpV9xVW6mQ==}
+    peerDependencies:
+      '@ethersproject/bytes': ~5.7.0
+      '@layerzerolabs/io-devtools': ~0.1.11
+      '@layerzerolabs/lz-definitions': ^2.3.3
+      zod: ^3.22.4
+    dependencies:
+      '@ethersproject/bytes': 5.7.0
+      '@layerzerolabs/io-devtools': link:packages/io-devtools
+      '@layerzerolabs/lz-definitions': 2.3.31
+      exponential-backoff: 3.1.1
+      js-yaml: 4.1.0
+      zod: 3.22.4
+    dev: false
+
   /@layerzerolabs/eslint-config-next@2.3.3(typescript@5.3.3):
     resolution: {integrity: sha512-zeq0LZkSPI2tm6M1fRmmPA6gzTAUg3rux074FV+8N+PyC53/DhPUHT/DYvTHl0/+F04nFp8MD+yYSHReVIQLNQ==}
     dependencies:
@@ -4815,7 +4835,6 @@ packages:
     resolution: {integrity: sha512-UBtnIhdny7frTApjwDhtmslXKdmKxST0BsVpBmUrYmNP76bJ69A7H2lawBHQokmDm63DulMiao2TthPN32ss4g==}
     dependencies:
       tiny-invariant: 1.3.3
-    dev: true
 
   /@layerzerolabs/lz-evm-messagelib-v2@2.3.25(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.25)(@layerzerolabs/lz-evm-v1-0.7@2.3.25)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-QcIqNry0qia7Rf/7PR1t4VibQT2QGZdyLzsiKICzb2k8EpwiUYnHriIX6VBeFklVOBc3D9ffwZ/bBvsg9NykKg==}
