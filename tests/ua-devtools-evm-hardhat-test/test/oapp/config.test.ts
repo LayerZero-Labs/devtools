@@ -2351,7 +2351,7 @@ describe('oapp/config', () => {
             })
 
             it('should not set callerBpsCap that has already been set', async () => {
-                const avaxCallerBpsCap = 1000
+                const avaxCallerBpsCap = BigInt(1000)
                 const graph: OAppOmniGraph = {
                     contracts: [
                         {
@@ -2371,8 +2371,8 @@ describe('oapp/config', () => {
             })
 
             it('should return all setCallerBpsCap transactions if callerBpsCap is specified', async () => {
-                const avaxCallerBpsCap = 1000
-                const ethCallerBpsCap = 5000
+                const avaxCallerBpsCap = BigInt(1000)
+                const ethCallerBpsCap = BigInt(5000)
                 const graph: OAppOmniGraph = {
                     contracts: [
                         {
