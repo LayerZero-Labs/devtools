@@ -1,0 +1,15 @@
+{
+  "extends": ["//"],
+  "pipeline": {
+    "build": {
+      "outputs": [
+        "dist/**",
+        "artifacts*/**",
+        "hh-cache*/**",
+        "cache*/**",
+        "src/typechain-types/**",
+        "out/**"
+      ]
+    }
+  }
+}
