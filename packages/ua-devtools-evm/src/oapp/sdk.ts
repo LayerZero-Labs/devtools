@@ -138,7 +138,15 @@ export class OApp extends Ownable implements IOApp {
         }
     }
 
-    async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction> {
+    async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction | undefined> {
+        if (this.contract.contract.interface.functions['setCallerBpsCap'] == null) {
+            return (
+                this.logger.warn(
+                    `Cannot set callerBpsCap for ${this.label}: setCallerBpsCap function is not supported`
+                ),
+                undefined
+            )
+        }
         const data = this.contract.contract.interface.encodeFunctionData('setCallerBpsCap', [callerBpsCap])
 
         return {
@@ -148,7 +156,15 @@ export class OApp extends Ownable implements IOApp {
     }
 
     @AsyncRetriable()
-    async getCallerBpsCap(): Promise<bigint> {
+    async getCallerBpsCap(): Promise<bigint | undefined> {
+        // We want to return undefined if there is no callerBpsCap defined on the contract as opposed to throwing
+        // since throwing would trigger the async retriable
+        if (this.contract.contract.interface.functions['callerBpsCap()'] == null) {
+            return (
+                this.logger.warn(`Cannot get callerBpsCap for ${this.label}: callerBpsCap function is not supported`),
+                undefined
+            )
+        }
         const callerBpsCap = await this.contract.contract.callerBpsCap()
 
         return BigNumberishBigIntSchema.parse(callerBpsCap)

@@ -2365,7 +2365,9 @@ describe('oapp/config', () => {
                 }
 
                 const signAndSend = createSignAndSend(createSignerFactory())
-                await signAndSend([await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)])
+                if (avaxContract.contract.interface.functions['setCallerBpsCap'] != null) {
+                    await signAndSend([(await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)) as OmniTransaction])
+                }
 
                 expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
             })
