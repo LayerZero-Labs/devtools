@@ -22,8 +22,7 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: fujiContract,
             config: {
-                callerBpsCap: 1000, // this is example of how callerBpsCap can be configured when calling lz:oapp:wire
-                // QUESTION: is this accurate + should this be in edges or nodes?
+                callerBpsCap: BigInt(1000),
             },
         },
         {
