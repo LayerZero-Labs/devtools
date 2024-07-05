@@ -2365,9 +2365,8 @@ describe('oapp/config', () => {
                 }
 
                 const signAndSend = createSignAndSend(createSignerFactory())
-                if (avaxContract.contract.interface.functions['setCallerBpsCap(uint256)'] != null) {
-                    await signAndSend([(await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)) as OmniTransaction])
-                }
+                await signAndSend([await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)])
+                expect(await avaxOAppSdk.getCallerBpsCap()).toBe(avaxCallerBpsCap)
 
                 expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
             })
@@ -2397,6 +2396,16 @@ describe('oapp/config', () => {
                     await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap),
                     await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap),
                 ])
+
+                /**
+                 * Now we'll check if the callerBpsCap has been set correctly after above transactions are signed and sent
+                 */
+                const signAndSend = createSignAndSend(createSignerFactory())
+                await signAndSend([await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)])
+                expect(await avaxOAppSdk.getCallerBpsCap()).toBe(avaxCallerBpsCap)
+
+                await signAndSend([await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap)])
+                expect(await ethOAppSdk.getCallerBpsCap()).toBe(ethCallerBpsCap)
             })
         })
     })
