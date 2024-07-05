@@ -139,7 +139,7 @@ export class OApp extends Ownable implements IOApp {
     }
 
     async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction | undefined> {
-        if (this.contract.contract.interface.functions['setCallerBpsCap'] == null) {
+        if (this.contract.contract.interface.functions['setCallerBpsCap(uint256)'] == null) {
             return (
                 this.logger.warn(
                     `Cannot set callerBpsCap for ${this.label}: setCallerBpsCap function is not supported`
