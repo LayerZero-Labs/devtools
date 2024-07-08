@@ -22,7 +22,7 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: fujiContract,
             config: {
-                callerBpsCap: BigInt(1000),
+                callerBpsCap: BigInt(300),
             },
         },
         {
