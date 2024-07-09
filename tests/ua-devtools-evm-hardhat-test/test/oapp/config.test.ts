@@ -7,7 +7,14 @@ import {
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { configureOApp, configureOAppDelegates, IOApp, OAppFactory, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import {
+    configureOApp,
+    configureOAppDelegates,
+    configureCallerBpsCap,
+    IOApp,
+    OAppFactory,
+    OAppOmniGraph,
+} from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     avaxReceiveUln,
@@ -33,7 +40,7 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 describe('oapp/config', () => {
     const ethPointHardhat = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DefaultOApp' }
     const avaxPointHardhat = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DefaultOApp' }
-    const bscPointHardhat = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DefaultOApp' }
+    const bscPointHardhat = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'CustomOApp' }
 
     let contractFactory: OmniContractFactoryHardhat
     let signAndSend
@@ -48,6 +55,11 @@ describe('oapp/config', () => {
     let avaxPoint: OmniPoint
     let avaxOAppSdk: IOApp
     let avaxEndpointV2Sdk: IEndpointV2
+
+    let bscContract: OmniContract
+    let bscPoint: OmniPoint
+    let bscOAppSdk: IOApp
+
     let transactions: OmniTransaction[]
 
     // This is the OApp config that we want to use against our contracts
@@ -62,12 +74,16 @@ describe('oapp/config', () => {
 
         ethContract = await contractFactory(ethPointHardhat)
         avaxContract = await contractFactory(avaxPointHardhat)
+        bscContract = await contractFactory(bscPointHardhat)
 
         ethPoint = omniContractToPoint(ethContract)
         ethOAppSdk = await oappSdkFactory(ethPoint)
 
         avaxPoint = omniContractToPoint(avaxContract)
         avaxOAppSdk = await oappSdkFactory(avaxPoint)
+
+        bscPoint = omniContractToPoint(bscContract)
+        bscOAppSdk = await oappSdkFactory(bscPoint)
 
         ethEndpointV2Sdk = await ethOAppSdk.getEndpointSDK()
         avaxEndpointV2Sdk = await avaxOAppSdk.getEndpointSDK()
@@ -712,12 +728,7 @@ describe('oapp/config', () => {
         })
 
         describe('configureConfig configureSendConfig and configureReceiveConfig separately', () => {
-            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: IOApp
-
             beforeEach(async () => {
-                bscContract = await contractFactory(bscPointHardhat)
-                bscPoint = omniContractToPoint(bscContract)
-                bscOAppSdk = await oappSdkFactory(bscPoint)
                 // Before we configure the OApp, we'll set some peers
                 const [_, errors] = await signAndSend([
                     await ethOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
@@ -1565,12 +1576,8 @@ describe('oapp/config', () => {
 
         describe('configureEnforcedOptions', () => {
             let graph: OAppOmniGraph
-            let bscContract: OmniContract, bscPoint: OmniPoint, bscOAppSdk: IOApp
 
             beforeEach(async () => {
-                bscContract = await contractFactory(bscPointHardhat)
-                bscPoint = omniContractToPoint(bscContract)
-                bscOAppSdk = await oappSdkFactory(bscPoint)
                 // Before we configure the OApp, we'll set some peers
                 const [_, errors] = await signAndSend([
                     await ethOAppSdk.setPeer(bscPoint.eid, bscPoint.address),
@@ -2299,6 +2306,122 @@ describe('oapp/config', () => {
                 const transactionsAgain = await configureOApp(graph, oappSdkFactory)
                 // eslint-disable-next-line jest/no-standalone-expect
                 expect(transactionsAgain).toEqual([])
+            })
+        })
+
+        describe('configureCallerBpsCap', () => {
+            it('should not return any transactions if configs are undefined', async () => {
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: undefined,
+                        },
+                        {
+                            point: ethPoint,
+                            config: undefined,
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should not return any transactions if callerBpsCap is undefined', async () => {
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: undefined,
+                            },
+                        },
+                        {
+                            point: ethPoint,
+                            config: {
+                                callerBpsCap: undefined,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should not set callerBpsCap that has already been set', async () => {
+                const avaxCallerBpsCap = BigInt(100)
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: avaxCallerBpsCap,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                const signAndSend = createSignAndSend(createSignerFactory())
+                await signAndSend([(await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)) as OmniTransaction])
+                expect(await avaxOAppSdk.getCallerBpsCap()).toBe(avaxCallerBpsCap)
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should return no transactions if setCallerBpsCap function does not exist', async () => {
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: bscPoint,
+                            config: {
+                                callerBpsCap: BigInt(100),
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([])
+            })
+
+            it('should return all setCallerBpsCap transactions if callerBpsCap is specified', async () => {
+                const avaxCallerBpsCap = BigInt(100)
+                const ethCallerBpsCap = BigInt(300)
+                const graph: OAppOmniGraph = {
+                    contracts: [
+                        {
+                            point: avaxPoint,
+                            config: {
+                                callerBpsCap: avaxCallerBpsCap,
+                            },
+                        },
+                        {
+                            point: ethPoint,
+                            config: {
+                                callerBpsCap: ethCallerBpsCap,
+                            },
+                        },
+                    ],
+                    connections: [],
+                }
+
+                expect(await configureCallerBpsCap(graph, oappSdkFactory)).toEqual([
+                    await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap),
+                    await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap),
+                ])
+
+                /**
+                 * Now we'll check if the callerBpsCap has been set correctly after above transactions are signed and sent
+                 */
+                const signAndSend = createSignAndSend(createSignerFactory())
+                await signAndSend([(await avaxOAppSdk.setCallerBpsCap(avaxCallerBpsCap)) as OmniTransaction])
+                expect(await avaxOAppSdk.getCallerBpsCap()).toBe(avaxCallerBpsCap)
+
+                await signAndSend([(await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap)) as OmniTransaction])
+                expect(await ethOAppSdk.getCallerBpsCap()).toBe(ethCallerBpsCap)
             })
         })
     })

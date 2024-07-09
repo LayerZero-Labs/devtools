@@ -21,6 +21,14 @@ const config: OAppOmniGraphHardhat = {
     contracts: [
         {
             contract: fujiContract,
+            /**
+             * This config object is optional.
+             * The callerBpsCap refers to the maximum fee (in basis points) that the contract can charge.
+             */
+
+            // config: {
+            //     callerBpsCap: BigInt(300),
+            // },
         },
         {
             contract: sepoliaContract,
