@@ -43,11 +43,13 @@ ARG EVM_NODE_IMAGE=node-evm-hardhat
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM node:$NODE_VERSION as base
 
+ARG RUST_TOOLCHAIN_VERSION=1.75.0
+
 WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
-ENV PATH "/root/.foundry/bin:$PATH"
+ENV PATH "/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
@@ -60,9 +62,19 @@ RUN apt-get install --yes \
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
     expect
 
+# Install rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN rustup default ${RUST_TOOLCHAIN_VERSION}
+
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
+
+# Install SVM, Solidity version manager
+RUN cargo install svm-rs
+
+# Install solc 0.8.22
+RUN svm install 0.8.22
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
@@ -80,6 +92,7 @@ RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
+RUN solc --version
 RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
