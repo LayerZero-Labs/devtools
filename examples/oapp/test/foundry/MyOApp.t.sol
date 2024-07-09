@@ -20,15 +20,15 @@ import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contract
 contract MyOAppTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
-    uint32 aEid = 1;
-    uint32 bEid = 2;
+    uint32 private aEid = 1;
+    uint32 private bEid = 2;
 
-    MyOApp aOApp;
-    MyOApp bOApp;
+    MyOApp private aOApp;
+    MyOApp private bOApp;
 
-    address public userA = address(0x1);
-    address public userB = address(0x2);
-    uint256 public initialBalance = 100 ether;
+    address private userA = address(0x1);
+    address private userB = address(0x2);
+    uint256 private initialBalance = 100 ether;
 
     function setUp() public virtual override {
         vm.deal(userA, 1000 ether);
