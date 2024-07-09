@@ -1,6 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { makeBytes32 } = require('@layerzerolabs/devtools');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { EndpointId } = require('@layerzerolabs/lz-definitions');
 
 const ethContract = {
@@ -17,8 +15,8 @@ const avaxContract = {
 //
 // Since it's only used as a `to` in a connection, the scripts should still work
 const solContract = {
-    eid: EndpointId.SEPOLIA_V2_MAINNET,
-    address: makeBytes32('0x7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH'),
+    eid: EndpointId.SOLANA_V2_MAINNET,
+    address: '0x708687b6133d4eff7fdfe1adb237dfa01d3671f924f9991c5676729cedce9efd',
 };
 
 module.exports = {
