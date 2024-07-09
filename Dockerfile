@@ -49,7 +49,7 @@ WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
-ENV PATH "/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+ENV PATH "/root/.cargo/bin:/root/.foundry/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
