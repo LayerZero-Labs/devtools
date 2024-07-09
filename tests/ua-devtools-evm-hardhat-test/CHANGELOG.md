@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.14
+
+### Patch Changes
+
+- 7c51be3: Added configuration for setting callerBpsCap
+
 ## 0.2.13
 
 ### Patch Changes

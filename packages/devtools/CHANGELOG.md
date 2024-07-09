@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.18
+
+### Patch Changes
+
+- 7c51be3: Added configuration for setting callerBpsCap
+
 ## 0.3.17
 
 ### Patch Changes

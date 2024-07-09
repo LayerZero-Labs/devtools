@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.19
+
+### Patch Changes
+
+- 7c51be3: Added configuration for setting callerBpsCap
+- Updated dependencies [7c51be3]
+  - @layerzerolabs/devtools@0.3.18
+
 ## 0.3.18
 
 ### Patch Changes
