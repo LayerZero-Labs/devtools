@@ -37,13 +37,9 @@ contract MyOAppTest is TestHelperOz5 {
         super.setUp();
         setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        aOApp = MyOApp(
-            _deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[aEid]), address(this)))
-        );
+        aOApp = MyOApp(_deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[aEid]), address(this))));
 
-        bOApp = MyOApp(
-            _deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[bEid]), address(this)))
-        );
+        bOApp = MyOApp(_deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[bEid]), address(this))));
 
         address[] memory oapps = new address[](2);
         oapps[0] = address(aOApp);
