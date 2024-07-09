@@ -1,5 +1,12 @@
 # @layerzerolabs/oapp-example
 
+## 0.2.9
+
+### Patch Changes
+
+- 141d067: Update cache paths
+- 7c51be3: Added configuration for setting callerBpsCap
+
 ## 0.2.8
 
 ### Patch Changes

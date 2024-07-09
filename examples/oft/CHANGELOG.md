@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.8
+
+### Patch Changes
+
+- 141d067: Update cache paths
+
 ## 0.2.7
 
 ### Patch Changes
