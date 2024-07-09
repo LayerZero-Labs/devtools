@@ -1,0 +1,65 @@
+{
+  "name": "@layerzerolabs/oft-evm",
+  "version": "0.0.1",
+  "license": "MIT",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "artifacts/contracts/**/*",
+    "contracts/**/*"
+  ],
+  "scripts": {
+    "build": "$npm_execpath compile",
+    "clean": "$npm_execpath clean-prebuild && rimraf .turbo cache out hh-cache artifacts",
+    "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat && $npm_execpath compile:hardhat:tron",
+    "compile:forge": "$npm_execpath forge build",
+    "compile:hardhat": "$npm_execpath hardhat compile",
+    "compile:hardhat:tron": "$npm_execpath hardhat compile --network tron-sandbox-local",
+    "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
+    "test:forge": "$npm_execpath forge test",
+    "test:hardhat": "$npm_execpath forge test && $npm_execpath hardhat test --no-compile"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
+    "@layerzerolabs/hardhat-collect-outcomes": "^2.3.29",
+    "@layerzerolabs/hardhat-tron": "^2.3.29",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@layerzerolabs/toolbox-foundry": "^0.1.7",
+    "@layerzerolabs/toolbox-hardhat": "~0.2.35",
+    "@layerzerolabs/typescript-config-next": "^2.3.29",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^4.8.1",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1",
+    "@typechain/ethers-v5": "^10.2.1",
+    "@typechain/hardhat": "^6.1.6",
+    "@types/node": "^20.10.5",
+    "hardhat": "^2.19.0",
+    "hardhat-contract-sizer": "^2.10.0",
+    "hardhat-deploy": "^0.12.4",
+    "hardhat-deploy-ethers": "^0.3.0-beta.13",
+    "rimraf": "^5.0.5",
+    "solidity-bytes-utils": "^0.8.0",
+    "typechain": "^8.3.2",
+    "typescript": "~5.2.2"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0",
+    "hardhat-deploy": "^0.11.44",
+    "solidity-bytes-utils": "^0.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
