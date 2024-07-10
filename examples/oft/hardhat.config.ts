@@ -4,11 +4,15 @@
 // - Duplicate .env.example file and name it .env
 // - Fill in the environment variables
 import 'dotenv/config'
-
+import { task } from "hardhat/config";
 import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
+import "./layerzero/tasks/deploy";
+import "./layerzero/tasks/oappConfigInit";
+import "./layerzero/tasks/oappConfigWire";
+import "./layerzero/tasks/sendOFT";
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'

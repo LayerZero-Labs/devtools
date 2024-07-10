@@ -53,6 +53,7 @@
     "eslint-plugin-prettier": "^5.1.3",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-turbo": "^1.12.3",
+    "hardhat": "^2.22.6",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
@@ -62,5 +63,10 @@
   "packageManager": "pnpm@8.14.0",
   "engines": {
     "node": ">=18.16.0"
+  },
+  "dependencies": {
+    "@layerzerolabs/devtools-evm-hardhat": "^0.3.21",
+    "@layerzerolabs/lz-definitions": "^2.3.29",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.29"
   }
 }
