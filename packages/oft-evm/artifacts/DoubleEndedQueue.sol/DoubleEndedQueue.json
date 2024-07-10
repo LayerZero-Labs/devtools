@@ -1,0 +1,72 @@
+{
+  "abi": [
+    { "type": "error", "name": "Empty", "inputs": [] },
+    { "type": "error", "name": "OutOfBounds", "inputs": [] }
+  ],
+  "bytecode": {
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212209b2dccffa10f6162f1cb88b9e704ddb60a64710ba72d66d7608be55a313e985d64736f6c63430008140033",
+    "sourceMap": "843:5066:128:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;843:5066:128;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212209b2dccffa10f6162f1cb88b9e704ddb60a64710ba72d66d7608be55a313e985d64736f6c63430008140033",
+    "sourceMap": "843:5066:128:-:0;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"Empty\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OutOfBounds\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"A sequence of items with the ability to efficiently push and pop items (i.e. insert and remove) on both ends of the sequence (called front and back). Among other access patterns, it can be used to implement efficient LIFO and FIFO queues. Storage use is optimized, and all operations are O(1) constant time. This includes {clear}, given that the existing queue contents are left in storage. The struct is called `Bytes32Deque`. Other types can be cast to and from `bytes32`. This data structure can only be used in storage, and not in memory. ```solidity DoubleEndedQueue.Bytes32Deque queue; ``` _Available since v4.6._\",\"errors\":{\"Empty()\":[{\"details\":\"An operation (e.g. {front}) couldn't be completed due to the queue being empty.\"}],\"OutOfBounds()\":[{\"details\":\"An operation (e.g. {at}) couldn't be completed due to an index being out of bounds.\"}]},\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol\":\"DoubleEndedQueue\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/\",\":@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/\",\":@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/\",\":@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/\",\":@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/\",\":@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol\":{\"keccak256\":\"0x52a8cfb0f5239d11b457dcdd1b326992ef672714ca8da71a157255bddd13f3ad\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://495145362c7ff1c9ca88c58bbbbcb412e3c2004406647412394486552ff6c278\",\"dweb:/ipfs/QmNNCeng6d5eRPDn6tkWSQhjE39XWfQEfjA63rRwHmr1iH\"]},\"node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol\":{\"keccak256\":\"0xb5fbb623dec53bb9b6c1b738b4ab6540a04ac5dc2ac94d95fa3ebfd22898559c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a6e7f26c0c688a987c19c8b0997c7e47c33f7717b6293a487afe8429d95b8e7\",\"dweb:/ipfs/QmVrmXcQ7KLM5fw4PWeJ8j4nnmfHkjpFPariMMh5UvsEVD\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.20+commit.a1b79de6" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "Empty" },
+        { "inputs": [], "type": "error", "name": "OutOfBounds" }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/",
+        "@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/",
+        "@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/",
+        "@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/",
+        "@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/",
+        "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol": "DoubleEndedQueue"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
+        "keccak256": "0x52a8cfb0f5239d11b457dcdd1b326992ef672714ca8da71a157255bddd13f3ad",
+        "urls": [
+          "bzz-raw://495145362c7ff1c9ca88c58bbbbcb412e3c2004406647412394486552ff6c278",
+          "dweb:/ipfs/QmNNCeng6d5eRPDn6tkWSQhjE39XWfQEfjA63rRwHmr1iH"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol": {
+        "keccak256": "0xb5fbb623dec53bb9b6c1b738b4ab6540a04ac5dc2ac94d95fa3ebfd22898559c",
+        "urls": [
+          "bzz-raw://4a6e7f26c0c688a987c19c8b0997c7e47c33f7717b6293a487afe8429d95b8e7",
+          "dweb:/ipfs/QmVrmXcQ7KLM5fw4PWeJ8j4nnmfHkjpFPariMMh5UvsEVD"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 128
+}

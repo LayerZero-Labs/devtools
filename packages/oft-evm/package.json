@@ -11,11 +11,9 @@
   ],
   "scripts": {
     "build": "$npm_execpath compile",
-    "clean": "$npm_execpath clean-prebuild && rimraf .turbo cache out hh-cache artifacts",
-    "compile": "$npm_execpath compile:forge && $npm_execpath compile:hardhat && $npm_execpath compile:hardhat:tron",
+    "clean": "rimraf .turbo cache out artifacts",
+    "compile": "$npm_execpath compile:forge",
     "compile:forge": "$npm_execpath forge build",
-    "compile:hardhat": "$npm_execpath hardhat compile",
-    "compile:hardhat:tron": "$npm_execpath hardhat compile --network tron-sandbox-local",
     "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
     "test:forge": "$npm_execpath forge test",
     "test:hardhat": "$npm_execpath forge test && $npm_execpath hardhat test --no-compile"
@@ -32,6 +30,7 @@
     "@layerzerolabs/lz-evm-oapp-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.7",
     "@layerzerolabs/toolbox-foundry": "^0.1.7",
     "@layerzerolabs/toolbox-hardhat": "~0.2.35",
     "@layerzerolabs/typescript-config-next": "^2.3.29",

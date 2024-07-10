@@ -3,22 +3,10 @@ solc = '0.8.20'
 verbosity = 3
 src = "contracts"
 test = "test"
-out = "out"
+out = "artifacts"
 cache_path = "cache"
 optimizer = true
 optimizer_runs = 20_000
-
-allow_paths = [
-#    "../../../../.yarn/unplugged",
-#    "../../../../node_modules",
-#    "../protocol",
-#    "../messagelib",
-#    "../../../layerzero-v1/evm"
-]
-
-libs = [
-#    '../../../../lib',
-]
 
 remappings = [
     # note: map to package level only, required for pnp-berry to work with foundry

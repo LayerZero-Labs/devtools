@@ -1,0 +1,1420 @@
+{
+  "abi": [
+    { "type": "receive", "stateMutability": "payable" },
+    {
+      "type": "function",
+      "name": "executorConfigs",
+      "inputs": [
+        { "name": "oapp", "type": "address", "internalType": "address" },
+        { "name": "eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        {
+          "name": "maxMessageSize",
+          "type": "uint32",
+          "internalType": "uint32"
+        },
+        { "name": "executor", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "fees",
+      "inputs": [
+        { "name": "worker", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getConfig",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_configType", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "config", "type": "bytes", "internalType": "bytes" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getExecutorConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_remoteEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        {
+          "name": "rtnConfig",
+          "type": "tuple",
+          "internalType": "struct ExecutorConfig",
+          "components": [
+            {
+              "name": "maxMessageSize",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "executor", "type": "address", "internalType": "address" }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isSupportedEid",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "messageLibType",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "uint8", "internalType": "enum MessageLibType" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "quote",
+      "inputs": [
+        {
+          "name": "_packet",
+          "type": "tuple",
+          "internalType": "struct Packet",
+          "components": [
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" },
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "address", "internalType": "address" },
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "receiver",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            { "name": "guid", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "message", "type": "bytes", "internalType": "bytes" }
+          ]
+        },
+        { "name": "_options", "type": "bytes", "internalType": "bytes" },
+        { "name": "_payInLzToken", "type": "bool", "internalType": "bool" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingFee",
+          "components": [
+            {
+              "name": "nativeFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lzTokenFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "send",
+      "inputs": [
+        {
+          "name": "_packet",
+          "type": "tuple",
+          "internalType": "struct Packet",
+          "components": [
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" },
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "address", "internalType": "address" },
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "receiver",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            { "name": "guid", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "message", "type": "bytes", "internalType": "bytes" }
+          ]
+        },
+        { "name": "_options", "type": "bytes", "internalType": "bytes" },
+        { "name": "_payInLzToken", "type": "bool", "internalType": "bool" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingFee",
+          "components": [
+            {
+              "name": "nativeFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lzTokenFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        },
+        { "name": "", "type": "bytes", "internalType": "bytes" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        {
+          "name": "_config",
+          "type": "tuple[]",
+          "internalType": "struct SetConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "configType",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "config", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultExecutorConfigs",
+      "inputs": [
+        {
+          "name": "_params",
+          "type": "tuple[]",
+          "internalType": "struct SetDefaultExecutorConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "config",
+              "type": "tuple",
+              "internalType": "struct ExecutorConfig",
+              "components": [
+                {
+                  "name": "maxMessageSize",
+                  "type": "uint32",
+                  "internalType": "uint32"
+                },
+                {
+                  "name": "executor",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setTreasury",
+      "inputs": [
+        { "name": "_treasury", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setTreasuryNativeFeeCap",
+      "inputs": [
+        {
+          "name": "_newTreasuryNativeFeeCap",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "supportsInterface",
+      "inputs": [
+        { "name": "_interfaceId", "type": "bytes4", "internalType": "bytes4" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        { "name": "newOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "treasury",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        { "name": "major", "type": "uint64", "internalType": "uint64" },
+        { "name": "minor", "type": "uint8", "internalType": "uint8" },
+        { "name": "endpointVersion", "type": "uint8", "internalType": "uint8" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "withdrawFee",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "withdrawLzTokenFee",
+      "inputs": [
+        { "name": "_lzToken", "type": "address", "internalType": "address" },
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DefaultExecutorConfigsSet",
+      "inputs": [
+        {
+          "name": "params",
+          "type": "tuple[]",
+          "indexed": false,
+          "internalType": "struct SetDefaultExecutorConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "config",
+              "type": "tuple",
+              "internalType": "struct ExecutorConfig",
+              "components": [
+                {
+                  "name": "maxMessageSize",
+                  "type": "uint32",
+                  "internalType": "uint32"
+                },
+                {
+                  "name": "executor",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ExecutorConfigSet",
+      "inputs": [
+        {
+          "name": "oapp",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "config",
+          "type": "tuple",
+          "indexed": false,
+          "internalType": "struct ExecutorConfig",
+          "components": [
+            {
+              "name": "maxMessageSize",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "executor", "type": "address", "internalType": "address" }
+          ]
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ExecutorFeePaid",
+      "inputs": [
+        {
+          "name": "executor",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "fee",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LzTokenFeeWithdrawn",
+      "inputs": [
+        {
+          "name": "lzToken",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "NativeFeeWithdrawn",
+      "inputs": [
+        {
+          "name": "worker",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TreasuryNativeFeeCapSet",
+      "inputs": [
+        {
+          "name": "newTreasuryNativeFeeCap",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TreasurySet",
+      "inputs": [
+        {
+          "name": "treasury",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "LZ_MessageLib_CannotWithdrawAltToken",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LZ_MessageLib_InvalidAmount",
+      "inputs": [
+        { "name": "requested", "type": "uint256", "internalType": "uint256" },
+        { "name": "available", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    { "type": "error", "name": "LZ_MessageLib_InvalidExecutor", "inputs": [] },
+    {
+      "type": "error",
+      "name": "LZ_MessageLib_InvalidMessageSize",
+      "inputs": [
+        { "name": "actual", "type": "uint256", "internalType": "uint256" },
+        { "name": "max", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    { "type": "error", "name": "LZ_MessageLib_NotTreasury", "inputs": [] },
+    { "type": "error", "name": "LZ_MessageLib_OnlyEndpoint", "inputs": [] },
+    { "type": "error", "name": "LZ_MessageLib_TransferFailed", "inputs": [] },
+    { "type": "error", "name": "LZ_MessageLib_ZeroMessageSize", "inputs": [] },
+    {
+      "type": "error",
+      "name": "Transfer_NativeFailed",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_value", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    { "type": "error", "name": "Transfer_ToAddressIsZero", "inputs": [] }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "executorConfigs(address,uint32)": "4d963200",
+    "fees(address)": "faaebd21",
+    "getConfig(uint32,address,uint32)": "9c33abf7",
+    "getExecutorConfig(address,uint32)": "188183f4",
+    "isSupportedEid(uint32)": "6750cd4c",
+    "messageLibType()": "1881d94d",
+    "owner()": "8da5cb5b",
+    "quote((uint64,uint32,address,uint32,bytes32,bytes32,bytes),bytes,bool)": "d80e9bd9",
+    "renounceOwnership()": "715018a6",
+    "send((uint64,uint32,address,uint32,bytes32,bytes32,bytes),bytes,bool)": "4389e58f",
+    "setConfig(address,(uint32,uint32,bytes)[])": "20efd722",
+    "setDefaultExecutorConfigs((uint32,(uint32,address))[])": "c14c4349",
+    "setTreasury(address)": "f0f44260",
+    "setTreasuryNativeFeeCap(uint256)": "d15b0d49",
+    "supportsInterface(bytes4)": "01ffc9a7",
+    "transferOwnership(address)": "f2fde38b",
+    "treasury()": "61d027b3",
+    "version()": "54fd4d50",
+    "withdrawFee(address,uint256)": "fd9be522",
+    "withdrawLzTokenFee(address,address,uint256)": "200175f7"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"LZ_MessageLib_CannotWithdrawAltToken\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"requested\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"available\",\"type\":\"uint256\"}],\"name\":\"LZ_MessageLib_InvalidAmount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_MessageLib_InvalidExecutor\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"actual\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"LZ_MessageLib_InvalidMessageSize\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_MessageLib_NotTreasury\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_MessageLib_OnlyEndpoint\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_MessageLib_TransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_MessageLib_ZeroMessageSize\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer_NativeFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Transfer_ToAddressIsZero\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"maxMessageSize\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"internalType\":\"struct ExecutorConfig\",\"name\":\"config\",\"type\":\"tuple\"}],\"indexed\":false,\"internalType\":\"struct SetDefaultExecutorConfigParam[]\",\"name\":\"params\",\"type\":\"tuple[]\"}],\"name\":\"DefaultExecutorConfigsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oapp\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"maxMessageSize\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"indexed\":false,\"internalType\":\"struct ExecutorConfig\",\"name\":\"config\",\"type\":\"tuple\"}],\"name\":\"ExecutorConfigSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"}],\"name\":\"ExecutorFeePaid\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"lzToken\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"LzTokenFeeWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"worker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"NativeFeeWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newTreasuryNativeFeeCap\",\"type\":\"uint256\"}],\"name\":\"TreasuryNativeFeeCapSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"treasury\",\"type\":\"address\"}],\"name\":\"TreasurySet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"}],\"name\":\"executorConfigs\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"maxMessageSize\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"worker\",\"type\":\"address\"}],\"name\":\"fees\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_configType\",\"type\":\"uint32\"}],\"name\":\"getConfig\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_remoteEid\",\"type\":\"uint32\"}],\"name\":\"getExecutorConfig\",\"outputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"maxMessageSize\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"internalType\":\"struct ExecutorConfig\",\"name\":\"rtnConfig\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"isSupportedEid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"messageLibType\",\"outputs\":[{\"internalType\":\"enum MessageLibType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"receiver\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"}],\"internalType\":\"struct Packet\",\"name\":\"_packet\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_options\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"_payInLzToken\",\"type\":\"bool\"}],\"name\":\"quote\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"receiver\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"}],\"internalType\":\"struct Packet\",\"name\":\"_packet\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"_options\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"_payInLzToken\",\"type\":\"bool\"}],\"name\":\"send\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"\",\"type\":\"tuple\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"configType\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"internalType\":\"struct SetConfigParam[]\",\"name\":\"_config\",\"type\":\"tuple[]\"}],\"name\":\"setConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"maxMessageSize\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"}],\"internalType\":\"struct ExecutorConfig\",\"name\":\"config\",\"type\":\"tuple\"}],\"internalType\":\"struct SetDefaultExecutorConfigParam[]\",\"name\":\"_params\",\"type\":\"tuple[]\"}],\"name\":\"setDefaultExecutorConfigs\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_treasury\",\"type\":\"address\"}],\"name\":\"setTreasury\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newTreasuryNativeFeeCap\",\"type\":\"uint256\"}],\"name\":\"setTreasuryNativeFeeCap\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"treasury\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"version\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"major\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"minor\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"endpointVersion\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lzToken\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawLzTokenFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"details\":\"send-side message library base contract on endpoint v2. design: the high level logic is the same as SendLibBaseE1 1/ with added interfaces 2/ adapt the functions to the new types, like uint32 for eid, address for sender.\",\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setTreasuryNativeFeeCap(uint256)\":{\"details\":\"the new value can not be greater than the old value, i.e. down only\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"withdrawFee(address,uint256)\":{\"details\":\"E2 only\"},\"withdrawLzTokenFee(address,address,uint256)\":{\"details\":\"_lzToken is a user-supplied value because lzToken might change in the endpoint before all lzToken can be taken outE2 onlytreasury only function\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol\":\"SendLibBaseE2\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/\",\":@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/\",\":@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/\",\":@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/\",\":@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/\",\":@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/MessageLibBase.sol\":{\"keccak256\":\"0x14899a4398251439938d6ef8a15ea8c6acdddc98a7b0066d7e63676192dea0d1\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://3998d03de7025c2c601a4fdcaf9475d12a1ef661fcf1a685ece84fdde6498cf9\",\"dweb:/ipfs/QmReknRbiGAiPqq9toKyXKo6hUKXrQPJyyS6LnTGjiDKoY\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol\":{\"keccak256\":\"0x400eaa11c7d50b4c25b7625290ff00937b6875ad3986b353c37a4e62b5a834b1\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://1f51eb0785d3630815a9d63de1c1331fe966df4c3f2fb6750b8da7be9e9743a4\",\"dweb:/ipfs/QmaAEf1kjhhff3AUhRiPm6ikpk2YMMrpKc2ccYzNs7waBy\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol\":{\"keccak256\":\"0x90ada11d0a330732c56b989e59c8272b70f956a5d7be2cf209d6d51a51d35a9e\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://0abc7a6d07ec40a3a922256ad05bdd6eca10550d85bfd2e67147473617bb0497\",\"dweb:/ipfs/QmRDphmFhx1scRJXcusg6pUhVQvp941oCJwnHGAPdrNY4T\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol\":{\"keccak256\":\"0x3647af317ee126b1247a782abb30e59ec5ab21b4945f1d3b4370d1fa3c1bf347\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5b51cd5e7347ee869a06bd57a698f40e4a901ec7fdcb27f0ef485e4a0e1e9be4\",\"dweb:/ipfs/QmP2Nc73veRzLGdUahkjhQAiKR9ZWYiUtSGwoMB1sPXxUp\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol\":{\"keccak256\":\"0x2aab2a3cf50e20af56d9204b1367d52a47abba0b0c7c21f304d413de1ced6345\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f8b603b5e5e62c621715f8449280af240a4add8721c4ae8f5e8e491507f6e4c5\",\"dweb:/ipfs/QmUQ7Ti7CPmKnRbQFN9TLvVbeZhsi1xUjqZPTJ36dCZ6y8\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol\":{\"keccak256\":\"0xc3b7b7927472f7c1ca9703af310e9050c798afaccf399ad0f131e179b8582c8d\",\"license\":\"MIT OR Apache-2.0\",\"urls\":[\"bzz-raw://e5be13af32ff6b371985d405bc6fe8ac2faf5445bd88fda2dab4b869f66e3f89\",\"dweb:/ipfs/Qmd21k4H2tAHKrpiuHUbH87eNtHLLJzHj9ZCrMh8AKfDHh\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol\":{\"keccak256\":\"0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0\",\"dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol\":{\"keccak256\":\"0xf1c07bc61e7b1dce195ed12d50f87980fbf2d63cac1326fd28287f55fe0ba625\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://060f10ff7afc33c1c2f2b4b5ba29231fd3c943146488084d0e4ab99fce991d97\",\"dweb:/ipfs/QmaSsefAqqEqtf8FgFUmDYMwTsAty3X1pqDb6SiFvry6B3\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol\":{\"keccak256\":\"0x621d6dd5b8b7e827351459fff4ac87c16ba4656757592cf67de8b199aea4cf9a\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://345aa8c007ed8b96a74260d289545713f1d7180df270d67687e3a540a61fa5c0\",\"dweb:/ipfs/QmNWCvpqSuar6UGLDVshUc7shUv3pt1J5FTf9VyZZ13wXL\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fc980984badf3984b6303b377711220e067722bbd6a135b24669ff5069ef9f32\",\"dweb:/ipfs/QmPHXMSXj99XjSVM21YsY6aNtLLjLVXDbyN76J5HQYvvrz\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5\",\"dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol\":{\"keccak256\":\"0xb264c03a3442eb37a68ad620cefd1182766b58bee6cec40343480392d6b14d69\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://28879d01fd22c07b44f006612775f8577defbe459cb01685c5e25cd518c91a71\",\"dweb:/ipfs/QmVgfkwv2Fxw6hhTcDUZhE7NkoSKjab3ipM7UaRbt6uXb5\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xabefac93435967b4d36a4fabcbdbb918d1f0b7ae3c3d85bc30923b326c927ed1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9d213d3befca47da33f6db0310826bcdb148299805c10d77175ecfe1d06a9a68\",\"dweb:/ipfs/QmRgCn6SP1hbBkExUADFuDo8xkT4UU47yjNF5FhCeRbQmS\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2455248c8ddd9cc6a7af76a13973cddf222072427e7b0e2a7d1aff345145e931\",\"dweb:/ipfs/QmfYjnjRbWqYpuxurqveE6HtzsY1Xx323J428AKQgtBJZm\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0xa92e4fa126feb6907daa0513ddd816b2eb91f30a808de54f63c17d0e162c3439\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a367861093b74443b137564d3f3c472f70bcf114739e62059c939f25e315706c\",\"dweb:/ipfs/Qmd7JMpcxD9RuQjK3uM3EzJUgSqdN8vzp8eytEiuwxQJ6h\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol\":{\"keccak256\":\"0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d\",\"dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f\",\"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.20+commit.a1b79de6" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_MessageLib_CannotWithdrawAltToken"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "requested",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "available",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "LZ_MessageLib_InvalidAmount"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_MessageLib_InvalidExecutor"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint256", "name": "actual", "type": "uint256" },
+            { "internalType": "uint256", "name": "max", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "LZ_MessageLib_InvalidMessageSize"
+        },
+        { "inputs": [], "type": "error", "name": "LZ_MessageLib_NotTreasury" },
+        { "inputs": [], "type": "error", "name": "LZ_MessageLib_OnlyEndpoint" },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_MessageLib_TransferFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_MessageLib_ZeroMessageSize"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_value", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "Transfer_NativeFailed"
+        },
+        { "inputs": [], "type": "error", "name": "Transfer_ToAddressIsZero" },
+        {
+          "inputs": [
+            {
+              "internalType": "struct SetDefaultExecutorConfigParam[]",
+              "name": "params",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "struct ExecutorConfig",
+                  "name": "config",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint32",
+                      "name": "maxMessageSize",
+                      "type": "uint32"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "executor",
+                      "type": "address"
+                    }
+                  ]
+                }
+              ],
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultExecutorConfigsSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "oapp",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "struct ExecutorConfig",
+              "name": "config",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "maxMessageSize",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "address",
+                  "name": "executor",
+                  "type": "address"
+                }
+              ],
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ExecutorConfigSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "executor",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "fee",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ExecutorFeePaid",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "lzToken",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LzTokenFeeWithdrawn",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "worker",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "NativeFeeWithdrawn",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "newTreasuryNativeFeeCap",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TreasuryNativeFeeCapSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "treasury",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TreasurySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "oapp", "type": "address" },
+            { "internalType": "uint32", "name": "eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "executorConfigs",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "maxMessageSize",
+              "type": "uint32"
+            },
+            { "internalType": "address", "name": "executor", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "worker", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "fees",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            {
+              "internalType": "uint32",
+              "name": "_configType",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConfig",
+          "outputs": [
+            { "internalType": "bytes", "name": "config", "type": "bytes" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_remoteEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getExecutorConfig",
+          "outputs": [
+            {
+              "internalType": "struct ExecutorConfig",
+              "name": "rtnConfig",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "maxMessageSize",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "address",
+                  "name": "executor",
+                  "type": "address"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSupportedEid",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "messageLibType",
+          "outputs": [
+            {
+              "internalType": "enum MessageLibType",
+              "name": "",
+              "type": "uint8"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Packet",
+              "name": "_packet",
+              "type": "tuple",
+              "components": [
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" },
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "address",
+                  "name": "sender",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "receiver",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "guid",
+                  "type": "bytes32"
+                },
+                { "internalType": "bytes", "name": "message", "type": "bytes" }
+              ]
+            },
+            { "internalType": "bytes", "name": "_options", "type": "bytes" },
+            { "internalType": "bool", "name": "_payInLzToken", "type": "bool" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "quote",
+          "outputs": [
+            {
+              "internalType": "struct MessagingFee",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "nativeFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lzTokenFee",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Packet",
+              "name": "_packet",
+              "type": "tuple",
+              "components": [
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" },
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "address",
+                  "name": "sender",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "receiver",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "guid",
+                  "type": "bytes32"
+                },
+                { "internalType": "bytes", "name": "message", "type": "bytes" }
+              ]
+            },
+            { "internalType": "bytes", "name": "_options", "type": "bytes" },
+            { "internalType": "bool", "name": "_payInLzToken", "type": "bool" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "send",
+          "outputs": [
+            {
+              "internalType": "struct MessagingFee",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "nativeFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lzTokenFee",
+                  "type": "uint256"
+                }
+              ]
+            },
+            { "internalType": "bytes", "name": "", "type": "bytes" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            {
+              "internalType": "struct SetConfigParam[]",
+              "name": "_config",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "uint32",
+                  "name": "configType",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes", "name": "config", "type": "bytes" }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setConfig"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct SetDefaultExecutorConfigParam[]",
+              "name": "_params",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "struct ExecutorConfig",
+                  "name": "config",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint32",
+                      "name": "maxMessageSize",
+                      "type": "uint32"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "executor",
+                      "type": "address"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultExecutorConfigs"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_treasury",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setTreasury"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_newTreasuryNativeFeeCap",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setTreasuryNativeFeeCap"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "_interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "supportsInterface",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "treasury",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "version",
+          "outputs": [
+            { "internalType": "uint64", "name": "major", "type": "uint64" },
+            { "internalType": "uint8", "name": "minor", "type": "uint8" },
+            {
+              "internalType": "uint8",
+              "name": "endpointVersion",
+              "type": "uint8"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawFee"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_lzToken",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawLzTokenFee"
+        },
+        { "inputs": [], "stateMutability": "payable", "type": "receive" }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "owner()": { "details": "Returns the address of the current owner." },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+          },
+          "setTreasuryNativeFeeCap(uint256)": {
+            "details": "the new value can not be greater than the old value, i.e. down only"
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          },
+          "withdrawFee(address,uint256)": { "details": "E2 only" },
+          "withdrawLzTokenFee(address,address,uint256)": {
+            "details": "_lzToken is a user-supplied value because lzToken might change in the endpoint before all lzToken can be taken outE2 onlytreasury only function"
+          }
+        },
+        "version": 1
+      },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/",
+        "@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/",
+        "@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/",
+        "@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/",
+        "@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/",
+        "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol": "SendLibBaseE2"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/MessageLibBase.sol": {
+        "keccak256": "0x14899a4398251439938d6ef8a15ea8c6acdddc98a7b0066d7e63676192dea0d1",
+        "urls": [
+          "bzz-raw://3998d03de7025c2c601a4fdcaf9475d12a1ef661fcf1a685ece84fdde6498cf9",
+          "dweb:/ipfs/QmReknRbiGAiPqq9toKyXKo6hUKXrQPJyyS6LnTGjiDKoY"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol": {
+        "keccak256": "0x400eaa11c7d50b4c25b7625290ff00937b6875ad3986b353c37a4e62b5a834b1",
+        "urls": [
+          "bzz-raw://1f51eb0785d3630815a9d63de1c1331fe966df4c3f2fb6750b8da7be9e9743a4",
+          "dweb:/ipfs/QmaAEf1kjhhff3AUhRiPm6ikpk2YMMrpKc2ccYzNs7waBy"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol": {
+        "keccak256": "0x90ada11d0a330732c56b989e59c8272b70f956a5d7be2cf209d6d51a51d35a9e",
+        "urls": [
+          "bzz-raw://0abc7a6d07ec40a3a922256ad05bdd6eca10550d85bfd2e67147473617bb0497",
+          "dweb:/ipfs/QmRDphmFhx1scRJXcusg6pUhVQvp941oCJwnHGAPdrNY4T"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol": {
+        "keccak256": "0x3647af317ee126b1247a782abb30e59ec5ab21b4945f1d3b4370d1fa3c1bf347",
+        "urls": [
+          "bzz-raw://5b51cd5e7347ee869a06bd57a698f40e4a901ec7fdcb27f0ef485e4a0e1e9be4",
+          "dweb:/ipfs/QmP2Nc73veRzLGdUahkjhQAiKR9ZWYiUtSGwoMB1sPXxUp"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol": {
+        "keccak256": "0x2aab2a3cf50e20af56d9204b1367d52a47abba0b0c7c21f304d413de1ced6345",
+        "urls": [
+          "bzz-raw://f8b603b5e5e62c621715f8449280af240a4add8721c4ae8f5e8e491507f6e4c5",
+          "dweb:/ipfs/QmUQ7Ti7CPmKnRbQFN9TLvVbeZhsi1xUjqZPTJ36dCZ6y8"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol": {
+        "keccak256": "0xc3b7b7927472f7c1ca9703af310e9050c798afaccf399ad0f131e179b8582c8d",
+        "urls": [
+          "bzz-raw://e5be13af32ff6b371985d405bc6fe8ac2faf5445bd88fda2dab4b869f66e3f89",
+          "dweb:/ipfs/Qmd21k4H2tAHKrpiuHUbH87eNtHLLJzHj9ZCrMh8AKfDHh"
+        ],
+        "license": "MIT OR Apache-2.0"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": {
+        "keccak256": "0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c",
+        "urls": [
+          "bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0",
+          "dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol": {
+        "keccak256": "0xf1c07bc61e7b1dce195ed12d50f87980fbf2d63cac1326fd28287f55fe0ba625",
+        "urls": [
+          "bzz-raw://060f10ff7afc33c1c2f2b4b5ba29231fd3c943146488084d0e4ab99fce991d97",
+          "dweb:/ipfs/QmaSsefAqqEqtf8FgFUmDYMwTsAty3X1pqDb6SiFvry6B3"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol": {
+        "keccak256": "0x621d6dd5b8b7e827351459fff4ac87c16ba4656757592cf67de8b199aea4cf9a",
+        "urls": [
+          "bzz-raw://345aa8c007ed8b96a74260d289545713f1d7180df270d67687e3a540a61fa5c0",
+          "dweb:/ipfs/QmNWCvpqSuar6UGLDVshUc7shUv3pt1J5FTf9VyZZ13wXL"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+        "keccak256": "0xba43b97fba0d32eb4254f6a5a297b39a19a247082a02d6e69349e071e2946218",
+        "urls": [
+          "bzz-raw://fc980984badf3984b6303b377711220e067722bbd6a135b24669ff5069ef9f32",
+          "dweb:/ipfs/QmPHXMSXj99XjSVM21YsY6aNtLLjLVXDbyN76J5HQYvvrz"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305",
+        "urls": [
+          "bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5",
+          "dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+        "keccak256": "0xb264c03a3442eb37a68ad620cefd1182766b58bee6cec40343480392d6b14d69",
+        "urls": [
+          "bzz-raw://28879d01fd22c07b44f006612775f8577defbe459cb01685c5e25cd518c91a71",
+          "dweb:/ipfs/QmVgfkwv2Fxw6hhTcDUZhE7NkoSKjab3ipM7UaRbt6uXb5"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0xabefac93435967b4d36a4fabcbdbb918d1f0b7ae3c3d85bc30923b326c927ed1",
+        "urls": [
+          "bzz-raw://9d213d3befca47da33f6db0310826bcdb148299805c10d77175ecfe1d06a9a68",
+          "dweb:/ipfs/QmRgCn6SP1hbBkExUADFuDo8xkT4UU47yjNF5FhCeRbQmS"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa",
+        "urls": [
+          "bzz-raw://2455248c8ddd9cc6a7af76a13973cddf222072427e7b0e2a7d1aff345145e931",
+          "dweb:/ipfs/QmfYjnjRbWqYpuxurqveE6HtzsY1Xx323J428AKQgtBJZm"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Context.sol": {
+        "keccak256": "0xa92e4fa126feb6907daa0513ddd816b2eb91f30a808de54f63c17d0e162c3439",
+        "urls": [
+          "bzz-raw://a367861093b74443b137564d3f3c472f70bcf114739e62059c939f25e315706c",
+          "dweb:/ipfs/Qmd7JMpcxD9RuQjK3uM3EzJUgSqdN8vzp8eytEiuwxQJ6h"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+        "keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+        "urls": [
+          "bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+          "dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+        "urls": [
+          "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+          "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 12
+}

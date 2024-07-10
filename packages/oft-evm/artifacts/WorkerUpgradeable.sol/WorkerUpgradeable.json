@@ -1,0 +1,1153 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "DEFAULT_ADMIN_ROLE",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "allowlistSize",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultMultiplierBps",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint16", "internalType": "uint16" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getRoleAdmin",
+      "inputs": [
+        { "name": "role", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSupportedOptionTypes",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "uint8[]", "internalType": "uint8[]" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "grantRole",
+      "inputs": [
+        { "name": "role", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "account", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "hasAcl",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "hasRole",
+      "inputs": [
+        { "name": "role", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "account", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "priceFeed",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "renounceRole",
+      "inputs": [
+        { "name": "", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "revokeRole",
+      "inputs": [
+        { "name": "role", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "account", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultMultiplierBps",
+      "inputs": [
+        { "name": "_multiplierBps", "type": "uint16", "internalType": "uint16" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setPaused",
+      "inputs": [{ "name": "_paused", "type": "bool", "internalType": "bool" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setPriceFeed",
+      "inputs": [
+        { "name": "_priceFeed", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setSupportedOptionTypes",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_optionTypes", "type": "uint8[]", "internalType": "uint8[]" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setWorkerFeeLib",
+      "inputs": [
+        {
+          "name": "_workerFeeLib",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "supportsInterface",
+      "inputs": [
+        { "name": "interfaceId", "type": "bytes4", "internalType": "bytes4" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "withdrawFee",
+      "inputs": [
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "withdrawToken",
+      "inputs": [
+        { "name": "_token", "type": "address", "internalType": "address" },
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "workerFeeLib",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "Initialized",
+      "inputs": [
+        {
+          "name": "version",
+          "type": "uint8",
+          "indexed": false,
+          "internalType": "uint8"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "Paused",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "RoleAdminChanged",
+      "inputs": [
+        {
+          "name": "role",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "previousAdminRole",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "newAdminRole",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "RoleGranted",
+      "inputs": [
+        {
+          "name": "role",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "account",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "sender",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "RoleRevoked",
+      "inputs": [
+        {
+          "name": "role",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "account",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "sender",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SetDefaultMultiplierBps",
+      "inputs": [
+        {
+          "name": "multiplierBps",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SetPriceFeed",
+      "inputs": [
+        {
+          "name": "priceFeed",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SetSupportedOptionTypes",
+      "inputs": [
+        {
+          "name": "dstEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "optionTypes",
+          "type": "uint8[]",
+          "indexed": false,
+          "internalType": "uint8[]"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SetWorkerLib",
+      "inputs": [
+        {
+          "name": "workerLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "Unpaused",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "Withdraw",
+      "inputs": [
+        {
+          "name": "lib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "to",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "Transfer_NativeFailed",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_value", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    { "type": "error", "name": "Transfer_ToAddressIsZero", "inputs": [] },
+    { "type": "error", "name": "Worker_NotAllowed", "inputs": [] },
+    { "type": "error", "name": "Worker_OnlyMessageLib", "inputs": [] },
+    { "type": "error", "name": "Worker_RoleRenouncingDisabled", "inputs": [] }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "DEFAULT_ADMIN_ROLE()": "a217fddf",
+    "allowlistSize()": "d2ae2104",
+    "defaultMultiplierBps()": "00bf2e80",
+    "getRoleAdmin(bytes32)": "248a9ca3",
+    "getSupportedOptionTypes(uint32)": "26e67a37",
+    "grantRole(bytes32,address)": "2f2ff15d",
+    "hasAcl(address)": "2de11376",
+    "hasRole(bytes32,address)": "91d14854",
+    "paused()": "5c975abb",
+    "priceFeed()": "741bef1a",
+    "renounceRole(bytes32,address)": "36568abe",
+    "revokeRole(bytes32,address)": "d547741f",
+    "setDefaultMultiplierBps(uint16)": "c358de0a",
+    "setPaused(bool)": "16c38b3c",
+    "setPriceFeed(address)": "724e78da",
+    "setSupportedOptionTypes(uint32,uint8[])": "cd88b903",
+    "setWorkerFeeLib(address)": "c7b2370b",
+    "supportsInterface(bytes4)": "01ffc9a7",
+    "withdrawFee(address,address,uint256)": "1095b6d7",
+    "withdrawToken(address,address,uint256)": "01e33667",
+    "workerFeeLib()": "c416aa51"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_value\",\"type\":\"uint256\"}],\"name\":\"Transfer_NativeFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Transfer_ToAddressIsZero\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Worker_NotAllowed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Worker_OnlyMessageLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Worker_RoleRenouncingDisabled\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"multiplierBps\",\"type\":\"uint16\"}],\"name\":\"SetDefaultMultiplierBps\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"priceFeed\",\"type\":\"address\"}],\"name\":\"SetPriceFeed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint8[]\",\"name\":\"optionTypes\",\"type\":\"uint8[]\"}],\"name\":\"SetSupportedOptionTypes\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"workerLib\",\"type\":\"address\"}],\"name\":\"SetWorkerLib\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"Withdraw\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"allowlistSize\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"defaultMultiplierBps\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"\",\"type\":\"uint16\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"getSupportedOptionTypes\",\"outputs\":[{\"internalType\":\"uint8[]\",\"name\":\"\",\"type\":\"uint8[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"}],\"name\":\"hasAcl\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"priceFeed\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_multiplierBps\",\"type\":\"uint16\"}],\"name\":\"setDefaultMultiplierBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bool\",\"name\":\"_paused\",\"type\":\"bool\"}],\"name\":\"setPaused\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_priceFeed\",\"type\":\"address\"}],\"name\":\"setPriceFeed\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"uint8[]\",\"name\":\"_optionTypes\",\"type\":\"uint8[]\"}],\"name\":\"setSupportedOptionTypes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_workerFeeLib\",\"type\":\"address\"}],\"name\":\"setWorkerFeeLib\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawFee\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_amount\",\"type\":\"uint256\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"workerFeeLib\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"events\":{\"Initialized(uint8)\":{\"details\":\"Triggered when the contract has been initialized or reinitialized.\"},\"Paused(address)\":{\"details\":\"Emitted when the pause is triggered by `account`.\"},\"RoleAdminChanged(bytes32,bytes32,bytes32)\":{\"details\":\"Emitted when `newAdminRole` is set as ``role``'s admin role, replacing `previousAdminRole` `DEFAULT_ADMIN_ROLE` is the starting admin for all roles, despite {RoleAdminChanged} not being emitted signaling this. _Available since v3.1._\"},\"RoleGranted(bytes32,address,address)\":{\"details\":\"Emitted when `account` is granted `role`. `sender` is the account that originated the contract call, an admin role bearer except when using {AccessControl-_setupRole}.\"},\"RoleRevoked(bytes32,address,address)\":{\"details\":\"Emitted when `account` is revoked `role`. `sender` is the account that originated the contract call:   - if using `revokeRole`, it is the admin role bearer   - if using `renounceRole`, it is the role bearer (i.e. `account`)\"},\"Unpaused(address)\":{\"details\":\"Emitted when the pause is lifted by `account`.\"}},\"kind\":\"dev\",\"methods\":{\"getRoleAdmin(bytes32)\":{\"details\":\"Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}.\"},\"grantRole(bytes32,address)\":{\"details\":\"Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleGranted} event.\"},\"hasAcl(address)\":{\"details\":\"Access control list using allowlist and denylist1) if one address is in the denylist -> deny2) else if address in the allowlist OR allowlist is empty (allows everyone)-> allow3) else deny\",\"params\":{\"_sender\":\"address to check\"}},\"hasRole(bytes32,address)\":{\"details\":\"Returns `true` if `account` has been granted `role`.\"},\"paused()\":{\"details\":\"Returns true if the contract is paused, and false otherwise.\"},\"renounceRole(bytes32,address)\":{\"details\":\"overrides AccessControl to disable renouncing of roles\"},\"revokeRole(bytes32,address)\":{\"details\":\"Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleRevoked} event.\"},\"setDefaultMultiplierBps(uint16)\":{\"params\":{\"_multiplierBps\":\"default multiplier for worker fee\"}},\"setPaused(bool)\":{\"details\":\"flag to pause execution of workers (if used with whenNotPaused modifier)\",\"params\":{\"_paused\":\"true to pause, false to unpause\"}},\"setPriceFeed(address)\":{\"params\":{\"_priceFeed\":\"price feed address\"}},\"setWorkerFeeLib(address)\":{\"params\":{\"_workerFeeLib\":\"worker fee lib address\"}},\"supportsInterface(bytes4)\":{\"details\":\"See {IERC165-supportsInterface}.\"},\"withdrawFee(address,address,uint256)\":{\"details\":\"supports withdrawing fee from ULN301, ULN302 and more\",\"params\":{\"_amount\":\"amount to withdraw\",\"_lib\":\"message lib address\",\"_to\":\"address to withdraw fee to\"}},\"withdrawToken(address,address,uint256)\":{\"details\":\"supports withdrawing token from the contract\",\"params\":{\"_amount\":\"amount to withdraw\",\"_to\":\"address to withdraw token to\",\"_token\":\"token address\"}}},\"stateVariables\":{\"__gap\":{\"details\":\"This empty reserved space is put in place to allow future versions to add new variables without shifting down storage in the inheritance chain. See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/upgradeable/WorkerUpgradeable.sol\":\"WorkerUpgradeable\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/\",\":@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/\",\":@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/\",\":@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/\",\":@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/\",\":@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol\":{\"keccak256\":\"0xa6b61913767305227576cc6da5067de4208f09a4f58bfbfe32beafdfae9869b1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b7fce83bfb831f383606aee7f5ff68a330c8526bb1036f9ba0813d3e4fa8d534\",\"dweb:/ipfs/QmR7zAqJkmCgBj6sguS8t2WthY5k6FwsakgH4UY11uqD4n\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/upgradeable/WorkerUpgradeable.sol\":{\"keccak256\":\"0xdef5a8f2212f21a2298a58a2922f5dc9e655bf97a01dd0850481a7fc7ea18924\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://16193eed67de47d743de3bb2052b82c7bacb91a2fc08d982c2e18cb87e7ad8b5\",\"dweb:/ipfs/QmYUTt4vFzFnaK6sR1jyLHvTnaaCAzqBtXUHgFyxtL9VvS\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol\":{\"keccak256\":\"0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0\",\"dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol\":{\"keccak256\":\"0xf1c07bc61e7b1dce195ed12d50f87980fbf2d63cac1326fd28287f55fe0ba625\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://060f10ff7afc33c1c2f2b4b5ba29231fd3c943146488084d0e4ab99fce991d97\",\"dweb:/ipfs/QmaSsefAqqEqtf8FgFUmDYMwTsAty3X1pqDb6SiFvry6B3\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol\":{\"keccak256\":\"0x621d6dd5b8b7e827351459fff4ac87c16ba4656757592cf67de8b199aea4cf9a\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://345aa8c007ed8b96a74260d289545713f1d7180df270d67687e3a540a61fa5c0\",\"dweb:/ipfs/QmNWCvpqSuar6UGLDVshUc7shUv3pt1J5FTf9VyZZ13wXL\"]},\"node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol\":{\"keccak256\":\"0xc8710577334e8d0799ae2b2a731b1924a7bddd64319da9787ddd2dc69bdd1ce5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b83b7afa4d2372da3ba5402fb10860a105c35d79812c60dc61007be2afc17618\",\"dweb:/ipfs/QmYX9xPmbNVSKXrepKiUZiG5oL3SdzFp9a4kqspxX1sEUx\"]},\"node_modules/@openzeppelin/contracts-upgradeable/access/IAccessControlUpgradeable.sol\":{\"keccak256\":\"0xb8f5302f12138c5561362e88a78d061573e6298b7a1a5afe84a1e2c8d4d5aeaa\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://740cf4dc535e3082560cf5a031473029f322690fc8037fe9d5e3a8bef42e757c\",\"dweb:/ipfs/QmTQxFdfxcaueQa23VX34wAPqzruZbkzyeN58tZK2yav2b\"]},\"node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x89be10e757d242e9b18d5a32c9fbe2019f6d63052bbe46397a430a1d60d7f794\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f103ee2e4aecd37aac6ceefe670709cdd7613dee25fa2d4d9feaf7fc0aaa155e\",\"dweb:/ipfs/QmRiNZLoJk5k3HPMYGPGjZFd2ke1ZxjhJZkM45Ec9GH9hv\"]},\"node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol\":{\"keccak256\":\"0xad32f6821f860555f9530902a65b54203a4f5db2117f4384ae47a124958078db\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6d362da7417bc7d7cc8623f3d3f8f04c3808d043ee6379568c63a63ec14a124e\",\"dweb:/ipfs/QmYm3wDHUcfGh3MNiRqpWEBbSSYnDSyUsppDATy5DVsfui\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol\":{\"keccak256\":\"0x9c80f545915582e63fe206c6ce27cbe85a86fc10b9cd2a0e8c9488fb7c2ee422\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://310136ad60820af4177a11a61d77a3686faf5fca4942b600e08fc940db38396b\",\"dweb:/ipfs/QmbCzMNSTL7Zi7M4UCSqBrkHtp4jjxUnGbkneCZKdR1qeq\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0x75097e35253e7fb282ee4d7f27a80eaacfa759923185bf17302a89cbc059c5ef\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8b06267c5f80bad727af3e48b1382333d591dad51376399ef2f6b0ee6d58bf95\",\"dweb:/ipfs/QmdU5La1agcQvghnfMpWZGDPz2TUDTCxUwTLKmuMRXBpAx\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol\":{\"keccak256\":\"0xb96dc79b65b7c37937919dcdb356a969ce0aa2e8338322bf4dc027a3c9c9a7eb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f8613145881436fc0480fff22da4868d611e2b0c0c3da083334eb4362ce1945a\",\"dweb:/ipfs/QmPqpP3YeRbBdTJRe6Gv2eGsUaANf4J6RwTNRW36iYahfV\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol\":{\"keccak256\":\"0xd90d7723512df65ae417adaf0801042940f0dabd60039ceeaffe34aa5b238da1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1b13befeb3413749292f9fb229de1c7a509a5ce2c8047d9094fc004ca9d3af89\",\"dweb:/ipfs/QmRzJ2hZSwRtMejHUZAYTPRKgZsnfb112Fno9Jf3EiDfwA\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol\":{\"keccak256\":\"0xc6cef87559d0aeffdf0a99803de655938a7779ec0a3cd5d4383483ad85565a09\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://92ad7e572cf44e6b4b37631b44b62f9eb9fb1cf14d9ce51c1504d5dc7ccaf758\",\"dweb:/ipfs/QmcnbqX85tsWnUXPmtuPLE4SczME2sJaTfmqEFkuAJvWhy\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol\":{\"keccak256\":\"0x2bc0007987c229ae7624eb29be6a9b84f6a6a5872f76248b15208b131ea41c4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2b2835c737d073ef8b82a4cc246495a9740f43e7ff2cf130906b2449ff9bfb91\",\"dweb:/ipfs/QmSCWfNoSvvTN57ic7o1RW6NqSxxGAqbBTnLKc7QHe27qB\"]},\"node_modules/@openzeppelin/contracts-upgradeable/utils/math/SignedMathUpgradeable.sol\":{\"keccak256\":\"0x88f6b7bba3ee33eeb741f9a0f5bc98b6e6e352d0fe4905377bb328590f84095a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://88ace2d60f265752f18903d839910be4e4e104340b2957678585b812447825d4\",\"dweb:/ipfs/QmXFkNxMc3AAGzhs2wUEZyErWQjsvoTGyYjuU5oZkFki5Z\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5\",\"dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol\":{\"keccak256\":\"0xb264c03a3442eb37a68ad620cefd1182766b58bee6cec40343480392d6b14d69\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://28879d01fd22c07b44f006612775f8577defbe459cb01685c5e25cd518c91a71\",\"dweb:/ipfs/QmVgfkwv2Fxw6hhTcDUZhE7NkoSKjab3ipM7UaRbt6uXb5\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xabefac93435967b4d36a4fabcbdbb918d1f0b7ae3c3d85bc30923b326c927ed1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9d213d3befca47da33f6db0310826bcdb148299805c10d77175ecfe1d06a9a68\",\"dweb:/ipfs/QmRgCn6SP1hbBkExUADFuDo8xkT4UU47yjNF5FhCeRbQmS\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2455248c8ddd9cc6a7af76a13973cddf222072427e7b0e2a7d1aff345145e931\",\"dweb:/ipfs/QmfYjnjRbWqYpuxurqveE6HtzsY1Xx323J428AKQgtBJZm\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f\",\"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.20+commit.a1b79de6" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_value", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "Transfer_NativeFailed"
+        },
+        { "inputs": [], "type": "error", "name": "Transfer_ToAddressIsZero" },
+        { "inputs": [], "type": "error", "name": "Worker_NotAllowed" },
+        { "inputs": [], "type": "error", "name": "Worker_OnlyMessageLib" },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Worker_RoleRenouncingDisabled"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Initialized",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Paused",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "bytes32",
+              "name": "previousAdminRole",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "bytes32",
+              "name": "newAdminRole",
+              "type": "bytes32",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "RoleAdminChanged",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "RoleGranted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "role",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "RoleRevoked",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint16",
+              "name": "multiplierBps",
+              "type": "uint16",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SetDefaultMultiplierBps",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "priceFeed",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SetPriceFeed",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "dstEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint8[]",
+              "name": "optionTypes",
+              "type": "uint8[]",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SetSupportedOptionTypes",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "workerLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SetWorkerLib",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Unpaused",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "lib",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Withdraw",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "DEFAULT_ADMIN_ROLE",
+          "outputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "allowlistSize",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultMultiplierBps",
+          "outputs": [
+            { "internalType": "uint16", "name": "", "type": "uint16" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRoleAdmin",
+          "outputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSupportedOptionTypes",
+          "outputs": [
+            { "internalType": "uint8[]", "name": "", "type": "uint8[]" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "grantRole"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "hasAcl",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "hasRole",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "paused",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "priceFeed",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" },
+            { "internalType": "address", "name": "", "type": "address" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "renounceRole"
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+            { "internalType": "address", "name": "account", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "revokeRole"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint16",
+              "name": "_multiplierBps",
+              "type": "uint16"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultMultiplierBps"
+        },
+        {
+          "inputs": [
+            { "internalType": "bool", "name": "_paused", "type": "bool" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setPaused"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_priceFeed",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setPriceFeed"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            {
+              "internalType": "uint8[]",
+              "name": "_optionTypes",
+              "type": "uint8[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setSupportedOptionTypes"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_workerFeeLib",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setWorkerFeeLib"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "supportsInterface",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawFee"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_token", "type": "address" },
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawToken"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "workerFeeLib",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "getRoleAdmin(bytes32)": {
+            "details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+          },
+          "grantRole(bytes32,address)": {
+            "details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleGranted} event."
+          },
+          "hasAcl(address)": {
+            "details": "Access control list using allowlist and denylist1) if one address is in the denylist -> deny2) else if address in the allowlist OR allowlist is empty (allows everyone)-> allow3) else deny",
+            "params": { "_sender": "address to check" }
+          },
+          "hasRole(bytes32,address)": {
+            "details": "Returns `true` if `account` has been granted `role`."
+          },
+          "paused()": {
+            "details": "Returns true if the contract is paused, and false otherwise."
+          },
+          "renounceRole(bytes32,address)": {
+            "details": "overrides AccessControl to disable renouncing of roles"
+          },
+          "revokeRole(bytes32,address)": {
+            "details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleRevoked} event."
+          },
+          "setDefaultMultiplierBps(uint16)": {
+            "params": { "_multiplierBps": "default multiplier for worker fee" }
+          },
+          "setPaused(bool)": {
+            "details": "flag to pause execution of workers (if used with whenNotPaused modifier)",
+            "params": { "_paused": "true to pause, false to unpause" }
+          },
+          "setPriceFeed(address)": {
+            "params": { "_priceFeed": "price feed address" }
+          },
+          "setWorkerFeeLib(address)": {
+            "params": { "_workerFeeLib": "worker fee lib address" }
+          },
+          "supportsInterface(bytes4)": {
+            "details": "See {IERC165-supportsInterface}."
+          },
+          "withdrawFee(address,address,uint256)": {
+            "details": "supports withdrawing fee from ULN301, ULN302 and more",
+            "params": {
+              "_amount": "amount to withdraw",
+              "_lib": "message lib address",
+              "_to": "address to withdraw fee to"
+            }
+          },
+          "withdrawToken(address,address,uint256)": {
+            "details": "supports withdrawing token from the contract",
+            "params": {
+              "_amount": "amount to withdraw",
+              "_to": "address to withdraw token to",
+              "_token": "token address"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/",
+        "@layerzerolabs/lz-evm-oapp-v2/=node_modules/@layerzerolabs/lz-evm-oapp-v2/",
+        "@layerzerolabs/lz-evm-protocol-v2/=node_modules/@layerzerolabs/lz-evm-protocol-v2/",
+        "@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/",
+        "@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/",
+        "@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/upgradeable/WorkerUpgradeable.sol": "WorkerUpgradeable"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol": {
+        "keccak256": "0xa6b61913767305227576cc6da5067de4208f09a4f58bfbfe32beafdfae9869b1",
+        "urls": [
+          "bzz-raw://b7fce83bfb831f383606aee7f5ff68a330c8526bb1036f9ba0813d3e4fa8d534",
+          "dweb:/ipfs/QmR7zAqJkmCgBj6sguS8t2WthY5k6FwsakgH4UY11uqD4n"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/upgradeable/WorkerUpgradeable.sol": {
+        "keccak256": "0xdef5a8f2212f21a2298a58a2922f5dc9e655bf97a01dd0850481a7fc7ea18924",
+        "urls": [
+          "bzz-raw://16193eed67de47d743de3bb2052b82c7bacb91a2fc08d982c2e18cb87e7ad8b5",
+          "dweb:/ipfs/QmYUTt4vFzFnaK6sR1jyLHvTnaaCAzqBtXUHgFyxtL9VvS"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": {
+        "keccak256": "0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c",
+        "urls": [
+          "bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0",
+          "dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol": {
+        "keccak256": "0xf1c07bc61e7b1dce195ed12d50f87980fbf2d63cac1326fd28287f55fe0ba625",
+        "urls": [
+          "bzz-raw://060f10ff7afc33c1c2f2b4b5ba29231fd3c943146488084d0e4ab99fce991d97",
+          "dweb:/ipfs/QmaSsefAqqEqtf8FgFUmDYMwTsAty3X1pqDb6SiFvry6B3"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol": {
+        "keccak256": "0x621d6dd5b8b7e827351459fff4ac87c16ba4656757592cf67de8b199aea4cf9a",
+        "urls": [
+          "bzz-raw://345aa8c007ed8b96a74260d289545713f1d7180df270d67687e3a540a61fa5c0",
+          "dweb:/ipfs/QmNWCvpqSuar6UGLDVshUc7shUv3pt1J5FTf9VyZZ13wXL"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol": {
+        "keccak256": "0xc8710577334e8d0799ae2b2a731b1924a7bddd64319da9787ddd2dc69bdd1ce5",
+        "urls": [
+          "bzz-raw://b83b7afa4d2372da3ba5402fb10860a105c35d79812c60dc61007be2afc17618",
+          "dweb:/ipfs/QmYX9xPmbNVSKXrepKiUZiG5oL3SdzFp9a4kqspxX1sEUx"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/access/IAccessControlUpgradeable.sol": {
+        "keccak256": "0xb8f5302f12138c5561362e88a78d061573e6298b7a1a5afe84a1e2c8d4d5aeaa",
+        "urls": [
+          "bzz-raw://740cf4dc535e3082560cf5a031473029f322690fc8037fe9d5e3a8bef42e757c",
+          "dweb:/ipfs/QmTQxFdfxcaueQa23VX34wAPqzruZbkzyeN58tZK2yav2b"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
+        "keccak256": "0x89be10e757d242e9b18d5a32c9fbe2019f6d63052bbe46397a430a1d60d7f794",
+        "urls": [
+          "bzz-raw://f103ee2e4aecd37aac6ceefe670709cdd7613dee25fa2d4d9feaf7fc0aaa155e",
+          "dweb:/ipfs/QmRiNZLoJk5k3HPMYGPGjZFd2ke1ZxjhJZkM45Ec9GH9hv"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol": {
+        "keccak256": "0xad32f6821f860555f9530902a65b54203a4f5db2117f4384ae47a124958078db",
+        "urls": [
+          "bzz-raw://6d362da7417bc7d7cc8623f3d3f8f04c3808d043ee6379568c63a63ec14a124e",
+          "dweb:/ipfs/QmYm3wDHUcfGh3MNiRqpWEBbSSYnDSyUsppDATy5DVsfui"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": {
+        "keccak256": "0x9c80f545915582e63fe206c6ce27cbe85a86fc10b9cd2a0e8c9488fb7c2ee422",
+        "urls": [
+          "bzz-raw://310136ad60820af4177a11a61d77a3686faf5fca4942b600e08fc940db38396b",
+          "dweb:/ipfs/QmbCzMNSTL7Zi7M4UCSqBrkHtp4jjxUnGbkneCZKdR1qeq"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
+        "keccak256": "0x75097e35253e7fb282ee4d7f27a80eaacfa759923185bf17302a89cbc059c5ef",
+        "urls": [
+          "bzz-raw://8b06267c5f80bad727af3e48b1382333d591dad51376399ef2f6b0ee6d58bf95",
+          "dweb:/ipfs/QmdU5La1agcQvghnfMpWZGDPz2TUDTCxUwTLKmuMRXBpAx"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": {
+        "keccak256": "0xb96dc79b65b7c37937919dcdb356a969ce0aa2e8338322bf4dc027a3c9c9a7eb",
+        "urls": [
+          "bzz-raw://f8613145881436fc0480fff22da4868d611e2b0c0c3da083334eb4362ce1945a",
+          "dweb:/ipfs/QmPqpP3YeRbBdTJRe6Gv2eGsUaANf4J6RwTNRW36iYahfV"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol": {
+        "keccak256": "0xd90d7723512df65ae417adaf0801042940f0dabd60039ceeaffe34aa5b238da1",
+        "urls": [
+          "bzz-raw://1b13befeb3413749292f9fb229de1c7a509a5ce2c8047d9094fc004ca9d3af89",
+          "dweb:/ipfs/QmRzJ2hZSwRtMejHUZAYTPRKgZsnfb112Fno9Jf3EiDfwA"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol": {
+        "keccak256": "0xc6cef87559d0aeffdf0a99803de655938a7779ec0a3cd5d4383483ad85565a09",
+        "urls": [
+          "bzz-raw://92ad7e572cf44e6b4b37631b44b62f9eb9fb1cf14d9ce51c1504d5dc7ccaf758",
+          "dweb:/ipfs/QmcnbqX85tsWnUXPmtuPLE4SczME2sJaTfmqEFkuAJvWhy"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol": {
+        "keccak256": "0x2bc0007987c229ae7624eb29be6a9b84f6a6a5872f76248b15208b131ea41c4e",
+        "urls": [
+          "bzz-raw://2b2835c737d073ef8b82a4cc246495a9740f43e7ff2cf130906b2449ff9bfb91",
+          "dweb:/ipfs/QmSCWfNoSvvTN57ic7o1RW6NqSxxGAqbBTnLKc7QHe27qB"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts-upgradeable/utils/math/SignedMathUpgradeable.sol": {
+        "keccak256": "0x88f6b7bba3ee33eeb741f9a0f5bc98b6e6e352d0fe4905377bb328590f84095a",
+        "urls": [
+          "bzz-raw://88ace2d60f265752f18903d839910be4e4e104340b2957678585b812447825d4",
+          "dweb:/ipfs/QmXFkNxMc3AAGzhs2wUEZyErWQjsvoTGyYjuU5oZkFki5Z"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0x287b55befed2961a7eabd7d7b1b2839cbca8a5b80ef8dcbb25ed3d4c2002c305",
+        "urls": [
+          "bzz-raw://bd39944e8fc06be6dbe2dd1d8449b5336e23c6a7ba3e8e9ae5ae0f37f35283f5",
+          "dweb:/ipfs/QmPV3FGYjVwvKSgAXKUN3r9T9GwniZz83CxBpM7vyj2G53"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+        "keccak256": "0xb264c03a3442eb37a68ad620cefd1182766b58bee6cec40343480392d6b14d69",
+        "urls": [
+          "bzz-raw://28879d01fd22c07b44f006612775f8577defbe459cb01685c5e25cd518c91a71",
+          "dweb:/ipfs/QmVgfkwv2Fxw6hhTcDUZhE7NkoSKjab3ipM7UaRbt6uXb5"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0xabefac93435967b4d36a4fabcbdbb918d1f0b7ae3c3d85bc30923b326c927ed1",
+        "urls": [
+          "bzz-raw://9d213d3befca47da33f6db0310826bcdb148299805c10d77175ecfe1d06a9a68",
+          "dweb:/ipfs/QmRgCn6SP1hbBkExUADFuDo8xkT4UU47yjNF5FhCeRbQmS"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0x006dd67219697fe68d7fbfdea512e7c4cb64a43565ed86171d67e844982da6fa",
+        "urls": [
+          "bzz-raw://2455248c8ddd9cc6a7af76a13973cddf222072427e7b0e2a7d1aff345145e931",
+          "dweb:/ipfs/QmfYjnjRbWqYpuxurqveE6HtzsY1Xx323J428AKQgtBJZm"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+        "urls": [
+          "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+          "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 36
+}

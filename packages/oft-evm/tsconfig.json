@@ -1,13 +1,10 @@
 {
   "extends": "@layerzerolabs/typescript-config-next/library.json",
 
-  "files": ["hardhat.config.ts"], // this root tsconfig just exists to compose sub-projects
+  "files": ["hardhat.config.ts"],
   "references": [
     {
       "path": "./src"
-    },
-    {
-      "path": "./ops"
     }
   ],
 

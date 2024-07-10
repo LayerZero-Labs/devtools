@@ -978,6 +978,9 @@ importers:
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^2.3.29
         version: 2.3.29(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~0.2.7
+        version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ^0.1.7
         version: link:../toolbox-foundry
@@ -5152,7 +5155,7 @@ packages:
       hardhat: ^2.0.0
     dependencies:
       ethers: 5.7.2
-      hardhat: 2.22.3(ts-node@10.9.2)(typescript@5.3.3)
+      hardhat: 2.22.3(typescript@5.2.2)
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.7.3:
@@ -9854,7 +9857,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       cli-table3: 0.6.3
-      hardhat: 2.22.3(ts-node@10.9.2)(typescript@5.3.3)
+      hardhat: 2.22.3(typescript@5.2.2)
       strip-ansi: 6.0.1
     dev: true
 
