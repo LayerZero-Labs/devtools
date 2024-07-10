@@ -6,7 +6,12 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "artifacts/contracts/**/*",
+    "artifacts/IOFT.sol/IOFT.json",
+    "artifacts/OFTComposeMsgCodec.sol/OFTComposeMsgCodec.json",
+    "artifacts/OFTMsgCodec.sol/OFTMsgCodec.json",
+    "artifacts/OFT.sol/OFT.json",
+    "artifacts/OFTAdapter.sol/OFTAdapter.json",
+    "artifacts/OFTCore.sol/OFTCore.json",
     "contracts/**/*"
   ],
   "scripts": {
