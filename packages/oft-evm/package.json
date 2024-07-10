@@ -14,9 +14,8 @@
     "clean": "rimraf .turbo cache out artifacts",
     "compile": "$npm_execpath compile:forge",
     "compile:forge": "$npm_execpath forge build",
-    "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
-    "test:forge": "$npm_execpath forge test",
-    "test:hardhat": "$npm_execpath forge test && $npm_execpath hardhat test --no-compile"
+    "test": "$npm_execpath test:forge",
+    "test:forge": "$npm_execpath forge test"
   },
   "dependencies": {
     "ethers": "^5.7.2"
