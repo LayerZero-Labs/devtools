@@ -378,6 +378,21 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             )
         })
 
+        it('should work if an external contract is used in `to` of a connection', async () => {
+            const oappConfig = configPathFixture('valid.config.connected.external.connection.js')
+
+            promptToContinueMock.mockResolvedValue(false)
+
+            const result = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+
+            expect(result).toEqual([
+                [expectTransactionWithReceipt, expectTransactionWithReceipt, expectTransactionWithReceipt],
+                [],
+                [],
+            ])
+            expect(promptToContinueMock).not.toHaveBeenCalled()
+        })
+
         describe('if a transaction fails', () => {
             let sendTransactionMock: jest.SpyInstance
 
