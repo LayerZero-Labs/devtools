@@ -610,6 +610,7 @@ const enforcedOptionsReducer = (
 
 export const configureOApp: OAppConfigurator = withOAppLogger(
     createConfigureMultiple(
+        configureOAppDelegates,
         configureOAppPeers,
         configureSendLibraries,
         configureReceiveLibraries,
@@ -617,8 +618,7 @@ export const configureOApp: OAppConfigurator = withOAppLogger(
         configureSendConfig,
         configureReceiveConfig,
         configureEnforcedOptions,
-        configureCallerBpsCap,
-        configureOAppDelegates
+        configureCallerBpsCap
     ),
     {
         onStart: (logger) => logger.info(`Checking OApp configuration`),
