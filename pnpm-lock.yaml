@@ -1501,7 +1501,7 @@ importers:
         specifier: ~0.2.5
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~0.3.18
+        specifier: ~0.3.20
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~0.3.14

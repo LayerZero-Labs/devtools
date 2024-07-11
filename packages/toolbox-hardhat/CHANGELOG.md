@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.36
+
+### Patch Changes
+
+- 1a60d2b: Configure OApp delagates before configuring other properties
+- Updated dependencies [1a60d2b]
+  - @layerzerolabs/ua-devtools@0.3.20
+
 ## 0.2.35
 
 ### Patch Changes
