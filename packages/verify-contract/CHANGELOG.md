@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.23
+
+### Patch Changes
+
+- 6af620b: Added api urls for similar network names and alphabetized the map
+
 ## 1.1.22
 
 ### Patch Changes
