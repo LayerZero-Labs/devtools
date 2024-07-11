@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.20
+
+### Patch Changes
+
+- 1a60d2b: Configure OApp delagates before configuring other properties
+
 ## 0.3.19
 
 ### Patch Changes
