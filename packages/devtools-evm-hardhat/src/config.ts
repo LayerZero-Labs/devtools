@@ -4,6 +4,7 @@ import { endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { HardhatUserConfig } from 'hardhat/types'
 import { join, dirname } from 'path'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
+import type { ArtifactPackage } from './type-extensions'
 
 const resolvePackageDirectory = (packageName: string): string => {
     // The tricky bit here is the fact that if we resolve packages by their package name,
@@ -16,6 +17,22 @@ const resolvePackageDirectory = (packageName: string): string => {
     const packageJsonPath = require.resolve(packageJsonName)
     // And return its directory
     return dirname(packageJsonPath)
+}
+
+const resolveArtifactsPath = (artifactsPackage: ArtifactPackage): string => {
+    // In case the package was specified as a package name only, we'll resolve its filesystem location
+    // and use the default `artifacts` directory
+    if (typeof artifactsPackage === 'string') {
+        return join(resolvePackageDirectory(artifactsPackage), 'artifacts')
+    }
+
+    // In case the package was specified as an object, we'll use the `path` property to point to the artifacts directory
+    if (artifactsPackage.name != null) {
+        return join(resolvePackageDirectory(artifactsPackage.name), artifactsPackage.path ?? 'artifacts')
+    }
+
+    // In case the package was specified as a `path` only, we'll use that as the final artifacts path
+    return artifactsPackage.path
 }
 
 /**
@@ -136,12 +153,10 @@ export const withLayerZeroDeployments = (...packageNames: string[]) => {
  *
  * @returns `<THardhatUserConfig extends HardhatUserConfig>(config: THardhatUserConfig): THardhatUserConfig` Hardhat config decorator
  */
-export const withLayerZeroArtifacts = (...packageNames: string[]) => {
-    const resolvedArtifactsDirectories = packageNames
-        // The first thing we do is we resolve the paths to LayerZero packages
-        .map(resolvePackageDirectory)
-        // Then navigate to the artifacts folder
-        .map((resolvedPackagePath) => join(resolvedPackagePath, 'artifacts'))
+export const withLayerZeroArtifacts = (...artifactPackages: ArtifactPackage[]) => {
+    const resolvedArtifactsDirectories = artifactPackages
+        // The first thing we do is we resolve the artifact package definitions into filesystem paths
+        .map(resolveArtifactsPath)
 
     // We return a function that will enrich hardhat config with the external artifacts configuration
     //

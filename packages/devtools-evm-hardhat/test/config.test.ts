@@ -137,63 +137,197 @@ describe('config', () => {
     })
 
     describe('withLayerZeroArtifacts()', () => {
-        const resolvedLzEvmSdkPackageJson = dirname(
-            require.resolve(join('@layerzerolabs/lz-evm-sdk-v1', 'package.json'))
-        )
+        describe('with package names', () => {
+            const resolvedLzEvmSdkPackage = dirname(
+                require.resolve(join('@layerzerolabs/lz-evm-sdk-v1', 'package.json'))
+            )
 
-        it('should append external artifacts', () => {
-            const config = {
-                networks: {},
-            }
+            it('should append external artifacts from named', () => {
+                const config = {
+                    networks: {},
+                }
 
-            expect(withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
-                networks: {},
-                external: {
-                    contracts: [
-                        {
-                            artifacts: [`${resolvedLzEvmSdkPackageJson}/artifacts`],
-                        },
-                    ],
-                },
+                expect(withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(config)).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/artifacts`],
+                            },
+                        ],
+                    },
+                })
+            })
+
+            it('should not append duplicate external artifacts', () => {
+                const config = {
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifact',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifact'],
+                            },
+                        ],
+                    },
+                    networks: {},
+                }
+
+                const configWithSomePath = withLayerZeroArtifacts(
+                    '@layerzerolabs/lz-evm-sdk-v1',
+                    '@layerzerolabs/lz-evm-sdk-v1'
+                )(config)
+                const configWithSomePathAgain =
+                    withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(configWithSomePath)
+
+                expect(configWithSomePathAgain).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifact',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifact'],
+                            },
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/artifacts`],
+                            },
+                        ],
+                    },
+                })
             })
         })
 
-        it('should not append duplicate external artifacts', () => {
-            const config = {
-                external: {
-                    contracts: [
-                        {
-                            artifacts: './my/external/artifact',
-                        },
-                        {
-                            artifacts: ['./my/other/external/artifact'],
-                        },
-                    ],
-                },
-                networks: {},
-            }
+        describe('with package names & paths', () => {
+            const resolvedLzEvmSdkPackage = dirname(
+                require.resolve(join('@layerzerolabs/lz-evm-sdk-v1', 'package.json'))
+            )
 
-            const configWithSomePath = withLayerZeroArtifacts(
-                '@layerzerolabs/lz-evm-sdk-v1',
-                '@layerzerolabs/lz-evm-sdk-v1'
-            )(config)
-            const configWithSomePathAgain = withLayerZeroArtifacts('@layerzerolabs/lz-evm-sdk-v1')(configWithSomePath)
+            it('should append external artifacts from named', () => {
+                const config = {
+                    networks: {},
+                }
 
-            expect(configWithSomePathAgain).toEqual({
-                networks: {},
-                external: {
-                    contracts: [
-                        {
-                            artifacts: './my/external/artifact',
-                        },
-                        {
-                            artifacts: ['./my/other/external/artifact'],
-                        },
-                        {
-                            artifacts: [`${resolvedLzEvmSdkPackageJson}/artifacts`],
-                        },
-                    ],
-                },
+                expect(
+                    withLayerZeroArtifacts({ name: '@layerzerolabs/lz-evm-sdk-v1', path: 'custom/path' })(config)
+                ).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/custom/path`],
+                            },
+                        ],
+                    },
+                })
+            })
+
+            it('should not append duplicate external artifacts', () => {
+                const config = {
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifacts',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifacts'],
+                            },
+                        ],
+                    },
+                    networks: {},
+                }
+
+                const configWithSomePath = withLayerZeroArtifacts(
+                    { name: '@layerzerolabs/lz-evm-sdk-v1', path: 'custom/path' },
+                    { name: '@layerzerolabs/lz-evm-sdk-v1', path: 'custom/path' }
+                )(config)
+                const configWithSomePathAgain = withLayerZeroArtifacts({
+                    name: '@layerzerolabs/lz-evm-sdk-v1',
+                    path: 'custom/path',
+                })(configWithSomePath)
+
+                expect(configWithSomePathAgain).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifacts',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifacts'],
+                            },
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/custom/path`],
+                            },
+                        ],
+                    },
+                })
+            })
+        })
+
+        describe('with package paths', () => {
+            const resolvedLzEvmSdkPackage = dirname(
+                require.resolve(join('@layerzerolabs/lz-evm-sdk-v1', 'package.json'))
+            )
+
+            it('should append external artifacts from named', () => {
+                const config = {
+                    networks: {},
+                }
+
+                expect(withLayerZeroArtifacts({ path: join(resolvedLzEvmSdkPackage, 'artifacts') })(config)).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/artifacts`],
+                            },
+                        ],
+                    },
+                })
+            })
+
+            it('should not append duplicate external artifacts', () => {
+                const config = {
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifact',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifact'],
+                            },
+                        ],
+                    },
+                    networks: {},
+                }
+
+                const configWithSomePath = withLayerZeroArtifacts(
+                    { path: join(resolvedLzEvmSdkPackage, 'artifacts') },
+                    { path: join(resolvedLzEvmSdkPackage, 'artifacts') }
+                )(config)
+                const configWithSomePathAgain = withLayerZeroArtifacts({
+                    path: join(resolvedLzEvmSdkPackage, 'artifacts'),
+                })(configWithSomePath)
+
+                expect(configWithSomePathAgain).toEqual({
+                    networks: {},
+                    external: {
+                        contracts: [
+                            {
+                                artifacts: './my/external/artifact',
+                            },
+                            {
+                                artifacts: ['./my/other/external/artifact'],
+                            },
+                            {
+                                artifacts: [`${resolvedLzEvmSdkPackage}/artifacts`],
+                            },
+                        ],
+                    },
+                })
             })
         })
     })
