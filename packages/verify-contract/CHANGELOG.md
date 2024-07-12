@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.24
+
+### Patch Changes
+
+- a541c81: Added flare and gravity api urls
+
 ## 1.1.23
 
 ### Patch Changes
