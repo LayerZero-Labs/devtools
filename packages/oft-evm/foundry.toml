@@ -23,3 +23,6 @@ remappings = [
     '@layerzerolabs/lz-evm-messagelib-v2/=node_modules/@layerzerolabs/lz-evm-messagelib-v2/',
     '@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/'
 ]
+
+[fuzz]
+runs = 1000
