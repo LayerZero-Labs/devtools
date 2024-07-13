@@ -27,6 +27,7 @@
     "artifacts/OFT.sol/OFT.json",
     "artifacts/OFTAdapter.sol/OFTAdapter.json",
     "artifacts/OFTCore.sol/OFTCore.json",
+    "artifacts/OFT.sol/OFTFee.json",
     "contracts/**/*"
   ],
   "scripts": {

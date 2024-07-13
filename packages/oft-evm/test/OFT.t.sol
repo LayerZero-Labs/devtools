@@ -15,51 +15,69 @@ import { OFTMsgCodec } from "../contracts/libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "../contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
+import { OFT } from "../contracts/OFT.sol";
+import { OFTAdapter } from "../contracts/OFTAdapter.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
+import { OFTMockCodec } from "./lib/OFTMockCodec.sol";
+import { OFTAdapterMockCodec } from "./lib/OFTAdapterMockCodec.sol";
 
 import "forge-std/console.sol";
 import { TestHelper } from "./TestHelper.sol";
 
 contract OFTTest is TestHelper {
     using OptionsBuilder for bytes;
+    using OFTMockCodec for OFT;
+    using OFTAdapterMockCodec for OFTAdapter;
 
-    uint32 aEid = 1;
-    uint32 bEid = 2;
-    uint32 cEid = 3;
+    uint32 internal constant A_EID = 1;
+    uint32 internal constant B_EID = 2;
+    uint32 internal constant C_EID = 3;
 
-    OFTMock aOFT;
-    OFTMock bOFT;
-    OFTAdapterMock cOFTAdapter;
-    ERC20Mock cERC20Mock;
+    string internal constant A_OFT_NAME = "aOFT";
+    string internal constant A_OFT_SYMBOL = "aOFT";
+    string internal constant B_OFT_NAME = "bOFT";
+    string internal constant B_OFT_SYMBOL = "bOFT";
+    string internal constant C_TOKEN_NAME = "cToken";
+    string internal constant C_TOKEN_SYMBOL = "cToken";
 
-    OFTInspectorMock oAppInspector;
+    OFT internal aOFT;
+    OFT internal bOFT;
+    OFTAdapter internal cOFTAdapter;
+    ERC20Mock internal cERC20Mock;
 
-    address public userA = address(0x1);
-    address public userB = address(0x2);
-    address public userC = address(0x3);
+    OFTInspectorMock internal oAppInspector;
+
+    address public userA = makeAddr("userA");
+    address public userB = makeAddr("userB");
+    address public userC = makeAddr("userC");
     uint256 public initialBalance = 100 ether;
 
     function setUp() public virtual override {
-        vm.deal(userA, 1000 ether);
-        vm.deal(userB, 1000 ether);
-        vm.deal(userC, 1000 ether);
+        _deal();
 
         super.setUp();
         setUpEndpoints(3, LibraryType.UltraLightNode);
 
         aOFT = OFTMock(
-            _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))
+            _deployOApp(
+                type(OFTMock).creationCode,
+                abi.encode(A_OFT_NAME, A_OFT_SYMBOL, address(endpoints[A_EID]), address(this))
+            )
         );
 
         bOFT = OFTMock(
-            _deployOApp(type(OFTMock).creationCode, abi.encode("bOFT", "bOFT", address(endpoints[bEid]), address(this)))
+            _deployOApp(
+                type(OFTMock).creationCode,
+                abi.encode(B_OFT_NAME, B_OFT_SYMBOL, address(endpoints[B_EID]), address(this))
+            )
         );
 
-        cERC20Mock = new ERC20Mock("cToken", "cToken");
+        cERC20Mock = new ERC20Mock(C_TOKEN_NAME, C_TOKEN_SYMBOL);
         cOFTAdapter = OFTAdapterMock(
             _deployOApp(
                 type(OFTAdapterMock).creationCode,
-                abi.encode(address(cERC20Mock), address(endpoints[cEid]), address(this))
+                abi.encode(address(cERC20Mock), address(endpoints[C_EID]), address(this))
             )
         );
 
@@ -71,12 +89,18 @@ contract OFTTest is TestHelper {
         this.wireOApps(ofts);
 
         // mint tokens
-        aOFT.mint(userA, initialBalance);
-        bOFT.mint(userB, initialBalance);
+        aOFT.asOFTMock().mint(userA, initialBalance);
+        bOFT.asOFTMock().mint(userB, initialBalance);
         cERC20Mock.mint(userC, initialBalance);
 
         // deploy a universal inspector, can be used by each oft
         oAppInspector = new OFTInspectorMock();
+    }
+
+    function _deal() internal {
+        vm.deal(userA, 1000 ether);
+        vm.deal(userB, 1000 ether);
+        vm.deal(userC, 1000 ether);
     }
 
     function test_constructor() public {
@@ -99,15 +123,15 @@ contract OFTTest is TestHelper {
         assertEq(interfaceId, expectedId);
     }
 
-    function test_send_oft(uint256 tokensToSend) public {
+    function test_send_oft(uint256 tokensToSend) public virtual {
         vm.assume(tokensToSend > 0.001 ether && tokensToSend < 100 ether); // avoid reverting due to SlippageExceeded
 
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
-            bEid,
+            B_EID,
             addressToBytes32(userB),
             tokensToSend,
-            (tokensToSend * 9_900) / 10_000, // allow 1% slippage
+            (tokensToSend * 9_500) / 10_000, // allow 1% slippage
             options,
             "",
             ""
@@ -117,20 +141,24 @@ contract OFTTest is TestHelper {
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(userB), initialBalance);
 
+        if (aOFT.asOFTMock().approvalRequired()) {
+            vm.prank(userA);
+            aOFT.asIERC20().approve(address(aOFT), tokensToSend);
+        }
         vm.prank(userA);
         (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: fee.nativeFee }(
             sendParam,
             fee,
             payable(address(this))
         );
-        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+        verifyPackets(B_EID, addressToBytes32(address(bOFT)));
 
         assertEq(msgReceipt.fee.nativeFee, fee.nativeFee);
         assertEq(aOFT.balanceOf(userA), initialBalance - oftReceipt.amountSentLD);
         assertEq(bOFT.balanceOf(userB), initialBalance + oftReceipt.amountReceivedLD);
     }
 
-    function test_send_oft_compose_msg(uint256 tokensToSend) public {
+    function test_send_oft_compose_msg(uint256 tokensToSend) public virtual {
         vm.assume(tokensToSend > 0.001 ether && tokensToSend < 100 ether); // avoid reverting due to SlippageExceeded
 
         OFTComposerMock composer = new OFTComposerMock();
@@ -141,10 +169,10 @@ contract OFTTest is TestHelper {
             .addExecutorLzComposeOption(0, 500000, 0);
         bytes memory composeMsg = hex"1234";
         SendParam memory sendParam = SendParam(
-            bEid,
+            B_EID,
             addressToBytes32(address(composer)),
             tokensToSend,
-            (tokensToSend * 9_900) / 10_000, // allow 1% slippage
+            (tokensToSend * 9_500) / 10_000, // allow 1% slippage
             options,
             composeMsg,
             ""
@@ -154,23 +182,27 @@ contract OFTTest is TestHelper {
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(address(composer)), 0);
 
+        if (aOFT.asOFTMock().approvalRequired()) {
+            vm.prank(userA);
+            aOFT.asIERC20().approve(address(aOFT), tokensToSend);
+        }
         vm.prank(userA);
         (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: fee.nativeFee }(
             sendParam,
             fee,
             payable(address(this))
         );
-        verifyPackets(bEid, addressToBytes32(address(bOFT)));
+        verifyPackets(B_EID, addressToBytes32(address(bOFT)));
 
         // lzCompose params
-        uint32 dstEid_ = bEid;
+        uint32 dstEid_ = B_EID;
         address from_ = address(bOFT);
         bytes memory options_ = options;
         bytes32 guid_ = msgReceipt.guid;
         address to_ = address(composer);
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
             msgReceipt.nonce,
-            aEid,
+            A_EID,
             oftReceipt.amountReceivedLD,
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
@@ -222,48 +254,56 @@ contract OFTTest is TestHelper {
         composeMsg = OFTComposeMsgCodec.composeMsg(message);
     }
 
-    function test_debit_slippage_removeDust() public {
+    function test_debit_slippage_removeDust() public virtual {
         uint256 amountToSendLD = 1.23456789 ether;
         uint256 minAmountToCreditLD = 1.23456789 ether;
-        uint32 dstEid = aEid;
+        uint32 dstEid = A_EID;
 
         // remove the dust form the shared decimal conversion
-        assertEq(aOFT.removeDust(amountToSendLD), 1.234567 ether);
+        assertEq(aOFT.asOFTMock().removeDust(amountToSendLD), 1.234567 ether);
 
         vm.expectRevert(
-            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, aOFT.removeDust(amountToSendLD), minAmountToCreditLD)
+            abi.encodeWithSelector(
+                IOFT.SlippageExceeded.selector,
+                aOFT.asOFTMock().removeDust(amountToSendLD),
+                minAmountToCreditLD
+            )
         );
-        aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
+        aOFT.asOFTMock().debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
-    function test_debit_slippage_minAmountToCreditLD() public {
+    function test_debit_slippage_minAmountToCreditLD() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1.00000001 ether;
-        uint32 dstEid = aEid;
+        uint32 dstEid = A_EID;
 
         vm.expectRevert(abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD));
-        aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
+        aOFT.asOFTMock().debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
     function test_toLD(uint64 amountSD) public {
-        assertEq(amountSD * aOFT.decimalConversionRate(), aOFT.toLD(uint64(amountSD)));
+        assertEq(amountSD * OFTMock(address(aOFT)).decimalConversionRate(), aOFT.asOFTMock().toLD(uint64(amountSD)));
     }
 
     function test_toSD(uint256 amountLD) public {
         vm.assume(amountLD <= type(uint64).max); // avoid reverting due to overflow
-        assertEq(amountLD / aOFT.decimalConversionRate(), aOFT.toSD(amountLD));
+        assertEq(amountLD / aOFT.asOFTMock().decimalConversionRate(), aOFT.asOFTMock().toSD(amountLD));
     }
 
-    function test_oft_debit() public {
+    function test_oft_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
-        uint32 dstEid = aEid;
+        uint32 dstEid = A_EID;
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(aOFT.balanceOf(address(this)), 0);
 
         vm.prank(userA);
-        (uint256 amountDebitedLD, uint256 amountToCreditLD) = aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = aOFT.asOFTMock().debit(
+            amountToSendLD,
+            minAmountToCreditLD,
+            dstEid
+        );
 
         assertEq(amountDebitedLD, amountToSendLD);
         assertEq(amountToCreditLD, amountToSendLD);
@@ -274,22 +314,22 @@ contract OFTTest is TestHelper {
 
     function test_oft_credit() public {
         uint256 amountToCreditLD = 1 ether;
-        uint32 srcEid = aEid;
+        uint32 srcEid = A_EID;
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(aOFT.balanceOf(address(this)), 0);
 
         vm.prank(userA);
-        uint256 amountReceived = aOFT.credit(userA, amountToCreditLD, srcEid);
+        uint256 amountReceived = aOFT.asOFTMock().credit(userA, amountToCreditLD, srcEid);
 
         assertEq(aOFT.balanceOf(userA), initialBalance + amountReceived);
         assertEq(aOFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_adapter_debit() public {
+    function test_oft_adapter_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
-        uint32 dstEid = cEid;
+        uint32 dstEid = C_EID;
 
         assertEq(cERC20Mock.balanceOf(userC), initialBalance);
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), 0);
@@ -298,12 +338,12 @@ contract OFTTest is TestHelper {
         vm.expectRevert(
             abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
         );
-        cOFTAdapter.debitView(amountToSendLD, minAmountToCreditLD + 1, dstEid);
+        cOFTAdapter.asOFTAdapterMock().debitView(amountToSendLD, minAmountToCreditLD + 1, dstEid);
 
         vm.prank(userC);
         cERC20Mock.approve(address(cOFTAdapter), amountToSendLD);
         vm.prank(userC);
-        (uint256 amountDebitedLD, uint256 amountToCreditLD) = cOFTAdapter.debit(
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = cOFTAdapter.asOFTAdapterMock().debit(
             amountToSendLD,
             minAmountToCreditLD,
             dstEid
@@ -318,7 +358,7 @@ contract OFTTest is TestHelper {
 
     function test_oft_adapter_credit() public {
         uint256 amountToCreditLD = 1 ether;
-        uint32 srcEid = cEid;
+        uint32 srcEid = C_EID;
 
         assertEq(cERC20Mock.balanceOf(userC), initialBalance);
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), 0);
@@ -326,7 +366,7 @@ contract OFTTest is TestHelper {
         vm.prank(userC);
         cERC20Mock.transfer(address(cOFTAdapter), amountToCreditLD);
 
-        uint256 amountReceived = cOFTAdapter.credit(userB, amountToCreditLD, srcEid);
+        uint256 amountReceived = cOFTAdapter.asOFTAdapterMock().credit(userB, amountToCreditLD, srcEid);
 
         assertEq(cERC20Mock.balanceOf(userC), initialBalance - amountToCreditLD);
         assertEq(cERC20Mock.balanceOf(address(userB)), amountReceived);
@@ -344,7 +384,7 @@ contract OFTTest is TestHelper {
 
     function test_oft_build_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD, bytes memory composeMsg) public {
         vm.assume(composeMsg.length > 0); // ensure there is a composed payload
-        uint256 minAmountToCreditLD = aOFT.removeDust(amountToSendLD);
+        uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
@@ -359,7 +399,7 @@ contract OFTTest is TestHelper {
         );
         uint256 amountToCreditLD = minAmountToCreditLD;
 
-        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
+        (bytes memory message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
 
         (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
             message
@@ -367,13 +407,13 @@ contract OFTTest is TestHelper {
 
         assertEq(isComposed_, true);
         assertEq(sendTo_, to);
-        assertEq(amountSD_, aOFT.toSD(amountToCreditLD));
+        assertEq(amountSD_, aOFT.asOFTMock().toSD(amountToCreditLD));
         bytes memory expectedComposeMsg = abi.encodePacked(addressToBytes32(address(this)), composeMsg);
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
     function test_oft_build_msg_no_compose_msg(uint32 dstEid, bytes32 to, uint256 amountToSendLD) public {
-        uint256 minAmountToCreditLD = aOFT.removeDust(amountToSendLD);
+        uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
@@ -389,7 +429,7 @@ contract OFTTest is TestHelper {
         );
         uint256 amountToCreditLD = minAmountToCreditLD;
 
-        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
+        (bytes memory message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
 
         (bool isComposed_, bytes32 sendTo_, uint64 amountSD_, bytes memory composeMsg_) = this.decodeOFTMsgCodec(
             message
@@ -397,7 +437,7 @@ contract OFTTest is TestHelper {
 
         assertEq(isComposed_, false);
         assertEq(sendTo_, to);
-        assertEq(amountSD_, aOFT.toSD(amountToCreditLD));
+        assertEq(amountSD_, aOFT.asOFTMock().toSD(amountToCreditLD));
         assertEq(composeMsg_, "");
     }
 
@@ -495,7 +535,7 @@ contract OFTTest is TestHelper {
 
     function test_oapp_inspector_inspect(uint32 dstEid, address user, uint256 amountToSendLD) public {
         bytes32 to = addressToBytes32(user);
-        uint256 minAmountToCreditLD = aOFT.removeDust(amountToSendLD);
+        uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(amountToSendLD);
 
         // params for buildMsgAndOptions
         bytes memory extraOptions = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
@@ -512,7 +552,7 @@ contract OFTTest is TestHelper {
         uint256 amountToCreditLD = minAmountToCreditLD;
 
         // doesnt revert
-        (bytes memory message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
+        (bytes memory message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
 
         // deploy a universal inspector, it automatically reverts
         oAppInspector = new OFTInspectorMock();
@@ -521,6 +561,6 @@ contract OFTTest is TestHelper {
 
         // does revert because inspector is set
         vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
-        (message, ) = aOFT.buildMsgAndOptions(sendParam, amountToCreditLD);
+        (message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
     }
 }
