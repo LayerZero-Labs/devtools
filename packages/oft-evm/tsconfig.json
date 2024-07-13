@@ -1,0 +1,14 @@
+{
+  "extends": "@layerzerolabs/typescript-config-next/library.json",
+
+  "files": ["hardhat.config.ts"],
+  "references": [
+    {
+      "path": "./src"
+    }
+  ],
+
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
+}
