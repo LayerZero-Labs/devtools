@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.25
+
+### Patch Changes
+
+- 5759792: Added api urls for klaytn, rarible, and xchain
+
 ## 1.1.24
 
 ### Patch Changes
