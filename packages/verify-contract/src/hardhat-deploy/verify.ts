@@ -45,7 +45,7 @@ export const verifyNonTarget = async (
 
     const verificationArtifacts = config.contracts.flatMap((contract): VerificationArtifact[] => {
         const { address, network, contractName, deployment: deploymentPathOrBasename } = contract
-        logger.info(`Collectiong information for contract ${contractName} on network ${network}`)
+        logger.info(`Collecting information for contract ${contractName} on network ${network}`)
 
         const networkConfig = networks[network]
         if (networkConfig == null) {
