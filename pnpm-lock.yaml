@@ -1559,7 +1559,7 @@ importers:
         specifier: ~0.3.13
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.22
+        specifier: ~0.3.23
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11
@@ -5207,7 +5207,7 @@ packages:
       hardhat: ^2.0.0
     dependencies:
       ethers: 5.7.2
-      hardhat: 2.22.3(typescript@5.2.2)
+      hardhat: 2.22.3(ts-node@10.9.2)(typescript@5.3.3)
     dev: true
 
   /@openzeppelin/contracts-upgradeable@4.7.3:
@@ -9909,7 +9909,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       cli-table3: 0.6.3
-      hardhat: 2.22.3(typescript@5.2.2)
+      hardhat: 2.22.3(ts-node@10.9.2)(typescript@5.3.3)
       strip-ansi: 6.0.1
     dev: true
 
