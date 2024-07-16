@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.38
+
+### Patch Changes
+
+- e26636b: Allow specifying filesystem paths for external artifacts
+- Updated dependencies [e26636b]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.23
+
 ## 0.2.37
 
 ### Patch Changes
