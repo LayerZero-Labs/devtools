@@ -11,5 +11,9 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "test", "types"]
+  "include": ["src", "test", "types"],
+  "ts-node": {
+    "esm": true,
+    "files": true
+  }
 }

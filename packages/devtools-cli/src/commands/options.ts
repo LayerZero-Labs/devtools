@@ -7,6 +7,13 @@ export interface WithSetupOption {
 
 export const createSetupFileOption = () => new Option('-s,--setup <path>', 'Path to a setup file').makeOptionMandatory()
 
+export interface WithOAppConfigOption {
+    oappConfig: string
+}
+
+export const createOAppConfigFileOption = () =>
+    new Option('--oapp-config <path>', 'Path to an OApp config file').makeOptionMandatory()
+
 export interface WithLogLevelOption {
     logLevel: LogLevel
 }
@@ -21,6 +28,22 @@ export const createLogLevelOption = () =>
 
             return value
         })
+
+export interface WithAssertFlag {
+    assert?: boolean
+}
+
+export const createAssertFlag = () =>
+    new Option(
+        '--assert',
+        'Will not execute any transactions and fail if there are any transactions required to configure the OApp'
+    )
+
+export interface WithDryRunFlag {
+    dryRun?: boolean
+}
+
+export const createDryRunFlag = () => new Option('--dry-run', 'Will not execute any transactions')
 
 export interface WithTsConfigOption {
     tsConfig?: string
