@@ -14,7 +14,7 @@ Property 'contracts.1.contract': Invalid input
 Property 'connections': Required]
 `;
 
-exports[`task lz:oapp:wire with invalid configs should fail with a misconfigured file (001) 1`] = `[Error: Config from file 'test/task/oapp/__data__/configs/valid.config.misconfigured.001.js' is invalid: AssertionError [ERR_ASSERTION]: Could not find a deployment for contract 'NonExistent']`;
+exports[`task lz:oapp:wire with invalid configs should fail with a misconfigured file (001) 1`] = `[Error: Config from file 'test/task/oapp/__data__/configs/valid.config.misconfigured.001.js' is invalid: AssertionError [ERR_ASSERTION]: Could not find a deployment for contract 'NonExistent' on AVALANCHE_V2_MAINNET (britney)]`;
 
 exports[`task lz:oapp:wire with invalid configs should fail with an empty JS file 1`] = `
 [Error: Config from file 'test/task/oapp/__data__/configs/invalid.config.empty.js' is malformed. Please fix the following errors:
