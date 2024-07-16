@@ -3,6 +3,27 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { ConnectSafeConfigWithSafeAddress } from '@safe-global/protocol-kit'
 import { SimulationUserConfig } from '@/simulation/types'
 
+/**
+ * Packages containing external artifacts can be specified either
+ *
+ * - By just their package name, in which case the artifacts will be loaded from the `./artifacts` path
+ * - By their package name and a specific path to the artifacts directory
+ * - By a filesystem path
+ */
+export type ArtifactPackage = ArtifactPackageName | ArtifactPackageWithPath | ArtifactPackagePath
+
+export type ArtifactPackageName = string
+
+export interface ArtifactPackageWithPath {
+    name: ArtifactPackageName
+    path?: string
+}
+
+export interface ArtifactPackagePath {
+    name?: never
+    path: string
+}
+
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
         eid?: never
@@ -124,7 +145,7 @@ declare module 'hardhat/types/config' {
          *
          * @default ['@layerzerolabs/lz-evm-sdk-v2','@layerzerolabs/test-devtools-evm-hardhat']
          */
-        artifactSourcePackages?: string[]
+        artifactSourcePackages?: ArtifactPackage[]
 
         /**
          * Configuration of features that are not considered stable yet
