@@ -1,9 +1,15 @@
-import type { HardhatRuntimeEnvironment, EthereumProvider, ConfigurableTaskDefinition } from 'hardhat/types'
+import type {
+    HardhatRuntimeEnvironment,
+    EthereumProvider,
+    ConfigurableTaskDefinition,
+    HardhatArguments,
+} from 'hardhat/types'
 
 import pMemoize from 'p-memoize'
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import { ConfigurationError } from './errors'
 import { HardhatContext } from 'hardhat/internal/context'
+import { loadConfigAndTasks } from 'hardhat/internal/core/config/config-loading'
 import { Environment as HardhatRuntimeEnvironmentImplementation } from 'hardhat/internal/core/runtime-environment'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointBasedFactory, Factory, formatEid } from '@layerzerolabs/devtools'
@@ -21,6 +27,40 @@ export type GetByNetwork<TValue> = Factory<[networkName: string], TValue>
  * Helper type for when we need to grab something asynchronously by the network name
  */
 export type GetByEid<TValue> = Factory<[eid: EndpointId], TValue>
+
+/**
+ * Creates and sets the default hardhat context.
+ *
+ * This function will fail if a context has already been created
+ */
+export const createDefaultContext = (hardhatArguments: Partial<HardhatArguments> = {}) => {
+    const ctx = HardhatContext.createHardhatContext()
+    const resolvedArguments: HardhatArguments = {
+        showStackTraces: false,
+        version: false,
+        help: false,
+        emoji: false,
+        verbose: false,
+        ...hardhatArguments,
+    }
+    const { resolvedConfig, userConfig } = loadConfigAndTasks(resolvedArguments)
+    const envExtenders = ctx.environmentExtenders
+    const providerExtenders = ctx.providerExtenders
+    const taskDefinitions = ctx.tasksDSL.getTaskDefinitions()
+    const scopesDefinitions = ctx.tasksDSL.getScopesDefinitions()
+    const env = new HardhatRuntimeEnvironmentImplementation(
+        resolvedConfig,
+        resolvedArguments,
+        taskDefinitions,
+        scopesDefinitions,
+        envExtenders,
+        ctx.experimentalHardhatNetworkMessageTraceHooks,
+        userConfig,
+        providerExtenders
+    )
+
+    ctx.setHardhatRuntimeEnvironment(env as unknown as HardhatRuntimeEnvironment)
+}
 
 /**
  * Returns the default hardhat context for the project, i.e.
