@@ -20,10 +20,11 @@ export const omniDeploymentToContract = ({ eid, deployment }: OmniDeployment): O
 
 export const createContractFactory = (environmentFactory = createGetHreByEid()): OmniContractFactoryHardhat => {
     return pMemoize(async ({ eid, address, contractName }) => {
-        const logger = createModuleLogger(`Contract factory @ ${formatEid(eid)}`)
-
         const env = await environmentFactory(eid)
         assertHardhatDeploy(env)
+
+        const networkLabel = `${formatEid(eid)} (${env.network.name})`
+        const logger = createModuleLogger(`Contract factory @ ${networkLabel}`)
 
         // If we have both the contract name & address, we go off artifacts
         if (contractName != null && address != null) {
@@ -46,7 +47,7 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
             logger.verbose(`Looking for contract ${contractName} in deployments`)
 
             const deployment = await env.deployments.getOrNull(contractName)
-            assert(deployment != null, `Could not find a deployment for contract '${contractName}'`)
+            assert(deployment != null, `Could not find a deployment for contract '${contractName}' on ${networkLabel}`)
 
             return omniDeploymentToContract({ eid, deployment })
         }
@@ -71,7 +72,7 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
 
                 return await env.deployments.getDeploymentsFromAddress(address)
             })
-            assert(deployments.length > 0, `Could not find a deployment for address '${address}'`)
+            assert(deployments.length > 0, `Could not find a deployment for address '${address}' on ${networkLabel}`)
 
             const mergedAbis = deployments.flatMap((deployment) => deployment.abi)
 
@@ -84,6 +85,6 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
             return { eid, contract: new Contract(address, deduplicatedAbi) }
         }
 
-        assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat')
+        assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat on ${networkLabel}')
     })
 }
