@@ -16,7 +16,13 @@ contract UlnOptionsMock {
 }
 
 contract OptionsHelper {
+    /// @dev For backwards compatibility reasons, we'll keep this initialization here
+    /// @dev Any new tests should use the _setUpUlnOptions function below
     UlnOptionsMock ulnOptions = new UlnOptionsMock();
+
+    function _setUpUlnOptions() internal {
+        ulnOptions = new UlnOptionsMock();
+    }
 
     function _parseExecutorLzReceiveOption(bytes memory _options) internal view returns (uint256 gas, uint256 value) {
         (bool exist, bytes memory option) = _getExecutorOptionByOptionType(
