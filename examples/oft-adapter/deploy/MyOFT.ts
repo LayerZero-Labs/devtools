@@ -33,8 +33,8 @@ const deploy: DeployFunction = async (hre) => {
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
-    // The token address must be defined in hardhat.config.ts
-    // If the token address is not defined, the deployment will throw an error
+    // If the oftAdapter configuration is defined on a network that is deploying an OFT,
+    // the deployment will log a warning and skip the deployment
     if (hre.network.config.oftAdapter != null) {
         console.warn(`oftAdapter configuration found on OFT deployment, skipping OFT deployment`)
         return
