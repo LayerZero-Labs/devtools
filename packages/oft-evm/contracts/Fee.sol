@@ -4,9 +4,12 @@ pragma solidity ^0.8.20;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { IFee, FeeConfig } from "./interfaces/IFee.sol";
+import { FeeConfig, IFee } from "./interfaces/IFee.sol";
 
 abstract contract Fee is Ownable {
+    event FeeBpsSet(uint32 dstEid, uint16 feeBps, bool enabled);
+    event DefaultFeeBpsSet(uint16 feeBps);
+
     uint16 public constant BPS_DENOMINATOR = 10_000;
     uint16 public defaultFeeBps;
     mapping(uint32 dstEid => FeeConfig config) public feeBps;
@@ -23,9 +26,9 @@ abstract contract Fee is Ownable {
         emit FeeBpsSet(_dstEid, _feeBps, _enabled);
     }
 
-    function getFee(uint32 _dstEid, uint256 _amount) external view virtual returns (uint256) {
-        uint16 feeBps = _getFeeBps(_dstEid);
-        return feeBps == 0 ? 0 : (_amount * feeBps) / BPS_DENOMINATOR;
+    function getFee(uint32 _dstEid, uint256 _amount) public view virtual returns (uint256) {
+        uint16 bps = _getFeeBps(_dstEid);
+        return bps == 0 ? 0 : (_amount * bps) / BPS_DENOMINATOR;
     }
 
     function _getFeeBps(uint32 _dstEid) internal view returns (uint16) {

@@ -10,7 +10,4 @@ struct FeeConfig {
 interface IFee {
     error InvalidBps();
     error InvalidFeeOwner();
-
-    event FeeBpsSet(uint32 dstEid, uint16 feeBps, bool enabled);
-    event DefaultFeeBpsSet(uint16 feeBps);
 }

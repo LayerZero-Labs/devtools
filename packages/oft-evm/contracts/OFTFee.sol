@@ -20,8 +20,8 @@ abstract contract OFTFee is OFT, Fee {
         address _delegate
     ) OFT(_name, _symbol, _lzEndpoint, _delegate) {}
 
-    function withdrawFees(address _to, uint256 _amountLD) public virtual onlyOwner {
-        _transfer(address(this), _to, _amountLD);
+    function withdrawFees(address _to) public virtual onlyOwner {
+        _transfer(address(this), _to, feeBalance());
     }
 
     function feeBalance() public virtual returns (uint256) {

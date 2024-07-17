@@ -50,19 +50,15 @@ abstract contract OFTFeeAdapter is OFTAdapter, Fee {
         amountSentLD = (amountReceivedLD * BPS_DENOMINATOR) / (BPS_DENOMINATOR - feeBps);
     }
 
-    function withdrawFees(address _to) external override onlyOwner {
-        uint256 balance = _feeBalance();
+    function withdrawFees(address _to) external virtual onlyOwner {
+        uint256 balance = feeBalance;
         feeBalance = 0;
         if (balance > 0) {
             _transferFrom(address(this), _to, balance);
         }
     }
 
-    function _feeBalance() internal virtual override returns (uint256) {
-        return feeBalance;
-    }
-
-    function _transferFrom(address _from, address _to, uint256 _amount) internal virtual override returns (uint256) {
+    function _transferFrom(address _from, address _to, uint256 _amount) internal virtual returns (uint256) {
         uint256 before = innerToken.balanceOf(_to);
         if (_from == address(this)) {
             innerToken.safeTransfer(_to, _amount);
