@@ -21,3 +21,10 @@ export const createLogLevelOption = () =>
 
             return value
         })
+
+export interface WithTsConfigOption {
+    tsConfig?: string
+}
+
+export const createTsConfigFileOption = () =>
+    new Option('--ts-config <path>', 'Path to TypeScript config file (tsconfig.json)').default('tsconfig.json')
