@@ -261,7 +261,7 @@ If you do NOT explicitly set each configuration parameter, your OApp will fallba
 
  <br>
 
-Returns the LayerZero Executor config for each network in your `hardhat.config.ts`. You can use this method to see the max destination gas in wei (`nativeCap`) you can request in your [`execution options`]().
+Returns the LayerZero Executor config for each network in your `hardhat.config.ts`. You can use this method to see the max destination gas in wei (`nativeCap`) you can request in your [`execution options`](https://docs.layerzero.network/v2/developers/evm/gas-settings/options).
 
 ```bash
 ┌───────────────────┬────────────────────────────────────────────┐
