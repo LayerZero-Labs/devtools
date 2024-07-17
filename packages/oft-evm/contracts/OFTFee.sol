@@ -53,38 +53,20 @@ abstract contract OFTFee is OFT, Fee {
         uint32 _dstEid
     ) internal virtual override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
-        _transferFrom(_from, address(this), amountSentLD - amountReceivedLD);
+        uint256 fee = amountSentLD - amountReceivedLD;
+        if (fee > 0) {
+            _transferFrom(_from, address(this), fee);
+        }
         _burn(_from, amountReceivedLD);
-    }
-
-    /**
-     * @dev Credits tokens to the specified address.
-     * @param _to The address to credit the tokens to.
-     * @param _amountLD The amount of tokens to credit in local decimals.
-     * @dev _srcEid The source chain ID.
-     * @return amountReceivedLD The amount of tokens ACTUALLY received in local decimals.
-     */
-    function _credit(
-        address _to,
-        uint256 _amountLD,
-        uint32 /*_srcEid*/
-    ) internal virtual override returns (uint256 amountReceivedLD) {
-        if (_to == address(0x0)) _to = address(0xdead); // _mint(...) does not support address(0x0)
-        // @dev Default OFT mints on dst.
-        _mint(_to, _amountLD);
-        // @dev In the case of NON-default OFT, the _amountLD MIGHT not be == amountReceivedLD.
-        return _amountLD;
     }
 
     /**
      * @dev Internal function to mock the amount mutation from a OFT debit() operation.
      * @param _amountLD The amount to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
-     * @dev _dstEid The destination endpoint ID.
+     * @dev _dstEid The destination LayerZero endpoint ID.
      * @return amountSentLD The amount sent, in local decimals.
      * @return amountReceivedLD The amount to be received on the remote chain, in local decimals.
-     *
-     * @dev This is where things like fees would be calculated and deducted from the amount to be received on the remote.
      */
     function _debitView(
         uint256 _amountLD,
