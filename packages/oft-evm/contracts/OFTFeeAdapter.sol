@@ -15,7 +15,7 @@ abstract contract OFTFeeAdapter is OFTAdapter, Fee {
     constructor(address _token, address _lzEndpoint, address _delegate) OFTAdapter(_token, _lzEndpoint, _delegate) {}
 
     /**
-     * @dev Burns tokens from the sender's specified balance, ie. pull method.
+     * @dev Locks tokens from the sender's specified balance in this contract.
      * @param _from The address to debit from.
      * @param _amountLD The amount of tokens to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
@@ -24,9 +24,6 @@ abstract contract OFTFeeAdapter is OFTAdapter, Fee {
      * @return amountReceivedLD The amount received in local decimals on the remote.
      *
      * @dev msg.sender will need to approve this _amountLD of tokens to be locked inside of the contract.
-     * @dev WARNING: The default OFTAdapter implementation assumes LOSSLESS transfers, ie. 1 token in, 1 token out.
-     * IF the 'innerToken' applies something like a transfer fee, the default will NOT work...
-     * a pre/post balance check will need to be done to calculate the amountReceivedLD.
      */
     function _debit(
         address _from,
