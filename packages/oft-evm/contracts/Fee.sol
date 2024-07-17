@@ -27,8 +27,8 @@ abstract contract Fee is Ownable {
     }
 
     function getFee(uint32 _dstEid, uint256 _amount) public view virtual returns (uint256) {
-        uint16 bps = _getFeeBps(_dstEid);
-        return bps == 0 ? 0 : (_amount * bps) / BPS_DENOMINATOR;
+        uint16 feeBps = _getFeeBps(_dstEid);
+        return feeBps == 0 ? 0 : (_amount * feeBps) / BPS_DENOMINATOR;
     }
 
     function _getFeeBps(uint32 _dstEid) internal view returns (uint16) {
