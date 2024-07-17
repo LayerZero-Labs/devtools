@@ -6,7 +6,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "tests/ua-devtools-evm-hardhat-test"
+    "directory": "tests/devtools-cli-test"
   },
   "license": "MIT",
   "scripts": {
