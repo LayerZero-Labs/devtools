@@ -1,5 +1,12 @@
 import { z } from 'zod'
-import { AddressSchema, UIntBigIntSchema, UIntNumberSchema } from '@layerzerolabs/devtools'
+import {
+    AddressSchema,
+    createOmniEdgeSchema,
+    createOmniGraphSchema,
+    createOmniNodeSchema,
+    UIntBigIntSchema,
+    UIntNumberSchema,
+} from '@layerzerolabs/devtools'
 import { Uln302ExecutorConfigSchema, Uln302UlnUserConfigSchema, TimeoutSchema } from '@layerzerolabs/protocol-devtools'
 import {
     ExecutorComposeOption,
@@ -88,3 +95,8 @@ export const OAppEdgeConfigSchema = z
     // We'll pass all unknown properties through without validating them
     .passthrough()
     .partial() satisfies z.ZodSchema<OAppEdgeConfig, z.ZodTypeDef, unknown>
+
+export const OAppOmniGraphSchema = createOmniGraphSchema(
+    createOmniNodeSchema(OAppNodeConfigSchema),
+    createOmniEdgeSchema(OAppEdgeConfigSchema)
+)
