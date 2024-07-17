@@ -71,7 +71,6 @@ export const createSimulationComposeSpec = (
     config: SimulationConfig,
     networks: Record<string, AnvilOptions>
 ): ComposeSpec => ({
-    version: '3.9',
     services: pipe(
         networks,
         // First we turn the networks into docker compose specs for EVM nodes
