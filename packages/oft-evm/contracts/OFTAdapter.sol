@@ -58,7 +58,7 @@ abstract contract OFTAdapter is OFTCore {
     }
 
     /**
-     * @dev Burns tokens from the sender's specified balance, ie. pull method.
+     * @dev Locks tokens from the sender's specified balance in this contract.
      * @param _from The address to debit from.
      * @param _amountLD The amount of tokens to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
