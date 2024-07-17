@@ -23,6 +23,14 @@ teardown() {
     rm -rf "$PROJECTS_DIRECTORY"
 }
 
+@test "should output version" {
+    npx --yes @layerzerolabs/devtools-cli --version
+}
+
+@test "should output help" {
+    npx --yes @layerzerolabs/devtools-cli --help
+}
+
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
