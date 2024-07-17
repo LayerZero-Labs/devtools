@@ -3,6 +3,9 @@ import type { BaseProvider } from '@ethersproject/providers'
 
 export type Provider = BaseProvider
 
-export type RpcUrlFactory = EndpointBasedFactory<string>
+/**
+ * @deprecated Please use `RpcUrlFactory` from `@layerzerolabs/devtools`
+ */
+export type { RpcUrlFactory } from '@layerzerolabs/devtools'
 
 export type ProviderFactory<TProvider extends Provider = Provider> = EndpointBasedFactory<TProvider>

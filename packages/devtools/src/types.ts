@@ -31,6 +31,8 @@ export type Factory<TInput extends unknown[], TOutput> = (...input: TInput) => T
 
 export type EndpointBasedFactory<TValue> = Factory<[eid: EndpointId], TValue>
 
+export type RpcUrlFactory = EndpointBasedFactory<string>
+
 /**
  * Helper type that grabs all the keys of a type / an interface
  * that are not defined as undefined or unknown
