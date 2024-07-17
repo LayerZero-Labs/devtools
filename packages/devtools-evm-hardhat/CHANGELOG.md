@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.24
+
+### Patch Changes
+
+- 73270f3: Add createDefaultContext utility for creating hardhat context outside of hardhat CLI
+- a831501: Add better errors for missing deployments
+
 ## 0.3.23
 
 ### Patch Changes

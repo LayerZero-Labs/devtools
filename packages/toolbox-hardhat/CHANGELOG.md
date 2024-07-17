@@ -1,5 +1,14 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.39
+
+### Patch Changes
+
+- a831501: Add better errors for missing deployments
+- Updated dependencies [73270f3]
+- Updated dependencies [a831501]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.24
+
 ## 0.2.38
 
 ### Patch Changes

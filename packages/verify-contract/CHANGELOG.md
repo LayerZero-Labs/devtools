@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.26
+
+### Patch Changes
+
+- 4c31d73: Added some more chains for verify default urls
+
 ## 1.1.25
 
 ### Patch Changes

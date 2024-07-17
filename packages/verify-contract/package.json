@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/verify-contract",
-  "version": "1.1.25",
+  "version": "1.1.26",
   "description": "Verify Solidity contracts on supported block explorers",
   "bugs": {
     "url": "https://github.com/LayerZero-Labs/devtools/issues"
