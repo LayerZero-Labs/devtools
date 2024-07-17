@@ -289,7 +289,7 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
 
-  examples/oftAdapter:
+  examples/oft-adapter:
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
