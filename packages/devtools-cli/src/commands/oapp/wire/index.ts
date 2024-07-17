@@ -23,7 +23,8 @@ import {
     createTsConfigFileOption,
 } from '@/commands/options'
 import { createSetupLoader, setupTypescript } from '@/setup'
-import { Configurator, formatOmniTransaction } from '@layerzerolabs/devtools'
+import { Configurator, formatOmniTransaction, OmniGraph, OmniTransaction } from '@layerzerolabs/devtools'
+import { CLISetup } from '@/types'
 
 interface Args
     extends WithLogLevelOption,
@@ -71,11 +72,22 @@ export const wire = new Command('wire')
                 logger.info(`Running in dry run mode`)
             }
 
+            let setup: CLISetup
+
             // Now it's time to load the setup file tht contains all the bits required to do the wiring
-            logger.verbose(`Loading setup from ${setupPath}`)
             const loadSetup = createSetupLoader()
-            const setup = await loadSetup(setupPath)
-            logger.verbose(`Loaded setup from ${setupPath}`)
+
+            try {
+                logger.verbose(`Loading setup from ${setupPath}`)
+
+                setup = await loadSetup(setupPath)
+
+                logger.verbose(`Loaded setup from ${setupPath}`)
+            } catch (error) {
+                logger.error(`Failed to load setup from ${setupPath}:\n\n${error}`)
+
+                process.exit(1)
+            }
 
             // The first thing we'll need is the graph of our app
             //
@@ -87,23 +99,43 @@ export const wire = new Command('wire')
                     ? `Using default OApp config loader`
                     : `Using custom config loader from ${setupPath}`
             )
-            const loadConfig = setup.loadConfig ?? createConfigLoader(OAppOmniGraphSchema)
+
+            let graph: OmniGraph
 
             // Now it's time to load the config file
-            logger.info(`Loading config file from ${oappConfigPath}`)
-            const graph = await loadConfig(oappConfigPath)
-            logger.info(`${printBoolean(true)} Success`)
-            logger.debug(`Loaded config file from ${oappConfigPath}:\n\n${printJson(graph)}`)
+            const loadConfig = setup.loadConfig ?? createConfigLoader(OAppOmniGraphSchema)
 
-            logger.verbose(
+            try {
+                logger.info(`Loading config file from ${oappConfigPath}`)
+
+                graph = await loadConfig(oappConfigPath)
+
+                logger.info(`${printBoolean(true)} Successfully loaded config file from ${oappConfigPath}`)
+                logger.debug(`Loaded config file from ${oappConfigPath}:\n\n${printJson(graph)}`)
+            } catch (error) {
+                logger.error(`Failed to load config from ${setupPath}:\n\n${error}`)
+
+                process.exit(1)
+            }
+
+            // With the setup & config in place, the only missing piece to get the OApp configuration
+            // is the configurator that will get the list of transactions needed
+            const configure: Configurator<any, any> =
                 setup.configure == null
-                    ? `Using default OApp configurator`
-                    : `Using custom configurator from ${setupPath}`
-            )
-            const configure: Configurator<any, any> = setup.configure ?? configureOApp
+                    ? (logger.verbose(`Using default OApp configurator`), configureOApp)
+                    : (logger.verbose(`Using custom configurator from ${setupPath}`), setup.configure)
 
-            logger.info(`Checking configuration`)
-            const transactions = await configure(graph, setup.createSdk)
+            let transactions: OmniTransaction[]
+
+            try {
+                logger.info(`Checking configuration`)
+
+                transactions = await configure(graph, setup.createSdk)
+            } catch (error) {
+                logger.error(`Failed to check OApp configuration:\n\n${error}`)
+
+                process.exit(1)
+            }
 
             // If there are no transactions that need to be executed, we'll just exit
             if (transactions.length === 0) {

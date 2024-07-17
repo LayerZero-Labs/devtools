@@ -62,7 +62,7 @@ describe(`command oapp wire`, () => {
                     setupPathFixture('valid.setup.ts'),
                 ])
 
-                expect(result.stderr).toMatch(`Unable to read config file './does-not-exist.js'`)
+                expect(result.stdout).toMatch(`Unable to read config file './does-not-exist.js'`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -70,7 +70,7 @@ describe(`command oapp wire`, () => {
                 const oappConfig = dirname(configPathFixture('invalid.config.empty.json'))
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatch(`Unable to read config file '${oappConfig}`)
+                expect(result.stdout).toMatch(`Unable to read config file '${oappConfig}`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -80,7 +80,7 @@ describe(`command oapp wire`, () => {
                 expect(isFile(oappConfig)).toBeTruthy()
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatch(`Unable to read config file '${oappConfig}`)
+                expect(result.stdout).toMatch(`Unable to read config file '${oappConfig}`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -88,7 +88,8 @@ describe(`command oapp wire`, () => {
                 const oappConfig = configPathFixture('invalid.config.empty.json')
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatch(`Unable to read config file '${oappConfig}'`)
+                expect(result.stdout).toMatch(`Unexpected end of JSON input`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -96,7 +97,7 @@ describe(`command oapp wire`, () => {
                 const oappConfig = configPathFixture('invalid.config.empty.js')
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatchSnapshot()
                 expect(result.status).not.toBe(0)
             })
 
@@ -104,7 +105,7 @@ describe(`command oapp wire`, () => {
                 const oappConfig = configPathFixture('invalid.config.001.js')
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatchSnapshot()
                 expect(result.status).not.toBe(0)
             })
 
@@ -112,7 +113,7 @@ describe(`command oapp wire`, () => {
                 const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
 
                 const result = runWire(['--oapp-config', oappConfig, '--setup', setupPathFixture('valid.setup.ts')])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatchSnapshot()
                 expect(result.status).not.toBe(0)
             })
         })
@@ -126,7 +127,7 @@ describe(`command oapp wire`, () => {
                     './does-not-exist.js',
                 ])
 
-                expect(result.stderr).toMatch(`Unable to read setup file './does-not-exist.js'`)
+                expect(result.stdout).toMatch(`Unable to read setup file './does-not-exist.js'`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -134,7 +135,7 @@ describe(`command oapp wire`, () => {
                 const setup = dirname(configPathFixture('invalid.config.empty.json'))
 
                 const result = runWire(['--oapp-config', configPathFixture('valid.config.empty.js'), '--setup', setup])
-                expect(result.stderr).toMatch(`Unable to read setup file '${setup}`)
+                expect(result.stdout).toMatch(`Unable to read setup file '${setup}`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -144,7 +145,7 @@ describe(`command oapp wire`, () => {
                 expect(isFile(setup)).toBeTruthy()
 
                 const result = runWire(['--oapp-config', configPathFixture('valid.config.empty.js'), '--setup', setup])
-                expect(result.stderr).toMatch(`Unable to read setup file '${setup}`)
+                expect(result.stdout).toMatch(`Unable to read setup file '${setup}`)
                 expect(result.status).not.toBe(0)
             })
 
@@ -152,7 +153,7 @@ describe(`command oapp wire`, () => {
                 const setup = setupPathFixture('invalid.setup.empty.js')
 
                 const result = runWire(['--oapp-config', configPathFixture('valid.config.empty.js'), '--setup', setup])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatchSnapshot()
                 expect(result.status).not.toBe(0)
             })
 
@@ -160,7 +161,7 @@ describe(`command oapp wire`, () => {
                 const setup = setupPathFixture('invalid.setup.001.js')
 
                 const result = runWire(['--oapp-config', configPathFixture('valid.config.empty.js'), '--setup', setup])
-                expect(result.stderr).toMatchSnapshot()
+                expect(result.stdout).toMatchSnapshot()
                 expect(result.status).not.toBe(0)
             })
         })
