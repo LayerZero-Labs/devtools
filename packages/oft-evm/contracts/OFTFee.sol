@@ -2,9 +2,6 @@
 
 pragma solidity ^0.8.20;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import { IFee } from "./interfaces/IFee.sol";
-import { OFTCore } from "./OFTCore.sol";
 import { OFT } from "./OFT.sol";
 import { Fee } from "./Fee.sol";
 
@@ -13,15 +10,22 @@ import { Fee } from "./Fee.sol";
  * @dev OFT is an ERC-20 token that extends the functionality of the OFTCore contract.
  */
 abstract contract OFTFee is OFT, Fee {
+
+    address public feeOwner;
+
+    event FeeOwnerSet(address _feeOwner);
+
     constructor(
         string memory _name,
         string memory _symbol,
         address _lzEndpoint,
-        address _delegate
-    ) OFT(_name, _symbol, _lzEndpoint, _delegate) {}
+        address _owner
+    ) OFT(_name, _symbol, _lzEndpoint, _owner) {
+        feeOwner = _owner;
+    }
 
-    function withdrawFees(address _to, uint256 _amountLD) public virtual onlyOwner {
-        _transfer(address(this), _to, _amountLD);
+    function setFeeOwner(address _feeOwner) external onlyOwner {
+        feeOwner = _feeOwner;
     }
 
     function _debitView(
@@ -51,7 +55,7 @@ abstract contract OFTFee is OFT, Fee {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
         uint256 fee = amountSentLD - amountReceivedLD;
         if (fee > 0) {
-            _transfer(_from, address(this), fee);
+            _transfer(_from, feeOwner, fee);
         }
         _burn(_from, amountReceivedLD);
     }

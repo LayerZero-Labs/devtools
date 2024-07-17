@@ -18,10 +18,13 @@ abstract contract OFTFeeAdapter is OFTAdapter, Fee {
     constructor(
         address _token,
         address _lzEndpoint,
-        address _delegate
-    ) OFTAdapter(_token, _lzEndpoint, _delegate) {}
+        address _owner
+    ) OFTAdapter(_token, _lzEndpoint, _owner) {}
 
-    function withdrawFees(address _to) external override onlyOwner {
+    // @dev Fees accumulate inside of the contract to save gas, and then can be withdrawn by the owner.
+    function withdrawFees(address _to) external onlyOwner {
+        // @dev doesn't allow owner to pull from the locked assets of the contract,
+        // only from accumulated fees
         uint256 balance = feeBalance;
         if (balance == 0) revert NoFeesToWithdraw();
 
@@ -58,6 +61,7 @@ abstract contract OFTFeeAdapter is OFTAdapter, Fee {
         innerToken.safeTransferFrom(_from, address(this), amountSentLD);
 
         if (amountSentLD > amountReceivedLD) {
+            // @dev increment the total fees that can be withdrawn
             feeBalance += (amountSentLD - amountReceivedLD);
         }
     }

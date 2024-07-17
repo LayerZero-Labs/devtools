@@ -6,7 +6,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 import { FeeConfig, IFee } from "./interfaces/IFee.sol";
 
-abstract contract Fee is Ownable {
+abstract contract Fee is IFee, Ownable {
     event FeeBpsSet(uint32 dstEid, uint16 feeBps, bool enabled);
     event DefaultFeeBpsSet(uint16 feeBps);
 
