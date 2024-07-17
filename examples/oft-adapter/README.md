@@ -19,12 +19,12 @@
 ### OFTAdapter additional setup:
 
 - In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the OFTAdapter to:
-    ```typescript
-    // Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
-    oftAdapter: {
-        tokenAddress: '0x0',
-    }
-    ```
+  ```typescript
+  // Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
+  oftAdapter: {
+      tokenAddress: '0x0',
+  }
+  ```
 
 ## 1) Developing Contracts
 
