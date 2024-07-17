@@ -32,7 +32,7 @@ The Omnichain Fungible Token (OFT) Standard is an ERC20 token that can be transf
 
 This standard works by combining the LayerZero OApp Contract Standard with the ERC20 [`_burn`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L80) method, to initiate omnichain send transfers on the source chain, sending a message via the LayerZero protocol, and delivering a function call to the destination contract to [`_mint`](https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oft/OFT.sol#L96) the same number of tokens burned, creating a unified supply across all networks connected.
 
-Read more about what you can do with OFTs by reading the [OFT Quickstart](https://docs.layerzero.network/v2/developers/evm/oft/quickstart) in the LayerZero Documentation. 
+Read more about what you can do with OFTs by reading the [OFT Quickstart](https://docs.layerzero.network/v2/developers/evm/oft/quickstart) in the LayerZero Documentation.
 
 ## LayerZero Hardhat Helper Tasks
 
@@ -65,7 +65,7 @@ Deploys your contract to any of the available networks in your [`hardhat.config.
 
  <br>
 
-Initializes a `layerzero.config.ts` file for all available pathways between your hardhat networks with the current LayerZero default placeholder settings. This task can be incredibly useful for correctly formatting your config file. 
+Initializes a `layerzero.config.ts` file for all available pathways between your hardhat networks with the current LayerZero default placeholder settings. This task can be incredibly useful for correctly formatting your config file.
 
 You can run this task by providing the `contract-name` you want to set for the config and `file-name` you want to generate:
 
@@ -143,6 +143,7 @@ export default {
     ],
 }
 ```
+
 </details>
 
 <details>
@@ -154,15 +155,15 @@ Calls the configuration functions between your deployed OApp contracts on every 
 
 Running `lz:oapp:wire` will make the following function calls per pathway connection for a fully defined config file using your specified settings and your environment variables (Private Keys and RPCs):
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 _eid, bytes32 _peer) public virtual onlyOwner {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/OAppCore.sol#L33-L46"><code>function setPeer(uint32 \_eid, bytes32 \_peer) public virtual onlyOwner {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address _oapp, address _lib, SetConfigParam[] calldata _params) external onlyRegistered(_lib) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L304-L311"><code>function setConfig(address \_oapp, address \_lib, SetConfigParam[] calldata \_params) external onlyRegistered(\_lib) {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata _enforcedOptions) public virtual onlyOwner {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/oapp/contracts/oapp/libs/OAppOptionsType3.sol#L18-L36"><code>function setEnforcedOptions(EnforcedOptionParam[] calldata \_enforcedOptions) public virtual onlyOwner {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address _oapp, uint32 _eid, address _newLib) external onlyRegisteredOrDefault(_newLib) isSendLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L238"><code>function setSendLibrary(address \_oapp, uint32 \_eid, address \_newLib) external onlyRegisteredOrDefault(\_newLib) isSendLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
 
-- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address _oapp, uint32 _eid, address _newLib, uint256 _gracePeriod) external onlyRegisteredOrDefault(_newLib) isReceiveLib(_newLib) onlySupportedEid(_newLib, _eid) {}</code></a>
+- <a href="https://github.com/LayerZero-Labs/LayerZero-v2/blob/main/packages/layerzero-v2/evm/protocol/contracts/MessageLibManager.sol#L223-L273"><code>function setReceiveLibrary(address \_oapp, uint32 \_eid, address \_newLib, uint256 \_gracePeriod) external onlyRegisteredOrDefault(\_newLib) isReceiveLib(\_newLib) onlySupportedEid(\_newLib, \_eid) {}</code></a>
 
 To use this task, run:
 
@@ -390,130 +391,130 @@ npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-conf
 
 ```typescript
 const ethereumContract: OmniPointHardhat = {
-    eid: EndpointId.ETHEREUM_V2_MAINNET,
-    contractName: 'MyOFTAdapter',
-}
+  eid: EndpointId.ETHEREUM_V2_MAINNET,
+  contractName: "MyOFTAdapter",
+};
 
 const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.ARBITRUM_V2_MAINNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.ARBITRUM_V2_MAINNET,
+  contractName: "MyOFT",
+};
 ```
 
 Then define the pathway you want to create from and to each contract:
 
 ```typescript
 connections: [
-    // ETH <--> ARB PATHWAY: START
-    {
-        from: ethereumContract,
-        to: arbitrumContract,
-    },
-    {
-        from: arbitrumContract,
-        to: ethereumContract,
-    },
-    // ETH <--> ARB PATHWAY: END
-]
+  // ETH <--> ARB PATHWAY: START
+  {
+    from: ethereumContract,
+    to: arbitrumContract,
+  },
+  {
+    from: arbitrumContract,
+    to: ethereumContract,
+  },
+  // ETH <--> ARB PATHWAY: END
+];
 ```
 
 Finally, define the config settings for each direction of the pathway:
 
 ```typescript
 connections: [
-    // ETH <--> ARB PATHWAY: START
-    {
-        from: ethereumContract,
-        to: arbitrumContract,
-        config: {
-          sendLibrary: contractsConfig.ethereum.sendLib302,
-          receiveLibraryConfig: {
-              receiveLibrary: contractsConfig.ethereum.receiveLib302,
-              gracePeriod: BigInt(0),
-          },
-          // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid
-          receiveLibraryTimeoutConfig: {
-              lib: "0x0000000000000000000000000000000000000000",
-              expiry: BigInt(0),
-          },
-          // Optional Send Configuration
-          // @dev Controls how the `from` chain sends messages to the `to` chain.
-          sendConfig: {
-              executorConfig: {
-              maxMessageSize: 10000,
-              // The configured Executor address
-              executor: contractsConfig.ethereum.executor,
-              },
-              ulnConfig: {
-              // The number of block confirmations to wait on BSC before emitting the message from the source chain.
-              confirmations: BigInt(15),
-              // The address of the DVNs you will pay to verify a sent message on the source chain ).
-              // The destination tx will wait until ALL `requiredDVNs` verify the message.
-              requiredDVNs: [
-                  contractsConfig.ethereum.horizenDVN, // Horizen
-                  contractsConfig.ethereum.polyhedraDVN, // Polyhedra
-                  contractsConfig.ethereum.animocaBlockdaemonDVN, // Animoca-Blockdaemon (only available on ETH <-> Arbitrum One)
-                  contractsConfig.ethereum.lzDVN  // LayerZero Labs
-              ],
-              // The address of the DVNs you will pay to verify a sent message on the source chain ).
-              // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
-              optionalDVNs: [],
-              // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
-              optionalDVNThreshold: 0,
-              },
-          },
-          // Optional Receive Configuration
-          // @dev Controls how the `from` chain receives messages from the `to` chain.
-          receiveConfig: {
-              ulnConfig: {
-              // The number of block confirmations to expect from the `to` chain.
-              confirmations: BigInt(20),
-              // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain ).
-              // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
-              requiredDVNs: [
-                  contractsConfig.ethereum.lzDVN, // LayerZero Labs DVN
-                  contractsConfig.ethereum.animocaBlockdaemonDVN, // Blockdaemon-Animoca
-                  contractsConfig.ethereum.horizenDVN, // Horizen Labs
-                  contractsConfig.ethereum.polyhedraDVN // Polyhedra
-              ],
-              // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain ).
-              // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
-              optionalDVNs: [],
-              // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
-              optionalDVNThreshold: 0,
-              },
-          },
-          // Optional Enforced Options Configuration
-          // @dev Controls how much gas to use on the `to` chain, which the user pays for on the source `from` chain.
-          enforcedOptions: [
-              {
-              msgType: 1,
-              optionType: ExecutorOptionType.LZ_RECEIVE,
-              gas: 65000,
-              value: 0,
-              },
-              {
-              msgType: 2,
-              optionType: ExecutorOptionType.LZ_RECEIVE,
-              gas: 65000,
-              value: 0,
-              },
-              {
-              msgType: 2,
-              optionType: ExecutorOptionType.COMPOSE,
-              index: 0,
-              gas: 50000,
-              value: 0,
-              },
+  // ETH <--> ARB PATHWAY: START
+  {
+    from: ethereumContract,
+    to: arbitrumContract,
+    config: {
+      sendLibrary: contractsConfig.ethereum.sendLib302,
+      receiveLibraryConfig: {
+        receiveLibrary: contractsConfig.ethereum.receiveLib302,
+        gracePeriod: BigInt(0),
+      },
+      // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid
+      receiveLibraryTimeoutConfig: {
+        lib: "0x0000000000000000000000000000000000000000",
+        expiry: BigInt(0),
+      },
+      // Optional Send Configuration
+      // @dev Controls how the `from` chain sends messages to the `to` chain.
+      sendConfig: {
+        executorConfig: {
+          maxMessageSize: 10000,
+          // The configured Executor address
+          executor: contractsConfig.ethereum.executor,
+        },
+        ulnConfig: {
+          // The number of block confirmations to wait on BSC before emitting the message from the source chain.
+          confirmations: BigInt(15),
+          // The address of the DVNs you will pay to verify a sent message on the source chain ).
+          // The destination tx will wait until ALL `requiredDVNs` verify the message.
+          requiredDVNs: [
+            contractsConfig.ethereum.horizenDVN, // Horizen
+            contractsConfig.ethereum.polyhedraDVN, // Polyhedra
+            contractsConfig.ethereum.animocaBlockdaemonDVN, // Animoca-Blockdaemon (only available on ETH <-> Arbitrum One)
+            contractsConfig.ethereum.lzDVN, // LayerZero Labs
           ],
-      }
+          // The address of the DVNs you will pay to verify a sent message on the source chain ).
+          // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
+          optionalDVNs: [],
+          // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
+          optionalDVNThreshold: 0,
+        },
+      },
+      // Optional Receive Configuration
+      // @dev Controls how the `from` chain receives messages from the `to` chain.
+      receiveConfig: {
+        ulnConfig: {
+          // The number of block confirmations to expect from the `to` chain.
+          confirmations: BigInt(20),
+          // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain ).
+          // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
+          requiredDVNs: [
+            contractsConfig.ethereum.lzDVN, // LayerZero Labs DVN
+            contractsConfig.ethereum.animocaBlockdaemonDVN, // Blockdaemon-Animoca
+            contractsConfig.ethereum.horizenDVN, // Horizen Labs
+            contractsConfig.ethereum.polyhedraDVN, // Polyhedra
+          ],
+          // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain ).
+          // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
+          optionalDVNs: [],
+          // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
+          optionalDVNThreshold: 0,
+        },
+      },
+      // Optional Enforced Options Configuration
+      // @dev Controls how much gas to use on the `to` chain, which the user pays for on the source `from` chain.
+      enforcedOptions: [
+        {
+          msgType: 1,
+          optionType: ExecutorOptionType.LZ_RECEIVE,
+          gas: 65000,
+          value: 0,
+        },
+        {
+          msgType: 2,
+          optionType: ExecutorOptionType.LZ_RECEIVE,
+          gas: 65000,
+          value: 0,
+        },
+        {
+          msgType: 2,
+          optionType: ExecutorOptionType.COMPOSE,
+          index: 0,
+          gas: 50000,
+          value: 0,
+        },
+      ],
     },
-    {
-        from: arbitrumContract,
-        to: ethereumContract,
-    },
-    // ETH <--> ARB PATHWAY: END
-]
+  },
+  {
+    from: arbitrumContract,
+    to: ethereumContract,
+  },
+  // ETH <--> ARB PATHWAY: END
+];
 ```
 
 To set these config settings, run:
