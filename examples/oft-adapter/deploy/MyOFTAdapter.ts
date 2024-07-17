@@ -1,6 +1,5 @@
 import assert from 'assert'
 
-import { HttpNetworkConfig } from 'hardhat/types/config'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
 const contractName = 'MyOFTAdapter'
@@ -36,15 +35,16 @@ const deploy: DeployFunction = async (hre) => {
 
     // The token address must be defined in hardhat.config.ts
     // If the token address is not defined, the deployment will throw an error
-    const token = (hre.network.config as HttpNetworkConfig).oftAdapter?.tokenAddress
-    if (!token) {
-        throw new Error('Token address not configured')
+    if (hre.network.config.oftAdapter == null) {
+        console.warn(`oftAdapter not configured on network config, skipping OFTWrapper deployment`)
+
+        return
     }
 
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
-            token, // token address
+            hre.network.config.oftAdapter.tokenAddress, // token address
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
         ],

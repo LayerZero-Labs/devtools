@@ -39,10 +39,10 @@ export const EXAMPLES: Example[] = [
         ref,
     },
     {
-        id: 'oftAdapter',
+        id: 'oft-adapter',
         label: 'OFTAdapter',
         repository,
-        directory: 'examples/oftAdapter',
+        directory: 'examples/oft-adapter',
         ref,
     },
 ]

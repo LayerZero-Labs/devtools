@@ -5,6 +5,14 @@ interface OftAdapterConfig {
 }
 
 declare module 'hardhat/types/config' {
+    interface HardhatNetworkUserConfig {
+        oftAdapter?: never
+    }
+
+    interface HardhatNetworkConfig {
+        oftAdapter?: never
+    }
+
     interface HttpNetworkUserConfig {
         oftAdapter?: OftAdapterConfig
     }
