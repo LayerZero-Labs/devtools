@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
     solidity: {
         version: '0.8.22',
     },
-    networks: createTestNetworkConfigV2({ mnemonic, initialIndex: 10 }),
+    networks: createTestNetworkConfigV2({ mnemonic, initialIndex: 40 }),
 }
 
 export default config
