@@ -447,7 +447,7 @@ importers:
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.3.3)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -919,7 +919,7 @@ importers:
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.3.3)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -1428,7 +1428,7 @@ importers:
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1503,7 +1503,7 @@ importers:
         version: 2.6.2
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -1908,7 +1908,7 @@ importers:
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       tsup:
         specifier: ^8.0.1
-        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.3.3)
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.3.3)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -2122,6 +2122,9 @@ importers:
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11
         version: link:../../packages/io-devtools
+      '@layerzerolabs/test-setup-devtools-evm-hardhat':
+        specifier: ~0.0.6
+        version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.2.35
         version: link:../../packages/toolbox-hardhat
@@ -14420,7 +14423,7 @@ packages:
       - ts-node
     dev: true
 
-  /tsup@8.0.1(ts-node@10.9.2)(typescript@5.3.3):
+  /tsup@8.0.1(@swc/core@1.4.0)(typescript@5.3.3):
     resolution: {integrity: sha512-hvW7gUSG96j53ZTSlT4j/KL0q1Q2l6TqGBFc6/mu/L46IoNWqLLUzLRLP1R8Q7xrJTmkDxxDoojV5uCVs1sVOg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -14439,10 +14442,11 @@ packages:
       typescript:
         optional: true
     dependencies:
+      '@swc/core': 1.4.0
       bundle-require: 4.0.2(esbuild@0.19.11)
       cac: 6.7.14
       chokidar: 3.6.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       esbuild: 0.19.11
       execa: 5.1.1
       globby: 11.1.0
