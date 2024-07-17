@@ -7,13 +7,23 @@ export const setupTypescript = (tsConfigPath?: string): void => {
     try {
         require.resolve('typescript')
     } catch {
-        return logger.debug(`typescript module not available`), undefined
+        return (
+            logger.debug(
+                `typescript module not available. To enable TypeScript support for devtools, please install typescript NPM module`
+            ),
+            undefined
+        )
     }
 
     try {
         require.resolve('ts-node')
     } catch {
-        return logger.debug(`ts-node module not available`), undefined
+        return (
+            logger.debug(
+                `ts-node module not available. To enable TypeScript support for devtools, please install ts-node NPM module`
+            ),
+            undefined
+        )
     }
 
     // In case a custom tsconfig is required, we specify it using an env variable
@@ -35,7 +45,11 @@ export const setupTypescript = (tsConfigPath?: string): void => {
 
         require(tsNode)
     } catch (error) {
-        console.error(error)
-        return logger.debug(`Failed to register ts-node: ${error}`), undefined
+        return (
+            logger.debug(
+                `Failed to register ts-node. TypeScript support for devtools will not be available. Error:\n\n${error}`
+            ),
+            undefined
+        )
     }
 }
