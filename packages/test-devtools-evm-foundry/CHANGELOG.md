@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.2.8
+
+### Patch Changes
+
+- 06ccffe: Fix UlnOptionsMock initialization in OptionsHelper
+
 ## 0.2.7
 
 ### Patch Changes
