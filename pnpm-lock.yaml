@@ -902,6 +902,9 @@ importers:
       '@layerzerolabs/devtools':
         specifier: ~0.3.17
         version: link:../devtools
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.11
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^2.3.25
         version: 2.3.25

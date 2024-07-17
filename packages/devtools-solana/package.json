@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.3.17",
+    "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.25",
     "@layerzerolabs/test-devtools": "~0.2.6",
     "@solana/web3.js": "~1.95.0",
@@ -61,6 +62,7 @@
   },
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.3.17",
+    "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.3",
     "@solana/web3.js": "~1.95.0",
     "fp-ts": "^2.16.2",
