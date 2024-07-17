@@ -1,6 +1,6 @@
 import { createModuleLogger, importDefault, isFile, isReadable, printZodErrors } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
-import { CLISetup } from './types'
+import { CLISetup } from '@/types'
 import { CLISetupSchema } from './schema'
 
 export const createSetupLoader =

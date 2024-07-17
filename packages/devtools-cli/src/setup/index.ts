@@ -1,3 +1,3 @@
 export * from './loading'
 export * from './schema'
-export * from './types'
+export * from './typescript'
