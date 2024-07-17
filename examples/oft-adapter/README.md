@@ -16,10 +16,15 @@
 
 <p align="center">Template project for getting started with LayerZero's <code>OFTAdapter</code> contract development.</p>
 
-### OFTAdapter notes:
+### OFTAdapter additional setup:
 
-- OFTAdapter is a contract that adapts an ERC-20 token to the OFT functionality.
-- WARNING: ONLY 1 of these should exist for a given global mesh, unless you make a NON-default implementation of OFT and needs to be done very carefully.
+- In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the OFTAdapter to:
+    ```typescript
+    // Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
+    oftAdapter: {
+        tokenAddress: '0x0',
+    }
+    ```
 
 ## 1) Developing Contracts
 
