@@ -198,6 +198,34 @@ export const getEidForNetworkName = (
  * Gets a network name with its `eid` property matching
  * a particular `eid`
  *
+ * Throws if there are multiple networks defined with the same `eid`.
+ *
+ * Returns `undefined` if there is no network with given `eid`
+ *
+ * @param {EndpointId} eid
+ * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @returns {string | undefined}
+ */
+export const getNetworkNameForEidMaybe = (
+    eid: EndpointId,
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
+): string | undefined => {
+    // We are using getEidsByNetworkName to get the nice validation of network config
+    const eidsByNetworkName = getEidsByNetworkName(hre)
+
+    for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
+        if (networkEid === eid) {
+            return networkName
+        }
+    }
+
+    return undefined
+}
+
+/**
+ * Gets a network name with its `eid` property matching
+ * a particular `eid`
+ *
  * Throws if there is no such network or if there are multiple
  * networks defined with the same `eid`
  *
@@ -209,17 +237,10 @@ export const getNetworkNameForEid = (
     eid: EndpointId,
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
 ): string => {
-    // We are using getEidsByNetworkName to get the nice validation of network config
-    const eidsByNetworkName = getEidsByNetworkName(hre)
-
-    for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
-        if (networkEid === eid) {
-            return networkName
-        }
-    }
+    const networkName = getNetworkNameForEidMaybe(eid, hre)
 
     // Here we error out if there are no networks with this eid
-    assert(false, `Could not find a network for eid ${eid} (${formatEid(eid)})`)
+    return assert(networkName != null, `Could not find a network for eid ${eid} (${formatEid(eid)})`), networkName
 }
 
 /**
