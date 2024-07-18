@@ -4,3 +4,5 @@ import { Keypair } from '@solana/web3.js'
 export const seedArbitrary = fc.uint8Array({ minLength: 32, maxLength: 32 })
 
 export const keypairArbitrary = seedArbitrary.map((seed) => Keypair.fromSeed(seed))
+
+export const solanaAddressArbitrary = keypairArbitrary.map((keypair) => keypair.publicKey.toBase58())
