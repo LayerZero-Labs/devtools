@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-evm-hardhat",
-  "version": "0.3.25",
+  "version": "0.3.26",
   "description": "Hardhat utilities for LayerZero EVM projects",
   "repository": {
     "type": "git",
@@ -55,7 +55,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.17",
+    "@layerzerolabs/devtools": "~0.3.19",
     "@layerzerolabs/devtools-evm": "~0.3.13",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.25",
@@ -83,7 +83,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.17",
+    "@layerzerolabs/devtools": "~0.3.19",
     "@layerzerolabs/devtools-evm": "~0.3.13",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.3",
