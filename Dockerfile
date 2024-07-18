@@ -41,7 +41,7 @@ ARG EVM_NODE_IMAGE=node-evm-hardhat
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION as base
+FROM node:$NODE_VERSION AS base
 
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
 
@@ -104,7 +104,7 @@ RUN docker compose version
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM $BASE_IMAGE as development
+FROM $BASE_IMAGE AS development
 
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV NPM_CONFIG_PACKAGE_IMPORT_METHOD=copy

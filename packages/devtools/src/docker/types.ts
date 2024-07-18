@@ -103,7 +103,7 @@ export type ComposeSpecVolume = null | ComposeSpecVolumeDefinition
 export type ComposeSpecVolumes = Record<string, ComposeSpecVolume>
 
 export interface ComposeSpec {
-    version: ComposeSpecVersion
+    version?: ComposeSpecVersion
     services?: ComposeSpecServices
     volumes?: ComposeSpecVolumes
 }
