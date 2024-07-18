@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "exclude": ["dist", "node_modules"],
+  "include": ["src"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "types": ["node"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
