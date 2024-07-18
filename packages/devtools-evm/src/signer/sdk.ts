@@ -5,8 +5,7 @@ import SafeApiKit from '@safe-global/api-kit'
 import { MetaTransactionData, OperationType, SafeTransaction } from '@safe-global/safe-core-sdk-types'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
-    formatEid,
-    formatOmniPoint,
+    OmniSignerBase,
     type OmniTransactionResponse,
     type OmniSigner,
     type OmniTransaction,
@@ -15,23 +14,13 @@ import assert from 'assert'
 
 import { ethers } from 'ethers'
 
-export abstract class OmniSignerEVMBase implements OmniSigner {
+export abstract class OmniSignerEVMBase extends OmniSignerBase implements OmniSigner {
     protected constructor(
-        public readonly eid: EndpointId,
+        eid: EndpointId,
         public readonly signer: Signer
-    ) {}
-
-    protected assertTransaction(transaction: OmniTransaction) {
-        assert(
-            transaction.point.eid === this.eid,
-            `Could not use signer for ${formatEid(this.eid)} to sign a transaction for ${formatOmniPoint(
-                transaction.point
-            )}`
-        )
+    ) {
+        super(eid)
     }
-
-    abstract sign(transaction: OmniTransaction): Promise<string>
-    abstract signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse>
 }
 
 /**

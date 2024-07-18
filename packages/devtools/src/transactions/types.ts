@@ -1,5 +1,6 @@
 import { OmniPoint } from '@/omnigraph/types'
 import { EndpointBasedFactory } from '@/types'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 export interface OmniTransaction {
     point: OmniPoint
@@ -34,6 +35,8 @@ export interface OmniTransactionReceipt {
 }
 
 export interface OmniSigner<TResponse extends OmniTransactionResponse = OmniTransactionResponse> {
+    eid: EndpointId
+
     sign: (transaction: OmniTransaction) => Promise<string>
     signAndSend: (transaction: OmniTransaction) => Promise<TResponse>
 
