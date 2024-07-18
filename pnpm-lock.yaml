@@ -917,6 +917,9 @@ importers:
       '@layerzerolabs/test-devtools':
         specifier: ~0.2.6
         version: link:../test-devtools
+      '@layerzerolabs/test-devtools-solana':
+        specifier: ~0.0.1
+        version: link:../test-devtools-solana
       '@solana/web3.js':
         specifier: ~1.95.0
         version: 1.95.0

@@ -1,7 +1,8 @@
-import { Connection } from '@solana/web3.js'
+import { Connection, Transaction } from '@solana/web3.js'
 import { formatOmniPoint, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
 import type { IOmniSDK } from './types'
 import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
+import { serializeTransaction } from '@/transactions/serde'
 
 /**
  * Base class for all Solana SDKs, providing some common functionality
@@ -23,10 +24,10 @@ export abstract class OmniSDK implements IOmniSDK {
         return `Solana program @ ${formatOmniPoint(this.point)}`
     }
 
-    protected createTransaction(data: string): OmniTransaction {
+    protected createTransaction(transaction: Transaction): OmniTransaction {
         return {
             point: this.point,
-            data,
+            data: serializeTransaction(transaction),
         }
     }
 }
