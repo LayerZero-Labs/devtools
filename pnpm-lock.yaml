@@ -316,8 +316,8 @@ importers:
         specifier: ^2.3.25
         version: 2.3.25
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.1
-        version: 0.0.1(@layerzerolabs/lz-evm-messagelib-v2@2.3.29)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        specifier: ^0.0.3
+        version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
         version: 2.3.25
@@ -5338,30 +5338,6 @@ packages:
       '@ethersproject/solidity': 5.7.0
       bs58: 5.0.0
       tiny-invariant: 1.3.3
-
-  /@layerzerolabs/oft-evm@0.0.1(@layerzerolabs/lz-evm-messagelib-v2@2.3.29)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-zt7SvagW8nRukb1dmQmmzPwaMIHlnBa3eg8RdybjbK9oHHXvtoM8wtF0A12yuXZPMIrHjF2p5Lng2wi8448qpA==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^2.3.29
-      '@layerzerolabs/lz-evm-protocol-v2': ^2.3.29
-      '@layerzerolabs/lz-evm-v1-0.7': ^2.3.29
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-      solidity-bytes-utils: ^0.8.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 2.3.29(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 2.3.29(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 2.3.29(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
-      '@openzeppelin/contracts': 5.0.2
-      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
-      ethers: 5.7.2
-      hardhat-deploy: 0.12.4
-      solidity-bytes-utils: 0.8.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: true
 
   /@layerzerolabs/prettier-config-next@2.3.25:
     resolution: {integrity: sha512-QS2pqm469wr7TrHY+ydsBWzJZuN/X4Au3RzDvBZgOvhLK3gCHeNE7gxXrxbve3crHeIbA3YMTHEGNMkNYpVHMw==}
