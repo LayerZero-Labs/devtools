@@ -3,6 +3,7 @@ import type {
     OmniSigner,
     OmniSignerFactory,
     OmniTransaction,
+    OmniTransactionResponse,
     OmniTransactionWithError,
     OmniTransactionWithReceipt,
     OmniTransactionWithResponse,
@@ -10,6 +11,25 @@ import type {
 import { formatEid, formatOmniPoint } from '@/omnigraph/format'
 import { groupTransactionsByEid } from './utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import assert from 'assert'
+
+/**
+ * Base class for all signers containing common functionality
+ */
+export abstract class OmniSignerBase implements OmniSigner {
+    abstract eid: EndpointId
+    abstract sign(transaction: OmniTransaction): Promise<string>
+    abstract signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse>
+
+    protected assertTransaction(transaction: OmniTransaction) {
+        assert(
+            transaction.point.eid === this.eid,
+            `Could not use signer for ${formatEid(this.eid)} to sign a transaction for ${formatOmniPoint(
+                transaction.point
+            )}`
+        )
+    }
+}
 
 export type SignAndSendResult = [
     // All the successful transactions
