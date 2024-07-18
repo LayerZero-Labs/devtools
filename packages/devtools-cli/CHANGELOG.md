@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli
 
+## 0.0.3
+
+### Patch Changes
+
+- 72dfc71: Add configuration logic to devtools-cli
+
 ## 0.0.2
 
 ### Patch Changes

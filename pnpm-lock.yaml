@@ -208,7 +208,7 @@ importers:
         specifier: ^2.3.25
         version: 2.3.25
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
@@ -654,7 +654,7 @@ importers:
         version: 1.10.0
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.17
+        specifier: ~0.3.19
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11
@@ -827,7 +827,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.17
+        specifier: ~0.3.19
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.13
@@ -2037,16 +2037,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.18
+        specifier: ~0.3.19
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-cli':
-        specifier: ~0.0.1
+        specifier: ~0.0.3
         version: link:../../packages/devtools-cli
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.13
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~0.3.21
+        specifier: ~0.3.26
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11

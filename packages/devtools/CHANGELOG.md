@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.19
+
+### Patch Changes
+
+- 4eb19e7: Make docker compose schema optional
+
 ## 0.3.18
 
 ### Patch Changes

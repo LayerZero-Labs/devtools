@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-cli-test",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "private": true,
   "description": "Integration tests for devtools-cli for V2",
   "repository": {
@@ -25,10 +25,10 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@ethersproject/wallet": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.18",
-    "@layerzerolabs/devtools-cli": "~0.0.1",
+    "@layerzerolabs/devtools": "~0.3.19",
+    "@layerzerolabs/devtools-cli": "~0.0.3",
     "@layerzerolabs/devtools-evm": "~0.3.13",
-    "@layerzerolabs/devtools-evm-hardhat": "~0.3.21",
+    "@layerzerolabs/devtools-evm-hardhat": "~0.3.26",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.25",
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
