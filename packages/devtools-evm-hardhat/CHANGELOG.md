@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.25
+
+### Patch Changes
+
+- 1818fbd: Don't force network to be defined when formatting transactions
+
 ## 0.3.24
 
 ### Patch Changes

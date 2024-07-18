@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.9
+
+### Patch Changes
+
+- d2ff651: Use @layerzerolabs/oft-evm OFT version
+
 ## 0.2.8
 
 ### Patch Changes

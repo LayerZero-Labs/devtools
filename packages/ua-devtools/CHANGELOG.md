@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.21
+
+### Patch Changes
+
+- 8ed825a: Add OAppOmniGraphSchema to ua-devtools
+
 ## 0.3.20
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.40
+
+### Patch Changes
+
+- 1818fbd: Don't force network to be defined when formatting transactions
+- Updated dependencies [1818fbd]
+- Updated dependencies [8ed825a]
+  - @layerzerolabs/devtools-evm-hardhat@0.3.25
+  - @layerzerolabs/ua-devtools@0.3.21
+
 ## 0.2.39
 
 ### Patch Changes
