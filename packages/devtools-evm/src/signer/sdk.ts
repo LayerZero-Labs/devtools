@@ -16,14 +16,11 @@ import { ethers } from 'ethers'
 
 export abstract class OmniSignerEVMBase extends OmniSignerBase implements OmniSigner {
     protected constructor(
-        public readonly eid: EndpointId,
+        eid: EndpointId,
         public readonly signer: Signer
     ) {
-        super()
+        super(eid)
     }
-
-    abstract sign(transaction: OmniTransaction): Promise<string>
-    abstract signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse>
 }
 
 /**

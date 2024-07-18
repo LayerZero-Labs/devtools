@@ -17,10 +17,17 @@ import assert from 'assert'
  * Base class for all signers containing common functionality
  */
 export abstract class OmniSignerBase implements OmniSigner {
-    abstract eid: EndpointId
+    protected constructor(public readonly eid: EndpointId) {}
+
     abstract sign(transaction: OmniTransaction): Promise<string>
+
     abstract signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse>
 
+    /**
+     * helper method to ensure that the transaction we are trying to sign is on a correct network
+     *
+     * @param {OmniTransaction} transaction
+     */
     protected assertTransaction(transaction: OmniTransaction) {
         assert(
             transaction.point.eid === this.eid,
