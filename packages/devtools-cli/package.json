@@ -45,6 +45,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.3.17",
     "@layerzerolabs/io-devtools": "~0.1.11",
+    "@layerzerolabs/ua-devtools": "~0.3.20",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",
     "commander": "^11.1.0",

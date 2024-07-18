@@ -1,0 +1,225 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command oapp wire with invalid options with invalid config option should fail with a malformed JS file (001) 1`] = `
+"
+
+
+
+
+
+                                   **********
+                                 **************
+                               ******************
+                              ********************
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                                 ******  *********
+                               ********  *********
+                              *********  ********
+                              *********  ******
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                              ********************
+                               ******************
+                                ****************
+                                   **********
+
+
+
+
+
+
+
+[33mwarn[39m:    This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being.
+[32minfo[39m:    Loading config file from test/commands/oapp/__data__/configs/invalid.config.001.js
+[31merror[39m:   Failed to load config from test/commands/oapp/__data__/setups/valid.setup.ts:
+
+Error: Config from file 'test/commands/oapp/__data__/configs/invalid.config.001.js' is malformed. Please fix the following errors:
+
+Property 'contracts.0.point': Required
+Property 'contracts.0.config': Required
+Property 'contracts.1.point': Required
+Property 'contracts.1.config': Required
+Property 'connections': Required
+"
+`;
+
+exports[`command oapp wire with invalid options with invalid config option should fail with a misconfigured file (001) 1`] = `
+"
+
+
+
+
+
+                                   **********
+                                 **************
+                               ******************
+                              ********************
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                                 ******  *********
+                               ********  *********
+                              *********  ********
+                              *********  ******
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                              ********************
+                               ******************
+                                ****************
+                                   **********
+
+
+
+
+
+
+
+[33mwarn[39m:    This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being.
+[32minfo[39m:    Loading config file from test/commands/oapp/__data__/configs/valid.config.misconfigured.001.js
+[31merror[39m:   Failed to load config from test/commands/oapp/__data__/setups/valid.setup.ts:
+
+Error: Config from file 'test/commands/oapp/__data__/configs/valid.config.misconfigured.001.js' is malformed. Please fix the following errors:
+
+Property 'contracts.0.point': Required
+Property 'contracts.0.config': Required
+Property 'contracts.1.point': Required
+Property 'contracts.1.config': Required
+Property 'connections.0.vector': Required
+Property 'connections.0.config': Required
+Property 'connections.1.vector': Required
+Property 'connections.1.config': Required
+"
+`;
+
+exports[`command oapp wire with invalid options with invalid config option should fail with an empty JS file 1`] = `
+"
+
+
+
+
+
+                                   **********
+                                 **************
+                               ******************
+                              ********************
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                                 ******  *********
+                               ********  *********
+                              *********  ********
+                              *********  ******
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                              ********************
+                               ******************
+                                ****************
+                                   **********
+
+
+
+
+
+
+
+[33mwarn[39m:    This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being.
+[32minfo[39m:    Loading config file from test/commands/oapp/__data__/configs/invalid.config.empty.js
+[31merror[39m:   Failed to load config from test/commands/oapp/__data__/setups/valid.setup.ts:
+
+Error: Config from file 'test/commands/oapp/__data__/configs/invalid.config.empty.js' is malformed. Please fix the following errors:
+
+Property 'contracts': Required
+Property 'connections': Required
+"
+`;
+
+exports[`command oapp wire with invalid options with invalid setup option should fail with a malformed JS file (001) 1`] = `
+"
+
+
+
+
+
+                                   **********
+                                 **************
+                               ******************
+                              ********************
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                                 ******  *********
+                               ********  *********
+                              *********  ********
+                              *********  ******
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                              ********************
+                               ******************
+                                ****************
+                                   **********
+
+
+
+
+
+
+
+[33mwarn[39m:    This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being.
+[31merror[39m:   Failed to load setup from test/commands/oapp/__data__/setups/invalid.setup.001.js:
+
+Error: Setup from file 'test/commands/oapp/__data__/setups/invalid.setup.001.js' is malformed. Please fix the following errors:
+
+Property 'createSdk': Expected function, received array
+Property 'createSigner': Required
+"
+`;
+
+exports[`command oapp wire with invalid options with invalid setup option should fail with an empty JS file 1`] = `
+"
+
+
+
+
+
+                                   **********
+                                 **************
+                               ******************
+                              ********************
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                                 ******  *********
+                               ********  *********
+                              *********  ********
+                              *********  ******
+                              *********  *********
+                              *********  *********
+                              *********  *********
+                              ********************
+                               ******************
+                                ****************
+                                   **********
+
+
+
+
+
+
+
+[33mwarn[39m:    This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being.
+[31merror[39m:   Failed to load setup from test/commands/oapp/__data__/setups/invalid.setup.empty.js:
+
+Error: Setup from file 'test/commands/oapp/__data__/setups/invalid.setup.empty.js' is malformed. Please fix the following errors:
+
+Property 'createSdk': Required
+Property 'createSigner': Required
+"
+`;
+
+exports[`command oapp wire with valid configs should not understand hardhat config 1`] = `""`;

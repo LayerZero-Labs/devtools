@@ -23,12 +23,20 @@ teardown() {
     rm -rf "$PROJECTS_DIRECTORY"
 }
 
+@test "should output version" {
+    npx --yes @layerzerolabs/devtools-cli --version
+}
+
+@test "should output help" {
+    npx --yes @layerzerolabs/devtools-cli --help
+}
+
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
     npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
-    run npx --yes @layerzerolabs/devtools-cli oapp wire --setup ./imaginary.layerzero.setup.ts
+    run npx --yes @layerzerolabs/devtools-cli oapp wire --setup ./imaginary.layerzero.setup.ts --oapp-config ./layerzero.config.ts --dry-run
     assert_output --partial "This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being."
 }
