@@ -76,7 +76,7 @@ describe('transactions/signer', () => {
                             lamports: 49,
                         })
 
-                        const connection = new Connection('http://solana.lz-localnet.org:8899')
+                        const connection = new Connection('http://soyllama.com')
                         const omniSigner = new OmniSignerSolana(eid, connection, sender)
 
                         const transaction = new Transaction().add(transfer)
