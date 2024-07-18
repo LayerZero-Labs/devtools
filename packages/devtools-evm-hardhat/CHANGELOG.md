@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 0.3.26
+
+### Patch Changes
+
+- 4eb19e7: Make docker compose schema optional
+- Updated dependencies [4eb19e7]
+  - @layerzerolabs/devtools@0.3.19
+
 ## 0.3.25
 
 ### Patch Changes
