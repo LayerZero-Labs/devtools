@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.4
+
+### Patch Changes
+
+- 7ce87bc: Release public version
+
 ## 0.0.3
 
 ### Patch Changes
