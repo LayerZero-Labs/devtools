@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- b8160bd: Add Fee implementation
+
 ## 0.0.4
 
 ### Patch Changes
