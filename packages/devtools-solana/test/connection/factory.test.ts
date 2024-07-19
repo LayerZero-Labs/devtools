@@ -5,10 +5,6 @@ import { Connection } from '@solana/web3.js'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { formatEid } from '@layerzerolabs/devtools'
 
-// We'll use the fake timers to work around the fact that JsonRpcProvider uses setTimeout
-// to schedule a task in the queue in its constructor
-jest.useFakeTimers()
-
 describe('provider/factory', () => {
     describe('createConnectionFactory', () => {
         const errorArbitrary = fc.anything()
