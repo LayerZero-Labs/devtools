@@ -21,6 +21,8 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "artifacts/Fee.sol/Fee.json",
+    "artifacts/IFee.sol/IFee.json",
     "artifacts/IOFT.sol/IOFT.json",
     "artifacts/OFTComposeMsgCodec.sol/OFTComposeMsgCodec.json",
     "artifacts/OFTMsgCodec.sol/OFTMsgCodec.json",

@@ -24,3 +24,6 @@ remappings = [
     '@layerzerolabs/lz-evm-v1-0.7/=node_modules/@layerzerolabs/lz-evm-v1-0.7/',
     '@layerzerolabs/test-devtools-evm-foundry/=node_modules/@layerzerolabs/test-devtools-evm-foundry/',
 ]
+
+[fuzz]
+runs = 1000
