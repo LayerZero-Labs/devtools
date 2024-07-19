@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
 import { OFTAdapter } from "../../contracts/OFTAdapter.sol";
 
 contract OFTAdapterMock is OFTAdapter {
-    constructor(address _token, address _lzEndpoint, address _delegate) OFTAdapter(_token, _lzEndpoint, _delegate) {}
+    constructor(
+        address _token,
+        address _lzEndpoint,
+        address _delegate
+    ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     // @dev expose internal functions for testing purposes
     function debit(

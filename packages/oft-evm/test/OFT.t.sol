@@ -18,9 +18,9 @@ import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 import "forge-std/console.sol";
-import { TestHelper } from "./TestHelper.sol";
+import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-contract OFTTest is TestHelper {
+contract OFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
     uint32 aEid = 1;
