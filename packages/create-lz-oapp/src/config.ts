@@ -38,6 +38,13 @@ export const EXAMPLES: Example[] = [
         directory: 'examples/onft721',
         ref,
     },
+    {
+        id: 'oft-adapter',
+        label: 'OFTAdapter',
+        repository,
+        directory: 'examples/oft-adapter',
+        ref,
+    },
 ]
 
 export const PACKAGE_MANAGERS: PackageManager[] = [

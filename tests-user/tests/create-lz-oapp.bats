@@ -147,6 +147,17 @@ teardown() {
     pnpm lint:fix
 }
 
+@test "should work with pnpm & oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter"
+
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+    pnpm lint
+    pnpm lint:fix
+}
+
 @test "should work with yarn & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
@@ -180,6 +191,17 @@ teardown() {
     yarn lint:fix
 }
 
+@test "should work with yarn & oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
+
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
+    cd "$DESTINATION"
+    yarn compile
+    yarn test
+    yarn lint
+    yarn lint:fix
+}
+
 @test "should work with npm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
@@ -206,6 +228,17 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
     npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager npm
+    cd "$DESTINATION"
+    npm run compile
+    npm run test
+    npm run lint
+    npm run lint:fix
+}
+
+@test "should work with npm & oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
+
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
