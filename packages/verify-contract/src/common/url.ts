@@ -112,6 +112,8 @@ const DEFAULT_SCAN_API_URLS: Map<NetworkName, string> = new Map([
     ['rarible-mainnet', 'https://mainnet.explorer.rarichain.org/api'],
     ['scroll', 'https://api.scrollscan.com/api'],
     ['scroll-mainnet', 'https://api.scrollscan.com/api'],
+    ['sei', 'https://seitrace.com/pacific-1/api'],
+    ['sei-mainnet', 'https://seitrace.com/pacific-1/api'],
     ['taiko', 'https://api.taikoscan.io/api'],
     ['taiko-mainnet', 'https://api.taikoscan.io/api'],
     ['xchain', 'https://xchain-explorer.idex.io/api'],
