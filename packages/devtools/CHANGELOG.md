@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.20
+
+### Patch Changes
+
+- 7716a76: Move common signer functionality into devtools
+
 ## 0.3.19
 
 ### Patch Changes

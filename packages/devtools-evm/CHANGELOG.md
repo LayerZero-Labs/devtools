@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm
 
+## 0.3.14
+
+### Patch Changes
+
+- 7716a76: Move common signer functionality into devtools
+- Updated dependencies [7716a76]
+  - @layerzerolabs/devtools@0.3.20
+
 ## 0.3.13
 
 ### Patch Changes
