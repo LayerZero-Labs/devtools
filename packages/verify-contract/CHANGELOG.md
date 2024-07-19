@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.27
+
+### Patch Changes
+
+- d77313d: Added api url for sei
+
 ## 1.1.26
 
 ### Patch Changes
