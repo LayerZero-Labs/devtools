@@ -184,7 +184,7 @@ networks: {
     /* ... */
     // Network-specific settings
     safeConfig: {
-      safeUrl: 'http://something',
+      safeUrl: 'http://something', // URL of the Safe API, not the Safe itself
       safeAddress: 'address'
     }
   }
