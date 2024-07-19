@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+
 import { OFT } from "../../contracts/OFT.sol";
 import { SendParam } from "../../contracts/OFTCore.sol";
 
@@ -10,7 +12,7 @@ contract OFTMock is OFT {
         string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) OFT(_name, _symbol, _lzEndpoint, _delegate) {}
+    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     function mint(address _to, uint256 _amount) public {
         _mint(_to, _amount);
