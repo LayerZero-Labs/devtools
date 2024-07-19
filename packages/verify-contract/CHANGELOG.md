@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.28
+
+### Patch Changes
+
+- 205c839: Update default urls for testnet
+
 ## 1.1.27
 
 ### Patch Changes
