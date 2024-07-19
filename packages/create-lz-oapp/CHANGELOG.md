@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.22
+
+### Patch Changes
+
+- 3e88d26: Adding in OFTAdapter to create-lz-oapp
+
 ## 0.1.21
 
 ### Patch Changes
