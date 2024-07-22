@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.10
+
+### Patch Changes
+
+- 7c4b031: Fix network name suffix in examples
+
 ## 0.2.9
 
 ### Patch Changes
