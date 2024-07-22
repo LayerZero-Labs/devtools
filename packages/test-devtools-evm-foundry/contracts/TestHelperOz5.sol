@@ -44,7 +44,6 @@ interface IOAppSetPeer {
  * @dev Extends Foundry's Test contract and provides utility functions for setting up mock endpoints and OApps.
  */
 contract TestHelperOz5 is Test, OptionsHelper {
-//    using OptionsBuilder for bytes;
 
     enum LibraryType {
         UltraLightNode,
