@@ -13,8 +13,7 @@ import bs58 from 'bs58'
  * @param {PossiblyBytes | null | undefined} address
  * @returns {string}
  */
-export const makeBytes32 = (address?: PossiblyBytes | null | undefined): PossiblyBytes =>
-    hexZeroPad(address || '0x0', 32)
+export const makeBytes32 = (address?: PossiblyBytes | null | undefined): string => hexZeroPad(address || '0x0', 32)
 
 /**
  * Compares two Bytes32-like values by value (i.e. ignores casing on strings
@@ -37,8 +36,21 @@ export const areBytes32Equal = (a: PossiblyBytes | null | undefined, b: Possibly
  * @param {PossiblyBytes | PossiblyBigInt | null | undefined} value
  * @returns {boolean}
  */
-export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined): boolean =>
-    value === '0x' || BigInt(value || 0) === BigInt(0)
+export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined): boolean => {
+    switch (true) {
+        case value === '0x':
+        case value == null:
+            return true
+
+        case typeof value === 'string':
+        case typeof value === 'number':
+        case typeof value === 'bigint':
+            return BigInt(value) === BigInt(0)
+
+        default:
+            return value.every((byte) => byte === 0)
+    }
+}
 
 /**
  * Turns a potentially zero address into undefined
@@ -85,7 +97,7 @@ export const normalizePeer = (address: OmniAddress, eid: EndpointId): Uint8Array
 
         case ChainType.APTOS:
         case ChainType.EVM:
-            return toBytes32(Uint8Array.from(Buffer.from(address.replace(/^0x/, ''), 'hex')))
+            return toBytes32(fromHex(address))
 
         default:
             throw new Error(`normalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
@@ -107,10 +119,10 @@ export const denormalizePeer = (bytes: Uint8Array, eid: EndpointId): OmniAddress
             return bs58.encode(toBytes32(bytes))
 
         case ChainType.APTOS:
-            return `0x${Buffer.from(toBytes32(bytes)).toString('hex')}`
+            return toHex(toBytes32(bytes))
 
         case ChainType.EVM:
-            return `0x${Buffer.from(toBytes20(bytes)).toString('hex')}`
+            return toHex(toBytes20(bytes))
 
         default:
             throw new Error(`denormalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
@@ -142,6 +154,10 @@ const toBytes20 = (bytes: Uint8Array): Uint8Array => {
 
     return new Uint8Array(bytes.slice(-20))
 }
+
+const toHex = (bytes: Uint8Array): string => `0x${Buffer.from(bytes).toString('hex')}`
+
+const fromHex = (hex: string): Uint8Array => Uint8Array.from(Buffer.from(hex.replace(/^0x/, ''), 'hex'))
 
 const getLeftPadding = (bytes: Uint8Array, length: number) => bytes.slice(0, Math.max(bytes.length - length, 0))
 
