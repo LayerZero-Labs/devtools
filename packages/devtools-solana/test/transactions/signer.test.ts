@@ -1,9 +1,9 @@
 import fc from 'fast-check'
 import { Connection, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js'
 import { serializeTransactionMessage, OmniSignerSolana, deserializeTransactionBuffer } from '@/transactions'
-import { keypairArbitrary, solanaAddressArbitrary } from '@layerzerolabs/test-devtools-solana'
+import { keypairArbitrary } from '@layerzerolabs/test-devtools-solana'
 import { OmniTransaction } from '@layerzerolabs/devtools'
-import { endpointArbitrary } from '@layerzerolabs/test-devtools'
+import { endpointArbitrary, solanaAddressArbitrary } from '@layerzerolabs/test-devtools'
 
 jest.mock('@solana/web3.js', () => {
     const original = jest.requireActual('@solana/web3.js')
