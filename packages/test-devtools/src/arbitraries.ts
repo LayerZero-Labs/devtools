@@ -2,6 +2,7 @@ import fc from 'fast-check'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 import { BIP39_WORDLIST, ENDPOINT_IDS } from './constants'
 import { entropyToMnemonic } from '@scure/bip39'
+import bs58 from 'bs58'
 
 export const nullishArbitrary = fc.constantFrom(null, undefined)
 
@@ -16,6 +17,10 @@ export const addressArbitrary = fc.string()
 export const evmAddressArbitrary = fc.hexaString({ minLength: 40, maxLength: 40 }).map((address) => `0x${address}`)
 
 export const evmBytes32Arbitrary = fc.hexaString({ minLength: 64, maxLength: 64 }).map((address) => `0x${address}`)
+
+export const aptosAddressArbitrary = fc.hexaString({ minLength: 64, maxLength: 64 }).map((address) => `0x${address}`)
+
+export const solanaAddressArbitrary = fc.uint8Array({ minLength: 32, maxLength: 32 }).map((bytes) => bs58.encode(bytes))
 
 export const endpointArbitrary: fc.Arbitrary<EndpointId> = fc.constantFrom(...ENDPOINT_IDS)
 

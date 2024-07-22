@@ -7,8 +7,6 @@ export const seedArbitrary = fc.uint8Array({ minLength: 32, maxLength: 32 })
 
 export const keypairArbitrary = seedArbitrary.map((seed) => Keypair.fromSeed(seed))
 
-export const solanaAddressArbitrary = keypairArbitrary.map((keypair) => keypair.publicKey.toBase58())
-
 export const solanaBlockhashArbitrary = fc
     .string()
     .map((value) => bs58.encode(Uint8Array.from(createHash('sha256').update(value).digest())))

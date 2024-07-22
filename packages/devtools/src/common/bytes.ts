@@ -1,5 +1,9 @@
-import type { PossiblyBigInt, PossiblyBytes } from '@/types'
+import { formatEid } from '@/omnigraph'
+import type { OmniAddress, PossiblyBigInt, PossiblyBytes } from '@/types'
 import { hexZeroPad } from '@ethersproject/bytes'
+import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import assert from 'assert'
+import bs58 from 'bs58'
 
 /**
  * Converts an address into Bytes32 by padding it with zeros.
@@ -64,3 +68,81 @@ export const ignoreZero = <T extends PossiblyBytes | PossiblyBigInt>(value?: T |
  */
 export const compareBytes32Ascending = (a: PossiblyBytes, b: PossiblyBytes): number =>
     Number(BigInt(makeBytes32(a)) - BigInt(makeBytes32(b)))
+
+/**
+ * Normalizes a network-specific peer address into a byte array with length of 32.
+ *
+ * @param {OmniAddress} address
+ * @param {EndpointId} eid
+ * @returns {Uint8Array}
+ */
+export const normalizePeer = (address: OmniAddress, eid: EndpointId): Uint8Array => {
+    const chainType = endpointIdToChainType(eid)
+
+    switch (chainType) {
+        case ChainType.SOLANA:
+            return bs58.decode(address)
+
+        case ChainType.APTOS:
+        case ChainType.EVM:
+            return toBytes32(Uint8Array.from(Buffer.from(address.replace(/^0x/, ''), 'hex')))
+
+        default:
+            throw new Error(`normalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
+    }
+}
+
+/**
+ * Denormalizes Bytes32 representing a peer address into a network-specific peer address.
+ *
+ * @param {Uint8Array} bytes
+ * @param {EndpointId} eid
+ * @returns {OmniAddress}
+ */
+export const denormalizePeer = (bytes: Uint8Array, eid: EndpointId): OmniAddress => {
+    const chainType = endpointIdToChainType(eid)
+
+    switch (chainType) {
+        case ChainType.SOLANA:
+            return bs58.encode(toBytes32(bytes))
+
+        case ChainType.APTOS:
+            return `0x${Buffer.from(toBytes32(bytes)).toString('hex')}`
+
+        case ChainType.EVM:
+            return `0x${Buffer.from(toBytes20(bytes)).toString('hex')}`
+
+        default:
+            throw new Error(`denormalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
+    }
+}
+
+/**
+ * Helper utility that left-pads a `Uint8Array` to be 32 bytes in length.
+ *
+ * @param {Uint8Array} bytes A `Uint8Array` with length less than or equal to 32.
+ * @returns {Uint8Array} A `Uint8Array` of length 32.
+ */
+const toBytes32 = (bytes: Uint8Array): Uint8Array => {
+    assertZeroBytes(
+        getLeftPadding(bytes, 32),
+        `Cannot convert an array with more than 32 non-zero bytes into Bytes32. Got ${bytes} with length ${bytes.length}`
+    )
+
+    const bytes32 = new Uint8Array(32)
+
+    return bytes32.set(bytes, 32 - bytes.length), bytes32
+}
+
+const toBytes20 = (bytes: Uint8Array): Uint8Array => {
+    assertZeroBytes(
+        getLeftPadding(bytes, 20),
+        `Cannot convert an array with more than 20 non-zero bytes into Bytes20. Got ${bytes} with length ${bytes.length}`
+    )
+
+    return new Uint8Array(bytes.slice(-20))
+}
+
+const getLeftPadding = (bytes: Uint8Array, length: number) => bytes.slice(0, Math.max(bytes.length - length, 0))
+
+const assertZeroBytes = (bytes: Uint8Array, message: string) => bytes.forEach((byte) => assert(byte === 0, message))
