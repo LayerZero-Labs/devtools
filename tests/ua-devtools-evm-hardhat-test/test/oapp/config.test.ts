@@ -2445,9 +2445,15 @@ describe('oapp/config', () => {
                     },
                 ],
             }
+
             const transactions = await configureOApp(graph, oappSdkFactory)
             const expectedTransactions = [await avaxOAppSdk.setPeer(solanaPoint.eid, solanaPoint.address)]
             expect(transactions).toEqual(expectedTransactions)
+
+            const signAndSend = createSignAndSend(createSignerFactory())
+            await signAndSend(transactions)
+
+            expect(await configureOApp(graph, oappSdkFactory)).toEqual([])
         })
     })
 })
