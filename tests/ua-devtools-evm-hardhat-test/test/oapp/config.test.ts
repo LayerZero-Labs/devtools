@@ -123,6 +123,7 @@ describe('oapp/config', () => {
             ]
             expect(transactions).toEqual(expectedTransactions)
         })
+
         it('should exclude setPeer transactions for peers that have been set', async () => {
             // Before we configure the OApp, we'll set some peers
             const signerFactory = createSignerFactory()
@@ -2423,6 +2424,30 @@ describe('oapp/config', () => {
                 await signAndSend([(await ethOAppSdk.setCallerBpsCap(ethCallerBpsCap)) as OmniTransaction])
                 expect(await ethOAppSdk.getCallerBpsCap()).toBe(ethCallerBpsCap)
             })
+        })
+    })
+
+    describe('configureOAppPeers with Solana', () => {
+        it('should set the peers', async () => {
+            const solanaPoint: OmniPoint = {
+                eid: EndpointId.SOLANA_V2_MAINNET,
+                address: 'Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs',
+            }
+            const graph: OAppOmniGraph = {
+                contracts: [
+                    {
+                        point: avaxPoint,
+                    },
+                ],
+                connections: [
+                    {
+                        vector: { from: avaxPoint, to: solanaPoint },
+                    },
+                ],
+            }
+            const transactions = await configureOApp(graph, oappSdkFactory)
+            const expectedTransactions = [await avaxOAppSdk.setPeer(solanaPoint.eid, solanaPoint.address)]
+            expect(transactions).toEqual(expectedTransactions)
         })
     })
 })
