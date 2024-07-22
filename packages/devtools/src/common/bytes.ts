@@ -10,10 +10,10 @@ import bs58 from 'bs58'
  *
  * It will return zero bytes if passed `null`, `undefined` or an empty string.
  *
- * @param {PossiblyBytes | null | undefined} address
+ * @param {PossiblyBytes | null | undefined} bytes
  * @returns {string}
  */
-export const makeBytes32 = (address?: PossiblyBytes | null | undefined): string => hexZeroPad(address || '0x0', 32)
+export const makeBytes32 = (bytes?: PossiblyBytes | null | undefined): string => hexZeroPad(bytes || '0x0', 32)
 
 /**
  * Compares two Bytes32-like values by value (i.e. ignores casing on strings
@@ -88,7 +88,11 @@ export const compareBytes32Ascending = (a: PossiblyBytes, b: PossiblyBytes): num
  * @param {EndpointId} eid
  * @returns {Uint8Array}
  */
-export const normalizePeer = (address: OmniAddress, eid: EndpointId): Uint8Array => {
+export const normalizePeer = (address: OmniAddress | null | undefined, eid: EndpointId): Uint8Array => {
+    if (address == null) {
+        return new Uint8Array(32)
+    }
+
     const chainType = endpointIdToChainType(eid)
 
     switch (chainType) {
@@ -111,7 +115,11 @@ export const normalizePeer = (address: OmniAddress, eid: EndpointId): Uint8Array
  * @param {EndpointId} eid
  * @returns {OmniAddress}
  */
-export const denormalizePeer = (bytes: Uint8Array, eid: EndpointId): OmniAddress => {
+export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: EndpointId): OmniAddress | undefined => {
+    if (bytes == null || isZero(bytes)) {
+        return undefined
+    }
+
     const chainType = endpointIdToChainType(eid)
 
     switch (chainType) {
