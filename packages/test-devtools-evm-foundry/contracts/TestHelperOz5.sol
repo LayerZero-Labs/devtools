@@ -17,7 +17,7 @@ import { SetDefaultExecutorConfigParam, ExecutorConfig } from "@layerzerolabs/lz
 import { IMessageLib } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol";
 import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol";
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
-import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { Origin, ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 
 // @dev oz4/5 breaking change...
 import { ReceiveUln302Mock as ReceiveUln302, IReceiveUlnE2 } from "./mocks/ReceiveUln302Mock.sol";
@@ -27,15 +27,16 @@ import { ExecutorMock as Executor, IExecutor } from "./mocks/ExecutorMock.sol";
 import { PriceFeedMock as PriceFeed, ILayerZeroPriceFeed } from "./mocks/PriceFeedMock.sol";
 import { EndpointV2Mock as EndpointV2 } from "./mocks//EndpointV2Mock.sol";
 
-// OApp
-import { OApp } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
-import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
-
 // Misc. Mocks
 import { OptionsHelper } from "./OptionsHelper.sol";
 import { SendUln302Mock as SendUln302 } from "./mocks/SendUln302Mock.sol";
 import { SimpleMessageLibMock } from "./mocks/SimpleMessageLibMock.sol";
 import { ExecutorFeeLibMock as ExecutorFeeLib } from "./mocks/ExecutorFeeLibMock.sol";
+
+interface IOAppSetPeer {
+    function setPeer(uint32 _eid, bytes32 _peer) external;
+    function endpoint() external view returns (ILayerZeroEndpointV2 iEndpoint);
+}
 
 /**
  * @title TestHelperOz5
@@ -43,7 +44,7 @@ import { ExecutorFeeLibMock as ExecutorFeeLib } from "./mocks/ExecutorFeeLibMock
  * @dev Extends Foundry's Test contract and provides utility functions for setting up mock endpoints and OApps.
  */
 contract TestHelperOz5 is Test, OptionsHelper {
-    using OptionsBuilder for bytes;
+//    using OptionsBuilder for bytes;
 
     enum LibraryType {
         UltraLightNode,
@@ -268,10 +269,10 @@ contract TestHelperOz5 is Test, OptionsHelper {
     function wireOApps(address[] memory oapps) public {
         uint256 size = oapps.length;
         for (uint256 i = 0; i < size; i++) {
-            OApp localOApp = OApp(payable(oapps[i]));
+            IOAppSetPeer localOApp = IOAppSetPeer(oapps[i]);
             for (uint256 j = 0; j < size; j++) {
                 if (i == j) continue;
-                OApp remoteOApp = OApp(payable(oapps[j]));
+                IOAppSetPeer remoteOApp = IOAppSetPeer(oapps[j]);
                 uint32 remoteEid = (remoteOApp.endpoint()).eid();
                 localOApp.setPeer(remoteEid, addressToBytes32(address(remoteOApp)));
             }

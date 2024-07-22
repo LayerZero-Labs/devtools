@@ -1,0 +1,24 @@
+[profile.default]
+solc = '0.8.22'
+verbosity = 3
+src = "contracts"
+test = "test"
+out = "artifacts"
+cache_path = "cache"
+optimizer = true
+optimizer_runs = 20_000
+
+remappings = [
+    # note: map to package level only, required for pnp-berry to work with foundry
+    # ok - solidity-stringutils/=node_modules/solidity-stringutils/
+    # not ok - solidity-stringutils/=node_modules/solidity-stringutils/src/
+    'ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/',
+    'forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/',
+    '@openzeppelin=node_modules/@openzeppelin/',
+    'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
+    'hardhat-deploy/=node_modules/hardhat-deploy/',
+    '@layerzerolabs=node_modules/@layerzerolabs/',
+]
+
+[fuzz]
+runs = 1000
