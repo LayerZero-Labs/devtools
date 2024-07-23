@@ -10,6 +10,8 @@ import { IPreCrime, PreCrimePeer } from "./interfaces/IPreCrime.sol";
 import { IOAppPreCrimeSimulator } from "./interfaces/IOAppPreCrimeSimulator.sol";
 import { InboundPacket, PacketDecoder } from "./libs/Packet.sol";
 
+// @dev WARNING: This preCrime contract is for testing only, it is not secure and should not be used in production.
+// @dev This is not fully implemented/audited/tested
 abstract contract PreCrime is Ownable, IPreCrime {
     using BytesLib for bytes;
 
