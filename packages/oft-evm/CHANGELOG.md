@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.6
+
+### Patch Changes
+
+- aeacd03: Allow feeBps==BPS_DENOMINATOR
+- 6686824: Simplify \_getFeeBps() for easier readbility
+
 ## 0.0.5
 
 ### Patch Changes

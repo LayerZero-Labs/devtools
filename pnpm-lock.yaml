@@ -208,7 +208,7 @@ importers:
         specifier: ^2.3.25
         version: 2.3.25
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.5
+        specifier: ^0.0.6
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
@@ -316,7 +316,7 @@ importers:
         specifier: ^2.3.25
         version: 2.3.25
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.5
+        specifier: ^0.0.6
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
