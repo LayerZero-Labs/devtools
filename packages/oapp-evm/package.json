@@ -4,10 +4,7 @@
   "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
   "keywords": [
     "LayerZero",
-    "OFT",
     "OmniChain",
-    "Fungible",
-    "Token",
     "EndpointV2",
     "EVM",
     "OApp"
@@ -22,46 +19,29 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "artifacts/**/*",
     "contracts/**/*",
     "test/**/*"
   ],
   "scripts": {
     "build": "$npm_execpath compile",
-    "clean": "rimraf .turbo cache out artifacts",
-    "compile": "$npm_execpath compile:forge",
-    "compile:forge": "$npm_execpath forge build",
-    "test": "$npm_execpath test:forge",
-    "test:forge": "$npm_execpath forge test"
+    "clean": "rm -rf .turbo cache artifacts",
+    "compile": "$npm_execpath forge build",
+    "test": "$npm_execpath forge test"
   },
   "dependencies": {
     "ethers": "^5.7.2"
   },
   "devDependencies": {
-    "@ethersproject/abi": "^5.7.0",
-    "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/hardhat-collect-outcomes": "^2.3.29",
-    "@layerzerolabs/hardhat-tron": "^2.3.29",
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.8",
     "@layerzerolabs/toolbox-foundry": "^0.1.7",
     "@layerzerolabs/toolbox-hardhat": "~0.2.40",
-    "@layerzerolabs/typescript-config-next": "^2.3.29",
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "@typechain/ethers-v5": "^10.2.1",
-    "@typechain/hardhat": "^6.1.6",
-    "@types/node": "^20.10.5",
-    "hardhat": "^2.19.0",
-    "hardhat-contract-sizer": "^2.10.0",
-    "hardhat-deploy": "^0.12.4",
-    "hardhat-deploy-ethers": "^0.3.0-beta.13",
-    "rimraf": "^5.0.5",
-    "solidity-bytes-utils": "^0.8.0",
-    "typechain": "^8.3.2",
-    "typescript": "~5.2.2"
+    "solidity-bytes-utils": "^0.8.0"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
@@ -69,7 +49,6 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0",
-    "hardhat-deploy": "^0.11.44",
     "solidity-bytes-utils": "^0.8.0"
   },
   "publishConfig": {
