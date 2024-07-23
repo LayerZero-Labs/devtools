@@ -1208,9 +1208,6 @@ importers:
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^2.3.29
         version: 2.3.29(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-oapp-v2':
-        specifier: ^2.3.29
-        version: 2.3.29(@layerzerolabs/lz-evm-messagelib-v2@2.3.29)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^2.3.29
         version: 2.3.29(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
