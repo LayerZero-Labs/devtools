@@ -18,10 +18,10 @@ node_modules:
 	mkdir -p lib/solidity-bytes-utils
 
 	# We copy the contracts
-	cp -R node_modules/solidity-bytes-utils/contracts/ lib/solidity-bytes-utils/
+	cp -R node_modules/solidity-bytes-utils/contracts/. lib/solidity-bytes-utils/.
 
 	# And we include the licenses & package.json
-	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE* lib/solidity-bytes-utils
+	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE* lib/solidity-bytes-utils/
 
 # This target will get all the git submodules installed in src/ directory
 # and copy them to lib/ directory
