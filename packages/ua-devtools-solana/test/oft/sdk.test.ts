@@ -49,7 +49,11 @@ describe('oft/sdk', () => {
                 const sdk = new OFT(connection, point, account, mintAccount)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.ETHEREUM_V2_MAINNET, makeBytes32())
-                expect(omniTransaction).toMatchSnapshot()
+                expect(omniTransaction).toEqual({
+                    data: expect.any(String),
+                    point,
+                    description: `Setting peer for eid ${EndpointId.ETHEREUM_V2_MAINNET} (ETHEREUM_V2_MAINNET) to address 0x0000000000000000000000000000000000000000000000000000000000000000`,
+                })
             })
         })
 
@@ -61,7 +65,11 @@ describe('oft/sdk', () => {
                 const sdk = new OFT(connection, point, account, mintAccount)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.APTOS_MAINNET, makeBytes32())
-                expect(omniTransaction).toMatchSnapshot()
+                expect(omniTransaction).toEqual({
+                    data: expect.any(String),
+                    point,
+                    description: `Setting peer for eid ${EndpointId.APTOS_MAINNET} (APTOS_MAINNET) to address 0x0000000000000000000000000000000000000000000000000000000000000000`,
+                })
             })
         })
 
@@ -73,7 +81,11 @@ describe('oft/sdk', () => {
                 const sdk = new OFT(connection, point, account, mintAccount)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.SOLANA_V2_MAINNET, point.address)
-                expect(omniTransaction).toMatchSnapshot()
+                expect(omniTransaction).toEqual({
+                    data: expect.any(String),
+                    point,
+                    description: `Setting peer for eid ${EndpointId.SOLANA_V2_MAINNET} (SOLANA_V2_MAINNET) to address ${makeBytes32(normalizePeer(point.address, EndpointId.SOLANA_V2_MAINNET))}`,
+                })
             })
         })
     })
