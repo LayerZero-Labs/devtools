@@ -53,9 +53,7 @@ abstract contract Fee is IFee, Ownable {
         FeeConfig memory config = feeBps[_dstEid];
         if (config.enabled) {
             return config.feeBps;
-        } else if (defaultFeeBps > 0) {
-            return defaultFeeBps;
         }
-        return 0;
+        return defaultFeeBps;
     }
 }
