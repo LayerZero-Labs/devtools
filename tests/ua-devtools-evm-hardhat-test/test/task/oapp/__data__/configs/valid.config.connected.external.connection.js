@@ -16,7 +16,7 @@ const avaxContract = {
 // Since it's only used as a `to` in a connection, the scripts should still work
 const solContract = {
     eid: EndpointId.SOLANA_V2_MAINNET,
-    address: '0x708687b6133d4eff7fdfe1adb237dfa01d3671f924f9991c5676729cedce9efd',
+    address: 'Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs',
 };
 
 module.exports = {
