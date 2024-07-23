@@ -40,16 +40,14 @@
     "@layerzerolabs/toolbox-foundry": "^0.1.7",
     "@layerzerolabs/toolbox-hardhat": "~0.2.40",
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "solidity-bytes-utils": "^0.8.0"
+    "@openzeppelin/contracts-upgradeable": "^5.0.2"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
-    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0",
-    "solidity-bytes-utils": "^0.8.0"
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },
   "publishConfig": {
     "access": "public"

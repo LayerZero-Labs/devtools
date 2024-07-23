@@ -1217,9 +1217,6 @@ importers:
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
         version: 5.0.2(@openzeppelin/contracts@5.0.2)
-      solidity-bytes-utils:
-        specifier: ^0.8.0
-        version: 0.8.2
 
   packages/oft-evm:
     dependencies:

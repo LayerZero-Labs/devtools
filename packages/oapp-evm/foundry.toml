@@ -12,7 +12,7 @@ remappings = [
     'ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/',
     'forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/',
     '@openzeppelin=node_modules/@openzeppelin/',
-    'solidity-bytes-utils/=node_modules/solidity-bytes-utils/',
+    'solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/',
     '@layerzerolabs=node_modules/@layerzerolabs/',
 ]
 
