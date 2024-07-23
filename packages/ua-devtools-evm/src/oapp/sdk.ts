@@ -62,7 +62,7 @@ export class OApp extends Ownable implements IOApp {
         // We run the hex string we got through a normalization/denormalization process
         // that will ensure that zero addresses will get stripped
         // and any network-specific logic will be applied
-        return denormalizePeer(normalizePeer(peer, eid), eid)
+        return denormalizePeer(normalizePeer(peer, this.contract.eid), eid)
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
