@@ -10,7 +10,7 @@ export type PossiblyBigInt = string | number | bigint
 
 export type OmniAddress = Bytes32 | Bytes20
 
-export type PossiblyBytes = Bytes | Bytes32 | Bytes20
+export type PossiblyBytes = Bytes | Bytes32 | Bytes20 | Uint8Array
 
 /**
  * Generic type for a hybrid (sync / async) factory

@@ -6,9 +6,10 @@ import {
     formatEid,
     isZero,
     areBytes32Equal,
-    ignoreZero,
     makeBytes32,
     Bytes,
+    normalizePeer,
+    denormalizePeer,
 } from '@layerzerolabs/devtools'
 import { type OmniContract, formatOmniContract, BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -58,20 +59,28 @@ export class OApp extends Ownable implements IOApp {
             (error) => new Error(`Failed to get peer for ${eidLabel} for OApp ${this.label}: ${error}`)
         )
 
-        return ignoreZero(peer)
+        // We run the hex string we got through a normalization/denormalization process
+        // that will ensure that zero addresses will get stripped
+        // and any network-specific logic will be applied
+        return denormalizePeer(normalizePeer(peer, this.contract.eid), eid)
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
-        return areBytes32Equal(await this.getPeer(eid), address)
+        const peer = await this.getPeer(eid)
+
+        return areBytes32Equal(normalizePeer(peer, eid), normalizePeer(address, eid))
     }
 
     async setPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<OmniTransaction> {
-        this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`)
+        const normalizedPeer = normalizePeer(address, eid)
+        const peerAsBytes32 = makeBytes32(normalizedPeer)
 
-        const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, makeBytes32(address)])
+        this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${peerAsBytes32}`)
+
+        const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, peerAsBytes32])
         return {
             ...this.createTransaction(data),
-            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`,
+            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${peerAsBytes32}`,
         }
     }
 

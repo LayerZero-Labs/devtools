@@ -97,6 +97,50 @@ describe('bytes', () => {
                 })
             )
         })
+
+        it('should return true for identical UInt8Arrays', () => {
+            fc.assert(
+                fc.property(fc.uint8Array({ minLength: 1 }), (bytes) => {
+                    expect(areBytes32Equal(bytes, bytes)).toBe(true)
+                })
+            )
+        })
+
+        it('should return true for a UInt8Array & its hex representation', () => {
+            fc.assert(
+                fc.property(fc.uint8Array({ minLength: 1, maxLength: 32 }), (bytes) => {
+                    expect(areBytes32Equal(bytes, makeBytes32(bytes))).toBe(true)
+                })
+            )
+        })
+
+        it('should return false two non-matching UInt8Array instances', () => {
+            fc.assert(
+                fc.property(
+                    fc.uint8Array({ minLength: 1, maxLength: 32 }),
+                    fc.uint8Array({ minLength: 1, maxLength: 32 }),
+                    (a, b) => {
+                        fc.pre(a.length !== b.length || a.some((v, i) => v !== b[i]) || b.some((v, i) => v !== a[i]))
+
+                        expect(areBytes32Equal(a, b)).toBe(false)
+                    }
+                )
+            )
+        })
+
+        it('should return false two a UInt8Array & non-matching hex string', () => {
+            fc.assert(
+                fc.property(
+                    fc.uint8Array({ minLength: 1, maxLength: 32 }),
+                    fc.uint8Array({ minLength: 1, maxLength: 32 }),
+                    (a, b) => {
+                        fc.pre(a.length !== b.length || a.some((v, i) => v !== b[i]) || b.some((v, i) => v !== a[i]))
+
+                        expect(areBytes32Equal(a, makeBytes32(b))).toBe(false)
+                    }
+                )
+            )
+        })
     })
 
     describe('isZero', () => {
@@ -136,6 +180,28 @@ describe('bytes', () => {
                     fc.pre(address !== ZERO_BYTES)
 
                     expect(isZero(address)).toBe(false)
+                })
+            )
+        })
+
+        it('should return true with an empty UInt8Array', () => {
+            expect(isZero(new Uint8Array(0))).toBe(true)
+        })
+
+        it('should return true with a zero-only UInt8Array', () => {
+            fc.assert(
+                fc.property(fc.uint8Array({ min: 0, max: 0 }), (bytes) => {
+                    expect(isZero(bytes)).toBe(true)
+                })
+            )
+        })
+
+        it('should return false with a non-zero UInt8Array', () => {
+            fc.assert(
+                fc.property(fc.uint8Array({ minLength: 1 }), (bytes) => {
+                    fc.pre(bytes.some((byte) => byte !== 0))
+
+                    expect(isZero(bytes)).toBe(false)
                 })
             )
         })

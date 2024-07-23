@@ -1,16 +1,19 @@
-import type { PossiblyBigInt, PossiblyBytes } from '@/types'
+import { formatEid } from '@/omnigraph'
+import type { OmniAddress, PossiblyBigInt, PossiblyBytes } from '@/types'
 import { hexZeroPad } from '@ethersproject/bytes'
+import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import assert from 'assert'
+import bs58 from 'bs58'
 
 /**
  * Converts an address into Bytes32 by padding it with zeros.
  *
  * It will return zero bytes if passed `null`, `undefined` or an empty string.
  *
- * @param {PossiblyBytes | null | undefined} address
+ * @param {PossiblyBytes | null | undefined} bytes
  * @returns {string}
  */
-export const makeBytes32 = (address?: PossiblyBytes | null | undefined): PossiblyBytes =>
-    hexZeroPad(address || '0x0', 32)
+export const makeBytes32 = (bytes?: PossiblyBytes | null | undefined): string => hexZeroPad(bytes || '0x0', 32)
 
 /**
  * Compares two Bytes32-like values by value (i.e. ignores casing on strings
@@ -33,8 +36,21 @@ export const areBytes32Equal = (a: PossiblyBytes | null | undefined, b: Possibly
  * @param {PossiblyBytes | PossiblyBigInt | null | undefined} value
  * @returns {boolean}
  */
-export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined): boolean =>
-    value === '0x' || BigInt(value || 0) === BigInt(0)
+export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined): boolean => {
+    switch (true) {
+        case value === '0x':
+        case value == null:
+            return true
+
+        case typeof value === 'string':
+        case typeof value === 'number':
+        case typeof value === 'bigint':
+            return BigInt(value) === BigInt(0)
+
+        default:
+            return value.every((byte) => byte === 0)
+    }
+}
 
 /**
  * Turns a potentially zero address into undefined
@@ -64,3 +80,93 @@ export const ignoreZero = <T extends PossiblyBytes | PossiblyBigInt>(value?: T |
  */
 export const compareBytes32Ascending = (a: PossiblyBytes, b: PossiblyBytes): number =>
     Number(BigInt(makeBytes32(a)) - BigInt(makeBytes32(b)))
+
+/**
+ * Normalizes a network-specific peer address into a byte array with length of 32.
+ *
+ * @param {OmniAddress} address
+ * @param {EndpointId} eid
+ * @returns {Uint8Array}
+ */
+export const normalizePeer = (address: OmniAddress | null | undefined, eid: EndpointId): Uint8Array => {
+    if (address == null) {
+        return new Uint8Array(32)
+    }
+
+    const chainType = endpointIdToChainType(eid)
+
+    switch (chainType) {
+        case ChainType.SOLANA:
+            return bs58.decode(address)
+
+        case ChainType.APTOS:
+        case ChainType.EVM:
+            return toBytes32(fromHex(address))
+
+        default:
+            throw new Error(`normalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
+    }
+}
+
+/**
+ * Denormalizes Bytes32 representing a peer address into a network-specific peer address.
+ *
+ * @param {Uint8Array} bytes
+ * @param {EndpointId} eid
+ * @returns {OmniAddress}
+ */
+export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: EndpointId): OmniAddress | undefined => {
+    if (bytes == null || isZero(bytes)) {
+        return undefined
+    }
+
+    const chainType = endpointIdToChainType(eid)
+
+    switch (chainType) {
+        case ChainType.SOLANA:
+            return bs58.encode(toBytes32(bytes))
+
+        case ChainType.APTOS:
+            return toHex(toBytes32(bytes))
+
+        case ChainType.EVM:
+            return toHex(toBytes20(bytes))
+
+        default:
+            throw new Error(`denormalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
+    }
+}
+
+/**
+ * Helper utility that left-pads a `Uint8Array` to be 32 bytes in length.
+ *
+ * @param {Uint8Array} bytes A `Uint8Array` with length less than or equal to 32.
+ * @returns {Uint8Array} A `Uint8Array` of length 32.
+ */
+const toBytes32 = (bytes: Uint8Array): Uint8Array => {
+    assertZeroBytes(
+        getLeftPadding(bytes, 32),
+        `Cannot convert an array with more than 32 non-zero bytes into Bytes32. Got ${bytes} with length ${bytes.length}`
+    )
+
+    const bytes32 = new Uint8Array(32)
+
+    return bytes32.set(bytes, 32 - bytes.length), bytes32
+}
+
+const toBytes20 = (bytes: Uint8Array): Uint8Array => {
+    assertZeroBytes(
+        getLeftPadding(bytes, 20),
+        `Cannot convert an array with more than 20 non-zero bytes into Bytes20. Got ${bytes} with length ${bytes.length}`
+    )
+
+    return new Uint8Array(bytes.slice(-20))
+}
+
+const toHex = (bytes: Uint8Array): string => `0x${Buffer.from(bytes).toString('hex')}`
+
+const fromHex = (hex: string): Uint8Array => Uint8Array.from(Buffer.from(hex.replace(/^0x/, ''), 'hex'))
+
+const getLeftPadding = (bytes: Uint8Array, length: number) => bytes.slice(0, Math.max(bytes.length - length, 0))
+
+const assertZeroBytes = (bytes: Uint8Array, message: string) => bytes.forEach((byte) => assert(byte === 0, message))
