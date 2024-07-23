@@ -1,9 +1,17 @@
 import fc from 'fast-check'
-import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
+import {
+    aptosAddressArbitrary,
+    aptosEndpointArbitrary,
+    endpointArbitrary,
+    evmAddressArbitrary,
+    evmEndpointArbitrary,
+    solanaAddressArbitrary,
+    solanaEndpointArbitrary,
+} from '@layerzerolabs/test-devtools'
 import { Contract } from '@ethersproject/contracts'
 import { OApp } from '@/oapp/sdk'
 import { OmniContract, makeZeroAddress } from '@layerzerolabs/devtools-evm'
-import { isZero, makeBytes32 } from '@layerzerolabs/devtools'
+import { denormalizePeer, isZero, makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
 import { formatEid } from '@layerzerolabs/devtools'
 
 describe('oapp/sdk', () => {
@@ -40,38 +48,126 @@ describe('oapp/sdk', () => {
             )
         })
 
-        it('should return undefined if peers() returns a zero address, null or undefined', async () => {
-            await fc.assert(
-                fc.asyncProperty(
-                    omniContractArbitrary,
-                    endpointArbitrary,
-                    nullishAddressArbitrary,
-                    async (omniContract, peerEid, peer) => {
-                        omniContract.contract.peers.mockResolvedValue(peer)
+        describe('for EVM', () => {
+            it('should return undefined if peers() returns a zero address, null or undefined', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        evmEndpointArbitrary,
+                        nullishAddressArbitrary,
+                        async (omniContract, peerEid, peer) => {
+                            omniContract.contract.peers.mockResolvedValue(peer)
 
-                        const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
 
-                        await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
-                    }
+                            await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
+                        }
+                    )
                 )
-            )
+            })
+
+            it('should return an address if peers() returns a non-null bytes', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        evmEndpointArbitrary,
+                        evmAddressArbitrary,
+                        async (omniContract, peerEid, peer) => {
+                            fc.pre(!isZero(peer))
+
+                            omniContract.contract.peers.mockResolvedValue(peer)
+
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
+
+                            await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
+                        }
+                    )
+                )
+            })
         })
 
-        it('should return undefined if peers() returns null or undefined', async () => {
-            await fc.assert(
-                fc.asyncProperty(
-                    omniContractArbitrary,
-                    endpointArbitrary,
-                    evmAddressArbitrary,
-                    async (omniContract, peerEid, peer) => {
-                        omniContract.contract.peers.mockResolvedValue(peer)
+        describe('for Solana', () => {
+            it('should return undefined if peers() returns a zero address, null or undefined', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        solanaEndpointArbitrary,
+                        nullishAddressArbitrary,
+                        async (omniContract, peerEid, peer) => {
+                            omniContract.contract.peers.mockResolvedValue(peer)
 
-                        const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
 
-                        await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
-                    }
+                            await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
+                        }
+                    )
                 )
-            )
+            })
+
+            it('should return an address if peers() returns a non-null bytes', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        evmEndpointArbitrary,
+                        solanaEndpointArbitrary,
+                        solanaAddressArbitrary,
+                        async (omniContract, eid, peerEid, peer) => {
+                            // For Solana we need to take the native address format and turn it into EVM bytes32
+                            //
+                            // We do this by normalizing the value into a UInt8Array,
+                            // then denormalizing it using an EVM eid
+                            const peerBytes = normalizePeer(peer, peerEid)
+                            const peerHex = denormalizePeer(peerBytes, eid)
+
+                            fc.pre(!isZero(peerHex))
+
+                            omniContract.contract.peers.mockResolvedValue(peerHex)
+
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
+
+                            await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
+                        }
+                    )
+                )
+            })
+        })
+
+        describe('for Aptos', () => {
+            it('should return undefined if peers() returns a zero address, null or undefined', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        aptosEndpointArbitrary,
+                        nullishAddressArbitrary,
+                        async (omniContract, peerEid, peer) => {
+                            omniContract.contract.peers.mockResolvedValue(peer)
+
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
+
+                            await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
+                        }
+                    )
+                )
+            })
+
+            it('should return an address if peers() returns a non-null bytes', async () => {
+                await fc.assert(
+                    fc.asyncProperty(
+                        omniContractArbitrary,
+                        aptosEndpointArbitrary,
+                        aptosAddressArbitrary,
+                        async (omniContract, peerEid, peer) => {
+                            fc.pre(!isZero(peer))
+
+                            omniContract.contract.peers.mockResolvedValue(peer)
+
+                            const sdk = new OApp(omniContract, EndpointV2Factory)
+
+                            await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
+                        }
+                    )
+                )
+            })
         })
     })
 

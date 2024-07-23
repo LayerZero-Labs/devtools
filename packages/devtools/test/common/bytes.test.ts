@@ -1,19 +1,18 @@
 import { denormalizePeer, isZero, normalizePeer } from '@/common/bytes'
-import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import {
     aptosAddressArbitrary,
-    endpointArbitrary,
+    aptosEndpointArbitrary,
     evmAddressArbitrary,
+    evmEndpointArbitrary,
     nullishArbitrary,
     solanaAddressArbitrary,
+    solanaEndpointArbitrary,
 } from '@layerzerolabs/test-devtools'
 import fc from 'fast-check'
 
 describe('common/bytes', () => {
     describe('normalizePeer/denormalizePeer', () => {
         describe('for EVM', () => {
-            const evmEndpointArbitrary = endpointArbitrary.filter((eid) => endpointIdToChainType(eid) === ChainType.EVM)
-
             it('should normalize a nullish value to empty bytes', () => {
                 fc.assert(
                     fc.property(evmEndpointArbitrary, nullishArbitrary, (eid, address) => {
@@ -40,10 +39,6 @@ describe('common/bytes', () => {
         })
 
         describe('for APTOS', () => {
-            const aptosEndpointArbitrary = endpointArbitrary.filter(
-                (eid) => endpointIdToChainType(eid) === ChainType.APTOS
-            )
-
             it('should normalize a nullish value to empty bytes', () => {
                 fc.assert(
                     fc.property(aptosEndpointArbitrary, nullishArbitrary, (eid, address) => {
@@ -70,10 +65,6 @@ describe('common/bytes', () => {
         })
 
         describe('for SOLANA', () => {
-            const solanaEndpointArbitrary = endpointArbitrary.filter(
-                (eid) => endpointIdToChainType(eid) === ChainType.SOLANA
-            )
-
             it('should normalize a nullish value to empty bytes', () => {
                 fc.assert(
                     fc.property(solanaEndpointArbitrary, nullishArbitrary, (eid, address) => {
