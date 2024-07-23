@@ -166,40 +166,44 @@ contract PreCrimeV2Test is TestHelperOz5 {
         preCrime.simulate(unsortedPackets, packetMsgValues);
     }
 
-    // TODO get this to work
-//    function test_simulate_packetUnsorted_one_unordered_peer(
-//        uint8 _numPacketsB,
-//        uint64 _startingNonceB,
-//        uint64 _replaceIndex // TODO check this converting to uint64 is ok, down from 256
-//    ) public {
-//        vm.assume(_numPacketsB >= 3);
-//        // calculate the last nonce sent by B and C, ensuring that the container does not overflow
-//        uint128 endingNonceB = (uint128(_startingNonceB) + uint128(_numPacketsB));
-//        vm.assume(endingNonceB < type(uint64).max);
-//        vm.assume(_replaceIndex > _startingNonceB && _replaceIndex < endingNonceB - 2);
-//
-//        setUpPreCrime(DEFAULT_NUM_PEERS, _numPacketsB);
-//
-//        uint256[] memory packetMsgValues = new uint256[](_numPacketsB);
-//        bytes[] memory unsortedPackets = _buildPacket(EID_B, SENDER_B, _startingNonceB, _numPacketsB);
-//        unsortedPackets[_replaceIndex - _startingNonceB] = _encodePacket(
-//            InboundPacket(
-//                Origin(EID_B, SENDER_B, 0),
-//                DST_EID,
-//                address(uint160(uint256(SENDER_B))), //preCrime.oApp(),
-//                bytes32(0), // guid
-//                0, // value
-//                address(0), // executor
-//                "", // message
-//                "" // extraData
-//            )
-//        );
-//
-//        vm.startPrank(OFF_CHAIN);
-//        bytes memory expectedError = abi.encodeWithSelector(IPreCrime.PacketUnsorted.selector);
-//        vm.expectRevert(expectedError);
-//        preCrime.simulate(unsortedPackets, packetMsgValues);
-//    }
+    function test_simulate_packetUnsorted_one_unordered_peer(
+        uint8 _numPacketsB,
+        uint64 _startingNonceB,
+        uint8 _replaceIndexOffset // added to _startingNonceB to get the index of the packet to replace
+    ) public {
+        // 1. numPacketsB must be at least 3 to ensure that the replaceIndex is within bounds
+        // 2. replaceIndexOffset must be less than numPacketsB to ensure that the replaceIndex is within bounds
+        vm.assume(_numPacketsB >= 3);
+        vm.assume(_replaceIndexOffset < _numPacketsB - 2);
+        // 3. calculate the last nonce sent by B and C, ensuring that the container does not overflow
+        uint128 endingNonceB = (uint128(_startingNonceB) + uint128(_numPacketsB));
+        vm.assume(endingNonceB < type(uint64).max);
+        // 4. calculate the index of the packet to replace
+        uint64 replaceIndex = _replaceIndexOffset + _startingNonceB;
+        vm.assume(replaceIndex > _startingNonceB && replaceIndex < endingNonceB - 2);
+
+        setUpPreCrime(DEFAULT_NUM_PEERS, _numPacketsB);
+
+        uint256[] memory packetMsgValues = new uint256[](_numPacketsB);
+        bytes[] memory unsortedPackets = _buildPacket(EID_B, SENDER_B, _startingNonceB, _numPacketsB);
+        unsortedPackets[replaceIndex - _startingNonceB] = _encodePacket(
+            InboundPacket(
+                Origin(EID_B, SENDER_B, 0),
+                DST_EID,
+                address(uint160(uint256(SENDER_B))), //preCrime.oApp(),
+                bytes32(0), // guid
+                0, // value
+                address(0), // executor
+                "", // message
+                "" // extraData
+            )
+        );
+
+        vm.startPrank(OFF_CHAIN);
+        bytes memory expectedError = abi.encodeWithSelector(IPreCrime.PacketUnsorted.selector);
+        vm.expectRevert(expectedError);
+        preCrime.simulate(unsortedPackets, packetMsgValues);
+    }
 
     function test_simulate_failed() public {
         uint32 invalidPeerEid = 0; // see PrecrimeV2SimulatorMock, which hardcodes eid=0 as InvalidEid
