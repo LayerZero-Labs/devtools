@@ -9,7 +9,6 @@ import {
     Bytes,
     normalizePeer,
     denormalizePeer,
-    fromHex,
 } from '@layerzerolabs/devtools'
 import { type OmniContract, formatOmniContract, BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -62,7 +61,7 @@ export class OApp extends Ownable implements IOApp {
         // We run the hex string we got through a normalization/denormalization process
         // that will ensure that zero addresses will get stripped
         // and any network-specific logic will be applied
-        return denormalizePeer(fromHex(peer), eid)
+        return denormalizePeer(normalizePeer(peer, this.contract.eid), eid)
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
