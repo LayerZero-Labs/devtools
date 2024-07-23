@@ -80,7 +80,7 @@ export class OApp extends Ownable implements IOApp {
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, peerAsBytes32])
         return {
             ...this.createTransaction(data),
-            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${makeBytes32(address)}`,
+            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${peerAsBytes32}`,
         }
     }
 
