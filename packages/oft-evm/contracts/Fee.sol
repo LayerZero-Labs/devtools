@@ -27,7 +27,7 @@ abstract contract Fee is IFee, Ownable {
      * @dev Sets the default fee basis points (BPS) for all destinations.
      */
     function setDefaultFeeBps(uint16 _feeBps) external onlyOwner {
-        if (_feeBps >= BPS_DENOMINATOR) revert IFee.InvalidBps();
+        if (_feeBps > BPS_DENOMINATOR) revert IFee.InvalidBps();
         defaultFeeBps = _feeBps;
         emit DefaultFeeBpsSet(_feeBps);
     }
@@ -36,7 +36,7 @@ abstract contract Fee is IFee, Ownable {
      * @dev Sets the fee basis points (BPS) for a specific destination LayerZero EndpointV2 ID.
      */
     function setFeeBps(uint32 _dstEid, uint16 _feeBps, bool _enabled) external onlyOwner {
-        if (_feeBps >= BPS_DENOMINATOR) revert IFee.InvalidBps();
+        if (_feeBps > BPS_DENOMINATOR) revert IFee.InvalidBps();
         feeBps[_dstEid] = FeeConfig(_feeBps, _enabled);
         emit FeeBpsSet(_dstEid, _feeBps, _enabled);
     }

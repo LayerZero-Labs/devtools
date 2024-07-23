@@ -16,7 +16,7 @@ contract FeeTest is Test {
         // 1. Set up the test.
         Fee fee = new FeeImpl(0, feeImplOwner);
 
-        if (_feeBps >= fee.BPS_DENOMINATOR()) {
+        if (_feeBps > fee.BPS_DENOMINATOR()) {
             // 2a. Test revert if the fee is too high
             vm.expectRevert(IFee.InvalidBps.selector);
             vm.prank(feeImplOwner);
@@ -37,7 +37,7 @@ contract FeeTest is Test {
         fee.setDefaultFeeBps(_defaultFeeBps);
         assertEq(fee.defaultFeeBps(), _defaultFeeBps);
 
-        if (_feeBps >= fee.BPS_DENOMINATOR()) {
+        if (_feeBps > fee.BPS_DENOMINATOR()) {
             // 2a. Test revert if the fee is too high
             vm.prank(feeImplOwner);
             vm.expectRevert(IFee.InvalidBps.selector);
