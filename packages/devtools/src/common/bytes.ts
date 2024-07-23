@@ -140,7 +140,10 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
 /**
  * Helper utility that left-pads a `Uint8Array` to be 32 bytes in length.
  *
- * @param {Uint8Array} bytes A `Uint8Array` with length less than or equal to 32.
+ * This function will check that only the rightmost 32 bytes are non-zero
+ * and will throw otherwise.
+ *
+ * @param {Uint8Array} bytes A `Uint8Array` with the all but the rightmost 32 bytes set to zero.
  * @returns {Uint8Array} A `Uint8Array` of length 32.
  */
 const toBytes32 = (bytes: Uint8Array): Uint8Array => {
@@ -154,6 +157,15 @@ const toBytes32 = (bytes: Uint8Array): Uint8Array => {
     return bytes32.set(bytes, 32 - bytes.length), bytes32
 }
 
+/**
+ * Helper utility that left-pads a `Uint8Array` to be 20 bytes in length.
+ *
+ * This function will check that only the rightmost 20 bytes are non-zero
+ * and will throw otherwise.
+ *
+ * @param {Uint8Array} bytes A `Uint8Array` with the all but the rightmost 20 bytes set to zero.
+ * @returns {Uint8Array} A `Uint8Array` of length 32.
+ */
 const toBytes20 = (bytes: Uint8Array): Uint8Array => {
     assertZeroBytes(
         getLeftPadding(bytes, 20),
@@ -163,10 +175,47 @@ const toBytes20 = (bytes: Uint8Array): Uint8Array => {
     return new Uint8Array(bytes.slice(-20))
 }
 
-const toHex = (bytes: Uint8Array): string => `0x${Buffer.from(bytes).toString('hex')}`
+/**
+ * Helper utility to convert `UInt8Array` into a hex string (with leading `0x`)
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
+export const toHex = (bytes: Uint8Array): string => `0x${Buffer.from(bytes).toString('hex')}`
 
-const fromHex = (hex: string): Uint8Array => Uint8Array.from(Buffer.from(hex.replace(/^0x/, ''), 'hex'))
+/**
+ * Helper utility to convert a hex string (with or without leading `0x`) to `UInt8Array`
+ *
+ * @param {string} hex
+ * @returns {Uint8Array}
+ */
+export const fromHex = (hex: string): Uint8Array => Uint8Array.from(Buffer.from(hex.replace(/^0x/, ''), 'hex'))
 
-const getLeftPadding = (bytes: Uint8Array, length: number) => bytes.slice(0, Math.max(bytes.length - length, 0))
+/**
+ * Helper utility that returns the leftmost bytes after removing the rightmost `length` bytes from a UInt8Array.
+ *
+ * This is used when asserting that the `UInt8Array` only contains zero values
+ * except for the rightmost `length` bytes
+ *
+ * ```
+ * // Remove 1 rigthmost byte and return the result
+ * const left4Bytes = getLeftPadding([1,2,3,4,5], 1) // [1,2,3,4]
+ *
+ * // Remove 8 rightmost bytes and return the result
+ * const left8Bytes = getLeftPadding([1,2,3,4,5], 8) // []
+ * ```
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} length The number of rightmost bytes to remove from the array
+ * @returns {Uint8Array}
+ */
+const getLeftPadding = (bytes: Uint8Array, length: number): Uint8Array =>
+    bytes.subarray(0, Math.max(bytes.length - length, 0))
 
+/**
+ * Helper utility to assert that all elements of `bytes` are zero.
+ *
+ * @param {Uint8Array} bytes
+ * @param {string} message A message to fail the assertion with if a non-zero byte is found
+ */
 const assertZeroBytes = (bytes: Uint8Array, message: string) => bytes.forEach((byte) => assert(byte === 0, message))
