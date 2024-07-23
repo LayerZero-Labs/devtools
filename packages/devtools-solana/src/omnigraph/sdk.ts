@@ -12,7 +12,7 @@ export abstract class OmniSDK implements IOmniSDK {
     constructor(
         public readonly connection: Connection,
         public readonly point: OmniPoint,
-        public readonly account: PublicKey,
+        public readonly userAccount: PublicKey,
         protected readonly logger: Logger = createModuleLogger(
             `Solana SDK ${new.target.name} @ ${formatOmniPoint(point)}`
         )
@@ -25,11 +25,15 @@ export abstract class OmniSDK implements IOmniSDK {
         return `Solana program @ ${formatOmniPoint(this.point)}`
     }
 
+    get publicKey(): PublicKey {
+        return new PublicKey(this.point.address)
+    }
+
     protected async createTransaction(transaction: Transaction): Promise<OmniTransaction> {
         const { blockhash } = await this.connection.getLatestBlockhash('finalized')
 
         // Transactions in Solana require a block hash and a fee payer account in order to be serialized
-        transaction.feePayer = this.account
+        transaction.feePayer = this.userAccount
         transaction.recentBlockhash = blockhash
 
         return {
