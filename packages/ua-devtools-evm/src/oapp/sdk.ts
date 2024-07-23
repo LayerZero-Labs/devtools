@@ -1,6 +1,5 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
 import {
-    type Bytes32,
     type OmniAddress,
     type OmniTransaction,
     formatEid,
@@ -10,6 +9,7 @@ import {
     Bytes,
     normalizePeer,
     denormalizePeer,
+    fromHex,
 } from '@layerzerolabs/devtools'
 import { type OmniContract, formatOmniContract, BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -50,7 +50,7 @@ export class OApp extends Ownable implements IOApp {
     }
 
     @AsyncRetriable()
-    async getPeer(eid: EndpointId): Promise<Bytes32 | undefined> {
+    async getPeer(eid: EndpointId): Promise<OmniAddress | undefined> {
         const eidLabel = `eid ${eid} (${formatEid(eid)})`
 
         this.logger.debug(`Getting peer for ${eidLabel}`)
@@ -62,7 +62,7 @@ export class OApp extends Ownable implements IOApp {
         // We run the hex string we got through a normalization/denormalization process
         // that will ensure that zero addresses will get stripped
         // and any network-specific logic will be applied
-        return denormalizePeer(normalizePeer(peer, this.contract.eid), eid)
+        return denormalizePeer(fromHex(peer), eid)
     }
 
     async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
@@ -72,15 +72,21 @@ export class OApp extends Ownable implements IOApp {
     }
 
     async setPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<OmniTransaction> {
-        const normalizedPeer = normalizePeer(address, eid)
+        const eidLabel = formatEid(eid)
+        // We use the `mapError` and pretend `normalizePeer` is async to avoid having a let and a try/catch block
+        const normalizedPeer = await mapError(
+            async () => normalizePeer(address, eid),
+            (error) =>
+                new Error(`Failed to convert peer ${address} for ${eidLabel} for OApp ${this.label} to bytes: ${error}`)
+        )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
 
-        this.logger.debug(`Setting peer for eid ${eid} (${formatEid(eid)}) to address ${peerAsBytes32}`)
+        this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setPeer', [eid, peerAsBytes32])
         return {
             ...this.createTransaction(data),
-            description: `Setting peer for eid ${eid} (${formatEid(eid)}) to address ${peerAsBytes32}`,
+            description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`,
         }
     }
 
