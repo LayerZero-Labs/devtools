@@ -1,4 +1,3 @@
-out
 cache
 
 # artifacts;  ignore all files except the local contract artifacts.
