@@ -178,7 +178,16 @@ export class OFT extends OmniSDK implements IOApp {
         }
     }
 
-    private reduceEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]) {
+    /**
+     * Helper utility that takes an array of `OAppEnforcedOptionParam` objects and turns them into
+     * a map keyed by `EndpointId` that contains another map keyed by `MsgType`.
+     *
+     * @param {OAppEnforcedOptionParam[]} enforcedOptions
+     * @returns {Map<EndpointId, Map<MsgType, Uint8Array>>}
+     */
+    private reduceEnforcedOptions(
+        enforcedOptions: OAppEnforcedOptionParam[]
+    ): Map<EndpointId, Map<MsgType, Uint8Array>> {
         return enforcedOptions.reduce((optionsByEid, enforcedOption) => {
             const {
                 eid,
@@ -195,6 +204,7 @@ export class OFT extends OmniSDK implements IOApp {
                 this.logger.warn(`Duplicate enforced option for ${formatEid(eid)} and msgType ${msgType}`)
             }
 
+            // We wrap the call with try/catch to deliver a better error message in case malformed options were passed
             try {
                 optionsByMsgType.set(msgType, Options.fromOptions(options).toBytes())
             } catch (error) {
@@ -209,6 +219,13 @@ export class OFT extends OmniSDK implements IOApp {
         }, new Map<EndpointId, Map<MsgType, Uint8Array>>())
     }
 
+    /**
+     * Helper method that asserts that `value` is a `MsgType` that the OFT understands
+     * and prints out a friendly error message if it doesn't
+     *
+     * @param {unknown} value
+     * @returns {undefined}
+     */
     private assertMsgType(value: unknown): asserts value is MsgType {
         assert(
             isMsgType(value),
