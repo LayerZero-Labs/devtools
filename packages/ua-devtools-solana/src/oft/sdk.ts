@@ -1,5 +1,5 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
-import { OftTools, OFT_SEED } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OftTools, OFT_SEED, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import {
     type OmniAddress,
     type OmniTransaction,
@@ -15,6 +15,7 @@ import {
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
+import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
@@ -62,7 +63,11 @@ export class OFT extends OmniSDK implements IOApp {
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
-        throw new TypeError(`getEndpointSDK() not implemented on Solana OFT SDK`)
+        return new EndpointV2(
+            this.connection,
+            { eid: this.point.eid, address: EndpointProgram.PROGRAM_ID.toBase58() },
+            this.userAccount
+        )
     }
 
     @AsyncRetriable()

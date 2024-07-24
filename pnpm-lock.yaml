@@ -2111,6 +2111,9 @@ importers:
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.3.9
         version: link:../protocol-devtools
+      '@layerzerolabs/protocol-devtools-solana':
+        specifier: ~0.0.1
+        version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.2.6
         version: link:../test-devtools
