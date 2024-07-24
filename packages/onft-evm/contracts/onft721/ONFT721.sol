@@ -13,6 +13,8 @@ import { ONFT721Core } from "./ONFT721Core.sol";
 abstract contract ONFT721 is ONFT721Core, ERC721 {
     string internal baseTokenURI;
 
+    event BaseURISet(string baseURI);
+
     /**
      * @dev Constructor for the ONFT721 contract.
      * @param _name The name of the ONFT.
@@ -34,8 +36,9 @@ abstract contract ONFT721 is ONFT721Core, ERC721 {
         return address(this);
     }
 
-    function setBaseURI(string memory _baseTokenURI) external onlyOwner {
+    function setBaseURI(string calldata _baseTokenURI) external onlyOwner {
         baseTokenURI = _baseTokenURI;
+        emit BaseURISet(baseTokenURI);
     }
 
     function _baseURI() internal view override returns (string memory) {
