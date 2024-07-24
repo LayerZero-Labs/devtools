@@ -2020,6 +2020,9 @@ importers:
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^2.3.31
         version: 2.3.31(fastestsmallesttextencoderdecoder@1.0.22)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^2.3.25
+        version: 2.3.31
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.3.9
         version: link:../protocol-devtools

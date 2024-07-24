@@ -3,6 +3,23 @@ import { createConnectionFactory, defaultRpcUrlFactory } from '@layerzerolabs/de
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT } from '@/oft'
 import { makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { printJson } from '@layerzerolabs/io-devtools'
+import { OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+
+const createSetEnforcedOptionsIxMock = OftTools.createSetEnforcedOptionsIx as jest.Mock
+
+jest.mock('@layerzerolabs/lz-solana-sdk-v2', () => {
+    const actual = jest.requireActual('@layerzerolabs/lz-solana-sdk-v2')
+
+    return {
+        ...actual,
+        OftTools: {
+            ...actual.OftTools,
+            createSetEnforcedOptionsIx: jest.fn().mockImplementation(actual.OftTools.createSetEnforcedOptionsIx),
+        },
+    }
+})
 
 describe('oft/sdk', () => {
     // FIXME These tests are using a mainnet OFT deployment and are potentially very fragile
@@ -12,6 +29,10 @@ describe('oft/sdk', () => {
     const point = { eid: EndpointId.SOLANA_V2_MAINNET, address: 'Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs' }
     const account = new PublicKey('6tzUZqC33igPgP7YyDnUxQg6eupMmZGRGKdVAksgRzvk')
     const mintAccount = new PublicKey('Bq9wBU8fqFnUDkrWqLFXGRc7BvRMPjUkCM2SrJf6dBMv')
+
+    afterEach(() => {
+        createSetEnforcedOptionsIxMock.mockClear()
+    })
 
     describe('getPeer', () => {
         it('should return undefined if we are asking for a peer that has not been set', async () => {
@@ -87,6 +108,153 @@ describe('oft/sdk', () => {
                     description: `Setting peer for eid ${EndpointId.SOLANA_V2_MAINNET} (SOLANA_V2_MAINNET) to address ${makeBytes32(normalizePeer(point.address, EndpointId.SOLANA_V2_MAINNET))}`,
                 })
             })
+        })
+    })
+
+    describe('getEnforcedOptions', () => {
+        it('should throw if we are trying to get an option for invalid msgType', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            await expect(sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_TESTNET, 3)).rejects.toMatchSnapshot()
+        })
+
+        it('should return an empty bytes if we are asking for options that have not been set', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            expect(await sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_TESTNET, 1)).toBe('0x')
+        })
+
+        it('should return an a hex string if we are asking for options that have been set', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            const sendOptionsHex = await sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_MAINNET, 1)
+            expect(sendOptionsHex).toEqual(expect.any(String))
+
+            const sendOptions = Options.fromOptions(sendOptionsHex)
+            expect(sendOptions).toMatchSnapshot()
+
+            const sendAndCallOptionsHex = await sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_MAINNET, 2)
+            expect(sendAndCallOptionsHex).toEqual(expect.any(String))
+
+            const sendAndCallOptions = Options.fromOptions(sendAndCallOptionsHex)
+            expect(sendAndCallOptions).toMatchSnapshot()
+        })
+    })
+
+    describe('setEnforcedOptions', () => {
+        it('should throw if we are trying to get an option for invalid msgType', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            await expect(
+                sdk.setEnforcedOptions([
+                    {
+                        eid: EndpointId.ETHEREUM_V2_TESTNET,
+                        option: { msgType: 7, options: Options.newOptions().toHex() },
+                    },
+                ])
+            ).rejects.toMatchSnapshot()
+        })
+
+        it('should return an omnitransaction if called with valid msgType', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            const enforcedOptions = [
+                {
+                    eid: EndpointId.ETHEREUM_V2_TESTNET,
+                    option: { msgType: 1, options: Options.newOptions().toHex() },
+                },
+            ]
+            const omniTransaction = await sdk.setEnforcedOptions(enforcedOptions)
+
+            expect(omniTransaction).toEqual({
+                data: expect.any(String),
+                point,
+                description: `Setting enforced options to ${printJson(enforcedOptions)}`,
+            })
+        })
+
+        it('should create instructions grouped by eid', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+
+            const enforcedOptions = [
+                // We'll set two options for ethereum
+                {
+                    eid: EndpointId.ETHEREUM_V2_TESTNET,
+                    option: { msgType: 1, options: Options.newOptions().addExecutorOrderedExecutionOption().toHex() },
+                },
+                {
+                    eid: EndpointId.ETHEREUM_V2_TESTNET,
+                    option: { msgType: 2, options: Options.newOptions().addExecutorLzReceiveOption(1, 1).toHex() },
+                },
+                // One option for base
+                {
+                    eid: EndpointId.BASE_V2_MAINNET,
+                    option: { msgType: 1, options: Options.newOptions().addExecutorLzReceiveOption(4, 1).toHex() },
+                },
+                // And we add a duplicte option for Avalanche
+                //
+                // The first one should be ignored
+                {
+                    eid: EndpointId.AVALANCHE_V2_MAINNET,
+                    option: { msgType: 2, options: Options.newOptions().addExecutorLzReceiveOption(2, 1).toHex() },
+                },
+                {
+                    eid: EndpointId.AVALANCHE_V2_MAINNET,
+                    option: { msgType: 2, options: Options.newOptions().addExecutorLzReceiveOption(3, 1).toHex() },
+                },
+            ]
+
+            await sdk.setEnforcedOptions(enforcedOptions)
+
+            expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledTimes(3)
+
+            // Ethereum should have both msgType options set
+            expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                sdk.userAccount,
+                sdk.configAccount,
+                EndpointId.ETHEREUM_V2_TESTNET,
+                Options.newOptions().addExecutorOrderedExecutionOption().toBytes(),
+                Options.newOptions().addExecutorLzReceiveOption(1, 1).toBytes(),
+                sdk.publicKey
+            )
+
+            // Base should have one option set
+            expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                sdk.userAccount,
+                sdk.configAccount,
+                EndpointId.BASE_V2_MAINNET,
+                Options.newOptions().addExecutorLzReceiveOption(4, 1).toBytes(),
+                Options.newOptions().toBytes(),
+                sdk.publicKey
+            )
+
+            // Avalanche should use the latter option and ignore the first one
+            expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                sdk.userAccount,
+                sdk.configAccount,
+                EndpointId.AVALANCHE_V2_MAINNET,
+                Options.newOptions().toBytes(),
+                Options.newOptions().addExecutorLzReceiveOption(3, 1).toBytes(),
+                sdk.publicKey
+            )
         })
     })
 })

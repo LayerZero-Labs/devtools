@@ -11,6 +11,7 @@ import {
     normalizePeer,
     denormalizePeer,
     fromHex,
+    toHex,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
@@ -18,6 +19,8 @@ import { Logger, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
+import assert from 'assert'
 
 export class OFT extends OmniSDK implements IOApp {
     constructor(
@@ -86,7 +89,7 @@ export class OFT extends OmniSDK implements IOApp {
         const normalizedPeer = await mapError(
             async () => normalizePeer(address, eid),
             (error) =>
-                new Error(`Failed to convert peer ${address} for ${eidLabel} for OApp ${this.label} to bytes: ${error}`)
+                new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
 
@@ -124,17 +127,110 @@ export class OFT extends OmniSDK implements IOApp {
 
     @AsyncRetriable()
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<Bytes> {
+        // First we check that we can understand the message type
+        this.assertMsgType(msgType)
+
         const eidLabel = `eid ${eid} (${formatEid(eid)})`
+        this.logger.verbose(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
 
-        this.logger.debug(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
+        try {
+            const options = await OftTools.getEnforcedOptions(this.connection, this.configAccount, eid, this.publicKey)
+            const optionsForMsgType = msgType === MSG_TYPE_SEND ? options.send : options.sendAndCall
 
-        throw new TypeError(`getEnforcedOptions() not implemented on Solana OFT SDK`)
+            return toHex(optionsForMsgType)
+        } catch (error) {
+            if (String(error).match(/Unable to find EnforcedOptions account/)) {
+                return toHex(new Uint8Array(0))
+            }
+
+            throw new Error(
+                `Failed to get enforced options for ${this.label} for ${eidLabel} and message type ${msgType}: ${error}`
+            )
+        }
     }
 
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
-        this.logger.debug(`Setting enforced options to ${printJson(enforcedOptions)}`)
+        this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
-        throw new TypeError(`setEnforcedOptions() not implemented on Solana OFT SDK`)
+        const transaction = new Transaction()
+        const optionsByEidAndMsgType = this.reduceEnforcedOptions(enforcedOptions)
+        const emptyOptions = Options.newOptions().toBytes()
+
+        for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
+            const sendOption = optionsByMsgType.get(MSG_TYPE_SEND) ?? emptyOptions
+            const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
+
+            const instruction = await OftTools.createSetEnforcedOptionsIx(
+                this.userAccount, // your admin address
+                this.configAccount, // your OFT Config
+                eid, // destination endpoint id for the options to apply to
+                sendOption,
+                sendAndCallOption,
+                this.publicKey
+            )
+
+            transaction.add(instruction)
+        }
+
+        return {
+            ...(await this.createTransaction(transaction)),
+            description: `Setting enforced options to ${printJson(enforcedOptions)}`,
+        }
+    }
+
+    /**
+     * Helper utility that takes an array of `OAppEnforcedOptionParam` objects and turns them into
+     * a map keyed by `EndpointId` that contains another map keyed by `MsgType`.
+     *
+     * @param {OAppEnforcedOptionParam[]} enforcedOptions
+     * @returns {Map<EndpointId, Map<MsgType, Uint8Array>>}
+     */
+    private reduceEnforcedOptions(
+        enforcedOptions: OAppEnforcedOptionParam[]
+    ): Map<EndpointId, Map<MsgType, Uint8Array>> {
+        return enforcedOptions.reduce((optionsByEid, enforcedOption) => {
+            const {
+                eid,
+                option: { msgType, options },
+            } = enforcedOption
+
+            // First we check that we can understand the message type
+            this.assertMsgType(msgType)
+
+            // Then we warn the user if they are trying to specify enforced options for eid & msgType more than once
+            // in which case the former option will be ignored
+            const optionsByMsgType = optionsByEid.get(eid) ?? new Map<MsgType, Uint8Array>()
+            if (optionsByMsgType.has(msgType)) {
+                this.logger.warn(`Duplicate enforced option for ${formatEid(eid)} and msgType ${msgType}`)
+            }
+
+            // We wrap the call with try/catch to deliver a better error message in case malformed options were passed
+            try {
+                optionsByMsgType.set(msgType, Options.fromOptions(options).toBytes())
+            } catch (error) {
+                throw new Error(
+                    `Invalid enforced options for ${this.label} for ${formatEid(eid)} and msgType ${msgType}: ${options}: ${error}`
+                )
+            }
+
+            optionsByEid.set(eid, optionsByMsgType)
+
+            return optionsByEid
+        }, new Map<EndpointId, Map<MsgType, Uint8Array>>())
+    }
+
+    /**
+     * Helper method that asserts that `value` is a `MsgType` that the OFT understands
+     * and prints out a friendly error message if it doesn't
+     *
+     * @param {unknown} value
+     * @returns {undefined}
+     */
+    private assertMsgType(value: unknown): asserts value is MsgType {
+        assert(
+            isMsgType(value),
+            `${this.label}: Invalid msgType received: ${value}. Expected one of ${MSG_TYPE_SEND} (send), ${MSG_TYPE_SEND_AND_CALL} (send and call)`
+        )
     }
 
     async setCallerBpsCap(callerBpsCap: bigint): Promise<OmniTransaction | undefined> {
@@ -150,3 +246,10 @@ export class OFT extends OmniSDK implements IOApp {
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
     }
 }
+
+type MsgType = 1 | 2
+
+const MSG_TYPE_SEND = 1 satisfies MsgType
+const MSG_TYPE_SEND_AND_CALL = 2 satisfies MsgType
+
+const isMsgType = (value: unknown): value is MsgType => value === MSG_TYPE_SEND || value === MSG_TYPE_SEND_AND_CALL
