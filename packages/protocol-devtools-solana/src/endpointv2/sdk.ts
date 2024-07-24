@@ -73,9 +73,19 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
     @AsyncRetriable()
     async getSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<OmniAddress | undefined> {
-        this.logger.debug(`Getting send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`)
+        const eidLabel = formatEid(dstEid)
 
-        throw new TypeError(`getSendLibrary() not implemented on Solana Endpoint SDK`)
+        this.logger.debug(`Getting send library for eid ${dstEid} (${eidLabel}) and address ${sender}`)
+
+        const config = await mapError(
+            () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
+            (error) =>
+                new Error(
+                    `Failed to get the send library for ${this.label} for OApp ${sender} for ${eidLabel}: ${error}`
+                )
+        )
+
+        return config?.msgLib.toBase58() ?? undefined
     }
 
     @AsyncRetriable()
@@ -83,9 +93,19 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         receiver: OmniAddress,
         srcEid: EndpointId
     ): Promise<[address: OmniAddress | undefined, isDefault: boolean]> {
+        const eidLabel = formatEid(srcEid)
+
         this.logger.debug(`Getting receive library for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`)
 
-        throw new TypeError(`getReceiveLibrary() not implemented on Solana Endpoint SDK`)
+        const config = await mapError(
+            () => this.program.getReceiveLibrary(this.connection, new PublicKey(receiver), srcEid),
+            (error) =>
+                new Error(
+                    `Failed to get the receive library for ${this.label} for OApp ${receiver} for ${eidLabel}: ${error}`
+                )
+        )
+
+        return [config?.msgLib.toBase58() ?? undefined, config?.isDefault ?? true]
     }
 
     async setDefaultReceiveLibrary(
