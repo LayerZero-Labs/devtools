@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.2.15
+
+### Patch Changes
+
+- 11aaea4: Add non-EVM bytes logic
+
 ## 0.2.14
 
 ### Patch Changes

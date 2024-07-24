@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.3.21
+
+### Patch Changes
+
+- 11aaea4: Add non-EVM bytes logic
+- efe11f6: Use fromHex instead of norlaizePeer when getting peers in OApp
+
 ## 0.3.20
 
 ### Patch Changes
