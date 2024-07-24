@@ -1,63 +1,59 @@
 {
   "name": "@layerzerolabs/onft-evm",
   "version": "0.0.1",
-  "description": "",
+  "description": "LayerZero Labs reference EVM OmniChain Non Fungible Token (ONFT) implementation",
+  "keywords": [
+    "LayerZero",
+    "ONFT",
+    "OmniChain",
+    "NonFungible",
+    "Token",
+    "EndpointV2",
+    "EVM"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/LayerZero-Labs/devtools.git"
   },
+  "license": "MIT",
   "exports": {
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
   "files": [
-    "artifacts/contracts/**/!(*.dbg).json",
+    "artifacts/IONFT721.sol/IONFT721.json",
+    "artifacts/ONFT721.sol/ONFT721.json",
+    "aftifacts/ONFT721Adapter.sol/ONFT721Adapter.json",
+    "artifacts/ONFT721Base.sol/ONFT721Base.json",
+    "artifacts/ONFT721Core.sol/ONFT721Core.json",
+    "artifacts/ONFT721MsgCodec.sol/ONFT721MsgCodec.json",
+    "artifacts/ONFTComposeMsgCodec.sol/ONFTComposeMsgCodec.json",
     "contracts/**/*"
   ],
   "scripts": {
+    "build": "$npm_execpath compile",
+    "clean": "rimraf .turbo cache out artifacts",
     "compile": "$npm_execpath compile:forge",
     "compile:forge": "forge build",
     "test": "$npm_execpath test:forge",
     "test:forge": "forge test"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@layerzerolabs/eslint-config-next": "~2.3.3",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
-    "@layerzerolabs/prettier-config-next": "^2.3.25",
-    "@layerzerolabs/solhint-config": "^2.3.3",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.29",
+    "@layerzerolabs/oapp-evm": "^0.0.1",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.7",
-    "@layerzerolabs/toolbox-foundry": "~0.1.7",
-    "@layerzerolabs/toolbox-hardhat": "~0.2.35",
-    "@nomicfoundation/hardhat-ethers": "^3.0.5",
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@layerzerolabs/toolbox-foundry": "~0.1.8",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "@rushstack/eslint-patch": "^1.7.0",
-    "@types/chai": "^4.3.11",
-    "@types/mocha": "^10.0.6",
-    "@types/node": "~18.18.14",
-    "chai": "^4.4.1",
-    "dotenv": "^16.4.1",
-    "erc721a": "^4.3.0",
-    "eslint-plugin-jest-extended": "~2.0.0",
-    "ethers": "^5.7.2",
-    "hardhat": "^2.22.3",
-    "hardhat-contract-sizer": "^2.10.0",
-    "hardhat-deploy": "^0.12.1",
-    "mocha": "^10.2.0",
-    "prettier": "^3.2.5",
-    "solhint": "^4.1.1",
-    "solidity-bytes-utils": "^0.8.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "rimraf": "^6.0.1"
   },
-  "engines": {
-    "node": ">=18.16.0"
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   }
 }

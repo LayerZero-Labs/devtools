@@ -4,7 +4,7 @@ pragma solidity ^0.8.22;
 import { IERC721 } from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
+import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { ONFTComposeMsgCodec } from "../../../contracts/libs/ONFTComposeMsgCodec.sol";
 import { ONFT721Adapter } from "../../../contracts/onft721/ONFT721Adapter.sol";
 
@@ -14,7 +14,7 @@ import { ONFT721MsgCodec } from "../../../contracts/onft721/libs/ONFT721MsgCodec
 import { ComposerMock } from "../../mocks/ComposerMock.sol";
 import { InspectorMock, IOAppMsgInspector } from "../../mocks/InspectorMock.sol";
 import { MessagingFee, MessagingReceipt } from "../../../contracts/onft721/ONFT721Core.sol";
-import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
+import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 
 import { SendParam } from "../../../contracts/onft721/interfaces/IONFT721.sol";
 
@@ -496,7 +496,7 @@ contract ONFT721Test is ONFT721Base {
         (message, ) = aONFT.buildMsgAndOptions(sendParam);
     }
 
-    function test_setBaseURI(address _user, string memory _baseTokenURI, uint256 _id) public {
+    function test_setBaseURI(address _user, string memory _baseTokenURI) public {
         vm.assume(_user != address(this));
 
         // 1. Test non privileged user

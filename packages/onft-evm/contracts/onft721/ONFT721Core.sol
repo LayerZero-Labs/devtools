@@ -4,10 +4,10 @@ pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { OApp, Origin } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
-import { OAppOptionsType3 } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
-import { IOAppMsgInspector } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppMsgInspector.sol";
-import { OAppPreCrimeSimulator } from "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol";
+import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import { IOAppMsgInspector } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol";
+import { OAppPreCrimeSimulator } from "@layerzerolabs/oapp-evm/contracts/precrime/OAppPreCrimeSimulator.sol";
 
 import { IONFT721, MessagingFee, MessagingReceipt, SendParam } from "./interfaces/IONFT721.sol";
 import { ONFT721MsgCodec } from "./libs/ONFT721MsgCodec.sol";
