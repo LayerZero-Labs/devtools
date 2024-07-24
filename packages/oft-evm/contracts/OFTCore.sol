@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.20;
 
-import { OApp, Origin } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
-import { OAppOptionsType3 } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
-import { IOAppMsgInspector } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/interfaces/IOAppMsgInspector.sol";
+import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import { IOAppMsgInspector } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol";
 
-import { OAppPreCrimeSimulator } from "@layerzerolabs/lz-evm-oapp-v2/contracts/precrime/OAppPreCrimeSimulator.sol";
+import { OAppPreCrimeSimulator } from "@layerzerolabs/oapp-evm/contracts/precrime/OAppPreCrimeSimulator.sol";
 
 import { IOFT, SendParam, OFTLimit, OFTReceipt, OFTFeeDetail, MessagingReceipt, MessagingFee } from "./interfaces/IOFT.sol";
 import { OFTMsgCodec } from "./libs/OFTMsgCodec.sol";
