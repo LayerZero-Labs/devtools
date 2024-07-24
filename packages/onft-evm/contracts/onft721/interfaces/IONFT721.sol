@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.22;
 
-import { MessagingFee, MessagingReceipt } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OAppSender.sol";
+import { MessagingFee, MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 
 /**
  * @dev Struct representing token parameters for the ONFT send() operation.
