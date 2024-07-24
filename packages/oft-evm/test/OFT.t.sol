@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import { OptionsBuilder } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OptionsBuilder.sol";
+import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
 import { OFTMock } from "./mocks/OFTMock.sol";
 import { MessagingFee, MessagingReceipt } from "../contracts/OFTCore.sol";
@@ -9,7 +9,7 @@ import { OFTAdapterMock } from "./mocks/OFTAdapterMock.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTInspectorMock, IOAppMsgInspector } from "./mocks/OFTInspectorMock.sol";
-import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/libs/OAppOptionsType3.sol";
+import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 
 import { OFTMsgCodec } from "../contracts/libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "../contracts/libs/OFTComposeMsgCodec.sol";
