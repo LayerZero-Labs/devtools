@@ -26,7 +26,7 @@ import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey } from '@solana/web3.js'
 
 /**
- * EVM-specific SDK for EndpointV2 contracts
+ * Solana-specific SDK for EndpointV2 contracts
  *
  * @implements {IEndpointV2}
  */
