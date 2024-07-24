@@ -7,6 +7,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 import { ONFTComposeMsgCodec } from "../../../contracts/libs/ONFTComposeMsgCodec.sol";
 import { ONFT721Adapter } from "../../../contracts/onft721/ONFT721Adapter.sol";
+import { ONFT721 } from "../../../contracts/onft721/ONFT721.sol";
 
 import { IONFT721 } from "../../../contracts/onft721/interfaces/IONFT721.sol";
 import { ERC721Mock } from "./mocks/ERC721Mock.sol";
@@ -505,6 +506,8 @@ contract ONFT721Test is ONFT721Base {
         aONFT.setBaseURI(_baseTokenURI);
 
         // 2. Test setting with owner doesn't throw
+        vm.expectEmit();
+        emit ONFT721.BaseURISet(_baseTokenURI);
         aONFT.setBaseURI(_baseTokenURI);
     }
 }
