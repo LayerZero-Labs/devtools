@@ -49,8 +49,6 @@ describe('endpointv2/sdk', () => {
         })
 
         it('should return a Solana address if we are asking for a library that has been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new EndpointV2(connection, point, account)
 
@@ -61,6 +59,22 @@ describe('endpointv2/sdk', () => {
 
             expect(await sdk.isDefaultSendLibrary(lib!, eid)).toBeTruthy()
             expect(await sdk.isDefaultSendLibrary(EndpointProgram.PROGRAM_ID.toBase58(), eid)).toBeFalsy()
+        })
+    })
+
+    describe('isDefaultSendLibrary', () => {
+        it('should return true if the default send library is being used', async () => {
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            expect(await sdk.isDefaultSendLibrary(oftConfig.toBase58(), EndpointId.FLARE_V2_MAINNET)).toBeTruthy()
+        })
+
+        it('should return false if the default send library is not being used', async () => {
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            expect(await sdk.isDefaultSendLibrary(oftConfig.toBase58(), EndpointId.ETHEREUM_V2_MAINNET)).toBeFalsy()
         })
     })
 

@@ -14,8 +14,6 @@ import {
     AsyncRetriable,
     OmniPoint,
     mapError,
-    areBytes32Equal,
-    normalizePeer,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
@@ -139,10 +137,15 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             `Checking default send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`
         )
 
-        return areBytes32Equal(
-            normalizePeer(sender, this.point.eid),
-            normalizePeer(await this.getDefaultSendLibrary(dstEid), this.point.eid)
+        const config = await mapError(
+            () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
+            (error) =>
+                new Error(
+                    `Failed to check the default send library for ${this.label} for ${sender} for ${formatEid(dstEid)}: ${error}`
+                )
         )
+
+        return config?.isDefault ?? true
     }
 
     async setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction> {
