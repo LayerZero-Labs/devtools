@@ -7,7 +7,16 @@ import type {
     Uln302SetUlnConfig,
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-devtools'
-import { formatEid, type OmniAddress, type OmniTransaction, AsyncRetriable, OmniPoint } from '@layerzerolabs/devtools'
+import {
+    formatEid,
+    type OmniAddress,
+    type OmniTransaction,
+    AsyncRetriable,
+    OmniPoint,
+    mapError,
+    areBytes32Equal,
+    normalizePeer,
+} from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
@@ -89,7 +98,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default send library for eid ${eid} (${formatEid(eid)})`)
 
-        throw new TypeError(`getDefaultSendLibrary() not implemented on Solana Endpoint SDK`)
+        const config = await mapError(
+            () => this.program.getDefaultSendLibrary(this.connection, eid),
+            (error) =>
+                new Error(`Failed to get the default send library for ${this.label} for ${formatEid(eid)}: ${error}`)
+        )
+
+        return config?.msgLib.toBase58() ?? undefined
     }
 
     @AsyncRetriable()
@@ -98,7 +113,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             `Checking default send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`
         )
 
-        throw new TypeError(`isDefaultSendLibrary() not implemented on Solana Endpoint SDK`)
+        return areBytes32Equal(
+            normalizePeer(sender, this.point.eid),
+            normalizePeer(await this.getDefaultSendLibrary(dstEid), this.point.eid)
+        )
     }
 
     async setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction> {
