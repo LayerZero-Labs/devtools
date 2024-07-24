@@ -406,20 +406,20 @@ importers:
         specifier: ~2.3.3
         version: 2.3.3(typescript@5.4.5)
       '@layerzerolabs/lz-definitions':
-        specifier: ^2.3.25
-        version: 2.3.25
+        specifier: ^2.3.29
+        version: 2.3.31
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ^2.3.25
-        version: 2.3.25(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.25)(@layerzerolabs/lz-evm-v1-0.7@2.3.25)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        specifier: ^2.3.29
+        version: 2.3.29(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.29)(@layerzerolabs/lz-evm-v1-0.7@2.3.29)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ^2.3.25
-        version: 2.3.25(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        specifier: ^2.3.29
+        version: 2.3.29(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ^2.3.25
-        version: 2.3.25(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+        specifier: ^2.3.29
+        version: 2.3.29(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ^2.3.25
-        version: 2.3.25
+        specifier: ^2.3.29
+        version: 2.3.31
       '@layerzerolabs/oapp-evm':
         specifier: ^0.0.1
         version: link:../../packages/oapp-evm
@@ -427,8 +427,8 @@ importers:
         specifier: ^0.0.1
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
-        specifier: ^2.3.25
-        version: 2.3.25
+        specifier: ^2.3.29
+        version: 2.3.32
       '@layerzerolabs/solhint-config':
         specifier: ^2.3.3
         version: 2.3.3(typescript@5.4.5)
@@ -5427,6 +5427,14 @@ packages:
 
   /@layerzerolabs/prettier-config-next@2.3.25:
     resolution: {integrity: sha512-QS2pqm469wr7TrHY+ydsBWzJZuN/X4Au3RzDvBZgOvhLK3gCHeNE7gxXrxbve3crHeIbA3YMTHEGNMkNYpVHMw==}
+    dependencies:
+      prettier: 3.2.5
+      prettier-plugin-packagejson: 2.5.0(prettier@3.2.5)
+      prettier-plugin-solidity: 1.3.1(prettier@3.2.5)
+    dev: true
+
+  /@layerzerolabs/prettier-config-next@2.3.32:
+    resolution: {integrity: sha512-6ew3Wt2BZlpt2p8zUvdW6g3CLrWTym0qniQE6/Q6gZYyH+pX8p+iO6ZNYDwSQ6uUQ6iyB65Q4U9X0ntrp5X2jQ==}
     dependencies:
       prettier: 3.2.5
       prettier-plugin-packagejson: 2.5.0(prettier@3.2.5)
