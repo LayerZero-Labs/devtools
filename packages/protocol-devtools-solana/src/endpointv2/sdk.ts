@@ -62,7 +62,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting default receive library for eid ${eid} (${formatEid(eid)})`)
 
-        throw new TypeError(`getDefaultReceiveLibrary() not implemented on Solana Endpoint SDK`)
+        const config = await mapError(
+            () => this.program.getDefaultReceiveLibrary(this.connection, eid),
+            (error) =>
+                new Error(`Failed to get the default receive library for ${this.label} for ${formatEid(eid)}: ${error}`)
+        )
+
+        return config?.msgLib.toBase58() ?? undefined
     }
 
     @AsyncRetriable()
