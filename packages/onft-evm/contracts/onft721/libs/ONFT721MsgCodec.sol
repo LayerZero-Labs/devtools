@@ -44,7 +44,7 @@ library ONFT721MsgCodec {
      * @return The ID of the tokens to transfer.
      */
     function tokenId(bytes calldata _msg) internal pure returns (uint256) {
-        return abi.decode(_msg[SEND_TO_OFFSET:TOKEN_ID_OFFSET], (uint256));
+        return uint256(bytes32(_msg[SEND_TO_OFFSET:TOKEN_ID_OFFSET]));
     }
 
     /**
