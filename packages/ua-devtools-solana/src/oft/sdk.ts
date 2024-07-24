@@ -33,6 +33,15 @@ export class OFT extends OmniSDK implements IOApp {
         super(connection, point, userAccount, logger)
     }
 
+    /**
+     * For Solana OFTs, the endpoint config is stored under the config account
+     *
+     * @returns {OmniAddress}
+     */
+    getEndpointConfigAddress(): OmniAddress {
+        return this.configAccount.toBase58()
+    }
+
     getOwner(): Promise<OmniAddress | undefined> {
         throw new Error('Method not implemented.')
     }

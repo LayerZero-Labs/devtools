@@ -16,6 +16,14 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 import type { IOwnable, OwnableNodeConfig } from '@/ownable/types'
 
 export interface IOApp extends IOmniSDK, IOwnable {
+    /**
+     * For non-EVM networks the address of the contract might not correspond to the address
+     * under which the config is stored on the Endpoint
+     *
+     * An example of this is Solana for which the config is stored under a different account
+     * derviced from the program ID and the mint account
+     */
+    getEndpointConfigAddress(): OmniAddress | Promise<OmniAddress>
     getEndpointSDK(): Promise<IEndpointV2>
     getPeer(eid: EndpointId): Promise<OmniAddress | undefined>
     hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean>
