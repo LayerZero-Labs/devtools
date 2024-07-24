@@ -9,6 +9,8 @@ import { ONFT721Core } from "./ONFT721Core.sol";
 /**
  * @title ONFT721Adapter Contract
  * @dev ONFT721Adapter is a wrapper used to enable cross-chain transferring of an existing ERC721 token.
+ * @dev ERC721 NFTs from extensions which revert certain transactions, such as ones from blocked wallets or soulbound
+ * @dev tokens, may still be bridgeable.
  */
 abstract contract ONFT721Adapter is ONFT721Core {
     IERC721 internal immutable innerToken;
