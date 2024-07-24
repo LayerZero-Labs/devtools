@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -38,14 +38,14 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.18",
+    "@layerzerolabs/devtools": "~0.3.21",
     "@layerzerolabs/devtools-evm": "~0.3.13",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.25",
     "@layerzerolabs/lz-v2-utilities": "^2.3.25",
     "@layerzerolabs/protocol-devtools": "~0.3.9",
     "@layerzerolabs/protocol-devtools-evm": "~0.3.10",
-    "@layerzerolabs/test-devtools": "~0.2.6",
+    "@layerzerolabs/test-devtools": "~0.2.7",
     "@layerzerolabs/ua-devtools": "~0.3.19",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
@@ -61,7 +61,7 @@
   "peerDependencies": {
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.18",
+    "@layerzerolabs/devtools": "~0.3.21",
     "@layerzerolabs/devtools-evm": "~0.3.13",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/lz-definitions": "^2.3.3",

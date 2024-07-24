@@ -722,7 +722,7 @@ importers:
         specifier: ^2.3.25
         version: 2.3.25
       '@layerzerolabs/test-devtools':
-        specifier: ~0.2.6
+        specifier: ~0.2.7
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -1965,7 +1965,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.18
+        specifier: ~0.3.21
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.13
@@ -1986,7 +1986,7 @@ importers:
         specifier: ~0.3.10
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools':
-        specifier: ~0.2.6
+        specifier: ~0.2.7
         version: link:../test-devtools
       '@layerzerolabs/ua-devtools':
         specifier: ~0.3.19
@@ -2741,7 +2741,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.18
+        specifier: ~0.3.21
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.3.13
@@ -2798,7 +2798,7 @@ importers:
         specifier: ~0.3.19
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~0.3.15
+        specifier: ~0.3.16
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
         specifier: ~0.3.19

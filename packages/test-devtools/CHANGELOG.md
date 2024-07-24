@@ -1,5 +1,12 @@
 # @layerzerolabs/test-devtools
 
+## 0.2.7
+
+### Patch Changes
+
+- 11aaea4: Add non-EVM bytes logic
+- 11aaea4: Add network-specific address arbitraries
+
 ## 0.2.6
 
 ### Patch Changes

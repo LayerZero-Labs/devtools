@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.8
+
+### Patch Changes
+
+- 803a5c1: Update Makefile that was incorrectly copying soldity-bytes-utils
+
 ## 0.1.7
 
 ### Patch Changes
