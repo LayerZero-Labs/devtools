@@ -11,8 +11,12 @@ contract RateLimiterImpl is RateLimiter {
         _setRateLimits(_rateLimitConfigs);
     }
 
-    function checkAndUpdateRateLimit(uint32 _dstEid, uint256 _amount) external {
-        _checkAndUpdateRateLimit(_dstEid, _amount);
+    function outflow(uint32 _dstEid, uint256 _amount) external {
+        _outflow(_dstEid, _amount);
+    }
+
+    function inflow(uint32 _srcEid, uint256 _amount) external {
+        _inflow(_srcEid, _amount);
     }
 }
 
@@ -34,24 +38,62 @@ contract RateLimiterTest is RateLimiterImpl, Test {
     }
 
     function test_max_rate_limit() public {
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
     }
 
     function test_over_max_rate_limit() public {
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, 101 ether);
+        rateLimiterImpl.outflow(dstEid, 101 ether);
     }
 
     function test_rate_limit_resets_after_window() public {
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
         vm.warp(block.timestamp + 1 hours + 1 seconds);
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
+    }
+
+    function test_rate_limit_inflow_deducts_from_outflow() public {
+        // Send max limit
+        vm.warp(0);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
+
+        // Verify max in flight
+        (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
+        assertEq(amountInFlight, sendLimit);
+        assertEq(amountCanBeSent, 0);
+
+        // Inflow some amount
+        rateLimiterImpl.inflow(dstEid, sendLimit / 2);
+
+        // Verify amountInFlight/amountCanBeSent is half the sendLimit
+        (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
+        assertEq(amountInFlight, sendLimit / 2);
+        assertEq(amountCanBeSent, sendLimit / 2);
+    }
+
+    function test_rate_limit_inflow_deducts_from_outflow_exceeds_amount_in_flight() public {
+        // Send max limit
+        vm.warp(0);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
+
+        // Verify max in flight
+        (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
+        assertEq(amountInFlight, sendLimit);
+        assertEq(amountCanBeSent, 0);
+
+        // Inflow some amount that exceeds the current amount in flight
+        rateLimiterImpl.inflow(dstEid, sendLimit + 1);
+
+        // Verify amount in flight reset to 0
+        (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
+        assertEq(amountInFlight, 0);
+        assertEq(amountCanBeSent, sendLimit);
     }
 
     function test_multiple_rate_limit_windows() public {
         uint16[10] memory times = [1, 11, 233, 440, 666, 667, 778, 999, 1000, 3600];
         uint256 decay = 0;
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
         for (uint256 i = 0; i < 10; i++) {
             decay = (sendLimit * times[i]) / window;
             vm.warp(times[i]);
@@ -69,7 +111,7 @@ contract RateLimiterTest is RateLimiterImpl, Test {
 
         // Send max limit
         vm.warp(0);
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
 
         // Verify max in flight
         (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
@@ -78,7 +120,7 @@ contract RateLimiterTest is RateLimiterImpl, Test {
 
         // Expect revert when max in flight
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
 
         // Advance halfway through window
         vm.warp(1800);
@@ -104,17 +146,17 @@ contract RateLimiterTest is RateLimiterImpl, Test {
         vm.warp(3600);
 
         // Verify new max limit can be sent
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Expect revert when max in flight
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, 1 ether);
+        rateLimiterImpl.outflow(dstEid, 1 ether);
     }
 
     function test_window_change_mid_window() public {
         // Send max limit
         vm.warp(0);
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
         (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
         assertEq(amountInFlight, sendLimit);
         assertEq(amountCanBeSent, 0);
@@ -140,7 +182,7 @@ contract RateLimiterTest is RateLimiterImpl, Test {
 
         // Expect anything more that half the sendLimit to revert
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit / 2 + 1 ether);
+        rateLimiterImpl.outflow(dstEid, sendLimit / 2 + 1 ether);
 
         // Advance another 30 mins
         vm.warp(3600);
@@ -155,18 +197,18 @@ contract RateLimiterTest is RateLimiterImpl, Test {
         vm.warp(5400);
 
         // Verify max limit can be sent
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
 
         // Advance old window and make sure you cant send max limit because of newly set window
         vm.warp(9000);
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
     }
 
     function test_rate_and_window_change_mid_window() public {
         // Send max limit
         vm.warp(0);
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, sendLimit);
+        rateLimiterImpl.outflow(dstEid, sendLimit);
         (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
         assertEq(amountInFlight, sendLimit);
         assertEq(amountCanBeSent, 0);
@@ -208,38 +250,38 @@ contract RateLimiterTest is RateLimiterImpl, Test {
         // Advance another 30 mins
         vm.warp(5400);
         // Verify new max limit can be sent
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Verify max amount cant be sent for the rest of the window (4 hours left in window)
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Advance another 60 mins
         vm.warp(9000);
         // Verify max amount cant be sent for the rest of the window (3 hours left in window)
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Advance another 60 mins
         vm.warp(12600);
         // Verify max amount cant be sent for the rest of the window (2 hours left in window)
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Advance another 60 mins
         vm.warp(16200);
         // Verify max amount cant be sent for the rest of the window (1 hours left in window)
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Advance another 60 mins
         vm.warp(19800);
         (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
         // Verify max amount can be sent when new window starts
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, newLimit);
+        rateLimiterImpl.outflow(dstEid, newLimit);
 
         // Verify max inflight and cant send anymore at this point in time
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
-        rateLimiterImpl.checkAndUpdateRateLimit(dstEid, 1 ether);
+        rateLimiterImpl.outflow(dstEid, 1 ether);
     }
 }
