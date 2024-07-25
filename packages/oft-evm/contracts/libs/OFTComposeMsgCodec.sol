@@ -27,7 +27,7 @@ library OFTComposeMsgCodec {
     }
 
     /**
-     * @dev Retrieves the nonce from the composed message.
+     * @dev Retrieves the nonce for the composed message.
      * @param _msg The message.
      * @return The nonce value.
      */
@@ -36,7 +36,7 @@ library OFTComposeMsgCodec {
     }
 
     /**
-     * @dev Retrieves the source endpoint ID from the composed message.
+     * @dev Retrieves the source endpoint ID for the composed message.
      * @param _msg The message.
      * @return The source endpoint ID.
      */
