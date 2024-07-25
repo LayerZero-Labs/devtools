@@ -3,7 +3,7 @@ import { ConnectionFactory, createConnectionFactory, defaultRpcUrlFactory } from
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@/endpointv2'
 import { formatEid, normalizePeer } from '@layerzerolabs/devtools'
-import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
 describe('endpointv2/sdk', () => {
     // FIXME These tests are using a mainnet OFT deployment and are potentially very fragile
@@ -18,15 +18,22 @@ describe('endpointv2/sdk', () => {
     const blockhash = '3dY6Hp5N6MiztdurusKF59i2fE9tJbo9nPf5JsFarJFg'
 
     let connectionFactory: ConnectionFactory
+    let getLatestBlockhashMock: jest.SpyInstance
 
     beforeAll(() => {
         connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+    })
 
+    beforeEach(() => {
         // We mock the getLatestBlockhash to reduce the RPC load
-        jest.spyOn(Connection.prototype, 'getLatestBlockhash').mockResolvedValue({
+        getLatestBlockhashMock = jest.spyOn(Connection.prototype, 'getLatestBlockhash').mockResolvedValue({
             blockhash,
             lastValidBlockHeight: NaN,
         })
+    })
+
+    afterEach(() => {
+        getLatestBlockhashMock.mockRestore()
     })
 
     describe('getDefaultReceiveLibrary', () => {
@@ -299,6 +306,53 @@ describe('endpointv2/sdk', () => {
                     optionalDVNs: [],
                 })
             ).toBeFalsy()
+        })
+    })
+
+    describe('setConfig', () => {
+        it('should create an OmniTransaction when called with uln configs', async () => {
+            getLatestBlockhashMock.mockRestore()
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            const eid = EndpointId.ETHEREUM_V2_MAINNET
+
+            const sendUln = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
+            expect(sendUln).not.toBeUndefined()
+
+            console.warn({ orig: UlnProgram.PROGRAM_ID.toBase58(), sendUln })
+
+            const params = await sdk.getUlnConfigParams(sendUln!, [
+                {
+                    type: 'send',
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    ulnConfig: {
+                        confirmations: BigInt(32),
+                        optionalDVNThreshold: 0,
+                        requiredDVNs: [
+                            '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                            'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                        ],
+                        optionalDVNs: [],
+                    },
+                },
+                {
+                    type: 'receive',
+                    eid: EndpointId.ETHEREUM_V2_MAINNET,
+                    ulnConfig: {
+                        confirmations: BigInt(32),
+                        optionalDVNThreshold: 0,
+                        requiredDVNs: [
+                            '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                            'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                        ],
+                        optionalDVNs: [],
+                    },
+                },
+            ])
+
+            await sdk.setConfig(oftConfig.toBase58(), sendUln!, params)
         })
     })
 })
