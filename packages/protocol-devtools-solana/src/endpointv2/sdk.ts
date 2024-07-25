@@ -6,6 +6,7 @@ import type {
     Uln302ExecutorConfig,
     Uln302SetUlnConfig,
     Uln302UlnConfig,
+    Uln302UlnUserConfig,
 } from '@layerzerolabs/protocol-devtools'
 import {
     formatEid,
@@ -23,6 +24,7 @@ import { Logger, printJson } from '@layerzerolabs/io-devtools'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import assert from 'assert'
+import { Uln302 } from '@/uln302'
 
 /**
  * Solana-specific SDK for EndpointV2 contracts
@@ -54,7 +56,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getUln302SDK(address: OmniAddress): Promise<IUln302> {
         this.logger.debug(`Getting Uln302 SDK for address ${address}`)
 
-        throw new TypeError(`getUln302SDK() not implemented on Solana Endpoint SDK`)
+        return new Uln302(this.connection, { eid: this.point.eid, address }, this.userAccount)
     }
 
     @AsyncRetriable()
@@ -317,14 +319,22 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async getAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig> {
         this.logger.debug(`Getting App ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`)
 
-        throw new TypeError(`getAppUlnConfig() not implemented on Solana Endpoint SDK`)
+        const ulnSdk = await this.getUln302SDK(uln)
+        return await ulnSdk.getAppUlnConfig(eid, oapp)
     }
 
     /**
      * @see {@link IEndpointV2.hasAppUlnConfig}
      */
-    async hasAppUlnConfig(): Promise<boolean> {
-        throw new TypeError(`hasAppUlnConfig() not implemented on Solana Endpoint SDK`)
+    async hasAppUlnConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        eid: EndpointId,
+        config: Uln302UlnUserConfig
+    ): Promise<boolean> {
+        const ulnSdk = await this.getUln302SDK(uln)
+
+        return ulnSdk.hasAppUlnConfig(eid, oapp, config)
     }
 
     @AsyncRetriable()
