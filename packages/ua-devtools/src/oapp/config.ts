@@ -335,7 +335,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
 
                 if (!hasUlnConfig) {
                     const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
-                        { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig },
+                        { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig, type: 'send' },
                     ])
 
                     // Updates map with new configs for that OApp and Send Library
@@ -416,7 +416,7 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
 
             if (!hasUlnConfig) {
                 const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
-                    { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig },
+                    { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig, type: 'receive' },
                 ])
 
                 // Updates map with new configs for that OApp and Receive Library

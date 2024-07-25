@@ -182,6 +182,7 @@ export interface Uln302SetExecutorConfig {
 }
 
 export interface Uln302SetUlnConfig {
+    type: 'send' | 'receive'
     eid: EndpointId
     ulnConfig: Uln302UlnUserConfig
 }
@@ -189,7 +190,7 @@ export interface Uln302SetUlnConfig {
 export interface SetConfigParam {
     eid: EndpointId
     configType: number
-    config: string
+    config: unknown
 }
 
 export interface MessageParams {
