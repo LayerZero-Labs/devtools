@@ -21,7 +21,8 @@ import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import assert from 'assert'
 
 /**
  * Solana-specific SDK for EndpointV2 contracts
@@ -157,24 +158,70 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     async setSendLibrary(
         oapp: OmniAddress,
         eid: EndpointId,
-        uln: OmniAddress | null | undefined
+        ulnMaybe: OmniAddress | null | undefined
     ): Promise<OmniTransaction> {
-        this.logger.debug(`Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to ULN ${uln}`)
+        const eidLabel = formatEid(eid)
+        this.logger.debug(`Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp}`)
 
-        throw new TypeError(`setSendLibrary() not implemented on Solana Endpoint SDK`)
+        // If no library has been provided, we go and fetch the default one
+        const uln = ulnMaybe ?? (await this.getDefaultSendLibrary(eid))
+        assert(uln != null, `No send library specified and default does not exist for setSendLibrary on ${this.label}`)
+
+        this.logger.debug(`Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
+
+        const instruction = await mapError(
+            () => this.program.setSendLibrary(this.userAccount, new PublicKey(oapp), new PublicKey(uln), eid),
+            (error) =>
+                new Error(`Failed to set the send library for ${this.label} and OApp ${oapp} for ${eidLabel}: ${error}`)
+        )
+
+        const transaction = new Transaction().add(instruction)
+
+        return {
+            ...(await this.createTransaction(transaction)),
+            description: `Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`,
+        }
     }
 
     async setReceiveLibrary(
         oapp: OmniAddress,
         eid: EndpointId,
-        uln: OmniAddress | null | undefined,
+        ulnMaybe: OmniAddress | null | undefined,
         gracePeriod: bigint
     ): Promise<OmniTransaction> {
-        this.logger.debug(
-            `Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to ULN ${uln} with a grace period of ${gracePeriod}`
+        const eidLabel = formatEid(eid)
+        this.logger.debug(`Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp}`)
+
+        // If no library has been provided, we go and fetch the default one
+        const uln = ulnMaybe ?? (await this.getDefaultReceiveLibrary(eid))
+        assert(
+            uln != null,
+            `No receive library specified and default does not exist for setReceiveLibrary on ${this.label}`
         )
 
-        throw new TypeError(`setReceiveLibrary() not implemented on Solana Endpoint SDK`)
+        this.logger.debug(`Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
+
+        const instruction = await mapError(
+            () =>
+                this.program.setReceiveLibrary(
+                    this.userAccount,
+                    new PublicKey(oapp),
+                    new PublicKey(uln),
+                    eid,
+                    Number(gracePeriod)
+                ),
+            (error) =>
+                new Error(
+                    `Failed to set the receive library for ${this.label} and OApp ${oapp} for ${eidLabel}: ${error}`
+                )
+        )
+
+        const transaction = new Transaction().add(instruction)
+
+        return {
+            ...(await this.createTransaction(transaction)),
+            description: `Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`,
+        }
     }
 
     @AsyncRetriable()
