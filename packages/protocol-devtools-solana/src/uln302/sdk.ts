@@ -168,20 +168,12 @@ export class Uln302 extends OmniSDK implements IUln302 {
         throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
     }
 
-    decodeExecutorConfig(_executorConfigBytes: string): Uln302ExecutorConfig {
-        throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
+    encodeExecutorConfig(config: Uln302ExecutorConfig): SerializedUln302ExecutorConfig {
+        return this.serializeExecutorConfig(config)
     }
 
-    encodeExecutorConfig(_config: Uln302ExecutorConfig): string {
-        throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
-    }
-
-    decodeUlnConfig(_ulnConfigBytes: string): Uln302UlnConfig {
-        throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
-    }
-
-    encodeUlnConfig(_config: Uln302UlnUserConfig): string {
-        throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
+    encodeUlnConfig(config: Uln302UlnUserConfig): SerializedUln302UlnConfig {
+        return this.serializeUlnConfig(config)
     }
 
     async setDefaultUlnConfig(_eid: EndpointId, _config: Uln302UlnUserConfig): Promise<OmniTransaction> {

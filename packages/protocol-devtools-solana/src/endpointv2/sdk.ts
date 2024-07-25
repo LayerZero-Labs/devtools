@@ -21,10 +21,11 @@ import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
-import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, SetConfigType } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import assert from 'assert'
 import { Uln302 } from '@/uln302'
+import { SetConfigSchema } from './schema'
 
 /**
  * Solana-specific SDK for EndpointV2 contracts
@@ -61,12 +62,14 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
     @AsyncRetriable()
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
-        this.logger.debug(`Getting default receive library for eid ${eid} (${formatEid(eid)})`)
+        const eidLabel = formatEid(eid)
+
+        this.logger.debug(`Getting default receive library for eid ${eid} (${eidLabel})`)
 
         const config = await mapError(
             () => this.program.getDefaultReceiveLibrary(this.connection, eid),
             (error) =>
-                new Error(`Failed to get the default receive library for ${this.label} for ${formatEid(eid)}: ${error}`)
+                new Error(`Failed to get the default receive library for ${this.label} for ${eidLabel}: ${error}`)
         )
 
         return config?.msgLib.toBase58() ?? undefined
@@ -86,7 +89,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 )
         )
 
-        return config?.msgLib.toBase58() ?? undefined
+        return config?.programId?.toBase58() ?? undefined
     }
 
     @AsyncRetriable()
@@ -96,7 +99,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     ): Promise<[address: OmniAddress | undefined, isDefault: boolean]> {
         const eidLabel = formatEid(srcEid)
 
-        this.logger.debug(`Getting receive library for eid ${srcEid} (${formatEid(srcEid)}) and address ${receiver}`)
+        this.logger.debug(`Getting receive library for eid ${srcEid} (${eidLabel}) and address ${receiver}`)
 
         const config = await mapError(
             () => this.program.getReceiveLibrary(this.connection, new PublicKey(receiver), srcEid),
@@ -106,7 +109,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 )
         )
 
-        return [config?.msgLib.toBase58() ?? undefined, config?.isDefault ?? true]
+        return [config?.programId?.toBase58() ?? undefined, config?.isDefault ?? true]
     }
 
     async setDefaultReceiveLibrary(
@@ -123,12 +126,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
     @AsyncRetriable()
     async getDefaultSendLibrary(eid: EndpointId): Promise<OmniAddress | undefined> {
-        this.logger.debug(`Getting default send library for eid ${eid} (${formatEid(eid)})`)
+        const eidLabel = formatEid(eid)
+
+        this.logger.debug(`Getting default send library for eid ${eid} (${eidLabel})`)
 
         const config = await mapError(
             () => this.program.getDefaultSendLibrary(this.connection, eid),
-            (error) =>
-                new Error(`Failed to get the default send library for ${this.label} for ${formatEid(eid)}: ${error}`)
+            (error) => new Error(`Failed to get the default send library for ${this.label} for ${eidLabel}: ${error}`)
         )
 
         return config?.msgLib.toBase58() ?? undefined
@@ -255,10 +259,39 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`setReceiveLibraryTimeout() not implemented on Solana Endpoint SDK`)
     }
 
-    async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
-        this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParam)}`)
+    async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParams: SetConfigParam[]): Promise<OmniTransaction> {
+        this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParams)}`)
 
-        throw new TypeError(`setConfig() not implemented on Solana Endpoint SDK`)
+        const transaction = new Transaction()
+
+        for (const setConfigParam of setConfigParams) {
+            try {
+                // We run the config through a schema to ensure the formatting is good
+                // and so that we convert the string DVN/executor addresses to public keys
+                const parsedConfig = SetConfigSchema.parse(setConfigParam)
+
+                const instruction = await this.program.setOappConfig(
+                    this.connection,
+                    this.userAccount,
+                    new PublicKey(oapp),
+                    new PublicKey(uln),
+                    setConfigParam.eid,
+                    {
+                        configType: parsedConfig.configType,
+                        value: parsedConfig.config,
+                    }
+                )
+
+                transaction.add(instruction)
+            } catch (error) {
+                throw new Error(`Failed to setConfig for ${this.label} and OApp ${oapp} and ULN ${uln}: ${error}`)
+            }
+        }
+
+        return {
+            ...(await this.createTransaction(transaction)),
+            description: `Setting config for ULN ${uln} to ${printJson(setConfigParams)}`,
+        }
     }
 
     async setUlnConfig(
@@ -294,14 +327,25 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             `Getting executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`
         )
 
-        throw new TypeError(`getAppExecutorConfig() not implemented on Solana Endpoint SDK`)
+        const ulnSdk = await this.getUln302SDK(uln)
+        return await ulnSdk.getAppExecutorConfig(eid, oapp)
     }
 
     /**
      * @see {@link IEndpointV2.hasAppExecutorConfig}
      */
-    async hasAppExecutorConfig(): Promise<boolean> {
-        throw new TypeError(`hasAppExecutorConfig() not implemented on Solana Endpoint SDK`)
+    async hasAppExecutorConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        eid: EndpointId,
+        config: Uln302ExecutorConfig
+    ): Promise<boolean> {
+        this.logger.debug(
+            `Checking executor app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`
+        )
+
+        const ulnSdk = await this.getUln302SDK(uln)
+        return await ulnSdk.hasAppExecutorConfig(eid, oapp, config)
     }
 
     /**
@@ -332,8 +376,9 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         eid: EndpointId,
         config: Uln302UlnUserConfig
     ): Promise<boolean> {
-        const ulnSdk = await this.getUln302SDK(uln)
+        this.logger.debug(`Checking ULN app config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`)
 
+        const ulnSdk = await this.getUln302SDK(uln)
         return ulnSdk.hasAppUlnConfig(eid, oapp, config)
     }
 
@@ -351,11 +396,26 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`quote() not implemented on Solana Endpoint SDK`)
     }
 
-    async getUlnConfigParams(): Promise<SetConfigParam[]> {
-        throw new TypeError(`getUlnConfigParams() not implemented on Solana Endpoint SDK`)
+    async getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
+        const ulnSdk = (await this.getUln302SDK(uln)) as Uln302
+
+        return setUlnConfig.map(({ eid, ulnConfig, type }) => ({
+            eid,
+            configType: type === 'send' ? SetConfigType.SEND_ULN : SetConfigType.RECEIVE_ULN,
+            config: ulnSdk.encodeUlnConfig(ulnConfig),
+        }))
     }
 
-    async getExecutorConfigParams(): Promise<SetConfigParam[]> {
-        throw new TypeError(`getExecutorConfigParams() not implemented on Solana Endpoint SDK`)
+    async getExecutorConfigParams(
+        uln: OmniAddress,
+        setExecutorConfig: Uln302SetExecutorConfig[]
+    ): Promise<SetConfigParam[]> {
+        const ulnSdk = (await this.getUln302SDK(uln)) as Uln302
+
+        return setExecutorConfig.map(({ eid, executorConfig }) => ({
+            eid,
+            configType: SetConfigType.EXECUTOR,
+            config: ulnSdk.encodeExecutorConfig(executorConfig),
+        }))
     }
 }
