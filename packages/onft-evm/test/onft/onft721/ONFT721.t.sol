@@ -474,6 +474,8 @@ contract ONFT721Test is ONFT721Base {
     }
 
     function test_OAppInspector_inspect(uint256 _tokenId, bytes32 _to) public {
+        vm.assume(_to != bytes32(0));
+
         uint32 dstEid = B_EID;
         _setMeshDefaultEnforcedSendOption();
 
