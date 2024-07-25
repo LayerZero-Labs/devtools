@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-example",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -30,7 +30,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
     "@layerzerolabs/lz-v2-utilities": "^2.3.25",
     "@layerzerolabs/oapp-evm": "^0.0.1",
-    "@layerzerolabs/oft-evm": "^0.0.6",
+    "@layerzerolabs/oft-evm": "^0.0.7",
     "@layerzerolabs/prettier-config-next": "^2.3.25",
     "@layerzerolabs/solhint-config": "^2.3.3",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.7",

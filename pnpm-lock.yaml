@@ -211,7 +211,7 @@ importers:
         specifier: ^0.0.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
@@ -319,7 +319,7 @@ importers:
         specifier: ^0.0.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.6
+        specifier: ^0.0.7
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.25
@@ -427,7 +427,7 @@ importers:
         specifier: ^0.0.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.29

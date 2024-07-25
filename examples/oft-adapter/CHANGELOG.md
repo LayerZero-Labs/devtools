@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.0.4
+
+### Patch Changes
+
+- 658ba47: Update to use @layerzerolabs/oapp-evm
+
 ## 0.0.3
 
 ### Patch Changes

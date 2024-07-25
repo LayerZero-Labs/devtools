@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.7
+
+### Patch Changes
+
+- 658ba47: Update to use @layerzerolabs/oapp-evm
+- 658ba47: Clean up package.json, foundry.toml, and turbo.json
+- 36966e5: Cache msgInspector to avoid double storage read
+
 ## 0.0.6
 
 ### Patch Changes
