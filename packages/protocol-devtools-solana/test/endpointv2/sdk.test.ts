@@ -3,7 +3,7 @@ import { ConnectionFactory, createConnectionFactory, defaultRpcUrlFactory } from
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@/endpointv2'
 import { formatEid, normalizePeer } from '@layerzerolabs/devtools'
-import { EndpointProgram, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
 describe('endpointv2/sdk', () => {
     // FIXME These tests are using a mainnet OFT deployment and are potentially very fragile
@@ -320,8 +320,6 @@ describe('endpointv2/sdk', () => {
 
             const sendUln = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
             expect(sendUln).not.toBeUndefined()
-
-            console.warn({ orig: UlnProgram.PROGRAM_ID.toBase58(), sendUln })
 
             const params = await sdk.getUlnConfigParams(sendUln!, [
                 {
