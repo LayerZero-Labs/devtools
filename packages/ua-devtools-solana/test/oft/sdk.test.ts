@@ -5,7 +5,7 @@ import { OFT } from '@/oft'
 import { makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { printJson } from '@layerzerolabs/io-devtools'
-import { OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 const createSetEnforcedOptionsIxMock = OftTools.createSetEnforcedOptionsIx as jest.Mock
 
@@ -255,6 +255,22 @@ describe('oft/sdk', () => {
                 Options.newOptions().addExecutorLzReceiveOption(3, 1).toBytes(),
                 sdk.publicKey
             )
+        })
+    })
+
+    describe('getEndpointSDK', () => {
+        it('should return an SDK with the correct eid and address', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, mintAccount)
+            const endpointSdk = await sdk.getEndpointSDK()
+
+            expect(endpointSdk.point).toEqual({ eid: sdk.point.eid, address: EndpointProgram.PROGRAM_ID.toBase58() })
+
+            // Run a random function on the SDK to check whether it works
+            expect(
+                await endpointSdk.isDefaultSendLibrary(sdk.configAccount.toBase58(), EndpointId.ETHEREUM_V2_MAINNET)
+            ).toBeFalsy()
         })
     })
 })
