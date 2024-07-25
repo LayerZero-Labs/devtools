@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.12
+
+### Patch Changes
+
+- 218ab72: OpenZeppelin Contracts/Contracts-Upgradeable Upgraded to 5.0.2
+
 ## 0.2.11
 
 ### Patch Changes
