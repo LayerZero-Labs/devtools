@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/export-deployments-test",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "description": "Integration tests for ua-devtools-evm-hardhat for V2",
   "repository": {

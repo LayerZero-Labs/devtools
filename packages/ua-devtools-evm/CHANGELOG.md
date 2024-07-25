@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.17
+
+### Patch Changes
+
+- 666ca47: Add getEndpointConfigAddress to IOApp interface
+- Updated dependencies [f8efbda]
+- Updated dependencies [666ca47]
+  - @layerzerolabs/ua-devtools@0.3.22
+
 ## 0.3.16
 
 ### Patch Changes

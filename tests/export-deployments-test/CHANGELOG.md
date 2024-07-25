@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.2.6
+
+### Patch Changes
+
+- 218ab72: OpenZeppelin Contracts/Contracts-Upgradeable Upgraded to 5.0.2
+
 ## 0.2.5
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools
 
+## 0.3.22
+
+### Patch Changes
+
+- f8efbda: Add type parameter to Uln302SetUlnConfig type
+- 666ca47: Add getEndpointConfigAddress to IOApp interface
+
 ## 0.3.21
 
 ### Patch Changes

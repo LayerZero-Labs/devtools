@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.8
+
+### Patch Changes
+
+- 4b477b8: Fix inaccurate OFTComposeMsgCodec documentation
+
 ## 0.0.7
 
 ### Patch Changes

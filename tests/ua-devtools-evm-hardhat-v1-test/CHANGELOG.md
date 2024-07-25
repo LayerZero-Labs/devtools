@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.1.6
+
+### Patch Changes
+
+- 218ab72: OpenZeppelin Contracts/Contracts-Upgradeable Upgraded to 5.0.2
+
 ## 0.1.5
 
 ### Patch Changes
