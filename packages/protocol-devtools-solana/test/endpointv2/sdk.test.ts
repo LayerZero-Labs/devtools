@@ -230,4 +230,75 @@ describe('endpointv2/sdk', () => {
             )
         })
     })
+
+    describe('getAppUlnConfig', () => {
+        it('should be able to get OApp ULN config', async () => {
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            const eid = EndpointId.ETHEREUM_V2_MAINNET
+
+            const ulnAddress = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
+            expect(ulnAddress).not.toBeUndefined()
+
+            const config = await sdk.getAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid)
+
+            // FIXME This test is prone to be flaky since it check sthe mainnet configuration that can change anytime
+            expect(config).toEqual({
+                confirmations: BigInt(32),
+                optionalDVNThreshold: 0,
+                requiredDVNs: [
+                    '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                    'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                ],
+                optionalDVNs: [],
+            })
+        })
+    })
+
+    describe('hasAppUlnConfig', () => {
+        it('should return true if the config matches', async () => {
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            const eid = EndpointId.ETHEREUM_V2_MAINNET
+
+            const ulnAddress = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
+            expect(ulnAddress).not.toBeUndefined()
+
+            expect(
+                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
+                    confirmations: BigInt(32),
+                    optionalDVNThreshold: 0,
+                    requiredDVNs: [
+                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                    ],
+                    optionalDVNs: [],
+                })
+            ).toBeTruthy()
+
+            expect(
+                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
+                    confirmations: BigInt(32),
+                    optionalDVNThreshold: 0,
+                    requiredDVNs: [
+                        // We flip the DVNs
+                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                    ],
+                    optionalDVNs: [],
+                })
+            ).toBeTruthy()
+
+            expect(
+                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
+                    confirmations: BigInt(0),
+                    optionalDVNThreshold: 0,
+                    requiredDVNs: [],
+                    optionalDVNs: [],
+                })
+            ).toBeFalsy()
+        })
+    })
 })
