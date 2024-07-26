@@ -26,9 +26,9 @@ describe('oft/sdk', () => {
     //
     // We need to run our own Solana node with the OFT account cloned
     // so that we can isolate these tests
-    const point = { eid: EndpointId.SOLANA_V2_MAINNET, address: 'Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs' }
+    const programId = new PublicKey('Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs')
+    const point = { eid: EndpointId.SOLANA_V2_MAINNET, address: '8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC' }
     const account = new PublicKey('6tzUZqC33igPgP7YyDnUxQg6eupMmZGRGKdVAksgRzvk')
-    const mintAccount = new PublicKey('Bq9wBU8fqFnUDkrWqLFXGRc7BvRMPjUkCM2SrJf6dBMv')
 
     afterEach(() => {
         createSetEnforcedOptionsIxMock.mockClear()
@@ -39,7 +39,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             expect(await sdk.getPeer(EndpointId.ETHEREUM_V2_TESTNET)).toBeUndefined()
         })
@@ -48,7 +48,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             const peer = await sdk.getPeer(EndpointId.ETHEREUM_V2_MAINNET)
             expect(peer).toEqual(expect.any(String))
@@ -67,7 +67,7 @@ describe('oft/sdk', () => {
                 const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-                const sdk = new OFT(connection, point, account, mintAccount)
+                const sdk = new OFT(connection, point, account, programId)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.ETHEREUM_V2_MAINNET, makeBytes32())
                 expect(omniTransaction).toEqual({
@@ -83,7 +83,7 @@ describe('oft/sdk', () => {
                 const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-                const sdk = new OFT(connection, point, account, mintAccount)
+                const sdk = new OFT(connection, point, account, programId)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.APTOS_MAINNET, makeBytes32())
                 expect(omniTransaction).toEqual({
@@ -99,7 +99,7 @@ describe('oft/sdk', () => {
                 const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-                const sdk = new OFT(connection, point, account, mintAccount)
+                const sdk = new OFT(connection, point, account, programId)
 
                 const omniTransaction = await sdk.setPeer(EndpointId.SOLANA_V2_MAINNET, point.address)
                 expect(omniTransaction).toEqual({
@@ -116,7 +116,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             await expect(sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_TESTNET, 3)).rejects.toMatchSnapshot()
         })
@@ -125,7 +125,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             expect(await sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_TESTNET, 1)).toBe('0x')
         })
@@ -134,7 +134,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             const sendOptionsHex = await sdk.getEnforcedOptions(EndpointId.ETHEREUM_V2_MAINNET, 1)
             expect(sendOptionsHex).toEqual(expect.any(String))
@@ -155,7 +155,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             await expect(
                 sdk.setEnforcedOptions([
@@ -171,7 +171,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             const enforcedOptions = [
                 {
@@ -192,7 +192,7 @@ describe('oft/sdk', () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
 
             const enforcedOptions = [
                 // We'll set two options for ethereum
@@ -229,31 +229,31 @@ describe('oft/sdk', () => {
             // Ethereum should have both msgType options set
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
                 sdk.userAccount,
-                sdk.configAccount,
+                sdk.publicKey,
                 EndpointId.ETHEREUM_V2_TESTNET,
                 Options.newOptions().addExecutorOrderedExecutionOption().toBytes(),
                 Options.newOptions().addExecutorLzReceiveOption(1, 1).toBytes(),
-                sdk.publicKey
+                programId
             )
 
             // Base should have one option set
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
                 sdk.userAccount,
-                sdk.configAccount,
+                sdk.publicKey,
                 EndpointId.BASE_V2_MAINNET,
                 Options.newOptions().addExecutorLzReceiveOption(4, 1).toBytes(),
                 Options.newOptions().toBytes(),
-                sdk.publicKey
+                programId
             )
 
             // Avalanche should use the latter option and ignore the first one
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
                 sdk.userAccount,
-                sdk.configAccount,
+                sdk.publicKey,
                 EndpointId.AVALANCHE_V2_MAINNET,
                 Options.newOptions().toBytes(),
                 Options.newOptions().addExecutorLzReceiveOption(3, 1).toBytes(),
-                sdk.publicKey
+                programId
             )
         })
     })
@@ -262,14 +262,14 @@ describe('oft/sdk', () => {
         it('should return an SDK with the correct eid and address', async () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
-            const sdk = new OFT(connection, point, account, mintAccount)
+            const sdk = new OFT(connection, point, account, programId)
             const endpointSdk = await sdk.getEndpointSDK()
 
             expect(endpointSdk.point).toEqual({ eid: sdk.point.eid, address: EndpointProgram.PROGRAM_ID.toBase58() })
 
             // Run a random function on the SDK to check whether it works
             expect(
-                await endpointSdk.isDefaultSendLibrary(sdk.configAccount.toBase58(), EndpointId.ETHEREUM_V2_MAINNET)
+                await endpointSdk.isDefaultSendLibrary(sdk.publicKey.toBase58(), EndpointId.ETHEREUM_V2_MAINNET)
             ).toBeFalsy()
         })
     })

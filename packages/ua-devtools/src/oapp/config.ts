@@ -9,10 +9,9 @@ import {
     createConfigureMultiple,
     createConfigureNodes,
     createConfigureEdges,
-    type OmniPoint,
 } from '@layerzerolabs/devtools'
-import type { IOApp, OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
-import { createModuleLogger, createWithAsyncLogger, type Logger, printBoolean } from '@layerzerolabs/io-devtools'
+import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
+import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import type { SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
@@ -103,10 +102,9 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                     return []
                 }
 
-                const configAddress = await getEndpointConfigAddressPolyfill(sdk, from, logger)
                 const endpointSdk = await sdk.getEndpointSDK()
-                const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(configAddress, to.eid)
-                const currentSendLibrary = await endpointSdk.getSendLibrary(configAddress, to.eid)
+                const isDefaultLibrary = await endpointSdk.isDefaultSendLibrary(from.address, to.eid)
+                const currentSendLibrary = await endpointSdk.getSendLibrary(from.address, to.eid)
 
                 if (!isDefaultLibrary && currentSendLibrary === config.sendLibrary) {
                     logger.verbose(
@@ -116,7 +114,7 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
                 }
 
                 logger.verbose(`Setting sendLibrary ${config.sendLibrary} for ${formatOmniVector({ from, to })}`)
-                return [await endpointSdk.setSendLibrary(configAddress, to.eid, config.sendLibrary)]
+                return [await endpointSdk.setSendLibrary(from.address, to.eid, config.sendLibrary)]
             },
             {
                 onStart: (logger, [{ vector }]) =>
@@ -145,10 +143,9 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
                     return []
                 }
 
-                const configAddress = await getEndpointConfigAddressPolyfill(sdk, from, logger)
                 const endpointSdk = await sdk.getEndpointSDK()
                 const [currentReceiveLibrary, isDefaultLibrary] = await endpointSdk.getReceiveLibrary(
-                    configAddress,
+                    from.address,
                     to.eid
                 )
 
@@ -165,7 +162,7 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
 
                 return [
                     await endpointSdk.setReceiveLibrary(
-                        configAddress,
+                        from.address,
                         to.eid,
                         config.receiveLibraryConfig.receiveLibrary,
                         config.receiveLibraryConfig.gracePeriod
@@ -203,9 +200,8 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = withOAppLogger(
 
                 const { receiveLibraryTimeoutConfig } = config
 
-                const configAddress = await getEndpointConfigAddressPolyfill(sdk, from, logger)
                 const endpointSdk = await sdk.getEndpointSDK()
-                const timeout = await endpointSdk.getReceiveLibraryTimeout(configAddress, to.eid)
+                const timeout = await endpointSdk.getReceiveLibraryTimeout(from.address, to.eid)
 
                 if (isDeepEqual(timeout, receiveLibraryTimeoutConfig)) {
                     logger.verbose(
@@ -220,7 +216,7 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = withOAppLogger(
 
                 return [
                     await endpointSdk.setReceiveLibraryTimeout(
-                        configAddress,
+                        from.address,
                         to.eid,
                         receiveLibraryTimeoutConfig.lib,
                         receiveLibraryTimeoutConfig.expiry
@@ -262,10 +258,8 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
             }
 
             const oappSdk = await createSdk(from)
-            const configAddress = await getEndpointConfigAddressPolyfill(oappSdk, from, logger)
-            const configPoint: OmniPoint = { ...from, address: configAddress }
             const endpointSdk = await oappSdk.getEndpointSDK()
-            const currentSendLibrary = config.sendLibrary ?? (await endpointSdk.getSendLibrary(configAddress, to.eid))
+            const currentSendLibrary = config.sendLibrary ?? (await endpointSdk.getSendLibrary(from.address, to.eid))
             assert(
                 currentSendLibrary !== undefined,
                 'sendLibrary has not been set in your config and no default value exists'
@@ -277,7 +271,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                 // We need to ask not for the final config formed of the default config and the app config,
                 // we only need to check the app config
                 const hasExecutorConfig = await endpointSdk.hasAppExecutorConfig(
-                    configAddress,
+                    from.address,
                     currentSendLibrary,
                     to.eid,
                     config.sendConfig.executorConfig
@@ -294,17 +288,15 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     )
 
                     // Updates map with nw configs for that OApp and Send Library
-                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(configPoint, () => new Map())
+                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
                     const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
                     setConfigsByEndpointAndLibrary.set(
-                        configPoint,
+                        from,
                         setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
                     )
 
                     const updatedConfigList =
-                        setConfigsByEndpointAndLibrary
-                            .getOrElse(configPoint, () => new Map())
-                            .get(currentSendLibrary) ?? []
+                        setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
                     const updatedConfigListCsv = updatedConfigList
                         .map(
                             (setConfigParam) =>
@@ -323,7 +315,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                 // We need to ask not for the final config formed of the default config and the app config,
                 // we only need to check the app config
                 const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
-                    configAddress,
+                    from.address,
                     currentSendLibrary,
                     to.eid,
                     config.sendConfig.ulnConfig
@@ -339,17 +331,15 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     ])
 
                     // Updates map with new configs for that OApp and Send Library
-                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(configPoint, () => new Map())
+                    const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
                     const existingSetConfigs = setConfigsByLibrary.get(currentSendLibrary) ?? []
                     setConfigsByEndpointAndLibrary.set(
-                        configPoint,
+                        from,
                         setConfigsByLibrary.set(currentSendLibrary, [...existingSetConfigs, ...newSetConfigs])
                     )
 
                     const updatedConfigList =
-                        setConfigsByEndpointAndLibrary
-                            .getOrElse(configPoint, () => new Map())
-                            .get(currentSendLibrary) ?? []
+                        setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
                     const updatedConfigListCsv = updatedConfigList
                         .map(
                             (setConfigParam) =>
@@ -388,12 +378,10 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
             }
 
             const oappSdk = await createSdk(from)
-            const configAddress = await getEndpointConfigAddressPolyfill(oappSdk, from, logger)
-            const configPoint: OmniPoint = { ...from, address: configAddress }
             const endpointSdk = await oappSdk.getEndpointSDK()
             const [currentReceiveLibrary] = config?.receiveLibraryConfig?.receiveLibrary
                 ? [config.receiveLibraryConfig?.receiveLibrary, false]
-                : await endpointSdk.getReceiveLibrary(configAddress, to.eid)
+                : await endpointSdk.getReceiveLibrary(from.address, to.eid)
             assert(
                 currentReceiveLibrary !== undefined,
                 'receiveLibrary has not been set in your config and no default value exists'
@@ -404,7 +392,7 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
             // We need to ask not for the final config formed of the default config and the app config,
             // we only need to check the app config
             const hasUlnConfig = await endpointSdk.hasAppUlnConfig(
-                configAddress,
+                from.address,
                 currentReceiveLibrary,
                 to.eid,
                 config.receiveConfig.ulnConfig
@@ -420,16 +408,15 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
                 ])
 
                 // Updates map with new configs for that OApp and Receive Library
-                const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(configPoint, () => new Map())
+                const setConfigsByLibrary = setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map())
                 const existingSetConfigs = setConfigsByLibrary.get(currentReceiveLibrary) ?? []
                 setConfigsByEndpointAndLibrary.set(
-                    configPoint,
+                    from,
                     setConfigsByLibrary.set(currentReceiveLibrary, [...existingSetConfigs, ...newSetConfigs])
                 )
 
                 const updatedConfigList =
-                    setConfigsByEndpointAndLibrary.getOrElse(configPoint, () => new Map()).get(currentReceiveLibrary) ??
-                    []
+                    setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentReceiveLibrary) ?? []
                 const updatedConfigListCsv = updatedConfigList
                     .map(
                         (setConfigParam) =>
@@ -640,14 +627,3 @@ export const configureOApp: OAppConfigurator = withOAppLogger(
         onError: (logger, args, error) => logger.error(`Failed to check OApp configuration: ${error}`),
     }
 )
-
-const getEndpointConfigAddressPolyfill = async (sdk: IOApp, point: OmniPoint, logger: Logger) => {
-    return typeof sdk.getEndpointConfigAddress === 'function'
-        ? // The new devtools versions have the getEndpointConfigAddress method
-          await sdk.getEndpointConfigAddress()
-        : // The old versions don't have it, so we fallback to using the OApp address and warn the user
-          (logger.warn(
-              `Your SDK does not support getEndpointConfigAddress method. Please update @layerzerolabs packages to their newest versions`
-          ),
-          point.address)
-}
