@@ -2,6 +2,11 @@ import { AsyncRetriable } from '@/common/retry'
 
 describe('common/retry', () => {
     describe('AsyncRetriable', () => {
+        beforeEach(() => {
+            // We'll reset the default config before each test
+            AsyncRetriable.reset()
+        })
+
         it('should retry a method call 3 times by default', async () => {
             const error = new Error('Told ya')
             const mock = jest.fn().mockRejectedValue(error)
@@ -35,6 +40,27 @@ describe('common/retry', () => {
             await expect(new WithAsyncRetriable().iAlwaysFail('y')).rejects.toBe(error)
 
             expect(mock).toHaveBeenCalledTimes(2)
+        })
+
+        it('should use the default config if paramter has not been specified', async () => {
+            const error = new Error('Told ya')
+            const mock = jest.fn().mockRejectedValue(error)
+            const handleRetry = jest.fn().mockReturnValue(true)
+
+            class WithAsyncRetriable {
+                @AsyncRetriable()
+                async iAlwaysFail(value: string) {
+                    return mock(value)
+                }
+            }
+
+            AsyncRetriable.config.numAttempts = 5
+            AsyncRetriable.config.onRetry = handleRetry
+
+            await expect(new WithAsyncRetriable().iAlwaysFail('y')).rejects.toBe(error)
+
+            expect(mock).toHaveBeenCalledTimes(5)
+            expect(handleRetry).toHaveBeenCalledTimes(5)
         })
 
         it('should stop retrying if the onRetry handler returns false', async () => {

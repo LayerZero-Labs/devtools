@@ -15,7 +15,7 @@ export interface RetriableConfig<TInstance = unknown> {
     /**
      * Enable / disable the retry behavior
      */
-    enabled?: boolean
+    enabled: boolean
     /**
      * The maximum delay, in milliseconds, between two consecutive attempts.
      *
@@ -27,7 +27,7 @@ export interface RetriableConfig<TInstance = unknown> {
      *
      * @default 3
      */
-    numAttempts?: number
+    numAttempts: number
     /**
      * Callback called on every failed attempt.
      *
@@ -39,7 +39,35 @@ export interface RetriableConfig<TInstance = unknown> {
      * @param {unknown[]} args The method parameters
      * @returns {boolean | undefined} This function can stop the retry train by returning false
      */
-    onRetry?: OnRetry<TInstance>
+    onRetry: OnRetry<TInstance>
+}
+
+interface TAsyncRetriable {
+    <TArgs extends unknown[], TResult>(
+        overrides?: Partial<RetriableConfig>
+    ): (
+        target: unknown,
+        propertyKey: string,
+        descriptor: TypedPropertyDescriptor<(...args: TArgs) => Promise<TResult>>
+    ) => TypedPropertyDescriptor<(...args: TArgs) => Promise<TResult>>
+
+    /**
+     * The default config used by all Asyncretriable decorators.
+     *
+     * This config can be updated at runtime by setting its properties:
+     *
+     * ```
+     * AsyncRetriable.config.numAttempts = 10
+     * ```
+     */
+    config: RetriableConfig
+
+    /**
+     * Resets the config to its default state
+     *
+     * @returns {void}
+     */
+    reset: () => void
 }
 
 /**
@@ -54,22 +82,12 @@ export const createDefaultRetryHandler = (loggerName: string = 'AsyncRetriable')
     }
 }
 
-export const AsyncRetriable = ({
-    enabled = true,
-    maxDelay,
-    numAttempts = 3,
-    onRetry = createDefaultRetryHandler(),
-}: RetriableConfig = {}) => {
+export const AsyncRetriable: TAsyncRetriable = (overrides: Partial<RetriableConfig> = {}) => {
     return function AsyncRetriableDecorator<TArgs extends unknown[], TResult>(
         target: unknown,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<(...args: TArgs) => Promise<TResult>>
     ) {
-        // If we are disabled, we are disabled
-        if (!enabled) {
-            return descriptor
-        }
-
         // Grab the original method and ensure that we are decorating a method
         const originalMethod = descriptor.value
         assert(
@@ -86,11 +104,24 @@ export const AsyncRetriable = ({
         // We'll curry this function so that it can pass the arguments to onRetry
         const handleRetry =
             (args: TArgs) =>
-            (error: unknown, attempt: number): boolean =>
-                onRetry?.(attempt, numAttempts, error, target, propertyKey, args) ?? true
+            (error: unknown, attempt: number): boolean => {
+                const numAttempts = overrides.numAttempts ?? AsyncRetriable.config.numAttempts
+                const onRetry = overrides.onRetry ?? AsyncRetriable.config.onRetry
+
+                return onRetry(attempt, numAttempts, error, target, propertyKey, args) ?? true
+            }
 
         // Create the retried method
         const retriedMethod = function (this: unknown, ...args: TArgs): Promise<TResult> {
+            const enabled = overrides.enabled ?? AsyncRetriable.config.enabled
+            // If we are disabled, we are disabled
+            if (!enabled) {
+                return originalMethod.apply(this, args)
+            }
+
+            const maxDelay = overrides.numAttempts ?? AsyncRetriable.config.maxDelay
+            const numAttempts = overrides.numAttempts ?? AsyncRetriable.config.numAttempts
+
             // We need to call the original method with the current this context
             // rather than the target, target can point to a prototype rather than the instance
             return backOff(() => originalMethod.apply(this, args), {
@@ -106,4 +137,30 @@ export const AsyncRetriable = ({
         // return our new descriptor
         return (descriptor.value = retriedMethod), descriptor
     }
+}
+
+const DEFAULT_CONFIG: RetriableConfig = {
+    enabled: true,
+    numAttempts: 3,
+    onRetry: createDefaultRetryHandler(),
+}
+
+/**
+ * The default config used by all Asyncretriable decorators.
+ *
+ * This config can be updated at runtime by setting its properties:
+ *
+ * ```
+ * AsyncRetriable.config.numAttempts = 10
+ * ```
+ */
+AsyncRetriable.config = { ...DEFAULT_CONFIG }
+
+/**
+ * Resets the config to its default state
+ *
+ * @returns {void}
+ */
+AsyncRetriable.reset = () => {
+    AsyncRetriable.config = { ...DEFAULT_CONFIG }
 }

@@ -1,5 +1,5 @@
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { formatOmniPoint, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
+import { AsyncRetriable, formatOmniPoint, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
 import type { IOmniSDK } from './types'
 import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
 import { serializeTransactionMessage } from '@/transactions/serde'
@@ -8,7 +8,7 @@ import { serializeTransactionMessage } from '@/transactions/serde'
  * Base class for all Solana SDKs, providing some common functionality
  * to reduce the boilerplate
  */
-export abstract class OmniSDK implements IOmniSDK {
+export class OmniSDK implements IOmniSDK {
     constructor(
         public readonly connection: Connection,
         public readonly point: OmniPoint,
@@ -29,6 +29,7 @@ export abstract class OmniSDK implements IOmniSDK {
         return new PublicKey(this.point.address)
     }
 
+    @AsyncRetriable()
     protected async createTransaction(transaction: Transaction): Promise<OmniTransaction> {
         const { blockhash } = await this.connection.getLatestBlockhash('finalized')
 
