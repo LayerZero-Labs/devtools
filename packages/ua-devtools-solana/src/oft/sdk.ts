@@ -1,5 +1,5 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
-import { OftTools, OFT_SEED, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OftTools, EndpointProgram, OftProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import {
     type OmniAddress,
     type OmniTransaction,
@@ -28,19 +28,10 @@ export class OFT extends OmniSDK implements IOApp {
         connection: Connection,
         point: OmniPoint,
         userAccount: PublicKey,
-        public readonly mintAccount: PublicKey,
+        public readonly programId: PublicKey = OftProgram.OFT_DEFAULT_PROGRAM_ID,
         logger?: Logger
     ) {
         super(connection, point, userAccount, logger)
-    }
-
-    /**
-     * For Solana OFTs, the endpoint config is stored under the config account
-     *
-     * @returns {OmniAddress}
-     */
-    getEndpointConfigAddress(): OmniAddress {
-        return this.configAccount.toBase58()
     }
 
     getOwner(): Promise<OmniAddress | undefined> {
@@ -53,10 +44,6 @@ export class OFT extends OmniSDK implements IOApp {
 
     setOwner(): Promise<OmniTransaction> {
         throw new Error('Method not implemented.')
-    }
-
-    get configAccount(): PublicKey {
-        return PublicKey.findProgramAddressSync([Buffer.from(OFT_SEED), this.mintAccount.toBuffer()], this.publicKey)[0]
     }
 
     @AsyncRetriable()
@@ -76,7 +63,7 @@ export class OFT extends OmniSDK implements IOApp {
 
         this.logger.debug(`Getting peer for ${eidLabel}`)
         try {
-            const peer = await OftTools.getPeerAddress(this.connection, this.configAccount, eid, this.publicKey)
+            const peer = await OftTools.getPeerAddress(this.connection, this.publicKey, eid, this.programId)
 
             // We run the hex string we got through a normalization/denormalization process
             // that will ensure that zero addresses will get stripped
@@ -110,7 +97,7 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
 
         const transaction = new Transaction().add(
-            await OftTools.createSetPeerIx(this.userAccount, this.configAccount, eid, normalizedPeer, this.publicKey)
+            await OftTools.createSetPeerIx(this.userAccount, this.publicKey, eid, normalizedPeer, this.programId)
         )
 
         return {
@@ -148,7 +135,7 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
 
         try {
-            const options = await OftTools.getEnforcedOptions(this.connection, this.configAccount, eid, this.publicKey)
+            const options = await OftTools.getEnforcedOptions(this.connection, this.publicKey, eid, this.programId)
             const optionsForMsgType = msgType === MSG_TYPE_SEND ? options.send : options.sendAndCall
 
             return toHex(optionsForMsgType)
@@ -176,11 +163,11 @@ export class OFT extends OmniSDK implements IOApp {
 
             const instruction = await OftTools.createSetEnforcedOptionsIx(
                 this.userAccount, // your admin address
-                this.configAccount, // your OFT Config
+                this.publicKey, // your OFT Config
                 eid, // destination endpoint id for the options to apply to
                 sendOption,
                 sendAndCallOption,
-                this.publicKey
+                this.programId
             )
 
             transaction.add(instruction)

@@ -25,15 +25,6 @@ export class OApp extends Ownable implements IOApp {
         super(contract)
     }
 
-    /**
-     * For EVM OApps, the config is stored under the OApp's address
-     *
-     * @returns {OmniAddress}
-     */
-    getEndpointConfigAddress(): OmniAddress {
-        return this.contract.contract.address
-    }
-
     @AsyncRetriable()
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
