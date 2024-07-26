@@ -8,7 +8,7 @@ import { serializeTransactionMessage } from '@/transactions/serde'
  * Base class for all Solana SDKs, providing some common functionality
  * to reduce the boilerplate
  */
-export abstract class OmniSDK implements IOmniSDK {
+export class OmniSDK implements IOmniSDK {
     constructor(
         public readonly connection: Connection,
         public readonly point: OmniPoint,
