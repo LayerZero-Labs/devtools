@@ -1,5 +1,16 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.2.41
+
+### Patch Changes
+
+- 783461e: Allow AsyncRetriable to be configured at runtime
+- Updated dependencies [783461e]
+- Updated dependencies [02b35af]
+  - @layerzerolabs/devtools@0.3.22
+  - @layerzerolabs/ua-devtools-evm@0.3.18
+  - @layerzerolabs/ua-devtools@0.3.23
+
 ## 0.2.40
 
 ### Patch Changes

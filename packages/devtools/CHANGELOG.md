@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.22
+
+### Patch Changes
+
+- 783461e: Allow AsyncRetriable to be configured at runtime
+
 ## 0.3.21
 
 ### Patch Changes
