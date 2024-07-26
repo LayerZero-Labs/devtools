@@ -4,6 +4,7 @@
   "include": ["src", "test", "*.config.ts"],
   "compilerOptions": {
     "types": ["node", "jest"],
+    "experimentalDecorators": true,
     "paths": {
       "@/*": ["./src/*"]
     }
