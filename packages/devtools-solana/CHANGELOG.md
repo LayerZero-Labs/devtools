@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-solana
 
+## 0.0.4
+
+### Patch Changes
+
+- 783461e: Use Asyncretriable when creating Solana transactions
+- Updated dependencies [783461e]
+  - @layerzerolabs/devtools@0.3.22
+
 ## 0.0.3
 
 ### Patch Changes

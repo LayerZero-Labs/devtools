@@ -1,5 +1,15 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 0.3.18
+
+### Patch Changes
+
+- 02b35af: Remove recently introduced getEndpointConfigAddress method on IOApp
+- Updated dependencies [783461e]
+- Updated dependencies [02b35af]
+  - @layerzerolabs/devtools@0.3.22
+  - @layerzerolabs/ua-devtools@0.3.23
+
 ## 0.3.17
 
 ### Patch Changes
