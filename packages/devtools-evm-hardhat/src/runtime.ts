@@ -122,7 +122,7 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
     const environment = getDefaultRuntimeEnvironment()
 
     try {
-        // The last step is to create a duplicate enviornment that mimics the original one
+        // The last step is to create a duplicate environment that mimics the original one
         // with one crucial difference - the network setup
         return new HardhatRuntimeEnvironmentImplementation(
             environment.config,

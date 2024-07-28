@@ -40,7 +40,7 @@ This package comes with a CLI interface and registers an executable called `@lay
 npx @layerzerolabs/export-deployments
 ```
 
-### Programatic usage
+### Programmatic usage
 
 ```typescript
 // generateSafe is an error-safe function that returns an Either<Error, OutputFile[]> object

@@ -82,7 +82,7 @@ services:
     # we'll set these based on the default variables github gives us
     #
     # If these are not provided, for example if running on a local machine,
-    # we'll default them to our repository and and empty ref
+    # we'll default them to our repository and empty ref
     environment:
       - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL}
       - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
