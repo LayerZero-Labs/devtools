@@ -7,6 +7,8 @@ import {
     createSignAndSend,
     groupTransactionsByEid,
 } from '@/transactions'
+import { formatEid } from '@/omnigraph'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 describe('transactions/signer', () => {
     const transactionArbitrary: fc.Arbitrary<OmniTransaction> = fc.record({
@@ -36,6 +38,38 @@ describe('transactions/signer', () => {
 
                     expect(signAndSend).not.toHaveBeenCalled()
                     expect(sign).not.toHaveBeenCalled()
+                })
+
+                it('should return the first transaction as failed if createSigner fails', async () => {
+                    await fc.assert(
+                        fc.asyncProperty(fc.array(transactionArbitrary), async (transactions) => {
+                            const signerFactory: OmniSignerFactory = jest
+                                .fn()
+                                .mockImplementation((eid: EndpointId) => Promise.reject(new Error(`So sorry ${eid}`)))
+                            const signAndSendTransactions = createSignAndSend(signerFactory)
+
+                            // Now we send all the transactions to the flow and observe the output
+                            const [successful, errors, pending] = await signAndSendTransactions(transactions)
+
+                            const grouped = groupTransactionsByEid(transactions)
+
+                            // We expect none of the transactions to go through
+                            expect(successful).toEqual([])
+                            // We expect the errors to contain the first transaction and the wrapped error from the signer factory
+                            expect(errors).toEqual(
+                                Array.from(grouped.entries()).map(([eid, transactions]) => ({
+                                    error: new Error(
+                                        `Failed to create a signer for ${formatEid(eid)}: ${new Error(`So sorry ${eid}`)}`
+                                    ),
+                                    transaction: transactions[0],
+                                }))
+                            )
+                            // And we expect all the transactions to be pending
+                            expect(pending).toContainAllValues(
+                                Array.from(grouped.entries()).flatMap(([, transactions]) => transactions)
+                            )
+                        })
+                    )
                 })
 
                 it('should return all successful transactions if they all go through', async () => {
