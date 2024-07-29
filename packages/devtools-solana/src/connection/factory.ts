@@ -18,6 +18,25 @@ export const defaultRpcUrlFactory: RpcUrlFactory = (eid) => {
     throw new Error(`Could not find a default Solana RPC URL for eid ${eid} (${formatEid(eid)})`)
 }
 
+/**
+ * Creates a Solana RPC URL factory with the ability to specify overrides
+ * for specific `EndpointId`s.
+ *
+ * This is a convenience method for when custom RPC URLs can be provided, e.g.
+ * from environment variables.
+ *
+ * ```
+ * const rpcUrlFactory = createRpcUrlFactory({ [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA_MAINNET })
+ * ```
+ *
+ * @param {Partial<Record<EndpointId, string | null>>} [overrides] An object mapping `EndpointId`s to RPC URLs.
+ * @returns {RpcUrlFactory}
+ */
+export const createRpcUrlFactory =
+    (overrides: Partial<Record<EndpointId, string | null>> = {}): RpcUrlFactory =>
+    (eid) =>
+        overrides[eid] ?? defaultRpcUrlFactory(eid)
+
 export const createConnectionFactory = (
     urlFactory = defaultRpcUrlFactory,
     commitmentOrConfig?: Commitment | ConnectionConfig
