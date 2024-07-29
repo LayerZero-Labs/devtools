@@ -16,7 +16,7 @@ import {
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
-import { Logger, printJson } from '@layerzerolabs/io-devtools'
+import { Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
@@ -110,20 +110,42 @@ export class OFT extends OmniSDK implements IOApp {
     async getDelegate(): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting delegate`)
 
-        throw new TypeError(`getDelegate() not implemented on Solana OFT SDK`)
+        const endpointSdk = await this.getEndpointSDK()
+        const delegate = await endpointSdk.getDelegate(this.point.address)
+
+        return this.logger.verbose(`Got delegate: ${delegate}`), delegate
     }
 
     @AsyncRetriable()
     async isDelegate(delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate`)
 
-        throw new TypeError(`isDelegate() not implemented on Solana OFT SDK`)
+        const endpointSdk = await this.getEndpointSDK()
+        const isDelegate = await endpointSdk.isDelegate(this.point.address, delegate)
+
+        return this.logger.verbose(`Checked delegate: ${delegate}: ${printBoolean(isDelegate)}`), isDelegate
     }
 
     async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
         this.logger.debug(`Setting delegate to ${delegate}`)
 
-        throw new TypeError(`setDelegate() not implemented on Solana OFT SDK`)
+        const transaction = await mapError(
+            async () => {
+                const instruction = await OftTools.createSetDelegateIx(
+                    this.userAccount,
+                    this.publicKey,
+                    new PublicKey(delegate),
+                    this.programId
+                )
+                return new Transaction().add(instruction)
+            },
+            (error) => new Error(`Failed to set delegate for ${this.label} to ${delegate}: ${error}`)
+        )
+
+        return {
+            ...(await this.createTransaction(transaction)),
+            description: `Setting delegate to ${delegate}`,
+        }
     }
 
     @AsyncRetriable()

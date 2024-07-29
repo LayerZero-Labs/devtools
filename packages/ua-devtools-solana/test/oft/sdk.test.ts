@@ -111,6 +111,38 @@ describe('oft/sdk', () => {
         })
     })
 
+    describe('getDelegate', () => {
+        it('should return a Solana address if we are asking for a delegate that has been set', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, programId)
+
+            const delegate = await sdk.getDelegate()
+            expect(delegate).toEqual(expect.any(String))
+
+            expect(await sdk.isDelegate(delegate!)).toBeTruthy()
+        })
+    })
+
+    describe('setDelegate', () => {
+        it('should return an omnitransaction', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, programId)
+
+            const delegate = PublicKey.default.toBase58()
+            const omniTransaction = await sdk.setDelegate(delegate)
+
+            expect(omniTransaction).toEqual({
+                data: expect.any(String),
+                point,
+                description: `Setting delegate to ${delegate}`,
+            })
+        })
+    })
+
     describe('getEnforcedOptions', () => {
         it('should throw if we are trying to get an option for invalid msgType', async () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
