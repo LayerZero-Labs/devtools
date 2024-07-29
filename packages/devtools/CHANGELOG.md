@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.3.23
+
+### Patch Changes
+
+- 753a9aa: Add getPoint method to OmniSigner
+- f22da2e: Handle erros coming from signer factories
+
 ## 0.3.22
 
 ### Patch Changes
