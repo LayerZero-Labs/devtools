@@ -13,8 +13,10 @@
     "artifacts/"
   ],
   "scripts": {
+    "coverage": "forge coverage --ir-minimum",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "test": "forge test"
   },
   "devDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
