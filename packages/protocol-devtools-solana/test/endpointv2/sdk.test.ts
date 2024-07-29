@@ -73,7 +73,7 @@ describe('endpointv2/sdk', () => {
             expect(lib).toEqual<string>(expect.any(String))
             expect(normalizePeer(lib, eid)).toEqual(expect.any(Uint8Array))
 
-            expect(await sdk.isDefaultSendLibrary(lib!, eid)).toBeTruthy()
+            expect(await sdk.isDefaultSendLibrary(lib!, eid)).toBeFalsy()
             expect(await sdk.isDefaultSendLibrary(EndpointProgram.PROGRAM_ID.toBase58(), eid)).toBeFalsy()
         })
     })
@@ -83,7 +83,7 @@ describe('endpointv2/sdk', () => {
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new EndpointV2(connection, point, account)
 
-            expect(await sdk.isDefaultSendLibrary(oftConfig.toBase58(), EndpointId.FLARE_V2_MAINNET)).toBeTruthy()
+            expect(await sdk.isDefaultSendLibrary(oftConfig.toBase58(), EndpointId.FLARE_V2_MAINNET)).toBeFalsy()
         })
 
         it('should return false if the default send library is not being used', async () => {
@@ -101,7 +101,7 @@ describe('endpointv2/sdk', () => {
 
             expect(await sdk.getReceiveLibrary(account.toBase58(), EndpointId.ETHEREUM_V2_TESTNET)).toEqual([
                 undefined,
-                true,
+                false,
             ])
         })
 

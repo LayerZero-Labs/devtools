@@ -72,7 +72,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 new Error(`Failed to get the default receive library for ${this.label} for ${eidLabel}: ${error}`)
         )
 
-        return config?.msgLib.toBase58() ?? undefined
+        const lib = config?.owner?.toBase58() ?? undefined
+        this.logger.debug(`Got default receive library for eid ${eid} (${eidLabel}): ${lib}`)
+
+        return lib
     }
 
     @AsyncRetriable()
@@ -109,7 +112,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 )
         )
 
-        return [config?.programId?.toBase58() ?? undefined, config?.isDefault ?? true]
+        const lib = config?.programId?.toBase58() ?? undefined
+        const isDefault = config?.isDefault ?? false
+        this.logger.debug(
+            `Got receive library for eid ${srcEid} (${eidLabel}) and address ${receiver}: ${lib} (${isDefault ? 'default' : 'not default'})`
+        )
+
+        return [lib, isDefault]
     }
 
     async setDefaultReceiveLibrary(
@@ -135,24 +144,32 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             (error) => new Error(`Failed to get the default send library for ${this.label} for ${eidLabel}: ${error}`)
         )
 
-        return config?.msgLib.toBase58() ?? undefined
+        const lib = config?.owner?.toBase58() ?? undefined
+        this.logger.debug(`Got default receive library for eid ${eid} (${eidLabel}): ${lib}`)
+
+        return lib
     }
 
     @AsyncRetriable()
     async isDefaultSendLibrary(sender: OmniAddress, dstEid: EndpointId): Promise<boolean> {
-        this.logger.debug(
-            `Checking default send library for eid ${dstEid} (${formatEid(dstEid)}) and address ${sender}`
-        )
+        const eidLabel = formatEid(dstEid)
+
+        this.logger.debug(`Checking default send library for eid ${dstEid} (${eidLabel}) and address ${sender}`)
 
         const config = await mapError(
             () => this.program.getSendLibrary(this.connection, new PublicKey(sender), dstEid),
             (error) =>
                 new Error(
-                    `Failed to check the default send library for ${this.label} for ${sender} for ${formatEid(dstEid)}: ${error}`
+                    `Failed to check the default send library for ${this.label} for ${sender} for ${eidLabel}: ${error}`
                 )
         )
 
-        return config?.isDefault ?? true
+        const isDefault = config?.isDefault ?? false
+        this.logger.debug(
+            `Checked default send library for eid ${dstEid} (${eidLabel}) and address ${sender}: ${isDefault}`
+        )
+
+        return isDefault
     }
 
     async setDefaultSendLibrary(eid: EndpointId, uln: OmniAddress | null | undefined): Promise<OmniTransaction> {
