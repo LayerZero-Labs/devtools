@@ -12,12 +12,22 @@ import { formatEid, formatOmniPoint } from '@/omnigraph/format'
 import { groupTransactionsByEid } from './utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import assert from 'assert'
+import type { OmniPoint } from '@/omnigraph'
 
 /**
  * Base class for all signers containing common functionality
  */
 export abstract class OmniSignerBase implements OmniSigner {
-    protected constructor(public readonly eid: EndpointId) {}
+    /**
+     * @deprecated Use `OmniSigner.getPoint()` instead
+     */
+    public readonly eid: EndpointId
+
+    protected constructor(eid: EndpointId) {
+        this.eid = eid
+    }
+
+    abstract getPoint(): OmniPoint | Promise<OmniPoint>
 
     abstract sign(transaction: OmniTransaction): Promise<string>
 
