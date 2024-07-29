@@ -3,6 +3,7 @@ import {
     type OmniTransaction,
     type OmniTransactionReceipt,
     type OmniTransactionResponse,
+    OmniPoint,
     OmniSignerBase,
 } from '@layerzerolabs/devtools'
 import { ConfirmOptions, Connection, sendAndConfirmTransaction, Signer } from '@solana/web3.js'
@@ -17,6 +18,10 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
         public readonly confirmOptions: ConfirmOptions = { commitment: 'finalized' }
     ) {
         super(eid)
+    }
+
+    getPoint(): OmniPoint {
+        return { eid: this.eid, address: this.signer.publicKey.toBase58() }
     }
 
     async sign(transaction: OmniTransaction): Promise<string> {

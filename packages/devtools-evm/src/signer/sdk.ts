@@ -9,6 +9,7 @@ import {
     type OmniTransactionResponse,
     type OmniSigner,
     type OmniTransaction,
+    type OmniPoint,
 } from '@layerzerolabs/devtools'
 import assert from 'assert'
 
@@ -20,6 +21,10 @@ export abstract class OmniSignerEVMBase extends OmniSignerBase implements OmniSi
         public readonly signer: Signer
     ) {
         super(eid)
+    }
+
+    async getPoint(): Promise<OmniPoint> {
+        return { eid: this.eid, address: await this.signer.getAddress() }
     }
 }
 

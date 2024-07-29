@@ -35,7 +35,12 @@ export interface OmniTransactionReceipt {
 }
 
 export interface OmniSigner<TResponse extends OmniTransactionResponse = OmniTransactionResponse> {
+    /**
+     * @deprecated Use `OmniSigner.getPoint().eid` instead
+     */
     eid: EndpointId
+
+    getPoint(): OmniPoint | Promise<OmniPoint>
 
     sign: (transaction: OmniTransaction) => Promise<string>
     signAndSend: (transaction: OmniTransaction) => Promise<TResponse>
