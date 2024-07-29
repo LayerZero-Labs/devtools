@@ -15,13 +15,15 @@ import {
     AsyncRetriable,
     OmniPoint,
     mapError,
+    areBytes32Equal,
+    normalizePeer,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
-import { EndpointProgram, SetConfigType } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointPDADeriver, EndpointProgram, SetConfigType } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import assert from 'assert'
 import { Uln302 } from '@/uln302'
@@ -35,23 +37,39 @@ import { SetConfigSchema } from './schema'
 export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     public readonly program: EndpointProgram.Endpoint
 
+    public readonly deriver: EndpointPDADeriver
+
     constructor(connection: Connection, point: OmniPoint, userAccount: PublicKey, logger?: Logger) {
         super(connection, point, userAccount, logger)
 
         this.program = new EndpointProgram.Endpoint(this.publicKey)
+        this.deriver = new EndpointPDADeriver(this.publicKey)
     }
 
     @AsyncRetriable()
     async getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined> {
         this.logger.debug(`Getting delegate for ${oapp}`)
 
-        throw new TypeError(`getDelegate() not implemented on Solana Endpoint SDK`)
+        try {
+            const [oAppRegistry] = this.deriver.oappRegistry(new PublicKey(oapp))
+            const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
+                this.connection,
+                oAppRegistry
+            )
+
+            return oAppRegistryInfo.delegate.toBase58()
+        } catch (error) {
+            throw new Error(`Failed to get delegate for ${this.label} for oapp ${oapp}: ${error}`)
+        }
     }
 
     async isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate for OApp ${oapp}`)
 
-        throw new TypeError(`isDelegate() not implemented on Solana Endpoint SDK`)
+        return areBytes32Equal(
+            normalizePeer(delegate, this.point.eid),
+            normalizePeer(await this.getDelegate(oapp), this.point.eid)
+        )
     }
 
     async getUln302SDK(address: OmniAddress): Promise<IUln302> {
