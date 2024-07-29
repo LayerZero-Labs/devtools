@@ -45,7 +45,7 @@ git submodule update --init
 
 ### Setting up the environment
 
-This repository uses `pnpm` as its package manager and has a requirement on the minimum `node` version used. If using `nvm`, please run the following to setup the enviornment:
+This repository uses `pnpm` as its package manager and has a requirement on the minimum `node` version used. If using `nvm`, please run the following to setup the environment:
 
 ```bash
 # or nvm install if nvm use fails
