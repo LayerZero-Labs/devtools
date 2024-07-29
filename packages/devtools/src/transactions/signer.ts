@@ -3,6 +3,7 @@ import type {
     OmniSigner,
     OmniSignerFactory,
     OmniTransaction,
+    OmniTransactionReceipt,
     OmniTransactionResponse,
     OmniTransactionWithError,
     OmniTransactionWithReceipt,
@@ -127,7 +128,18 @@ export const createSignAndSend =
                 )
 
                 logger.debug(`Creating signer for ${eidName}`)
-                const signer = await createSigner(eid)
+                let signer: OmniSigner<OmniTransactionResponse<OmniTransactionReceipt>>
+
+                try {
+                    signer = await createSigner(eid)
+                } catch (error) {
+                    logger.error(`Failed to create a signer for ${eidName}: ${error}`)
+
+                    return handleError({
+                        error: new Error(`Failed to create a signer for ${eidName}: ${error}`),
+                        transaction: eidTransactions[0]!,
+                    })
+                }
 
                 await signerLogic(eid, logger, signer, eidTransactions, handleSuccess, handleError)
 
