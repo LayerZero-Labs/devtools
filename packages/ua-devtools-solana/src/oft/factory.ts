@@ -20,7 +20,7 @@ import {
  */
 export const createOFTFactory = (
     userAccountFactory: PublicKeyFactory,
-    mintAccountFactory: PublicKeyFactory,
+    programIdFactory: PublicKeyFactory,
     connectionFactory: ConnectionFactory = createConnectionFactory(defaultRpcUrlFactory)
 ): OAppFactory<OFT> =>
     pMemoize(
@@ -29,6 +29,6 @@ export const createOFTFactory = (
                 await connectionFactory(point.eid),
                 point,
                 await userAccountFactory(point),
-                await mintAccountFactory(point)
+                await programIdFactory(point)
             )
     )
