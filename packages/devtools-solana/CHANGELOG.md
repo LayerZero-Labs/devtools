@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.0.6
+
+### Patch Changes
+
+- 4d6cf0d: Add the ability to specify lookup tables in OmniSignerSolana
+
 ## 0.0.5
 
 ### Patch Changes

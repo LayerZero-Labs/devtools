@@ -1,5 +1,16 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 0.0.6
+
+### Patch Changes
+
+- 5192696: Add delegate getters/setters to Solana SDKs
+- Updated dependencies [4d6cf0d]
+- Updated dependencies [074b0a5]
+- Updated dependencies [5192696]
+  - @layerzerolabs/devtools-solana@0.0.6
+  - @layerzerolabs/protocol-devtools-solana@0.0.4
+
 ## 0.0.5
 
 ### Patch Changes
