@@ -1,5 +1,14 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 0.0.4
+
+### Patch Changes
+
+- 074b0a5: Adjust default send/receive library logic in Solana OFT SDK
+- 5192696: Add delegate getters/setters to Solana SDKs
+- Updated dependencies [4d6cf0d]
+  - @layerzerolabs/devtools-solana@0.0.6
+
 ## 0.0.3
 
 ### Patch Changes
