@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-solana
 
+## 0.0.5
+
+### Patch Changes
+
+- 753a9aa: Add getPoint method to OmniSigner
+- 0db7580: Add createRpcUrlFactory convenience method
+- Updated dependencies [753a9aa]
+- Updated dependencies [f22da2e]
+  - @layerzerolabs/devtools@0.3.23
+
 ## 0.0.4
 
 ### Patch Changes

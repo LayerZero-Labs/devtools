@@ -1,5 +1,17 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 0.0.5
+
+### Patch Changes
+
+- 802f2bb: Add @layerzerolabs/protocol-devtools-solana into peer dependencies
+- 802f2bb: Fix a typo in createOFTFactory
+- Updated dependencies [753a9aa]
+- Updated dependencies [f22da2e]
+- Updated dependencies [0db7580]
+  - @layerzerolabs/devtools-solana@0.0.5
+  - @layerzerolabs/devtools@0.3.23
+
 ## 0.0.4
 
 ### Patch Changes
