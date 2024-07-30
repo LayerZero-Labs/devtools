@@ -2642,6 +2642,9 @@ importers:
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~0.3.21
         version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.11
+        version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^2.3.25
         version: 2.3.25

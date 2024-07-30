@@ -1,5 +1,6 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
 import assert from 'assert'
+import { createLogger, printRecord } from '@layerzerolabs/io-devtools'
 
 /**
  * This deploy function will deploy and configure the TestProxy contract
@@ -28,10 +29,13 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         },
     })
 
-    console.table({
-        Network: `${network.name}`,
-        TestProxy: testProxyDeployment.address,
-    })
+    const logger = createLogger(process.env.LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING ? 'info' : 'error')
+    logger.info(
+        printRecord({
+            Network: `${network.name}`,
+            TestProxy: testProxyDeployment.address,
+        })
+    )
 }
 
 deploy.tags = ['TestProxy']
