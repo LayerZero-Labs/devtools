@@ -36,6 +36,6 @@ _Options {
 }
 `;
 
-exports[`oft/sdk getEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs @ SOLANA_V2_MAINNET]: Invalid msgType received: 3. Expected one of 1 (send), 2 (send and call)]`;
+exports[`oft/sdk getEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC @ SOLANA_V2_MAINNET]: Invalid msgType received: 3. Expected one of 1 (send), 2 (send and call)]`;
 
-exports[`oft/sdk setEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [Ag28jYmND83RnwcSFq2vwWxThSya55etjWJwubd8tRXs @ SOLANA_V2_MAINNET]: Invalid msgType received: 7. Expected one of 1 (send), 2 (send and call)]`;
+exports[`oft/sdk setEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC @ SOLANA_V2_MAINNET]: Invalid msgType received: 7. Expected one of 1 (send), 2 (send and call)]`;
