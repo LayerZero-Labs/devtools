@@ -2,6 +2,7 @@ import { formatEid } from '@layerzerolabs/devtools'
 import assert from 'assert'
 import { type DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { createLogger, printRecord } from '@layerzerolabs/io-devtools'
 
 /**
  * This `deploy` function will deploy and configure LayerZero Endpoint (V1)
@@ -20,10 +21,13 @@ const deploy: DeployFunction = async ({ getUnnamedAccounts, deployments, network
         args: [network.config.eid],
     })
 
-    console.table({
-        Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
-        EndpointV2: endpointDeployment.address,
-    })
+    const logger = createLogger(process.env.LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING ? 'info' : 'error')
+    logger.info(
+        printRecord({
+            Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
+            EndpointV2: endpointDeployment.address,
+        })
+    )
 }
 
 deploy.tags = ['Bootstrap', 'Endpoint']

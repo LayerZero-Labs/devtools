@@ -5,6 +5,7 @@ import assert from 'assert'
 import { Contract } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { createLogger, printRecord } from '@layerzerolabs/io-devtools'
 
 const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toString()
 
@@ -187,19 +188,22 @@ export const createDeployEndpointV2 =
             'DVN worker fee lib not set correctly'
         )
 
-        console.table({
-            Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
-            EndpointV2: endpointV2Deployment.address,
-            SendUln302: sendUln302.address,
-            ReceiveUln302: receiveUln302.address,
-            SendUln302_Opt2: SendUln302_Opt2.address,
-            ReceiveUln302_Opt2: ReceiveUln302_Opt2.address,
-            PriceFeed: priceFeed.address,
-            Executor: executor.address,
-            ExecutorFeeLib: executorFeeLib.address,
-            DVN: dvn.address,
-            DVN_Opt2: dvn_Opt2.address,
-            DVN_Opt3: dvn_Opt3.address,
-            DVNFeeLib: dvnFeeLib.address,
-        })
+        const logger = createLogger(process.env.LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING ? 'info' : 'error')
+        logger.info(
+            printRecord({
+                Network: `${network.name} (endpoint ${formatEid(network.config.eid)})`,
+                EndpointV2: endpointV2Deployment.address,
+                SendUln302: sendUln302.address,
+                ReceiveUln302: receiveUln302.address,
+                SendUln302_Opt2: SendUln302_Opt2.address,
+                ReceiveUln302_Opt2: ReceiveUln302_Opt2.address,
+                PriceFeed: priceFeed.address,
+                Executor: executor.address,
+                ExecutorFeeLib: executorFeeLib.address,
+                DVN: dvn.address,
+                DVN_Opt2: dvn_Opt2.address,
+                DVN_Opt3: dvn_Opt3.address,
+                DVNFeeLib: dvnFeeLib.address,
+            })
+        )
     }

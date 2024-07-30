@@ -142,8 +142,6 @@ describe('oft/sdk', () => {
 
     describe('getOwner', () => {
         it('should return a Solana address', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -157,8 +155,6 @@ describe('oft/sdk', () => {
 
     describe('setOwner', () => {
         it('should return an omnitransaction', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
