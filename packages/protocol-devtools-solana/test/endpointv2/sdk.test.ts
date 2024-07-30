@@ -1,5 +1,5 @@
 import { Connection, PublicKey } from '@solana/web3.js'
-import { ConnectionFactory, createConnectionFactory, defaultRpcUrlFactory } from '@layerzerolabs/devtools-solana'
+import { ConnectionFactory, createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@/endpointv2'
 import { formatEid, normalizePeer } from '@layerzerolabs/devtools'
@@ -21,7 +21,12 @@ describe('endpointv2/sdk', () => {
     let getLatestBlockhashMock: jest.SpyInstance
 
     beforeAll(() => {
-        connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+        connectionFactory = createConnectionFactory(
+            createRpcUrlFactory({
+                [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA_MAINNET,
+                [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
+            })
+        )
     })
 
     beforeEach(() => {
@@ -45,8 +50,6 @@ describe('endpointv2/sdk', () => {
         })
 
         it('should return a Solana address if we are asking for a library that has been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new EndpointV2(connection, point, account)
 

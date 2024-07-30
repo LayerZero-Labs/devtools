@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { createConnectionFactory, defaultRpcUrlFactory } from '@layerzerolabs/devtools-solana'
+import { ConnectionFactory, createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT } from '@/oft'
 import { makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
@@ -30,14 +30,23 @@ describe('oft/sdk', () => {
     const point = { eid: EndpointId.SOLANA_V2_MAINNET, address: '8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC' }
     const account = new PublicKey('6tzUZqC33igPgP7YyDnUxQg6eupMmZGRGKdVAksgRzvk')
 
+    let connectionFactory: ConnectionFactory
+
+    beforeAll(() => {
+        connectionFactory = createConnectionFactory(
+            createRpcUrlFactory({
+                [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA_MAINNET,
+                [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
+            })
+        )
+    })
+
     afterEach(() => {
         createSetEnforcedOptionsIxMock.mockClear()
     })
 
     describe('getPeer', () => {
         it('should return undefined if we are asking for a peer that has not been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -45,8 +54,6 @@ describe('oft/sdk', () => {
         })
 
         it('should return a Solana address if we are asking for a peer that has been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -64,8 +71,6 @@ describe('oft/sdk', () => {
     describe('setPeer', () => {
         describe('for EVM', () => {
             it('should return an OmniTransaction', async () => {
-                const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
                 const sdk = new OFT(connection, point, account, programId)
 
@@ -80,8 +85,6 @@ describe('oft/sdk', () => {
 
         describe('for Aptos', () => {
             it('should return an OmniTransaction', async () => {
-                const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
                 const sdk = new OFT(connection, point, account, programId)
 
@@ -96,8 +99,6 @@ describe('oft/sdk', () => {
 
         describe('for Solana', () => {
             it('should return an OmniTransaction', async () => {
-                const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
                 const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
                 const sdk = new OFT(connection, point, account, programId)
 
@@ -113,8 +114,6 @@ describe('oft/sdk', () => {
 
     describe('getDelegate', () => {
         it('should return a Solana address if we are asking for a delegate that has been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -127,8 +126,6 @@ describe('oft/sdk', () => {
 
     describe('setDelegate', () => {
         it('should return an omnitransaction', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -145,8 +142,6 @@ describe('oft/sdk', () => {
 
     describe('getEnforcedOptions', () => {
         it('should throw if we are trying to get an option for invalid msgType', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -154,8 +149,6 @@ describe('oft/sdk', () => {
         })
 
         it('should return an empty bytes if we are asking for options that have not been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -163,8 +156,6 @@ describe('oft/sdk', () => {
         })
 
         it('should return an a hex string if we are asking for options that have been set', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -184,8 +175,6 @@ describe('oft/sdk', () => {
 
     describe('setEnforcedOptions', () => {
         it('should throw if we are trying to get an option for invalid msgType', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -200,8 +189,6 @@ describe('oft/sdk', () => {
         })
 
         it('should return an omnitransaction if called with valid msgType', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -221,8 +208,6 @@ describe('oft/sdk', () => {
         })
 
         it('should create instructions grouped by eid', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
-
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
 
@@ -292,7 +277,6 @@ describe('oft/sdk', () => {
 
     describe('getEndpointSDK', () => {
         it('should return an SDK with the correct eid and address', async () => {
-            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
             const sdk = new OFT(connection, point, account, programId)
             const endpointSdk = await sdk.getEndpointSDK()
