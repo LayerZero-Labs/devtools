@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.1.0
+
+### Minor Changes
+
+- 1f18418: Allow EndpointV2.setConfig to return more than one transaction
+
 ## 0.0.6
 
 ### Patch Changes

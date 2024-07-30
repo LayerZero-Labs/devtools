@@ -1,5 +1,17 @@
 # @layerzerolabs/test-setup-devtools-evm-hardhat
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [1f18418]
+  - @layerzerolabs/protocol-devtools-evm@1.0.0
+  - @layerzerolabs/protocol-devtools@0.4.0
+  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/devtools-evm@0.4.0
+  - @layerzerolabs/devtools-evm-hardhat@1.0.0
+  - @layerzerolabs/ua-devtools-evm@1.0.0
+
 ## 0.0.6
 
 ### Patch Changes

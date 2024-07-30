@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 1.0.0
+
+### Minor Changes
+
+- 1f18418: Allow EndpointV2.setConfig to return more than one transaction
+
+### Patch Changes
+
+- Updated dependencies [1f18418]
+  - @layerzerolabs/protocol-devtools-evm@1.0.0
+  - @layerzerolabs/protocol-devtools@0.4.0
+  - @layerzerolabs/ua-devtools@1.0.0
+  - @layerzerolabs/devtools-evm@0.4.0
+
 ## 0.3.18
 
 ### Patch Changes
