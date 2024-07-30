@@ -143,6 +143,39 @@ describe('oft/sdk', () => {
         })
     })
 
+    describe('getOwner', () => {
+        it('should return a Solana address', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, programId)
+
+            const owner = await sdk.getOwner()
+            expect(owner).toEqual(expect.any(String))
+
+            expect(await sdk.hasOwner(owner!)).toBeTruthy()
+            expect(await sdk.hasOwner(PublicKey.default.toBase58())).toBeFalsy()
+        })
+    })
+
+    describe('setOwner', () => {
+        it('should return an omnitransaction', async () => {
+            const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new OFT(connection, point, account, programId)
+
+            const owner = PublicKey.default.toBase58()
+            const omniTransaction = await sdk.setOwner(owner)
+
+            expect(omniTransaction).toEqual({
+                data: expect.any(String),
+                point,
+                description: `Setting owner to ${owner}`,
+            })
+        })
+    })
+
     describe('getEnforcedOptions', () => {
         it('should throw if we are trying to get an option for invalid msgType', async () => {
             const connectionFactory = createConnectionFactory(defaultRpcUrlFactory)
