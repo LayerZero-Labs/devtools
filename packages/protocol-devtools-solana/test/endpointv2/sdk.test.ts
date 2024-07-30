@@ -4,6 +4,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@/endpointv2'
 import { formatEid, normalizePeer } from '@layerzerolabs/devtools'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { Uln302SetUlnConfig } from '@layerzerolabs/protocol-devtools'
 
 describe('endpointv2/sdk', () => {
     // FIXME These tests are using a mainnet OFT deployment and are potentially very fragile
@@ -353,7 +354,78 @@ describe('endpointv2/sdk', () => {
                 },
             ])
 
-            await sdk.setConfig(oftConfig.toBase58(), sendUln!, params)
+            const transactions = await sdk.setConfig(oftConfig.toBase58(), sendUln!, params)
+            expect(transactions).toHaveLength(1)
+        })
+
+        it('should create multiple OmniTransactions when called with a lot of uln configs', async () => {
+            getLatestBlockhashMock.mockRestore()
+
+            const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
+            const sdk = new EndpointV2(connection, point, account)
+
+            const eid = EndpointId.ETHEREUM_V2_MAINNET
+
+            const sendUln = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
+            expect(sendUln).not.toBeUndefined()
+
+            const sendConfigParam: Uln302SetUlnConfig = {
+                type: 'send',
+                eid: EndpointId.ETHEREUM_V2_MAINNET,
+                ulnConfig: {
+                    confirmations: BigInt(32),
+                    optionalDVNThreshold: 0,
+                    requiredDVNs: [
+                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                    ],
+                    optionalDVNs: [],
+                },
+            }
+
+            const receiveConfigParam: Uln302SetUlnConfig = {
+                type: 'receive',
+                eid: EndpointId.ETHEREUM_V2_MAINNET,
+                ulnConfig: {
+                    confirmations: BigInt(32),
+                    optionalDVNThreshold: 0,
+                    requiredDVNs: [
+                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                    ],
+                    optionalDVNs: [],
+                },
+            }
+
+            const params = await sdk.getUlnConfigParams(sendUln!, [
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+                sendConfigParam,
+                receiveConfigParam,
+            ])
+
+            const transactions = await sdk.setConfig(oftConfig.toBase58(), sendUln!, params)
+
+            expect(transactions.length).toBe(8)
+            expect(transactions.map(({ description, point }) => ({ description, point }))).toMatchSnapshot()
         })
     })
 })

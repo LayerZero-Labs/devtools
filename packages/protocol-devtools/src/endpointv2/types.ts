@@ -121,7 +121,7 @@ export interface IEndpointV2 extends IOmniSDK {
         oapp: PossiblyBytes,
         uln: PossiblyBytes,
         setExecutorConfig: Uln302SetExecutorConfig[]
-    ): Promise<OmniTransaction>
+    ): Promise<OmniTransaction[]>
 
     /**
      * Gets the ULN config for a given OApp, library and a destination
@@ -167,11 +167,11 @@ export interface IEndpointV2 extends IOmniSDK {
      */
     hasAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId, config: Uln302UlnUserConfig): Promise<boolean>
 
-    setUlnConfig(oapp: OmniAddress, uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction>
+    setUlnConfig(oapp: OmniAddress, uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction[]>
 
     getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
     getExecutorConfigParams(uln: OmniAddress, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
-    setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction>
+    setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction[]>
 
     quote(params: MessageParams, sender: OmniAddress): Promise<MessagingFee>
 }

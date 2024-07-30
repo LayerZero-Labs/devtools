@@ -258,22 +258,24 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }
     }
 
-    async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction> {
+    async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParam)}`)
 
         const data = this.contract.contract.interface.encodeFunctionData('setConfig', [oapp, uln, setConfigParam])
 
-        return {
-            ...this.createTransaction(data),
-            description: `Setting config for ULN ${uln} to ${printJson(setConfigParam)}`,
-        }
+        return [
+            {
+                ...this.createTransaction(data),
+                description: `Setting config for ULN ${uln} to ${printJson(setConfigParam)}`,
+            },
+        ]
     }
 
     async setUlnConfig(
         oapp: OmniAddress,
         uln: OmniAddress,
         setUlnConfig: Uln302SetUlnConfig[]
-    ): Promise<OmniTransaction> {
+    ): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting ULN config for OApp ${oapp} to ULN ${uln} with config ${printJson(setUlnConfig)}`)
 
         const setUlnConfigParams: SetConfigParam[] = await this.getUlnConfigParams(uln, setUlnConfig)
@@ -284,7 +286,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         oapp: OmniAddress,
         uln: OmniAddress,
         setExecutorConfig: Uln302SetExecutorConfig[]
-    ): Promise<OmniTransaction> {
+    ): Promise<OmniTransaction[]> {
         this.logger.debug(
             `Setting executor config for OApp ${oapp} to ULN ${uln} with config ${printJson(setExecutorConfig)}`
         )
