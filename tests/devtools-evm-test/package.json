@@ -23,7 +23,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.3.17",
-    "@layerzerolabs/devtools-evm": "~0.3.13",
+    "@layerzerolabs/devtools-evm": "~0.4.0",
     "@layerzerolabs/lz-definitions": "^2.3.25",
     "@layerzerolabs/test-devtools": "~0.2.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",

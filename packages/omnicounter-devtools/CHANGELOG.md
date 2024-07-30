@@ -1,5 +1,12 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 1.0.0
+
+### Patch Changes
+
+- Updated dependencies [1f18418]
+  - @layerzerolabs/protocol-devtools@0.4.0
+
 ## 0.3.7
 
 ### Patch Changes

@@ -38,7 +38,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.8",
     "@layerzerolabs/toolbox-foundry": "^0.1.7",
-    "@layerzerolabs/toolbox-hardhat": "~0.2.40",
+    "@layerzerolabs/toolbox-hardhat": "~0.3.0",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2"
   },

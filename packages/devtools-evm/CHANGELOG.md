@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm
 
+## 0.4.0
+
+### Minor Changes
+
+- 1f18418: Allow EndpointV2.setConfig to return more than one transaction
+
 ## 0.3.15
 
 ### Patch Changes
