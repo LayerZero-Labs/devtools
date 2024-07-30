@@ -867,7 +867,7 @@ describe('oapp/config', () => {
                 })
 
                 it('should return one configureSendConfig transaction', async () => {
-                    const [_, errors] = await signAndSend([
+                    const [_, errors] = await signAndSend(
                         await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
                             ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
                                 {
@@ -889,36 +889,35 @@ describe('oapp/config', () => {
                                     },
                                 },
                             ])),
-                        ]),
-                    ])
+                        ])
+                    )
                     expect(errors).toEqual([])
 
                     // Now we configure the OApp
                     transactions = await configureOApp(graph, oappSdkFactory)
-                    const expectedTransactions = [
-                        await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
-                            ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
-                                {
-                                    eid: avaxPoint.eid,
-                                    executorConfig: {
-                                        maxMessageSize: 99,
-                                        executor: ethExecutorAddress,
-                                    },
+                    const expectedTransactions = await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                        ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: ethExecutorAddress,
                                 },
-                            ])),
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
-                                {
-                                    eid: avaxPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(42),
-                                        requiredDVNs: [ethDvnAddress],
-                                        optionalDVNs: [ethDvnAddress],
-                                        optionalDVNThreshold: 1,
-                                    },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                        ]),
-                    ]
+                            },
+                        ])),
+                    ])
+
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
@@ -1128,37 +1127,36 @@ describe('oapp/config', () => {
                 it('should return all configureReceiveConfig transactions', async () => {
                     // Now we configure the OApp
                     transactions = await configureOApp(graph, oappSdkFactory)
-                    const expectedTransactions = [
-                        await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
-                                {
-                                    eid: avaxPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(42),
-                                        requiredDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNThreshold: 1,
-                                    },
+                    const expectedTransactions = await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
-                                {
-                                    eid: bscPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(24),
-                                        requiredDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNThreshold: 1,
-                                    },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
+                            {
+                                eid: bscPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(24),
+                                    requiredDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                        ]),
-                    ]
+                            },
+                        ])),
+                    ])
+
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
                 it('should return one configureReceiveConfig transactions', async () => {
-                    const [_, errors] = await signAndSend([
+                    const [_, errors] = await signAndSend(
                         await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
                             ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
                                 {
@@ -1171,27 +1169,26 @@ describe('oapp/config', () => {
                                     },
                                 },
                             ])),
-                        ]),
-                    ])
+                        ])
+                    )
                     expect(errors).toEqual([])
 
                     // Now we configure the OApp
                     transactions = await configureOApp(graph, oappSdkFactory)
-                    const expectedTransactions = [
-                        await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
-                                {
-                                    eid: bscPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(24),
-                                        requiredDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNs: ethReceiveUlnDVNs,
-                                        optionalDVNThreshold: 1,
-                                    },
+                    const expectedTransactions = await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
+                            {
+                                eid: bscPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(24),
+                                    requiredDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNs: ethReceiveUlnDVNs,
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                        ]),
-                    ]
+                            },
+                        ])),
+                    ])
+
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
@@ -1261,7 +1258,7 @@ describe('oapp/config', () => {
                 // Now we configure the OApp
                 transactions = await configureOApp(graph, oappSdkFactory)
                 expect(transactions).toEqual([
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
                         ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1282,8 +1279,8 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                    ])),
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
                         ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1295,7 +1292,7 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
+                    ])),
                 ])
             })
 
@@ -1397,7 +1394,7 @@ describe('oapp/config', () => {
                         ethDefaultReceiveLibrary,
                         expiryEthBlock
                     ),
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
                         ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1418,8 +1415,8 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                    ])),
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
                         ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1431,7 +1428,7 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
+                    ])),
                 ])
             })
 
@@ -1524,7 +1521,7 @@ describe('oapp/config', () => {
                         ethDefaultReceiveLibrary,
                         expiryEthBlock
                     ),
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
                         ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1545,8 +1542,8 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
-                    await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
+                    ])),
+                    ...(await ethEndpointV2Sdk.setConfig(ethPoint.address, ethReceiveLibrary, [
                         ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
                             {
                                 eid: avaxPoint.eid,
@@ -1558,7 +1555,7 @@ describe('oapp/config', () => {
                                 },
                             },
                         ])),
-                    ]),
+                    ])),
                 ])
             })
 

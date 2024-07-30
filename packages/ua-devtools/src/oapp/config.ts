@@ -541,12 +541,31 @@ const buildOmniTransactions = async (
     setConfigsByEndpointAndLibrary: OmniPointMap<Map<OmniAddress, SetConfigParam[]>>,
     createSdk: OAppFactory
 ): Promise<OmniTransaction[]> => {
+    const logger = createOAppLogger()
     const omniTransaction: OmniTransaction[] = []
     for (const [from, configsByLibrary] of setConfigsByEndpointAndLibrary) {
         const oapp = await createSdk(from)
         const endpoint = await oapp.getEndpointSDK()
         for (const [library, setConfigParams] of configsByLibrary) {
-            omniTransaction.push(await endpoint.setConfig(from.address, library, setConfigParams))
+            /**
+             * The older versions of devtools returned only one transaction from setConfig
+             * whereas the new versions might decide to split the transaction if it exceeds network size limits
+             *
+             * We'll handle the legacy versions gracefully and display a warning to the user about needing to update the dependencies
+             */
+            const transactionOrTransactions: OmniTransaction | OmniTransaction[] = await endpoint.setConfig(
+                from.address,
+                library,
+                setConfigParams
+            )
+            const transactions = Array.isArray(transactionOrTransactions)
+                ? transactionOrTransactions
+                : (logger.warn(
+                      `You are using an outdated version of @layerzerolabs/protocol-devtools (and/or @layerzerolabs/protocol-devtools-solana, @layerzerolabs/protocol-devtools-evm). Please update your dependencies to the newest version`
+                  ),
+                  [transactionOrTransactions])
+
+            omniTransaction.push(...transactions)
         }
     }
     return omniTransaction

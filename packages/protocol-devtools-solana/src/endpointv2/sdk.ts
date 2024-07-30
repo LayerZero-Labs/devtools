@@ -19,7 +19,7 @@ import {
     normalizePeer,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OmniSDK } from '@layerzerolabs/devtools-solana'
+import { canAddInstruction, OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
@@ -294,10 +294,23 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`setReceiveLibraryTimeout() not implemented on Solana Endpoint SDK`)
     }
 
-    async setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParams: SetConfigParam[]): Promise<OmniTransaction> {
+    async setConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        setConfigParams: SetConfigParam[]
+    ): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting config for OApp ${oapp} to ULN ${uln} with config ${printJson(setConfigParams)}`)
 
-        const transaction = new Transaction()
+        // We'll use this to hold the transaction that receives any new instructions
+        //
+        // If the size of this transaction is about to overflow, we serialize it
+        // and reset this variable to a new transaction
+        let transaction = new Transaction()
+
+        // For logging purposes we'll keep track of the set config params that we pushed into the current transaction
+        let setConfigParamsInTransaction: SetConfigParam[] = []
+
+        const omniTransactions: OmniTransaction[] = []
 
         for (const setConfigParam of setConfigParams) {
             try {
@@ -317,23 +330,43 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                     }
                 )
 
-                transaction.add(instruction)
+                // We now need to check whether we can add any new instructions to the current transaction
+                if (canAddInstruction(transaction, instruction)) {
+                    // If we can then we will
+                    transaction.add(instruction)
+                    setConfigParamsInTransaction.push(setConfigParam)
+                } else {
+                    // If we can't, we serialize the transaction as it is
+                    omniTransactions.push({
+                        ...(await this.createTransaction(transaction)),
+                        description: `Setting config for ULN ${uln} to ${printJson(setConfigParamsInTransaction)}`,
+                    })
+
+                    // And we'll push the instruction to a new transaction
+                    transaction = new Transaction().add(instruction)
+                    setConfigParamsInTransaction = [setConfigParam]
+                }
             } catch (error) {
                 throw new Error(`Failed to setConfig for ${this.label} and OApp ${oapp} and ULN ${uln}: ${error}`)
             }
         }
 
-        return {
-            ...(await this.createTransaction(transaction)),
-            description: `Setting config for ULN ${uln} to ${printJson(setConfigParams)}`,
+        // If we have any leftover instructions to send, we'll add them to the resulting array
+        if (transaction.instructions.length > 0) {
+            omniTransactions.push({
+                ...(await this.createTransaction(transaction)),
+                description: `Setting config for ULN ${uln} to ${printJson(setConfigParamsInTransaction)}`,
+            })
         }
+
+        return omniTransactions
     }
 
     async setUlnConfig(
         oapp: OmniAddress,
         uln: OmniAddress,
         setUlnConfig: Uln302SetUlnConfig[]
-    ): Promise<OmniTransaction> {
+    ): Promise<OmniTransaction[]> {
         this.logger.debug(`Setting ULN config for OApp ${oapp} to ULN ${uln} with config ${printJson(setUlnConfig)}`)
 
         throw new TypeError(`setConfig() not implemented on Solana Endpoint SDK`)
@@ -343,7 +376,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         oapp: OmniAddress,
         uln: OmniAddress,
         setExecutorConfig: Uln302SetExecutorConfig[]
-    ): Promise<OmniTransaction> {
+    ): Promise<OmniTransaction[]> {
         this.logger.debug(
             `Setting executor config for OApp ${oapp} to ULN ${uln} with config ${printJson(setExecutorConfig)}`
         )
