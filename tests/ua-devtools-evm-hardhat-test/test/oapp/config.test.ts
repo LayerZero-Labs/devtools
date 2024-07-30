@@ -819,50 +819,48 @@ describe('oapp/config', () => {
 
                 it('should return all configureSendConfig transactions', async () => {
                     transactions = await configureOApp(graph, oappSdkFactory)
-                    const expectedTransactions = [
-                        await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
-                            ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
-                                {
-                                    eid: avaxPoint.eid,
-                                    executorConfig: {
-                                        maxMessageSize: 99,
-                                        executor: ethExecutorAddress,
-                                    },
+                    const expectedTransactions = await ethEndpointV2Sdk.setConfig(ethPoint.address, ethSendLibrary, [
+                        ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: ethExecutorAddress,
                                 },
-                            ])),
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
-                                {
-                                    eid: avaxPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(42),
-                                        requiredDVNs: [ethDvnAddress],
-                                        optionalDVNs: [ethDvnAddress],
-                                        optionalDVNThreshold: 1,
-                                    },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
+                            {
+                                eid: avaxPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                            ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
-                                {
-                                    eid: bscPoint.eid,
-                                    executorConfig: {
-                                        maxMessageSize: 99,
-                                        executor: ethExecutorAddress,
-                                    },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
+                            {
+                                eid: bscPoint.eid,
+                                executorConfig: {
+                                    maxMessageSize: 99,
+                                    executor: ethExecutorAddress,
                                 },
-                            ])),
-                            ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
-                                {
-                                    eid: bscPoint.eid,
-                                    ulnConfig: {
-                                        confirmations: BigInt(42),
-                                        requiredDVNs: [ethDvnAddress],
-                                        optionalDVNs: [ethDvnAddress],
-                                        optionalDVNThreshold: 1,
-                                    },
+                            },
+                        ])),
+                        ...(await ethEndpointV2Sdk.getUlnConfigParams(ethSendLibrary, [
+                            {
+                                eid: bscPoint.eid,
+                                ulnConfig: {
+                                    confirmations: BigInt(42),
+                                    requiredDVNs: [ethDvnAddress],
+                                    optionalDVNs: [ethDvnAddress],
+                                    optionalDVNThreshold: 1,
                                 },
-                            ])),
-                        ]),
-                    ]
+                            },
+                        ])),
+                    ])
                     expect(transactions).toEqual(expectedTransactions)
                 })
 
