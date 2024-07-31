@@ -1,6 +1,7 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type {
     IUln302,
+    Uln302ConfigType,
     Uln302ExecutorConfig,
     Uln302UlnConfig,
     Uln302UlnUserConfig,
@@ -14,7 +15,7 @@ import {
     OmniPoint,
     mapError,
 } from '@layerzerolabs/devtools'
-import { Logger, printJson } from '@layerzerolabs/io-devtools'
+import { Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
@@ -34,8 +35,12 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @see {@link IUln302.getUlnConfig}
      */
     @AsyncRetriable()
-    async getUlnConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302UlnConfig> {
-        this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and address ${address}`)
+    async getUlnConfig(
+        eid: EndpointId,
+        address: OmniAddress | null | undefined,
+        type: Uln302ConfigType
+    ): Promise<Uln302UlnConfig> {
+        this.logger.debug(`Getting ULN ${type} config for eid ${eid} (${formatEid(eid)}) and address ${address}`)
 
         throw new TypeError(`getUlnConfig() not implemented on Solana Endpoint SDK`)
     }
@@ -44,10 +49,10 @@ export class Uln302 extends OmniSDK implements IUln302 {
      * @see {@link IUln302.getAppUlnConfig}
      */
     @AsyncRetriable()
-    async getAppUlnConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302UlnConfig> {
+    async getAppUlnConfig(eid: EndpointId, address: OmniAddress, type: Uln302ConfigType): Promise<Uln302UlnConfig> {
         const eidLabel = formatEid(eid)
 
-        this.logger.debug(`Getting ULN config for eid ${eid} (${eidLabel}) and address ${address}`)
+        this.logger.debug(`Getting App ULN ${type} config for eid ${eid} (${eidLabel}) and address ${address}`)
 
         const config = await mapError(
             async () => {
@@ -56,18 +61,20 @@ export class Uln302 extends OmniSDK implements IUln302 {
                 return (
                     (await this.program.getReceiveConfigState(this.connection, publicKey, eid)) ??
                     (this.logger.warn(
-                        `Got an empty ULN config for OApp ${address} and ${eidLabel}, getting the default one`
+                        `Got an empty App ULN ${type} config for OApp ${address} and ${eidLabel}, getting the default one`
                     ),
                     await this.program.getDefaultReceiveConfigState(this.connection, eid))
                 )
             },
             (error) =>
-                new Error(`Failed to get ULN config for ${this.label} for OApp ${address} and ${eidLabel}: ${error}`)
+                new Error(
+                    `Failed to get App ULN ${type} config for ${this.label} for OApp ${address} and ${eidLabel}: ${error}`
+                )
         )
 
         assert(
             config != null,
-            `Could not get OApp ULN config for ${this.label} and OApp ${address} and ${eidLabel}: Neither app nor default configs have been specified`
+            `Could not get App ULN ${type} config for ${this.label} and OApp ${address} and ${eidLabel}: Neither OApp nor default configs have been specified`
         )
 
         return {
@@ -85,26 +92,33 @@ export class Uln302 extends OmniSDK implements IUln302 {
     /**
      * @see {@link IUln302.hasAppUlnConfig}
      */
-    async hasAppUlnConfig(eid: EndpointId, oapp: string, config: Uln302UlnUserConfig): Promise<boolean> {
-        const currentConfig = await this.getAppUlnConfig(eid, oapp)
+    async hasAppUlnConfig(
+        eid: EndpointId,
+        oapp: string,
+        config: Uln302UlnUserConfig,
+        type: Uln302ConfigType
+    ): Promise<boolean> {
+        this.logger.verbose(
+            `Checking whether App ULN ${type} configs for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} match`
+        )
+
+        const currentConfig = await this.getAppUlnConfig(eid, oapp, type)
         const currentSerializedConfig = this.serializeUlnConfig(currentConfig)
         const serializedConfig = this.serializeUlnConfig(config)
 
-        this.logger.debug(`Checking whether ULN configs for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} match`)
-        this.logger.debug(`Current config: ${printJson(currentSerializedConfig)}`)
-        this.logger.debug(`Incoming config: ${printJson(serializedConfig)}`)
+        this.logger.debug(`Current App ULN ${type} config: ${printJson(currentSerializedConfig)}`)
+        this.logger.debug(`Incoming App ULN ${type} config: ${printJson(serializedConfig)}`)
 
-        return isDeepEqual(serializedConfig, currentSerializedConfig)
+        const areEqual = isDeepEqual(serializedConfig, currentSerializedConfig)
+
+        return this.logger.verbose(`Checked App ULN ${type} configs: ${printBoolean(areEqual)}`), areEqual
     }
 
     /**
      * @see {@link IUln302.getExecutorConfig}
      */
     @AsyncRetriable()
-    async getExecutorConfig(
-        _eid: EndpointId,
-        _address?: OmniAddress | null | undefined
-    ): Promise<Uln302ExecutorConfig> {
+    async getExecutorConfig(): Promise<Uln302ExecutorConfig> {
         throw new TypeError(`getExecutorConfig() not implemented on Solana Endpoint SDK`)
     }
 
