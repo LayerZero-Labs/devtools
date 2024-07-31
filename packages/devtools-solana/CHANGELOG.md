@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.1.1
+
+### Patch Changes
+
+- 10dcf5b: Add schemas for working with BN & PublicKey objects
+
 ## 0.1.0
 
 ### Minor Changes

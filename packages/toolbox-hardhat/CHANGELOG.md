@@ -1,5 +1,15 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.3.1
+
+### Patch Changes
+
+- 10dcf5b: Add ULN302 config type to EndpointV2 & ULN302 interfaces
+- Updated dependencies [10dcf5b]
+  - @layerzerolabs/protocol-devtools-evm@1.0.1
+  - @layerzerolabs/protocol-devtools@0.4.1
+  - @layerzerolabs/ua-devtools@1.0.1
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.4.1
+
+### Patch Changes
+
+- 10dcf5b: Add ULN302 config type to EndpointV2 & ULN302 interfaces
+
 ## 0.4.0
 
 ### Minor Changes
