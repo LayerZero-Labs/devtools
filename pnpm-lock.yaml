@@ -1043,9 +1043,15 @@ importers:
       '@swc/jest':
         specifier: ^0.2.36
         version: 0.2.36(@swc/core@1.4.0)
+      '@types/bn.js':
+        specifier: ~5.1.5
+        version: 5.1.5
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      bn.js:
+        specifier: ^5.2.0
+        version: 5.2.1
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1

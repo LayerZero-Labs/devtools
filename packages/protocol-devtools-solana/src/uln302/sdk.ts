@@ -1,5 +1,5 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type {
+import {
     IUln302,
     Uln302ConfigType,
     Uln302ExecutorConfig,
@@ -21,6 +21,7 @@ import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey } from '@solana/web3.js'
 import assert from 'assert'
+import { Uln302UlnConfigInputSchema } from './schema'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     public readonly program: UlnProgram.Uln
@@ -55,15 +56,22 @@ export class Uln302 extends OmniSDK implements IUln302 {
         this.logger.debug(`Getting App ULN ${type} config for eid ${eid} (${eidLabel}) and address ${address}`)
 
         const config = await mapError(
-            async () => {
+            async (): Promise<UlnProgram.UlnConfig> => {
                 const publicKey = new PublicKey(address)
+                const config =
+                    type === Uln302ConfigType.Receive
+                        ? await this.program.getReceiveConfigState(this.connection, publicKey, eid)
+                        : await this.program.getSendConfigState(this.connection, publicKey, eid)
 
                 return (
-                    (await this.program.getReceiveConfigState(this.connection, publicKey, eid)) ??
-                    (this.logger.warn(
-                        `Got an empty App ULN ${type} config for OApp ${address} and ${eidLabel}, getting the default one`
-                    ),
-                    await this.program.getDefaultReceiveConfigState(this.connection, eid))
+                    config?.uln ?? {
+                        confirmations: 0,
+                        optionalDvnThreshold: 0,
+                        requiredDvns: [],
+                        optionalDvns: [],
+                        requiredDvnCount: 0,
+                        optionalDvnCount: 0,
+                    }
                 )
             },
             (error) =>
@@ -77,16 +85,7 @@ export class Uln302 extends OmniSDK implements IUln302 {
             `Could not get App ULN ${type} config for ${this.label} and OApp ${address} and ${eidLabel}: Neither OApp nor default configs have been specified`
         )
 
-        return {
-            confirmations: BigInt(
-                typeof config.uln.confirmations === 'number'
-                    ? config.uln.confirmations
-                    : config.uln.confirmations.toString(10)
-            ),
-            optionalDVNThreshold: config.uln.optionalDvnThreshold,
-            requiredDVNs: config.uln.requiredDvns.map((key) => key.toBase58()),
-            optionalDVNs: config.uln.optionalDvns.map((key) => key.toBase58()),
-        }
+        return Uln302UlnConfigInputSchema.parse(config)
     }
 
     /**
