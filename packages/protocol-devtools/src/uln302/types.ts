@@ -9,6 +9,11 @@ import type {
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
+export enum Uln302ConfigType {
+    Send = 'send',
+    Receive = 'receive',
+}
+
 export interface IUln302 extends IOmniSDK {
     /**
      * Gets the ULN config for a given endpoint ID and an address.
@@ -19,9 +24,14 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getAppUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {PossiblyBytes} address
+     * @param {OmniAddress | null | undefined} address
+     * @param {Uln302ConfigType} type
      */
-    getUlnConfig(eid: EndpointId, address?: OmniAddress | null | undefined): Promise<Uln302UlnConfig>
+    getUlnConfig(
+        eid: EndpointId,
+        address: OmniAddress | null | undefined,
+        type: Uln302ConfigType
+    ): Promise<Uln302UlnConfig>
 
     /**
      * Gets the ULN config for a given endpoint ID and an address.
@@ -32,9 +42,10 @@ export interface IUln302 extends IOmniSDK {
      * @see {@link getUlnConfig}
      *
      * @param {EndpointId} eid Endpoint ID
-     * @param {PossiblyBytes} address
+     * @param {OmniAddress} address
+     * @param {Uln302ConfigType} type
      */
-    getAppUlnConfig(eid: EndpointId, address: OmniAddress): Promise<Uln302UlnConfig>
+    getAppUlnConfig(eid: EndpointId, address: OmniAddress, type: Uln302ConfigType): Promise<Uln302UlnConfig>
 
     /**
      * Checks whether a given `config` is set explicitly on a given OApp.
@@ -45,9 +56,15 @@ export interface IUln302 extends IOmniSDK {
      * @param {EndpointId} eid
      * @param {OmniAddress} oapp
      * @param {Uln302UlnUserConfig} config
+     * @param {Uln302ConfigType} type
      * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
      */
-    hasAppUlnConfig(eid: EndpointId, oapp: OmniAddress, config: Uln302UlnUserConfig): Promise<boolean>
+    hasAppUlnConfig(
+        eid: EndpointId,
+        oapp: OmniAddress,
+        config: Uln302UlnUserConfig,
+        type: Uln302ConfigType
+    ): Promise<boolean>
 
     setDefaultUlnConfig(eid: EndpointId, config: Uln302UlnUserConfig): Promise<OmniTransaction>
 
