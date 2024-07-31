@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 1.0.1
+
+### Patch Changes
+
+- b91782c: Add nonce initialization functionality for OFT SDK on Solana
+- Updated dependencies [b91782c]
+  - @layerzerolabs/protocol-devtools-solana@1.0.2
+
 ## 1.0.0
 
 ### Minor Changes
