@@ -2,8 +2,8 @@ import { MessageParams, MessagingFee, TimeoutSchema } from '@layerzerolabs/proto
 import assert from 'assert'
 import type {
     IEndpointV2,
-    IUln302,
     SetConfigParam,
+    Uln302ConfigType,
     Uln302ExecutorConfig,
     Uln302Factory,
     Uln302SetUlnConfig,
@@ -57,7 +57,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return areBytes32Equal(await this.getDelegate(oapp), delegate)
     }
 
-    async getUln302SDK(address: OmniAddress): Promise<IUln302> {
+    async getUln302SDK(address: OmniAddress): Promise<Uln302> {
         this.logger.debug(`Getting Uln302 SDK for address ${address}`)
 
         assert(
@@ -67,7 +67,17 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             )}`
         )
 
-        return await this.uln302Factory({ eid: this.point.eid, address })
+        const ulnSdk = await this.uln302Factory({ eid: this.point.eid, address })
+
+        // We expect the EVM ULN SDK to always be the provided SDK (or a subclass)
+        // so we warn the user if we get something unexpected
+        if (!(ulnSdk instanceof Uln302)) {
+            this.logger.verbose(
+                `Unexpected Uln302 SDK: expected the SDK to be an instance of Uln302, got ${(ulnSdk as object)?.constructor?.name}`
+            )
+        }
+
+        return ulnSdk as Uln302
     }
 
     @AsyncRetriable()
@@ -326,23 +336,37 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     /**
-     * @see {@link IUln302.getUlnConfig}
+     * @see {@link IEndpointV2.getUlnConfig}
      */
-    async getUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig> {
-        this.logger.debug(`Getting ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`)
+    async getUlnConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        eid: EndpointId,
+        type: Uln302ConfigType
+    ): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting ULN ${type} config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`
+        )
 
         const ulnSdk = await this.getUln302SDK(uln)
-        return await ulnSdk.getUlnConfig(eid, oapp)
+        return await ulnSdk.getUlnConfig(eid, oapp, type)
     }
 
     /**
-     * @see {@link IUln302.getAppUlnConfig}
+     * @see {@link IEndpointV2.getAppUlnConfig}
      */
-    async getAppUlnConfig(oapp: OmniAddress, uln: OmniAddress, eid: EndpointId): Promise<Uln302UlnConfig> {
-        this.logger.debug(`Getting App ULN config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`)
+    async getAppUlnConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        eid: EndpointId,
+        type: Uln302ConfigType
+    ): Promise<Uln302UlnConfig> {
+        this.logger.debug(
+            `Getting App ULN ${type} config for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} and ULN ${uln}`
+        )
 
         const ulnSdk = await this.getUln302SDK(uln)
-        return await ulnSdk.getAppUlnConfig(eid, oapp)
+        return await ulnSdk.getAppUlnConfig(eid, oapp, type)
     }
 
     /**
@@ -352,11 +376,12 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         oapp: string,
         uln: OmniAddress,
         eid: EndpointId,
-        config: Uln302UlnUserConfig
+        config: Uln302UlnUserConfig,
+        type: Uln302ConfigType
     ): Promise<boolean> {
         const ulnSdk = await this.getUln302SDK(uln)
 
-        return ulnSdk.hasAppUlnConfig(eid, oapp, config)
+        return ulnSdk.hasAppUlnConfig(eid, oapp, config, type)
     }
 
     @AsyncRetriable()
@@ -383,7 +408,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     async getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
-        const ulnSdk = (await this.getUln302SDK(uln)) as Uln302
+        const ulnSdk = await this.getUln302SDK(uln)
 
         return setUlnConfig.map(({ eid, ulnConfig }) => ({
             eid,
@@ -396,7 +421,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         uln: OmniAddress,
         setExecutorConfig: Uln302SetExecutorConfig[]
     ): Promise<SetConfigParam[]> {
-        const ulnSdk = (await this.getUln302SDK(uln)) as Uln302
+        const ulnSdk = await this.getUln302SDK(uln)
 
         return setExecutorConfig.map(({ eid, executorConfig }) => ({
             eid,

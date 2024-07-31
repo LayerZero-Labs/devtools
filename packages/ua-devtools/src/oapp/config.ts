@@ -12,7 +12,7 @@ import {
 } from '@layerzerolabs/devtools'
 import type { OAppConfigurator, OAppEnforcedOption, OAppEnforcedOptionParam, OAppFactory } from './types'
 import { createModuleLogger, createWithAsyncLogger, printBoolean } from '@layerzerolabs/io-devtools'
-import type { SetConfigParam } from '@layerzerolabs/protocol-devtools'
+import { Uln302ConfigType, type SetConfigParam } from '@layerzerolabs/protocol-devtools'
 import assert from 'assert'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
@@ -252,8 +252,10 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
             vector: { from, to },
             config,
         } of graph.connections) {
+            const connectionName = formatOmniVector({ from, to })
+
             if (config?.sendConfig?.executorConfig == null && config?.sendConfig?.ulnConfig == null) {
-                logger.verbose(`executorConfig and ulnConfig not set for ${formatOmniVector({ from, to })}, skipping`)
+                logger.verbose(`executorConfig and ulnConfig not set for ${connectionName}, skipping`)
                 continue
             }
 
@@ -278,7 +280,7 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                 )
 
                 logger.verbose(
-                    `Checked executor configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasExecutorConfig)}`
+                    `Checked executor configuration for ${connectionName}: ${printBoolean(hasExecutorConfig)}`
                 )
 
                 if (!hasExecutorConfig) {
@@ -298,14 +300,10 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     const updatedConfigList =
                         setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
                     const updatedConfigListCsv = updatedConfigList
-                        .map(
-                            (setConfigParam) =>
-                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
-                        )
+                        .map(({ configType, config }) => `{configType: ${configType}, config: ${config}}`)
                         .join(', ')
-                    logger.verbose(
-                        `Set executor configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`
-                    )
+
+                    logger.verbose(`Set executor configuration ${updatedConfigListCsv} for ${connectionName}`)
                 }
             }
 
@@ -318,16 +316,17 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     from.address,
                     currentSendLibrary,
                     to.eid,
-                    config.sendConfig.ulnConfig
+                    config.sendConfig.ulnConfig,
+                    Uln302ConfigType.Send
                 )
 
                 logger.verbose(
-                    `Checked Uln configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasUlnConfig)}`
+                    `Checked ULN configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasUlnConfig)}`
                 )
 
                 if (!hasUlnConfig) {
                     const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentSendLibrary, [
-                        { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig, type: 'send' },
+                        { eid: to.eid, ulnConfig: config.sendConfig.ulnConfig, type: Uln302ConfigType.Send },
                     ])
 
                     // Updates map with new configs for that OApp and Send Library
@@ -341,13 +340,10 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
                     const updatedConfigList =
                         setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentSendLibrary) ?? []
                     const updatedConfigListCsv = updatedConfigList
-                        .map(
-                            (setConfigParam) =>
-                                '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
-                        )
+                        .map(({ configType, config }) => `{configType: ${configType}, config: ${config}}`)
                         .join(', ')
                     logger.verbose(
-                        `Set Uln configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`
+                        `Set ULN configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`
                     )
                 }
             }
@@ -372,8 +368,10 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
             vector: { from, to },
             config,
         } of graph.connections) {
+            const connectionName = formatOmniVector({ from, to })
+
             if (config?.receiveConfig?.ulnConfig == null) {
-                logger.verbose(`ulnConfig not set for ${formatOmniVector({ from, to })}, skipping`)
+                logger.verbose(`ULN receive config not set for ${connectionName}, skipping`)
                 continue
             }
 
@@ -384,7 +382,7 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
                 : await endpointSdk.getReceiveLibrary(from.address, to.eid)
             assert(
                 currentReceiveLibrary !== undefined,
-                'receiveLibrary has not been set in your config and no default value exists'
+                `${connectionName}: receiveLibrary has not been set in your config and no default value exists`
             )
 
             // We ask the endpoint SDK whether this config has already been applied
@@ -395,16 +393,15 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
                 from.address,
                 currentReceiveLibrary,
                 to.eid,
-                config.receiveConfig.ulnConfig
+                config.receiveConfig.ulnConfig,
+                Uln302ConfigType.Receive
             )
 
-            logger.verbose(
-                `Checked Uln configuration for ${formatOmniVector({ from, to })}: ${printBoolean(hasUlnConfig)}`
-            )
+            logger.verbose(`Checked ULN receive configuration for ${connectionName}: ${printBoolean(hasUlnConfig)}`)
 
             if (!hasUlnConfig) {
                 const newSetConfigs: SetConfigParam[] = await endpointSdk.getUlnConfigParams(currentReceiveLibrary, [
-                    { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig, type: 'receive' },
+                    { eid: to.eid, ulnConfig: config.receiveConfig.ulnConfig, type: Uln302ConfigType.Receive },
                 ])
 
                 // Updates map with new configs for that OApp and Receive Library
@@ -418,12 +415,10 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
                 const updatedConfigList =
                     setConfigsByEndpointAndLibrary.getOrElse(from, () => new Map()).get(currentReceiveLibrary) ?? []
                 const updatedConfigListCsv = updatedConfigList
-                    .map(
-                        (setConfigParam) =>
-                            '{configType: ' + setConfigParam.configType + ', config: ' + setConfigParam.config + '}'
-                    )
+                    .map(({ configType, config }) => `{configType: ${configType}, config: ${config}}`)
                     .join(', ')
-                logger.verbose(`Set Uln configuration ${updatedConfigListCsv} for ${formatOmniVector({ from, to })}`)
+
+                logger.verbose(`Set ULN receive configuration ${updatedConfigListCsv} for ${connectionName}`)
             }
         }
 
@@ -446,8 +441,10 @@ export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
             vector: { from, to },
             config,
         } of graph.connections) {
+            const connectionName = formatOmniVector({ from, to })
+
             if (config?.enforcedOptions == null) {
-                logger.verbose(`Enforced options not set for ${formatOmniVector({ from, to })}, skipping`)
+                logger.verbose(`Enforced options not set for ${connectionName}, skipping`)
                 continue
             }
             const oappSdk = await createSdk(from)
@@ -461,9 +458,8 @@ export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
             // We ask the oapp SDK whether this config has already been applied
             for (const [msgType, options] of enforcedOptionsByMsgType) {
                 const currentEnforcedOption: Bytes = await oappSdk.getEnforcedOptions(to.eid, msgType)
-                logger.verbose(
-                    `Checked current enforced options for ${formatOmniVector({ from, to })}: ${currentEnforcedOption}`
-                )
+                logger.verbose(`Checked current enforced options for ${connectionName}: ${currentEnforcedOption}`)
+
                 if (currentEnforcedOption !== options.toHex()) {
                     // Updates map with new configs for that OApp and OAppEnforcedOptionParam[]
                     const setConfigsByLibrary = setEnforcedOptionsByEndpoint.getOrElse(from, () => [])
@@ -478,18 +474,10 @@ export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
 
                     const updatedEnforcedOptionsCsv = setEnforcedOptionsByEndpoint
                         .getOrElse(from, () => [])
-                        .map(
-                            (enforcedOption) =>
-                                '{msgType: ' +
-                                enforcedOption.option?.msgType +
-                                ', options: ' +
-                                enforcedOption.option?.options +
-                                '}'
-                        )
+                        .map(({ option }) => `{msgType: ${option.msgType}, options: ${option.options}}`)
                         .join(', ')
-                    logger.verbose(
-                        `Set enforced options ${updatedEnforcedOptionsCsv} for ${formatOmniVector({ from, to })}`
-                    )
+
+                    logger.verbose(`Set enforced options ${updatedEnforcedOptionsCsv} for ${connectionName}`)
                 }
             }
         }
