@@ -503,4 +503,45 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             config: ulnSdk.encodeExecutorConfig(executorConfig),
         }))
     }
+
+    async initializeOAppNonce(oapp: OmniAddress, eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
+        const eidLabel = formatEid(eid)
+
+        this.logger.verbose(`Initializing OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
+
+        const instruction = await mapError(
+            () => {
+                const peerBytes = normalizePeer(peer, eid)
+                return this.program.initOAppNonce(
+                    this.connection,
+                    this.userAccount,
+                    eid,
+                    new PublicKey(oapp),
+                    peerBytes
+                )
+            },
+            (error) =>
+                new Error(
+                    `Failed to init nonce for ${this.label} for OApp ${oapp} and peer ${peer} on ${eidLabel}: ${error}`
+                )
+        )
+
+        if (instruction == null) {
+            return (
+                this.logger.verbose(
+                    `Nonce initialization not necessary for OApp ${oapp} and peer ${peer} on ${eidLabel}`
+                ),
+                []
+            )
+        }
+
+        const transaction = new Transaction().add(instruction)
+
+        return [
+            {
+                ...(await this.createTransaction(transaction)),
+                description: `Initializing nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`,
+            },
+        ]
+    }
 }

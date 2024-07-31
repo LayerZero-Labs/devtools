@@ -14,9 +14,8 @@ import {
     toHex,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
-import { Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
+import { type Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
@@ -80,7 +79,7 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     @AsyncRetriable()
-    async getEndpointSDK(): Promise<IEndpointV2> {
+    async getEndpointSDK(): Promise<EndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
 
         return new EndpointV2(
@@ -232,6 +231,13 @@ export class OFT extends OmniSDK implements IOApp {
             ...(await this.createTransaction(transaction)),
             description: `Setting enforced options to ${printJson(enforcedOptions)}`,
         }
+    }
+
+    async initializeNonce(eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
+        this.logger.verbose(`Initializing OApp nonce`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        return endpointSdk.initializeOAppNonce(this.point.address, eid, peer)
     }
 
     /**
