@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 1.0.1
+
+### Patch Changes
+
+- 10dcf5b: Add ULN302 config type to EndpointV2 & ULN302 interfaces
+- Updated dependencies [10dcf5b]
+- Updated dependencies [10dcf5b]
+  - @layerzerolabs/protocol-devtools@0.4.1
+  - @layerzerolabs/ua-devtools@1.0.1
+  - @layerzerolabs/devtools-solana@0.1.1
+
 ## 1.0.0
 
 ### Minor Changes
