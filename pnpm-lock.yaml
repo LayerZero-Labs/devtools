@@ -1528,7 +1528,7 @@ importers:
         specifier: ~0.3.21
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~0.1.1
+        specifier: ~0.1.2
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11
@@ -1552,7 +1552,7 @@ importers:
         specifier: ~0.0.1
         version: link:../test-devtools-solana
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.1
+        specifier: ~1.0.2
         version: link:../ua-devtools
       '@solana/web3.js':
         specifier: ~1.95.0
@@ -1799,7 +1799,7 @@ importers:
         specifier: ~0.2.5
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.1
+        specifier: ~1.0.2
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~1.0.0
@@ -2100,7 +2100,7 @@ importers:
         specifier: ~0.3.23
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~0.1.0
+        specifier: ~0.1.2
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.11
@@ -2118,7 +2118,7 @@ importers:
         specifier: ~0.4.0
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~1.0.2
+        specifier: ~1.0.3
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.2.6
@@ -2127,7 +2127,7 @@ importers:
         specifier: ~0.0.1
         version: link:../test-devtools-solana
       '@layerzerolabs/ua-devtools':
-        specifier: ~1.0.0
+        specifier: ~1.0.2
         version: link:../ua-devtools
       '@solana/web3.js':
         specifier: ~1.95.0

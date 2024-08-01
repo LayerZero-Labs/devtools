@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.3.2
+
+### Patch Changes
+
+- 7653e00: Update log levels in OApp configuration
+- Updated dependencies [7653e00]
+  - @layerzerolabs/ua-devtools@1.0.2
+
 ## 0.3.1
 
 ### Patch Changes
