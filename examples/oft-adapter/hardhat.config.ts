@@ -62,7 +62,7 @@ const config: HardhatUserConfig = {
                 tokenAddress: '0x0', // Set the token address for the OFT adapter
             },
         },
-        'fuji-testnet': {
+        'avalanche-testnet': {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
             url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,

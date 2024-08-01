@@ -57,7 +57,7 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
         },
-        'fuji-testnet': {
+        'avalanche-testnet': {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
             url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
