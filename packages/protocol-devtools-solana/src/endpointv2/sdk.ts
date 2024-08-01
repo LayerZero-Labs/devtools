@@ -23,7 +23,13 @@ import { canAddInstruction, OmniSDK } from '@layerzerolabs/devtools-solana'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { Logger, printJson } from '@layerzerolabs/io-devtools'
-import { EndpointPDADeriver, EndpointProgram, SetConfigType } from '@layerzerolabs/lz-solana-sdk-v2'
+import {
+    EndpointPDADeriver,
+    EndpointProgram,
+    SetConfigType,
+    SimpleMessageLibProgram,
+    UlnProgram,
+} from '@layerzerolabs/lz-solana-sdk-v2'
 import { Connection, PublicKey, Transaction } from '@solana/web3.js'
 import assert from 'assert'
 import { Uln302 } from '@/uln302'
@@ -506,20 +512,17 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
     async initializeOAppNonce(oapp: OmniAddress, eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
         const eidLabel = formatEid(eid)
-
         this.logger.verbose(`Initializing OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => {
-                const peerBytes = normalizePeer(peer, eid)
-                return this.program.initOAppNonce(
+            () =>
+                this.program.initOAppNonce(
                     this.connection,
                     this.userAccount,
                     eid,
                     new PublicKey(oapp),
-                    peerBytes
-                )
-            },
+                    normalizePeer(peer, eid)
+                ),
             (error) =>
                 new Error(
                     `Failed to init nonce for ${this.label} for OApp ${oapp} and peer ${peer} on ${eidLabel}: ${error}`
@@ -535,12 +538,97 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             )
         }
 
-        const transaction = new Transaction().add(instruction)
+        return [
+            {
+                ...(await this.createTransaction(new Transaction().add(instruction))),
+                description: `Initializing nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`,
+            },
+        ]
+    }
+
+    async initializeSendLibrary(oapp: OmniAddress, eid: EndpointId): Promise<[OmniTransaction] | []> {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Initializing OApp send library for OApp ${oapp} on ${eidLabel}`)
+
+        const instruction = await mapError(
+            () => this.program.initSendLibrary(this.connection, this.userAccount, new PublicKey(oapp), eid),
+            (error) =>
+                new Error(`Failed to init send library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
+        )
+
+        if (instruction == null) {
+            return this.logger.verbose(`Send library initialization not necessary for OApp ${oapp} on ${eidLabel}`), []
+        }
 
         return [
             {
-                ...(await this.createTransaction(transaction)),
-                description: `Initializing nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`,
+                ...(await this.createTransaction(new Transaction().add(instruction))),
+                description: `Initializing send library for OApp ${oapp} on ${eidLabel}`,
+            },
+        ]
+    }
+
+    async initializeReceiveLibrary(oapp: OmniAddress, eid: EndpointId): Promise<[OmniTransaction] | []> {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Initializing OApp receive library for OApp ${oapp} on ${eidLabel}`)
+
+        const instruction = await mapError(
+            () => this.program.initReceiveLibrary(this.connection, this.userAccount, new PublicKey(oapp), eid),
+            (error) =>
+                new Error(`Failed to init receive library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
+        )
+
+        if (instruction == null) {
+            return (
+                this.logger.verbose(`Receive library initialization not necessary for OApp ${oapp} on ${eidLabel}`), []
+            )
+        }
+
+        return [
+            {
+                ...(await this.createTransaction(new Transaction().add(instruction))),
+                description: `Initializing receive library for OApp ${oapp} on ${eidLabel}`,
+            },
+        ]
+    }
+
+    async initializeOAppConfig(
+        oapp: OmniAddress,
+        eid: EndpointId,
+        lib: OmniAddress = UlnProgram.PROGRAM_ADDRESS
+    ): Promise<[OmniTransaction] | []> {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Initializing OApp config library for OApp ${oapp} on ${eidLabel}`)
+
+        const instruction = await mapError(
+            () => {
+                const libPublicKey = new PublicKey(lib)
+                const msgLibInterface = libPublicKey.equals(SimpleMessageLibProgram.PROGRAM_ID)
+                    ? (this.logger.debug(`Using SimpleMessageLib at ${libPublicKey} to initialize OApp config`),
+                      new SimpleMessageLibProgram.SimpleMessageLib(libPublicKey))
+                    : (this.logger.debug(`Using ULN at ${libPublicKey} to initialize OApp config`),
+                      new UlnProgram.Uln(libPublicKey))
+
+                return this.program.initOappConfig(
+                    this.userAccount,
+                    msgLibInterface,
+                    this.userAccount,
+                    new PublicKey(oapp),
+                    eid
+                )
+            },
+            (error) =>
+                new Error(`Failed to init OApp config for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
+        )
+
+        if (instruction == null) {
+            return this.logger.verbose(`OApp config initialization not necessary for OApp ${oapp} on ${eidLabel}`), []
+        }
+
+        return [
+            {
+                ...(await this.createTransaction(new Transaction().add(instruction))),
+                description: `Initializing OApp config for OApp ${oapp} on ${eidLabel}`,
             },
         ]
     }

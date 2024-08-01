@@ -53,4 +53,40 @@ export const initNonce: OAppConfigurator = createConfigureEdges(
     })
 )
 
-export const initOFTAccounts = createConfigureMultiple(initNonce)
+export const initSendLibrary: OAppConfigurator = createConfigureEdges(
+    onlyEdgesFromSolana(({ vector }, sdk) => {
+        const logger = createOFTLogger()
+
+        if (typeof (sdk as OFT).initializeSendLibrary !== 'function') {
+            return logger.warn(`Could not find initializeSendLibrary() method on OFT SDK, skipping`), undefined
+        }
+
+        return (sdk as OFT).initializeSendLibrary(vector.to.eid)
+    })
+)
+
+export const initReceiveLibrary: OAppConfigurator = createConfigureEdges(
+    onlyEdgesFromSolana(({ vector }, sdk) => {
+        const logger = createOFTLogger()
+
+        if (typeof (sdk as OFT).initializeReceiveLibrary !== 'function') {
+            return logger.warn(`Could not find initializeReceiveLibrary() method on OFT SDK, skipping`), undefined
+        }
+
+        return (sdk as OFT).initializeReceiveLibrary(vector.to.eid)
+    })
+)
+
+export const initOFTConfig: OAppConfigurator = createConfigureEdges(
+    onlyEdgesFromSolana(({ vector, config }, sdk) => {
+        const logger = createOFTLogger()
+
+        if (typeof (sdk as OFT).initializeOAppConfig !== 'function') {
+            return logger.warn(`Could not find initializeOAppConfig() method on OFT SDK, skipping`), undefined
+        }
+
+        return (sdk as OFT).initializeOAppConfig(vector.to.eid, config?.sendLibrary)
+    })
+)
+
+export const initOFTAccounts = createConfigureMultiple(initNonce, initSendLibrary, initReceiveLibrary, initOFTConfig)
