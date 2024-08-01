@@ -1,5 +1,15 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 1.0.3
+
+### Patch Changes
+
+- 40fb334: Add initialization functions to OFT & EndpointV2 SDKs
+- Updated dependencies [7653e00]
+- Updated dependencies [cac5fb0]
+  - @layerzerolabs/ua-devtools@1.0.2
+  - @layerzerolabs/devtools-solana@0.1.2
+
 ## 1.0.2
 
 ### Patch Changes

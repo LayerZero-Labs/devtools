@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 1.0.2
+
+### Patch Changes
+
+- 7653e00: Update log levels in OApp configuration
+
 ## 1.0.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.1.2
+
+### Patch Changes
+
+- cac5fb0: Add a feature flagged functionality for reassigning recent block hashes in solana signer
+
 ## 0.1.1
 
 ### Patch Changes
