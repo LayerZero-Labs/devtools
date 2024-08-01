@@ -52,8 +52,8 @@ export const configureOAppDelegates: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking OApp delegates configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp delegates`),
+        onStart: (logger) => logger.info(`Checking OApp delegates configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked OApp delegates`),
     }
 )
 
@@ -86,8 +86,8 @@ export const configureOAppPeers: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking OApp peers configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp peers configuration`),
+        onStart: (logger) => logger.info(`Checking OApp peers configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked OApp peers configuration`),
     }
 )
 
@@ -127,8 +127,8 @@ export const configureSendLibraries: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking send libraries configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked send libraries configuration`),
+        onStart: (logger) => logger.info(`Checking send libraries configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked send libraries configuration`),
     }
 )
 
@@ -180,8 +180,8 @@ export const configureReceiveLibraries: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking receive libraries configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive libraries configuration`),
+        onStart: (logger) => logger.info(`Checking receive libraries configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked receive libraries configuration`),
     }
 )
 
@@ -236,8 +236,8 @@ export const configureReceiveLibraryTimeouts: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking receive library timeout configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive library timeout configuration`),
+        onStart: (logger) => logger.info(`Checking receive library timeout configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked receive library timeout configuration`),
     }
 )
 
@@ -353,8 +353,8 @@ export const configureSendConfig: OAppConfigurator = withOAppLogger(
         return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
     },
     {
-        onStart: (logger) => logger.verbose(`Checking send configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked send configuration`),
+        onStart: (logger) => logger.info(`Checking send configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked send configuration`),
     }
 )
 
@@ -426,8 +426,8 @@ export const configureReceiveConfig: OAppConfigurator = withOAppLogger(
         return buildOmniTransactions(setConfigsByEndpointAndLibrary, createSdk)
     },
     {
-        onStart: (logger) => logger.verbose(`Checking receive configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked receive configuration`),
+        onStart: (logger) => logger.info(`Checking receive configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked receive configuration`),
     }
 )
 
@@ -486,8 +486,8 @@ export const configureEnforcedOptions: OAppConfigurator = withOAppLogger(
         return buildEnforcedOptionsOmniTransactions(setEnforcedOptionsByEndpoint, createSdk)
     },
     {
-        onStart: (logger) => logger.verbose(`Checking enforced options`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked enforced options`),
+        onStart: (logger) => logger.info(`Checking enforced options`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked enforced options`),
     }
 )
 
@@ -520,8 +520,8 @@ export const configureCallerBpsCap: OAppConfigurator = withOAppLogger(
         )
     ),
     {
-        onStart: (logger) => logger.verbose(`Checking OApp callerBpsCap configuration`),
-        onSuccess: (logger) => logger.verbose(`${printBoolean(true)} Checked OApp callerBpsCap configuration`),
+        onStart: (logger) => logger.info(`Checking OApp callerBpsCap configuration`),
+        onSuccess: (logger) => logger.info(`${printBoolean(true)} Checked OApp callerBpsCap configuration`),
     }
 )
 
