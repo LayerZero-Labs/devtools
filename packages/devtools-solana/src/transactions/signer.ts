@@ -18,6 +18,7 @@ import {
 } from '@solana/web3.js'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deserializeTransactionMessage, serializeTransactionBuffer } from './serde'
+import { createModuleLogger, type Logger } from '@layerzerolabs/io-devtools'
 
 export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
     constructor(
@@ -25,7 +26,8 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
         public readonly connection: Connection,
         public readonly signer: Signer,
         public readonly lookupAddress?: PublicKey,
-        public readonly confirmOptions: ConfirmOptions = { commitment: 'finalized' }
+        public readonly confirmOptions: ConfirmOptions = { commitment: 'finalized' },
+        protected readonly logger: Logger = createModuleLogger('OmniSignerSolana')
     ) {
         super(eid)
     }
@@ -90,7 +92,7 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
     ): Promise<OmniTransactionResponse<OmniTransactionReceipt>> {
         const signature = await sendAndConfirmTransaction(
             this.connection,
-            transaction,
+            await this.updateRecentBlockHash(transaction),
             [this.signer],
             this.confirmOptions
         )
@@ -101,5 +103,38 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
                 transactionHash: signature,
             }),
         }
+    }
+
+    /**
+     * To prevent transactions from expiring, we will update their recentBlockHash values
+     * just before signing (if the feature flag is enabled)
+     *
+     * @param {Transaction} transaction
+     * @returns {Promise<Transaction>}
+     */
+    protected async updateRecentBlockHash(transaction: Transaction): Promise<Transaction> {
+        if (!process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_RECENT_BLOCK_HASH_UPDATE) {
+            return transaction
+        }
+
+        // If this feature flag is enabled, we'll update the transactions with a new recentBlockHash
+        // just in time before signing & sending the transaction
+        this.logger.warn(
+            `You are using experimental feature to update a recentBlockHash for transactions. Set log level to verbose for more information`
+        )
+
+        try {
+            const { blockhash } = await this.connection.getLatestBlockhash('finalized')
+
+            this.logger.verbose(
+                `Updating transaction recentBlockHash from ${transaction.recentBlockhash} to ${blockhash}`
+            )
+
+            transaction.recentBlockhash = blockhash
+        } catch (error) {
+            this.logger.verbose(`Failed to get recentBlockHash from the network: ${error}`)
+        }
+
+        return transaction
     }
 }
