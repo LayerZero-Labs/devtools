@@ -234,10 +234,31 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     async initializeNonce(eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
-        this.logger.verbose(`Initializing OApp nonce`)
+        this.logger.verbose(`Initializing OApp nonce for peer ${peer} on ${formatEid(eid)}`)
 
         const endpointSdk = await this.getEndpointSDK()
         return endpointSdk.initializeOAppNonce(this.point.address, eid, peer)
+    }
+
+    async initializeSendLibrary(eid: EndpointId): Promise<[OmniTransaction] | []> {
+        this.logger.verbose(`Initializing send library on ${formatEid(eid)}`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        return endpointSdk.initializeSendLibrary(this.point.address, eid)
+    }
+
+    async initializeReceiveLibrary(eid: EndpointId): Promise<[OmniTransaction] | []> {
+        this.logger.verbose(`Initializing receive library on ${formatEid(eid)}`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        return endpointSdk.initializeReceiveLibrary(this.point.address, eid)
+    }
+
+    async initializeOAppConfig(eid: EndpointId, lib: OmniAddress | null | undefined): Promise<[OmniTransaction] | []> {
+        this.logger.verbose(`Initializing OApp config for library ${lib} on ${formatEid(eid)}`)
+
+        const endpointSdk = await this.getEndpointSDK()
+        return endpointSdk.initializeOAppConfig(this.point.address, eid, lib ?? undefined)
     }
 
     /**
