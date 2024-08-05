@@ -13,3 +13,7 @@ export const SUBTASK_LZ_OAPP_WIRE_CONFIGURE = '::lz:oapp:wire:configure'
 export const SUBTASK_LZ_OAPP_CONFIG_LOAD = '::lz:oapp:config:load'
 
 export const TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP = 'lz:ownable:transfer-ownership'
+
+export const TASK_LZ_OFT_SEND = 'lz:oft:send'
+
+export const TASK_LZ_OFT_BALANCE_GET = 'lz:oft:balances:get'
