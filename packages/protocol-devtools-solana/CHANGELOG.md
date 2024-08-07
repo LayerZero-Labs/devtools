@@ -1,5 +1,17 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 1.0.4
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- Updated dependencies [d126c52]
+  - @layerzerolabs/protocol-devtools@0.4.2
+  - @layerzerolabs/devtools-solana@0.1.3
+  - @layerzerolabs/io-devtools@0.1.12
+  - @layerzerolabs/ua-devtools@1.0.3
+  - @layerzerolabs/devtools@0.3.24
+
 ## 1.0.3
 
 ### Patch Changes

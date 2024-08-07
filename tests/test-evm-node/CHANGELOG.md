@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.0.9
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.0.8
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.3.3
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- Updated dependencies [d126c52]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.2.6
+  - @layerzerolabs/ua-devtools-evm-hardhat@1.0.1
+  - @layerzerolabs/protocol-devtools-evm@1.0.2
+  - @layerzerolabs/devtools-evm-hardhat@1.0.1
+  - @layerzerolabs/protocol-devtools@0.4.2
+  - @layerzerolabs/ua-devtools-evm@1.0.1
+  - @layerzerolabs/devtools-evm@0.4.1
+  - @layerzerolabs/io-devtools@0.1.12
+  - @layerzerolabs/ua-devtools@1.0.3
+  - @layerzerolabs/devtools@0.3.24
+
 ## 0.3.2
 
 ### Patch Changes

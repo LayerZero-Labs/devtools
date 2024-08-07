@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.0.7
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.0.6
 
 ### Patch Changes

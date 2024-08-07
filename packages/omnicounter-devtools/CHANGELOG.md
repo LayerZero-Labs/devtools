@@ -1,5 +1,14 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 1.0.1
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- Updated dependencies [d126c52]
+  - @layerzerolabs/protocol-devtools@0.4.2
+  - @layerzerolabs/devtools@0.3.24
+
 ## 1.0.0
 
 ### Patch Changes

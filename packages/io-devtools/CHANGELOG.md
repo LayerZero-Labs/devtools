@@ -1,5 +1,11 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.12
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.1.11
 
 ### Patch Changes
