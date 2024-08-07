@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.2.8
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.2.7
 
 ### Patch Changes

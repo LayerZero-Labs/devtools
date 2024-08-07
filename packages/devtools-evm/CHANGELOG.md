@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools-evm
 
+## 0.4.1
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- Updated dependencies [d126c52]
+  - @layerzerolabs/io-devtools@0.1.12
+  - @layerzerolabs/devtools@0.3.24
+
 ## 0.4.0
 
 ### Minor Changes

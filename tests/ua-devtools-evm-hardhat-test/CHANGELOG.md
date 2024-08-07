@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.3.1
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.29
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 1.1.28
 
 ### Patch Changes

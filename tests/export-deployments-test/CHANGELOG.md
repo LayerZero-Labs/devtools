@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.2.7
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+
 ## 0.2.6
 
 ### Patch Changes

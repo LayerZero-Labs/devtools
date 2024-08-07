@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 0.4.2
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- Updated dependencies [d126c52]
+  - @layerzerolabs/devtools@0.3.24
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.2.10
+
+### Patch Changes
+
+- d126c52: Update monorepo dependencies and typescript version
+- 294b03b: Enable coverage in TestHelper
+
 ## 0.2.9
 
 ### Patch Changes
