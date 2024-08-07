@@ -45,6 +45,18 @@ export const EXAMPLES: Example[] = [
         directory: 'examples/oft-adapter',
         ref,
     },
+    // The Solana OFT example is feature flagged for the time being
+    ...(process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE
+        ? [
+              {
+                  id: 'oft-solana',
+                  label: 'OFT (Solana)',
+                  repository,
+                  directory: 'examples/oft-solana',
+                  ref,
+              },
+          ]
+        : []),
 ]
 
 export const PACKAGE_MANAGERS: PackageManager[] = [

@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "anchor build",
     "clean": "rm -rf .anchor target",
+    "compile": "anchor build",
     "test": "anchor test"
   },
   "devDependencies": {
