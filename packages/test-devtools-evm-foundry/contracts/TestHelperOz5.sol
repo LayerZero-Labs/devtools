@@ -325,7 +325,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         optionsLookup[guid] = _options;
     }
 
-   /**
+    /**
      * @notice Verifies and processes packets destined for a specific chain and user address.
      * @dev Calls an overloaded version of verifyPackets with default values for packet amount and composer address.
      * @param _dstEid The destination chain's endpoint ID.
