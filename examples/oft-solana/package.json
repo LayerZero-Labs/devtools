@@ -1,0 +1,20 @@
+{
+  "name": "@layerzerolabs/oft-solana-example",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "anchor build",
+    "clean": "rm -rf .anchor target",
+    "test": "anchor test"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@layerzerolabs/lz-solana-sdk-v2": "^2.3.31",
+    "@solana/spl-token": "^0.4.6",
+    "@solana/web3.js": "^1.95.0",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  }
+}
