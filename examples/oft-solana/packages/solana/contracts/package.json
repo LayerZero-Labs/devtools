@@ -1,0 +1,21 @@
+{
+  "scripts": {
+    "build": "anchor build",
+    "test": "anchor test"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@layerzerolabs/lz-solana-sdk-v2": "^2.3.22",
+    "@solana/spl-token": "^0.4.6",
+    "@solana/web3.js": "^1.91.8",
+    "@types/bn.js": "^5.1.0",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.0.0",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.3",
+    "prettier": "^2.6.2",
+    "rpc-websockets": "=7.11.0",
+    "ts-mocha": "^10.0.0",
+    "typescript": "^4.3.5"
+  }
+}
