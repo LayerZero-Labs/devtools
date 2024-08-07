@@ -44,12 +44,13 @@ ARG EVM_NODE_IMAGE=node-evm-hardhat
 FROM node:$NODE_VERSION AS base
 
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
+ARG SOLANA_VERSION=1.18.17
 
 WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
-ENV PATH "/root/.cargo/bin:/root/.foundry/bin:$PATH"
+ENV PATH "/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
@@ -60,11 +61,39 @@ RUN apt-get install --yes \
     # expect is a utility that can be used to test CLI scripts
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
-    expect
+    expect \
+    # Utilities required to build solana
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler
 
 # Install rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 RUN rustup default ${RUST_TOOLCHAIN_VERSION}
+
+# Build Solana from source
+# 
+# This is necessary since developer machines' are running M2 processors
+# and solana does not build for linux on M2
+# 
+# First we download & extract the source code
+RUN curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz
+
+# Then we install the binaries (validator is enough)
+RUN ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana
+
+# Update the solana config
+# RUN solana config set --url https://api.devnet.solana.com
+
+# Build BPF SDK
+RUN cargo install --path ./solana-${SOLANA_VERSION}/sdk/cargo-build-bpf
+
+# Delete the source files
+RUN rm -rf ./solana-*
+
+# Install AVM - Anchor version manager for Solana
+RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+
+# Install anchor
+RUN avm install latest && avm use latest
 
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
@@ -88,11 +117,13 @@ RUN corepack enable
 RUN node -v
 RUN pnpm --version
 RUN git --version
+RUN anchor --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
 RUN solc --version
+RUN solana --version
 RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
