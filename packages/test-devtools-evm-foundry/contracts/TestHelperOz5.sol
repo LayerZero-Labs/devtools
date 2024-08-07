@@ -44,7 +44,6 @@ interface IOAppSetPeer {
  * @dev Extends Foundry's Test contract and provides utility functions for setting up mock endpoints and OApps.
  */
 contract TestHelperOz5 is Test, OptionsHelper {
-
     enum LibraryType {
         UltraLightNode,
         SimpleMessageLib
@@ -69,7 +68,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     }
 
     struct ConfigParams {
-        IExecutor.DstConfigParam[] dstConfigParams;
+        IExecutor.DstConfigParam[] executorConfigParams;
         IDVN.DstConfigParam[] dvnConfigParams;
     }
 
@@ -134,7 +133,12 @@ contract TestHelperOz5 is Test, OptionsHelper {
             if (_libraryType == LibraryType.UltraLightNode) {
                 address endpointAddr = address(endpointSetup.endpointList[i]);
 
-                libSetup.sendUln = new SendUln302(payable(this), endpointAddr, TREASURY_GAS_CAP, TREASURY_GAS_FOR_FEE_CAP);
+                libSetup.sendUln = new SendUln302(
+                    payable(this),
+                    endpointAddr,
+                    TREASURY_GAS_CAP,
+                    TREASURY_GAS_FOR_FEE_CAP
+                );
                 libSetup.receiveUln = new ReceiveUln302(endpointAddr);
                 endpointSetup.endpointList[i].registerLibrary(address(libSetup.sendUln));
                 endpointSetup.endpointList[i].registerLibrary(address(libSetup.receiveUln));
@@ -161,13 +165,20 @@ contract TestHelperOz5 is Test, OptionsHelper {
                     libSetup.executorLib = new ExecutorFeeLib();
                     libSetup.executor.setWorkerFeeLib(address(libSetup.executorLib));
 
-                    libSetup.dvn = new DVN(i + 1, messageLibs, address(endpointSetup.priceFeed), endpointSetup.signers, 1, admins);
+                    libSetup.dvn = new DVN(
+                        i + 1,
+                        messageLibs,
+                        address(endpointSetup.priceFeed),
+                        endpointSetup.signers,
+                        1,
+                        admins
+                    );
                     libSetup.dvnLib = new DVNFeeLib(1e18);
                     libSetup.dvn.setWorkerFeeLib(address(libSetup.dvnLib));
                 }
 
                 ConfigParams memory configParams;
-                configParams.dstConfigParams = new IExecutor.DstConfigParam[](_endpointNum);
+                configParams.executorConfigParams = new IExecutor.DstConfigParam[](_endpointNum);
                 configParams.dvnConfigParams = new IDVN.DstConfigParam[](_endpointNum);
 
                 for (uint8 j = 0; j < _endpointNum; j++) {
@@ -193,7 +204,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         libSetup.sendUln.setDefaultUlnConfigs(ulnParams);
                         libSetup.receiveUln.setDefaultUlnConfigs(ulnParams);
                     }
-                    
+
                     {
                         SetDefaultExecutorConfigParam[] memory execParams = new SetDefaultExecutorConfigParam[](1);
                         ExecutorConfig memory execConfig = ExecutorConfig(10000, address(libSetup.executor));
@@ -202,7 +213,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
                     }
 
                     // executor config
-                    configParams.dstConfigParams[j] = IExecutor.DstConfigParam({
+                    configParams.executorConfigParams[j] = IExecutor.DstConfigParam({
                         dstEid: dstEid,
                         lzReceiveBaseGas: 5000,
                         lzComposeBaseGas: 5000,
@@ -228,11 +239,13 @@ contract TestHelperOz5 is Test, OptionsHelper {
                     endpointSetup.priceFeed.setPrice(prices);
                 }
 
-                libSetup.executor.setDstConfig(configParams.dstConfigParams);
+                libSetup.executor.setDstConfig(configParams.executorConfigParams);
                 libSetup.dvn.setDstConfig(configParams.dvnConfigParams);
-
             } else if (_libraryType == LibraryType.SimpleMessageLib) {
-                SimpleMessageLibMock messageLib = new SimpleMessageLibMock(payable(this), address(endpointSetup.endpointList[i]));
+                SimpleMessageLibMock messageLib = new SimpleMessageLibMock(
+                    payable(this),
+                    address(endpointSetup.endpointList[i])
+                );
                 endpointSetup.endpointList[i].registerLibrary(address(messageLib));
                 endpointSetup.sendLibs[i] = address(messageLib);
                 endpointSetup.receiveLibs[i] = address(messageLib);
