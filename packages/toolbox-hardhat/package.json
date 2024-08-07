@@ -35,14 +35,14 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.3.22",
+    "@layerzerolabs/devtools": "~0.3.23",
     "@layerzerolabs/devtools-evm": "~0.4.0",
     "@layerzerolabs/devtools-evm-hardhat": "~1.0.0",
     "@layerzerolabs/io-devtools": "~0.1.11",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.25",
-    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.25",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
+    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.34",
+    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.34",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/protocol-devtools": "~0.4.1",
     "@layerzerolabs/protocol-devtools-evm": "~1.0.1",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.2.5",
@@ -67,7 +67,7 @@
     "jest": "^29.7.0",
     "ts-node": "^10.9.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   },
   "peerDependencies": {
     "@nomicfoundation/hardhat-ethers": "^3.0.2",

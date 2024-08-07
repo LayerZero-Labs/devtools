@@ -38,12 +38,12 @@
     "test:forge": "forge test"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.29",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/oapp-evm": "^0.0.1",
-    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.7",
+    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.9",
     "@layerzerolabs/toolbox-foundry": "~0.1.8",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",

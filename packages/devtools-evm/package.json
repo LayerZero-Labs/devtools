@@ -52,8 +52,8 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.3.23",
     "@layerzerolabs/io-devtools": "~0.1.11",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/test-devtools": "~0.2.6",
+    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/test-devtools": "~0.2.7",
     "@safe-global/safe-core-sdk-types": "^2.3.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
@@ -65,7 +65,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.4",
     "zod": "^3.22.4"
   },
   "peerDependencies": {

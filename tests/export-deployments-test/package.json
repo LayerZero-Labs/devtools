@@ -21,7 +21,7 @@
     "@layerzerolabs/export-deployments": "~0.0.10",
     "@layerzerolabs/io-devtools": "~0.1.11",
     "@layerzerolabs/test-setup-devtools-evm-hardhat": "~1.0.0",
-    "@layerzerolabs/toolbox-hardhat": "~0.3.0",
+    "@layerzerolabs/toolbox-hardhat": "~0.3.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
@@ -37,6 +37,6 @@
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   }
 }

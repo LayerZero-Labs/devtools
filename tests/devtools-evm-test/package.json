@@ -22,10 +22,10 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.3.17",
+    "@layerzerolabs/devtools": "~0.3.23",
     "@layerzerolabs/devtools-evm": "~0.4.0",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/test-devtools": "~0.2.6",
+    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/test-devtools": "~0.2.7",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@swc/core": "^1.4.0",
@@ -36,6 +36,6 @@
     "hardhat": "^2.22.3",
     "jest": "^29.7.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   }
 }
