@@ -34,10 +34,10 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "hardhat": "^2.22.3",
@@ -45,7 +45,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   },
   "peerDependencies": {
     "hardhat": "^2.22.3",

@@ -31,12 +31,12 @@
     "test": "jest --ci"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.22",
+    "@layerzerolabs/devtools": "~0.3.23",
     "@layerzerolabs/io-devtools": "~0.1.11",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
+    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/protocol-devtools": "~0.4.1",
-    "@layerzerolabs/test-devtools": "~0.2.6",
+    "@layerzerolabs/test-devtools": "~0.2.7",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -45,7 +45,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.4",
     "zod": "^3.22.4"
   },
   "peerDependencies": {

@@ -43,9 +43,9 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.19",
+    "@layerzerolabs/devtools": "~0.3.23",
     "@layerzerolabs/io-devtools": "~0.1.11",
-    "@layerzerolabs/ua-devtools": "~1.0.0",
+    "@layerzerolabs/ua-devtools": "~1.0.2",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",
     "commander": "^11.1.0",
@@ -57,7 +57,7 @@
     "react": "^17.0.2",
     "ts-node": "^10.9.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.4",
     "zod": "^3.22.4"
   },
   "engines": {

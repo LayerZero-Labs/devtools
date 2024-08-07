@@ -27,7 +27,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   },
   "devDependencies": {
     "@layerzerolabs/io-devtools": "~0.1.11",

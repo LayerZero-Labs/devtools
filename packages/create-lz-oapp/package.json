@@ -54,7 +54,7 @@
     "tiged": "^2.12.6",
     "ts-node": "^10.9.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.4",
     "which": "~4.0.0"
   },
   "engines": {

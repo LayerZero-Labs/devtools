@@ -23,19 +23,19 @@
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/devtools-evm-hardhat": "^1.0.0",
-    "@layerzerolabs/eslint-config-next": "~2.3.3",
-    "@layerzerolabs/lz-definitions": "^2.3.25",
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.25",
+    "@layerzerolabs/eslint-config-next": "~2.3.34",
+    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
+    "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/oapp-evm": "^0.0.1",
     "@layerzerolabs/oft-evm": "^0.0.8",
-    "@layerzerolabs/prettier-config-next": "^2.3.25",
-    "@layerzerolabs/solhint-config": "^2.3.3",
+    "@layerzerolabs/prettier-config-next": "^2.3.34",
+    "@layerzerolabs/solhint-config": "^2.3.34",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.9",
-    "@layerzerolabs/toolbox-foundry": "~0.1.7",
-    "@layerzerolabs/toolbox-hardhat": "~0.3.0",
+    "@layerzerolabs/toolbox-foundry": "~0.1.8",
+    "@layerzerolabs/toolbox-hardhat": "~0.3.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
@@ -56,7 +56,7 @@
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   },
   "engines": {
     "node": ">=18.16.0"

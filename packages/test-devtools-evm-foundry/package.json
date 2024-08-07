@@ -17,17 +17,17 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.25",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.25",
-    "@layerzerolabs/toolbox-foundry": "^0.1.7",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
+    "@layerzerolabs/toolbox-foundry": "^0.1.8",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@types/node": "~18.18.14",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.4"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.3",
