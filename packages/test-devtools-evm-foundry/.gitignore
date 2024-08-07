@@ -1,0 +1,8 @@
+cache
+# Ignore everything in the artifacts folder
+artifacts/*
+
+# Do not ignore the directory structure up to the specific file
+!artifacts/
+!artifacts/TestHelperOz5.sol/
+!artifacts/TestHelperOz5.sol/TestHelperOz5.json
