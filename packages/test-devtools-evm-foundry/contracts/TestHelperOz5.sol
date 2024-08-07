@@ -86,8 +86,8 @@ contract TestHelperOz5 is Test, OptionsHelper {
 
     uint128 public executorValueCap = 0.1 ether;
 
-    EndpointSetup endpointSetup;
-    LibrarySetup libSetup;
+    EndpointSetup internal endpointSetup;
+    LibrarySetup internal libSetup;
 
     /// @dev Initializes test environment setup, to be overridden by specific tests.
     function setUp() public virtual {
