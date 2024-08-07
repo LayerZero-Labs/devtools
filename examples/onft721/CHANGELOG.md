@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.0.6
+
+### Patch Changes
+
+- 40aebd3: Fix avalanche-testnet url
+
 ## 0.0.5
 
 ### Patch Changes

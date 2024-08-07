@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.2.13
+
+### Patch Changes
+
+- 40aebd3: Fix avalanche-testnet url
+
 ## 0.2.12
 
 ### Patch Changes
