@@ -1,7 +1,6 @@
 import * as anchor from '@coral-xyz/anchor'
 import { TOKEN_PROGRAM_ID, createInitializeMintInstruction, getMintLen } from '@solana/spl-token'
-import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
-import { assert } from 'chai'
+import { Keypair, PublicKey, SendTransactionError, SystemProgram } from '@solana/web3.js'
 
 import { OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
@@ -54,10 +53,15 @@ describe('OFT', () => {
             ENDPOINT_PROGRAM_ID
         )
 
-        await provider.sendAndConfirm(new anchor.web3.Transaction().add(initOftIx), [wallet.payer])
+        try {
+            await provider.sendAndConfirm(new anchor.web3.Transaction().add(initOftIx), [wallet.payer])
+        } catch (error) {
+            console.warn(await (error as SendTransactionError).getLogs(provider.connection))
+            throw error
+        }
 
         // check status
         const delegate = await OftTools.getDelegate(provider.connection, oftConfigPda, ENDPOINT_PROGRAM_ID)
-        assert.equal(delegate.toBase58(), wallet.publicKey.toBase58())
+        expect(delegate.toBase58()).toBe(wallet.publicKey.toBase58())
     })
 })
