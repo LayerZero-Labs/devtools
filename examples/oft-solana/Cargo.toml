@@ -1,5 +1,6 @@
 [workspace]
 members = ["programs/*"]
+resolver = "2"
 
 # [features]
 # idl-build = ["anchor-lang/idl-build"]
