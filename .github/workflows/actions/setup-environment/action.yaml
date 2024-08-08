@@ -7,3 +7,10 @@ runs:
       name: Install pnpm
       with:
         run_install: false
+
+    - name: Free up disk space
+      shell: bash
+      run: |
+        sudo swapoff -a
+        sudo rm -f /swapfile
+        sudo apt clean
