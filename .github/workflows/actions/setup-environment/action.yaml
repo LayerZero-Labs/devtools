@@ -11,6 +11,6 @@ runs:
     - name: Free up disk space
       shell: bash
       run: |
-        sudo swapoff -a
-        sudo rm -f /swapfile
-        sudo apt clean
+        swapoff -a
+        rm -rf /swapfile
+        apt clean
