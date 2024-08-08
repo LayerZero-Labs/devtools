@@ -26,45 +26,54 @@ This standard works by burning tokens on the source chain whenever an omnichain 
 
 [Audit Reports](https://github.com/LayerZero-Labs/Audits)
 
-## Prepare ProgramId
+### Development
 
-create programId keypair files if not existed
+#### Installing dependencies
 
+We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
+
+```bash
+pnpm install
 ```
-cd packages/solana/contracts
 
+#### Compiling your program
+
+```bash
+pnpm compile
+```
+
+#### Running tests
+
+```bash
+pnpm test
+```
+
+#### Preparing ProgramId
+
+Create programId keypair files by running
+
+```bash
 solana-keygen new -o target/deploy/endpoint-keypair.json
 solana-keygen new -o target/deploy/oft-keypair.json
 
 anchor keys sync
 ```
 
-## Build & Test
+#### Deploying
+
+##### Using `anchor`
 
 ```bash
-yarn && yarn build && yarn test
+anchor build -v
+solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u mainnet-beta
 ```
 
-## Deploy
+##### Using `solana-verify`
 
+```bash
+solana-verify build
+solana program deploy --program-id target/deploy/oft-keypair.json target/deploy/oft.so -u mainnet-beta
 ```
-cd packages/solana/contracts
-```
-
-1. with anchor
-
-   ```bash
-   anchor build -v
-   solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u mainnet-beta
-   ```
-
-   or
-
-2. with solana-verify
-   ```bash
-   solana-verify build
-   solana program deploy --program-id target/deploy/oft-keypair.json target/deploy/oft.so -u mainnet-beta
-   ```
 
 please visit [Solana Verify CLI](https://github.com/Ellipsis-Labs/solana-verifiable-build) and [Deploy a Solana Program with the CLI](https://docs.solanalabs.com/cli/examples/deploy-a-program) for more detail.
 
