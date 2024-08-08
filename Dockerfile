@@ -50,7 +50,9 @@ WORKDIR /app
 
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
-ENV PATH "/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+# Since we either install prebuilt binary for Solana or build from source, we need to include both
+# paths to binaries in the path
+ENV PATH "/root/.avm/bin:/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:/root/.local/share/solana/install/active_release/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 
 # Update the system packages
@@ -66,31 +68,24 @@ RUN apt-get install --yes \
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler
 
 # Install rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-RUN rustup default ${RUST_TOOLCHAIN_VERSION}
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
-# Build Solana from source
-# 
-# This is necessary since developer machines' are running M2 processors
-# and solana does not build for linux on M2
-# 
-# First we download & extract the source code
-RUN curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz
+RUN \
+    # First we try to download prebuilt binaries for Solana
+    curl --proto '=https' --tlsv1.2 -sSf https://release.solana.com/v${SOLANA_VERSION}/install | sh -s || \
+    # If that doesn't work, we'll need to build Solana from source
+    (\
+    # We download the source code and extract the archive
+    curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+    # Then run the installer
+    ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana \
+    )
 
-# Then we install the binaries (validator is enough)
-RUN ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana
-
-# Update the solana config
-# RUN solana config set --url https://api.devnet.solana.com
-
-# Build BPF SDK
-RUN cargo install --path ./solana-${SOLANA_VERSION}/sdk/cargo-build-bpf
-
-# Delete the source files
+# Delete the source files (only left behind if solana was build from source)
 RUN rm -rf ./solana-*
 
 # Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+RUN cargo install --git https://github.com/coral-xyz/anchor avm
 
 # Install anchor
 RUN avm install latest && avm use latest
@@ -118,6 +113,7 @@ RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
+RUN avm --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
