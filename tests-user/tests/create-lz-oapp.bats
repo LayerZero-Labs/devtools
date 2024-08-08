@@ -273,8 +273,8 @@ teardown() {
 
     LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
-    npm compile
-    npm test
-    npm lint
-    npm lint:fix
+    npm run compile
+    npm run test
+    npm run lint
+    npm run lint:fix
 }
