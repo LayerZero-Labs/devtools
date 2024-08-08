@@ -2,7 +2,7 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { OApp, Origin } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oapp/OApp.sol";
+import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 
 contract CustomOApp is OApp {
     uint256 private _customProperty;
@@ -15,7 +15,7 @@ contract CustomOApp is OApp {
         return _customProperty;
     }
 
-    function setCustomProperty(uint256 value) external onlyOwner() {
+    function setCustomProperty(uint256 value) external onlyOwner {
         _customProperty = value;
     }
 }
