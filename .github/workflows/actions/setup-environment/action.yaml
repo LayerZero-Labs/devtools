@@ -10,6 +10,4 @@ runs:
 
     - name: Free up disk space
       shell: bash
-      run: |
-        swapoff -a
-        rm -rf /swapfile
+      run: rm -rf /swapfile
