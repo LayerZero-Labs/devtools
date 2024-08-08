@@ -13,4 +13,3 @@ runs:
       run: |
         swapoff -a
         rm -rf /swapfile
-        apt clean
