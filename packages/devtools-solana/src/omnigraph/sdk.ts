@@ -1,14 +1,23 @@
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
-import { AsyncRetriable, formatOmniPoint, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
+import { type Connection, PublicKey, Transaction } from '@solana/web3.js'
+import {
+    AsyncRetriable,
+    formatOmniPoint,
+    OmniAddress,
+    type OmniPoint,
+    type OmniTransaction,
+} from '@layerzerolabs/devtools'
 import type { IOmniSDK } from './types'
-import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
+import { type Logger, createModuleLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { serializeTransactionMessage } from '@/transactions/serde'
+import { createGetAccountInfo, type GetAccountInfo } from '@/common/accounts'
 
 /**
  * Base class for all Solana SDKs, providing some common functionality
  * to reduce the boilerplate
  */
 export class OmniSDK implements IOmniSDK {
+    protected readonly getAccountInfo: GetAccountInfo
+
     constructor(
         public readonly connection: Connection,
         public readonly point: OmniPoint,
@@ -16,7 +25,9 @@ export class OmniSDK implements IOmniSDK {
         protected readonly logger: Logger = createModuleLogger(
             `Solana SDK ${new.target.name} @ ${formatOmniPoint(point)}`
         )
-    ) {}
+    ) {
+        this.getAccountInfo = createGetAccountInfo(connection, logger)
+    }
 
     /**
      * Human radable label for this SDK
@@ -41,5 +52,20 @@ export class OmniSDK implements IOmniSDK {
             point: this.point,
             data: serializeTransactionMessage(transaction),
         }
+    }
+
+    @AsyncRetriable()
+    protected async isAccountInitialized(account: OmniAddress): Promise<boolean> {
+        this.logger.verbose(`Checking whether account ${account} is initialized`)
+
+        const accountInfo = await this.getAccountInfo(account)
+        const isAccountInitialized = accountInfo != null
+
+        return (
+            this.logger.verbose(
+                `Checked whether account ${account} is initialized: ${printBoolean(isAccountInitialized)}`
+            ),
+            isAccountInitialized
+        )
     }
 }

@@ -4,9 +4,11 @@ import {
     formatOmniVector,
     createConfigureEdges,
     createConfigureMultiple,
+    OmniSDKFactory,
+    OmniPoint,
 } from '@layerzerolabs/devtools'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { endpointIdToChainType, ChainType } from '@layerzerolabs/lz-definitions'
+import { isOmniPointOnSolana } from '@layerzerolabs/devtools-solana'
 import type { IOApp, OAppConfigurator, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OFT } from './sdk'
 
@@ -18,7 +20,7 @@ const createOFTLogger = () => createModuleLogger('OFT')
  * @param {OmniVector} vector
  * @returns {boolean}
  */
-const isVectorFromSolana = (vector: OmniVector): boolean => endpointIdToChainType(vector.from.eid) === ChainType.SOLANA
+const isVectorFromSolana = (vector: OmniVector): boolean => isOmniPointOnSolana(vector.from)
 
 /**
  * Helper function that wraps a edge configuration function,
@@ -28,7 +30,7 @@ const isVectorFromSolana = (vector: OmniVector): boolean => endpointIdToChainTyp
  * @returns {CreateTransactionsFromOmniEdges<OAppOmniGraph, IOApp>}
  */
 const onlyEdgesFromSolana = (
-    createTransactions: CreateTransactionsFromOmniEdges<OAppOmniGraph, IOApp>
+    createTransactions: CreateTransactionsFromOmniEdges<OAppOmniGraph, OFT>
 ): CreateTransactionsFromOmniEdges<OAppOmniGraph, IOApp> => {
     const logger = createOFTLogger()
 
@@ -37,55 +39,75 @@ const onlyEdgesFromSolana = (
             return logger.verbose(`Ignoring connection ${formatOmniVector(edge.vector)}`), undefined
         }
 
-        return createTransactions(edge, sdk, graph, createSdk)
+        return createTransactions(edge, sdk as OFT, graph, createSdk as OmniSDKFactory<OFT, OmniPoint>)
     }
 }
 
 export const initNonce: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(({ vector }, sdk) => {
+    onlyEdgesFromSolana(async ({ vector: { to } }, sdk: OFT) => {
         const logger = createOFTLogger()
 
-        if (typeof (sdk as OFT).initializeNonce !== 'function') {
+        if (typeof sdk.initializeNonce !== 'function') {
             return logger.warn(`Could not find initializeNonce() method on OFT SDK, skipping`), undefined
         }
 
-        return (sdk as OFT).initializeNonce(vector.to.eid, vector.to.address)
+        if (typeof sdk.isNonceInitialized !== 'function') {
+            return logger.warn(`Could not find isNonceInitialized() method on OFT SDK, skipping`), undefined
+        }
+
+        const isInitialized = await sdk.isNonceInitialized(to.eid, to.address)
+        return isInitialized ? undefined : sdk.initializeNonce(to.eid, to.address)
     })
 )
 
 export const initSendLibrary: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(({ vector }, sdk) => {
+    onlyEdgesFromSolana(async ({ vector: { to } }, sdk) => {
         const logger = createOFTLogger()
 
-        if (typeof (sdk as OFT).initializeSendLibrary !== 'function') {
+        if (typeof sdk.initializeSendLibrary !== 'function') {
             return logger.warn(`Could not find initializeSendLibrary() method on OFT SDK, skipping`), undefined
         }
 
-        return (sdk as OFT).initializeSendLibrary(vector.to.eid)
+        if (typeof sdk.isSendLibraryInitialized !== 'function') {
+            return logger.warn(`Could not find isSendLibraryInitialized() method on OFT SDK, skipping`), undefined
+        }
+
+        const isInitialized = await sdk.isSendLibraryInitialized(to.eid)
+        return isInitialized ? undefined : sdk.initializeSendLibrary(to.eid)
     })
 )
 
 export const initReceiveLibrary: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(({ vector }, sdk) => {
+    onlyEdgesFromSolana(async ({ vector: { to } }, sdk) => {
         const logger = createOFTLogger()
 
-        if (typeof (sdk as OFT).initializeReceiveLibrary !== 'function') {
+        if (typeof sdk.initializeReceiveLibrary !== 'function') {
             return logger.warn(`Could not find initializeReceiveLibrary() method on OFT SDK, skipping`), undefined
         }
 
-        return (sdk as OFT).initializeReceiveLibrary(vector.to.eid)
+        if (typeof sdk.isReceiveLibraryInitialized !== 'function') {
+            return logger.warn(`Could not find isReceiveLibraryInitialized() method on OFT SDK, skipping`), undefined
+        }
+
+        const isInitialized = await sdk.isReceiveLibraryInitialized(to.eid)
+        return isInitialized ? undefined : sdk.initializeReceiveLibrary(to.eid)
     })
 )
 
 export const initOFTConfig: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(({ vector, config }, sdk) => {
+    onlyEdgesFromSolana(async ({ vector: { to }, config }, sdk) => {
         const logger = createOFTLogger()
 
-        if (typeof (sdk as OFT).initializeOAppConfig !== 'function') {
+        if (typeof sdk.initializeOAppConfig !== 'function') {
             return logger.warn(`Could not find initializeOAppConfig() method on OFT SDK, skipping`), undefined
         }
 
-        return (sdk as OFT).initializeOAppConfig(vector.to.eid, config?.sendLibrary)
+        if (typeof sdk.isOAppConfigInitialized !== 'function') {
+            return logger.warn(`Could not find isOAppConfigInitialized() method on OFT SDK, skipping`), undefined
+        }
+
+        const isInitialized = await sdk.isOAppConfigInitialized(to.eid)
+        return isInitialized ? undefined : sdk.initializeOAppConfig(to.eid, config?.sendLibrary)
     })
 )
 
