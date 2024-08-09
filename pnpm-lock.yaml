@@ -455,6 +455,9 @@ importers:
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.3.3
         version: link:../../packages/toolbox-hardhat
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^3.2.1
+        version: 3.2.1(@metaplex-foundation/umi@0.9.2)
       '@metaplex-foundation/mpl-toolbox':
         specifier: ^0.9.4
         version: 0.9.4(@metaplex-foundation/umi@0.9.2)
@@ -492,7 +495,7 @@ importers:
         specifier: ^0.4.8
         version: 0.4.8(@solana/web3.js@1.95.2)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
@@ -5413,6 +5416,15 @@ packages:
       debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@metaplex-foundation/mpl-token-metadata@3.2.1(@metaplex-foundation/umi@0.9.2):
+    resolution: {integrity: sha512-26W1NhQwDWmLOg/pBRYut7x/vEs/5kFS2sWVEY5/X0f2jJOLhnd4NaZQcq+5u+XZsXvm1jq2AtrRGPNK43oqWQ==}
+    peerDependencies:
+      '@metaplex-foundation/umi': '>= 0.8.2 < 1'
+    dependencies:
+      '@metaplex-foundation/mpl-toolbox': 0.9.4(@metaplex-foundation/umi@0.9.2)
+      '@metaplex-foundation/umi': 0.9.2
     dev: true
 
   /@metaplex-foundation/mpl-toolbox@0.9.4(@metaplex-foundation/umi@0.9.2):
