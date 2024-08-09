@@ -10,8 +10,6 @@ import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
 
-import { TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } from 'hardhat/builtin-tasks/task-names'
-import { subtask } from 'hardhat/config'
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -78,15 +76,5 @@ const config: HardhatUserConfig = {
         },
     },
 }
-
-// Add a subtask that sets the action for the TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS task
-subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS).setAction(async (_, __, runSuper) => {
-    // Get the list of source paths that would normally be passed to the Solidity compiler
-    const paths = await runSuper()
-
-    // Apply a filter function to exclude paths that contain the "anchor" directory
-    // Assuming 'anchor' is a folder containing test files that should be excluded
-    return paths.filter((p: string) => !p.includes('./test/anchor'))
-})
 
 export default config
