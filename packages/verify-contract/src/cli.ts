@@ -16,7 +16,7 @@ interface CommonArgs {
 
 interface NonTargetArgs extends CommonArgs {
     address: string
-    arguments?: string[]
+    arguments?: string[] | string
     deployment: string
     name: string
 }
@@ -55,6 +55,11 @@ const verifyNonTargetCommand = new Command('non-target')
         '--arguments <constructor arguments>',
         'JSON encoded array of constructor arguments, e.g. [1234, "0x0"]',
         (value: string) => {
+            if (value.startsWith('0x')) {
+                // If encoded parameters were passed in, we remove the leading 0x
+                return value.slice(2)
+            }
+
             try {
                 const decoded = JSON.parse(value)
                 if (!Array.isArray(decoded)) {
