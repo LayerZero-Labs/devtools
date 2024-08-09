@@ -492,7 +492,7 @@ importers:
         specifier: ^0.4.8
         version: 0.4.8(@solana/web3.js@1.95.2)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
       '@solana/web3.js':
-        specifier: ^1.95.1
+        specifier: ^1.95.0
         version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
@@ -1190,8 +1190,8 @@ importers:
         specifier: ~0.0.3
         version: link:../test-devtools-solana
       '@solana/web3.js':
-        specifier: ~1.95.0
-        version: 1.95.0
+        specifier: ^1.95.0
+        version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -1710,8 +1710,8 @@ importers:
         specifier: ~1.0.3
         version: link:../ua-devtools
       '@solana/web3.js':
-        specifier: ~1.95.0
-        version: 1.95.0
+        specifier: ^1.95.0
+        version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -1855,8 +1855,8 @@ importers:
   packages/test-devtools-solana:
     devDependencies:
       '@solana/web3.js':
-        specifier: ~1.95.0
-        version: 1.95.0
+        specifier: ^1.95.0
+        version: 1.95.2
       bs58:
         specifier: ~6.0.0
         version: 6.0.0
@@ -2285,8 +2285,8 @@ importers:
         specifier: ~1.0.3
         version: link:../ua-devtools
       '@solana/web3.js':
-        specifier: ~1.95.0
-        version: 1.95.0
+        specifier: ^1.95.0
+        version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -5345,7 +5345,7 @@ packages:
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
     dependencies:
-      '@babel/runtime': 7.23.8
+      '@babel/runtime': 7.24.8
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -6491,30 +6491,6 @@ packages:
     engines: {node: '>=16'}
     dependencies:
       buffer: 6.0.3
-    dev: true
-
-  /@solana/web3.js@1.95.0:
-    resolution: {integrity: sha512-iHwJ/HcWrF9qbnI1ctwI1UXHJ0vZXRpnt+lI5UcQIk8WvJNuQ5gV06icxzM6B7ojUES85Q1/FM4jZ49UQ8yZZQ==}
-    dependencies:
-      '@babel/runtime': 7.24.8
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
-      '@solana/buffer-layout': 4.0.1
-      agentkeepalive: 4.5.0
-      bigint-buffer: 1.1.5
-      bn.js: 5.2.1
-      borsh: 0.7.0
-      bs58: 4.0.1
-      buffer: 6.0.3
-      fast-stable-stringify: 1.0.0
-      jayson: 4.1.1
-      node-fetch: 2.7.0
-      rpc-websockets: 9.0.2
-      superstruct: 2.0.2
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
     dev: true
 
   /@solana/web3.js@1.95.2:

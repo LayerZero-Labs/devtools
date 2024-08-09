@@ -47,7 +47,7 @@
     "@layerzerolabs/lz-definitions": "^2.3.34",
     "@layerzerolabs/test-devtools": "~0.2.8",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
-    "@solana/web3.js": "~1.95.0",
+    "@solana/web3.js": "^1.95.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/bn.js": "~5.1.5",
@@ -67,7 +67,7 @@
     "@layerzerolabs/devtools": "~0.3.24",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^2.3.3",
-    "@solana/web3.js": "~1.95.0",
+    "@solana/web3.js": "^1.95.0",
     "bn.js": "^5.2.0",
     "fp-ts": "^2.16.2",
     "zod": "^3.22.4"
