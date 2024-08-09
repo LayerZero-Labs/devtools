@@ -405,13 +405,13 @@ importers:
         specifier: ^0.29.0
         version: 0.29.0
       '@layerzerolabs/lz-solana-sdk-v2':
-        specifier: ^2.3.31
+        specifier: ^2.3.34
         version: 2.3.34(fastestsmallesttextencoderdecoder@1.0.22)
       '@solana/spl-token':
         specifier: ^0.4.6
         version: 0.4.8(@solana/web3.js@1.95.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.0
       '@swc/core':
         specifier: ^1.4.0
