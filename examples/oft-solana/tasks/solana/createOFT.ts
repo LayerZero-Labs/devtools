@@ -19,15 +19,10 @@ import {
     signerIdentity,
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import {
-    fromWeb3JsInstruction,
-    fromWeb3JsKeypair,
-    fromWeb3JsPublicKey,
-    toWeb3JsKeypair,
-} from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
-import { getExplorerLink, getKeypairFromEnvironment } from '@solana-developers/helpers'
+import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
 import { TaskArguments } from 'hardhat/types'
 
@@ -35,7 +30,7 @@ import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import getFee from '../utils/getFee'
 
-task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config account')
+task('lz:solana:oft:create', 'Mints new SPL Token and creates new OFT Config account')
     .addParam('program', 'The OFT Program id')
     .addParam('staging', 'Solana mainnet or testnet')
     .addOptionalParam('amount', 'The initial supply to mint on solana')
@@ -52,17 +47,16 @@ task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config
 
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
         console.log(umi.programs.has('splAssociatedToken'))
-        const walletKeyPair = getKeypairFromEnvironment('SOLANA_PRIVATE_KEY')
-        const umiWalletKeyPair = fromWeb3JsKeypair(walletKeyPair)
+        console.log(process.env.SOLANA_PRIVATE_KEY)
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 
         // Your OFT_PROGRAM_ID
         const OFT_PROGRAM_ID = new PublicKey(taskArgs.program)
-        // The TOKEN METADATA PROGRAM ID
-        const umiWalletPublicKey = fromWeb3JsPublicKey(walletKeyPair.publicKey)
-        // Generate SPL TOKEN Mint Keypair
-        // Number of decimals for the token (recommended value is 6)
+
+        // Number of decimals for the token (recommended value for SHARED_DECIMALS is 6)
         const LOCAL_DECIMALS = 9
         const SHARED_DECIMALS = 6
 
@@ -79,17 +73,6 @@ task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config
         //
         // 1. MINT NEW SPL TOKEN
         //
-
-        // const tokenMint = await createMint(umi, {
-        // mint,
-        // decimals: LOCAL_DECIMALS,
-        // mintAuthority: umiWalletPublicKey,
-        // freezeAuthority: umiWalletPublicKey,
-        // }).sendAndConfirm(umi)
-
-        // const tokenTransactionSignature = bs58.encode(tokenMint.signature);
-        // const tokenMintLink = getExplorerLink('tx', tokenTransactionSignature.toString(), 'mainnet-beta');
-        // console.log(`✅ Token Mint Complete! View the transaction here: ${tokenMintLink}`)
 
         const token = generateSigner(umi)
 
@@ -123,39 +106,12 @@ task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config
         const createTokenLink = getExplorerLink('tx', createTokenTransactionSignature.toString(), 'mainnet-beta')
         console.log(`✅ Token Mint Complete! View the transaction here: ${createTokenLink}`)
 
-        // // Create the associated token account.
-        // const tokenAccountTransaction = await createAssociatedToken(
-        //     umi,
-        //     {
-        //         mint: token.publicKey,
-        //         owner: umiWalletSigner.publicKey, // Use the public key of the wallet keypair as the owner
-        //         payer: umiWalletSigner // Ensure the payer is the wallet signer
-        //     }
-        // ).sendAndConfirm(umi);
-
-        // const tokenAccountSignature = bs58.encode(tokenAccountTransaction.signature);
-        // const tokenAccountLink = getExplorerLink('tx', tokenAccountSignature.toString(), 'mainnet-beta');
-        // console.log(`✅ Token Account created! View the transaction here: ${tokenAccountLink}`);
-
         const tokenAccount = await findAssociatedTokenPda(umi, {
             mint: token.publicKey,
             owner: umiWalletSigner.publicKey,
         })
 
         console.log(`Your token account is: ${tokenAccount[0]}`)
-
-        // // OPTIONAL: Mint initial supply of tokens BEFORE transferring mint authority (See below for after).
-        // const oftMint = await mintTo(
-        //     connection,
-        //     walletKeyPair,
-        //     mintKeyPair.publicKey,
-        //     tokenAccount.address,
-        //     walletKeyPair.publicKey,
-        //     1000000000000,
-        // );
-
-        // Supply the Metadata using the token mint.
-        // You can find the Token metadata uploaded to Arweave in ./utils/token.json
 
         // Derive the OFT Config's PDA
         const [oftConfig] = PublicKey.findProgramAddressSync(
@@ -175,15 +131,11 @@ task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config
             newAuthority: fromWeb3JsPublicKey(oftConfig),
         })
 
-        // const setAuthorityTransactionSignature = bs58.encode(setAuthorityTx.signature);
-        // const setAuthorityLink = getExplorerLink('tx', setAuthorityTransactionSignature.toString(), 'mainnet-beta');
-        // console.log(`✅ Set authority complete! View the transaction here: ${setAuthorityLink}`);
-
         const oftConfigMintIx = await OftTools.createInitNativeOftIx(
-            walletKeyPair.publicKey, // payer
-            walletKeyPair.publicKey, // admin
+            web3WalletKeyPair.publicKey, // payer
+            web3WalletKeyPair.publicKey, // admin
             tokenLegacyKeypair.publicKey, // mint account
-            walletKeyPair.publicKey, // OFT Mint Authority
+            web3WalletKeyPair.publicKey, // OFT Mint Authority
             SHARED_DECIMALS, // OFT Shared Decimals
             TOKEN_PROGRAM_ID,
             OFT_PROGRAM_ID // OFT Program ID that I deployed
@@ -246,25 +198,4 @@ task('lz:solana:oft:create:ena', 'Mints new SPL Token and creates new OFT Config
         fs.writeFileSync(outputFile, JSON.stringify(accountsJson, null, 2))
 
         console.log(`Accounts have been saved to ${outputFile}`)
-
-        // // 2a. OPTIONAL MINT WITH OFT
-        // if (taskArgs.amount) {
-        //     const oftMintTransaction = new Transaction().add(
-        //         await OftTools.createMintToIx(
-        //             walletKeyPair.publicKey,
-        //             mintKeyPair.publicKey,
-        //             new PublicKey(tokenAccount), // which account to mint to?
-        //             BigInt(taskArgs.amount),
-        //             TOKEN_PROGRAM_ID,
-        //             OFT_PROGRAM_ID
-        //         )
-        //     )
-
-        //     // Send the transaction to mint the OFT tokens
-        //     const oftMintSignature = await sendAndConfirmTransaction(connection, oftMintTransaction, [walletKeyPair], {
-        //         commitment: `finalized`,
-        //     })
-        //     const oftMintLink = getExplorerLink('tx', oftMintSignature, taskArgs.staging)
-        //     console.log(`✅ You minted ${taskArgs.amount} tokens! View the transaction here: ${oftMintLink}`)
-        // }
     })

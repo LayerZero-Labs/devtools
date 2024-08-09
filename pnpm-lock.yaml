@@ -519,7 +519,7 @@ importers:
         specifier: ^4.4.1
         version: 4.5.0
       dotenv:
-        specifier: ^16.4.1
+        specifier: ^16.4.5
         version: 16.4.5
       eslint-plugin-jest-extended:
         specifier: ~2.0.0

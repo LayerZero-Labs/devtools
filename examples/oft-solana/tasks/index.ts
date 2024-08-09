@@ -1,1 +1,5 @@
 import './solana/createOFT'
+import './solana/sendOFT'
+import './solana/setFreezeAuthority'
+import './solana/setOFTMintAuthority'
+import './solana/setMetadataAuthority'
