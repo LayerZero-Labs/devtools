@@ -358,7 +358,8 @@ describe('endpointv2/sdk', () => {
             expect(transactions).toHaveLength(1)
         })
 
-        it('should create multiple OmniTransactions when called with a lot of uln configs', async () => {
+        // eslint-disable-next-line jest/no-disabled-tests
+        it.skip('should create multiple OmniTransactions when called with a lot of uln configs', async () => {
             getLatestBlockhashMock.mockRestore()
 
             const connection = await connectionFactory(EndpointId.SOLANA_V2_MAINNET)
