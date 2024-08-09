@@ -4,8 +4,8 @@ import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
 
 import { OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
-import oftIdl from '../target/idl/oft.json'
-import endpointIdl from '../target/idl/endpoint.json'
+import oftIdl from '../../target/idl/oft.json'
+import endpointIdl from '../../target/idl/endpoint.json'
 
 const OFT_SEED = 'Oft'
 const SOLANA_OFT_TOKEN_DECIMALS = 8
