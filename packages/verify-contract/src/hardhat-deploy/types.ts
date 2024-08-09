@@ -24,7 +24,7 @@ export interface VerifyHardhatContractConfig {
     address: string
     deployment: string
     contractName: string
-    constructorArguments?: unknown[]
+    constructorArguments?: unknown[] | string
 }
 
 export interface VerifyHardhatNonTargetConfig extends VerifyHardhatBaseConfig {
