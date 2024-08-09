@@ -16,7 +16,7 @@ use oapp::{
 };
 use state::*;
 
-declare_id!("CUinP3FqxxPGxhnmTSMDJM9rnKW6urhDugecXV13eZdK");
+declare_id!("37je9hcFfypmH194zxU2i3Vqa2fNQ3sQtruqcihEMpjn");
 
 pub const OFT_VERSION: u64 = 1;
 pub const OFT_SDK_VERSION: u64 = 1;
