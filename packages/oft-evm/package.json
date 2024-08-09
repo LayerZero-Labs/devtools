@@ -53,9 +53,9 @@
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.29",
-    "@layerzerolabs/lz-evm-oapp-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.29",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.29",
+    "@layerzerolabs/oapp-evm": "^0.0.2",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },
