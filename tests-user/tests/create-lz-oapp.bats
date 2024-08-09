@@ -158,6 +158,15 @@ teardown() {
     pnpm lint:fix
 }
 
+@test "should work with pnpm & oft solana example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
+
+    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
 @test "should work with yarn & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
@@ -202,6 +211,15 @@ teardown() {
     yarn lint:fix
 }
 
+@test "should work with yarn & oft solana example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-solana"
+
+    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
+    cd "$DESTINATION"
+    yarn compile
+    yarn test
+}
+
 @test "should work with npm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
@@ -244,4 +262,13 @@ teardown() {
     npm run test
     npm run lint
     npm run lint:fix
+}
+
+@test "should work with npm & oft solana example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-solana"
+
+    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
+    cd "$DESTINATION"
+    npm run compile
+    npm run test
 }
