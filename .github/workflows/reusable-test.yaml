@@ -107,7 +107,7 @@ jobs:
 
   test-user:
     name: User test
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-latest-16xlarge
 
     permissions:
       contents: read
