@@ -1,3 +1,4 @@
+import './common/wire'
 import './solana/createOFT'
 import './solana/sendOFT'
 import './solana/setFreezeAuthority'
