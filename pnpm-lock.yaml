@@ -407,12 +407,24 @@ importers:
       '@coral-xyz/anchor':
         specifier: ^0.29.0
         version: 0.29.0
+      '@layerzerolabs/devtools':
+        specifier: ~0.3.23
+        version: link:../../packages/devtools
+      '@layerzerolabs/devtools-evm':
+        specifier: ~0.4.0
+        version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ^1.0.1
         version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/devtools-solana':
+        specifier: ~0.1.2
+        version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.34
         version: 2.3.34(typescript@5.5.4)
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.11
+        version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^2.3.34
         version: 2.3.34
@@ -455,6 +467,18 @@ importers:
       '@layerzerolabs/toolbox-hardhat':
         specifier: ~0.3.3
         version: link:../../packages/toolbox-hardhat
+      '@layerzerolabs/ua-devtools':
+        specifier: ~1.0.2
+        version: link:../../packages/ua-devtools
+      '@layerzerolabs/ua-devtools-evm':
+        specifier: ~1.0.0
+        version: link:../../packages/ua-devtools-evm
+      '@layerzerolabs/ua-devtools-evm-hardhat':
+        specifier: ~1.0.0
+        version: link:../../packages/ua-devtools-evm-hardhat
+      '@layerzerolabs/ua-devtools-solana':
+        specifier: ~1.0.2
+        version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
         version: 3.2.1(@metaplex-foundation/umi@0.9.2)
