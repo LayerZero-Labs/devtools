@@ -51,7 +51,7 @@ jobs:
       # We'll run the build in series to avoid race conditions
       # when compiling hardhat projects in monorepo setups
       - name: Build
-        run: pnpm build --concurrency=1
+        run: pnpm build
 
   test:
     name: Test
