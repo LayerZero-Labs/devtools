@@ -64,6 +64,8 @@ RUN apt-get install --yes \
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
     expect \
+    # Parallel is a utilit we use to parallelize the BATS (user) tests
+    parallel \
     # Utilities required to build solana
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler
 
