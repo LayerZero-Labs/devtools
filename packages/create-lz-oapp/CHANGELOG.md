@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.1.24
+
+### Patch Changes
+
+- 6a0aabd: Add feature flagged solana OFT example
+
 ## 0.1.23
 
 ### Patch Changes
