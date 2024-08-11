@@ -18,7 +18,7 @@ import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 import getFee from '../utils/getFee'
 
-task('lz:solana:oft:rate-limit', "Sets the Solana and EVM rate limits from './scripts/solana/utils/constants.ts'")
+task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './scripts/solana/utils/constants.ts'")
     .addParam('mint', 'The OFT token mint public key')
     .addParam('program', 'The OFT Program id')
     .addParam('staging', 'Solana mainnet or testnet')
@@ -46,16 +46,12 @@ task('lz:solana:oft:rate-limit', "Sets the Solana and EVM rate limits from './sc
         }
 
         const solanaConfig: OAppOmniGraphHardhat = (await import(configPath)).default
-        let RPC_URL_SOLANA: string
         let solanaEid: EndpointId
 
-        // Determine the RPC URL from env based on the specified network (mainnet or testnet)
-        if (taskArgs.staging == 'mainnet') {
-            RPC_URL_SOLANA = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
-            solanaEid = EndpointId.SOLANA_V2_MAINNET
-        } else {
-            throw new Error("Invalid network specified. Use 'mainnet' or 'testnet'.")
-        }
+        const RPC_URL_SOLANA =
+            taskArgs.staging === 'mainnet'
+                ? env.RPC_URL_SOLANA?.toString() ?? 'default_url'
+                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? 'default_url'
 
         // Initialize UMI framework with the Solana connection
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())

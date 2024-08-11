@@ -4,13 +4,7 @@ import { env } from 'process'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
-import {
-    AuthorityType,
-    findAssociatedTokenPda,
-    mplToolbox,
-    setAuthority,
-    setComputeUnitPrice,
-} from '@metaplex-foundation/mpl-toolbox'
+import { findAssociatedTokenPda, mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import {
     TransactionBuilder,
     createSignerFromKeypair,
@@ -19,7 +13,7 @@ import {
     signerIdentity,
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey, clusterApiUrl } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
@@ -30,7 +24,7 @@ import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import getFee from '../utils/getFee'
 
-task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config account')
+task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT Adapter Config account')
     .addParam('program', 'The OFT Program id')
     .addParam('staging', 'Solana mainnet or testnet')
     .addOptionalParam('amount', 'The initial supply to mint on solana')
@@ -46,7 +40,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         // Initialize UMI with the Solana RPC URL and necessary tools
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
 
-        // Generate a wallet keypair from the private key stored in the environment
+        // Generate a wallet keypair from the private key stored in environment
         const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
 
         // Convert the UMI keypair to a format compatible with web3.js
@@ -62,7 +56,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         // Define the OFT Program ID based on the task arguments
         const OFT_PROGRAM_ID = new PublicKey(taskArgs.program)
 
-        // Number of decimals for the token (recommended value for SHARED_DECIMALS is 6)
+        // Define the number of decimals for the token
         const LOCAL_DECIMALS = 9
 
         // Define the number of shared decimals for the token
@@ -90,13 +84,17 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             accounts: AccountDetails[]
         }
 
-        // 2. Generate the accounts we want to create (SPL Token)
+        // 2. Generate the accounts we want to create (SPL Token / Lockbox)
 
         // Generate a new keypair for the SPL token mint account
         const token = generateSigner(umi)
 
-        // Convert the UMI keypair to web3.js compatible keypair
+        // Generate a new keypair for the Lockbox account
+        const lockbox = generateSigner(umi)
+
+        // Convert the UMI keypairs to web3.js compatible keypairs
         const web3TokenKeyPair = toWeb3JsKeypair(token)
+        const web3LockboxKeypair = toWeb3JsKeypair(lockbox)
 
         // Get the average compute unit price
         // getFee() uses connection.getRecentPrioritizationFees() to get recent fees and averages them
@@ -121,9 +119,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             .sendAndConfirm(umi)
 
         // Log the transaction and token mint details
-        const createTokenTransactionSignature = bs58.encode(createTokenTx.signature)
-        const createTokenLink = getExplorerLink('tx', createTokenTransactionSignature.toString(), 'mainnet-beta')
-        console.log(`✅ Token Mint Complete! View the transaction here: ${createTokenLink}`)
+        console.log(
+            `✅ Token Mint Complete! View the transaction here: ${getExplorerLink('tx', bs58.encode(createTokenTx.signature), taskArgs.staging)}`
+        )
 
         // Find the associated token account using the generated token mint
         const tokenAccount = findAssociatedTokenPda(umi, {
@@ -135,57 +133,42 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
 
         // 3. Derive OFT Config from those accounts and program ID
 
-        // Derive the OFT Config public key from the token mint keypair and OFT Program ID
+        // Derive the OFT Config public key from the Lockbox keypair and OFT Program ID
         const [oftConfig] = PublicKey.findProgramAddressSync(
-            [Buffer.from(OFT_SEED), web3TokenKeyPair.publicKey.toBuffer()],
+            [Buffer.from(OFT_SEED), web3LockboxKeypair.publicKey.toBuffer()],
             OFT_PROGRAM_ID
         )
 
         console.log(`OFT Config:`, oftConfig)
 
-        // 4. Create new account (OFT Config)
+        // 4. Create new account (OFT Adapter Config)
 
-        // Create a new transaction to transfer mint authority to the OFT Config account and initialize a new native OFT
-        const setAuthorityTx = await setAuthority(umi, {
-            owned: token.publicKey, // SPL Token mint account
-            owner: umiWalletKeyPair.publicKey, // Current authority of the token mint
-            authorityType: AuthorityType.MintTokens, // Authority type to transfer
-            newAuthority: fromWeb3JsPublicKey(oftConfig), // New authority (OFT Config)
-        })
-
-        // Initialize the OFT using the OFT Config and the token mint
-        const oftConfigMintIx = await OftTools.createInitNativeOftIx(
+        // Create the OFT Adapter Config initialization instruction
+        const adapterIx = await OftTools.createInitAdapterOftIx(
             web3WalletKeyPair.publicKey, // Payer
             web3WalletKeyPair.publicKey, // Admin
-            web3TokenKeyPair.publicKey, // Mint account
-            web3WalletKeyPair.publicKey, // OFT Mint Authority
-            SHARED_DECIMALS, // OFT Shared Decimals
-            TOKEN_PROGRAM_ID, // Token Program ID
+            web3TokenKeyPair.publicKey, // SPL Token Mint Account
+            web3LockboxKeypair.publicKey, // Lockbox account
+            SHARED_DECIMALS, // Number of shared decimals
+            TOKEN_PROGRAM_ID, // Token program ID
             OFT_PROGRAM_ID // OFT Program ID
         )
 
-        // Convert the instruction to UMI format
-        const convertedInstruction = fromWeb3JsInstruction(oftConfigMintIx)
-
-        // Build the transaction with the OFT Config initialization instruction
-        const configBuilder = new TransactionBuilder([
+        // Build and send the transaction with the create OFT Adapter instruction
+        const oftConfigTransaction = await new TransactionBuilder([
             {
-                instruction: convertedInstruction,
+                instruction: fromWeb3JsInstruction(adapterIx),
                 signers: [umiWalletSigner],
                 bytesCreatedOnChain: 0,
             },
         ])
-
-        // Set the fee payer and send the transaction
-        const oftConfigTransaction = await setAuthorityTx
-            .add(configBuilder)
             .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice * BigInt(4) }))
             .sendAndConfirm(umi)
 
         // Log the transaction details
-        const oftConfigSignature = bs58.encode(oftConfigTransaction.signature)
-        const oftConfigLink = getExplorerLink('tx', oftConfigSignature.toString(), 'mainnet-beta')
-        console.log(`✅ You created an OFT, view the transaction here: ${oftConfigLink}`)
+        console.log(
+            `✅ You created an OFT Adapter, view the transaction here: ${getExplorerLink('tx', bs58.encode(oftConfigTransaction.signature), taskArgs.staging)}`
+        )
 
         // Save the account details to a JSON file
         const accountsJson: AccountsJson = {
@@ -194,6 +177,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
                 { name: 'SPL Token Mint Account', publicKey: web3TokenKeyPair.publicKey.toString() },
                 { name: 'OFT Config Account', publicKey: oftConfig.toString() },
                 { name: 'OFT Program ID', publicKey: taskArgs.program },
+                { name: 'OFT Lockbox', publicKey: web3LockboxKeypair.publicKey.toString() },
             ],
         }
 
@@ -203,6 +187,6 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         }
 
         // Write the JSON file to the specified directory
-        fs.writeFileSync(`${outputDir}/OFT.json`, JSON.stringify(accountsJson, null, 2))
-        console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
+        fs.writeFileSync(`${outputDir}/OFTAdapter.json`, JSON.stringify(accountsJson, null, 2))
+        console.log(`Accounts have been saved to ${outputDir}/OFTAdapter.json`)
     })

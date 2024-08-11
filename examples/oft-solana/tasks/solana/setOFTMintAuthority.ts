@@ -14,7 +14,7 @@ import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import getFee from '../utils/getFee'
 
-task('lz:solana:oft:set-mint-authority', 'Sets solana mint authority to new account')
+task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new account')
     .addParam('newAuthority', 'The solana address to transfer authority to')
     .addParam('mint', 'The OFT token mint public key')
     .addParam('program', 'The OFT Program id')

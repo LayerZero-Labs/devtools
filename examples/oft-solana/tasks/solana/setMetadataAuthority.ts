@@ -16,7 +16,7 @@ import { task } from 'hardhat/config'
 import { TaskArguments } from 'hardhat/types'
 
 // Define a Hardhat task to set the metadata update authority for a token mint
-task('lz:solana:oft:set-metadata-authority', 'Transfers the account metadata authority for the provided mint')
+task('lz:oft:solana:set-metadata-authority', 'Transfers the account metadata authority for the provided mint')
     .addParam('mint', 'The token mint public key to update')
     .addParam('newAuthority', 'The new update authority public key')
     .setAction(async (taskArgs: TaskArguments) => {

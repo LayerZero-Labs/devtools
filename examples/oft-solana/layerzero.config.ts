@@ -17,6 +17,11 @@ const amoyContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
+const solanaContract: OmniPointHardhat = {
+    eid: EndpointId.SOLANA_V2_TESTNET,
+    address: '',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {

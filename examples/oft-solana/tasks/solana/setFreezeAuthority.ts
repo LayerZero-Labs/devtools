@@ -13,7 +13,7 @@ import { TaskArguments } from 'hardhat/types'
 import getFee from '../utils/getFee'
 
 // Define a Hardhat task for setting the freeze authority on a Solana mint
-task('lz:solana:oft:set-freeze-authority', 'Transfer Solana mint authority to a new account')
+task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a new account')
     .addParam('newAuthority', 'The Solana address to transfer authority to')
     .addParam('mint', 'The OFT token mint public key')
     .setAction(async (taskArgs: TaskArguments) => {

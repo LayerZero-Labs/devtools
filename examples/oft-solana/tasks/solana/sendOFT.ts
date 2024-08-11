@@ -37,7 +37,7 @@ import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import getFee from '../utils/getFee'
 
 // Define a Hardhat task for sending OFT from Solana
-task('lz:solana:oft:send:umi', 'Send tokens from Solana to a target EVM chain')
+task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
     .addParam('amount', 'The amount of tokens to send')
     .addParam('to', 'The recipient address on the destination chain')
     .addParam('eid', 'The destination endpoint ID')
