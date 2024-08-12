@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.30
+
+### Patch Changes
+
+- 902c87a: Support encoded constructor arguments
+
 ## 1.1.29
 
 ### Patch Changes

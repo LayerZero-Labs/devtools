@@ -89,8 +89,16 @@ export const verifyNonTarget = async (
         }
 
         const licenseType = findLicenseType(source.content)
-        const abi = getContructorABIFromSource(source.content)
-        const constructorArguments = encodeContructorArguments(abi, contract.constructorArguments)
+        // Constructor arguments can be passed encoded or decoded
+        const constructorArguments =
+            // If there are no constructor arguments, we don't pass anything
+            contract.constructorArguments == null
+                ? undefined
+                : // If the constructor arguments are passed encoded we pass them directly
+                  typeof contract.constructorArguments === 'string'
+                  ? contract.constructorArguments
+                  : // For decoded constructor arguments we'll need to try and encoded them using the contract source
+                    encodeContructorArguments(getContructorABIFromSource(source.content), contract.constructorArguments)
 
         // Deployment metadata contains solcInput, just a bit rearranged
         const solcInput = extractSolcInputFromMetadata(deployment.metadata)
