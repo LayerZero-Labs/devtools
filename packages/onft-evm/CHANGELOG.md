@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.4
+
+### Patch Changes
+
+- 22e6a5e: Remove warning label as ONFT721 is now audited
+
 ## 0.0.3
 
 ### Patch Changes
