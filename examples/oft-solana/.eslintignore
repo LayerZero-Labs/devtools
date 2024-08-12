@@ -11,5 +11,3 @@ out
 *.yaml
 *.lock
 package-lock.json
-test
-tasks
