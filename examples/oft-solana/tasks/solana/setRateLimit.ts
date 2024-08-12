@@ -24,6 +24,9 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
     .addParam('staging', 'Solana mainnet or testnet')
     .addParam('oappConfig', 'The LayerZero Solana config')
     .setAction(async (taskArgs: TaskArguments) => {
+        if (!env.SOLANA_PRIVATE_KEY) {
+            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+        }
         const configPath = path.resolve(taskArgs.oappConfig)
 
         type SolanaRateLimitConfig = {
@@ -55,7 +58,7 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
 
         // Initialize UMI framework with the Solana connection
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
         const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))

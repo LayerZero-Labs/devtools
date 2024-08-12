@@ -20,12 +20,15 @@ task('lz:oft:solana:set-metadata-authority', 'Transfers the account metadata aut
     .addParam('mint', 'The token mint public key to update')
     .addParam('newAuthority', 'The new update authority public key')
     .setAction(async (taskArgs: TaskArguments) => {
+        if (!env.SOLANA_PRIVATE_KEY) {
+            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+        }
         // Set up Solana connection and UMI framework
         const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
         const umi = createUmi(rpcUrlSolana).use(mplTokenMetadata())
 
         // Decode private key and create keypair for signing
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 

@@ -35,6 +35,10 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
     .addParam('staging', 'Solana mainnet or testnet')
     .addOptionalParam('amount', 'The initial supply to mint on solana')
     .setAction(async (taskArgs: TaskArguments) => {
+        if (!env.SOLANA_PRIVATE_KEY) {
+            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+        }
+        const privateKey = env.SOLANA_PRIVATE_KEY
         // 1. Setup UMI environment using environment variables (private key and Solana RPC)
 
         // Determine RPC URL based on network staging (mainnet or testnet)
@@ -47,7 +51,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
 
         // Convert the UMI keypair to a format compatible with web3.js
         // This is necessary as the @layerzerolabs/lz-solana-sdk-v2 library uses web3.js keypairs

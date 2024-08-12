@@ -17,12 +17,15 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
     .addParam('newAuthority', 'The Solana address to transfer authority to')
     .addParam('mint', 'The OFT token mint public key')
     .setAction(async (taskArgs: TaskArguments) => {
+        if (!env.SOLANA_PRIVATE_KEY) {
+            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+        }
         // Set up Solana connection
         const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
 
         // Initialize UMI framework with the Solana connection
         const umi = createUmi(rpcUrlSolana).use(mplToolbox())
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 

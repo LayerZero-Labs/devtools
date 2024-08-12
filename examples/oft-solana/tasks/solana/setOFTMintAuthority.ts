@@ -19,12 +19,15 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
     .addParam('mint', 'The OFT token mint public key')
     .addParam('program', 'The OFT Program id')
     .setAction(async (taskArgs: TaskArguments) => {
+        if (!env.SOLANA_PRIVATE_KEY) {
+            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+        }
         // Set up Solana connection and UMI framework
         const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
         const umi = createUmi(rpcUrlSolana).use(mplToolbox())
 
         // Decode private key and create keypair for signing
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY!))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
         const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
