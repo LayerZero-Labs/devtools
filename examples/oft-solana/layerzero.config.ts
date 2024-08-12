@@ -33,6 +33,9 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: amoyContract,
         },
+        {
+            contract: solanaContract,
+        },
     ],
     connections: [
         {
