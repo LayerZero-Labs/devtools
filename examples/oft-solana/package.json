@@ -39,6 +39,8 @@
     "@layerzerolabs/oapp-evm": "^0.0.2",
     "@layerzerolabs/oft-evm": "^0.0.9",
     "@layerzerolabs/prettier-config-next": "^2.3.34",
+    "@layerzerolabs/protocol-devtools": "^0.4.2",
+    "@layerzerolabs/protocol-devtools-solana": "^1.0.4",
     "@layerzerolabs/solhint-config": "^2.3.34",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.10",
     "@layerzerolabs/test-devtools-evm-hardhat": "0.2.6",

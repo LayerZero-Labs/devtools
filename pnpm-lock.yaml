@@ -452,6 +452,12 @@ importers:
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.34
         version: 2.3.34
+      '@layerzerolabs/protocol-devtools':
+        specifier: ^0.4.2
+        version: link:../../packages/protocol-devtools
+      '@layerzerolabs/protocol-devtools-solana':
+        specifier: ^1.0.4
+        version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^2.3.34
         version: 2.3.34(typescript@5.5.4)
