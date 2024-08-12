@@ -75,7 +75,7 @@
     "@layerzerolabs/lz-v2-utilities": "^2.3.3",
     "@layerzerolabs/protocol-devtools": "^0.4.2",
     "@layerzerolabs/ua-devtools": "^1.0.3",
-    "@solana/web3.js": "~1.95.0",
+    "@solana/web3.js": "^1.95.0",
     "fp-ts": "^2.16.2",
     "zod": "^3.22.4"
   },
