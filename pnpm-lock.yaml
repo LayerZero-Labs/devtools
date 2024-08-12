@@ -551,6 +551,9 @@ importers:
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
       hardhat:
         specifier: ^2.22.3
         version: 2.22.3(ts-node@10.9.2)(typescript@5.5.4)
