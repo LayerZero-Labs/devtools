@@ -1226,7 +1226,7 @@ importers:
         specifier: ~0.0.3
         version: link:../test-devtools-solana
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
@@ -1746,7 +1746,7 @@ importers:
         specifier: ~1.0.3
         version: link:../ua-devtools
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0
@@ -1891,7 +1891,7 @@ importers:
   packages/test-devtools-solana:
     devDependencies:
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.2
       bs58:
         specifier: ~6.0.0
@@ -2321,7 +2321,7 @@ importers:
         specifier: ~1.0.3
         version: link:../ua-devtools
       '@solana/web3.js':
-        specifier: ^1.95.0
+        specifier: ~1.95.0
         version: 1.95.2
       '@swc/core':
         specifier: ^1.4.0

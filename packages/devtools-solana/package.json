@@ -47,7 +47,7 @@
     "@layerzerolabs/lz-definitions": "^2.3.34",
     "@layerzerolabs/test-devtools": "~0.2.8",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
-    "@solana/web3.js": "^1.95.0",
+    "@solana/web3.js": "~1.95.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/bn.js": "~5.1.5",
