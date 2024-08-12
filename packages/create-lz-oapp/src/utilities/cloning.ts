@@ -77,7 +77,7 @@ export const cloneExample = async ({ example, destination }: Config) => {
 }
 
 // List of files to be removed after the cloning is done
-const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json']
+const IGNORED_FILES = ['CHANGELOG.md', 'turbo.json', 'target/deploy']
 
 /**
  * Helper utility that removes the files we don't want to include in the final project
@@ -90,7 +90,7 @@ const cleanupExample = async (destination: string) => {
         const filePath = resolve(destination, fileName)
 
         try {
-            await rm(filePath, { force: true })
+            await rm(filePath, { force: true, recursive: true })
         } catch {
             // If the cleanup fails let's just do nothing for now
         }
