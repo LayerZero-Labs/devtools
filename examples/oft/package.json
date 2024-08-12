@@ -46,6 +46,7 @@
     "@types/node": "~18.18.14",
     "chai": "^4.4.1",
     "dotenv": "^16.4.1",
+    "eslint": "^8.55.0",
     "eslint-plugin-jest-extended": "~2.0.0",
     "ethers": "^5.7.2",
     "hardhat": "^2.22.3",

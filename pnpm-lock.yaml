@@ -146,6 +146,9 @@ importers:
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.0
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
         version: 2.0.0(eslint@8.57.0)(typescript@5.5.4)
@@ -257,6 +260,9 @@ importers:
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.0
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
         version: 2.0.0(eslint@8.57.0)(typescript@5.5.4)
@@ -365,6 +371,9 @@ importers:
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.0
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
         version: 2.0.0(eslint@8.57.0)(typescript@5.5.4)
@@ -551,6 +560,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.0
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
         version: 2.0.0(eslint@8.57.0)(typescript@5.5.4)
