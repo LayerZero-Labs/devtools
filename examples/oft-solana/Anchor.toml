@@ -16,4 +16,4 @@ cluster = "Localnet"
 wallet = "./junk-id.json"
 
 [scripts]
-test = "npx jest"
+test = "npx jest test/anchor"
