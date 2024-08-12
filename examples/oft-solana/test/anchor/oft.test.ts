@@ -4,9 +4,7 @@ import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
 
 import { OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
-// eslint-disable-next-line import/no-unresolved
 import endpointIdl from '../../target/idl/endpoint.json'
-// eslint-disable-next-line import/no-unresolved
 import oftIdl from '../../target/idl/oft.json'
 
 const OFT_SEED = 'Oft'
