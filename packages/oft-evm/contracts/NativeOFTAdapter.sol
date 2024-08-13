@@ -126,4 +126,8 @@ abstract contract NativeOFTAdapter is OFTCore {
     function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
     }
+
+    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
+        return _nativeFee;
+    }
 }
