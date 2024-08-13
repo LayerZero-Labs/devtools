@@ -39,7 +39,7 @@ interface Args {
 }
 
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config account')
-    .addParam('program', 'The OFT Program id')
+    .addParam('programId', 'The OFT Program id')
     .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, types.int)
     .setAction(async (taskArgs: Args) => {
