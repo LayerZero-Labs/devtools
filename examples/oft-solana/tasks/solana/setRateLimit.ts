@@ -7,7 +7,7 @@ import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbo
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, clusterApiUrl } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
 import { TaskArguments } from 'hardhat/types'
@@ -53,8 +53,8 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
 
         const RPC_URL_SOLANA =
             taskArgs.staging === 'mainnet'
-                ? env.RPC_URL_SOLANA?.toString() ?? 'default_url'
-                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? 'default_url'
+                ? env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
+                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? clusterApiUrl('devnet')
 
         // Initialize UMI framework with the Solana connection
         const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())

@@ -6,7 +6,7 @@ import { AuthorityType, mplToolbox, setAuthority, setComputeUnitPrice } from '@m
 import { createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, clusterApiUrl } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 import { TaskArguments } from 'hardhat/types'
 
@@ -21,7 +21,7 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
             throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
         }
         // Set up Solana connection
-        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
+        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
 
         // Initialize UMI framework with the Solana connection
         const umi = createUmi(rpcUrlSolana).use(mplToolbox())
