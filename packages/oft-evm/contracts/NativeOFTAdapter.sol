@@ -148,9 +148,6 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint256 remainingMsgValue = msg.value - _sendParam.amountLD;
         feeWithExtraAmount.nativeFee = remainingMsgValue;
 
-        // @dev Applies the token transfers regarding this send() operation.
-        // - amountSentLD is the amount in local decimals that was ACTUALLY sent/debited from the sender.
-        // - amountReceivedLD is the amount in local decimals that will be received/credited to the recipient on the remote OFT instance.
         (uint256 amountSentLD, uint256 amountReceivedLD) = _debit(
             msg.sender,
             _sendParam.amountLD,
@@ -163,6 +160,7 @@ abstract contract NativeOFTAdapter is OFTCore {
 
         // @dev Sends the message to the LayerZero endpoint and returns the LayerZero msg receipt.
         msgReceipt = _lzSend(_sendParam.dstEid, message, options, feeWithExtraAmount, _refundAddress);
+        
         // @dev Formulate the OFT receipt.
         oftReceipt = OFTReceipt(amountSentLD, amountReceivedLD);
 
