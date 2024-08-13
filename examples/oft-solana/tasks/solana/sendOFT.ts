@@ -30,11 +30,11 @@ import { task } from 'hardhat/config'
 
 import { formatEid } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftPDADeriver, OftProgram, OftTools, SendHelper } from '@layerzerolabs/lz-solana-sdk-v2'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
 
 interface Args {
@@ -69,11 +69,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         const lookupTableAddress = LOOKUP_TABLE_ADDRESS[taskArgs.fromEid]
         assert(lookupTableAddress != null, `No lookup table found for ${formatEid(taskArgs.fromEid)}`)
 
-        const urlFactory = createRpcUrlFactory({
-            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
-            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
-        })
-        const connectionFactory = createConnectionFactory(urlFactory)
+        const connectionFactory = createSolanaConnectionFactory()
         const connection = await connectionFactory(taskArgs.fromEid)
 
         // Initialize Solana connection and UMI framework

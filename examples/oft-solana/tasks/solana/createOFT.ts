@@ -26,10 +26,10 @@ import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
 
 interface Args {
@@ -48,11 +48,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
 
         // 1. Setup UMI environment using environment variables (private key and Solana RPC)
 
-        const urlFactory = createRpcUrlFactory({
-            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
-            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
-        })
-        const connectionFactory = createConnectionFactory(urlFactory)
+        const connectionFactory = createSolanaConnectionFactory()
         const connection = await connectionFactory(taskArgs.eid)
 
         // Initialize UMI with the Solana RPC URL and necessary tools
