@@ -1,6 +1,6 @@
 // Import necessary functions and classes from Solana SDKs
+import assert from 'assert'
 import fs from 'fs'
-import { env } from 'process'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
@@ -21,34 +21,42 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { PublicKey, clusterApiUrl } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
 
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import getFee from '../utils/getFee'
 
+interface Args {
+    amount: number
+    eid: EndpointId
+    programId: string
+}
+
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config account')
     .addParam('program', 'The OFT Program id')
-    .addParam('staging', 'Solana mainnet or testnet')
-    .addOptionalParam('amount', 'The initial supply to mint on solana')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        const privateKey = env.SOLANA_PRIVATE_KEY
+    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
+    .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, types.int)
+    .setAction(async (taskArgs: Args) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+
         // 1. Setup UMI environment using environment variables (private key and Solana RPC)
 
-        // Determine RPC URL based on network staging (mainnet or testnet)
-        const RPC_URL_SOLANA =
-            taskArgs.staging === 'mainnet'
-                ? env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
-                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? clusterApiUrl('devnet')
+        const urlFactory = createRpcUrlFactory({
+            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
+            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
+        })
+        const connectionFactory = createConnectionFactory(urlFactory)
+        const connection = await connectionFactory(taskArgs.eid)
 
         // Initialize UMI with the Solana RPC URL and necessary tools
-        const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
+        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
         const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
@@ -64,7 +72,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         umi.use(signerIdentity(umiWalletSigner))
 
         // Define the OFT Program ID based on the task arguments
-        const OFT_PROGRAM_ID = new PublicKey(taskArgs.program)
+        const OFT_PROGRAM_ID = new PublicKey(taskArgs.programId)
 
         // Number of decimals for the token (recommended value for SHARED_DECIMALS is 6)
         const LOCAL_DECIMALS = 9
@@ -197,11 +205,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             accounts: [
                 { name: 'SPL Token Mint Account', publicKey: web3TokenKeyPair.publicKey.toString() },
                 { name: 'OFT Config Account', publicKey: oftConfig.toString() },
-                { name: 'OFT Program ID', publicKey: taskArgs.program },
+                { name: 'OFT Program ID', publicKey: taskArgs.programId },
             ],
         }
 
-        const outputDir = `./deployments/solana-${taskArgs.staging}`
+        const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true })
         }
