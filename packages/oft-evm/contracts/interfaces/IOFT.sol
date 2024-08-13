@@ -145,5 +145,5 @@ interface IOFT {
         SendParam calldata _sendParam,
         MessagingFee calldata _fee,
         address _refundAddress
-    ) external payable returns (MessagingReceipt memory, OFTReceipt memory);
+    ) public payable returns (MessagingReceipt memory, OFTReceipt memory);
 }
