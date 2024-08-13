@@ -19,8 +19,6 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 
 <p align="left>
 
-
-
 - [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
 - [OFT Solana Program (Beta)](#oft-solana-program-beta)
 - [Installation](#installation)
@@ -401,14 +399,14 @@ After creating your Solana Config Account, you will need to initialize each acco
 ```typescript
 // ./layerzero.config.ts
 const arbitrumContract: OmniPointHardhat = {
-    eid: EndpointId.ARBITRUM_V2_MAINNET,
-    contractName: 'MyOFT',
-}
+  eid: EndpointId.ARBITRUM_V2_MAINNET,
+  contractName: "MyOFT",
+};
 
 const solanaContract: OmniPointHardhat = {
-    eid: EndpointId.SOLANA_V2_MAINNET,
-    address: 'YOUR_OFT_CONFIG_ACCOUNT',
-}
+  eid: EndpointId.SOLANA_V2_MAINNET,
+  address: "YOUR_OFT_CONFIG_ACCOUNT",
+};
 
 // ... rest of LayerZero config
 ```
@@ -423,31 +421,31 @@ const solanaContract: OmniPointHardhat = {
 After initializing your accounts, run the standard `lz:oapp:wire` with the new flags (`--solana-program-id` & `--solana-secret-key`).
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-program-id YOUR_OFT_PROGRAM_ID --solana-secret-key YOUR_SOLANA_SECRET_KEY      
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-program-id YOUR_OFT_PROGRAM_ID --solana-secret-key YOUR_SOLANA_SECRET_KEY
 
 
 
 
 
 
-              **********                                                                                                                  
-            **************                                                                                                                
-          ******************                                                                                                              
-         ********************                                                                                                             
-         *********  *********                                                                                                             
-         *********  *********          ****                                                 ***********                                   
-         *********  *********          ****                                                 ***********                                   
-            ******  *********          ****        *************    ****  ******   *******       ****    ******    *** **   ******        
-          ********  *********          ****      *********** ****  **** ********** *******      ****   *********** ****** **********      
-         *********  ********           ****     ****    ****  ******** ***   ***** ****        ****   ****   ***** ****  ****    ****     
-         *********  ******             ****     ****    ****   ******* ********    ****      *****    *********    ***   ****    ****     
+              **********
+            **************
+          ******************
+         ********************
+         *********  *********
+         *********  *********          ****                                                 ***********
+         *********  *********          ****                                                 ***********
+            ******  *********          ****        *************    ****  ******   *******       ****    ******    *** **   ******
+          ********  *********          ****      *********** ****  **** ********** *******      ****   *********** ****** **********
+         *********  ********           ****     ****    ****  ******** ***   ***** ****        ****   ****   ***** ****  ****    ****
+         *********  ******             ****     ****    ****   ******* ********    ****      *****    *********    ***   ****    ****
          *********  *********          ********* ***********   ******   ********** ****     ********************** ***    **********  ****
          *********  *********          *********  **********    ****     ********  ****     ***********  ********  ***      *******   ****
-         *********  *********                                 *****                                                                       
-         ********************                                 ****                                                                        
-          ******************                                                                                                              
-           ****************                                                                                                               
-              **********                                                                                                                  
+         *********  *********                                 *****
+         ********************                                 ****
+          ******************
+           ****************
+              **********
 
 
 
@@ -527,6 +525,7 @@ If you prefer one over the other, you can use the tooling-specific commands:
 ```bash
 pnpm test:forge
 pnpm test:hardhat
+pnpm test:anchor
 ```
 
 Or adjust the `package.json` to for example remove `hardhat` tests:
