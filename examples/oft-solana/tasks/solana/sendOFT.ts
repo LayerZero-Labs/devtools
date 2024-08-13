@@ -24,7 +24,7 @@ import {
     toWeb3JsPublicKey,
 } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js'
 import { getExplorerLink, getSimulationComputeUnits } from '@solana-developers/helpers'
 import { hexlify } from 'ethers/lib/utils'
 import { task } from 'hardhat/config'
@@ -54,11 +54,11 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
 
         // Determine RPC URL and lookup table address based on the specified environment
         if (taskArgs.staging === 'mainnet') {
-            rpcUrlSolana = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
+            rpcUrlSolana = env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
             lookupTableAddress = new PublicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB')
         } else if (taskArgs.staging === 'testnet') {
-            rpcUrlSolana = env.RPC_URL_SOLANA_TESTNET?.toString() ?? 'default_url'
-            lookupTableAddress = new PublicKey('8VnbKsKuy7ibcXamMJSzPXNRFkv7wJUUdQmosgvxExGk')
+            rpcUrlSolana = env.RPC_URL_SOLANA_TESTNET?.toString() ?? clusterApiUrl('devnet')
+            lookupTableAddress = new PublicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK')
         } else {
             throw new Error("Invalid network specified. Use 'mainnet' or 'testnet'.")
         }

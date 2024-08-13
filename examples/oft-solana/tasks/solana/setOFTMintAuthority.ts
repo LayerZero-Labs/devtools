@@ -5,7 +5,7 @@ import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbo
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
+import { PublicKey, clusterApiUrl } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
 import { TaskArguments } from 'hardhat/types'
@@ -23,7 +23,7 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
             throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
         }
         // Set up Solana connection and UMI framework
-        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
+        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
         const umi = createUmi(rpcUrlSolana).use(mplToolbox())
 
         // Decode private key and create keypair for signing
