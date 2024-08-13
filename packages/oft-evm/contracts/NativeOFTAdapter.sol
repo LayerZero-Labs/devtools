@@ -76,39 +76,10 @@ abstract contract NativeOFTAdapter is OFTCore {
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
-        if (msg.value < _sendParam.amountLD) {
-            revert InsufficientMessageValue(msg.value, _sendParam.amountLD);
+        if (_fee.nativeFee + _sendParam.amountLD != msg.value) {
+            revert NotEnoughNative(msg.value);
         }
-        
-        MessagingFee memory feeWithExtraAmount = MessagingFee({
-            nativeFee: _fee.nativeFee,
-            lzTokenFee: _fee.lzTokenFee
-        });
 
-        uint256 remainingMsgValue = msg.value - _sendParam.amountLD;
-        feeWithExtraAmount.nativeFee = remainingMsgValue;
-
-        (uint256 amountSentLD, uint256 amountReceivedLD) = _debit(
-            msg.sender,
-            _sendParam.amountLD,
-            _sendParam.minAmountLD,
-            _sendParam.dstEid
-        );
-
-        // @dev Builds the options and OFT message to quote in the endpoint.
-        (bytes memory message, bytes memory options) = _buildMsgAndOptions(_sendParam, amountReceivedLD);
-
-        // @dev Sends the message to the LayerZero endpoint and returns the LayerZero msg receipt.
-        msgReceipt = _lzSend(_sendParam.dstEid, message, options, feeWithExtraAmount, _refundAddress);
-        
-        // @dev Formulate the OFT receipt.
-        oftReceipt = OFTReceipt(amountSentLD, amountReceivedLD);
-
-        emit OFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, amountSentLD, amountReceivedLD);
-    }
-
-    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
-        if (msg.value < _nativeFee) revert NotEnoughNative(msg.value);
-        return _nativeFee;
+        return super.send(_sendParam, _fee, _refundAddress);
     }
 }
