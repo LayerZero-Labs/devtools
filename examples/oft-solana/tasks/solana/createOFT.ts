@@ -110,8 +110,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         // Create and mint the SPL token using UMI
         const createTokenTx = await createAndMint(umi, {
             mint: token, // New token account
-            name: 'Mock', // Token name
-            symbol: 'Mock', // Token symbol
+            name: 'MyOFT', // Token name
+            symbol: 'MOFT', // Token symbol
             isMutable: true, // Allow token metadata to be mutable
             decimals: LOCAL_DECIMALS, // Number of decimals for the token
             uri: '', // URI for token metadata
