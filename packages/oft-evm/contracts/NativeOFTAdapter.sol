@@ -66,9 +66,6 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint256 _amountLD,
         uint32 /*_srcEid*/
     ) internal virtual override returns (uint256 amountReceivedLD) {
-        // TODO should there be some check on a mapping to ensure that msg.sender has previously deposited 
-        // amountLD worth of native before withdrawing?
-
         // @dev Unlock the tokens and transfer to the recipient.
         (bool success, ) = payable(_to).call{value: _amountLD}("");
         if (!success) {
@@ -84,9 +81,6 @@ abstract contract NativeOFTAdapter is OFTCore {
         MessagingFee calldata _fee,
         address _refundAddress
     ) external payable override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
-        // TODO if we are not extending erc20 then maybe there should be a mapping of how much each sender has already locked in the contract?
-        // UNLESS sendParam.amountLD is always equal to msg.value in which case we can just use msg.value
-
         if (msg.value < _sendParam.amountLD) {
             revert InsufficientMessageValue(msg.value, _sendParam.amountLD);
         }
@@ -119,8 +113,6 @@ abstract contract NativeOFTAdapter is OFTCore {
 
         emit OFTSent(msgReceipt.guid, _sendParam.dstEid, msg.sender, amountSentLD, amountReceivedLD);
     }
-
-    receive() external payable {} // TODO may need to add logic here to update a mapping that tracks how much native each sender has locked in this contract
 
     function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
         if (msg.value < _nativeFee) revert NotEnoughNative(msg.value);
