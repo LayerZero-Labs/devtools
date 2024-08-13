@@ -127,7 +127,24 @@ abstract contract NativeOFTAdapter is OFTCore {
         return _nativeFee;
     }
 
-    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
-        return _nativeFee;
+    /**
+     * @dev Returns the address of the native token
+     * @return The address of the native token.
+     */
+    function token() public pure returns (address) {
+        return NATIVE_TOKEN_ADDRESS;
     }
+
+    /**
+     * @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
+     * @return requiresApproval Needs approval of the underlying token implementation.
+     *
+     * @dev In the case of default NativeOFTAdapter, approval is not required.
+     */
+    function approvalRequired() external pure virtual returns (bool) {
+        return false;
+    }
+
+    // @dev Overridden to be empty as this assertion is done higher up on the send function.
+    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {}
 }
