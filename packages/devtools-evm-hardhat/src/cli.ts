@@ -5,7 +5,7 @@ import type { CLIArgumentType } from 'hardhat/types'
 import { splitCommaSeparated } from '@layerzerolabs/devtools'
 import { isEVMAddress, SignerDefinition } from '@layerzerolabs/devtools-evm'
 import { isLogLevel, LogLevel } from '@layerzerolabs/io-devtools'
-import { Environment, Stage } from '@layerzerolabs/lz-definitions'
+import { EndpointId, Environment, Stage } from '@layerzerolabs/lz-definitions'
 
 /**
  * Hardhat CLI type for a comma separated list of arbitrary strings
@@ -60,6 +60,43 @@ const stage: CLIArgumentType<Stage> = {
         }
 
         return value
+    },
+    validate() {},
+}
+
+/**
+ * Hardhat CLI type for a LayzerZero chain stage
+ *
+ * @see {@link Stage}
+ */
+const eid: CLIArgumentType<EndpointId> = {
+    name: 'eid',
+    parse(name: string, value: string) {
+        const valueAsInt = parseInt(value)
+        if (isNaN(valueAsInt)) {
+            const eid = EndpointId[value]
+
+            if (typeof eid !== 'number') {
+                throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+                    value,
+                    name: name,
+                    type: 'stage',
+                })
+            }
+
+            return eid
+        }
+
+        const eidLabel = EndpointId[valueAsInt]
+        if (typeof eidLabel !== 'string') {
+            throw new HardhatError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+                value,
+                name: name,
+                type: 'stage',
+            })
+        }
+
+        return valueAsInt as EndpointId
     },
     validate() {},
 }
@@ -139,4 +176,4 @@ export const signer: CLIArgumentType<SignerDefinition> = {
     validate() {},
 }
 
-export const types = { csv, logLevel, fn, signer, environment, stage, ...builtInTypes }
+export const types = { csv, eid, logLevel, fn, signer, environment, stage, ...builtInTypes }

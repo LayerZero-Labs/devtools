@@ -1,5 +1,6 @@
-import { signer } from '@/cli'
-import { evmAddressArbitrary } from '@layerzerolabs/test-devtools'
+import { signer, types } from '@/cli'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import fc from 'fast-check'
 
 describe('cli', () => {
@@ -28,6 +29,44 @@ describe('cli', () => {
             fc.assert(
                 fc.property(fc.integer({ min: 0 }), (index) => {
                     expect(signer.parse('signer', String(index))).toEqual({ type: 'index', index })
+                })
+            )
+        })
+    })
+
+    describe('eid', () => {
+        it('should parse all valid endpoint IDs', () => {
+            fc.assert(
+                fc.property(endpointArbitrary, (eid) => {
+                    expect(types.eid.parse('eid', String(eid))).toEqual(eid)
+                })
+            )
+        })
+
+        it('should parse all valid endpoint labels', () => {
+            fc.assert(
+                fc.property(endpointArbitrary, (eid) => {
+                    expect(types.eid.parse('eid', EndpointId[eid]!)).toEqual(eid)
+                })
+            )
+        })
+
+        it('should not parse invalid strings', () => {
+            fc.assert(
+                fc.property(fc.string(), (eid) => {
+                    fc.pre(EndpointId[eid] == null)
+
+                    expect(() => types.eid.parse('eid', eid)).toThrow()
+                })
+            )
+        })
+
+        it('should not parse invalid numbers', () => {
+            fc.assert(
+                fc.property(fc.integer(), (eid) => {
+                    fc.pre(EndpointId[eid] == null)
+
+                    expect(() => types.eid.parse('eid', String(eid))).toThrow()
                 })
             )
         })
