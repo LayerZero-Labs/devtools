@@ -28,6 +28,7 @@ import { getExplorerLink, getSimulationComputeUnits } from '@solana-developers/h
 import { hexlify } from 'ethers/lib/utils'
 import { task } from 'hardhat/config'
 
+import { formatEid } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -66,6 +67,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         const umiKeypair = fromWeb3JsKeypair(keypair)
 
         const lookupTableAddress = LOOKUP_TABLE_ADDRESS[taskArgs.fromEid]
+        assert(lookupTableAddress != null, `No lookup table found for ${formatEid(taskArgs.fromEid)}`)
 
         const urlFactory = createRpcUrlFactory({
             [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
