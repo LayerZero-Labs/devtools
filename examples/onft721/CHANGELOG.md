@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.0.8
+
+### Patch Changes
+
+- 9518029: Release onft-evm to the public
+
 ## 0.0.7
 
 ### Patch Changes

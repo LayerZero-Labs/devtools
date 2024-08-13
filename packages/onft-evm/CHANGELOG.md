@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.5
+
+### Patch Changes
+
+- 9518029: Release onft-evm to the public
+
 ## 0.0.4
 
 ### Patch Changes

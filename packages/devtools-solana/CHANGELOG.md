@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.1.4
+
+### Patch Changes
+
+- ecf2ea4: Change the default RPC URL for solana testnets
+
 ## 0.1.3
 
 ### Patch Changes
