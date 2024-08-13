@@ -71,11 +71,11 @@ describe('provider/factory', () => {
         })
 
         it('should return https://api.testnet.solana.com for SOLANA_V2_TESTNET', () => {
-            expect(defaultRpcUrlFactory(EndpointId.SOLANA_V2_TESTNET)).toBe(`https://api.testnet.solana.com`)
+            expect(defaultRpcUrlFactory(EndpointId.SOLANA_V2_TESTNET)).toBe(`https://api.devnet.solana.com`)
         })
 
         it('should return https://api.testnet.solana.com for SOLANA_TESTNET', () => {
-            expect(defaultRpcUrlFactory(EndpointId.SOLANA_TESTNET)).toBe(`https://api.testnet.solana.com`)
+            expect(defaultRpcUrlFactory(EndpointId.SOLANA_TESTNET)).toBe(`https://api.devnet.solana.com`)
         })
 
         it('should throw an error for other endpoints', () => {
