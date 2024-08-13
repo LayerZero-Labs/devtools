@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/onft721-example",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out",
@@ -28,7 +28,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
     "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/oapp-evm": "^0.0.2",
-    "@layerzerolabs/onft-evm": "^0.0.4",
+    "@layerzerolabs/onft-evm": "^0.0.5",
     "@layerzerolabs/prettier-config-next": "^2.3.34",
     "@layerzerolabs/solhint-config": "^2.3.34",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.10",
