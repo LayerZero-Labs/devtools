@@ -14,9 +14,8 @@ import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "
  */
 abstract contract NativeOFTAdapter is OFTCore {
 
-    error DepositFailed();
     error InsufficientMessageValue(uint256 provided, uint256 required);
-    error WithdrawalFailed();
+    error CreditFailed();
 
     /**
      * @dev Constructor for the NativeOFTAdapter contract.
@@ -46,12 +45,8 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint32 _dstEid
     ) internal virtual override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
         // @dev Lock native funds by moving them into this contract from the caller.
+        // No need to transfer here since msg.value moves funds to the contract.
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
-
-        (bool success, ) = payable(address(this)).call{value: amountSentLD}("");
-        if (!success) {
-            revert DepositFailed();
-        }
     }
 
     /**
@@ -69,7 +64,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         // @dev Unlock the tokens and transfer to the recipient.
         (bool success, ) = payable(_to).call{value: _amountLD}("");
         if (!success) {
-            revert WithdrawalFailed();
+            revert CreditFailed();
         }
 
         // @dev In the case of NON-default NativeOFTAdapter, the amountLD MIGHT not be == amountReceivedLD.
