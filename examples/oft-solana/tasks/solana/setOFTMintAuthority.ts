@@ -1,40 +1,54 @@
-import { env } from 'process'
+import assert from 'assert'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey, clusterApiUrl } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
 
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
+
+interface Args {
+    newAuthority: PublicKey
+    mint: PublicKey
+    programId: string
+    eid: EndpointId
+}
 
 task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new account')
     .addParam('newAuthority', 'The solana address to transfer authority to')
     .addParam('mint', 'The OFT token mint public key')
-    .addParam('program', 'The OFT Program id')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        // Set up Solana connection and UMI framework
-        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
-        const umi = createUmi(rpcUrlSolana).use(mplToolbox())
+    .addParam('programId', 'The OFT program ID', undefined, types.string)
+    .addParam('eid', 'The Solana endpoint ID')
+    .setAction(async (taskArgs: Args) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        // Decode private key and create keypair for signing
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
+        // 1. Setup UMI environment using environment variables (private key and Solana RPC)
+
+        const connectionFactory = createSolanaConnectionFactory()
+        const connection = await connectionFactory(taskArgs.eid)
+
+        // Initialize UMI framework with the Solana connection
+        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
+
+        // Generate a wallet keypair from the private key stored in the environment
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
         const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 
         const mintPublicKey = new PublicKey(taskArgs.mint)
         const newAuthorityPublicKey = new PublicKey(taskArgs.newAuthority)
-        const oftProgramId = new PublicKey(taskArgs.program)
+        const oftProgramId = new PublicKey(taskArgs.programId)
 
         // Derive the oftConfig
         const [oftConfig] = PublicKey.findProgramAddressSync(
@@ -63,7 +77,7 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
         // Fetch simulation compute unit price
         const { averageFeeExcludingZeros } = await getFee()
         const avgComputeUnitPrice = Math.round(averageFeeExcludingZeros)
-        const computeUnitPrice = BigInt(avgComputeUnitPrice * 1.1)
+        const computeUnitPrice = BigInt(avgComputeUnitPrice * 2)
 
         // Send and confirm the transaction
         const transactionSignature = await transactionBuilder
