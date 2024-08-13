@@ -12,7 +12,7 @@ export const defaultRpcUrlFactory: RpcUrlFactory = (eid) => {
 
         case EndpointId.SOLANA_V2_TESTNET:
         case EndpointId.SOLANA_TESTNET:
-            return 'https://api.testnet.solana.com'
+            return 'https://api.devnet.solana.com'
     }
 
     throw new Error(`Could not find a default Solana RPC URL for eid ${eid} (${formatEid(eid)})`)
