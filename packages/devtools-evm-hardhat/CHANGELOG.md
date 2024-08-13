@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 1.0.2
+
+### Patch Changes
+
+- 3b6cbe4: Add eid hardhat CLI parser
+
 ## 1.0.1
 
 ### Patch Changes
