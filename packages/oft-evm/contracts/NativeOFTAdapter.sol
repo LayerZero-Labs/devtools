@@ -61,7 +61,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint256 _amountLD,
         uint32 /*_srcEid*/
     ) internal virtual override returns (uint256 amountReceivedLD) {
-        // @dev Unlock the tokens and transfer to the recipient.
+        // @dev Transfer tokens to the recipient.
         (bool success, ) = payable(_to).call{value: _amountLD}("");
         if (!success) {
             revert CreditFailed();
@@ -81,5 +81,9 @@ abstract contract NativeOFTAdapter is OFTCore {
         }
 
         return super.send(_sendParam, _fee, _refundAddress);
+    }
+
+    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
+        return _nativeFee;
     }
 }
