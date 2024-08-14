@@ -5,22 +5,26 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 import { OFTMock } from "./mocks/OFTMock.sol";
 import { MessagingFee, MessagingReceipt } from "../contracts/OFTCore.sol";
+import { NativeOFTAdapterMock } from "./mocks/NativeOFTAdapterMock.sol";
 import { OFTAdapterMock } from "./mocks/OFTAdapterMock.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { OFTComposerMock } from "./mocks/OFTComposerMock.sol";
 import { OFTInspectorMock, IOAppMsgInspector } from "./mocks/OFTInspectorMock.sol";
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import { OAppSender } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 
 import { OFTMsgCodec } from "../contracts/libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "../contracts/libs/OFTComposeMsgCodec.sol";
 
 import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
 import { OFT } from "../contracts/OFT.sol";
+import { NativeOFTAdapter } from "../contracts/NativeOFTAdapter.sol";
 import { OFTAdapter } from "../contracts/OFTAdapter.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 import { OFTMockCodec } from "./lib/OFTMockCodec.sol";
 import { OFTAdapterMockCodec } from "./lib/OFTAdapterMockCodec.sol";
+import { NativeOFTAdapterMockCodec } from "./lib/NativeOFTAdapterMockCodec.sol";
 
 import "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
@@ -29,10 +33,12 @@ contract OFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
     using OFTMockCodec for OFT;
     using OFTAdapterMockCodec for OFTAdapter;
+    using NativeOFTAdapterMockCodec for NativeOFTAdapter;
 
     uint32 internal constant A_EID = 1;
     uint32 internal constant B_EID = 2;
     uint32 internal constant C_EID = 3;
+    uint32 internal constant D_EID = 4;
 
     string internal constant A_OFT_NAME = "aOFT";
     string internal constant A_OFT_SYMBOL = "aOFT";
@@ -43,6 +49,7 @@ contract OFTTest is TestHelperOz5 {
 
     OFT internal aOFT;
     OFT internal bOFT;
+    NativeOFTAdapter internal dNativeOFTAdapter;
     OFTAdapter internal cOFTAdapter;
     ERC20Mock internal cERC20Mock;
 
@@ -51,13 +58,18 @@ contract OFTTest is TestHelperOz5 {
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
     address public userC = makeAddr("userC");
+    address public userD = makeAddr("userD");
     uint256 public initialBalance = 100 ether;
+    uint256 public initialNativeBalance = 1000 ether;
+
+
+    address public constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
 
     function setUp() public virtual override {
         _deal();
 
         super.setUp();
-        setUpEndpoints(3, LibraryType.UltraLightNode);
+        setUpEndpoints(4, LibraryType.UltraLightNode);
 
         aOFT = OFTMock(
             _deployOApp(
@@ -81,11 +93,19 @@ contract OFTTest is TestHelperOz5 {
             )
         );
 
+        dNativeOFTAdapter = NativeOFTAdapterMock(
+            _deployOApp(
+                type(NativeOFTAdapterMock).creationCode,
+                abi.encode(18, address(endpoints[D_EID]), address(this))
+            )
+        );
+
         // config and wire the ofts
-        address[] memory ofts = new address[](3);
+        address[] memory ofts = new address[](4);
         ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
         ofts[2] = address(cOFTAdapter);
+        ofts[3] = address(dNativeOFTAdapter);
         this.wireOApps(ofts);
 
         // mint tokens
@@ -98,15 +118,17 @@ contract OFTTest is TestHelperOz5 {
     }
 
     function _deal() internal {
-        vm.deal(userA, 1000 ether);
-        vm.deal(userB, 1000 ether);
-        vm.deal(userC, 1000 ether);
+        vm.deal(userA, initialNativeBalance);
+        vm.deal(userB, initialNativeBalance);
+        vm.deal(userC, initialNativeBalance);
+        vm.deal(userD, initialNativeBalance);
     }
 
     function test_constructor() public {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
+        assertEq(dNativeOFTAdapter.owner(), address(this));
 
         assertEq(aOFT.balanceOf(userA), initialBalance);
         assertEq(bOFT.balanceOf(userB), initialBalance);
@@ -115,6 +137,9 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.token(), address(aOFT));
         assertEq(bOFT.token(), address(bOFT));
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
+        assertEq(dNativeOFTAdapter.token(), NATIVE_TOKEN_ADDRESS);
+
+        assertEq(dNativeOFTAdapter.approvalRequired(), false);
     }
 
     function test_oftVersion() public {
@@ -371,6 +396,75 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cERC20Mock.balanceOf(userC), initialBalance - amountToCreditLD);
         assertEq(cERC20Mock.balanceOf(address(userB)), amountReceived);
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), 0);
+    }
+
+    function test_native_oft_adapter_debit() public virtual {
+        uint256 amountToSendLD = 1 ether;
+        uint256 minAmountToCreditLD = 1 ether;
+        uint32 dstEid = D_EID;
+
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
+        );
+        dNativeOFTAdapter.asNativeOFTAdapterMock().debit(amountToSendLD, minAmountToCreditLD + 1, dstEid);
+
+        vm.prank(userD);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = dNativeOFTAdapter.asNativeOFTAdapterMock().debit(
+            amountToSendLD,
+            minAmountToCreditLD,
+            dstEid
+        );
+
+        assertEq(amountDebitedLD, amountToSendLD);
+        assertEq(amountToCreditLD, amountToSendLD);
+    }
+
+    function test_native_oft_adapter_credit() public {
+        uint256 amountToCreditLD = 1 ether;
+        uint32 srcEid = D_EID;
+
+        // simulate userD already having deposited native to the adapter
+        vm.deal(address(dNativeOFTAdapter), amountToCreditLD);
+
+        uint256 amountReceived = dNativeOFTAdapter.asNativeOFTAdapterMock().credit(userB, amountToCreditLD, srcEid);
+
+        assertEq(userB.balance, initialNativeBalance + amountReceived);
+        assertEq(address(dNativeOFTAdapter).balance, 0);
+    }
+
+    function test_native_oft_adapter_send() public virtual {
+        assertEq(userD.balance, initialNativeBalance);
+        assertEq(address(dNativeOFTAdapter).balance, 0);
+
+        uint256 amountToSendLD = 1 ether;
+        uint32 dstEid = B_EID;
+
+        SendParam memory sendParam = SendParam(
+            dstEid,
+            addressToBytes32(userB),
+            amountToSendLD,
+            amountToSendLD,
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0),
+            "",
+            ""
+        );
+
+        MessagingFee memory fee = dNativeOFTAdapter.quoteSend(sendParam, false);
+
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(OAppSender.NotEnoughNative.selector, fee.nativeFee)
+        );
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: fee.nativeFee}(sendParam, fee, userD);
+
+        uint256 msgValue = fee.nativeFee + sendParam.amountLD;
+
+        vm.prank(userD);
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: msgValue }(sendParam, fee, userD);
+
+        assertEq(userD.balance, initialNativeBalance - msgValue);
+        assertEq(address(dNativeOFTAdapter).balance, amountToSendLD);
     }
 
     function decodeOFTMsgCodec(
