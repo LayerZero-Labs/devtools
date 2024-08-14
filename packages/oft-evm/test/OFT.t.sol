@@ -62,9 +62,6 @@ contract OFTTest is TestHelperOz5 {
     uint256 public initialBalance = 100 ether;
     uint256 public initialNativeBalance = 1000 ether;
 
-
-    address public constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-
     function setUp() public virtual override {
         _deal();
 
@@ -137,7 +134,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.token(), address(aOFT));
         assertEq(bOFT.token(), address(bOFT));
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
-        assertEq(dNativeOFTAdapter.token(), NATIVE_TOKEN_ADDRESS);
+        assertEq(dNativeOFTAdapter.token(), address(0));
 
         assertEq(dNativeOFTAdapter.approvalRequired(), false);
     }
