@@ -17,9 +17,14 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 
 <p align="center">A boilerplate for streamlining the process of building, testing, deploying, and configuring <b>Omnichain Fungible Tokens (OFTs)</b> on Solana</p>
 
+> [!WARNING]  
+> The OFT Solana Example is currently an experimental build that is subject to changes.
+> You can enable this build my running:
+> <code>LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest</code>
+
 <p align="left>
 
-- [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
+- [So What is an Omnichain Fungible Token?](#omnichain-fungible-token)
 - [OFT Solana Program (Beta)](#oft-solana-program-beta)
 - [Installation](#installation)
 - [Available Helpers in this Repo](#layerzero-hardhat-helper-tasks)
