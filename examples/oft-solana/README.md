@@ -19,7 +19,8 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 
 > [!WARNING]  
 > The OFT Solana Example is currently an experimental build that is subject to changes.
-> You can enable this build my running:
+>
+> You can enable this build by running:
 > <code>LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest</code>
 
 <p align="left>
