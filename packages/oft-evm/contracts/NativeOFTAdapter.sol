@@ -69,7 +69,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         MessagingFee calldata _fee,
         address _refundAddress
     ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
-        if (_fee.nativeFee + _sendParam.amountLD != msg.value) {
+        if (_fee.nativeFee + _removeDust(_sendParam.amountLD) != msg.value) {
             revert NotEnoughNative(msg.value);
         }
 
