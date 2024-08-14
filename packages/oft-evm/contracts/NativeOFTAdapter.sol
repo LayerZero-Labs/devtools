@@ -32,6 +32,51 @@ abstract contract NativeOFTAdapter is OFTCore {
     ) OFTCore(_localDecimals, _lzEndpoint, _delegate) {}
 
     /**
+     * @dev Returns the address of the native token
+     * @return The address of the native token.
+     */
+    function token() public pure returns (address) {
+        return NATIVE_TOKEN_ADDRESS;
+    }
+
+    /**
+     * @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
+     * @return requiresApproval Needs approval of the underlying token implementation.
+     *
+     * @dev In the case of default NativeOFTAdapter, approval is not required.
+     */
+    function approvalRequired() external pure virtual returns (bool) {
+        return false;
+    }
+
+    /**
+     * @dev Executes the send operation while ensuring the correct amount of native is sent.
+     * @param _sendParam The parameters for the send operation.
+     * @param _fee The calculated fee for the send() operation.
+     *      - nativeFee: The native fee.
+     *      - lzTokenFee: The lzToken fee.
+     * @param _refundAddress The address to receive any excess funds.
+     * @return msgReceipt The receipt for the send operation.
+     * @return oftReceipt The OFT receipt information.
+     *
+     * @dev MessagingReceipt: LayerZero msg receipt
+     *  - guid: The unique identifier for the sent message.
+     *  - nonce: The nonce of the sent message.
+     *  - fee: The LayerZero fee incurred for the message.
+     */
+    function send(
+        SendParam calldata _sendParam,
+        MessagingFee calldata _fee,
+        address _refundAddress
+    ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        if (_fee.nativeFee + _sendParam.amountLD != msg.value) {
+            revert NotEnoughNative(msg.value);
+        }
+
+        return super.send(_sendParam, _fee, _refundAddress);
+    }
+
+    /**
      * @dev Locks native sent by the sender as msg.value
      * @param _amountLD The amount of native to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
@@ -72,38 +117,8 @@ abstract contract NativeOFTAdapter is OFTCore {
         return _amountLD;
     }
 
-    function send(
-        SendParam calldata _sendParam,
-        MessagingFee calldata _fee,
-        address _refundAddress
-    ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
-        if (_fee.nativeFee + _sendParam.amountLD != msg.value) {
-            revert NotEnoughNative(msg.value);
-        }
-
-        return super.send(_sendParam, _fee, _refundAddress);
-    }
-
-    /**
-     * @dev Returns the address of the native token
-     * @return The address of the native token.
-     */
-    function token() public pure returns (address) {
-        return NATIVE_TOKEN_ADDRESS;
-    }
-
-    /**
-     * @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
-     * @return requiresApproval Needs approval of the underlying token implementation.
-     *
-     * @dev In the case of default NativeOFTAdapter, approval is not required.
-     */
-    function approvalRequired() external pure virtual returns (bool) {
-        return false;
-    }
-
     // @dev Overridden to be empty as this assertion is done higher up on the send function.
-    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
+    function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
     }
 }
