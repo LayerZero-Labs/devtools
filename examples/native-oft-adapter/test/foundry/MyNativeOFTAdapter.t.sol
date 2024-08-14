@@ -47,10 +47,7 @@ contract MyNativeOFTAdapterTest is TestHelperOz5 {
         );
 
         bOFT = OFTMock(
-            _deployOApp(
-                type(OFTMock).creationCode,
-                abi.encode("Token", "TKN", address(endpoints[bEid]), address(this))
-            )
+            _deployOApp(type(OFTMock).creationCode, abi.encode("Token", "TKN", address(endpoints[bEid]), address(this)))
         );
 
         // config and wire
@@ -91,7 +88,7 @@ contract MyNativeOFTAdapterTest is TestHelperOz5 {
         assertEq(bOFT.balanceOf(userB), 0);
 
         uint256 msgValue = fee.nativeFee + nativeOFTAdapter.removeDust(amountToSend);
-        
+
         vm.prank(userA);
         nativeOFTAdapter.send{ value: msgValue }(sendParam, fee, payable(address(this)));
         verifyPackets(bEid, addressToBytes32(address(bOFT)));
