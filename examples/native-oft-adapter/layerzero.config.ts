@@ -3,7 +3,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 /**
- *  WARNING: ONLY 1 OFTAdapter should exist for a given global mesh.
+ *  WARNING: ONLY 1 NativeOFTAdapter should exist for a given global mesh.
  */
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
