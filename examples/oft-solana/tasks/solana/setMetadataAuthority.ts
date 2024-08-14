@@ -1,5 +1,5 @@
 // Import necessary modules and classes
-import { env } from 'process'
+import assert from 'assert'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import {
@@ -13,22 +13,36 @@ import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
+
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+
+import { createSolanaConnectionFactory } from '../common/utils'
+
+interface Args {
+    newAuthority: PublicKey
+    mint: PublicKey
+    eid: EndpointId
+}
 
 // Define a Hardhat task to set the metadata update authority for a token mint
 task('lz:oft:solana:set-metadata-authority', 'Transfers the account metadata authority for the provided mint')
     .addParam('mint', 'The token mint public key to update')
     .addParam('newAuthority', 'The new update authority public key')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        // Set up Solana connection and UMI framework
-        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
-        const umi = createUmi(rpcUrlSolana).use(mplTokenMetadata())
+    .addParam('eid', 'The Solana endpoint ID')
+    .setAction(async (taskArgs: Args) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        // Decode private key and create keypair for signing
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
+        // 1. Setup UMI environment using environment variables (private key and Solana RPC)
+
+        const connectionFactory = createSolanaConnectionFactory()
+        const connection = await connectionFactory(taskArgs.eid)
+
+        // Initialize UMI framework with the Solana connection
+        const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
+
+        // Generate a wallet keypair from the private key stored in the environment
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 

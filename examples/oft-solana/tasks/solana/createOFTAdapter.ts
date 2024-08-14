@@ -1,6 +1,6 @@
 // Import necessary functions and classes from Solana SDKs
+import assert from 'assert'
 import fs from 'fs'
-import { env } from 'process'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
@@ -15,36 +15,40 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { PublicKey, clusterApiUrl } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
 
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
 
+interface Args {
+    amount: number
+    eid: EndpointId
+    programId: string
+}
+
 task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT Adapter Config account')
-    .addParam('program', 'The OFT Program id')
-    .addParam('staging', 'Solana mainnet or testnet')
-    .addOptionalParam('amount', 'The initial supply to mint on solana')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        const privateKey = env.SOLANA_PRIVATE_KEY
+    .addParam('programId', 'The OFT Program id')
+    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
+    .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, types.int)
+    .setAction(async (taskArgs: Args) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+
         // 1. Setup UMI environment using environment variables (private key and Solana RPC)
 
-        // Determine RPC URL based on network staging (mainnet or testnet)
-        const RPC_URL_SOLANA =
-            taskArgs.staging === 'mainnet'
-                ? env.RPC_URL_SOLANA?.toString() ?? clusterApiUrl('mainnet-beta')
-                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? clusterApiUrl('devnet')
+        const connectionFactory = createSolanaConnectionFactory()
+        const connection = await connectionFactory(taskArgs.eid)
 
         // Initialize UMI with the Solana RPC URL and necessary tools
-        const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
+        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
-        // Generate a wallet keypair from the private key stored in environment
+        // Generate a wallet keypair from the private key stored in the environment
         const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
 
         // Convert the UMI keypair to a format compatible with web3.js
@@ -58,7 +62,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
         umi.use(signerIdentity(umiWalletSigner))
 
         // Define the OFT Program ID based on the task arguments
-        const OFT_PROGRAM_ID = new PublicKey(taskArgs.program)
+        const OFT_PROGRAM_ID = new PublicKey(taskArgs.programId)
 
         // Define the number of decimals for the token
         const LOCAL_DECIMALS = 9
@@ -125,7 +129,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
 
         // Log the transaction and token mint details
         console.log(
-            `✅ Token Mint Complete! View the transaction here: ${getExplorerLink('tx', bs58.encode(createTokenTx.signature), taskArgs.staging)}`
+            `✅ Token Mint Complete! View the transaction here: ${getExplorerLink('tx', bs58.encode(createTokenTx.signature), 'mainnet-beta')}`
         )
 
         // Find the associated token account using the generated token mint
@@ -163,7 +167,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
         const oftConfigTransaction = await new TransactionBuilder([
             {
                 instruction: fromWeb3JsInstruction(adapterIx),
-                signers: [umiWalletSigner],
+                signers: [umiWalletSigner, lockbox],
                 bytesCreatedOnChain: 0,
             },
         ])
@@ -172,7 +176,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
 
         // Log the transaction details
         console.log(
-            `✅ You created an OFT Adapter, view the transaction here: ${getExplorerLink('tx', bs58.encode(oftConfigTransaction.signature), taskArgs.staging)}`
+            `✅ You created an OFT Adapter, view the transaction here: ${getExplorerLink('tx', bs58.encode(oftConfigTransaction.signature), 'mainnet-beta')}`
         )
 
         // Save the account details to a JSON file
@@ -181,12 +185,12 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
             accounts: [
                 { name: 'SPL Token Mint Account', publicKey: web3TokenKeyPair.publicKey.toString() },
                 { name: 'OFT Config Account', publicKey: oftConfig.toString() },
-                { name: 'OFT Program ID', publicKey: taskArgs.program },
+                { name: 'OFT Program ID', publicKey: taskArgs.programId },
                 { name: 'OFT Lockbox', publicKey: web3LockboxKeypair.publicKey.toString() },
             ],
         }
 
-        const outputDir = `./deployments/solana-${taskArgs.staging}`
+        const outputDir = `./deployments/solana-${endpointIdToNetwork(taskArgs.eid)}`
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true })
         }

@@ -1,70 +1,68 @@
-import fs from 'fs'
-import path from 'path'
-import { env } from 'process'
+import assert from 'assert'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { PublicKey } from '@solana/web3.js'
+import { fromWeb3JsInstruction, fromWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
+import { Keypair, PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
 
+import { formatOmniVector } from '@layerzerolabs/devtools'
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
-import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
+import { OAppOmniGraphHardhatSchema, SUBTASK_LZ_OAPP_CONFIG_LOAD } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
+
+interface Args {
+    mint: string
+    eid: EndpointId
+    programId: string
+    oappConfig: string
+}
 
 task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './scripts/solana/utils/constants.ts'")
     .addParam('mint', 'The OFT token mint public key')
-    .addParam('program', 'The OFT Program id')
-    .addParam('staging', 'Solana mainnet or testnet')
+    .addParam('programId', 'The OFT Program id')
+    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
     .addParam('oappConfig', 'The LayerZero Solana config')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        const configPath = path.resolve(taskArgs.oappConfig)
+    .setAction(async (taskArgs: Args, hre) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        type SolanaRateLimitConfig = {
-            rateLimitConfig: {
-                rateLimitCapacity: bigint
-                rateLimitRefillRatePerSecond: bigint
-            }
-        }
+        const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
+        const umiKeypair = fromWeb3JsKeypair(keypair)
 
-        const solanaRateLimits: SolanaRateLimitConfig = {
+        const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+            configPath: taskArgs.oappConfig,
+            schema: OAppOmniGraphHardhatSchema,
+            task: 'lz:oft:solana:rate-limit',
+        })
+
+        const solanaRateLimits = {
             rateLimitConfig: {
                 rateLimitCapacity: BigInt('10000000000000000'),
                 rateLimitRefillRatePerSecond: BigInt('2777777777778'),
             },
         }
 
-        if (!fs.existsSync(configPath)) {
-            console.error(`Config file not found: ${configPath}`)
-            return
-        }
-
-        const solanaConfig: OAppOmniGraphHardhat = (await import(configPath)).default
         let solanaEid: EndpointId
 
-        const RPC_URL_SOLANA =
-            taskArgs.staging === 'mainnet'
-                ? env.RPC_URL_SOLANA?.toString() ?? 'default_url'
-                : env.RPC_URL_SOLANA_TESTNET?.toString() ?? 'default_url'
+        const connectionFactory = createSolanaConnectionFactory()
+        const connection = await connectionFactory(taskArgs.eid)
 
         // Initialize UMI framework with the Solana connection
-        const umi = createUmi(RPC_URL_SOLANA).use(mplToolbox())
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
-        const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
-        const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
+        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
+        const umiWalletSigner = createSignerFromKeypair(umi, umiKeypair)
         umi.use(signerIdentity(umiWalletSigner))
 
         const mintPublicKey = new PublicKey(taskArgs.mint)
-        const OFT_PROGRAM_ID = new PublicKey(taskArgs.program)
+        const OFT_PROGRAM_ID = new PublicKey(taskArgs.programId)
 
         // Derive the OFT Config's PDA
         const [oftConfig] = PublicKey.findProgramAddressSync(
@@ -72,12 +70,12 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
             OFT_PROGRAM_ID
         )
 
-        for (const peer of solanaConfig.connections.filter((connection) => connection.from.eid === solanaEid)) {
+        for (const peer of graph.connections.filter((connection) => connection.vector.from.eid === solanaEid)) {
             try {
                 const setRateLimitIx = await OftTools.createSetRateLimitIx(
-                    web3WalletKeyPair.publicKey,
+                    keypair.publicKey,
                     oftConfig,
-                    peer.to.eid,
+                    peer.vector.to.eid,
                     solanaRateLimits.rateLimitConfig.rateLimitCapacity,
                     solanaRateLimits.rateLimitConfig.rateLimitRefillRatePerSecond,
                     true,
@@ -106,10 +104,10 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
                 const setRateLimitSignature = bs58.encode(transactionSignature.signature)
                 const setRateLimitLink = getExplorerLink('tx', setRateLimitSignature.toString(), 'mainnet-beta')
                 console.log(
-                    `✅ You set ${solanaRateLimits.rateLimitConfig.rateLimitCapacity} with a refill of ${solanaRateLimits.rateLimitConfig.rateLimitRefillRatePerSecond} per second for dstEid ${peer.to.eid}! View the transaction here: ${setRateLimitLink}`
+                    `✅ You set ${solanaRateLimits.rateLimitConfig.rateLimitCapacity} with a refill of ${solanaRateLimits.rateLimitConfig.rateLimitRefillRatePerSecond} per second for ${formatOmniVector(peer.vector)}! View the transaction here: ${setRateLimitLink}`
                 )
             } catch (error) {
-                console.error(`Error processing LayerZero peer with from EID ${peer.from.eid}:`, error)
+                console.error(`Error processing LayerZero peer with from EID ${formatOmniVector(peer.vector)}:`, error)
             }
         }
     })

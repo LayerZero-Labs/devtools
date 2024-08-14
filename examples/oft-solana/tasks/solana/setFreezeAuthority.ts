@@ -1,5 +1,5 @@
 // Import necessary modules and classes from Solana SDKs and other libraries
-import { env } from 'process'
+import assert from 'assert'
 
 import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { AuthorityType, mplToolbox, setAuthority, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
@@ -7,25 +7,39 @@ import { createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/um
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
+import { getExplorerLink } from '@solana-developers/helpers'
 import { task } from 'hardhat/config'
-import { TaskArguments } from 'hardhat/types'
 
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+
+import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
+
+interface Args {
+    newAuthority: PublicKey
+    mint: PublicKey
+    eid: EndpointId
+}
 
 // Define a Hardhat task for setting the freeze authority on a Solana mint
 task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a new account')
     .addParam('newAuthority', 'The Solana address to transfer authority to')
     .addParam('mint', 'The OFT token mint public key')
-    .setAction(async (taskArgs: TaskArguments) => {
-        if (!env.SOLANA_PRIVATE_KEY) {
-            throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        }
-        // Set up Solana connection
-        const rpcUrlSolana: string = env.RPC_URL_SOLANA?.toString() ?? 'default_url'
+    .addParam('eid', 'The Solana endpoint ID')
+    .setAction(async (taskArgs: Args) => {
+        const privateKey = process.env.SOLANA_PRIVATE_KEY
+        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
+
+        // 1. Setup UMI environment using environment variables (private key and Solana RPC)
+
+        const connectionFactory = createSolanaConnectionFactory()
+        const connection = await connectionFactory(taskArgs.eid)
 
         // Initialize UMI framework with the Solana connection
-        const umi = createUmi(rpcUrlSolana).use(mplToolbox())
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(env.SOLANA_PRIVATE_KEY))
+        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
+
+        // Generate a wallet keypair from the private key stored in the environment
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 
@@ -45,12 +59,16 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
         // Fetch simulation compute unit price
         const { averageFeeExcludingZeros } = await getFee()
         const avgComputeUnitPrice = Math.round(averageFeeExcludingZeros)
-        const computeUnitPrice = BigInt(avgComputeUnitPrice * 1.1)
+        const computeUnitPrice = BigInt(avgComputeUnitPrice * 2)
 
         // Build and send the transaction
-        const transactionSignature = await setAuthorityTx
+        const transaction = await setAuthorityTx
             .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice }))
             .sendAndConfirm(umi)
 
-        console.log(`Transaction successful with signature: ${transactionSignature}`)
+        const transactionSignature = bs58.encode(transaction.signature)
+
+        // Provide transaction details
+        const metadataUpdateLink = getExplorerLink('tx', transactionSignature.toString(), 'mainnet-beta')
+        console.log(`✅ Freeze authority updated! View the transaction here: ${metadataUpdateLink}`)
     })
