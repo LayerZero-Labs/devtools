@@ -69,7 +69,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         address _refundAddress
     ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
         // @dev Ensure the native funds in msg.value are enough to cover the fees and amount to send (with dust removed).
-        // TODO should we remove dust from _sendParam.amountLD here?
+        // @dev This will revert if the _sendParam.amountLD contains any dust
         uint256 requiredMsgValue = _fee.nativeFee + _removeDust(_sendParam.amountLD);
         if (msg.value != requiredMsgValue) {
             revert InsufficientMessageValue(msg.value, requiredMsgValue);
