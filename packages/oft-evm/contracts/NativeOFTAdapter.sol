@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "./OFTCore.sol";
 
 /**
- * @title NativeOFTAdapter Contract
+ * @title NativeOFTAdapter
  * @dev NativeOFTAdapter is a contract that adapts native currency to the OFT functionality.
  *
  * @dev WARNING: ONLY 1 of these should exist for a given global mesh,
@@ -14,13 +14,10 @@ import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "
  */
 abstract contract NativeOFTAdapter is OFTCore {
 
-    address public constant NATIVE_TOKEN_ADDRESS = address(0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE);
-
     error InsufficientMessageValue(uint256 provided, uint256 required);
     error CreditFailed();
 
     /**
-     * @dev Constructor for the NativeOFTAdapter contract.
      * @param _localDecimals The decimals of the native on the local chain (this chain). 18 on ETH.
      * @param _lzEndpoint The LayerZero endpoint address.
      * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
@@ -36,12 +33,12 @@ abstract contract NativeOFTAdapter is OFTCore {
      * @return The address of the native token.
      */
     function token() public pure returns (address) {
-        return NATIVE_TOKEN_ADDRESS;
+        return address(0);
     }
 
     /**
      * @notice Indicates whether the OFT contract requires approval of the 'token()' to send.
-     * @return requiresApproval Needs approval of the underlying token implementation.
+     * @return bool indicating whether approval of underlying token implementation is required.
      *
      * @dev In the case of default NativeOFTAdapter, approval is not required.
      */
@@ -80,6 +77,7 @@ abstract contract NativeOFTAdapter is OFTCore {
 
     /**
      * @dev Locks native sent by the sender as msg.value
+     * @dev _from The address to debit.
      * @param _amountLD The amount of native to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
      * @param _dstEid The destination chain ID.
@@ -118,7 +116,11 @@ abstract contract NativeOFTAdapter is OFTCore {
         return _amountLD;
     }
 
-    // @dev Overridden to be empty as this assertion is done higher up on the overriden send() function.
+    /**
+     * @dev Overridden to be empty as this assertion is done higher up on the overriden send() function.
+     * @param _nativeFee The native fee to be paid.
+     * @return nativeFee The amount of native currency paid.
+     */
     function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
     }
