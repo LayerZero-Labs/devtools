@@ -5,6 +5,8 @@ pragma solidity ^0.8.22;
 import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "./OFTCore.sol";
 
 /**
+ * [AWAITING AUDIT]
+ *
  * @title NativeOFTAdapter
  * @dev NativeOFTAdapter is a contract that adapts native currency to the OFT functionality.
  *
