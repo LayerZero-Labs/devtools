@@ -448,14 +448,13 @@ contract OFTTest is TestHelperOz5 {
         );
 
         MessagingFee memory fee = dNativeOFTAdapter.quoteSend(sendParam, false);
+        uint256 msgValue = fee.nativeFee + sendParam.amountLD;
 
         vm.prank(userD);
         vm.expectRevert(
-            abi.encodeWithSelector(OAppSender.NotEnoughNative.selector, fee.nativeFee)
+            abi.encodeWithSelector(NativeOFTAdapter.InsufficientMessageValue.selector, fee.nativeFee, msgValue)
         );
         dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: fee.nativeFee}(sendParam, fee, userD);
-
-        uint256 msgValue = fee.nativeFee + sendParam.amountLD;
 
         vm.prank(userD);
         dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: msgValue }(sendParam, fee, userD);
