@@ -146,5 +146,7 @@ abstract contract NativeOFTAdapter is OFTCore {
     }
 
     // @dev Overridden to be empty as this assertion is done higher up on the send function.
-    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {}
+    function _payNative(uint256 _nativeFee) internal override returns (uint256 nativeFee) {
+        return _nativeFee;
+    }
 }
