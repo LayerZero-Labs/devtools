@@ -69,6 +69,8 @@ abstract contract NativeOFTAdapter is OFTCore {
         MessagingFee calldata _fee,
         address _refundAddress
     ) public payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        // @dev Ensure the native funds in msg.value are enough to cover the fees and amount to send (with dust removed).
+        // TODO should we remove dust from _sendParam.amountLD here?
         if (_fee.nativeFee + _removeDust(_sendParam.amountLD) != msg.value) {
             revert NotEnoughNative(msg.value);
         }
@@ -90,8 +92,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint256 _minAmountLD,
         uint32 _dstEid
     ) internal virtual override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
-        // @dev Lock native funds by moving them into this contract from the caller.
-        // No need to transfer here since msg.value moves funds to the contract.
+        // @dev Native funds sent with msg.value are locked into this contract higher up on the overridden send() function
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
     }
 
@@ -117,7 +118,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         return _amountLD;
     }
 
-    // @dev Overridden to be empty as this assertion is done higher up on the send function.
+    // @dev Overridden to be empty as this assertion is done higher up on the overriden send() function.
     function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
     }
