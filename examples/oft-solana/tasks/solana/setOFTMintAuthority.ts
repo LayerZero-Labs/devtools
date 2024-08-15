@@ -1,12 +1,12 @@
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
@@ -41,7 +41,7 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(decode(privateKey))
         const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
@@ -83,7 +83,7 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
         const transactionSignature = await transactionBuilder
             .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice }))
             .sendAndConfirm(umi)
-        const setOFTAuthoritySignature = bs58.encode(transactionSignature.signature)
+        const setOFTAuthoritySignature = encode(transactionSignature.signature)
         const setOFTAuthorityLink = getExplorerLink('tx', setOFTAuthoritySignature.toString(), 'mainnet-beta')
         console.log(
             `✅ You set ${newAuthorityPublicKey} as the mint authority of your OFT Config Account: ${oftConfig}, see transaction here: ${setOFTAuthorityLink}`

@@ -1,13 +1,13 @@
 // Import necessary modules and classes from Solana SDKs and other libraries
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { AuthorityType, mplToolbox, setAuthority, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -39,7 +39,7 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(decode(privateKey))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 
@@ -66,7 +66,7 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
             .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice }))
             .sendAndConfirm(umi)
 
-        const transactionSignature = bs58.encode(transaction.signature)
+        const transactionSignature = encode(transaction.signature)
 
         // Provide transaction details
         const metadataUpdateLink = getExplorerLink('tx', transactionSignature.toString(), 'mainnet-beta')

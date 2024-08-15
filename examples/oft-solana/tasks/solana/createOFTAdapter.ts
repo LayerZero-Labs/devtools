@@ -2,7 +2,6 @@
 import assert from 'assert'
 import fs from 'fs'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
 import { findAssociatedTokenPda, mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import {
@@ -17,6 +16,7 @@ import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
@@ -49,7 +49,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(decode(privateKey))
 
         // Convert the UMI keypair to a format compatible with web3.js
         // This is necessary as the @layerzerolabs/lz-solana-sdk-v2 library uses web3.js keypairs
@@ -129,7 +129,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
 
         // Log the transaction and token mint details
         console.log(
-            `✅ Token Mint Complete! View the transaction here: ${getExplorerLink('tx', bs58.encode(createTokenTx.signature), 'mainnet-beta')}`
+            `✅ Token Mint Complete! View the transaction here: ${getExplorerLink('tx', encode(createTokenTx.signature), 'mainnet-beta')}`
         )
 
         // Find the associated token account using the generated token mint
@@ -176,7 +176,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
 
         // Log the transaction details
         console.log(
-            `✅ You created an OFT Adapter, view the transaction here: ${getExplorerLink('tx', bs58.encode(oftConfigTransaction.signature), 'mainnet-beta')}`
+            `✅ You created an OFT Adapter, view the transaction here: ${getExplorerLink('tx', encode(oftConfigTransaction.signature), 'mainnet-beta')}`
         )
 
         // Save the account details to a JSON file

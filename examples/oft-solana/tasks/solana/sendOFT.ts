@@ -1,6 +1,5 @@
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
 import {
     fetchAddressLookupTable,
@@ -25,6 +24,7 @@ import {
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { getExplorerLink, getSimulationComputeUnits } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { hexlify } from 'ethers/lib/utils'
 import { task } from 'hardhat/config'
 
@@ -63,7 +63,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         const privateKey = process.env.SOLANA_PRIVATE_KEY
         assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
+        const keypair = Keypair.fromSecretKey(decode(privateKey))
         const umiKeypair = fromWeb3JsKeypair(keypair)
 
         const lookupTableAddress = LOOKUP_TABLE_ADDRESS[taskArgs.fromEid]
@@ -189,7 +189,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             .sendAndConfirm(umi)
 
         // Encode the transaction signature and generate explorer links
-        const transactionSignatureBase58 = bs58.encode(transactionSignature.signature)
+        const transactionSignatureBase58 = encode(transactionSignature.signature)
         const solanaTxLink = getExplorerLink('tx', transactionSignatureBase58.toString(), 'mainnet-beta')
         const layerZeroTxLink = `https://layerzeroscan.com/tx/${transactionSignatureBase58}`
 

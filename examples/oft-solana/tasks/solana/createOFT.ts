@@ -2,7 +2,6 @@
 import assert from 'assert'
 import fs from 'fs'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
 import {
     AuthorityType,
@@ -23,6 +22,7 @@ import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@me
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
@@ -55,7 +55,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(decode(privateKey))
 
         // Convert the UMI keypair to a format compatible with web3.js
         // This is necessary as the @layerzerolabs/lz-solana-sdk-v2 library uses web3.js keypairs
@@ -129,7 +129,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             .sendAndConfirm(umi)
 
         // Log the transaction and token mint details
-        const createTokenTransactionSignature = bs58.encode(createTokenTx.signature)
+        const createTokenTransactionSignature = encode(createTokenTx.signature)
         const createTokenLink = getExplorerLink('tx', createTokenTransactionSignature.toString(), 'mainnet-beta')
         console.log(`✅ Token Mint Complete! View the transaction here: ${createTokenLink}`)
 
@@ -191,7 +191,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             .sendAndConfirm(umi)
 
         // Log the transaction details
-        const oftConfigSignature = bs58.encode(oftConfigTransaction.signature)
+        const oftConfigSignature = encode(oftConfigTransaction.signature)
         const oftConfigLink = getExplorerLink('tx', oftConfigSignature.toString(), 'mainnet-beta')
         console.log(`✅ You created an OFT, view the transaction here: ${oftConfigLink}`)
 
