@@ -83,6 +83,8 @@ solana-keygen new -o target/deploy/oft-keypair.json
 anchor keys sync
 ```
 
+:warning: You will want to use the `--force` flag to generate your own keypair if these keys already exist.
+
 ### Deploying OFT Program
 
 #### Using `anchor`
