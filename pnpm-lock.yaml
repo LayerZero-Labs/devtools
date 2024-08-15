@@ -554,6 +554,9 @@ importers:
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
+      bs58:
+        specifier: ^6.0.0
+        version: 6.0.0
       chai:
         specifier: ^4.4.1
         version: 4.5.0

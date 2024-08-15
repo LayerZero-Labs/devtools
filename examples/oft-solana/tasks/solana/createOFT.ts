@@ -2,7 +2,6 @@
 import assert from 'assert'
 import fs from 'fs'
 
-import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
 import {
     AuthorityType,
@@ -23,6 +22,7 @@ import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@me
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'

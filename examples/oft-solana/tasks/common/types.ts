@@ -1,5 +1,5 @@
-import bs58 from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { Keypair, PublicKey } from '@solana/web3.js'
+import bs58 from 'bs58'
 import { CLIArgumentType } from 'hardhat/types'
 
 export const keyPair: CLIArgumentType<Keypair> = {

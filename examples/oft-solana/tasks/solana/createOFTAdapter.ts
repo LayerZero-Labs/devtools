@@ -2,7 +2,6 @@
 import assert from 'assert'
 import fs from 'fs'
 
-import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
 import { findAssociatedTokenPda, mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import {
@@ -17,6 +16,7 @@ import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'

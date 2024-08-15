@@ -1,7 +1,6 @@
 // Import necessary modules and classes from Solana SDKs and other libraries
 import assert from 'assert'
 
-import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
@@ -10,6 +9,7 @@ import { fromWeb3JsInstruction, fromWeb3JsKeypair, fromWeb3JsPublicKey } from '@
 import { TOKEN_PROGRAM_ID, getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'

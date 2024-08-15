@@ -1,12 +1,12 @@
 import assert from 'assert'
 
-import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'

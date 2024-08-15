@@ -1,6 +1,5 @@
 import assert from 'assert'
 
-import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
 import {
     fetchAddressLookupTable,
@@ -25,6 +24,7 @@ import {
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { getExplorerLink, getSimulationComputeUnits } from '@solana-developers/helpers'
+import { decode, encode } from 'bs58'
 import { hexlify } from 'ethers/lib/utils'
 import { task } from 'hardhat/config'
 
