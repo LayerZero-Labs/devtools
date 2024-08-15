@@ -3,6 +3,7 @@
 import {
     createConnectedContractFactory,
     createErrorParser,
+    createProviderFactory,
     createSignerFactory,
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
@@ -121,10 +122,11 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
  */
 export const setupDefaultEndpointV2 = async (): Promise<void> => {
     // This is the tooling we are going to need
+    const providerFactory = createProviderFactory()
     const contractFactory = createConnectedContractFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
-    const ulnSdkFactory = createUln302Factory(contractFactory)
-    const endpointV2SdkFactory = createEndpointV2Factory(contractFactory, ulnSdkFactory)
+    const ulnSdkFactory = createUln302Factory(providerFactory)
+    const endpointV2SdkFactory = createEndpointV2Factory(providerFactory)
     const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
     const executorSdkFactory = createExecutorFactory(contractFactory)
     const dvnSdkFactory = createDVNFactory(contractFactory)

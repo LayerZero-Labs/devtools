@@ -10,21 +10,15 @@ import {
     normalizePeer,
     denormalizePeer,
 } from '@layerzerolabs/devtools'
-import { type OmniContract, formatOmniContract, BigNumberishBigIntSchema } from '@layerzerolabs/devtools-evm'
+import { formatOmniContract, BigNumberishBigIntSchema, Provider } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { EndpointV2Factory, IEndpointV2 } from '@layerzerolabs/protocol-devtools'
+import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { Ownable } from '@/ownable/sdk'
+import { EndpointV2 } from '@layerzerolabs/protocol-devtools-evm'
 
 export class OApp extends Ownable implements IOApp {
-    constructor(
-        contract: OmniContract,
-        protected readonly endpointV2Factory: EndpointV2Factory
-    ) {
-        super(contract)
-    }
-
     @AsyncRetriable()
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
@@ -45,7 +39,7 @@ export class OApp extends Ownable implements IOApp {
 
         this.logger.debug(`Got EndpointV2 address: ${address}`)
 
-        return await this.endpointV2Factory({ address, eid: this.contract.eid })
+        return new EndpointV2(this.contract.contract.provider as Provider, { address, eid: this.point.eid })
     }
 
     @AsyncRetriable()

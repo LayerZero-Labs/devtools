@@ -5,7 +5,6 @@ import type {
     SetConfigParam,
     Uln302ConfigType,
     Uln302ExecutorConfig,
-    Uln302Factory,
     Uln302SetUlnConfig,
     Uln302UlnConfig,
     Uln302UlnUserConfig,
@@ -19,14 +18,17 @@ import {
     ignoreZero,
     areBytes32Equal,
     AsyncRetriable,
+    OmniPoint,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import { makeZeroAddress, type OmniContract, OmniSDK } from '@layerzerolabs/devtools-evm'
+import { makeZeroAddress, OmniSDK, Provider } from '@layerzerolabs/devtools-evm'
 import { Timeout } from '@layerzerolabs/protocol-devtools'
 import { Uln302 } from '@/uln302'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ReceiveLibrarySchema } from './schema'
+import { Contract } from '@ethersproject/contracts'
+import { abi } from './abi'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -38,10 +40,10 @@ const CONFIG_TYPE_ULN = 2
  */
 export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     constructor(
-        contract: OmniContract,
-        private readonly uln302Factory: Uln302Factory
+        private readonly provider: Provider,
+        point: OmniPoint
     ) {
-        super(contract)
+        super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
     }
 
     @AsyncRetriable()
@@ -67,17 +69,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             )}`
         )
 
-        const ulnSdk = await this.uln302Factory({ eid: this.point.eid, address })
-
-        // We expect the EVM ULN SDK to always be the provided SDK (or a subclass)
-        // so we warn the user if we get something unexpected
-        if (!(ulnSdk instanceof Uln302)) {
-            this.logger.verbose(
-                `Unexpected Uln302 SDK: expected the SDK to be an instance of Uln302, got ${(ulnSdk as object)?.constructor?.name}`
-            )
-        }
-
-        return ulnSdk as Uln302
+        return new Uln302(this.provider, { eid: this.point.eid, address })
     }
 
     @AsyncRetriable()
