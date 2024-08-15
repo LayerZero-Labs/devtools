@@ -1,7 +1,7 @@
 // Import necessary modules and classes
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import {
     fetchMetadataFromSeeds,
     mplTokenMetadata,
@@ -42,7 +42,7 @@ task('lz:oft:solana:set-metadata-authority', 'Transfers the account metadata aut
         const umi = createUmi(connection.rpcEndpoint).use(mplTokenMetadata())
 
         // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
+        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(decode(privateKey))
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
         umi.use(signerIdentity(umiWalletSigner))
 
@@ -71,7 +71,7 @@ task('lz:oft:solana:set-metadata-authority', 'Transfers the account metadata aut
             // Build and send the transaction
             const builder = new TransactionBuilder().add(updateInstruction)
             const transactionResult = await builder.sendAndConfirm(umi)
-            const transactionSignature = bs58.encode(transactionResult.signature)
+            const transactionSignature = encode(transactionResult.signature)
 
             // Provide transaction details
             const metadataUpdateLink = getExplorerLink('tx', transactionSignature.toString(), 'mainnet-beta')

@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
@@ -35,7 +35,7 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
         const privateKey = process.env.SOLANA_PRIVATE_KEY
         assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
+        const keypair = Keypair.fromSecretKey(decode(privateKey))
         const umiKeypair = fromWeb3JsKeypair(keypair)
 
         const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
@@ -101,7 +101,7 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
                 const transactionSignature = await transactionBuilder
                     .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice }))
                     .sendAndConfirm(umi)
-                const setRateLimitSignature = bs58.encode(transactionSignature.signature)
+                const setRateLimitSignature = encode(transactionSignature.signature)
                 const setRateLimitLink = getExplorerLink('tx', setRateLimitSignature.toString(), 'mainnet-beta')
                 console.log(
                     `✅ You set ${solanaRateLimits.rateLimitConfig.rateLimitCapacity} with a refill of ${solanaRateLimits.rateLimitConfig.rateLimitRefillRatePerSecond} per second for ${formatOmniVector(peer.vector)}! View the transaction here: ${setRateLimitLink}`

@@ -1,7 +1,7 @@
 // Import necessary modules and classes from Solana SDKs and other libraries
 import assert from 'assert'
 
-import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes'
+import { decode, encode } from '@coral-xyz/anchor/dist/cjs/utils/bytes/bs58'
 import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
 import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
@@ -37,7 +37,7 @@ task('lz:oft:solana:mint', 'Mint tokens on Solana using OFT pass-through')
         const privateKey = process.env.SOLANA_PRIVATE_KEY
         assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
 
-        const keypair = Keypair.fromSecretKey(bs58.decode(privateKey))
+        const keypair = Keypair.fromSecretKey(decode(privateKey))
         const umiKeypair = fromWeb3JsKeypair(keypair)
 
         const connectionFactory = createSolanaConnectionFactory()
@@ -98,7 +98,7 @@ task('lz:oft:solana:mint', 'Mint tokens on Solana using OFT pass-through')
             .sendAndConfirm(umi)
 
         // Encode the transaction signature and generate explorer links
-        const transactionSignatureBase58 = bs58.encode(transactionSignature.signature)
+        const transactionSignatureBase58 = encode(transactionSignature.signature)
         const solanaTxLink = getExplorerLink('tx', transactionSignatureBase58.toString(), 'mainnet-beta')
 
         console.log(`✅ Minted ${taskArgs.amount} token(s) to: ${web3TokenAccount.address}!`)
