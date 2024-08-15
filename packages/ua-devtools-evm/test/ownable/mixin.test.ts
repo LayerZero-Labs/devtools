@@ -22,15 +22,13 @@ describe('ownable/mixin', () => {
         contract: oappOmniContractArbitrary,
     })
 
-    const EndpointV2Factory = jest.fn().mockRejectedValue('No endpoint')
-
     describe('getOwner', () => {
         it('should call owner on the contract', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, evmAddressArbitrary, async (omniContract, owner) => {
                     omniContract.contract.owner.mockResolvedValue(owner)
 
-                    const sdk = new OApp(omniContract, EndpointV2Factory)
+                    const sdk = new OApp(omniContract)
                     const ownable = Object.assign(sdk, OwnableMixin)
 
                     expect(await ownable.getOwner()).toBe(owner)
@@ -46,7 +44,7 @@ describe('ownable/mixin', () => {
                 fc.asyncProperty(omniContractArbitrary, evmAddressArbitrary, async (omniContract, owner) => {
                     omniContract.contract.owner.mockResolvedValue(owner)
 
-                    const sdk = new OApp(omniContract, EndpointV2Factory)
+                    const sdk = new OApp(omniContract)
                     const ownable = Object.assign(sdk, OwnableMixin)
 
                     expect(await ownable.hasOwner(owner)).toBeTruthy()
@@ -65,7 +63,7 @@ describe('ownable/mixin', () => {
 
                         omniContract.contract.owner.mockResolvedValue(owner)
 
-                        const sdk = new OApp(omniContract, EndpointV2Factory)
+                        const sdk = new OApp(omniContract)
                         const ownable = Object.assign(sdk, OwnableMixin)
 
                         expect(await ownable.hasOwner(user)).toBeFalsy()
@@ -79,7 +77,7 @@ describe('ownable/mixin', () => {
         it('should encode data for a transferOwnership call', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, evmAddressArbitrary, async (omniContract, owner) => {
-                    const sdk = new OApp(omniContract, EndpointV2Factory)
+                    const sdk = new OApp(omniContract)
                     const ownable = Object.assign(sdk, OwnableMixin)
                     const encodeFunctionData = omniContract.contract.interface.encodeFunctionData as jest.Mock
 
