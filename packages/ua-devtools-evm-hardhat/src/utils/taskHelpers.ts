@@ -5,7 +5,12 @@ import type {
     Uln302ExecutorConfig,
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-devtools'
-import { createConnectedContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    createConnectedContractFactory,
+    createOmniPointHardhatTransformer,
+    createProviderFactory,
+    getEidForNetworkName,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 
 export async function getSendConfig(
@@ -16,9 +21,13 @@ export async function getSendConfig(
 ): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
-    const contractFactory = createConnectedContractFactory()
-    const EndpointV2Factory = createEndpointV2Factory(contractFactory)
-    const localEndpointSDK = await EndpointV2Factory({ eid: localEid, contractName: 'EndpointV2' })
+    const providerFactory = createProviderFactory()
+    const pointTransformer = createOmniPointHardhatTransformer()
+    const EndpointV2Factory = createEndpointV2Factory(providerFactory)
+
+    const localEndpointSDK = await EndpointV2Factory(
+        await pointTransformer({ eid: localEid, contractName: 'EndpointV2' })
+    )
 
     let sendLibrary
     let localSendUlnSDK
@@ -90,9 +99,12 @@ export async function getReceiveConfig(
 ): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
-    const contractFactory = createConnectedContractFactory()
-    const EndpointV2Factory = createEndpointV2Factory(contractFactory)
-    const localEndpointSDK = await EndpointV2Factory({ eid: localEid, contractName: 'EndpointV2' })
+    const providerFactory = createProviderFactory()
+    const pointTransformer = createOmniPointHardhatTransformer()
+    const EndpointV2Factory = createEndpointV2Factory(providerFactory)
+    const localEndpointSDK = await EndpointV2Factory(
+        await pointTransformer({ eid: localEid, contractName: 'EndpointV2' })
+    )
 
     let receiveLibrary
     let localReceiveUlnSDK
