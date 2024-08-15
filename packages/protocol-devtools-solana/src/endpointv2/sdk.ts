@@ -510,6 +510,21 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }))
     }
 
+    async isOAppNonceInitialized(oapp: OmniAddress, eid: EndpointId, peer: OmniAddress): Promise<boolean> {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Checking OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
+
+        return mapError(
+            async () => {
+                const [nonce] = this.deriver.nonce(new PublicKey(oapp), eid, normalizePeer(peer, eid))
+
+                return this.isAccountInitialized(nonce.toBase58())
+            },
+            (error) =>
+                new Error(`Failed to check OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}: ${error}`)
+        )
+    }
+
     async initializeOAppNonce(oapp: OmniAddress, eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
         const eidLabel = formatEid(eid)
         this.logger.verbose(`Initializing OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
@@ -546,6 +561,23 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         ]
     }
 
+    async isSendLibraryInitialized(oapp: OmniAddress, eid: EndpointId) {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Checking OApp send library initialization status for OApp ${oapp} on ${eidLabel}`)
+
+        return mapError(
+            async () => {
+                const [sendLibraryConfig] = this.deriver.sendLibraryConfig(new PublicKey(oapp), eid)
+
+                return this.isAccountInitialized(sendLibraryConfig.toBase58())
+            },
+            (error) =>
+                new Error(
+                    `Failed to check OApp send library initialization status for OApp ${oapp} on ${eidLabel}: ${error}`
+                )
+        )
+    }
+
     async initializeSendLibrary(oapp: OmniAddress, eid: EndpointId): Promise<[OmniTransaction] | []> {
         const eidLabel = formatEid(eid)
         this.logger.verbose(`Initializing OApp send library for OApp ${oapp} on ${eidLabel}`)
@@ -566,6 +598,23 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 description: `Initializing send library for OApp ${oapp} on ${eidLabel}`,
             },
         ]
+    }
+
+    async isReceiveLibraryInitialized(oapp: OmniAddress, eid: EndpointId) {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Checking OApp receive library initialization status for OApp ${oapp} on ${eidLabel}`)
+
+        return mapError(
+            async () => {
+                const [receiveLibraryConfig] = this.deriver.receiveLibraryConfig(new PublicKey(oapp), eid)
+
+                return this.isAccountInitialized(receiveLibraryConfig.toBase58())
+            },
+            (error) =>
+                new Error(
+                    `Failed to check OApp receive library initialization status for OApp ${oapp} on ${eidLabel}: ${error}`
+                )
+        )
     }
 
     async initializeReceiveLibrary(oapp: OmniAddress, eid: EndpointId): Promise<[OmniTransaction] | []> {
@@ -590,6 +639,22 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                 description: `Initializing receive library for OApp ${oapp} on ${eidLabel}`,
             },
         ]
+    }
+
+    async isOAppConfigInitialized(oapp: OmniAddress, eid: EndpointId): Promise<boolean> {
+        const eidLabel = formatEid(eid)
+        this.logger.verbose(`Checking OApp config initialization status for OApp ${oapp} on ${eidLabel}`)
+
+        return mapError(
+            async () => {
+                // TODO Verify that this is the only account that needs to be checked for the verification status
+                const [oappRegistry] = this.deriver.oappRegistry(new PublicKey(oapp))
+
+                return this.isAccountInitialized(oappRegistry.toBase58())
+            },
+            (error) =>
+                new Error(`Failed to check OApp config initialization status for OApp ${oapp} on ${eidLabel}: ${error}`)
+        )
     }
 
     async initializeOAppConfig(
