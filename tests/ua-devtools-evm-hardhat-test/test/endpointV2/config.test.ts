@@ -1,5 +1,5 @@
 import 'hardhat'
-import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createConnectedContractFactory, createProviderFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
@@ -27,8 +27,9 @@ describe('EndpointV2/config', () => {
     describe('EndpointV2', () => {
         it('should have default libraries configured', async () => {
             // This is the required tooling we need to set up
+            const providerFactory = createProviderFactory()
             const connectedContractFactory = createConnectedContractFactory()
-            const sdkFactory = createEndpointV2Factory(connectedContractFactory)
+            const sdkFactory = createEndpointV2Factory(providerFactory)
 
             // Now for the purposes of the test, we need to get coordinates of our contracts
             const ethEndpointPoint = omniContractToPoint(await connectedContractFactory(ethEndpoint))
@@ -62,8 +63,9 @@ describe('EndpointV2/config', () => {
     describe('sendUln302', () => {
         it('should have default executors configured', async () => {
             // This is the required tooling we need to set up
+            const providerFactory = createProviderFactory()
             const connectedContractFactory = createConnectedContractFactory()
-            const sdkFactory = createUln302Factory(connectedContractFactory)
+            const sdkFactory = createUln302Factory(providerFactory)
 
             const ethSendUlnPoint = omniContractToPoint(await connectedContractFactory(ethSendUln))
             const avaxSendUlnPoint = omniContractToPoint(await connectedContractFactory(avaxSendUln))
