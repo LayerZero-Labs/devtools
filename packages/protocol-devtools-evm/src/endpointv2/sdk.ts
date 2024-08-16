@@ -28,7 +28,7 @@ import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ReceiveLibrarySchema } from './schema'
 import { Contract } from '@ethersproject/contracts'
-import { abi } from './abi'
+import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/EndpointV2.sol/EndpointV2.json'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
