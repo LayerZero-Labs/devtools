@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 1.0.4
+
+### Patch Changes
+
+- 5f82713: Add initialization getter methods to OFT & EndpointV2 SDKs
+- 5f82713: Add account info helpers
+- Updated dependencies [5f82713]
+- Updated dependencies [5f82713]
+- Updated dependencies [5f82713]
+  - @layerzerolabs/ua-devtools@1.0.4
+  - @layerzerolabs/protocol-devtools-solana@1.0.5
+  - @layerzerolabs/devtools-solana@0.1.5
+
 ## 1.0.3
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 1.0.5
+
+### Patch Changes
+
+- 5f82713: Add initialization getter methods to OFT & EndpointV2 SDKs
+- Updated dependencies [5f82713]
+- Updated dependencies [5f82713]
+- Updated dependencies [5f82713]
+  - @layerzerolabs/ua-devtools@1.0.4
+  - @layerzerolabs/devtools-solana@0.1.5
+
 ## 1.0.4
 
 ### Patch Changes
