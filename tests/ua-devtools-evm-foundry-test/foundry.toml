@@ -1,0 +1,10 @@
+[profile.default]
+solc-version = '0.8.22'
+libs = [
+    'node_modules',
+]
+
+remappings = [
+    '@layerzerolabs/=node_modules/@layerzerolabs/',
+    '@openzeppelin/=node_modules/@openzeppelin/',
+]
