@@ -167,7 +167,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         ])
 
         // Fetch simulation compute units and set compute unit price
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const priorityFee = Math.round(averageFeeExcludingZeros)
         const computeUnitPrice = BigInt(priorityFee)
         console.log(`Compute unit price: ${computeUnitPrice}`)

@@ -75,7 +75,7 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
         ])
 
         // Fetch simulation compute unit price
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const avgComputeUnitPrice = Math.round(averageFeeExcludingZeros)
         const computeUnitPrice = BigInt(avgComputeUnitPrice * 2)
 

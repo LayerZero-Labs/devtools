@@ -107,7 +107,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
         // Get the average compute unit price
         // getFee() uses connection.getRecentPrioritizationFees() to get recent fees and averages them
         // This is necessary as Solana's default compute unit price is not always sufficient to land the tx
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const computeUnitPrice = BigInt(Math.round(averageFeeExcludingZeros))
 
         // Create and mint the SPL token using UMI

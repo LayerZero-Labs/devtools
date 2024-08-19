@@ -93,7 +93,7 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
                 ])
 
                 // Fetch simulation compute unit price
-                const { averageFeeExcludingZeros } = await getFee()
+                const { averageFeeExcludingZeros } = await getFee(connection)
                 const avgComputeUnitPrice = Math.round(averageFeeExcludingZeros)
                 const computeUnitPrice = BigInt(avgComputeUnitPrice * 1.1)
 

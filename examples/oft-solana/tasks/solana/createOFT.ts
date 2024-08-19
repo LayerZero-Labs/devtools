@@ -108,7 +108,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
 
         // Get the average compute unit price
         // getFee() uses connection.getRecentPrioritizationFees() to get recent fees and averages them
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const computeUnitPrice = BigInt(Math.round(averageFeeExcludingZeros))
 
         // Create and mint the SPL token using UMI

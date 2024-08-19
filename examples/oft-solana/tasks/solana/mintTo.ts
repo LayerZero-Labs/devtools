@@ -87,7 +87,7 @@ task('lz:oft:solana:mint', 'Mint tokens on Solana using OFT pass-through')
         ])
 
         // Fetch simulation compute units and set compute unit price
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const priorityFee = Math.round(averageFeeExcludingZeros)
         const computeUnitPrice = BigInt(priorityFee)
         console.log(`Compute unit price: ${computeUnitPrice}`)

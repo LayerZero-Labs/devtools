@@ -1,5 +1,3 @@
-import { env } from 'process'
-
 import { Connection, PublicKey } from '@solana/web3.js'
 
 // Define interfaces for more explicit typing
@@ -12,15 +10,14 @@ interface Config {
     lockedWritableAccounts: PublicKey[]
 }
 
-const getPrioritizationFees = async (): Promise<{
+const getPrioritizationFees = async (
+    connection: Connection
+): Promise<{
     averageFeeIncludingZeros: number
     averageFeeExcludingZeros: number
     medianFee: number
 }> => {
     try {
-        const SOLANA_RPC = env.RPC_URL_SOLANA!.toString()
-        const connection = new Connection(SOLANA_RPC)
-
         const publicKey = new PublicKey('JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4')
 
         const config: Config = {

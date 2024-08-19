@@ -57,7 +57,7 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
         })
 
         // Fetch simulation compute unit price
-        const { averageFeeExcludingZeros } = await getFee()
+        const { averageFeeExcludingZeros } = await getFee(connection)
         const avgComputeUnitPrice = Math.round(averageFeeExcludingZeros)
         const computeUnitPrice = BigInt(avgComputeUnitPrice * 2)
 
