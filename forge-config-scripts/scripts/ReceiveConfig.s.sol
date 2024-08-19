@@ -18,17 +18,15 @@ contract ReceiveConfig is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
         // ============================ Can deploy contract or fetch deployed contract ============================
-        // MyOFT myOFT = new MyOFT("ravina", "RG", address(0x6EDCE65403992e310A62460808c4b910D972f10f), address(0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7)); 
+        // MyOFT myOFT = new MyOFT("MyOFT", "OFT", address(0x6EDCE65403992e310A62460808c4b910D972f10f), address(0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7)); 
 
         MyOFT myOFT = MyOFT(contractAddress);
 
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(address(myOFT.endpoint()));
+        
+        (address receiveLibraryAddress, ) = endpoint.getReceiveLibrary(address(myOFT), remoteEid);
 
-        console.log("============================ Receive Library Address ============================ ");
-        (address receiveLibraryAddress, bool isDefault) = endpoint.getReceiveLibrary(address(myOFT), remoteEid);
-        console.logAddress(receiveLibraryAddress);
-
-        console.log("============================ SETTING RECEIVE CONFIG ============================");
+        console.log("============================ PREPARING RECEIVE CONFIG ============================");
         
         UlnConfig memory receiveConfig = UlnConfig({
                 confirmations: 59,
@@ -46,20 +44,20 @@ contract ReceiveConfig is Script {
             config: abi.encode(receiveConfig)
         });
 
+        console.log("============================ SETTING RECEIVE CONFIG ============================");
+
         vm.startBroadcast(deployerPrivateKey);
 
         endpoint.setConfig(address(myOFT), receiveLibraryAddress, setReceiveConfigParams);
 
         vm.stopBroadcast();
 
-        console.log("Done setting receive config");
-
-        console.log("============================ GETTING RECEIVE CONFIG ============================");
+        console.log("============================ GETTING UPDATED RECEIVE CONFIG ============================");
         
-        bytes memory updatedReceiveUlnConfigBytes = endpoint.getConfig(address(myOFT), receiveLibraryAddress, remoteEid, 2);
-        UlnConfig memory updatedReceiveUlnConfig = abi.decode(updatedReceiveUlnConfigBytes, (UlnConfig));
+        bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), receiveLibraryAddress, remoteEid, 2);
+        UlnConfig memory updatedUlnConfig = abi.decode(updatedUlnConfigBytes, (UlnConfig));
         
-        console.log(" Updated Receive Uln Config Confirmations: ");
-        console.logUint(updatedReceiveUlnConfig.confirmations);
+        console.log(" Updated Uln Config Confirmations: ");
+        console.logUint(updatedUlnConfig.confirmations);
     }
 }

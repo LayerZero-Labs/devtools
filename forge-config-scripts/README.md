@@ -44,7 +44,7 @@ We can set send and receive configurations by running forge scripts. See the exa
     For example:
 
     ```bash
-    source .env && forge script --chain sepolia forge-scripts/ReceiveConfig.s.sol:ReceiveConfig --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv --sig "run(address, uint32)" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231
+    source .env && forge script --chain sepolia scripts/ReceiveConfig.s.sol:ReceiveConfig --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv --sig "run(address, uint32)" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231
     ```
 
 Transactions initiated by the above commands will be logged within a `broadcasts/` folder. Use the `--verify` flag if you would like to verify any contracts deployed within the script. For more information, see:
