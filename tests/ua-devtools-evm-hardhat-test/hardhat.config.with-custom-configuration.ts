@@ -5,7 +5,6 @@ import type { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@layer
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { OAppConfigurator } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
-import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 import {
     MyCustomOAppSDK,
     MyCustomOmniGraphHardhatSchema,
@@ -59,8 +58,7 @@ task(SUBTASK_CUSTOM_CONFIGURE, 'Custom configuration subtask', async (args: Subt
 
     // Here we create the SDK factory
     const contractFactory = createConnectedContractFactory()
-    const endpointV2Factory = createEndpointV2Factory(contractFactory)
-    const sdkFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point), endpointV2Factory)
+    const sdkFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point))
 
     return hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
         ...args,

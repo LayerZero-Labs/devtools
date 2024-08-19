@@ -1,6 +1,6 @@
 /// <reference types="jest-extended" />
 
-import { OmniSignerEVM, parseLogsWithName } from '@layerzerolabs/devtools-evm'
+import { OmniSignerEVM, parseLogsWithName, ProviderFactory } from '@layerzerolabs/devtools-evm'
 import { parseEther } from 'ethers/lib/utils'
 import fc from 'fast-check'
 import 'hardhat'
@@ -15,6 +15,7 @@ import { createSignAndSend, makeBytes32, OmniPoint, OmniTransaction } from '@lay
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     createConnectedContractFactory,
+    createProviderFactory,
     createSignerFactory,
     OmniContractFactoryHardhat,
     OmniGraphBuilderHardhat,
@@ -91,12 +92,14 @@ describe('oapp/options', () => {
     let ethSigner: OmniSignerEVM
     let avaxPoint: OmniPoint
     let contractFactory: OmniContractFactoryHardhat
+    let providerFactory: ProviderFactory
 
     beforeAll(async () => {
         await deployContract('EndpointV2')
         await setupDefaultEndpointV2()
         await deployContract('OmniCounter')
 
+        providerFactory = createProviderFactory()
         contractFactory = createConnectedContractFactory()
         const sdkFactory = createOmniCounterFactory(contractFactory)
         const signerFactory = createSignerFactory()
@@ -136,7 +139,7 @@ describe('oapp/options', () => {
         }
 
         const ethEndpointPointV2 = omniContractToPoint(await contractFactory(ethEndpointV2))
-        const endpointV2SdkFactory = createEndpointV2Factory(contractFactory)
+        const endpointV2SdkFactory = createEndpointV2Factory(providerFactory)
         const ethEndpointV2Sdk = await endpointV2SdkFactory(ethEndpointPointV2)
         const incrementTxResponse = await ethSigner.signAndSend(incrementTx)
         const incrementTxReceipt: TransactionReceipt = await incrementTxResponse.wait()

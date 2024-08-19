@@ -1,18 +1,9 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { IncrementOutput, IncrementType, IOmniCounter } from '@layerzerolabs/omnicounter-devtools'
-import { EndpointV2Factory } from '@layerzerolabs/protocol-devtools'
 import { OApp } from '@layerzerolabs/ua-devtools-evm'
 import { type OmniAddress, makeBytes32 } from '@layerzerolabs/devtools'
-import { OmniContract } from '@layerzerolabs/devtools-evm'
 
 export class OmniCounter extends OApp implements IOmniCounter {
-    public constructor(
-        public override contract: OmniContract,
-        protected override endpointV2Factory: EndpointV2Factory
-    ) {
-        super(contract, endpointV2Factory)
-    }
-
     public async increment(
         eid: EndpointId,
         type: IncrementType,

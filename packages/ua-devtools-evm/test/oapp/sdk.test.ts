@@ -13,6 +13,7 @@ import { OApp } from '@/oapp/sdk'
 import { OmniContract, makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { areBytes32Equal, isZero, makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
 import { formatEid } from '@layerzerolabs/devtools'
+import { EndpointV2 } from '@layerzerolabs/protocol-devtools-evm'
 
 describe('oapp/sdk', () => {
     const nullishAddressArbitrary = fc.constantFrom(null, undefined, makeZeroAddress(), makeBytes32(makeZeroAddress()))
@@ -32,13 +33,11 @@ describe('oapp/sdk', () => {
         contract: oappOmniContractArbitrary,
     })
 
-    const EndpointV2Factory = jest.fn().mockRejectedValue('No endpoint')
-
     describe('getPeer', () => {
         it('should call peers on the contract', async () => {
             await fc.assert(
                 fc.asyncProperty(omniContractArbitrary, endpointArbitrary, async (omniContract, peerEid) => {
-                    const sdk = new OApp(omniContract, EndpointV2Factory)
+                    const sdk = new OApp(omniContract)
 
                     await sdk.getPeer(peerEid)
 
@@ -58,7 +57,7 @@ describe('oapp/sdk', () => {
                         async (omniContract, peerEid, peer) => {
                             omniContract.contract.peers.mockResolvedValue(peer)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
                         }
@@ -77,7 +76,7 @@ describe('oapp/sdk', () => {
 
                             omniContract.contract.peers.mockResolvedValue(peer)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
                         }
@@ -96,7 +95,7 @@ describe('oapp/sdk', () => {
                         async (omniContract, peerEid, peer) => {
                             omniContract.contract.peers.mockResolvedValue(peer)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
                         }
@@ -123,7 +122,7 @@ describe('oapp/sdk', () => {
 
                             omniContract.contract.peers.mockResolvedValue(peerHex)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
                         }
@@ -142,7 +141,7 @@ describe('oapp/sdk', () => {
                         async (omniContract, peerEid, peer) => {
                             omniContract.contract.peers.mockResolvedValue(peer)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBeUndefined()
                         }
@@ -161,7 +160,7 @@ describe('oapp/sdk', () => {
 
                             omniContract.contract.peers.mockResolvedValue(peer)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
 
                             await expect(sdk.getPeer(peerEid)).resolves.toBe(peer)
                         }
@@ -184,7 +183,7 @@ describe('oapp/sdk', () => {
                             async (omniContract, peerEid, peer, probePeer) => {
                                 omniContract.contract.peers.mockResolvedValue(peer)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, probePeer)).resolves.toBe(true)
                             }
@@ -204,7 +203,7 @@ describe('oapp/sdk', () => {
 
                                 omniContract.contract.peers.mockResolvedValue(peer)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, probePeer)).resolves.toBe(false)
                             }
@@ -221,7 +220,7 @@ describe('oapp/sdk', () => {
                             async (omniContract, peerEid, peer) => {
                                 omniContract.contract.peers.mockResolvedValue(makeBytes32(peer))
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, peer)).resolves.toBe(true)
                                 await expect(sdk.hasPeer(peerEid, makeBytes32(peer))).resolves.toBe(true)
@@ -241,7 +240,7 @@ describe('oapp/sdk', () => {
                             async (omniContract, peerEid, peer) => {
                                 omniContract.contract.peers.mockResolvedValue(peer)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, undefined)).resolves.toBe(true)
                             }
@@ -265,7 +264,7 @@ describe('oapp/sdk', () => {
 
                                 omniContract.contract.peers.mockResolvedValue(peerHex)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, probePeer)).resolves.toBe(false)
                             }
@@ -284,7 +283,7 @@ describe('oapp/sdk', () => {
 
                                 omniContract.contract.peers.mockResolvedValue(peerHex)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, peer)).resolves.toBe(true)
                             }
@@ -304,7 +303,7 @@ describe('oapp/sdk', () => {
                             async (omniContract, peerEid, peer, probePeer) => {
                                 omniContract.contract.peers.mockResolvedValue(peer)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, probePeer)).resolves.toBe(true)
                             }
@@ -324,7 +323,7 @@ describe('oapp/sdk', () => {
 
                                 omniContract.contract.peers.mockResolvedValue(peer)
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, probePeer)).resolves.toBe(false)
                             }
@@ -341,7 +340,7 @@ describe('oapp/sdk', () => {
                             async (omniContract, peerEid, peer) => {
                                 omniContract.contract.peers.mockResolvedValue(makeBytes32(peer))
 
-                                const sdk = new OApp(omniContract, EndpointV2Factory)
+                                const sdk = new OApp(omniContract)
 
                                 await expect(sdk.hasPeer(peerEid, peer)).resolves.toBe(true)
                                 await expect(sdk.hasPeer(peerEid, makeBytes32(peer))).resolves.toBe(true)
@@ -362,7 +361,7 @@ describe('oapp/sdk', () => {
                         evmEndpointArbitrary,
                         evmAddressArbitrary,
                         async (omniContract, peerEid, peerAddress) => {
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData
 
                             ;(encodeFunctionData as jest.Mock).mockClear()
@@ -390,7 +389,7 @@ describe('oapp/sdk', () => {
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData as jest.Mock
                             encodeFunctionData.mockReturnValue(data)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const transaction = await sdk.setPeer(peerEid, peerAddress)
 
                             expect(transaction).toEqual({
@@ -415,7 +414,7 @@ describe('oapp/sdk', () => {
                         solanaEndpointArbitrary,
                         solanaAddressArbitrary,
                         async (omniContract, peerEid, peerAddress) => {
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData
 
                             ;(encodeFunctionData as jest.Mock).mockClear()
@@ -443,7 +442,7 @@ describe('oapp/sdk', () => {
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData as jest.Mock
                             encodeFunctionData.mockReturnValue(data)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const transaction = await sdk.setPeer(peerEid, peerAddress)
 
                             expect(transaction).toEqual({
@@ -468,7 +467,7 @@ describe('oapp/sdk', () => {
                         aptosEndpointArbitrary,
                         aptosAddressArbitrary,
                         async (omniContract, peerEid, peerAddress) => {
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData
 
                             ;(encodeFunctionData as jest.Mock).mockClear()
@@ -496,7 +495,7 @@ describe('oapp/sdk', () => {
                             const encodeFunctionData = omniContract.contract.interface.encodeFunctionData as jest.Mock
                             encodeFunctionData.mockReturnValue(data)
 
-                            const sdk = new OApp(omniContract, EndpointV2Factory)
+                            const sdk = new OApp(omniContract)
                             const transaction = await sdk.setPeer(peerEid, peerAddress)
 
                             expect(transaction).toEqual({
@@ -520,7 +519,7 @@ describe('oapp/sdk', () => {
                 fc.asyncProperty(omniContractArbitrary, async (omniContract) => {
                     omniContract.contract.endpoint.mockRejectedValue('No you did not')
 
-                    const sdk = new OApp(omniContract, EndpointV2Factory)
+                    const sdk = new OApp(omniContract)
 
                     await expect(sdk.getEndpointSDK()).rejects.toThrow(/Failed to get EndpointV2 address for OApp/)
                 })
@@ -535,7 +534,7 @@ describe('oapp/sdk', () => {
                     async (omniContract, endpointAddress) => {
                         omniContract.contract.endpoint.mockResolvedValue(endpointAddress)
 
-                        const sdk = new OApp(omniContract, EndpointV2Factory)
+                        const sdk = new OApp(omniContract)
 
                         await expect(sdk.getEndpointSDK()).rejects.toThrow(
                             /EndpointV2 cannot be instantiated: EndpointV2 address has been set to a zero value for OApp/
@@ -545,31 +544,19 @@ describe('oapp/sdk', () => {
             )
         })
 
-        it('should call the EndpointV2Factory if the call to endpoint() resolves with a non-zeroish address', async () => {
+        it('should return an EndpointV2 if the call to endpoint() resolves with a non-zeroish address', async () => {
             await fc.assert(
-                fc.asyncProperty(
-                    omniContractArbitrary,
-                    evmAddressArbitrary,
-                    fc.anything(),
-                    async (omniContract, endpointAddress, endpointSdk) => {
-                        fc.pre(!isZero(endpointAddress))
+                fc.asyncProperty(omniContractArbitrary, evmAddressArbitrary, async (omniContract, endpointAddress) => {
+                    fc.pre(!isZero(endpointAddress))
 
-                        omniContract.contract.endpoint.mockResolvedValue(endpointAddress)
+                    omniContract.contract.endpoint.mockResolvedValue(endpointAddress)
 
-                        EndpointV2Factory.mockReset().mockResolvedValue(endpointSdk)
+                    const sdk = new OApp(omniContract)
+                    const endpoint = await sdk.getEndpointSDK()
 
-                        const sdk = new OApp(omniContract, EndpointV2Factory)
-                        const endpoint = await sdk.getEndpointSDK()
-
-                        expect(endpoint).toBe(endpointSdk)
-
-                        expect(EndpointV2Factory).toHaveBeenCalledTimes(1)
-                        expect(EndpointV2Factory).toHaveBeenCalledWith({
-                            eid: omniContract.eid,
-                            address: endpointAddress,
-                        })
-                    }
-                )
+                    expect(endpoint).toBeInstanceOf(EndpointV2)
+                    expect(endpoint.point).toEqual({ eid: sdk.point.eid, address: endpointAddress })
+                })
             )
         })
     })

@@ -1,24 +1,24 @@
-import { addChecksum, type OmniContract } from '@layerzerolabs/devtools-evm'
+import { addChecksum, makeZeroAddress, Provider } from '@layerzerolabs/devtools-evm'
 import { Uln302 } from '@/uln302'
 import { EndpointId, MainnetV2EndpointId } from '@layerzerolabs/lz-definitions'
-import { Contract } from '@ethersproject/contracts'
 import { AddressZero } from '@ethersproject/constants'
-import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
-import artifact from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
+import { Uln302ConfigType, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import fc from 'fast-check'
 import { endpointArbitrary, evmAddressArbitrary } from '@layerzerolabs/test-devtools'
 import { compareBytes32Ascending } from '@layerzerolabs/devtools'
 import { Uln302UlnUserConfig } from '@layerzerolabs/protocol-devtools'
+import { JsonRpcProvider } from '@ethersproject/providers'
+
+jest.spyOn(JsonRpcProvider.prototype, 'detectNetwork').mockResolvedValue({ chainId: 1, name: 'mock' })
 
 describe('uln302/sdk', () => {
-    let contract: Contract, omniContract: OmniContract, ulnSdk: Uln302
+    let provider: Provider, ulnSdk: Uln302
 
     const dvnsArbitrary = fc.array(evmAddressArbitrary, { minLength: 2 })
 
     beforeEach(async () => {
-        contract = new Contract(AddressZero, artifact.abi)
-        omniContract = { eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET, contract }
-        ulnSdk = new Uln302(omniContract)
+        provider = new JsonRpcProvider()
+        ulnSdk = new Uln302(provider, { eid: MainnetV2EndpointId.ETHEREUM_V2_MAINNET, address: makeZeroAddress() })
     })
 
     describe('encodeExecutorConfig', () => {
@@ -99,7 +99,7 @@ describe('uln302/sdk', () => {
 
                     // And let's check that the encoding call is correct and the DVNs are sorted
                     expect(transactionsSorted.data).toBe(
-                        contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
+                        ulnSdk.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
                             [
                                 {
                                     eid,
@@ -141,7 +141,7 @@ describe('uln302/sdk', () => {
 
                     // And let's check that the encoding call is correct and the DVNs are sorted
                     expect(transactionsWithDefaults.data).toBe(
-                        contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
+                        ulnSdk.contract.contract.interface.encodeFunctionData('setDefaultUlnConfigs', [
                             [
                                 {
                                     eid,
@@ -173,7 +173,10 @@ describe('uln302/sdk', () => {
             })
         )
 
-        let getAppUlnConfigSpy: jest.SpyInstance<Promise<Uln302UlnConfig>, [eid: EndpointId, address: string]>
+        let getAppUlnConfigSpy: jest.SpyInstance<
+            Promise<Uln302UlnConfig>,
+            [eid: EndpointId, address: string, type: Uln302ConfigType]
+        >
 
         beforeEach(() => {
             getAppUlnConfigSpy = jest.spyOn(Uln302.prototype, 'getAppUlnConfig')

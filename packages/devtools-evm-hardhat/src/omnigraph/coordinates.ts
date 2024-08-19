@@ -85,6 +85,6 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
             return { eid, contract: new Contract(address, deduplicatedAbi) }
         }
 
-        assert(false, 'At least one of contractName, address must be specified for OmniPointHardhat on ${networkLabel}')
+        assert(false, `At least one of contractName, address must be specified for OmniPointHardhat on ${networkLabel}`)
     })
 }
