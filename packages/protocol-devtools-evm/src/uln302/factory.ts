@@ -8,7 +8,7 @@ import type { ProviderFactory } from '@layerzerolabs/devtools-evm'
  * Syntactic sugar that creates an instance of EVM `Uln302` SDK
  * based on an `OmniPoint` with help of an `OmniContractFactory`
  *
- * @param {OmniContractFactory} contractFactory
+ * @param {ProviderFactory} providerFactory
  * @returns {Uln302Factory<Uln302>}
  */
 export const createUln302Factory = (providerFactory: ProviderFactory): Uln302Factory<Uln302, OmniPoint> =>

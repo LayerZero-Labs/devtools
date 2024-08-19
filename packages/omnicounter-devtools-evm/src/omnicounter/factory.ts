@@ -8,7 +8,6 @@ import { OmniContractFactory } from '@layerzerolabs/devtools-evm'
  * `OmniContractFactory` and an (optional) `EndpointV2Factory`
  *
  * @param {OmniContractFactory} contractFactory
- * @param {EndpointV2Factory} [EndpointV2Factory]
  * @returns {EndpointV2Factory<Endpoint>}
  */
 export const createOmniCounterFactory = (contractFactory: OmniContractFactory): OAppFactory<OmniCounter> =>
