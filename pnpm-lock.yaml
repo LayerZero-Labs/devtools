@@ -536,6 +536,9 @@ importers:
       '@solana/web3.js':
         specifier: ~1.95.0
         version: 1.95.2
+      '@sqds/sdk':
+        specifier: ^2.0.4
+        version: 2.0.4
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
