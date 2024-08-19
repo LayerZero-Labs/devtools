@@ -1,6 +1,6 @@
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
 import { OmniGraphBuilder, OmniTransaction } from '@layerzerolabs/devtools'
-import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { createProviderFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger, printJson } from '@layerzerolabs/io-devtools'
 import { IOApp, OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -11,7 +11,7 @@ import type { SubtaskConfigureTaskArgs } from './types'
 const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async ({
     graph,
     configurator = configureOApp,
-    sdkFactory = createOAppFactory(createConnectedContractFactory()),
+    sdkFactory = createOAppFactory(createProviderFactory()),
 }): Promise<OmniTransaction[]> => {
     const logger = createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE)
 

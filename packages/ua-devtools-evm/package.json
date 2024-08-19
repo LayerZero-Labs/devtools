@@ -34,6 +34,7 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
+    "@ethersproject/abi": "~5.7.0",
     "@ethersproject/address": "~5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
@@ -42,7 +43,10 @@
     "@layerzerolabs/devtools-evm": "~0.4.1",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.24",
+    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.24",
     "@layerzerolabs/lz-v2-utilities": "^2.3.34",
+    "@layerzerolabs/oapp-evm": "~0.0.2",
     "@layerzerolabs/protocol-devtools": "~0.4.2",
     "@layerzerolabs/protocol-devtools-evm": "~1.0.2",
     "@layerzerolabs/test-devtools": "~0.2.8",
@@ -59,13 +63,17 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@layerzerolabs/devtools": "~0.3.24",
     "@layerzerolabs/devtools-evm": "~0.4.1",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^2.3.3",
+    "@layerzerolabs/lz-evm-sdk-v1": "^2.3.24",
+    "@layerzerolabs/lz-evm-sdk-v2": "^2.3.24",
     "@layerzerolabs/lz-v2-utilities": "^2.3.3",
+    "@layerzerolabs/oapp-evm": "^0.0.2",
     "@layerzerolabs/protocol-devtools": "~0.4.2",
     "@layerzerolabs/protocol-devtools-evm": "~1.0.2",
     "@layerzerolabs/ua-devtools": "~1.0.3",

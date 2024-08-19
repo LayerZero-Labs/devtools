@@ -7,14 +7,16 @@ import {
     ignoreZero,
     makeBytes32,
     AsyncRetriable,
+    OmniPoint,
 } from '@layerzerolabs/devtools'
-import { type OmniContract, parseGenericError } from '@layerzerolabs/devtools-evm'
+import { parseGenericError, Provider } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { abi } from './abi'
 
 export class LzApp extends OmniSDK implements ILzApp {
-    constructor(contract: OmniContract) {
-        super(contract)
+    constructor(provider: Provider, point: OmniPoint) {
+        super(provider, point, abi)
     }
 
     @AsyncRetriable()

@@ -18,7 +18,11 @@
   },
   "license": "MIT",
   "exports": {
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./artifacts/*.json": {
+      "require": "./artifacts/*.json",
+      "imports": "./artifacts/*.json"
+    }
   },
   "files": [
     "artifacts/Fee.sol/Fee.json",

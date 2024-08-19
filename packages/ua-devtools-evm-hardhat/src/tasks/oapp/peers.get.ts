@@ -4,7 +4,7 @@ import { createLogger, printBoolean, printCrossTable, setDefaultLogLevel } from 
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_PEERS_GET } from '@/constants/tasks'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
-import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { createProviderFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid } from '@layerzerolabs/devtools-evm-hardhat'
@@ -43,8 +43,7 @@ const action: ActionType<TaskArgs> = async ({ oappConfig: oappConfigPath, logLev
 
     // At this point we are ready read data from the OApp
     logger.verbose(`Reading peers from OApps`)
-    const contractFactory = createConnectedContractFactory()
-    const oAppFactory = createOAppFactory(contractFactory)
+    const oAppFactory = createOAppFactory(createProviderFactory())
 
     try {
         const peers = await checkOAppPeers(graph, oAppFactory)

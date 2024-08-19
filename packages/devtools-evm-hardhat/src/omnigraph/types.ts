@@ -1,3 +1,4 @@
+import { JsonFragment } from '@ethersproject/abi'
 import type { Factory, OmniGraph, OmniPoint, WithEid, WithOptionals } from '@layerzerolabs/devtools'
 import type { OmniContractFactory } from '@layerzerolabs/devtools-evm'
 import type { Deployment } from 'hardhat-deploy/dist/types'
@@ -63,6 +64,8 @@ export type InferOmniGraph<TOmniGraphHardhat extends OmniGraphHardhat> =
     TOmniGraphHardhat extends OmniGraphHardhat<infer TNodeConfig, infer TEdgeConfig>
         ? OmniGraph<TNodeConfig, TEdgeConfig>
         : never
+
+export type AbiFactoryHardhat = Factory<[OmniPointHardhat | OmniPoint], JsonFragment[]>
 
 export type OmniContractFactoryHardhat = OmniContractFactory<OmniPointHardhat>
 

@@ -2,6 +2,7 @@ import 'hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     createConnectedContractFactory,
+    createProviderFactory,
     createSignerFactory,
     OmniContractFactoryHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
@@ -36,7 +37,7 @@ describe('ownable/config', () => {
         await deployContract('OApp')
 
         contractFactory = createConnectedContractFactory()
-        ownableFactory = createOwnableFactory(createOAppFactory(contractFactory))
+        ownableFactory = createOwnableFactory(createOAppFactory(createProviderFactory()))
 
         ethContract = await contractFactory(ethPointHardhat)
         avaxContract = await contractFactory(avaxPointHardhat)

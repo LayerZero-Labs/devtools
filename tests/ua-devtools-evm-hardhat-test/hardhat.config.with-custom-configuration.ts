@@ -4,12 +4,13 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import type { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { OAppConfigurator } from '@layerzerolabs/ua-devtools'
-import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createProviderFactory, createAbiFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import {
     MyCustomOAppSDK,
     MyCustomOmniGraphHardhatSchema,
     myCustomOAppConfigurator,
 } from './layerzero.config.with-custom-configuration'
+import type { OmniPoint } from '@layerzerolabs/devtools'
 
 const SUBTASK_CUSTOM_CONFIG_LOADING = '::my:custom:config:loading:subtask'
 const SUBTASK_CUSTOM_CONFIGURE = '::my:custom:configure:subtask'
@@ -57,8 +58,10 @@ task(SUBTASK_CUSTOM_CONFIGURE, 'Custom configuration subtask', async (args: Subt
     logger.info('Using custom configure task')
 
     // Here we create the SDK factory
-    const contractFactory = createConnectedContractFactory()
-    const sdkFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point))
+    const providerFactory = createProviderFactory()
+    const abiFactory = createAbiFactory()
+    const sdkFactory = async (point: OmniPoint) =>
+        new MyCustomOAppSDK(await providerFactory(point.eid), point, await abiFactory(point))
 
     return hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
         ...args,

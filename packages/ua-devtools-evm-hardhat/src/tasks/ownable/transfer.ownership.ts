@@ -6,10 +6,10 @@ import { OwnableOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
     SUBTASK_LZ_SIGN_AND_SEND,
-    createConnectedContractFactory,
     createSignerFactory,
     createGnosisSignerFactory,
     formatOmniTransaction,
+    createProviderFactory,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
 import { type SignAndSendResult } from '@layerzerolabs/devtools'
@@ -58,7 +58,7 @@ const action: ActionType<TaskArgs> = async (
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of ownership transferring transactions`)
 
-    const createSdk = createOwnableFactory(createOAppFactory(createConnectedContractFactory()))
+    const createSdk = createOwnableFactory(createOAppFactory(createProviderFactory()))
     const transactions = await configureOwnable(graph, createSdk)
 
     // Flood users with debug output
