@@ -9,14 +9,11 @@ import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { SetConfigParam } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol";
 import { UlnConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
-import { ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
 
 contract ReceiveConfig is Script {
     uint32 public constant RECEIVE_CONFIG_TYPE = 2;
 
-    function run(address contractAddress, uint32 remoteEid) external {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
-
+    function run(address contractAddress, uint32 remoteEid, address receiveLibraryAddress, address signer, UlnConfig calldata ulnConfig) external {
         // ============================ Can deploy contract or fetch deployed contract ============================
         // OFT myOFT = new OFT("MyOFT", "OFT", address(0x6EDCE65403992e310A62460808c4b910D972f10f), address(0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7)); 
 
@@ -24,29 +21,18 @@ contract ReceiveConfig is Script {
 
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(address(myOFT.endpoint()));
         
-        (address receiveLibraryAddress, ) = endpoint.getReceiveLibrary(address(myOFT), remoteEid);
-
         console.log("============================ PREPARING RECEIVE CONFIG ============================");
-        
-        UlnConfig memory receiveConfig = UlnConfig({
-                confirmations: 59,
-                requiredDVNs: new address[](0),
-                requiredDVNCount: 0,
-                optionalDVNCount: 0,
-                optionalDVNs: new address[](0),
-                optionalDVNThreshold: 0
-            });
 
-        SetConfigParam[] memory setReceiveConfigParams = new SetConfigParam[](1);
+        SetConfigParam[] memory setReceiveConfigParams = new SetConfigParam[](1); // TODO rename
         setReceiveConfigParams[0] = SetConfigParam({
             eid: remoteEid,
             configType: 2,
-            config: abi.encode(receiveConfig)
+            config: abi.encode(ulnConfig)
         });
 
         console.log("============================ SETTING RECEIVE CONFIG ============================");
 
-        vm.startBroadcast(deployerPrivateKey);
+        vm.startBroadcast(signer);
 
         endpoint.setConfig(address(myOFT), receiveLibraryAddress, setReceiveConfigParams);
 
