@@ -1,9 +1,6 @@
 [profile.default]
 solc-version = '0.8.22'
-src = 'contracts'
-out = 'out'
-test = 'test/foundry'
-cache_path = 'cache/foundry'
+src = 'src'
 libs = [
     'node_modules',
 ]

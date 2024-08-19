@@ -4,7 +4,7 @@ pragma solidity ^0.8.13;
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
 
-import "../contracts/MyOFT.sol";
+import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { SetConfigParam } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol";
@@ -18,9 +18,9 @@ contract ReceiveConfig is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
 
         // ============================ Can deploy contract or fetch deployed contract ============================
-        // MyOFT myOFT = new MyOFT("MyOFT", "OFT", address(0x6EDCE65403992e310A62460808c4b910D972f10f), address(0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7)); 
+        // OFT myOFT = new OFT("MyOFT", "OFT", address(0x6EDCE65403992e310A62460808c4b910D972f10f), address(0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7)); 
 
-        MyOFT myOFT = MyOFT(contractAddress);
+        OFT myOFT = OFT(contractAddress);
 
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(address(myOFT.endpoint()));
         

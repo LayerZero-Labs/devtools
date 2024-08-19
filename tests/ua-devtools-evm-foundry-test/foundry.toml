@@ -1,10 +1,12 @@
 [profile.default]
 solc-version = '0.8.22'
+src='src'
 libs = [
     'node_modules',
 ]
 
 remappings = [
+    'forge-std/=node_modules/forge-std/src',
     '@layerzerolabs/=node_modules/@layerzerolabs/',
     '@openzeppelin/=node_modules/@openzeppelin/',
 ]

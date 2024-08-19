@@ -2202,6 +2202,27 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
 
+  packages/ua-devtools-evm-foundry:
+    devDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.34)(@layerzerolabs/lz-evm-v1-0.7@2.3.34)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.0.2
+        version: link:../oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^0.0.9
+        version: link:../oft-evm
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.0.2
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+
   packages/ua-devtools-evm-hardhat:
     dependencies:
       p-memoize:
@@ -2899,6 +2920,33 @@ importers:
       typescript:
         specifier: ^5.4.4
         version: 5.5.4
+
+  tests/ua-devtools-evm-foundry-test:
+    devDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.34)(@layerzerolabs/lz-evm-v1-0.7@2.3.34)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.0.2
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^0.0.9
+        version: link:../../packages/oft-evm
+      '@layerzerolabs/ua-devtools-evm-foundry':
+        specifier: ~0.0.1
+        version: link:../../packages/ua-devtools-evm-foundry
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.0.2
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+      forge-std:
+        specifier: git://github.com:foundry-rs/forge-std.git
+        version: github.com/foundry-rs/forge-std/bf6606142994b1e47e2882ce0cd477c020d77623
 
   tests/ua-devtools-evm-hardhat-test:
     devDependencies:
@@ -15923,4 +15971,10 @@ packages:
     resolution: {tarball: https://codeload.github.com/dapphub/ds-test/tar.gz/e282159d5170298eb2455a6c05280ab5a73a4ef0}
     name: ds-test
     version: 1.0.0
+    dev: true
+
+  github.com/foundry-rs/forge-std/bf6606142994b1e47e2882ce0cd477c020d77623:
+    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/bf6606142994b1e47e2882ce0cd477c020d77623}
+    name: forge-std
+    version: 1.9.2
     dev: true

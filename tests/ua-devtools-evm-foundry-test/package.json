@@ -1,10 +1,11 @@
 {
-  "name": "@layerzerolabs/ua-devtools-evm-foundry",
+  "name": "@layerzerolabs/ua-devtools-evm-foundry-test",
   "version": "0.0.1",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/ua-devtools-evm-foundry"
+    "directory": "packages/ua-devtools-evm-foundry-test"
   },
   "license": "MIT",
   "files": [
@@ -16,10 +17,9 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
     "@layerzerolabs/oapp-evm": "^0.0.2",
     "@layerzerolabs/oft-evm": "^0.0.9",
+    "@layerzerolabs/ua-devtools-evm-foundry": "~0.0.1",
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/contracts-upgradeable": "^5.0.2"
-  },
-  "publishConfig": {
-    "access": "public"
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "forge-std": "git://github.com:foundry-rs/forge-std.git"
   }
 }
