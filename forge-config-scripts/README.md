@@ -35,16 +35,16 @@ We can set send and receive configurations by running forge scripts. See the exa
     sepolia = { key = "${ETHERSCAN_API_KEY}" }
     ethereum= { key = "${ETHERSCAN_API_KEY}" }
     ```
-3. The script can now be run using the `forge script` command. 
+3. The script can now be run using the `forge script` command. You may need to run `source .env` first to load global variables.
 
     ```bash
-    forge script --chain <chain name from foundry.toml> <fully qualified path to script> --rpc-url <rpc url> --broadcast --verify -vvvv --sig <function signature> <function arguments>
+    source .env && forge script --chain <chain name from foundry.toml> <fully qualified path to script> --rpc-url <rpc url> --broadcast --verify -vvvv --sig <function signature> <function arguments>
     ```
 
     For example:
 
     ```bash
-    forge script --chain sepolia forge-scripts/ReceiveConfig.s.sol:ReceiveConfig --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv --sig "run(address, uint32)" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231
+    source .env && forge script --chain sepolia forge-scripts/ReceiveConfig.s.sol:ReceiveConfig --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv --sig "run(address, uint32)" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231
     ```
 
 Transactions initiated by the above commands will be logged within a `broadcasts/` folder. Use the `--verify` flag if you would like to verify any contracts deployed within the script. For more information, see:
