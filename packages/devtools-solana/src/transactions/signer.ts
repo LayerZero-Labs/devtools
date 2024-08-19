@@ -1,3 +1,4 @@
+import Squads, { Wallet } from '@sqds/sdk'
 import {
     type OmniSigner,
     type OmniTransaction,
@@ -9,6 +10,7 @@ import {
 import {
     ConfirmOptions,
     Connection,
+    Keypair,
     PublicKey,
     sendAndConfirmTransaction,
     Signer,
@@ -136,5 +138,51 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
         }
 
         return transaction
+    }
+}
+
+export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner {
+    protected readonly squads: Squads
+
+    constructor(
+        eid: EndpointId,
+        public readonly connection: Connection,
+        public readonly multiSigAddress: PublicKey,
+        public readonly signer: Signer,
+        protected readonly logger: Logger = createModuleLogger('OmniSignerSolanaSquads')
+    ) {
+        super(eid)
+
+        this.squads = new Squads({ connection, wallet: new Wallet(Keypair.fromSecretKey(signer.secretKey)) })
+    }
+
+    getPoint(): OmniPoint {
+        return { eid: this.eid, address: this.signer.publicKey.toBase58() }
+    }
+
+    async sign(): Promise<string> {
+        throw new Error(`OmniSignerSolanaSquads does not support transaction signing`)
+    }
+
+    async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse<OmniTransactionReceipt>> {
+        this.assertTransaction(transaction)
+
+        const solanaTransaction = deserializeTransactionMessage(transaction.data)
+        const multisigTransaction = await this.squads.createTransaction(this.multiSigAddress, 1)
+
+        for (const instruction of solanaTransaction.instructions) {
+            await this.squads.addInstruction(multisigTransaction.publicKey, instruction)
+        }
+
+        await this.squads.activateTransaction(multisigTransaction.publicKey)
+
+        const transactionHash = multisigTransaction.publicKey.toBase58()
+
+        return {
+            transactionHash,
+            wait: async () => ({
+                transactionHash,
+            }),
+        }
     }
 }
