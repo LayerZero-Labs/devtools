@@ -2210,6 +2210,9 @@ importers:
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^2.3.34
         version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
         specifier: ^0.0.2
         version: link:../oapp-evm
@@ -2222,6 +2225,9 @@ importers:
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
         version: 5.0.2(@openzeppelin/contracts@5.0.2)
+      forge-std:
+        specifier: git://github.com:foundry-rs/forge-std.git
+        version: github.com/foundry-rs/forge-std/bf6606142994b1e47e2882ce0cd477c020d77623
 
   packages/ua-devtools-evm-hardhat:
     dependencies:
@@ -2929,12 +2935,18 @@ importers:
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^2.3.34
         version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
         specifier: ^0.0.2
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
         specifier: ^0.0.9
         version: link:../../packages/oft-evm
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ^0.2.10
+        version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/ua-devtools-evm-foundry':
         specifier: ~0.0.1
         version: link:../../packages/ua-devtools-evm-foundry
@@ -2947,6 +2959,9 @@ importers:
       forge-std:
         specifier: git://github.com:foundry-rs/forge-std.git
         version: github.com/foundry-rs/forge-std/bf6606142994b1e47e2882ce0cd477c020d77623
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
 
   tests/ua-devtools-evm-hardhat-test:
     devDependencies:
