@@ -101,7 +101,7 @@ describe('oapp/options', () => {
 
         providerFactory = createProviderFactory()
         contractFactory = createConnectedContractFactory()
-        const sdkFactory = createOmniCounterFactory(contractFactory)
+        const sdkFactory = createOmniCounterFactory(providerFactory)
         const signerFactory = createSignerFactory()
 
         const ethPoint = omniContractToPoint(await contractFactory(ethOmniCounter))

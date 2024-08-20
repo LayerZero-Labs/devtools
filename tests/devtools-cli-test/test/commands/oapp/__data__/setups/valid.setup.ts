@@ -1,8 +1,4 @@
-import {
-    createConnectedContractFactory,
-    createSignerFactory,
-    createDefaultContext,
-} from '@layerzerolabs/devtools-evm-hardhat'
+import { createSignerFactory, createDefaultContext, createProviderFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 
 import type { CLISetup } from '@layerzerolabs/devtools-cli'
@@ -19,7 +15,7 @@ createDefaultContext()
  * and will be available
  */
 const setup: CLISetup = {
-    createSdk: createOAppFactory(createConnectedContractFactory()),
+    createSdk: createOAppFactory(createProviderFactory()),
     createSigner: createSignerFactory(),
 }
 

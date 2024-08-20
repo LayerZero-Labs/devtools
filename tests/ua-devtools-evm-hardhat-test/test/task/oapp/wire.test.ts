@@ -38,7 +38,7 @@ const createSignerFactoryMock = createSignerFactory as jest.Mock
 
 describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     // Helper matcher object that checks for OmniPoint objects
-    const expectOmniPoint = { address: expect.any(String), eid: expect.any(Number) }
+    const expectOmniPoint = expect.objectContaining({ address: expect.any(String), eid: expect.any(Number) })
     // Helper matcher object that checks for OmniTransaction objects
     const expectTransaction = { data: expect.any(String), point: expectOmniPoint, description: expect.any(String) }
     const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expectTransaction }

@@ -1,6 +1,10 @@
 import 'hardhat'
 import { avaxLzApp, deployLzApp, ethLzApp } from '../__utils__/lzapp'
-import { createConnectedContractFactory, OmniContractFactoryHardhat } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    createConnectedContractFactory,
+    createProviderFactory,
+    OmniContractFactoryHardhat,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { configureLzApp, ILzApp, LzAppFactory, LzAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OmniContract, omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { deployEndpoint } from '../__utils__/endpoint'
@@ -26,7 +30,7 @@ describe('lzapp/config', () => {
         await deployLzApp()
 
         contractFactory = createConnectedContractFactory()
-        lzappSdkFactory = createLzAppFactory(contractFactory)
+        lzappSdkFactory = createLzAppFactory(createProviderFactory())
 
         ethContract = await contractFactory(ethLzApp)
         avaxContract = await contractFactory(avaxLzApp)

@@ -1,7 +1,11 @@
 import 'hardhat'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
-import { createConnectedContractFactory, createSignerFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    createConnectedContractFactory,
+    createProviderFactory,
+    createSignerFactory,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { checkOAppPeers } from '@layerzerolabs/ua-devtools'
@@ -26,8 +30,7 @@ describe('oapp/check', () => {
                 contracts: [],
                 connections: [],
             }
-            const contractFactory = createConnectedContractFactory()
-            const sdkFactory = createOAppFactory(contractFactory)
+            const sdkFactory = createOAppFactory(createProviderFactory())
             const oAppPeers = await checkOAppPeers(graph, sdkFactory)
 
             expect(oAppPeers).toEqual([])
@@ -62,7 +65,7 @@ describe('oapp/check', () => {
                     },
                 ],
             }
-            const sdkFactory = createOAppFactory(contractFactory)
+            const sdkFactory = createOAppFactory(createProviderFactory())
             const oAppPeers = await checkOAppPeers(graph, sdkFactory)
 
             expect(oAppPeers).toEqual([
@@ -79,7 +82,7 @@ describe('oapp/check', () => {
 
         it('should return one truthy value for connected peers', async () => {
             const contractFactory = createConnectedContractFactory()
-            const sdkFactory = createOAppFactory(contractFactory)
+            const sdkFactory = createOAppFactory(createProviderFactory())
 
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)
@@ -132,7 +135,7 @@ describe('oapp/check', () => {
 
         it('should return all truthy values for connected peers', async () => {
             const contractFactory = createConnectedContractFactory()
-            const sdkFactory = createOAppFactory(contractFactory)
+            const sdkFactory = createOAppFactory(createProviderFactory())
 
             const ethContract = await contractFactory(ethPointHardhat)
             const avaxContract = await contractFactory(avaxPointHardhat)

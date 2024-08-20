@@ -70,7 +70,7 @@ describe('oapp/config', () => {
 
         contractFactory = createConnectedContractFactory()
         signAndSend = createSignAndSend(createSignerFactory())
-        oappSdkFactory = createOAppFactory(contractFactory)
+        oappSdkFactory = createOAppFactory(createProviderFactory())
 
         ethContract = await contractFactory(ethPointHardhat)
         avaxContract = await contractFactory(avaxPointHardhat)

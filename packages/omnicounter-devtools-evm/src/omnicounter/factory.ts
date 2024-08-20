@@ -1,14 +1,14 @@
 import pMemoize from 'p-memoize'
 import { OmniCounter } from '@/omnicounter/sdk'
 import { OAppFactory } from '@layerzerolabs/ua-devtools'
-import { OmniContractFactory } from '@layerzerolabs/devtools-evm'
+import { ProviderFactory } from '@layerzerolabs/devtools-evm'
 
 /**
- * Syntactic sugar that creates an instance of EVM `OmniCounter` SDK based on an `OmniPoint` with help of an
- * `OmniContractFactory` and an (optional) `EndpointV2Factory`
+ * Syntactic sugar that creates an instance of EVM `OmniCounter` SDK based on an `OmniPoint` with help of a
+ * `ProviderFactory`
  *
- * @param {OmniContractFactory} contractFactory
- * @returns {EndpointV2Factory<Endpoint>}
+ * @param {ProviderFactory} providerFactory
+ * @returns {OAppFactory<OmniCounter>}
  */
-export const createOmniCounterFactory = (contractFactory: OmniContractFactory): OAppFactory<OmniCounter> =>
-    pMemoize(async (point) => new OmniCounter(await contractFactory(point)))
+export const createOmniCounterFactory = (providerFactory: ProviderFactory): OAppFactory<OmniCounter> =>
+    pMemoize(async (point) => new OmniCounter(await providerFactory(point.eid), point))

@@ -51,10 +51,11 @@ const MyCustomNodeConfigSchema = OAppNodeConfigSchema.extend({
     customProperty: UIntBigIntSchema,
 })
 
-export const MyCustomOmniGraphHardhatSchema: Zod.ZodSchema<MyCustomOmniGraphHardhat> = createOmniGraphHardhatSchema(
-    createOmniNodeHardhatSchema(MyCustomNodeConfigSchema),
-    createOmniEdgeHardhatSchema(OAppEdgeConfigSchema.optional())
-)
+export const MyCustomOmniGraphHardhatSchema: Zod.ZodSchema<MyCustomOmniGraphHardhat, Zod.ZodTypeDef, unknown> =
+    createOmniGraphHardhatSchema(
+        createOmniNodeHardhatSchema(MyCustomNodeConfigSchema),
+        createOmniEdgeHardhatSchema(OAppEdgeConfigSchema.optional())
+    )
 
 //   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 //  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \

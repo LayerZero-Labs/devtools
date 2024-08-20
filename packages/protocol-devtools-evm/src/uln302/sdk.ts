@@ -19,14 +19,13 @@ import assert from 'assert'
 import { printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { isZero, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK, Provider, addChecksum, makeZeroAddress } from '@layerzerolabs/devtools-evm'
-import { Contract } from '@ethersproject/contracts'
 // Although this SDK is not specific to SendUln302, it uses the SendUln302 ABI
 // because it contains all the necessary method fragments
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/uln/uln302/SendUln302.sol/SendUln302.json'
 
 export class Uln302 extends OmniSDK implements IUln302 {
     constructor(provider: Provider, point: OmniPoint) {
-        super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
+        super(provider, point, abi)
     }
 
     /**
