@@ -34,7 +34,7 @@ node_modules:
 	cp -R node_modules/@layerzerolabs/ua-devtools-evm-foundry/src/. lib/@layerzerolabs/ua-devtools-evm-foundry/.
 
 	# And we include the licenses & package.json
-	cp node_modules/@layerzerolabs/ua-devtools-evm-foundry/package.json node_modules/@layerzerolabs/ua-devtools-evm-foundry/LICENSE* lib/@layerzerolabs/ua-devtools-evm-foundry/
+	cp node_modules/@layerzerolabs/ua-devtools-evm-foundry/package.json lib/@layerzerolabs/ua-devtools-evm-foundry/
 
 # This target will get all the git submodules installed in src/ directory
 # and copy them to lib/ directory
