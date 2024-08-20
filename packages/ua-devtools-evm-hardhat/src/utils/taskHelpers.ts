@@ -6,7 +6,7 @@ import type {
     Uln302UlnConfig,
 } from '@layerzerolabs/protocol-devtools'
 import {
-    createConnectedContractFactory,
+    createContractFactory,
     createOmniPointHardhatTransformer,
     createProviderFactory,
     getEidForNetworkName,
@@ -175,8 +175,10 @@ export async function getExecutorDstConfig(
 ): Promise<ExecutorDstConfig | undefined> {
     const localEid = getEidForNetworkName(localNetworkName)
     const remoteEid = getEidForNetworkName(remoteNetworkName)
-    const contractFactory = createConnectedContractFactory()
-    const executorFactory = createExecutorFactory(contractFactory)
-    const localExecutorSDK = await executorFactory({ eid: localEid, contractName: 'Executor' })
+    const omnipointTransformer = createOmniPointHardhatTransformer(createContractFactory())
+    const executorFactory = createExecutorFactory(createProviderFactory())
+    const localExecutorSDK = await executorFactory(
+        await omnipointTransformer({ eid: localEid, contractName: 'Executor' })
+    )
     return await localExecutorSDK.getDstConfig(remoteEid)
 }

@@ -1,11 +1,16 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IPriceFeed, PriceData } from '@layerzerolabs/protocol-devtools'
-import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { formatEid, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniSDK, type Provider } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { PriceDataSchema } from './schema'
+import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/PriceFeed.sol/PriceFeed.json'
 
 export class PriceFeed extends OmniSDK implements IPriceFeed {
+    constructor(provider: Provider, point: OmniPoint) {
+        super(provider, point, abi)
+    }
+
     async getPrice(eid: EndpointId): Promise<PriceData> {
         const config = await this.contract.contract['getPrice(uint32)'](eid)
 

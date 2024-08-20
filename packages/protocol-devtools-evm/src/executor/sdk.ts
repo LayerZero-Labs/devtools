@@ -1,11 +1,16 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import { type IExecutor, type ExecutorDstConfig } from '@layerzerolabs/protocol-devtools'
-import { formatEid, type OmniTransaction } from '@layerzerolabs/devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import { formatEid, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniSDK, type Provider } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ExecutorDstConfigSchema } from './schema'
+import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/Executor.sol/Executor.json'
 
 export class Executor extends OmniSDK implements IExecutor {
+    constructor(provider: Provider, point: OmniPoint) {
+        super(provider, point, abi)
+    }
+
     async getDstConfig(eid: EndpointId): Promise<ExecutorDstConfig> {
         const config = await this.contract.contract.dstConfig(eid)
 
