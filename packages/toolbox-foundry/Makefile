@@ -23,19 +23,6 @@ node_modules:
 	# And we include the licenses & package.json
 	cp node_modules/solidity-bytes-utils/package.json node_modules/solidity-bytes-utils/LICENSE* lib/solidity-bytes-utils/
 
-	#
-	# @layerzerolabs/ua-devtools-evm-foundry
-	#
-
-	# First we make sure the target directory exists
-	mkdir -p lib/@layerzerolabs/ua-devtools-evm-foundry
-
-	# We copy the contracts
-	cp -R node_modules/@layerzerolabs/ua-devtools-evm-foundry/src/. lib/@layerzerolabs/ua-devtools-evm-foundry/.
-
-	# And we include the licenses & package.json
-	cp node_modules/@layerzerolabs/ua-devtools-evm-foundry/package.json lib/@layerzerolabs/ua-devtools-evm-foundry/
-
 # This target will get all the git submodules installed in src/ directory
 # and copy them to lib/ directory
 # 
