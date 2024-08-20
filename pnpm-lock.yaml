@@ -528,7 +528,7 @@ importers:
         specifier: ^1.7.0
         version: 1.10.4
       '@solana-developers/helpers':
-        specifier: ^2.3.0
+        specifier: ~2.4.0
         version: 2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
       '@solana/spl-token':
         specifier: ^0.4.8
