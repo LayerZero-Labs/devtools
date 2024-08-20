@@ -62,12 +62,14 @@ contract ReceiveConfigTest is Test {
         receiveConfig = new ReceiveConfig();
     }
 
-    function test_run() public {
-        // TODO test this with realistic values
+    function test_run(uint64 _confirmations, address[] memory _requiredDvns) public {
+        vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
+        vm.assume(_requiredDvns.length < 3);
+        
         UlnConfig memory ulnConfig = UlnConfig({
-            confirmations: 59,
-            requiredDVNs: new address[](0),
-            requiredDVNCount: 0,
+            confirmations: _confirmations,
+            requiredDVNs: sortAddresses(_requiredDvns),
+            requiredDVNCount: uint8(_requiredDvns.length),
             optionalDVNCount: 0,
             optionalDVNs: new address[](0),
             optionalDVNThreshold: 0
@@ -79,6 +81,21 @@ contract ReceiveConfigTest is Test {
         bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), address(receiveLib), remoteEid, receiveConfig.RECEIVE_CONFIG_TYPE());
         UlnConfig memory updatedUlnConfig = abi.decode(updatedUlnConfigBytes, (UlnConfig));
         
-        assertEq(updatedUlnConfig.confirmations, 59);
+        assertEq(updatedUlnConfig.confirmations, _confirmations);
+    }
+
+    function sortAddresses(address[] memory arr) internal pure returns (address[] memory) {
+        uint256 length = arr.length;
+        for (uint256 i = 0; i < length; i++) {
+            for (uint256 j = 0; j < length - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Swap elements if they are in the wrong order
+                    address temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+        return arr;
     }
 }
