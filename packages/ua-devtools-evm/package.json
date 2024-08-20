@@ -39,6 +39,7 @@
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.3.24",
     "@layerzerolabs/devtools-evm": "~0.4.1",
     "@layerzerolabs/io-devtools": "~0.1.12",
