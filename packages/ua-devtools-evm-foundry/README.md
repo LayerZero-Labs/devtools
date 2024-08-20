@@ -26,9 +26,11 @@ $ npm install @layerzerolabs/ua-devtools-evm-foundry
 We have provided 2 reference scripts in the `src/` directory that programatically set send and receive configurations. 
 
 To run the scripts, please follow these steps:
-1. Rename `.env.example` to `.env`, then fill in the `PRIVATE_KEY`
-2. In terminal, run `source .env` to load the `PRIVATE_KEY` global variable
-3. Run the `forge script` command
+1. Run `pnpm install`.
+2. Rename `.env.example` to `.env`, then fill in the `PRIVATE_KEY`.
+3. In terminal, run `source .env` to load the `PRIVATE_KEY` global variable.
+4. Run the `forge script` command.
+
     ```bash
     forge script --chain <chain-name> <fully qualified name of script with path> --rpc-url <rpc url> --broadcast -vvvv --sig <run function signature> <run function arguments>
     ```
