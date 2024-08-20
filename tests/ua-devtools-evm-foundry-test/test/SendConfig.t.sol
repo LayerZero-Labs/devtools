@@ -1,26 +1,30 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-import { ReceiveConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/ReceiveConfig.sol";
+import { SendConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/SendConfig.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { OFTMock } from "@layerzerolabs/oft-evm/test/mocks/OFTMock.sol";
 import { UlnConfig, SetDefaultUlnConfigParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 import { TestHelperOz5, EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
-import { ReceiveUln302Mock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol";
+import { ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
+import { SendUln302Mock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol";
 
 // Forge imports
 import "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
 
-contract ReceiveConfigTest is Test {
+contract SendConfigTest is Test {
     EndpointV2 endpoint;
-    ReceiveConfig private receiveConfig;
+    SendConfig private sendConfig;
 
     uint32 private aEid = 1;
     uint32 private remoteEid = 2;
 
+    uint256 private constant TREASURY_GAS_CAP = 1000000;
+    uint256 private constant TREASURY_GAS_FOR_FEE_CAP = 1000000;
+
     OFTMock private myOFT;
-    ReceiveUln302Mock private receiveLib;
+    SendUln302Mock private sendLib;
 
     address private userA = address(0x1);
 
@@ -30,7 +34,7 @@ contract ReceiveConfigTest is Test {
         vm.prank(userA);
         endpoint = new EndpointV2(remoteEid, userA);
 
-        receiveLib = new ReceiveUln302Mock(address(endpoint));
+        sendLib = new SendUln302Mock(payable(address(this)), address(endpoint), TREASURY_GAS_CAP, TREASURY_GAS_FOR_FEE_CAP);
 
         address[] memory defaultDVNs = new address[](1);
         defaultDVNs[0] = dvnAddress;
@@ -45,20 +49,21 @@ contract ReceiveConfigTest is Test {
             new address[](0)
         );
 
+        // TODO is this needed?
         ulnParams[0] = SetDefaultUlnConfigParam(remoteEid, ulnConfig);
-        receiveLib.setDefaultUlnConfigs(ulnParams);
+        sendLib.setDefaultUlnConfigs(ulnParams);
 
         vm.prank(userA);
-        endpoint.registerLibrary(address(receiveLib));
+        endpoint.registerLibrary(address(sendLib));
 
         console.log("===== LIBRARY REGISTERED =====");
 
         myOFT = new OFTMock("MyOFT", "OFT", address(endpoint), userA);
 
-        receiveConfig = new ReceiveConfig();
+        sendConfig = new SendConfig();
     }
 
-    function test_run_updates_receive_config(uint64 _confirmations, address[] memory _requiredDvns) public {
+    function test_run_updates_send_config(uint64 _confirmations, address[] memory _requiredDvns, uint32 _maxMessageSize, address _executor) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
 
         // Set required DVNs to a realistic length
@@ -73,10 +78,12 @@ contract ReceiveConfigTest is Test {
             optionalDVNThreshold: 0
         });
 
-        receiveConfig.run(address(myOFT), remoteEid, address(receiveLib), address(userA), ulnConfig);
+        ExecutorConfig memory executorConfig = ExecutorConfig({ maxMessageSize: _maxMessageSize, executor: _executor});
 
-        // Verify that the receive configuration was set correctly
-        bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), address(receiveLib), remoteEid, receiveConfig.RECEIVE_CONFIG_TYPE());
+        sendConfig.run(address(myOFT), remoteEid, address(sendLib), address(userA), ulnConfig, executorConfig);
+
+        // Verify that the send configuration was set correctly
+        bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), address(sendLib), remoteEid, sendConfig.ULN_CONFIG_TYPE());
         UlnConfig memory updatedUlnConfig = abi.decode(updatedUlnConfigBytes, (UlnConfig));
         
         assertEq(updatedUlnConfig.confirmations, ulnConfig.confirmations);
@@ -97,8 +104,15 @@ contract ReceiveConfigTest is Test {
         // }
 
         // assertEq(updatedUlnConfig.optionalDVNThreshold, ulnConfig.optionalDVNThreshold);
+
+        bytes memory updatedExecutorConfigBytes = endpoint.getConfig(address(myOFT), address(sendLib), remoteEid, sendConfig.EXECUTOR_CONFIG_TYPE());
+        (ExecutorConfig memory updatedExecutorConfig) = abi.decode(updatedExecutorConfigBytes, (ExecutorConfig));
+
+        assertEq(updatedExecutorConfig.maxMessageSize, executorConfig.maxMessageSize);
+        assertEq(updatedExecutorConfig.executor, executorConfig.executor);
     }
 
+    // TODO place this in a helper class?
     function sortAddresses(address[] memory arr) internal pure returns (address[] memory) {
         uint256 length = arr.length;
         for (uint256 i = 0; i < length; i++) {
