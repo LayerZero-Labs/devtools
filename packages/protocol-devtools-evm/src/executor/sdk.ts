@@ -5,11 +5,10 @@ import { OmniSDK, type Provider } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ExecutorDstConfigSchema } from './schema'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/Executor.sol/Executor.json'
-import { Contract } from '@ethersproject/contracts'
 
 export class Executor extends OmniSDK implements IExecutor {
     constructor(provider: Provider, point: OmniPoint) {
-        super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
+        super(provider, point, abi)
     }
 
     async getDstConfig(eid: EndpointId): Promise<ExecutorDstConfig> {
