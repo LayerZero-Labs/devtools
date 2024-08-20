@@ -1935,9 +1935,6 @@ importers:
 
   packages/toolbox-foundry:
     devDependencies:
-      '@layerzerolabs/ua-devtools-evm-foundry':
-        specifier: ^0.0.1
-        version: link:../ua-devtools-evm-foundry
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
