@@ -154,7 +154,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         // 4. Create new account (OFT Config)
 
         // Create a new transaction to transfer mint authority to the OFT Config account and initialize a new native OFT
-        const setAuthorityTx = await setAuthority(umi, {
+        const setAuthorityTx = setAuthority(umi, {
             owned: token.publicKey, // SPL Token mint account
             owner: umiWalletKeyPair.publicKey, // Current authority of the token mint
             authorityType: AuthorityType.MintTokens, // Authority type to transfer

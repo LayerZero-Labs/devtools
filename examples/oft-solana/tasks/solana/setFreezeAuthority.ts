@@ -49,7 +49,7 @@ task('lz:oft:solana:set-freeze-authority', 'Transfer Solana mint authority to a 
         const token = fromWeb3JsPublicKey(mintPublicKey)
 
         // Create the transaction to set the new freeze authority
-        const setAuthorityTx = await setAuthority(umi, {
+        const setAuthorityTx = setAuthority(umi, {
             owned: token,
             owner: umiWalletKeyPair.publicKey,
             authorityType: AuthorityType.FreezeAccount,
