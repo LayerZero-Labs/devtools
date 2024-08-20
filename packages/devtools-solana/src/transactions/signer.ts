@@ -148,20 +148,20 @@ export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner
         eid: EndpointId,
         public readonly connection: Connection,
         public readonly multiSigAddress: PublicKey,
-        public readonly signer: Signer,
+        public readonly wallet: Keypair,
         protected readonly logger: Logger = createModuleLogger('OmniSignerSolanaSquads')
     ) {
         super(eid)
 
-        this.squads = new Squads({ connection, wallet: new Wallet(Keypair.fromSecretKey(signer.secretKey)) })
+        this.squads = new Squads({ connection, wallet: new Wallet(wallet) })
     }
 
     getPoint(): OmniPoint {
-        return { eid: this.eid, address: this.signer.publicKey.toBase58() }
+        return { eid: this.eid, address: this.wallet.publicKey.toBase58() }
     }
 
     async sign(): Promise<string> {
-        throw new Error(`OmniSignerSolanaSquads does not support transaction signing`)
+        throw new Error(`OmniSignerSolanaSquads does not support the sign() method. Please use signAndSend().`)
     }
 
     async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse<OmniTransactionReceipt>> {
