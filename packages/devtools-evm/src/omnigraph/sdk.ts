@@ -1,11 +1,12 @@
-import type { OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import { formatOmniPoint, type OmniPoint, type OmniTransaction } from '@layerzerolabs/devtools'
 import type { IOmniSDK, OmniContract } from './types'
-import { omniContractToPoint } from './coordinates'
 import { createContractErrorParser } from '@/errors/parser'
 import type { OmniContractErrorParser, OmniContractErrorParserFactory } from '@/errors/types'
 import type { ContractError } from '@/errors/errors'
 import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
-import { formatOmniContract } from './format'
+import { JsonFragment } from '@ethersproject/abi'
+import { Provider } from '@/provider'
+import { Contract } from '@ethersproject/contracts'
 
 /**
  * Base class for all EVM SDKs, providing some common functionality
@@ -43,21 +44,21 @@ export abstract class OmniSDK implements IOmniSDK {
     }
 
     constructor(
-        public readonly contract: OmniContract,
-        protected readonly logger: Logger = createModuleLogger(
-            `EVM SDK ${new.target.name} @ ${formatOmniContract(contract)}`
-        )
+        public readonly provider: Provider,
+        public readonly point: OmniPoint,
+        public readonly abi: JsonFragment[],
+        protected readonly logger: Logger = createModuleLogger(`EVM SDK ${new.target.name} @ ${formatOmniPoint(point)}`)
     ) {}
 
     /**
      * Human radable label for this SDK
      */
     get label(): string {
-        return formatOmniContract(this.contract)
+        return formatOmniPoint(this.point)
     }
 
-    get point(): OmniPoint {
-        return omniContractToPoint(this.contract)
+    get contract(): OmniContract {
+        return { eid: this.point.eid, contract: new Contract(this.point.address, this.abi).connect(this.provider) }
     }
 
     protected createTransaction(data: string): OmniTransaction {

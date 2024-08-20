@@ -10,7 +10,7 @@ import {
     firstFactory,
     formatEid,
 } from '@layerzerolabs/devtools'
-import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createProviderFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import { OmniSignerSolana, createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { IOApp } from '@layerzerolabs/ua-devtools'
@@ -34,7 +34,7 @@ export const createSdkFactory = (
     //
     // We do this by using the firstFactory helper function that is provided by the devtools package.
     // This function will try to execute the factories one by one and return the first one that succeeds.
-    const evmSdkfactory = createOAppFactory(createConnectedContractFactory())
+    const evmSdkfactory = createOAppFactory(createProviderFactory())
     const solanaSdkFactory = createOFTFactory(
         // The first parameter to createOFTFactory is a user account factory
         //

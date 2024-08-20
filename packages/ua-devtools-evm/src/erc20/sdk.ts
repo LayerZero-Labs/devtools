@@ -1,11 +1,17 @@
-import { AsyncRetriable, type OmniAddress, type OmniTransaction, tapError } from '@layerzerolabs/devtools'
+import { AsyncRetriable, type OmniAddress, OmniPoint, type OmniTransaction, tapError } from '@layerzerolabs/devtools'
 
 import type { IERC20 } from './types'
 import { Ownable } from '@/ownable/sdk'
 import { z } from 'zod'
-import { BigNumberishBigIntSchema, BigNumberishNumberSchema } from '@layerzerolabs/devtools-evm'
+import { BigNumberishBigIntSchema, BigNumberishNumberSchema, Provider } from '@layerzerolabs/devtools-evm'
+import { abi as defaultAbi } from './abi'
+import { JsonFragment } from '@ethersproject/abi'
 
 export class ERC20 extends Ownable implements IERC20 {
+    constructor(provider: Provider, point: OmniPoint, abi: JsonFragment[] = defaultAbi) {
+        super(provider, point, abi)
+    }
+
     @AsyncRetriable()
     async getDecimals(): Promise<number> {
         this.logger.verbose(`Getting token decimals`)

@@ -2126,6 +2126,9 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
+      '@ethersproject/abi':
+        specifier: ~5.7.0
+        version: 5.7.0
       '@ethersproject/address':
         specifier: ~5.7.0
         version: 5.7.0
@@ -2150,9 +2153,18 @@ importers:
       '@layerzerolabs/lz-definitions':
         specifier: ^2.3.34
         version: 2.3.34
+      '@layerzerolabs/lz-evm-sdk-v1':
+        specifier: ^2.3.24
+        version: 2.3.34
+      '@layerzerolabs/lz-evm-sdk-v2':
+        specifier: ^2.3.24
+        version: 2.3.34
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^2.3.34
         version: 2.3.34
+      '@layerzerolabs/oapp-evm':
+        specifier: ~0.0.2
+        version: link:../oapp-evm
       '@layerzerolabs/protocol-devtools':
         specifier: ~0.4.2
         version: link:../protocol-devtools

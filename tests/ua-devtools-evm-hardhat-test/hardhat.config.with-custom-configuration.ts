@@ -3,13 +3,14 @@ import config from './hardhat.config'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import type { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@layerzerolabs/ua-devtools-evm-hardhat'
-import { OAppConfigurator } from '@layerzerolabs/ua-devtools'
-import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
+import { createProviderFactory } from '@layerzerolabs/devtools-evm-hardhat'
 import {
     MyCustomOAppSDK,
+    MyCustomOmniGraph,
     MyCustomOmniGraphHardhatSchema,
     myCustomOAppConfigurator,
 } from './layerzero.config.with-custom-configuration'
+import type { OmniPoint } from '@layerzerolabs/devtools'
 
 const SUBTASK_CUSTOM_CONFIG_LOADING = '::my:custom:config:loading:subtask'
 const SUBTASK_CUSTOM_CONFIGURE = '::my:custom:configure:subtask'
@@ -51,20 +52,25 @@ task(
  * This step is required - the default schema will pass any additonal
  * properties through (so the customProperty will be included).
  */
-task(SUBTASK_CUSTOM_CONFIGURE, 'Custom configuration subtask', async (args: SubtaskConfigureTaskArgs, hre) => {
-    const logger = createModuleLogger(SUBTASK_CUSTOM_CONFIGURE)
+task(
+    SUBTASK_CUSTOM_CONFIGURE,
+    'Custom configuration subtask',
+    async (args: SubtaskConfigureTaskArgs<MyCustomOmniGraph>, hre) => {
+        const logger = createModuleLogger(SUBTASK_CUSTOM_CONFIGURE)
 
-    logger.info('Using custom configure task')
+        logger.info('Using custom configure task')
 
-    // Here we create the SDK factory
-    const contractFactory = createConnectedContractFactory()
-    const sdkFactory = async (point) => new MyCustomOAppSDK(await contractFactory(point))
+        // Here we create the SDK factory
+        const { abi } = await import('./artifacts/contracts/CustomOApp.sol/CustomOApp.json')
+        const providerFactory = createProviderFactory()
+        const sdkFactory = async (point: OmniPoint) => new MyCustomOAppSDK(await providerFactory(point.eid), point, abi)
 
-    return hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
-        ...args,
-        sdkFactory,
-        configurator: myCustomOAppConfigurator as OAppConfigurator,
-    } satisfies SubtaskConfigureTaskArgs)
-})
+        return hre.run(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, {
+            ...args,
+            sdkFactory,
+            configurator: myCustomOAppConfigurator,
+        } satisfies SubtaskConfigureTaskArgs<MyCustomOmniGraph, MyCustomOAppSDK>)
+    }
+)
 
 export default config

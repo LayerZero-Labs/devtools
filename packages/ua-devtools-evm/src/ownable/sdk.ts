@@ -1,10 +1,16 @@
-import type { OmniAddress, OmniTransaction } from '@layerzerolabs/devtools'
-import { OmniSDK } from '@layerzerolabs/devtools-evm'
+import type { OmniAddress, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
+import { OmniSDK, Provider } from '@layerzerolabs/devtools-evm'
 import type { IOwnable } from '@layerzerolabs/ua-devtools'
 import { AsyncRetriable } from '@layerzerolabs/devtools'
 import { OwnableMixin } from './mixin'
+import { abi as defaultAbi } from './abi'
+import { JsonFragment } from '@ethersproject/abi'
 
 export class Ownable extends OmniSDK implements IOwnable {
+    constructor(provider: Provider, point: OmniPoint, abi: JsonFragment[] = defaultAbi) {
+        super(provider, point, abi)
+    }
+
     @AsyncRetriable()
     async getOwner(): Promise<OmniAddress | undefined> {
         return OwnableMixin.getOwner.call(this)

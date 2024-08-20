@@ -1,14 +1,14 @@
 import pMemoize from 'p-memoize'
 import type { LzAppFactory } from '@layerzerolabs/ua-devtools'
-import type { OmniContractFactory } from '@layerzerolabs/devtools-evm'
+import type { ProviderFactory } from '@layerzerolabs/devtools-evm'
 import { LzApp } from './sdk'
 
 /**
  * Syntactic sugar that creates an instance of EVM `LZApp` SDK
- * based on an `OmniPoint` with help of an `OmniContractFactory`
+ * based on an `OmniPoint` with help of a `ProviderFactory`
  *
- * @param {OmniContractFactory} contractFactory
+ * @param {ProviderFactory} providerFactory
  * @returns {LzAppFactory<LZApp>}
  */
-export const createLzAppFactory = (contractFactory: OmniContractFactory): LzAppFactory<LzApp> =>
-    pMemoize(async (point) => new LzApp(await contractFactory(point)))
+export const createLzAppFactory = (providerFactory: ProviderFactory): LzAppFactory<LzApp> =>
+    pMemoize(async (point) => new LzApp(await providerFactory(point.eid), point))

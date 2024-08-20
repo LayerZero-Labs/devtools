@@ -9,7 +9,9 @@ import {
     Bytes,
     normalizePeer,
     denormalizePeer,
+    OmniPoint,
 } from '@layerzerolabs/devtools'
+import type { JsonFragment } from '@ethersproject/abi'
 import { formatOmniContract, BigNumberishBigIntSchema, Provider } from '@layerzerolabs/devtools-evm'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
@@ -17,8 +19,13 @@ import { printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { Ownable } from '@/ownable/sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-evm'
+import { abi as defaultAbi } from '@layerzerolabs/oapp-evm/artifacts/OApp.sol/OApp.json'
 
 export class OApp extends Ownable implements IOApp {
+    constructor(provider: Provider, point: OmniPoint, abi: JsonFragment[] = defaultAbi) {
+        super(provider, point, abi)
+    }
+
     @AsyncRetriable()
     async getEndpointSDK(): Promise<IEndpointV2> {
         this.logger.debug(`Getting EndpointV2 SDK`)
