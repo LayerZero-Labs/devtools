@@ -30,6 +30,7 @@ contract ReceiveConfigTest is Test {
         vm.prank(userA);
         endpoint = new EndpointV2(remoteEid, userA);
 
+        // register receive library and set default ULN config
         receiveLib = new ReceiveUln302Mock(address(endpoint));
 
         address[] memory defaultDVNs = new address[](1);
@@ -51,8 +52,6 @@ contract ReceiveConfigTest is Test {
         vm.prank(userA);
         endpoint.registerLibrary(address(receiveLib));
 
-        console.log("===== LIBRARY REGISTERED =====");
-
         myOFT = new OFTMock("MyOFT", "OFT", address(endpoint), userA);
 
         receiveConfig = new ReceiveConfig();
@@ -60,9 +59,8 @@ contract ReceiveConfigTest is Test {
 
     function test_run_updates_receive_config(uint64 _confirmations, address[] memory _requiredDvns) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
-
-        // Set required DVNs to a realistic length
-        vm.assume(_requiredDvns.length <= 5);
+        // Set required DVNs to a realistic length and ensure they are sorted and unique
+        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && isSortedAndUnique(_requiredDvns));
 
         UlnConfig memory ulnConfig = UlnConfig({
             confirmations: _confirmations,
@@ -80,23 +78,21 @@ contract ReceiveConfigTest is Test {
         UlnConfig memory updatedUlnConfig = abi.decode(updatedUlnConfigBytes, (UlnConfig));
         
         assertEq(updatedUlnConfig.confirmations, ulnConfig.confirmations);
+        assertEq(updatedUlnConfig.requiredDVNCount, uint8(ulnConfig.requiredDVNCount));
+        assertEq(updatedUlnConfig.requiredDVNs.length, ulnConfig.requiredDVNs.length);
 
-        // TODO - Fix this test
-        // assertEq(updatedUlnConfig.requiredDVNCount, uint8(ulnConfig.requiredDVNCount));
-        // assertEq(updatedUlnConfig.requiredDVNs.length, ulnConfig.requiredDVNs.length);
+        for (uint i = 0; i < ulnConfig.requiredDVNs.length; i++) {
+            assertEq(updatedUlnConfig.requiredDVNs[i], ulnConfig.requiredDVNs[i]);
+        }
 
-        // for (uint i = 0; i < ulnConfig.requiredDVNs.length; i++) {
-        //     assertEq(updatedUlnConfig.requiredDVNs[i], ulnConfig.requiredDVNs[i]);
-        // }
+        assertEq(updatedUlnConfig.optionalDVNCount, ulnConfig.optionalDVNCount);
+        assertEq(updatedUlnConfig.optionalDVNs.length, ulnConfig.optionalDVNs.length);
 
-        // assertEq(updatedUlnConfig.optionalDVNCount, ulnConfig.optionalDVNCount);
-        // assertEq(updatedUlnConfig.optionalDVNs.length, ulnConfig.optionalDVNs.length);
+        for (uint i = 0; i < ulnConfig.optionalDVNs.length; i++) {
+            assertEq(updatedUlnConfig.optionalDVNs[i], ulnConfig.optionalDVNs[i]);
+        }
 
-        // for (uint i = 0; i < ulnConfig.optionalDVNs.length; i++) {
-        //     assertEq(updatedUlnConfig.optionalDVNs[i], ulnConfig.optionalDVNs[i]);
-        // }
-
-        // assertEq(updatedUlnConfig.optionalDVNThreshold, ulnConfig.optionalDVNThreshold);
+        assertEq(updatedUlnConfig.optionalDVNThreshold, ulnConfig.optionalDVNThreshold);
     }
 
     function sortAddresses(address[] memory arr) internal pure returns (address[] memory) {
@@ -112,5 +108,17 @@ contract ReceiveConfigTest is Test {
             }
         }
         return arr;
+    }
+
+    // Helper function to check if the array is sorted and unique
+    function isSortedAndUnique(address[] memory arr) internal pure returns (bool) {
+        if (arr.length < 2) return true; // Arrays of length 0 or 1 are trivially sorted and unique
+
+        for (uint256 i = 1; i < arr.length; i++) {
+            if (arr[i] <= arr[i - 1]) {
+                return false;
+            }
+        }
+        return true;
     }
 }

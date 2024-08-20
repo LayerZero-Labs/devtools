@@ -49,14 +49,11 @@ contract SendConfigTest is Test {
             new address[](0)
         );
 
-        // TODO is this needed?
         ulnParams[0] = SetDefaultUlnConfigParam(remoteEid, ulnConfig);
         sendLib.setDefaultUlnConfigs(ulnParams);
 
         vm.prank(userA);
         endpoint.registerLibrary(address(sendLib));
-
-        console.log("===== LIBRARY REGISTERED =====");
 
         myOFT = new OFTMock("MyOFT", "OFT", address(endpoint), userA);
 
