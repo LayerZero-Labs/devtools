@@ -39,17 +39,5 @@ contract SendConfig is Script {
         endpoint.setConfig(address(myOFT), sendLibraryAddress, setConfigParams);
 
         vm.stopBroadcast();
-        
-        // bytes memory updatedExecutorConfigBytes = endpoint.getConfig(address(myOFT), sendLibraryAddress, remoteEid, EXECUTOR_CONFIG_TYPE);
-        // (ExecutorConfig memory updatedExecutorConfig) = abi.decode(updatedExecutorConfigBytes, (ExecutorConfig));
-
-        // console.log("updatedExecutorConfig.maxMessageSize");
-        // console.logUint(updatedExecutorConfig.maxMessageSize);
-
-        // bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), sendLibraryAddress, remoteEid, ULN_CONFIG_TYPE);
-        // (UlnConfig memory updatedUlnConfig) = abi.decode(updatedUlnConfigBytes, (UlnConfig));
-        
-        // console.log("updatedUlnConfig.confirmations");
-        // console.logUint(updatedUlnConfig.confirmations);
     }
 }

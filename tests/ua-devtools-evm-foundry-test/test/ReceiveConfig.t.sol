@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
-import { ReceiveConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/ReceiveConfig.sol";
+// LayerZero imports
+import { EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { OFTMock } from "@layerzerolabs/oft-evm/test/mocks/OFTMock.sol";
-import { UlnConfig, SetDefaultUlnConfigParam } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
-import { TestHelperOz5, EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { ReceiveConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/ReceiveConfig.sol";
 import { ReceiveUln302Mock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol";
+import { SetDefaultUlnConfigParam, UlnConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 
 // Forge imports
 import "forge-std/console.sol";
 import { Test } from "forge-std/Test.sol";
+
+import "../utils/Helpers.sol";
 
 contract ReceiveConfigTest is Test {
     EndpointV2 endpoint;
@@ -60,11 +63,11 @@ contract ReceiveConfigTest is Test {
     function test_run_updates_receive_config(uint64 _confirmations, address[] memory _requiredDvns) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
         // Set required DVNs to a realistic length and ensure they are sorted and unique
-        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && isSortedAndUnique(_requiredDvns));
+        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && Helpers.isSortedAndUnique(_requiredDvns));
 
         UlnConfig memory ulnConfig = UlnConfig({
             confirmations: _confirmations,
-            requiredDVNs: sortAddresses(_requiredDvns),
+            requiredDVNs: Helpers.sortAddresses(_requiredDvns),
             requiredDVNCount: uint8(_requiredDvns.length),
             optionalDVNCount: 0,
             optionalDVNs: new address[](0),
@@ -93,32 +96,5 @@ contract ReceiveConfigTest is Test {
         }
 
         assertEq(updatedUlnConfig.optionalDVNThreshold, ulnConfig.optionalDVNThreshold);
-    }
-
-    function sortAddresses(address[] memory arr) internal pure returns (address[] memory) {
-        uint256 length = arr.length;
-        for (uint256 i = 0; i < length; i++) {
-            for (uint256 j = 0; j < length - 1; j++) {
-                if (arr[j] > arr[j + 1]) {
-                    // Swap elements if they are in the wrong order
-                    address temp = arr[j];
-                    arr[j] = arr[j + 1];
-                    arr[j + 1] = temp;
-                }
-            }
-        }
-        return arr;
-    }
-
-    // Helper function to check if the array is sorted and unique
-    function isSortedAndUnique(address[] memory arr) internal pure returns (bool) {
-        if (arr.length < 2) return true; // Arrays of length 0 or 1 are trivially sorted and unique
-
-        for (uint256 i = 1; i < arr.length; i++) {
-            if (arr[i] <= arr[i - 1]) {
-                return false;
-            }
-        }
-        return true;
     }
 }
