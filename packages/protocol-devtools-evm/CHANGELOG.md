@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 1.1.0
+
+### Minor Changes
+
+- 8b86a36: Provide embedded ABIs for Endpoint & Uln302
+
 ## 1.0.2
 
 ### Patch Changes

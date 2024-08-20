@@ -1,5 +1,17 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 2.0.0
+
+### Minor Changes
+
+- 8b86a36: Provide embedded ABIs for Endpoint & Uln302
+
+### Patch Changes
+
+- Updated dependencies [8b86a36]
+  - @layerzerolabs/protocol-devtools-evm@1.1.0
+  - @layerzerolabs/ua-devtools-evm@2.0.0
+
 ## 1.0.1
 
 ### Patch Changes

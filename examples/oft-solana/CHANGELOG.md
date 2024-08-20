@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.0.3
+
+### Patch Changes
+
+- 07b6f31: Remove unnecessary await (hygeine)
+
 ## 0.0.2
 
 ### Patch Changes
