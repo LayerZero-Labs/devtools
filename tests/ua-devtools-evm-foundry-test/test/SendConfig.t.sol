@@ -65,14 +65,11 @@ contract SendConfigTest is Test {
 
     function test_run_updates_send_config(uint64 _confirmations, address[] memory _requiredDvns, uint32 _maxMessageSize, address _executor) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
-        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && Helpers.isSortedAndUnique(_requiredDvns));
-
-        // Set required DVNs to a realistic length
-        vm.assume(_requiredDvns.length <= 5);
+        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && Helpers.validateRequiredDvns(_requiredDvns));
 
         UlnConfig memory ulnConfig = UlnConfig({
             confirmations: _confirmations,
-            requiredDVNs: Helpers.sortAddresses(_requiredDvns),
+            requiredDVNs: _requiredDvns,
             requiredDVNCount: uint8(_requiredDvns.length),
             optionalDVNCount: 0,
             optionalDVNs: new address[](0),
