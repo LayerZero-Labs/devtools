@@ -28,6 +28,7 @@ import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ReceiveLibrarySchema } from './schema'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/EndpointV2.sol/EndpointV2.json'
+import { Contract } from '@ethersproject/contracts'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -39,7 +40,7 @@ const CONFIG_TYPE_ULN = 2
  */
 export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     constructor(provider: Provider, point: OmniPoint) {
-        super(provider, point, abi)
+        super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
     }
 
     @AsyncRetriable()

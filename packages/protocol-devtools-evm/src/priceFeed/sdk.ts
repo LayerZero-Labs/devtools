@@ -5,10 +5,11 @@ import { OmniSDK, type Provider } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { PriceDataSchema } from './schema'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/PriceFeed.sol/PriceFeed.json'
+import { Contract } from '@ethersproject/contracts'
 
 export class PriceFeed extends OmniSDK implements IPriceFeed {
     constructor(provider: Provider, point: OmniPoint) {
-        super(provider, point, abi)
+        super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
     }
 
     async getPrice(eid: EndpointId): Promise<PriceData> {
