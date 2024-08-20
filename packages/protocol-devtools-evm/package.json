@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-evm",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Utilities for LayerZero EVM protocol contracts",
   "repository": {
     "type": "git",

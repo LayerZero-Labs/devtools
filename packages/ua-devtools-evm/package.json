@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
     "@layerzerolabs/lz-definitions": "^2.3.34",
     "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/protocol-devtools": "~0.4.2",
-    "@layerzerolabs/protocol-devtools-evm": "~1.0.2",
+    "@layerzerolabs/protocol-devtools-evm": "~1.1.0",
     "@layerzerolabs/test-devtools": "~0.2.8",
     "@layerzerolabs/ua-devtools": "~1.0.3",
     "@swc/core": "^1.4.0",
@@ -67,7 +67,7 @@
     "@layerzerolabs/lz-definitions": "^2.3.3",
     "@layerzerolabs/lz-v2-utilities": "^2.3.3",
     "@layerzerolabs/protocol-devtools": "~0.4.2",
-    "@layerzerolabs/protocol-devtools-evm": "~1.0.2",
+    "@layerzerolabs/protocol-devtools-evm": "~1.1.0",
     "@layerzerolabs/ua-devtools": "~1.0.3",
     "zod": "^3.22.4"
   },

@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.4.0
+
+### Minor Changes
+
+- 8b86a36: Provide embedded ABIs for Endpoint & Uln302
+
 ## 0.3.1
 
 ### Patch Changes
