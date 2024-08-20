@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.0.4
+
+### Patch Changes
+
+- 5442565: Fix @solana-developers/helpers version to 2.4.0
+
 ## 0.0.3
 
 ### Patch Changes
