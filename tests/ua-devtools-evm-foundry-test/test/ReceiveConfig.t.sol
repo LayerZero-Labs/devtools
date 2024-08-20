@@ -62,10 +62,12 @@ contract ReceiveConfigTest is Test {
         receiveConfig = new ReceiveConfig();
     }
 
-    function test_run(uint64 _confirmations, address[] memory _requiredDvns) public {
+    function test_run_updates_receive_config(uint64 _confirmations, address[] memory _requiredDvns) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
-        vm.assume(_requiredDvns.length < 3);
-        
+
+        // Set required DVNs to a realistic length
+        vm.assume(_requiredDvns.length <= 5);
+
         UlnConfig memory ulnConfig = UlnConfig({
             confirmations: _confirmations,
             requiredDVNs: sortAddresses(_requiredDvns),
@@ -81,7 +83,24 @@ contract ReceiveConfigTest is Test {
         bytes memory updatedUlnConfigBytes = endpoint.getConfig(address(myOFT), address(receiveLib), remoteEid, receiveConfig.RECEIVE_CONFIG_TYPE());
         UlnConfig memory updatedUlnConfig = abi.decode(updatedUlnConfigBytes, (UlnConfig));
         
-        assertEq(updatedUlnConfig.confirmations, _confirmations);
+        assertEq(updatedUlnConfig.confirmations, ulnConfig.confirmations);
+
+        // TODO - Fix this test
+        // assertEq(updatedUlnConfig.requiredDVNCount, uint8(ulnConfig.requiredDVNCount));
+        // assertEq(updatedUlnConfig.requiredDVNs.length, ulnConfig.requiredDVNs.length);
+
+        // for (uint i = 0; i < ulnConfig.requiredDVNs.length; i++) {
+        //     assertEq(updatedUlnConfig.requiredDVNs[i], ulnConfig.requiredDVNs[i]);
+        // }
+
+        // assertEq(updatedUlnConfig.optionalDVNCount, ulnConfig.optionalDVNCount);
+        // assertEq(updatedUlnConfig.optionalDVNs.length, ulnConfig.optionalDVNs.length);
+
+        // for (uint i = 0; i < ulnConfig.optionalDVNs.length; i++) {
+        //     assertEq(updatedUlnConfig.optionalDVNs[i], ulnConfig.optionalDVNs[i]);
+        // }
+
+        // assertEq(updatedUlnConfig.optionalDVNThreshold, ulnConfig.optionalDVNThreshold);
     }
 
     function sortAddresses(address[] memory arr) internal pure returns (address[] memory) {
