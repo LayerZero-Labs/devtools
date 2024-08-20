@@ -26,41 +26,19 @@ $ npm install @layerzerolabs/ua-devtools-evm-foundry
 We have provided 2 reference scripts in the `src/` directory that programatically set send and receive configurations. 
 
 To run the scripts, please follow these steps:
-
-<!-- 1. Update `.env` with your private key, the rpc urls you would like to interact with, and etherscan api key if you would like to verify any deployed contracts within your scripts. For example:
-
+1. Rename `.env.example` to `.env`, then fill in the `PRIVATE_KEY`
+2. In terminal, run `source .env` to load the `PRIVATE_KEY` global variable
+3. Run the `forge script` command
     ```bash
-    MNEMONIC="test test test test test test test test test test test junk"
-    PRIVATE_KEY='0x12345678909876543211234567890'
-
-    SEPOLIA_RPC_URL="https://ethereum-sepolia-rpc.publicnode.com"
-    ETHEREUM_RPC_URL="https://rpc.ankr.com/eth"
-
-    ETHERSCAN_API_KEY="123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    ``` -->
-<!-- 1. Update `foundry.toml` with the rpc urls and etherscan api key defined within the `.env` file. For example:
-
-    ```bash
-    [rpc_endpoints]
-    sepolia = "${SEPOLIA_RPC_URL}"
-    ethereum= "${ETHEREUM_RPC_URL}"
-
-    [etherscan]
-    sepolia = { key = "${ETHERSCAN_API_KEY}" }
-    ethereum= { key = "${ETHERSCAN_API_KEY}" }
-    ``` -->
-3. The script can now be run using the `forge script` command. 
-<!-- You may need to run `source .env` first to load global variables. -->
-
-    ```bash
-    source .env && forge script --chain <chain name from foundry.toml> <fully qualified path to script> --rpc-url <rpc url> --broadcast --verify -vvvv --sig <function signature> <function arguments>
-    ```
-    For example:
-    ```bash
-    source .env && forge script --chain sepolia scripts/ReceiveConfig.s.sol:ReceiveConfig --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv --sig "run(address, uint32)" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231
+    forge script --chain <chain-name> <fully qualified name of script with path> --rpc-url <rpc url> --broadcast -vvvv --sig <run function signature> <run function arguments>
     ```
 
-Transactions initiated by the above commands will be logged within a `broadcasts/` folder. Use the `--verify` flag if you would like to verify any contracts deployed within the script. For more information, see:
+For example:
+
+```bash
+forge script --chain sepolia src/ReceiveConfig.sol:ReceiveConfig --rpc-url "https://ethereum-sepolia-rpc.publicnode.com" --broadcast -vvvv --sig "run(address, uint32, address, address, (uint64, uint8, uint8, uint8, address[], address[]))" 0xC51c580Eeb3844b4117C9B3f5e9Cc43f5B808A85 40231 0xdAf00F5eE2158dD58E0d3857851c432E34A3A851 0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7 "(100,1,0,0,[0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7],[])"
+```
+
+Transactions initiated by the above commands will be logged within a `broadcasts/` folder. For more information, see:
     
     forge script --help
-<!-- TODO update!!

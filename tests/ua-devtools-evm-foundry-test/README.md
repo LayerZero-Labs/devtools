@@ -9,3 +9,11 @@
 ## Development
 
 This package provides integration tests for `@layerzerolabs/ua-devtools-evm-foundry`.
+
+## Run tests
+
+First, install dependencies with `pnpm install`. Then run:
+```bash
+forge test
+```
+

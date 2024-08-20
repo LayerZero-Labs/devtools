@@ -6,10 +6,7 @@ libs = [
 ]
 
 remappings = [
+    'forge-std/=node_modules/forge-std/src',
     '@layerzerolabs/=node_modules/@layerzerolabs/',
     '@openzeppelin/=node_modules/@openzeppelin/',
 ]
-
-## TODO is this needed here?
-[rpc_endpoints]
-sepolia = "${SEPOLIA_RPC_URL}"
