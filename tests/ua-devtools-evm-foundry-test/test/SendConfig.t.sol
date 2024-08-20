@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
+// Forge imports
+import "forge-std/console.sol";
+import { Test } from "forge-std/Test.sol";
+
 // LayerZero imports
 import { EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { ExecutorConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
@@ -10,33 +14,28 @@ import { SendConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/SendConfi
 import { SendUln302Mock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol";
 import { SetDefaultUlnConfigParam, UlnConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 
-// Forge imports
-import "forge-std/console.sol";
-import { Test } from "forge-std/Test.sol";
-
 import "../utils/Helpers.sol";
 
 contract SendConfigTest is Test {
-    EndpointV2 endpoint;
+    uint256 private constant TREASURY_GAS_CAP = 1000000;
+    uint256 private constant TREASURY_GAS_FOR_FEE_CAP = 1000000;
+
+    EndpointV2 private endpoint;
+    OFTMock private myOFT;
     SendConfig private sendConfig;
+    SendUln302Mock private sendLib;
 
     uint32 private aEid = 1;
     uint32 private remoteEid = 2;
 
-    uint256 private constant TREASURY_GAS_CAP = 1000000;
-    uint256 private constant TREASURY_GAS_FOR_FEE_CAP = 1000000;
-
-    OFTMock private myOFT;
-    SendUln302Mock private sendLib;
-
     address private userA = address(0x1);
-
     address private dvnAddress = address(0x2);
 
     function setUp() public virtual {
         vm.prank(userA);
         endpoint = new EndpointV2(remoteEid, userA);
 
+        // register send library and set default ULN config
         sendLib = new SendUln302Mock(payable(address(this)), address(endpoint), TREASURY_GAS_CAP, TREASURY_GAS_FOR_FEE_CAP);
 
         address[] memory defaultDVNs = new address[](1);

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.22;
 
+// Forge imports
+import "forge-std/console.sol";
+import { Test } from "forge-std/Test.sol";
+
 // LayerZero imports
 import { EndpointV2 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
@@ -9,24 +13,18 @@ import { ReceiveConfig } from "@layerzerolabs/ua-devtools-evm-foundry/src/Receiv
 import { ReceiveUln302Mock } from "@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol";
 import { SetDefaultUlnConfigParam, UlnConfig } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol";
 
-// Forge imports
-import "forge-std/console.sol";
-import { Test } from "forge-std/Test.sol";
-
 import "../utils/Helpers.sol";
 
 contract ReceiveConfigTest is Test {
-    EndpointV2 endpoint;
+    EndpointV2 private endpoint;
+    OFTMock private myOFT;
     ReceiveConfig private receiveConfig;
+    ReceiveUln302Mock private receiveLib;
 
     uint32 private aEid = 1;
     uint32 private remoteEid = 2;
 
-    OFTMock private myOFT;
-    ReceiveUln302Mock private receiveLib;
-
     address private userA = address(0x1);
-
     address private dvnAddress = address(0x2);
 
     function setUp() public virtual {
