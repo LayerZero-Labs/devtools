@@ -154,7 +154,7 @@ export const wire = new Command('wire')
 
             // If we are in dry run mode, we'll just print the transactions and exit
             if (dryRun) {
-                printRecords(transactions.map(formatOmniTransaction))
+                return printRecords(transactions.map(formatOmniTransaction))
             }
         }
     )

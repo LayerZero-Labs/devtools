@@ -19,7 +19,7 @@ import { printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { Ownable } from '@/ownable/sdk'
 import { EndpointV2 } from '@layerzerolabs/protocol-devtools-evm'
-import { abi as defaultAbi } from '@layerzerolabs/oapp-evm/artifacts/OApp.sol/OApp.json'
+import { abi as defaultAbi } from './abi'
 
 export class OApp extends Ownable implements IOApp {
     constructor(provider: Provider, point: OmniPoint, abi: JsonFragment[] = defaultAbi) {
