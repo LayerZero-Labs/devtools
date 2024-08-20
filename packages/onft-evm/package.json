@@ -17,7 +17,11 @@
   },
   "license": "MIT",
   "exports": {
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./artifacts/*.json": {
+      "require": "./artifacts/*.json",
+      "imports": "./artifacts/*.json"
+    }
   },
   "files": [
     "artifacts/IONFT721.sol/IONFT721.json",
