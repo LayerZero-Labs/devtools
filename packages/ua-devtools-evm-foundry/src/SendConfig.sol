@@ -19,16 +19,6 @@ contract SendConfig is Script {
         OFT myOFT = OFT(contractAddress);
 
         ILayerZeroEndpointV2 endpoint = ILayerZeroEndpointV2(address(myOFT.endpoint()));
-        
-        // ExecutorConfig memory executorConfig = ExecutorConfig({ maxMessageSize: 50, executor: 0x71d7a02cDD38BEa35E42b53fF4a42a37638a0066});
-        // UlnConfig memory ulnConfig = UlnConfig({
-        //                             confirmations: 99,
-        //                             requiredDVNs: new address[](0),
-        //                             requiredDVNCount: 0,
-        //                             optionalDVNCount: 0,
-        //                             optionalDVNs: new address[](0),
-        //                             optionalDVNThreshold: 0
-        //                         });
 
         SetConfigParam[] memory setConfigParams = new SetConfigParam[](2);
         
