@@ -27,8 +27,8 @@ import { Uln302 } from '@/uln302'
 import { Uln302SetExecutorConfig } from '@layerzerolabs/protocol-devtools'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { ReceiveLibrarySchema } from './schema'
-import { Contract } from '@ethersproject/contracts'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/EndpointV2.sol/EndpointV2.json'
+import { Contract } from '@ethersproject/contracts'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
@@ -39,10 +39,7 @@ const CONFIG_TYPE_ULN = 2
  * @implements {IEndpointV2}
  */
 export class EndpointV2 extends OmniSDK implements IEndpointV2 {
-    constructor(
-        private readonly provider: Provider,
-        point: OmniPoint
-    ) {
+    constructor(provider: Provider, point: OmniPoint) {
         super({ eid: point.eid, contract: new Contract(point.address, abi).connect(provider) })
     }
 
@@ -69,7 +66,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             )}`
         )
 
-        return new Uln302(this.provider, { eid: this.point.eid, address })
+        return new Uln302(this.contract.contract.provider as Provider, { eid: this.point.eid, address })
     }
 
     @AsyncRetriable()

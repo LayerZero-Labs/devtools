@@ -1,15 +1,14 @@
 /// <reference types="hardhat-deploy/dist/src/type-extensions" />
 
 import {
-    createConnectedContractFactory,
     createErrorParser,
+    createOmniPointHardhatTransformer,
     createProviderFactory,
     createSignerFactory,
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import {
     configureEndpointV2,
     DVNDstConfig,
@@ -123,30 +122,30 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 export const setupDefaultEndpointV2 = async (): Promise<void> => {
     // This is the tooling we are going to need
     const providerFactory = createProviderFactory()
-    const contractFactory = createConnectedContractFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
     const ulnSdkFactory = createUln302Factory(providerFactory)
     const endpointV2SdkFactory = createEndpointV2Factory(providerFactory)
-    const priceFeedSdkFactory = createPriceFeedFactory(contractFactory)
-    const executorSdkFactory = createExecutorFactory(contractFactory)
-    const dvnSdkFactory = createDVNFactory(contractFactory)
+    const priceFeedSdkFactory = createPriceFeedFactory(providerFactory)
+    const executorSdkFactory = createExecutorFactory(providerFactory)
+    const dvnSdkFactory = createDVNFactory(providerFactory)
+    const omnipointTransformer = createOmniPointHardhatTransformer()
 
     // For the graphs, we'll also need the pointers to the contracts
-    const ethSendUlnPoint = omniContractToPoint(await contractFactory(ethSendUln))
-    const avaxSendUlnPoint = omniContractToPoint(await contractFactory(avaxSendUln))
-    const bscSendUlnPoint = omniContractToPoint(await contractFactory(bscSendUln))
+    const ethSendUlnPoint = await omnipointTransformer(ethSendUln)
+    const avaxSendUlnPoint = await omnipointTransformer(avaxSendUln)
+    const bscSendUlnPoint = await omnipointTransformer(bscSendUln)
 
-    const ethReceiveUlnPoint = omniContractToPoint(await contractFactory(ethReceiveUln))
-    const avaxReceiveUlnPoint = omniContractToPoint(await contractFactory(avaxReceiveUln))
-    const bscReceiveUlnPoint = omniContractToPoint(await contractFactory(bscReceiveUln))
+    const ethReceiveUlnPoint = await omnipointTransformer(ethReceiveUln)
+    const avaxReceiveUlnPoint = await omnipointTransformer(avaxReceiveUln)
+    const bscReceiveUlnPoint = await omnipointTransformer(bscReceiveUln)
 
-    const ethExecutorPoint = omniContractToPoint(await contractFactory(ethExecutor))
-    const avaxExecutorPoint = omniContractToPoint(await contractFactory(avaxExecutor))
-    const bscExecutorPoint = omniContractToPoint(await contractFactory(bscExecutor))
+    const ethExecutorPoint = await omnipointTransformer(ethExecutor)
+    const avaxExecutorPoint = await omnipointTransformer(avaxExecutor)
+    const bscExecutorPoint = await omnipointTransformer(bscExecutor)
 
-    const ethDvnPoint = omniContractToPoint(await contractFactory(ethDvn))
-    const avaxDvnPoint = omniContractToPoint(await contractFactory(avaxDvn))
-    const bscDvnPoint = omniContractToPoint(await contractFactory(bscDvn))
+    const ethDvnPoint = await omnipointTransformer(ethDvn)
+    const avaxDvnPoint = await omnipointTransformer(avaxDvn)
+    const bscDvnPoint = await omnipointTransformer(bscDvn)
 
     const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
     const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
