@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.10
+
+### Patch Changes
+
+- d5b1bb1: Add artifacts exports to EVM contract packages
+- Updated dependencies [d5b1bb1]
+  - @layerzerolabs/oapp-evm@0.0.3
+
 ## 0.0.9
 
 ### Patch Changes

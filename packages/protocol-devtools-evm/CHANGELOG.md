@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 1.2.0
+
+### Minor Changes
+
+- 69a1498: Decouple DVN, Executor & PriceFeed SDKs from hardhat-deploy
+
 ## 1.1.0
 
 ### Minor Changes

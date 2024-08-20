@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.6
+
+### Patch Changes
+
+- d5b1bb1: Add artifacts exports to EVM contract packages
+
 ## 0.0.5
 
 ### Patch Changes

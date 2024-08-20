@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 0.1.6
+
+### Patch Changes
+
+- e670782: Add a stub of squads signer
+
 ## 0.1.5
 
 ### Patch Changes
