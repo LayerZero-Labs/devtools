@@ -2,19 +2,22 @@
 pragma solidity ^0.8.22;
 
 library Helpers {
-    // Validate that the required DVNs are sorted in strictly ascending order, contain no duplicates, and are not address(0)
-    function validateRequiredDvns(address[] memory arr) internal pure returns (bool) {
-        if (arr.length < 2) return arr.length == 0 || arr[0] != address(0); // Handle arrays of length 0 or 1
 
-        for (uint256 i = 0; i < arr.length; i++) {
-            if (arr[i] == address(0)) {
-                return false; // Contains a zero address
-            }
+    function convertToAddresses(uint8[] memory numbers) public pure returns (address[] memory) {
+        address[] memory addresses = new address[](numbers.length);
+        uint160 cumulativeSum = 0;
 
-            if (i > 0 && arr[i] <= arr[i - 1]) {
-                return false; // Not sorted in strictly ascending order or contains duplicates
-            }
+        for (uint i = 0; i < numbers.length; i++) {
+            // Treat 0 as 1
+            uint8 currentNumber = numbers[i] == 0 ? 1 : numbers[i];
+            
+            // Add to cumulative sum
+            cumulativeSum += currentNumber;
+            
+            // Convert cumulative sum to address
+            addresses[i] = address(cumulativeSum);
         }
-        return true;
+        
+        return addresses;
     }
 }

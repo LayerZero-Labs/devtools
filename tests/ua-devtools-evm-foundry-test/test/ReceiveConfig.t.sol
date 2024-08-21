@@ -58,13 +58,13 @@ contract ReceiveConfigTest is Test {
         receiveConfig = new ReceiveConfig();
     }
 
-    function test_run_updates_receive_config(uint64 _confirmations, address[] memory _requiredDvns) public {
+    function test_run_updates_receive_config(uint64 _confirmations, uint8[] memory _requiredDvns) public {
         vm.assume(_confirmations > 0 && _confirmations < type(uint64).max);
-        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length <= 5 && Helpers.validateRequiredDvns(_requiredDvns));
+        vm.assume(_requiredDvns.length > 0 && _requiredDvns.length < 10);
 
         UlnConfig memory ulnConfig = UlnConfig({
             confirmations: _confirmations,
-            requiredDVNs: _requiredDvns,
+            requiredDVNs: Helpers.convertToAddresses(_requiredDvns),
             requiredDVNCount: uint8(_requiredDvns.length),
             optionalDVNCount: 0,
             optionalDVNs: new address[](0),
