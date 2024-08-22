@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.0.5
+
+### Patch Changes
+
+- 51ab953: fix Solana Devnet Hardhat tasks
+
 ## 0.0.4
 
 ### Patch Changes
