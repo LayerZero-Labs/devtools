@@ -22,7 +22,7 @@ import {
     createSetupFileOption,
     createTsConfigFileOption,
 } from '@/commands/options'
-import { createSetupLoader, setupTypescript } from '@/setup'
+import { createSetupLoader, setupTypeScript } from '@/setup'
 import { Configurator, formatOmniTransaction, OmniGraph, OmniTransaction } from '@layerzerolabs/devtools'
 import { CLISetup } from '@/types'
 
@@ -56,7 +56,7 @@ export const wire = new Command('wire')
             setDefaultLogLevel(logLevel)
 
             // We'll setup TypeScript support so that we can dynamically load TypeScript config files
-            setupTypescript(tsConfigPath)
+            setupTypeScript(tsConfigPath)
 
             // We'll need a logger
             const logger = createLogger(logLevel)

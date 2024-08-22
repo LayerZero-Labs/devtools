@@ -364,21 +364,21 @@ Returns the LayerZero Executor config for each network in your `hardhat.config.t
 
 This repo also comes with several Solana helpers in the form of Hardhat tasks to easily deploy, verify, configure, connect, and send OFTs on Solana.
 
-These helpers use the `@metaplex-foundation/umi` Typescript framework to interact with the Solana blockchain. For more information, refer to the [Umi documentation](https://developers.metaplex.com/umi).
+These helpers use the `@metaplex-foundation/umi` TypeScript framework to interact with the Solana blockchain. For more information, refer to the [Umi documentation](https://developers.metaplex.com/umi).
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/solana/overview"><code>npx hardhat lz:oft:solana:create --program YOUR_OFT_PROGRAM_ID --staging mainnet </code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/solana/overview"><code>npx hardhat lz:oft:solana:create --program-id YOUR_OFT_PROGRAM_ID --eid YOUR_SOLANA_ENDPOINT_ID </code></a> </summary>
 
- <br>
+<br>
 
 In addition to deploying your **OFT Program**, you will need to mint a new **SPL Token** and **OFT Config Account** to create your deployment. The `lz:oft:solana:create` task will create a new SPL Token Mint, and optionally mint an amount of tokens if given an amount.
 
 ```typescript
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config account')
-    .addParam('program', 'The OFT Program ID')
-    .addParam('staging', 'Solana mainnet or testnet (devnet)')
-    .addOptionalParam('amount', 'The initial supply to mint on solana')
-    .setAction(async (taskArgs: TaskArguments) => {
+    .addParam('programId', 'The OFT Program id')
+    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
+    .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, types.int)
+    .setAction(async (taskArgs: Args) => {
       // ... task continues
     }
 ```

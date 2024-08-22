@@ -1,7 +1,7 @@
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 
-export const setupTypescript = (tsConfigPath?: string): void => {
+export const setupTypeScript = (tsConfigPath?: string): void => {
     const logger = createModuleLogger('TypeScript support')
 
     try {
