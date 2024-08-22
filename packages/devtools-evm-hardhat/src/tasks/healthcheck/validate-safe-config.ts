@@ -4,18 +4,20 @@ import assert from 'assert'
 import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
 import { ActionType /* HardhatUserConfig*/ } from 'hardhat/types'
 import { task } from 'hardhat/config'
-// import { printLogo } from '@layerzerolabs/io-devtools/swag'
-// import { createLogger } from '@layerzerolabs/io-devtools'
+import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 
-// TODO this will only work if the safe url is always one of the supported networks here https://docs.safe.global/core-api/transaction-service-supported-networks
-// which seems to be the case for ZROClaim at least
+const SAFE_CONFIG_KEY = 'safeConfig'
+
+// @dev safeURLs are only considered valid if they are listed here: https://docs.safe.global/core-api/transaction-service-supported-networks
 const validateSafeConfig = async (config: any): Promise<boolean> => {
     assert(config.safeAddress != null, 'Missing safeAddress')
     assert(config.safeUrl != null, 'Missing safeUrl')
 
     // Construct the API URL to query the Safe's balance
-    const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/balances/`
-    // const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`; // TODO or should we use this general info api endpoint
+    // TODO which api endpoint to use?
+    // const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/balances/`
+    const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`
 
     try {
         // Make the API request to check the Safe's balance
@@ -40,30 +42,26 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
 }
 
 const action: ActionType<unknown> = async (_, hre) => {
-    // TODO should we be validating all safe configs in the hardhat.config.ts file or only for the network specified when this task is run?
-    // perhaps we can do both with a flag?
+    printLogo()
 
-    // const logger = createLogger()
-
-    // Grab the safe config for provided network
-    const userConfig = hre.userConfig
-
-    console.log('userConfig', userConfig)
+    const logger = createLogger()
 
     const networkNames = Object.keys(hre.userConfig.networks || {})
+
+    logger.info(`...Validating safe configs for ${networkNames.join(', ')}...`)
+
     for (const networkName of networkNames) {
         const networkConfig = hre.userConfig.networks?.[networkName]
-        if (networkConfig && 'safeConfig' in networkConfig) {
+
+        if (networkConfig && SAFE_CONFIG_KEY in networkConfig) {
             const isValid = await validateSafeConfig(networkConfig.safeConfig)
+
             if (!isValid) {
-                throw new Error(`Safe config validation failed for network: ${networkName}`)
+                throw new Error(`${printBoolean(false)} Safe config validation failed for network: ${networkName}`)
             }
         }
     }
 
-    console.log('All safe configs are valid') // TODO improve this message
-    // TODO use logger
-
-    // printLogo()
+    logger.info(`${printBoolean(true)} All safe configs are valid!`)
 }
 task(TASK_LZ_VALIDATE_SAFE_CONFIGS, 'Validate safe configs in hardhat.config.ts', action)
