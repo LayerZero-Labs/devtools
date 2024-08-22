@@ -1,4 +1,4 @@
-import '../type-extensions'
+import '@/type-extensions'
 import assert from 'assert'
 
 import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
