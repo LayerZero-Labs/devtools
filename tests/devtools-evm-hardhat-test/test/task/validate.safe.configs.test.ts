@@ -36,7 +36,9 @@ const invalidHRE: HardhatRuntimeEnvironment = {
     },
 }
 
-const runSpy = jest.spyOn(hre, 'run')
+const runSpyHRE = jest.spyOn(hre, 'run')
+const runSpyInvalidHRE = jest.spyOn(invalidHRE, 'run')
+const runSpyValidHRE = jest.spyOn(validHRE, 'run')
 
 describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
     it('should be available', () => {
@@ -46,21 +48,21 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
     it('should display failures for invalid safe configs', async () => {
         const isValid = await invalidHRE.run(TASK_LZ_VALIDATE_SAFE_CONFIGS)
 
-        expect(runSpy).toHaveBeenCalled()
+        expect(runSpyInvalidHRE).toHaveBeenCalled()
         expect(isValid).toBe(false)
     })
 
     it('should successfully validate valid safe configs', async () => {
         const isValid = await validHRE.run(TASK_LZ_VALIDATE_SAFE_CONFIGS)
 
-        expect(runSpy).toHaveBeenCalled()
+        expect(runSpyValidHRE).toHaveBeenCalled()
         expect(isValid).toBe(true)
     })
 
     it('should successfully validate no safe configs', async () => {
         const isValid = await hre.run(TASK_LZ_VALIDATE_SAFE_CONFIGS)
 
-        expect(runSpy).toHaveBeenCalled()
+        expect(runSpyHRE).toHaveBeenCalled()
         expect(isValid).toBe(true)
     })
 })
