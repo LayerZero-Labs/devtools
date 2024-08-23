@@ -2,7 +2,7 @@ import '@/type-extensions'
 import assert from 'assert'
 
 import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
-import { ActionType /* HardhatUserConfig*/ } from 'hardhat/types'
+import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
@@ -63,5 +63,7 @@ const action: ActionType<unknown> = async (_, hre) => {
     }
 
     logger.info(`${printBoolean(true)} All safe configs are valid!`)
+
+    return true
 }
 task(TASK_LZ_VALIDATE_SAFE_CONFIGS, 'Validate safe configs in hardhat.config.ts', action)
