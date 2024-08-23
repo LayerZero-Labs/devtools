@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "CLI for configuring LayerZero OApp contracts",
   "keywords": [
     "LayerZero",
