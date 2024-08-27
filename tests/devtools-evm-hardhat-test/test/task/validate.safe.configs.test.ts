@@ -1,10 +1,9 @@
 /// <reference types="jest-extended" />
 
 import hre from 'hardhat'
-// import { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { join } from 'path'
 import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@layerzerolabs/devtools-evm-hardhat'
 import { spawnSync } from 'child_process'
-import { join } from 'path'
 
 describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
     describe('expectations', () => {

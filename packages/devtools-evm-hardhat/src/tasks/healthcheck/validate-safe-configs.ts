@@ -1,10 +1,10 @@
 import '@/type-extensions'
 
-import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
+import { printLogo } from '@layerzerolabs/io-devtools/swag'
 
 const SAFE_CONFIG_KEY = 'safeConfig'
 
@@ -22,11 +22,11 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
         return false
     }
 
-    // Construct the API URL to query the Safe's balance
+    // Construct the API URL to read safe
     const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`
 
     try {
-        // Make the API request to check the Safe's balance
+        // Make the API request to read safe
         const response = await fetch(apiUrl)
 
         // Check if the response is successful
