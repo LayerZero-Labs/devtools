@@ -43,7 +43,6 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
 }
 
 const action: ActionType<unknown> = async (_, hre) => {
-    console.log('====== RAVINA IN VALIDATE TASK')
     printLogo()
 
     const logger = createLogger()
