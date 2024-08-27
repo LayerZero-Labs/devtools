@@ -37,10 +37,10 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
         return true
     } catch (error) {
         if (error instanceof Error) {
-            console.error('Validation failed:', error.message)
+            logger.error(`Validation failed: ${error.message}`)
         } else {
             // Handle other types of errors (if any)
-            console.error('An unknown error occurred')
+            logger.error('An unknown error occurred')
         }
 
         return false

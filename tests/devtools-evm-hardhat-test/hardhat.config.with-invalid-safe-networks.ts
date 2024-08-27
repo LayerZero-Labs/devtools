@@ -1,8 +1,9 @@
 import 'hardhat-deploy'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import '@layerzerolabs/toolbox-hardhat'
-import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import type { HardhatUserConfig } from 'hardhat/types'
+
+import { default as baseConfig } from './hardhat.config'
 
 const MNEMONIC = process.env.MNEMONIC ?? ''
 
@@ -11,11 +12,9 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
  * hardhat functionality without mocking too much
  */
 const config: HardhatUserConfig = {
-    solidity: {
-        version: '0.8.22',
-    },
+    ...baseConfig,
     networks: {
-        ...createTestNetworkConfigV2({ mnemonic: MNEMONIC, initialIndex: 0 }),
+        ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
             url: 'no:///way',
