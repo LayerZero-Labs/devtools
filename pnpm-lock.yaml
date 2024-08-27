@@ -609,6 +609,258 @@ importers:
         specifier: ^5.4.4
         version: 5.5.4
 
+  examples/omnicounter-solana:
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@coral-xyz/anchor':
+        specifier: ^0.29.0
+        version: 0.29.0
+      '@ethersproject/bytes':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@ethersproject/keccak256':
+        specifier: ^5.7.0
+        version: 5.7.0
+      '@layerzerolabs/devtools':
+        specifier: ~0.3.23
+        version: link:../../packages/devtools
+      '@layerzerolabs/devtools-evm':
+        specifier: ~0.4.0
+        version: link:../../packages/devtools-evm
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^1.1.0
+        version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/devtools-solana':
+        specifier: ~0.1.6
+        version: link:../../packages/devtools-solana
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.34
+        version: 2.3.34(typescript@5.5.4)
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.11
+        version: link:../../packages/io-devtools
+      '@layerzerolabs/lz-definitions':
+        specifier: ^2.3.34
+        version: 2.3.34
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.34)(@layerzerolabs/lz-evm-v1-0.7@2.3.34)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^2.3.34
+        version: 2.3.34(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-solana-sdk-v2':
+        specifier: ^2.3.31
+        version: 2.3.34(fastestsmallesttextencoderdecoder@1.0.22)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^2.3.34
+        version: 2.3.34
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.0.3
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^0.0.10
+        version: link:../../packages/oft-evm
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.34
+        version: 2.3.34
+      '@layerzerolabs/protocol-devtools':
+        specifier: ^0.4.2
+        version: link:../../packages/protocol-devtools
+      '@layerzerolabs/protocol-devtools-solana':
+        specifier: ^1.0.5
+        version: link:../../packages/protocol-devtools-solana
+      '@layerzerolabs/solhint-config':
+        specifier: ^2.3.34
+        version: 2.3.34(typescript@5.5.4)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~0.2.11
+        version: link:../../packages/test-devtools-evm-foundry
+      '@layerzerolabs/test-devtools-evm-hardhat':
+        specifier: 0.2.6
+        version: link:../../packages/test-devtools-evm-hardhat
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.9
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.3.6
+        version: link:../../packages/toolbox-hardhat
+      '@layerzerolabs/tsup-config-next':
+        specifier: ^2.3.31
+        version: 2.3.38(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.4)
+      '@layerzerolabs/typescript-config-next':
+        specifier: ^2.3.31
+        version: 2.3.38
+      '@layerzerolabs/ua-devtools':
+        specifier: ~1.0.4
+        version: link:../../packages/ua-devtools
+      '@layerzerolabs/ua-devtools-evm':
+        specifier: ~3.0.0
+        version: link:../../packages/ua-devtools-evm
+      '@layerzerolabs/ua-devtools-evm-hardhat':
+        specifier: ~3.0.0
+        version: link:../../packages/ua-devtools-evm-hardhat
+      '@layerzerolabs/ua-devtools-solana':
+        specifier: ~1.0.4
+        version: link:../../packages/ua-devtools-solana
+      '@metaplex-foundation/beet':
+        specifier: ^0.7.1
+        version: 0.7.2
+      '@metaplex-foundation/beet-solana':
+        specifier: ^0.4.0
+        version: 0.4.1
+      '@metaplex-foundation/mpl-token-metadata':
+        specifier: ^3.2.1
+        version: 3.2.1(@metaplex-foundation/umi@0.9.2)
+      '@metaplex-foundation/mpl-toolbox':
+        specifier: ^0.9.4
+        version: 0.9.4(@metaplex-foundation/umi@0.9.2)
+      '@metaplex-foundation/solita':
+        specifier: ^0.20.1
+        version: 0.20.1
+      '@metaplex-foundation/umi':
+        specifier: ^0.9.2
+        version: 0.9.2
+      '@metaplex-foundation/umi-bundle-defaults':
+        specifier: ^0.9.2
+        version: 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.95.2)
+      '@metaplex-foundation/umi-public-keys':
+        specifier: ^0.8.9
+        version: 0.8.9
+      '@metaplex-foundation/umi-web3js-adapters':
+        specifier: ^0.9.2
+        version: 0.9.2(@metaplex-foundation/umi@0.9.2)(@solana/web3.js@1.95.2)
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.3)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.3)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.0.2
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.10.4
+      '@solana-developers/helpers':
+        specifier: ~2.4.0
+        version: 2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+      '@solana/spl-token':
+        specifier: ^0.4.8
+        version: 0.4.8(@solana/web3.js@1.95.2)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.4)
+      '@solana/web3.js':
+        specifier: ~1.95.0
+        version: 1.95.2
+      '@sqds/sdk':
+        specifier: ^2.0.4
+        version: 2.0.4
+      '@swc/core':
+        specifier: ^1.4.0
+        version: 1.4.0
+      '@swc/jest':
+        specifier: ^0.2.36
+        version: 0.2.36(@swc/core@1.4.0)
+      '@types/bn.js':
+        specifier: ^5.1.5
+        version: 5.1.5
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.11
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.6
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      bip39:
+        specifier: ^3.1.0
+        version: 3.1.0
+      bn.js:
+        specifier: ^5.2.1
+        version: 5.2.1
+      bs58:
+        specifier: ^6.0.0
+        version: 6.0.0
+      chai:
+        specifier: ^4.4.1
+        version: 4.5.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      ed25519-hd-key:
+        specifier: ^1.3.0
+        version: 1.3.0
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.0
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.0(eslint@8.57.0)(typescript@5.5.4)
+      ethereumjs-util:
+        specifier: ^7.1.5
+        version: 7.1.5
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      fp-ts:
+        specifier: ^2.16.2
+        version: 2.16.2
+      hardhat:
+        specifier: ^2.22.3
+        version: 2.22.3(ts-node@10.9.2)(typescript@5.5.4)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.3)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.9
+      solhint:
+        specifier: ^4.1.1
+        version: 4.1.1(typescript@5.5.4)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      tiny-invariant:
+        specifier: ^1.3.1
+        version: 1.3.3
+      ts-mocha:
+        specifier: ^10.0.0
+        version: 10.0.0(mocha@10.2.0)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.4)
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.4)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.4
+      zx:
+        specifier: ^8.1.3
+        version: 8.1.4
+
   examples/onft721:
     devDependencies:
       '@babel/core':
@@ -3521,7 +3773,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.22.6
       '@babel/parser': 7.23.9
       '@babel/types': 7.23.9
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -3568,7 +3820,7 @@ packages:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /@changesets/assemble-release-plan@6.0.0:
@@ -3579,7 +3831,7 @@ packages:
       '@changesets/get-dependents-graph': 2.0.0
       '@changesets/types': 6.0.0
       '@manypkg/get-packages': 1.1.3
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /@changesets/changelog-git@0.2.0:
@@ -3651,7 +3903,7 @@ packages:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /@changesets/get-release-plan@4.0.0:
@@ -3734,6 +3986,42 @@ packages:
       fs-extra: 7.0.1
       human-id: 1.0.2
       prettier: 2.8.8
+    dev: true
+
+  /@chialab/cjs-to-esm@0.17.11:
+    resolution: {integrity: sha512-yzIKx1J7ykDoKm+CQXw/gkI0B3YbGDUAkkz70ohoPVI9stSeNwdvXMNcNwMQMndQleJkTS8aOi4j3JRrBbVAng==}
+    engines: {node: '>=13'}
+    dependencies:
+      '@chialab/estransform': 0.17.5
+    dev: true
+
+  /@chialab/esbuild-plugin-commonjs@0.17.2:
+    resolution: {integrity: sha512-C30UShSb89PJiO+mJTwAS1ei6aKVxMcxZQrl0g1JAJVd4d1AE6OjcbYlCs4847PcbmMNqYZrTcWpgIg+zRQL3Q==}
+    engines: {node: '>=13'}
+    dependencies:
+      '@chialab/cjs-to-esm': 0.17.11
+      '@chialab/esbuild-rna': 0.17.8
+      '@chialab/node-resolve': 0.17.1
+    dev: true
+
+  /@chialab/esbuild-rna@0.17.8:
+    resolution: {integrity: sha512-hovU4W5zlyMnbJjexdczpQ9mcUfFsJuv9FWUhzpXiQwPprlp5lul+frTed9s8AyVDTDq2yq3Gx2Ac411QsXYGA==}
+    engines: {node: '>=13'}
+    dependencies:
+      '@chialab/estransform': 0.17.5
+      '@chialab/node-resolve': 0.17.1
+    dev: true
+
+  /@chialab/estransform@0.17.5:
+    resolution: {integrity: sha512-maJUFkwk0ie0L4VvDO74NDYyRvaTQAI0qmSmrms8bZxUkZ+zQZd1ByWKDCYTRwtR6AOzTvgEOl2ZvEG+OUKv/A==}
+    engines: {node: '>=13'}
+    dependencies:
+      '@parcel/source-map': 2.1.1
+    dev: true
+
+  /@chialab/node-resolve@0.17.1:
+    resolution: {integrity: sha512-YWaK0MKKeB0FILI6j7qiAlGoSC9MqJZDFXzlAgfOaMCbn8Feqh6njxv7mI3oVkdi7QwV6zPRaTN6hKig/NriMA==}
+    engines: {node: '>=13'}
     dev: true
 
   /@colors/colors@1.5.0:
@@ -5340,6 +5628,26 @@ packages:
       - typescript
     dev: true
 
+  /@layerzerolabs/tsup-config-next@2.3.38(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.4):
+    resolution: {integrity: sha512-YpkaVp/g8tQ88+MFmWBu2JX997WLZPr+mOMtPX1+RmmVqvKU8aAl0TKW/cGPVw9gZ8rOrJiZD99M597v9K+IKA==}
+    dependencies:
+      '@chialab/esbuild-plugin-commonjs': 0.17.2
+      esbuild: 0.19.11
+      esbuild-node-externals: 1.14.0(esbuild@0.19.11)
+      tsup: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.4)
+    transitivePeerDependencies:
+      - '@microsoft/api-extractor'
+      - '@swc/core'
+      - postcss
+      - supports-color
+      - ts-node
+      - typescript
+    dev: true
+
+  /@layerzerolabs/typescript-config-next@2.3.38:
+    resolution: {integrity: sha512-kcbOo/+b1c8w0W6s18yDq7lRUYRkVY4lhiUk2rsmDXiZ1jJobTeAmIzXub17IE9WxXLFkfrh6VTUW3NCIqhT8Q==}
+    dev: true
+
   /@manypkg/find-root@1.1.0:
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
     dependencies:
@@ -5916,6 +6224,13 @@ packages:
 
   /@openzeppelin/contracts@5.0.2:
     resolution: {integrity: sha512-ytPc6eLGcHHnapAZ9S+5qsdomhjo6QBHTDRRBFfTxXIpsicMhVPouPgmUPebZZZGX7vt9USA+Z+0M0dSVtSUEA==}
+    dev: true
+
+  /@parcel/source-map@2.1.1:
+    resolution: {integrity: sha512-Ejx1P/mj+kMjQb8/y5XxDUn4reGdr+WyKYloBljpppUy8gs42T+BNoEOuRYqDVdgPc6NxduzIDoJS9pOFfV5Ew==}
+    engines: {node: ^12.18.3 || >=14}
+    dependencies:
+      detect-libc: 1.0.3
     dev: true
 
   /@pkgjs/parseargs@0.11.0:
@@ -6770,6 +7085,15 @@ packages:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
 
+  /@types/fs-extra@11.0.4:
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+    requiresBuild: true
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 18.18.14
+    dev: true
+    optional: true
+
   /@types/graceful-fs@4.1.9:
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
     dependencies:
@@ -6816,6 +7140,14 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
+  /@types/jsonfile@6.1.4:
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+    requiresBuild: true
+    dependencies:
+      '@types/node': 18.18.14
+    dev: true
+    optional: true
+
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
@@ -6840,6 +7172,14 @@ packages:
     resolution: {integrity: sha512-iSOeNeXYNYNLLOMDSVPvIFojclvMZ/HDY2dU17kUlcsOsSQETbWIslJbYLZgA+ox8g2XQwSHKTkght1a5X26lQ==}
     dependencies:
       undici-types: 5.26.5
+
+  /@types/node@22.5.0:
+    resolution: {integrity: sha512-DkFrJOe+rfdHTqqMg0bSNlGlQ85hSoh2TPzZyhHsXnMtligRWpxUySiyw8FY14ITt24HVCiQPWxS3KO/QlGmWg==}
+    requiresBuild: true
+    dependencies:
+      undici-types: 6.19.8
+    dev: true
+    optional: true
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -7850,7 +8190,7 @@ packages:
   /builtins@5.0.1:
     resolution: {integrity: sha512-qwVpFEHNfhYJIzNRBvd2C1kyo6jz3ZSMPyyuR47OPdiKWlbYnZNyDWuyR175qDnAJLiCo5fBBqPb3RiXgWlkOQ==}
     dependencies:
-      semver: 7.6.2
+      semver: 7.6.3
     dev: true
 
   /bundle-require@4.0.2(esbuild@0.19.11):
@@ -8665,6 +9005,12 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
+  /detect-libc@1.0.3:
+    resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
+    engines: {node: '>=0.10'}
+    hasBin: true
+    dev: true
+
   /detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
@@ -8678,6 +9024,11 @@ packages:
   /diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    dev: true
+
+  /diff@3.5.0:
+    resolution: {integrity: sha512-A46qtFgd+g7pDZinpnwiRJtxbC1hpgf0uzP3iG89scHk0AUC7A1TGxf5OiiOUv/JMZR8GOt8hL900hV0bOy5xA==}
+    engines: {node: '>=0.3.1'}
     dev: true
 
   /diff@4.0.2:
@@ -8968,6 +9319,17 @@ packages:
     dependencies:
       d: 1.0.2
       ext: 1.7.0
+
+  /esbuild-node-externals@1.14.0(esbuild@0.19.11):
+    resolution: {integrity: sha512-jMWnTlCII3cLEjR5+u0JRSTJuP+MgbjEHKfwSIAI41NgLQ0ZjfzjchlbEn0r7v2u5gCBMSEYvYlkO7GDG8gG3A==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      esbuild: 0.12 - 0.23
+    dependencies:
+      esbuild: 0.19.11
+      find-up: 5.0.0
+      tslib: 2.6.3
+    dev: true
 
   /esbuild-plugin-copy@2.1.1(esbuild@0.23.0):
     resolution: {integrity: sha512-Bk66jpevTcV8KMFzZI1P7MZKZ+uDcrZm2G2egZ2jNIvVnivDpodZI+/KnpL3Jnap0PBdIHU7HwFGB8r+vV5CVw==}
@@ -10320,7 +10682,7 @@ packages:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
       minimatch: 9.0.4
-      minipass: 7.0.4
+      minipass: 7.1.2
       path-scurry: 1.10.1
     dev: true
 
@@ -10349,6 +10711,7 @@ packages:
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -10405,7 +10768,7 @@ packages:
       array-union: 2.1.0
       dir-glob: 3.0.1
       fast-glob: 3.3.2
-      ignore: 5.3.0
+      ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
     dev: true
@@ -10827,7 +11190,7 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12536,7 +12899,6 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.8
-    dev: false
 
   /mkdirp@1.0.4:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
@@ -13218,7 +13580,7 @@ packages:
     dependencies:
       '@solidity-parser/parser': 0.17.0
       prettier: 3.2.5
-      semver: 7.6.2
+      semver: 7.6.3
       solidity-comments-extractor: 0.0.8
     dev: true
 
@@ -13662,6 +14024,7 @@ packages:
 
   /rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
+    deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
     dependencies:
       glob: 7.2.3
@@ -13814,12 +14177,6 @@ packages:
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-
-  /semver@7.6.2:
-    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dev: true
 
   /semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
@@ -14692,6 +15049,19 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
+  /ts-mocha@10.0.0(mocha@10.2.0):
+    resolution: {integrity: sha512-VRfgDO+iiuJFlNB18tzOfypJ21xn2xbuZyDvJvqpTbWgkAgD17ONGr8t+Tl8rcBtOBdjXp5e/Rk+d39f7XBHRw==}
+    engines: {node: '>= 6.X.X'}
+    hasBin: true
+    peerDependencies:
+      mocha: ^3.X.X || ^4.X.X || ^5.X.X || ^6.X.X || ^7.X.X || ^8.X.X || ^9.X.X || ^10.X.X
+    dependencies:
+      mocha: 10.2.0
+      ts-node: 7.0.1
+    optionalDependencies:
+      tsconfig-paths: 3.15.0
+    dev: true
+
   /ts-node@10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.4):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
@@ -14722,6 +15092,21 @@ packages:
       typescript: 5.5.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+
+  /ts-node@7.0.1:
+    resolution: {integrity: sha512-BVwVbPJRspzNh2yfslyT1PSbl5uIk03EZlb493RKHN4qej/D06n1cEhjlOJG69oFsE7OT8XjpTUcYf6pKTLMhw==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+    dependencies:
+      arrify: 1.0.1
+      buffer-from: 1.1.2
+      diff: 3.5.0
+      make-error: 1.3.6
+      minimist: 1.2.8
+      mkdirp: 0.5.6
+      source-map-support: 0.5.21
+      yn: 2.0.0
+    dev: true
 
   /tsconfig-paths@3.15.0:
     resolution: {integrity: sha512-2Ac2RgzDe/cn48GvOe3M+o82pEFewD3UPbyoUHHdKasHwJKjds4fLXWf/Ux5kATBKN20oaFGu+jbElp1pos0mg==}
@@ -15057,6 +15442,12 @@ packages:
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+
+  /undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+    requiresBuild: true
+    dev: true
+    optional: true
 
   /undici@5.28.2:
     resolution: {integrity: sha512-wh1pHJHnUeQV5Xa8/kyQhO7WFa8M34l026L5P/+2TYiakvGy5Rdc8jWZVyG7ieht/0WgJLEd3kcU5gKx+6GC8w==}
@@ -15856,6 +16247,11 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
+  /yn@2.0.0:
+    resolution: {integrity: sha512-uTv8J/wiWTgUTg+9vLTi//leUl5vDQS6uii/emeTb2ssY7vl6QWf2fFbIIGjnhjvbdKlU0ed7QPgY1htTC86jQ==}
+    engines: {node: '>=4'}
+    dev: true
+
   /yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
@@ -15907,6 +16303,15 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+
+  /zx@8.1.4:
+    resolution: {integrity: sha512-QFDYYpnzdpRiJ3dL2102Cw26FpXpWshW4QLTGxiYfIcwdAqg084jRCkK/kuP/NOSkxOjydRwNFG81qzA5r1a6w==}
+    engines: {node: '>= 12.17.0'}
+    hasBin: true
+    optionalDependencies:
+      '@types/fs-extra': 11.0.4
+      '@types/node': 22.5.0
+    dev: true
 
   github.com/LayerZero-Labs/es5-ext/7e360296a7e27176e240bc063b32f5ada55f9aa6:
     resolution: {tarball: https://codeload.github.com/LayerZero-Labs/es5-ext/tar.gz/7e360296a7e27176e240bc063b32f5ada55f9aa6}

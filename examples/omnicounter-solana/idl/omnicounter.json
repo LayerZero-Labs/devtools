@@ -1,0 +1,546 @@
+{
+  "version": "0.1.0",
+  "name": "omnicounter",
+  "instructions": [
+    {
+      "name": "initCount",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "count",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lzReceiveTypesAccounts",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lzComposeTypesAccounts",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "InitCountParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setRemote",
+      "accounts": [
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "remote",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "count",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetRemoteParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "quote",
+      "accounts": [
+        {
+          "name": "count",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpoint",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "QuoteParams"
+          }
+        }
+      ],
+      "returns": {
+        "defined": "MessagingFee"
+      }
+    },
+    {
+      "name": "increment",
+      "accounts": [
+        {
+          "name": "remote",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "count",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "endpoint",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "IncrementParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lzReceive",
+      "accounts": [
+        {
+          "name": "count",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "remote",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "LzReceiveParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lzReceiveTypes",
+      "accounts": [
+        {
+          "name": "count",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "LzReceiveParams"
+          }
+        }
+      ],
+      "returns": {
+        "vec": {
+          "defined": "LzAccount"
+        }
+      }
+    },
+    {
+      "name": "lzCompose",
+      "accounts": [
+        {
+          "name": "count",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "LzComposeParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lzComposeTypes",
+      "accounts": [
+        {
+          "name": "count",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "LzComposeParams"
+          }
+        }
+      ],
+      "returns": {
+        "vec": {
+          "defined": "LzAccount"
+        }
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EndpointSettings",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "eid",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "lzTokenMint",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Count",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "composedCount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "endpointProgram",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzComposeTypesAccounts",
+      "docs": [
+        "LzComposeTypesAccounts includes accounts that are used in the LzComposeTypes",
+        "instruction."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "count",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzReceiveTypesAccounts",
+      "docs": [
+        "LzReceiveTypesAccounts includes accounts that are used in the LzReceiveTypes",
+        "instruction."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "count",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Remote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "address",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "MessagingFee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nativeFee",
+            "type": "u64"
+          },
+          {
+            "name": "lzTokenFee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzComposeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "from",
+            "type": "publicKey"
+          },
+          {
+            "name": "to",
+            "type": "publicKey"
+          },
+          {
+            "name": "guid",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "index",
+            "type": "u16"
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "extraData",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzReceiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "srcEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "guid",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "extraData",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LzAccount",
+      "docs": ["same to anchor_lang::prelude::AccountMeta"],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "publicKey"
+          },
+          {
+            "name": "isSigner",
+            "type": "bool"
+          },
+          {
+            "name": "isWritable",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IncrementParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "msgType",
+            "type": "u8"
+          },
+          {
+            "name": "options",
+            "type": "bytes"
+          },
+          {
+            "name": "nativeFee",
+            "type": "u64"
+          },
+          {
+            "name": "lzTokenFee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitCountParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "endpoint",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "QuoteParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "receiver",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "msgType",
+            "type": "u8"
+          },
+          {
+            "name": "options",
+            "type": "bytes"
+          },
+          {
+            "name": "payInLzToken",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetRemoteParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u8"
+          },
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "remote",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidMessageType"
+    }
+  ],
+  "metadata": {
+    "address": "2tLJfE12h5RY7vJqK6i41taeg8ejzigoFXduBanDV4Cu"
+  }
+}
