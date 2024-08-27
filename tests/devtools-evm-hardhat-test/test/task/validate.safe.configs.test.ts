@@ -33,6 +33,18 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
 
             expect(result.status).toBe(0)
         })
+
+        it('should validate missing safe address', async () => {
+            const result = runExpect('validate-missing-safe-address')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should validate missing safe url', async () => {
+            const result = runExpect('validate-missing-safe-url')
+
+            expect(result.status).toBe(0)
+        })
     })
 
     it('should be available', () => {

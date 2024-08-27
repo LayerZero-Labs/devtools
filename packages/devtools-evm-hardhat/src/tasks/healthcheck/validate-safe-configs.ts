@@ -1,5 +1,4 @@
 import '@/type-extensions'
-import assert from 'assert'
 
 import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@/constants'
 import { ActionType } from 'hardhat/types'
@@ -9,10 +8,19 @@ import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 
 const SAFE_CONFIG_KEY = 'safeConfig'
 
+const logger = createLogger()
+
 // @dev safeURLs are only considered valid if they are listed here: https://docs.safe.global/core-api/transaction-service-supported-networks
 const validateSafeConfig = async (config: any): Promise<boolean> => {
-    assert(config.safeAddress != null, 'Missing safeAddress') // TODO add tests for these cases
-    assert(config.safeUrl != null, 'Missing safeUrl')
+    if (!config.safeAddress) {
+        logger.error(`${printBoolean(false)} Missing safeAddress`)
+        return false
+    }
+
+    if (!config.safeUrl) {
+        logger.error(`${printBoolean(false)} Missing safeUrl`)
+        return false
+    }
 
     // Construct the API URL to query the Safe's balance
     const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`
@@ -41,8 +49,6 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
 
 const action: ActionType<unknown> = async (_, hre) => {
     printLogo()
-
-    const logger = createLogger()
 
     const networkNames = Object.keys(hre.userConfig.networks || {})
 
