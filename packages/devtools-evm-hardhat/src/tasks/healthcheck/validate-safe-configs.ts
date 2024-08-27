@@ -42,7 +42,8 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
     }
 }
 
-const action: ActionType<unknown> = async (_, hre): Promise<boolean> => {
+const action: ActionType<unknown> = async (_, hre) => {
+    console.log('====== RAVINA IN VALIDATE TASK')
     printLogo()
 
     const logger = createLogger()
@@ -58,14 +59,11 @@ const action: ActionType<unknown> = async (_, hre): Promise<boolean> => {
             const isValid = await validateSafeConfig(networkConfig.safeConfig)
 
             if (!isValid) {
-                return false
-                // throw new Error(`${printBoolean(false)} Safe config validation failed for network: ${networkName}`)
+                throw new Error(`${printBoolean(false)} Safe config validation failed for network: ${networkName}`)
             }
         }
     }
 
     logger.info(`${printBoolean(true)} All safe configs are valid!`)
-
-    return true
 }
 task(TASK_LZ_VALIDATE_SAFE_CONFIGS, 'Validate safe configs in hardhat.config.ts', action)

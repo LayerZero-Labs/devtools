@@ -6,38 +6,6 @@ import { TASK_LZ_VALIDATE_SAFE_CONFIGS } from '@layerzerolabs/devtools-evm-hardh
 import { spawnSync } from 'child_process'
 import { join } from 'path'
 
-// const validHRE: HardhatRuntimeEnvironment = {
-//     ...hre,
-//     userConfig: {
-//         ...hre.userConfig,
-//         networks: {
-//             ...hre.userConfig.networks,
-//             ethereum: {
-//                 safeConfig: {
-//                     safeAddress: '0xCDa8e3ADD00c95E5035617F970096118Ca2F4C92',
-//                     safeUrl: 'https://safe-transaction-mainnet.safe.global/',
-//                 },
-//             },
-//         },
-//     },
-// }
-
-// const invalidHRE: HardhatRuntimeEnvironment = {
-//     ...hre,
-//     userConfig: {
-//         ...hre.userConfig,
-//         networks: {
-//             ...hre.userConfig.networks,
-//             ethereum: {
-//                 safeConfig: {
-//                     safeAddress: '0x565786AbE5BA0f9D307AdfA681379F0788bEdEf7',
-//                     safeUrl: 'https://wrong-url.safe.global/',
-//                 },
-//             },
-//         },
-//     },
-// }
-
 describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
     describe('expectations', () => {
         const EXPECTATIONS_DIRECTORY = join('test', 'task', 'validate.safe.configs.test.expectations')
@@ -52,25 +20,19 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
             const result = runExpect('validate-no-safe-configs')
 
             expect(result.status).toBe(0)
-
-            // TODO should there be more validations here or should we leave it up to the .exp file?
         })
 
-        // it('should validate valid safe configs', async () => {
-        //     const result = runExpect('validate-valid-safe-configs')
+        it('should validate valid safe configs', async () => {
+            const result = runExpect('validate-valid-safe-configs')
 
-        //     expect(result.status).toBe(0)
+            expect(result.status).toBe(0)
+        })
 
-        //     // TODO should there be more validations here or should we leave it up to the .exp file?
-        // })
+        it('should validate invalid safe configs', async () => {
+            const result = runExpect('validate-invalid-safe-configs')
 
-        // it('should validate invalid safe configs', async () => {
-        //     const result = runExpect('validate-invalid-safe-configs')
-
-        //     expect(result.status).toBe(0) // TODO should not be 0 bc 0 == success
-
-        //     // TODO should there be more validations here or should we leave it up to the .exp file?
-        // })
+            expect(result.status).toBe(1)
+        })
     })
 
     it('should be available', () => {

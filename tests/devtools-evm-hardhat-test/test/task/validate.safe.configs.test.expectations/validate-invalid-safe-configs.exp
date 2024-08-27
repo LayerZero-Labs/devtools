@@ -28,9 +28,14 @@ if {$force_conservative} {
 
 
 set timeout 60
-spawn npx hardhat lz:deploy --stage sandbox --ci
+
 match_max 100000
 
-expect "No networks selected, exiting"
+# You will run your task
+spawn npx hardhat --config hardhat.config.with-invalid-safe-networks lz:validate-safe-configs
 
+# And make sure you get the valid info message back
+expect "Safe config validation failed for network: ethereum"
+
+# This just waits for the script to exit
 expect eof
