@@ -11,12 +11,10 @@ const SAFE_CONFIG_KEY = 'safeConfig'
 
 // @dev safeURLs are only considered valid if they are listed here: https://docs.safe.global/core-api/transaction-service-supported-networks
 const validateSafeConfig = async (config: any): Promise<boolean> => {
-    assert(config.safeAddress != null, 'Missing safeAddress')
+    assert(config.safeAddress != null, 'Missing safeAddress') // TODO add tests for these cases
     assert(config.safeUrl != null, 'Missing safeUrl')
 
     // Construct the API URL to query the Safe's balance
-    // TODO which api endpoint to use?
-    // const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/balances/`
     const apiUrl = `${config.safeUrl}/api/v1/safes/${config.safeAddress}/`
 
     try {
@@ -26,7 +24,6 @@ const validateSafeConfig = async (config: any): Promise<boolean> => {
         // Check if the response is successful
         if (!response.ok) {
             return false
-            // throw new Error(`Failed to fetch Safe balance: ${response.statusText}`)
         }
 
         return true

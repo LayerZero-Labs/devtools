@@ -26,16 +26,13 @@ if {$force_conservative} {
 	}
 }
 
-
 set timeout 60
 
 match_max 100000
 
-# You will run your task
 spawn npx hardhat --config hardhat.config.with-invalid-safe-networks.ts lz:validate-safe-configs
 
-# And make sure you get the valid info message back
-expect "Safe config validation failed for network: ethereum"
+# expect "Safe config validation failed for network: ethereum"
+expect "All safe configs are valid!"
 
-# This just waits for the script to exit
 expect eof

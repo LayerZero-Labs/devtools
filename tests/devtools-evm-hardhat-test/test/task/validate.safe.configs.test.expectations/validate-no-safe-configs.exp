@@ -31,11 +31,8 @@ set timeout 60
 
 match_max 100000
 
-# You will run your task
 spawn npx hardhat --config hardhat.config.ts lz:validate-safe-configs
 
-# And make sure you get the valid info message back
 expect "All safe configs are valid!"
 
-# This just waits for the script to exit
 expect eof
