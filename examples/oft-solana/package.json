@@ -34,7 +34,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
-    "@layerzerolabs/lz-solana-sdk-v2": "^2.3.31",
+    "@layerzerolabs/lz-solana-sdk-v2": "^2.3.36",
     "@layerzerolabs/lz-v2-utilities": "^2.3.34",
     "@layerzerolabs/oapp-evm": "^0.0.3",
     "@layerzerolabs/oft-evm": "^0.0.10",
