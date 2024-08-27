@@ -32,7 +32,6 @@ match_max 100000
 
 spawn npx hardhat --config hardhat.config.with-invalid-safe-networks.ts lz:validate-safe-configs
 
-# expect "Safe config validation failed for network: ethereum"
-expect "All safe configs are valid!"
+expect "Safe config validation failed for network: ethereum"
 
 expect eof
