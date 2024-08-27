@@ -1,4 +1,5 @@
 import 'hardhat-deploy'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import '@layerzerolabs/toolbox-hardhat'
 import { createTestNetworkConfigV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import type { HardhatUserConfig } from 'hardhat/types'
@@ -16,6 +17,12 @@ const config: HardhatUserConfig = {
     networks: {
         ...createTestNetworkConfigV2({ mnemonic: MNEMONIC, initialIndex: 0 }),
         ethereum: {
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
+            url: 'no:///way',
+            accounts: {
+                mnemonic: MNEMONIC,
+                initialIndex: 0,
+            },
             safeConfig: {
                 safeAddress: '0xCDa8e3ADD00c95E5035617F970096118Ca2F4C92',
                 safeUrl: 'https://safe-transaction-mainnet.safe.global/',
