@@ -1,1 +1,1 @@
-export * from './validate-safe-config'
+export * from './validate-safe-configs'
