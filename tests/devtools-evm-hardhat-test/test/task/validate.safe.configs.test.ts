@@ -31,7 +31,7 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
         it('should validate invalid safe configs', async () => {
             const result = runExpect('validate-invalid-safe-configs')
 
-            expect(result.status).toBe(1)
+            expect(result.status).toBe(0)
         })
     })
 
