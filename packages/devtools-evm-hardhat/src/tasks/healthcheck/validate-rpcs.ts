@@ -102,11 +102,6 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
         `========== Validating RPC URLs with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
     )
 
-    if (!networkNames.length) {
-        logger.info(`No networks found in hardhat.config.ts`)
-        return
-    }
-
     for (const networkName of networkNames) {
         const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
 
