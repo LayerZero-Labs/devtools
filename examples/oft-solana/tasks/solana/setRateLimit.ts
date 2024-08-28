@@ -73,13 +73,13 @@ task('lz:oft:solana:rate-limit', "Sets the Solana and EVM rate limits from './sc
         for (const peer of graph.connections.filter((connection) => connection.vector.from.eid === solanaEid)) {
             try {
                 const setRateLimitIx = await OftTools.createSetRateLimitIx(
+                    OFT_PROGRAM_ID,
                     keypair.publicKey,
                     oftConfig,
                     peer.vector.to.eid,
                     solanaRateLimits.rateLimitConfig.rateLimitCapacity,
                     solanaRateLimits.rateLimitConfig.rateLimitRefillRatePerSecond,
-                    true,
-                    OFT_PROGRAM_ID
+                    true
                 )
 
                 // Convert the instruction and create the transaction builder

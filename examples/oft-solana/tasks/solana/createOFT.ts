@@ -163,13 +163,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
 
         // Initialize the OFT using the OFT Config and the token mint
         const oftConfigMintIx = await OftTools.createInitNativeOftIx(
+            OFT_PROGRAM_ID, // OFT Program ID
             web3WalletKeyPair.publicKey, // Payer
             web3WalletKeyPair.publicKey, // Admin
             web3TokenKeyPair.publicKey, // Mint account
             web3WalletKeyPair.publicKey, // OFT Mint Authority
             SHARED_DECIMALS, // OFT Shared Decimals
-            TOKEN_PROGRAM_ID, // Token Program ID
-            OFT_PROGRAM_ID // OFT Program ID
+            TOKEN_PROGRAM_ID // Token Program ID
         )
 
         // Convert the instruction to UMI format

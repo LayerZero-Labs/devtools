@@ -58,10 +58,10 @@ task('lz:oft:solana:set-mint-authority', 'Sets solana mint authority to new acco
 
         // Create the instruction using OftTools
         const setMintAuthorityIx = await OftTools.createSetMintAuthorityIx(
+            oftProgramId,
             web3WalletKeyPair.publicKey,
             oftConfig,
-            newAuthorityPublicKey,
-            oftProgramId
+            newAuthorityPublicKey
         )
 
         // Convert the instruction and create the transaction builder
