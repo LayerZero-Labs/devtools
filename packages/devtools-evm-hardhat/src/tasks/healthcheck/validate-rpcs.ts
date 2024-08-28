@@ -92,7 +92,6 @@ const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, netwo
     return false
 }
 
-// TODO consider validating all rpc urls so if multiple are incorrect they can all be fixed before the next run?
 const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     printLogo()
 
