@@ -56,7 +56,7 @@ const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boo
             // Handle other types of errors (if any)
             logger.error('An unknown error occurred')
         }
-        // TODO log url being validated
+
         return false
     }
 }
@@ -90,11 +90,13 @@ const validateWebSocketRpcUrl = (rpcUrl: string, timeout: number): Promise<boole
     })
 }
 
-const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number): Promise<boolean> => {
+const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, networkName: string): Promise<boolean> => {
     if (!rpcUrl) {
         logger.error(`${printBoolean(false)} Missing rpc url`)
         return false
     }
+
+    logger.info(`...Validating RPC URL ${rpcUrl} for ${networkName}...`) // TODO consistent case sensitivity/formatting
 
     if (rpcUrl.startsWith('http://') || rpcUrl.startsWith('https://')) {
         return await validateHttpsRpcUrl(rpcUrl, timeout)
@@ -111,7 +113,9 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
 
     const networkNames = Object.keys(hre.userConfig.networks || {})
 
-    logger.info(`...Validating rpc urls with ${taskArgs.timeout}ms timeout for ${networkNames.join(', ')}...`)
+    logger.info(
+        `========== Validating rpc urls with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
+    )
 
     if (networkNames.length === 0) {
         logger.info(`No networks found in hardhat.config.ts`)
@@ -122,7 +126,7 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
         const networkConfig = hre.userConfig.networks?.[networkName]
 
         if (networkConfig && RPC_URL_KEY in networkConfig) {
-            const isValid = await validateRpcUrl(networkConfig.url, taskArgs.timeout)
+            const isValid = await validateRpcUrl(networkConfig.url, taskArgs.timeout, networkName)
 
             if (!isValid) {
                 throw new Error(`${printBoolean(false)} RPC url validation failed for network: ${networkName}`)
@@ -138,7 +142,7 @@ task(
     action
 ).addParam(
     'timeout',
-    `Maximum amount of time (in milliseconds) that the rpc urls have to respond. If unspecified, default timeout of ${TIMEOUT}ms will be used.`,
+    `Maximum amount of time (in milliseconds) that the rpc urls have to respond. If unspecified, default timeout will be used.`,
     TIMEOUT,
     types.int,
     true
