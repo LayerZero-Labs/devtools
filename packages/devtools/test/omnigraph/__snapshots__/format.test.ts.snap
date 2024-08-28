@@ -174,6 +174,12 @@ exports[`omnigraph/format formatEid should format 302 correctly 1`] = `"PEAQ_MAI
 
 exports[`omnigraph/format formatEid should format 303 correctly 1`] = `"ZIRCUIT_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 309 correctly 1`] = `"LIGHTLINK_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 310 correctly 1`] = `"CODEX_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 311 correctly 1`] = `"LYRA_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -438,6 +444,22 @@ exports[`omnigraph/format formatEid should format 10310 correctly 1`] = `"BAHAMU
 
 exports[`omnigraph/format formatEid should format 10311 correctly 1`] = `"CODEX_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10312 correctly 1`] = `"OTHERWORLD_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10313 correctly 1`] = `"ABSTRACT_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10315 correctly 1`] = `"STORY_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10316 correctly 1`] = `"TREASURE_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10318 correctly 1`] = `"ROOT_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10319 correctly 1`] = `"REYA_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10320 correctly 1`] = `"BITLAYER_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10321 correctly 1`] = `"DM2VERSE_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -633,6 +655,12 @@ exports[`omnigraph/format formatEid should format 30301 correctly 1`] = `"ZKLINK
 exports[`omnigraph/format formatEid should format 30302 correctly 1`] = `"PEAQ_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30303 correctly 1`] = `"ZIRCUIT_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30309 correctly 1`] = `"LIGHTLINK_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30310 correctly 1`] = `"CODEX_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30311 correctly 1`] = `"LYRA_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -891,6 +919,22 @@ exports[`omnigraph/format formatEid should format 40309 correctly 1`] = `"LIGHTL
 exports[`omnigraph/format formatEid should format 40310 correctly 1`] = `"BAHAMUT_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40311 correctly 1`] = `"CODEX_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40312 correctly 1`] = `"OTHERWORLD_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40313 correctly 1`] = `"ABSTRACT_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40315 correctly 1`] = `"STORY_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40316 correctly 1`] = `"TREASURE_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40318 correctly 1`] = `"ROOT_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40319 correctly 1`] = `"REYA_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40320 correctly 1`] = `"BITLAYER_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40321 correctly 1`] = `"DM2VERSE_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
