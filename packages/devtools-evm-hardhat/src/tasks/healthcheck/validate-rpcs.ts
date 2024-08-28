@@ -16,58 +16,46 @@ const TIMEOUT = 1000 // 1 second
 
 const logger = createLogger()
 
-// TODO refactor/cleanup
 const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boolean> => {
-    try {
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), timeout)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
 
+    try {
         const response = await fetch(rpcUrl, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                jsonrpc: '2.0',
-                method: 'eth_blockNumber',
-                params: [],
-                id: 1,
-            }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }),
             signal: controller.signal,
         })
+
         clearTimeout(timeoutId)
 
-        if (response.ok) {
-            const data = await response.json()
-            if (data.result) {
-                return true
-            } else {
-                logger.error(`${printBoolean(false)} RPC url responded with invalid data: ${JSON.stringify(data)}`)
-                return false
-            }
-        } else {
-            logger.error(`${printBoolean(false)} RPC url responded with status: ${response.status}`)
+        if (!response.ok) {
+            logger.error(`RPC URL ${rpcUrl} responded with status: ${response.status}`)
             return false
         }
-    } catch (error) {
-        if (error instanceof Error) {
-            logger.error(`Validation failed: ${error.message}`)
-        } else {
-            // Handle other types of errors (if any)
-            logger.error('An unknown error occurred')
+
+        const data = await response.json()
+        if (data.result) {
+            return true
         }
 
+        logger.error(`RPC URL ${rpcUrl} responded with invalid data: ${JSON.stringify(data)}`)
+        return false
+    } catch (error) {
+        logger.error(
+            `Validation failed for RPC URL ${rpcUrl}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
+        )
         return false
     }
 }
 
-const validateWebSocketRpcUrl = (rpcUrl: string, timeout: number): Promise<boolean> => {
+const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number): Promise<boolean> => {
     return new Promise((resolve) => {
         const ws = new WebSocket(rpcUrl)
-
         const timeoutId = setTimeout(() => {
             ws.close()
-            logger.error(`${printBoolean(false)} WebSocket connection timed out`)
+            logger.error(`WebSocket connection timed out for RPC URL ${rpcUrl}`)
             resolve(false)
         }, timeout)
 
@@ -79,12 +67,9 @@ const validateWebSocketRpcUrl = (rpcUrl: string, timeout: number): Promise<boole
 
         ws.onerror = (error) => {
             clearTimeout(timeoutId)
-
-            if (error instanceof Error) {
-                logger.error(`${printBoolean(false)} WebSocket RPC url validation failed: ${error.message}`)
-            } else {
-                logger.error(`${printBoolean(false)} WebSocket RPC url validation failed: An unknown error occurred`)
-            }
+            logger.error(
+                `Validation failed for RPC URL ${rpcUrl}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
+            )
             resolve(false)
         }
     })
@@ -92,11 +77,11 @@ const validateWebSocketRpcUrl = (rpcUrl: string, timeout: number): Promise<boole
 
 const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, networkName: string): Promise<boolean> => {
     if (!rpcUrl) {
-        logger.error(`${printBoolean(false)} Missing rpc url`)
+        logger.error(`${printBoolean(false)} Missing RPC URL for network: ${networkName}`)
         return false
     }
 
-    logger.info(`...Validating RPC URL ${rpcUrl} for ${networkName}...`) // TODO consistent case sensitivity/formatting
+    logger.info(`...Validating RPC URL ${rpcUrl} for ${networkName}...`)
 
     if (rpcUrl.startsWith('http://') || rpcUrl.startsWith('https://')) {
         return await validateHttpsRpcUrl(rpcUrl, timeout)
@@ -111,38 +96,35 @@ const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, netwo
 const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     printLogo()
 
-    const networkNames = Object.keys(hre.userConfig.networks || {})
+    const networks = hre.userConfig.networks || {}
+    const networkNames = Object.keys(networks)
 
     logger.info(
-        `========== Validating rpc urls with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
+        `========== Validating RPC URLs with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
     )
 
-    if (networkNames.length === 0) {
+    if (!networkNames.length) {
         logger.info(`No networks found in hardhat.config.ts`)
         return
     }
 
     for (const networkName of networkNames) {
-        const networkConfig = hre.userConfig.networks?.[networkName]
+        const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
 
-        if (networkConfig && RPC_URL_KEY in networkConfig) {
-            const isValid = await validateRpcUrl(networkConfig.url, taskArgs.timeout, networkName)
-
-            if (!isValid) {
-                throw new Error(`${printBoolean(false)} RPC url validation failed for network: ${networkName}`)
-            }
+        if (rpcUrl && !(await validateRpcUrl(rpcUrl, taskArgs.timeout, networkName))) {
+            throw new Error(`RPC URL validation failed for network: ${networkName}`)
         }
     }
 
-    logger.info(`${printBoolean(true)} All rpc urls are valid!`)
+    logger.info(`All RPC URLs are valid!`)
 }
 task(
     TASK_LZ_VALIDATE_RPCS,
-    'Validate rpc urls in hardhat.config.ts. RPCs are only considered valid if they respond within the specified timeout.',
+    'Validate RPC URLs in hardhat.config.ts. RPCs are only considered valid if they respond within the specified timeout.',
     action
 ).addParam(
     'timeout',
-    `Maximum amount of time (in milliseconds) that the rpc urls have to respond. If unspecified, default timeout will be used.`,
+    `Maximum amount of time (in milliseconds) that the RPC URLs have to respond. If unspecified, default timeout will be used.`,
     TIMEOUT,
     types.int,
     true
