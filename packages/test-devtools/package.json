@@ -33,7 +33,7 @@
     "@scure/bip39": "~1.2.2"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-definitions": "^2.3.39",
     "bs58": "^6.0.0",
     "fast-check": "^3.15.1",
     "ts-node": "^10.9.2",

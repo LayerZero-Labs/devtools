@@ -111,6 +111,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         // Quote the fee for the cross-chain transfer
         const feeQuote = await OftTools.quoteWithUln(
             connection,
+            oftProgramId, // OFT Program
             keypair.publicKey,
             mintPublicKey,
             destinationEid,
@@ -129,8 +130,8 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                 destinationEid,
                 hexlify(peerInfo.address)
             ),
-            TOKEN_PROGRAM_ID, // SPL Token Program
-            oftProgramId // OFT Program
+            undefined, // Endpoint program ID
+            TOKEN_PROGRAM_ID // SPL Token Program
         )
 
         console.log(feeQuote)
@@ -138,6 +139,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         // Create the instruction for sending tokens
         const sendInstruction = await OftTools.sendWithUln(
             connection,
+            oftProgramId, // OFT Program
             keypair.publicKey, // payer
             mintPublicKey, // tokenMint
             toWeb3JsPublicKey(tokenAccount[0]), // tokenSource
@@ -152,8 +154,8 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             undefined,
             peerInfo.address,
             undefined,
-            TOKEN_PROGRAM_ID, // SPL Token Program
-            oftProgramId // OFT Program
+            undefined, // Endpoint program ID
+            TOKEN_PROGRAM_ID // SPL Token Program
         )
 
         // Convert the instruction and create the transaction builder

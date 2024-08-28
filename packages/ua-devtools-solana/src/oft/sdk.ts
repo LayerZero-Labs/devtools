@@ -27,7 +27,7 @@ export class OFT extends OmniSDK implements IOApp {
         connection: Connection,
         point: OmniPoint,
         userAccount: PublicKey,
-        public readonly programId: PublicKey = OftProgram.OFT_DEFAULT_PROGRAM_ID,
+        public readonly programId: PublicKey,
         logger?: Logger
     ) {
         super(connection, point, userAccount, logger)
@@ -63,10 +63,10 @@ export class OFT extends OmniSDK implements IOApp {
             async () =>
                 new Transaction().add(
                     await OftTools.createTransferAdminIx(
-                        this.userAccount,
-                        this.publicKey,
-                        new PublicKey(address),
-                        this.programId
+                        this.programId,
+                        this.userAccount, // Signer
+                        this.publicKey, // OFT Config account
+                        new PublicKey(address) // Owner account
                     )
                 ),
             (error) => new Error(`Failed to set owner for ${this.label} to ${address}: ${error}`)
@@ -95,7 +95,7 @@ export class OFT extends OmniSDK implements IOApp {
 
         this.logger.debug(`Getting peer for ${eidLabel}`)
         try {
-            const peer = await OftTools.getPeerAddress(this.connection, this.publicKey, eid, this.programId)
+            const peer = await OftTools.getPeerAddress(this.connection, this.programId, this.publicKey, eid)
 
             // We run the hex string we got through a normalization/denormalization process
             // that will ensure that zero addresses will get stripped
@@ -129,7 +129,7 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
 
         const transaction = new Transaction().add(
-            await OftTools.createSetPeerIx(this.userAccount, this.publicKey, eid, normalizedPeer, this.programId)
+            await OftTools.createSetPeerIx(this.programId, this.userAccount, this.publicKey, eid, normalizedPeer)
         )
 
         return {
@@ -164,10 +164,10 @@ export class OFT extends OmniSDK implements IOApp {
         const transaction = await mapError(
             async () => {
                 const instruction = await OftTools.createSetDelegateIx(
+                    this.programId,
                     this.userAccount,
                     this.publicKey,
-                    new PublicKey(delegate),
-                    this.programId
+                    new PublicKey(delegate)
                 )
                 return new Transaction().add(instruction)
             },
@@ -189,7 +189,7 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
 
         try {
-            const options = await OftTools.getEnforcedOptions(this.connection, this.publicKey, eid, this.programId)
+            const options = await OftTools.getEnforcedOptions(this.connection, this.programId, this.publicKey, eid)
             const optionsForMsgType = msgType === MSG_TYPE_SEND ? options.send : options.sendAndCall
 
             return toHex(optionsForMsgType)
@@ -216,12 +216,12 @@ export class OFT extends OmniSDK implements IOApp {
             const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
 
             const instruction = await OftTools.createSetEnforcedOptionsIx(
+                this.programId, // OFT Program ID
                 this.userAccount, // your admin address
                 this.publicKey, // your OFT Config
                 eid, // destination endpoint id for the options to apply to
                 sendOption,
-                sendAndCallOption,
-                this.programId
+                sendAndCallOption
             )
 
             transaction.add(instruction)

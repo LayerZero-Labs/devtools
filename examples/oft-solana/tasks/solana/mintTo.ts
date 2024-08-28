@@ -68,11 +68,11 @@ task('lz:oft:solana:mint', 'Mint tokens on Solana using OFT pass-through')
         const amount = taskArgs.amount * 10 ** mintInfo.decimals
 
         const oftMintIx = await OftTools.createMintToIx(
+            TOKEN_PROGRAM_ID,
             keypair.publicKey,
             mintPublicKey,
             web3TokenAccount.address, // which account to mint to?
             BigInt(amount),
-            TOKEN_PROGRAM_ID,
             oftProgramId
         )
 
