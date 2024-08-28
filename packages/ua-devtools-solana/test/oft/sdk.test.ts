@@ -274,32 +274,32 @@ describe('oft/sdk', () => {
 
             // Ethereum should have both msgType options set
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                programId,
                 sdk.userAccount,
                 sdk.publicKey,
                 EndpointId.ETHEREUM_V2_TESTNET,
                 Options.newOptions().addExecutorOrderedExecutionOption().toBytes(),
-                Options.newOptions().addExecutorLzReceiveOption(1, 1).toBytes(),
-                programId
+                Options.newOptions().addExecutorLzReceiveOption(1, 1).toBytes()
             )
 
             // Base should have one option set
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                programId,
                 sdk.userAccount,
                 sdk.publicKey,
                 EndpointId.BASE_V2_MAINNET,
                 Options.newOptions().addExecutorLzReceiveOption(4, 1).toBytes(),
-                Options.newOptions().toBytes(),
-                programId
+                Options.newOptions().toBytes()
             )
 
             // Avalanche should use the latter option and ignore the first one
             expect(createSetEnforcedOptionsIxMock).toHaveBeenCalledWith(
+                programId,
                 sdk.userAccount,
                 sdk.publicKey,
                 EndpointId.AVALANCHE_V2_MAINNET,
                 Options.newOptions().toBytes(),
-                Options.newOptions().addExecutorLzReceiveOption(3, 1).toBytes(),
-                programId
+                Options.newOptions().addExecutorLzReceiveOption(3, 1).toBytes()
             )
         })
     })
