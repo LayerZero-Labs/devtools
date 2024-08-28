@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.1.8
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.1.7
 
 ### Patch Changes

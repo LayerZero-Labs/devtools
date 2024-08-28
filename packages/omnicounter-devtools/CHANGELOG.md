@@ -1,5 +1,14 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 1.0.2
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+- Updated dependencies [893ad66]
+  - @layerzerolabs/protocol-devtools@0.4.3
+  - @layerzerolabs/devtools@0.3.25
+
 ## 1.0.1
 
 ### Patch Changes

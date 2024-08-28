@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.0.9
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.0.8
 
 ### Patch Changes
