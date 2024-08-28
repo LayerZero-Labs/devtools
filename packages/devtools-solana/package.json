@@ -44,7 +44,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.3.24",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-definitions": "^2.3.34",
+    "@layerzerolabs/lz-definitions": "^2.3.39",
     "@layerzerolabs/test-devtools": "~0.2.8",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
     "@solana/web3.js": "~1.95.0",

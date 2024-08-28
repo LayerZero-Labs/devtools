@@ -154,13 +154,14 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
 
         // Create the OFT Adapter Config initialization instruction
         const adapterIx = await OftTools.createInitAdapterOftIx(
+            OFT_PROGRAM_ID, // OFT Program ID
             web3WalletKeyPair.publicKey, // Payer
             web3WalletKeyPair.publicKey, // Admin
             web3TokenKeyPair.publicKey, // SPL Token Mint Account
             web3LockboxKeypair.publicKey, // Lockbox account
             SHARED_DECIMALS, // Number of shared decimals
-            TOKEN_PROGRAM_ID, // Token program ID
-            OFT_PROGRAM_ID // OFT Program ID
+            undefined, // Endpoint program ID
+            TOKEN_PROGRAM_ID // Token program ID
         )
 
         // Build and send the transaction with the create OFT Adapter instruction
