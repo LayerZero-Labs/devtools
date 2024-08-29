@@ -2,10 +2,10 @@
 
 import hre from 'hardhat'
 import { join } from 'path'
-import { TASK_VALIDATE_RPCS } from '@layerzerolabs/devtools-evm-hardhat' // TODO why is this not being identified  >:( ?
+import { TASK_LZ_VALIDATE_RPCS } from '@layerzerolabs/devtools-evm-hardhat'
 import { spawnSync } from 'child_process'
 
-describe(`task ${TASK_VALIDATE_RPCS}`, () => {
+describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
     describe('expectations', () => {
         const EXPECTATIONS_DIRECTORY = join('test', 'task', 'validate.rpcs.test.expectations')
         const expectationPath = (name: string) => join(EXPECTATIONS_DIRECTORY, `${name}.exp`)
@@ -67,6 +67,6 @@ describe(`task ${TASK_VALIDATE_RPCS}`, () => {
     })
 
     it('should be available', () => {
-        expect(hre.tasks[TASK_VALIDATE_RPCS]).not.toBeUndefined()
+        expect(hre.tasks[TASK_LZ_VALIDATE_RPCS]).not.toBeUndefined()
     })
 })
