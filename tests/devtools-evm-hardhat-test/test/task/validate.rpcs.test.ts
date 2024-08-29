@@ -61,8 +61,6 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
             expect(result.status).toBe(0)
         })
-
-        // TODO add more tests can there be other types of RPCs other than http/https/wss ?
     })
 
     it('should be available', () => {

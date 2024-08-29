@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
     networks: {
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'wss://ws-feed.pro.coinbase.com', // websocket that is not an rpc
+            url: 'wss://socketsbay.com/wss/v2/1/demo/', // websocket that is not an rpc
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,

@@ -57,7 +57,6 @@ const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boo
     }
 }
 
-// TODO this validates any ws URL, not just RPCs
 const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number): Promise<boolean> => {
     return new Promise((resolve) => {
         const ws = new WebSocket(rpcUrl)
