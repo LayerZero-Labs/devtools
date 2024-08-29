@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
         ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'https://github.com', // URL that is not an rpc TODO can this be more robust?
+            url: 'https://github.com', // URL that is not an rpc
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,

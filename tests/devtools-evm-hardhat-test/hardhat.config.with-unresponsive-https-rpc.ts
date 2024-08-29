@@ -5,7 +5,7 @@ import type { HardhatUserConfig } from 'hardhat/types'
 
 import { default as baseConfig } from './hardhat.config'
 
-const MNEMONIC = process.env.MNEMONIC ?? '' // TODO add wss or https to all
+const MNEMONIC = process.env.MNEMONIC ?? ''
 
 /**
  * This is a dummy hardhat config that enables us to test

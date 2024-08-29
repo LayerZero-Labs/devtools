@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
         ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'https://polygon-rpc.com/', // Polygon (MATIC)'s public endpoint TODO can this be more robust?
+            url: 'https://polygon-rpc.com/', // Polygon (MATIC)'s public endpoint
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,

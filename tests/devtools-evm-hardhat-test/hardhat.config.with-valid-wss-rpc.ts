@@ -17,7 +17,7 @@ const config: HardhatUserConfig = {
         ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'wss://rpc-mainnet.matic.network', // Polygon (Matic)'s public websocket TODO can this be more robust?
+            url: 'wss://rpc-mainnet.matic.network', // Polygon (Matic)'s public websocket
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,

@@ -17,7 +17,6 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
         it('should validate incorrect https RPC URL', async () => {
             const result = runExpect('validate-incorrect-https-rpc')
-            // TODO organize https and wss and any other type of RPCs
             expect(result.status).toBe(0)
         })
 

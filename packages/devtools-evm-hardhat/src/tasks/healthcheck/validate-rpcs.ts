@@ -93,6 +93,8 @@ const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, netwo
         return await validateWebSocketRpcUrl(rpcUrl, timeout)
     }
 
+    logger.error(`Unsupported RPC protocol in network: ${networkName}`)
+
     return false
 }
 
@@ -118,7 +120,7 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
 }
 task(
     TASK_LZ_VALIDATE_RPCS,
-    'Validate RPC URLs in hardhat.config.ts. RPCs are only considered valid if they respond within the specified timeout.',
+    'Validate RPC URLs in hardhat.config.ts. RPCs are only considered valid if they use the https or wss protocol and respond within the specified timeout.',
     action
 ).addParam(
     'timeout',
