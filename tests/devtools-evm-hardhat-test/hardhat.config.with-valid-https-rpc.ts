@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
     networks: {
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'https://polygon-rpc.com/', // Polygon (MATIC)'s public endpoint
+            url: 'https://ethereum-rpc.publicnode.com',
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,
