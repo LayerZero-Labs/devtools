@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.2.18
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.2.17
 
 ### Patch Changes

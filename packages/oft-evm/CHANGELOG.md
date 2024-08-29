@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-evm
 
+## 0.0.11
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+- Updated dependencies [893ad66]
+  - @layerzerolabs/oapp-evm@0.0.4
+
 ## 0.0.10
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 0.2.12
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+- Updated dependencies [893ad66]
+  - @layerzerolabs/oapp-evm@0.0.4
+  - @layerzerolabs/oft-evm@0.0.11
+
 ## 0.2.11
 
 ### Patch Changes

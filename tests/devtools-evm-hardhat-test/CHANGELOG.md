@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.1.8
+
+### Patch Changes
+
+- 3208a32: Task to validate safe configurations within hardhat.config.ts
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.1.7
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # decode-lz-options
 
+## 0.0.5
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.0.4
 
 ### Patch Changes

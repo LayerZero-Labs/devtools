@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.7
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.0.6
 
 ### Patch Changes
