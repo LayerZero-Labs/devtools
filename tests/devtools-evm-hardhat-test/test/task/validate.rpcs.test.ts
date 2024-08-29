@@ -57,7 +57,7 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
         })
 
         it('should validate valid wss RPC URL', async () => {
-            const result = runExpect('validate-valid-wss-rpcs')
+            const result = runExpect('validate-valid-wss-rpc')
 
             expect(result.status).toBe(0)
         })
