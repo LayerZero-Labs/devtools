@@ -31,7 +31,7 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.ts lz:validate-safe-configs
+spawn npx hardhat --config hardhat.config.ts lz:healthcheck:validate:safe-configs
 
 expect "All safe configs are valid!"
 

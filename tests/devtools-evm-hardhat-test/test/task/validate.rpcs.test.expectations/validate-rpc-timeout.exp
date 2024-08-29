@@ -30,7 +30,7 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.with-valid-https-rpc.ts lz:validate-rpcs --timeout 10
+spawn npx hardhat --config hardhat.config.with-valid-https-rpc.ts lz:healthcheck:validate:rpcs --timeout 10
 
 expect "========== RPC URL validation failed for network(s): arbitrum"
 

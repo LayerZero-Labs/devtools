@@ -30,7 +30,7 @@ set timeout 60
 
 match_max 100000
 
-spawn npx hardhat --config hardhat.config.with-missing-safe-address.ts lz:validate-safe-configs
+spawn npx hardhat --config hardhat.config.with-missing-safe-address.ts lz:healthcheck:validate:safe-configs
 
 expect "Missing safeAddress"
 expect "Safe config validation failed for network: ethereum"
