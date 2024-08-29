@@ -12,6 +12,7 @@ interface TaskArguments {
 }
 
 const RPC_URL_KEY = 'url'
+const JSON_RPC = '2.0'
 
 const HTTP_URL = 'http://'
 const HTTPS_URL = 'https://'
@@ -66,18 +67,44 @@ const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number): Promise
             resolve(false)
         }, timeout)
 
-        ws.onopen = () => {
+        const cleanup = (success: boolean, message?: string) => {
             clearTimeout(timeoutId)
+            if (message) {
+                logger.error(message)
+            }
             ws.close()
-            resolve(true)
+            resolve(success)
+        }
+
+        ws.onopen = () => {
+            const rpcRequest = JSON.stringify({
+                jsonrpc: JSON_RPC,
+                method: 'eth_blockNumber',
+                params: [],
+                id: 1,
+            })
+            ws.send(rpcRequest)
+        }
+
+        ws.onmessage = (event) => {
+            try {
+                const response = JSON.parse(event.data.toString())
+                if (response.jsonrpc === JSON_RPC && !!response.result) {
+                    cleanup(true)
+                } else {
+                    cleanup(false, `Invalid RPC response: ${event.data}`)
+                }
+            } catch (error) {
+                cleanup(false, `Error parsing RPC response: ${error}`)
+            }
         }
 
         ws.onerror = (error) => {
-            clearTimeout(timeoutId)
-            logger.error(
-                `Validation failed for RPC URL: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
-            )
-            resolve(false)
+            cleanup(false, `Validation failed: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
+        }
+
+        ws.onclose = () => {
+            cleanup(false, `Validation failed: WebSocket connection closed unexpectedly`)
         }
     })
 }
