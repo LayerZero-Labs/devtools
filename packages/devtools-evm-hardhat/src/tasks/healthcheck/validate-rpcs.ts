@@ -132,5 +132,3 @@ task(
     types.int,
     true
 )
-
-// TODO potentially implement a feature flag that runs this task/validation inside hardhat config?
