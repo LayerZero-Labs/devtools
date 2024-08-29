@@ -61,6 +61,12 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
             expect(result.status).toBe(0)
         })
+
+        it('should validate multiple RPC URLs', async () => {
+            const result = runExpect('validate-multiple-rpcs')
+
+            expect(result.status).toBe(0)
+        })
     })
 
     it('should be available', () => {
