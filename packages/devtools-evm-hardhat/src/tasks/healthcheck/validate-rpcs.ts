@@ -12,7 +12,11 @@ interface TaskArguments {
 }
 
 const RPC_URL_KEY = 'url'
-const HTTP_URL = 'https://'
+
+const HTTP_URL = 'http://'
+const HTTPS_URL = 'https://'
+
+const WS_URL = 'ws://'
 const WSS_URL = 'wss://'
 
 const TIMEOUT = 1000 // 1 second
@@ -87,9 +91,9 @@ const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, netwo
 
     logger.info(`...Validating RPC URL ${rpcUrl} for ${networkName}...`)
 
-    if (rpcUrl.startsWith(HTTP_URL)) {
+    if (rpcUrl.startsWith(HTTP_URL) || rpcUrl.startsWith(HTTPS_URL)) {
         return await validateHttpsRpcUrl(rpcUrl, timeout)
-    } else if (rpcUrl.startsWith(WSS_URL)) {
+    } else if (rpcUrl.startsWith(WS_URL) || rpcUrl.startsWith(WSS_URL)) {
         return await validateWebSocketRpcUrl(rpcUrl, timeout)
     }
 

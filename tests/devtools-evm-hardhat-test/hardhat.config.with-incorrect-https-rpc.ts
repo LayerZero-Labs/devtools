@@ -14,7 +14,6 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
 const config: HardhatUserConfig = {
     ...baseConfig,
     networks: {
-        ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
             url: 'https://github.com', // URL that is not an rpc

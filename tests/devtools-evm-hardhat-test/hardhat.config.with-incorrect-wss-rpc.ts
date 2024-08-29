@@ -14,7 +14,6 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
 const config: HardhatUserConfig = {
     ...baseConfig,
     networks: {
-        ...baseConfig.networks,
         ethereum: {
             eid: EndpointId.ETHEREUM_V2_MAINNET,
             url: 'wss://ws-feed.pro.coinbase.com', // websocket that is not an rpc
