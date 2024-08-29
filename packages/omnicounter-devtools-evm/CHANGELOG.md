@@ -1,5 +1,19 @@
 # @layerzerolabs/omnicounter-devtools-evm
 
+## 3.0.1
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+- Updated dependencies [893ad66]
+  - @layerzerolabs/protocol-devtools-evm@1.2.1
+  - @layerzerolabs/omnicounter-devtools@1.0.2
+  - @layerzerolabs/protocol-devtools@0.4.3
+  - @layerzerolabs/ua-devtools-evm@3.0.1
+  - @layerzerolabs/devtools-evm@0.4.2
+  - @layerzerolabs/ua-devtools@1.0.5
+  - @layerzerolabs/devtools@0.3.25
+
 ## 3.0.0
 
 ### Patch Changes

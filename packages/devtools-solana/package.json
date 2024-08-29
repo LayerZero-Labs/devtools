@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-solana",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",
@@ -42,10 +42,10 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.3.24",
+    "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^2.3.39",
-    "@layerzerolabs/test-devtools": "~0.2.8",
+    "@layerzerolabs/test-devtools": "~0.2.9",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
     "@solana/web3.js": "~1.95.0",
     "@sqds/sdk": "~2.0.4",
@@ -65,7 +65,7 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.3.24",
+    "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^2.3.3",
     "@solana/web3.js": "^1.95.0",

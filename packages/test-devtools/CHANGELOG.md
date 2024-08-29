@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.2.9
+
+### Patch Changes
+
+- 893ad66: Update @LayerZero-Labs dependencies to 2.3.39
+
 ## 0.2.8
 
 ### Patch Changes
