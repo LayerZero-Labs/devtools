@@ -15,6 +15,12 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
                 stdio: 'inherit',
             })
 
+        it('should not validate RPC URLs for network without eid', async () => {
+            const result = runExpect('validate-rpc-for-network-without-eid')
+
+            expect(result.status).toBe(0)
+        })
+
         it('should validate incorrect https RPC URL', async () => {
             const result = runExpect('validate-incorrect-https-rpc')
             expect(result.status).toBe(0)
@@ -28,6 +34,12 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
         it('should validate invalid RPC URL', async () => {
             const result = runExpect('validate-invalid-rpc')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should validate multiple RPC URLs', async () => {
+            const result = runExpect('validate-multiple-rpcs')
 
             expect(result.status).toBe(0)
         })
@@ -58,12 +70,6 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
         it('should validate valid wss RPC URL', async () => {
             const result = runExpect('validate-valid-wss-rpc')
-
-            expect(result.status).toBe(0)
-        })
-
-        it('should validate multiple RPC URLs', async () => {
-            const result = runExpect('validate-multiple-rpcs')
 
             expect(result.status).toBe(0)
         })

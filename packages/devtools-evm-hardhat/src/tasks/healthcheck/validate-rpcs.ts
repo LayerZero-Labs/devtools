@@ -5,6 +5,7 @@ import { task, types } from 'hardhat/config'
 import { TASK_LZ_VALIDATE_RPCS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { getEidsByNetworkName } from '@/runtime'
 import WebSocket from 'ws'
 
 interface TaskArguments {
@@ -132,7 +133,8 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     printLogo()
 
     const networks = hre.userConfig.networks || {}
-    const networkNames = Object.keys(networks)
+    const eidByNetworkName = getEidsByNetworkName(hre)
+    const networkNames = Object.keys(networks).filter((networkName) => !!eidByNetworkName[networkName])
 
     logger.info(
         `========== Validating RPC URLs with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
@@ -154,7 +156,7 @@ task(
     action
 ).addParam(
     'timeout',
-    `Maximum amount of time (in milliseconds) that the RPC URLs have to respond. If unspecified, default timeout will be used.`,
+    `Maximum amount of time (in milliseconds) that the RPC URLs have to respond. If unspecified, default timeout of ${TIMEOUT}ms will be used.`,
     TIMEOUT,
     types.int,
     true
