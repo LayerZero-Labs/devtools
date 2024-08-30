@@ -45,6 +45,9 @@ FROM node:$NODE_VERSION AS base
 
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ARG SOLANA_VERSION=1.18.17
+ARG SVM_RS_VERSION=0.5.4
+ARG ANCHOR_VERSION=0.30.1
+ARG SOLC_VERSION=0.8.22
 
 WORKDIR /app
 
@@ -90,17 +93,18 @@ RUN rm -rf ./solana-*
 RUN cargo install --git https://github.com/coral-xyz/anchor avm
 
 # Install anchor
-RUN avm install latest && avm use latest
+RUN avm install ${ANCHOR_VERSION}
+RUN avm use ${ANCHOR_VERSION}
 
 # Install foundry
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
-RUN cargo install svm-rs
+RUN cargo install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
-RUN svm install 0.8.22
+RUN svm install ${SOLC_VERSION}
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh

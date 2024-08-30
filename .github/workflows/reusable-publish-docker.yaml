@@ -56,7 +56,16 @@ jobs:
         with:
           provenance: false
           context: .
-          platforms: linux/amd64,linux/arm64
+          # linux/arm64 platform build is timing out on github runners
+          # most probably due to memory limitations of the runner
+          #
+          # Since this platform is only used on local M1/2/3 machines
+          # and can be built locally, we'll disable the CI/CD build
+          # instead of going for much more complex distributed matrix build
+          #
+          # See more about how the build can be distributed here
+          # https://docs.docker.com/build/ci/github-actions/multi-platform/
+          platforms: linux/amd64
           push: true
           target: base
           tags: ${{ steps.meta.outputs.tags }}
