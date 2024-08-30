@@ -75,7 +75,7 @@ abstract contract NativeOFTAdapter is OFTCore {
             revert InsufficientMessageValue(msg.value, requiredMsgValue);
         }
 
-        return super.send(_sendParam, _fee, _refundAddress);
+        return super._send(_sendParam, _fee, _refundAddress);
     }
 
     /**
