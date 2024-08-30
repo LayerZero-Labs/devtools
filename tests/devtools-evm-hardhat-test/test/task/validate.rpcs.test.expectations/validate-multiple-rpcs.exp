@@ -32,6 +32,6 @@ match_max 100000
 
 spawn npx hardhat --config hardhat.config.with-multiple-rpcs.ts lz:validate-rpcs
 
-expect "All RPC URLs are valid!"
+expect "========== All RPC URLs are valid!"
 
 expect eof

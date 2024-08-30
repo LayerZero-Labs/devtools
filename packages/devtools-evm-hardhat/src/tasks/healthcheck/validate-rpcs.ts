@@ -25,7 +25,7 @@ const TIMEOUT = 1000 // 1 second
 
 const logger = createLogger()
 
-const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boolean> => {
+const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number, networkName: string): Promise<boolean> => {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)
 
@@ -40,7 +40,7 @@ const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boo
         clearTimeout(timeoutId)
 
         if (!response.ok) {
-            logger.error(`RPC URL responded with status: ${response.status}`)
+            logger.error(`RPC URL ${rpcUrl} for network ${networkName} responded with status: ${response.status}`)
             return false
         }
 
@@ -49,22 +49,24 @@ const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number): Promise<boo
             return true
         }
 
-        logger.error(`RPC URL responded with invalid data: ${JSON.stringify(data)}`)
+        logger.error(
+            `RPC URL ${rpcUrl} for network ${networkName} responded with invalid data: ${JSON.stringify(data)}`
+        )
         return false
     } catch (error) {
         logger.error(
-            `Validation failed for RPC URL: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
+            `Validation failed for RPC URL ${rpcUrl} for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
         )
         return false
     }
 }
 
-const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number): Promise<boolean> => {
+const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number, networkName: string): Promise<boolean> => {
     return new Promise((resolve) => {
         const ws = new WebSocket(rpcUrl)
         const timeoutId = setTimeout(() => {
             ws.close()
-            logger.error(`WebSocket connection timed out for RPC URL`)
+            logger.error(`WebSocket connection timed out for RPC URL ${rpcUrl} for network ${networkName}`)
             resolve(false)
         }, timeout)
 
@@ -93,19 +95,25 @@ const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number): Promise
                 if (response.jsonrpc === JSON_RPC && !!response.result) {
                     cleanup(true)
                 } else {
-                    cleanup(false, `Invalid RPC response: ${event.data}`)
+                    cleanup(false, `Invalid RPC URL ${rpcUrl} for network ${networkName} response: ${event.data}`)
                 }
             } catch (error) {
-                cleanup(false, `Error parsing RPC response: ${error}`)
+                cleanup(false, `Error parsing RPC response for ${rpcUrl} for network ${networkName}: ${error}`)
             }
         }
 
         ws.onerror = (error) => {
-            cleanup(false, `Validation failed: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
+            cleanup(
+                false,
+                `Validation failed for ${rpcUrl} for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
+            )
         }
 
         ws.onclose = () => {
-            cleanup(false, `Validation failed: WebSocket connection closed unexpectedly`)
+            cleanup(
+                false,
+                `Validation failed for ${rpcUrl} for network ${networkName}: WebSocket connection closed unexpectedly`
+            )
         }
     })
 }
@@ -116,12 +124,10 @@ const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, netwo
         return false
     }
 
-    logger.info(`...Validating RPC URL ${rpcUrl} for ${networkName}...`)
-
     if (rpcUrl.startsWith(HTTP_URL) || rpcUrl.startsWith(HTTPS_URL)) {
-        return await validateHttpsRpcUrl(rpcUrl, timeout)
+        return await validateHttpsRpcUrl(rpcUrl, timeout, networkName)
     } else if (rpcUrl.startsWith(WS_URL) || rpcUrl.startsWith(WSS_URL)) {
-        return await validateWebSocketRpcUrl(rpcUrl, timeout)
+        return await validateWebSocketRpcUrl(rpcUrl, timeout, networkName)
     }
 
     logger.error(`Unsupported RPC protocol in network: ${networkName}`)
@@ -140,15 +146,25 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
         `========== Validating RPC URLs with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
     )
 
-    for (const networkName of networkNames) {
+    const networksWithInvalidRPCs: string[] = []
+
+    const validationPromises = networkNames.map(async (networkName) => {
         const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
 
         if (rpcUrl && !(await validateRpcUrl(rpcUrl, taskArgs.timeout, networkName))) {
-            throw new Error(`${printBoolean(false)} RPC URL validation failed for network: ${networkName}`)
+            networksWithInvalidRPCs.push(networkName)
         }
-    }
+    })
 
-    logger.info(`${printBoolean(true)} All RPC URLs are valid!`)
+    await Promise.all(validationPromises)
+
+    if (networksWithInvalidRPCs.length !== 0) {
+        logger.error(
+            `${printBoolean(false)} ========== RPC URL validation failed for network(s): ${networksWithInvalidRPCs.join(', ')}`
+        )
+    } else {
+        logger.info(`${printBoolean(true)} ========== All RPC URLs are valid!`)
+    }
 }
 task(
     TASK_LZ_VALIDATE_RPCS,
