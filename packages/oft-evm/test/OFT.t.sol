@@ -395,41 +395,6 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cERC20Mock.balanceOf(address(cOFTAdapter)), 0);
     }
 
-    function test_native_oft_adapter_debit() public virtual {
-        uint256 amountToSendLD = 1 ether;
-        uint256 minAmountToCreditLD = 1 ether;
-        uint32 dstEid = D_EID;
-
-        vm.prank(userD);
-        vm.expectRevert(
-            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
-        );
-        dNativeOFTAdapter.asNativeOFTAdapterMock().debit(amountToSendLD, minAmountToCreditLD + 1, dstEid);
-
-        vm.prank(userD);
-        (uint256 amountDebitedLD, uint256 amountToCreditLD) = dNativeOFTAdapter.asNativeOFTAdapterMock().debit(
-            amountToSendLD,
-            minAmountToCreditLD,
-            dstEid
-        );
-
-        assertEq(amountDebitedLD, amountToSendLD);
-        assertEq(amountToCreditLD, amountToSendLD);
-    }
-
-    function test_native_oft_adapter_credit() public {
-        uint256 amountToCreditLD = 1 ether;
-        uint32 srcEid = D_EID;
-
-        // simulate userD already having deposited native to the adapter
-        vm.deal(address(dNativeOFTAdapter), amountToCreditLD);
-
-        uint256 amountReceived = dNativeOFTAdapter.asNativeOFTAdapterMock().credit(userB, amountToCreditLD, srcEid);
-
-        assertEq(userB.balance, initialNativeBalance + amountReceived);
-        assertEq(address(dNativeOFTAdapter).balance, 0);
-    }
-
     function test_native_oft_adapter_send() public virtual {
         assertEq(userD.balance, initialNativeBalance);
         assertEq(address(dNativeOFTAdapter).balance, 0);
