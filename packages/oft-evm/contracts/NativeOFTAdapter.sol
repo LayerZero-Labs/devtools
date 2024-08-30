@@ -17,7 +17,7 @@ import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "
 abstract contract NativeOFTAdapter is OFTCore {
 
     error IncorrectMessageValue(uint256 provided, uint256 required);
-    error CreditFailed();
+    error CreditFailed(address to, uint256 amountLD);
 
     /**
      * @param _localDecimals The decimals of the native on the local chain (this chain). 18 on ETH.
@@ -112,7 +112,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         // @dev Transfer tokens to the recipient.
         (bool success, ) = payable(_to).call{value: _amountLD}("");
         if (!success) {
-            revert CreditFailed();
+            revert CreditFailed(_to, _amountLD);
         }
 
         // @dev In the case of NON-default NativeOFTAdapter, the amountLD MIGHT not be == amountReceivedLD.
