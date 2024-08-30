@@ -448,19 +448,30 @@ contract OFTTest is TestHelperOz5 {
         );
 
         MessagingFee memory fee = dNativeOFTAdapter.quoteSend(sendParam, false);
-        uint256 msgValue = fee.nativeFee + sendParam.amountLD;
+        uint256 correctMsgValue = fee.nativeFee + sendParam.amountLD;
 
+        // expect sending wrapped native to fail if the amount to be sent is not provided in msg.value
         vm.prank(userD);
         vm.expectRevert(
-            abi.encodeWithSelector(NativeOFTAdapter.InsufficientMessageValue.selector, fee.nativeFee, msgValue)
+            abi.encodeWithSelector(NativeOFTAdapter.IncorrectMessageValue.selector, fee.nativeFee, correctMsgValue)
         );
         dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: fee.nativeFee}(sendParam, fee, userD);
 
+        // expect sending wrapped native to succeed if the amount to be sent and the fee are both included in msg.value
         vm.prank(userD);
-        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: msgValue }(sendParam, fee, userD);
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: correctMsgValue }(sendParam, fee, userD);
 
-        assertEq(userD.balance, initialNativeBalance - msgValue);
+        assertEq(userD.balance, initialNativeBalance - correctMsgValue);
         assertEq(address(dNativeOFTAdapter).balance, amountToSendLD);
+
+        // expect sending wrapped native to fail if extra msg.value is provided 
+        // i.e msg.value > amount to be sent (with dust removed) + fee
+        uint256 extraMsgValue = correctMsgValue + 1;
+        vm.prank(userD);
+        vm.expectRevert(
+            abi.encodeWithSelector(NativeOFTAdapter.IncorrectMessageValue.selector, extraMsgValue, correctMsgValue)
+        );
+        dNativeOFTAdapter.asNativeOFTAdapterMock().send{ value: extraMsgValue}(sendParam, fee, userD);
     }
 
     function decodeOFTMsgCodec(
