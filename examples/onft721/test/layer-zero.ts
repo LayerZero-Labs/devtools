@@ -55,23 +55,20 @@ describe('MyONFT721 Test', function () {
         expect(beforeOwnerAFinalBalance.eq(1)).to.be.true
         expect(beforeOwnerBFinalBalance.eq(0)).to.be.true
 
-        const executorOption = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex()
+        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex()
 
         const sendParam = {
             dstEid: eidB,
             to: hre.ethers.utils.hexZeroPad(ownerB.address, 32),
             tokenId: tokenId,
-            extraOptions: executorOption,
+            extraOptions: options,
             composeMsg: [],
             onftCmd: [],
         }
 
-        const msgFee = {
-            nativeFee: hre.ethers.utils.parseEther('0.1'),
-            lzTokenFee: hre.ethers.utils.parseEther('0'),
-        }
+        const [nativeFee] = await aONFT.quoteSend(sendParam, false)
 
-        await aONFT.connect(ownerA).send(sendParam, msgFee, ownerA.address, { value: msgFee.nativeFee })
+        await aONFT.connect(ownerA).send(sendParam, [nativeFee, 0], ownerA.address, { value: nativeFee })
 
         const ownerAFinalBalance = await aONFT.balanceOf(ownerA.address)
         const ownerBFinalBalance = await bONFT.balanceOf(ownerB.address)
