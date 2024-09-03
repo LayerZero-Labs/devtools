@@ -32,6 +32,7 @@ match_max 100000
 
 spawn npx hardhat --config hardhat.config.with-network-without-eid.ts lz:validate-rpcs
 
+expect "No eid found for network localhost, skipping" 
 expect "========== All RPC URLs are valid!" 
 
 expect eof
