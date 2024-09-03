@@ -108,14 +108,18 @@ export class Uln302 extends OmniSDK implements IUln302 {
         this.logger.debug(`Current App ULN ${type} config: ${printJson(currentSerializedConfig)}`)
         this.logger.debug(`Incoming App ULN ${type} config: ${printJson(serializedConfig)}`)
 
-        // In Solana, the 0 value for confirmations in the config means that the config is not yet set.
+        // On Solana, a confirmation value of 0 in the configuration indicates that the config has been initialized but not explicitly set.
+        // This is different from EVM where a 0 value might act as a default placeholder.
         //
-        // Setting confirmations to 0 will set the config to the default one so
-        // if the user wants defaults to be set, we need to treat this special case
+        // If a user explicitly sets the confirmations to 0, it indicates they want to use the default configuration.
+        // Therefore, we need to handle this case specially:
         //
-        // If the chain config returns 0, we will return false to allow people to set the defaults:
-        // - if incoming config has a 0 value for confirmations, this function will return false instead of true
-        // - if incoming config has a non-0 value for confirmations, the configs would not be equal anyway
+        // - If the current chain config returns 0 for confirmations, it means the config is initialized but not explicitly set.
+        // - If the incoming config has a 0 value for confirmations, this function will return false, allowing the user to set the default configuration.
+        // - If the incoming config has a non-zero value for confirmations, the configs would not match anyway, so normal behavior applies.
+        //
+        // It's important to note that on Solana, a 0 value for confirmations doesn't mean turning off block confirmations; instead,
+        // it's used as a signal to apply default settings. Unlike EVM, Solana requires explicitly setting this 0 value to activate the defaults.
         const hasZeroConfirmations = currentConfig.confirmations === BigInt(0)
         if (hasZeroConfirmations) {
             this.logger.verbose(
