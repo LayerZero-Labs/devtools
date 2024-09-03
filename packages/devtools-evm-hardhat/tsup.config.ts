@@ -10,6 +10,7 @@ export default defineConfig([
         splitting: false,
         treeshake: true,
         format: ['esm', 'cjs'],
+        external: ['ethers'],
         loader: {
             '.conf': 'text',
         },
