@@ -53,7 +53,7 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     const networks = hre.userConfig.networks || {}
     const eidByNetworkName = getEidsByNetworkName(hre)
 
-    logger.info(`========== Validating RPC URLs for networks in hardhat.config.ts`)
+    logger.info(`========== Validating RPC URLs for networks: ${Object.keys(eidByNetworkName)}`)
 
     const networksWithInvalidRPCs: string[] = []
 
@@ -90,7 +90,7 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
 
     if (networksWithInvalidRPCs.length !== 0) {
         logger.error(
-            `${printBoolean(false)} ========== RPC URL validation failed for network(s): ${networksWithInvalidRPCs.join(', ')}`
+            `========== ${printBoolean(false)} RPC URL validation failed for network(s): ${networksWithInvalidRPCs.join(', ')}`
         )
     } else {
         logger.info(`========== ${printBoolean(true)} All RPC URLs are valid!`)
