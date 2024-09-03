@@ -14,9 +14,9 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
 const config: HardhatUserConfig = {
     ...baseConfig,
     networks: {
-        ethereum: {
-            eid: EndpointId.ETHEREUM_V2_MAINNET,
-            url: 'https://ethereum-rpc.publicnode.com',
+        arbitrum: {
+            eid: EndpointId.ARBITRUM_V2_MAINNET,
+            url: 'https://arbitrum-one-rpc.publicnode.com',
             accounts: {
                 mnemonic: MNEMONIC,
                 initialIndex: 0,

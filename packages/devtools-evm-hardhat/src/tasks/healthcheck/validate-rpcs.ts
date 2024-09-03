@@ -6,7 +6,6 @@ import { task, types } from 'hardhat/config'
 import { TASK_LZ_VALIDATE_RPCS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
-import { createProviderFactory } from '@/provider'
 import { getEidsByNetworkName } from '@/runtime'
 import { BaseProvider } from '@ethersproject/providers'
 
@@ -26,18 +25,10 @@ interface TaskArguments {
     timeout: number
 }
 
-const getProvider = async (rpcUrl: string, networkName: string, eid: number): Promise<BaseProvider> => {
+const getProvider = async (rpcUrl: string, networkName: string): Promise<BaseProvider> => {
     let provider
     if (rpcUrl.startsWith(HTTP_URL) || rpcUrl.startsWith(HTTPS_URL)) {
-        const providerFactory = createProviderFactory()
-
-        try {
-            provider = await providerFactory(eid)
-        } catch (error) {
-            logger.error(
-                `Error fetching provider for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
-            )
-        }
+        provider = new ethers.providers.JsonRpcProvider(rpcUrl)
     } else if (rpcUrl.startsWith(WS_URL) || rpcUrl.startsWith(WSS_URL)) {
         provider = new ethers.providers.WebSocketProvider(rpcUrl)
     } else {
@@ -69,7 +60,7 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
                 return
             }
 
-            const provider: BaseProvider = await getProvider(rpcUrl, networkName, eid as number)
+            const provider: BaseProvider = await getProvider(rpcUrl, networkName)
             if (!provider) {
                 networksWithInvalidRPCs.push(networkName)
                 logger.error(`Error fetching provider for network: ${networkName}`)

@@ -14,8 +14,8 @@ const MNEMONIC = process.env.MNEMONIC ?? ''
 const config: HardhatUserConfig = {
     ...baseConfig,
     networks: {
-        ethereum: {
-            eid: EndpointId.ETHEREUM_V2_MAINNET,
+        arbitrum: {
+            eid: EndpointId.ARBITRUM_V2_MAINNET,
             url: 'no:///way',
             accounts: {
                 mnemonic: MNEMONIC,
