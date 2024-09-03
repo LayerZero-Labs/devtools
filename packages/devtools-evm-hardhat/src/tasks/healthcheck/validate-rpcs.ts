@@ -1,19 +1,16 @@
 import '@/type-extensions'
 
 import { ActionType } from 'hardhat/types'
+import { ethers } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { TASK_LZ_VALIDATE_RPCS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { createProviderFactory } from '@/provider'
 import { getEidsByNetworkName } from '@/runtime'
-import WebSocket from 'ws'
-
-interface TaskArguments {
-    timeout: number
-}
+import { BaseProvider } from '@ethersproject/providers'
 
 const RPC_URL_KEY = 'url'
-const JSON_RPC = '2.0'
 
 const HTTP_URL = 'http://'
 const HTTPS_URL = 'https://'
@@ -25,114 +22,29 @@ const TIMEOUT = 1000 // 1 second
 
 const logger = createLogger()
 
-const validateHttpsRpcUrl = async (rpcUrl: string, timeout: number, networkName: string): Promise<boolean> => {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), timeout)
-
-    try {
-        const response = await fetch(rpcUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 }),
-            signal: controller.signal,
-        })
-
-        clearTimeout(timeoutId)
-
-        if (!response.ok) {
-            logger.error(`RPC URL ${rpcUrl} for network ${networkName} responded with status: ${response.status}`)
-            return false
-        }
-
-        const data = await response.json()
-        if (data.result) {
-            return true
-        }
-
-        logger.error(
-            `RPC URL ${rpcUrl} for network ${networkName} responded with invalid data: ${JSON.stringify(data)}`
-        )
-        return false
-    } catch (error) {
-        logger.error(
-            `Validation failed for RPC URL ${rpcUrl} for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
-        )
-        return false
-    }
+interface TaskArguments {
+    timeout: number
 }
 
-const validateWebSocketRpcUrl = async (rpcUrl: string, timeout: number, networkName: string): Promise<boolean> => {
-    return new Promise((resolve) => {
-        const ws = new WebSocket(rpcUrl)
-        const timeoutId = setTimeout(() => {
-            ws.close()
-            logger.error(`WebSocket connection timed out for RPC URL ${rpcUrl} for network ${networkName}`)
-            resolve(false)
-        }, timeout)
-
-        const cleanup = (success: boolean, message?: string) => {
-            clearTimeout(timeoutId)
-            if (message) {
-                logger.error(message)
-            }
-            ws.close()
-            resolve(success)
-        }
-
-        ws.onopen = () => {
-            const rpcRequest = JSON.stringify({
-                jsonrpc: JSON_RPC,
-                method: 'eth_blockNumber',
-                params: [],
-                id: 1,
-            })
-            ws.send(rpcRequest)
-        }
-
-        ws.onmessage = (event) => {
-            try {
-                const response = JSON.parse(event.data.toString())
-                if (response.jsonrpc === JSON_RPC && !!response.result) {
-                    cleanup(true)
-                } else {
-                    cleanup(false, `Invalid RPC URL ${rpcUrl} for network ${networkName} response: ${event.data}`)
-                }
-            } catch (error) {
-                cleanup(false, `Error parsing RPC response for ${rpcUrl} for network ${networkName}: ${error}`)
-            }
-        }
-
-        ws.onerror = (error) => {
-            cleanup(
-                false,
-                `Validation failed for ${rpcUrl} for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
-            )
-        }
-
-        ws.onclose = () => {
-            cleanup(
-                false,
-                `Validation failed for ${rpcUrl} for network ${networkName}: WebSocket connection closed unexpectedly`
-            )
-        }
-    })
-}
-
-const validateRpcUrl = async (rpcUrl: string | undefined, timeout: number, networkName: string): Promise<boolean> => {
-    if (!rpcUrl || rpcUrl.trim() === '') {
-        logger.error(`Missing RPC URL for network: ${networkName}`)
-        return false
-    }
-
+const getProvider = async (rpcUrl: string, networkName: string, eid: number): Promise<BaseProvider> => {
+    let provider
     if (rpcUrl.startsWith(HTTP_URL) || rpcUrl.startsWith(HTTPS_URL)) {
-        return await validateHttpsRpcUrl(rpcUrl, timeout, networkName)
+        const providerFactory = createProviderFactory()
+
+        try {
+            provider = await providerFactory(eid)
+        } catch (error) {
+            logger.error(
+                `Error fetching provider for network ${networkName}: ${error instanceof Error ? error.message : 'An unknown error occurred'}`
+            )
+        }
     } else if (rpcUrl.startsWith(WS_URL) || rpcUrl.startsWith(WSS_URL)) {
-        return await validateWebSocketRpcUrl(rpcUrl, timeout, networkName)
+        provider = new ethers.providers.WebSocketProvider(rpcUrl)
+    } else {
+        logger.error(`Unsupported RPC protocol in network: ${networkName}`)
     }
 
-    logger.error(`Unsupported RPC protocol in network: ${networkName}`)
-
-    return false
+    return provider
 }
 
 const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
@@ -140,30 +52,48 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
 
     const networks = hre.userConfig.networks || {}
     const eidByNetworkName = getEidsByNetworkName(hre)
-    const networkNames = Object.keys(networks).filter((networkName) => !!eidByNetworkName[networkName])
 
-    logger.info(
-        `========== Validating RPC URLs with ${taskArgs.timeout}ms timeout for networks: ${networkNames.join(', ')}`
-    )
+    logger.info(`========== Validating RPC URLs for networks in hardhat.config.ts`)
 
     const networksWithInvalidRPCs: string[] = []
 
-    const validationPromises = networkNames.map(async (networkName) => {
-        const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
+    await Promise.all(
+        Object.entries(eidByNetworkName).map(async ([networkName, eid]) => {
+            if (!eid) {
+                return
+            }
+            const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
+            if (!rpcUrl) {
+                return
+            }
 
-        if (rpcUrl && !(await validateRpcUrl(rpcUrl, taskArgs.timeout, networkName))) {
-            networksWithInvalidRPCs.push(networkName)
-        }
-    })
+            const provider: BaseProvider = await getProvider(rpcUrl, networkName, eid as number)
+            if (!provider) {
+                networksWithInvalidRPCs.push(networkName)
+                logger.error(`Error fetching provider for network: ${networkName}`)
+                return
+            }
 
-    await Promise.all(validationPromises)
+            return Promise.race([
+                provider.getBlockNumber(),
+                new Promise<void>((_, reject) => setTimeout(reject, taskArgs.timeout)),
+            ]).then(
+                (block) => {
+                    return !!block
+                },
+                () => {
+                    networksWithInvalidRPCs.push(networkName)
+                }
+            )
+        })
+    )
 
     if (networksWithInvalidRPCs.length !== 0) {
         logger.error(
             `${printBoolean(false)} ========== RPC URL validation failed for network(s): ${networksWithInvalidRPCs.join(', ')}`
         )
     } else {
-        logger.info(`${printBoolean(true)} ========== All RPC URLs are valid!`)
+        logger.info(`========== ${printBoolean(true)} All RPC URLs are valid!`)
     }
 }
 task(

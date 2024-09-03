@@ -76,8 +76,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.4.4",
-    "ws": "^8.18.0"
+    "typescript": "^5.4.4"
   },
   "peerDependencies": {
     "@ethersproject/abi": "^5.7.0",
