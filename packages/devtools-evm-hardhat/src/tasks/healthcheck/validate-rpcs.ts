@@ -60,10 +60,12 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     await Promise.all(
         Object.entries(eidByNetworkName).map(async ([networkName, eid]) => {
             if (!eid) {
+                logger.info(`No eid found for network ${networkName}, skipping`)
                 return
             }
             const rpcUrl = networks[networkName]?.[RPC_URL_KEY]
             if (!rpcUrl) {
+                logger.info(`No RPC URL found for network ${networkName}, skipping`)
                 return
             }
 
