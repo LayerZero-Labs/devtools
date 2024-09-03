@@ -108,9 +108,25 @@ export class Uln302 extends OmniSDK implements IUln302 {
         this.logger.debug(`Current App ULN ${type} config: ${printJson(currentSerializedConfig)}`)
         this.logger.debug(`Incoming App ULN ${type} config: ${printJson(serializedConfig)}`)
 
-        const areEqual = isDeepEqual(serializedConfig, currentSerializedConfig)
+        // In Solana, the 0 value for confirmations in the config means that the config is not yet set.
+        //
+        // Setting confirmations to 0 will set the config to the default one so
+        // if the user wants defaults to be set, we need to treat this special case
+        //
+        // If the chain config returns 0, we will return false to allow people to set the defaults:
+        // - if incoming config has a 0 value for confirmations, this function will return false instead of true
+        // - if incoming config has a non-0 value for confirmations, the configs would not be equal anyway
+        const hasZeroConfirmations = currentConfig.confirmations === BigInt(0)
+        if (hasZeroConfirmations) {
+            this.logger.verbose(
+                `Received 0 value for confirmations for ULN ${type} config. This will be treated as a non-matching config`
+            )
+        }
 
-        return this.logger.verbose(`Checked App ULN ${type} configs: ${printBoolean(areEqual)}`), areEqual
+        const areEqual = isDeepEqual(serializedConfig, currentSerializedConfig)
+        const hasConfig = areEqual && !hasZeroConfirmations
+
+        return this.logger.verbose(`Checked App ULN ${type} configs: ${printBoolean(hasConfig)}`), hasConfig
     }
 
     /**
