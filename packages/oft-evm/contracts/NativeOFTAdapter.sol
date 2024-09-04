@@ -16,13 +16,8 @@ import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "
  */
 abstract contract NativeOFTAdapter is OFTCore {
 
-<<<<<<< HEAD
     error IncorrectMessageValue(uint256 provided, uint256 required);
-    error CreditFailed(address to, uint256 amountLD);
-=======
-    error InsufficientMessageValue(uint256 provided, uint256 required);
     error CreditFailed(address to, uint256 amountLD, bytes revertData);
->>>>>>> 6f915167 (Jan reviews, adding revertData to error)
 
     /**
      * @param _localDecimals The decimals of the native on the local chain (this chain). 18 on ETH.
