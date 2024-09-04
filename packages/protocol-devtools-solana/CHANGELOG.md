@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 1.0.7
+
+### Patch Changes
+
+- 27319ef: Treat special case of 0 confirmations for Solana ULN configs
+
 ## 1.0.6
 
 ### Patch Changes
