@@ -1,13 +1,12 @@
 import '@/type-extensions'
 
 import { ActionType } from 'hardhat/types'
-import { ethers } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { TASK_LZ_VALIDATE_RPCS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { getEidsByNetworkName } from '@/runtime'
-import { BaseProvider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcProvider, WebSocketProvider } from '@ethersproject/providers'
 
 const RPC_URL_KEY = 'url'
 
@@ -28,9 +27,9 @@ interface TaskArguments {
 const getProvider = async (rpcUrl: string, networkName: string): Promise<BaseProvider> => {
     let provider
     if (rpcUrl.startsWith(HTTP_URL) || rpcUrl.startsWith(HTTPS_URL)) {
-        provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+        provider = new JsonRpcProvider(rpcUrl)
     } else if (rpcUrl.startsWith(WS_URL) || rpcUrl.startsWith(WSS_URL)) {
-        provider = new ethers.providers.WebSocketProvider(rpcUrl)
+        provider = new WebSocketProvider(rpcUrl)
     } else {
         logger.error(`Unsupported RPC protocol in network: ${networkName}`)
     }

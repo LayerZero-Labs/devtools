@@ -1182,9 +1182,6 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1
