@@ -54,7 +54,6 @@ export const createDefaultContext = (hardhatArguments: Partial<HardhatArguments>
         taskDefinitions,
         scopesDefinitions,
         envExtenders,
-        ctx.experimentalHardhatNetworkMessageTraceHooks,
         userConfig,
         providerExtenders
     )
@@ -133,7 +132,6 @@ export const getHreByNetworkName: GetByNetwork<HardhatRuntimeEnvironment> = pMem
             environment.tasks,
             environment.scopes,
             context.environmentExtenders,
-            context.experimentalHardhatNetworkMessageTraceHooks,
             environment.userConfig,
             context.providerExtenders
             // This is a bit annoying - the environmentExtenders are not stronly typed
