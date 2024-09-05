@@ -174,7 +174,30 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
         SendParam calldata _sendParam,
         MessagingFee calldata _fee,
         address _refundAddress
-    ) public payable virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+    ) external payable virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        return _send(_sendParam, _fee, _refundAddress);
+    }
+
+    /**
+     * @dev Internal function to execute the send operation.
+     * @param _sendParam The parameters for the send operation.
+     * @param _fee The calculated fee for the send() operation.
+     *      - nativeFee: The native fee.
+     *      - lzTokenFee: The lzToken fee.
+     * @param _refundAddress The address to receive any excess funds.
+     * @return msgReceipt The receipt for the send operation.
+     * @return oftReceipt The OFT receipt information.
+     *
+     * @dev MessagingReceipt: LayerZero msg receipt
+     *  - guid: The unique identifier for the sent message.
+     *  - nonce: The nonce of the sent message.
+     *  - fee: The LayerZero fee incurred for the message.
+     */
+    function _send(
+        SendParam calldata _sendParam,
+        MessagingFee calldata _fee,
+        address _refundAddress
+    ) internal virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
         // @dev Applies the token transfers regarding this send() operation.
         // - amountSentLD is the amount in local decimals that was ACTUALLY sent/debited from the sender.
         // - amountReceivedLD is the amount in local decimals that will be received/credited to the recipient on the remote OFT instance.
