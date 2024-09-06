@@ -10,6 +10,6 @@ export const TASK_LZ_TEST_SIMULATION_LOGS = 'lz:test:simulation:logs'
 
 export const TASK_LZ_TEST_SIMULATION_STOP = 'lz:test:simulation:stop'
 
-export const TASK_LZ_VALIDATE_SAFE_CONFIGS = 'lz:validate-safe-configs' // TODO rename this to lz:validate:safe-configs in followup PR
+export const TASK_LZ_VALIDATE_SAFE_CONFIGS = 'lz:healthcheck:validate:safe-configs'
 
-export const TASK_LZ_VALIDATE_RPCS = 'lz:validate-rpcs' // TODO rename this to lz:validate:rpcs in followup PR
+export const TASK_LZ_VALIDATE_RPCS = 'lz:healthcheck:validate:rpcs'
