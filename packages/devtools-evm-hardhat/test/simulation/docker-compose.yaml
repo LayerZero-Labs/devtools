@@ -1,0 +1,36 @@
+services:
+  amoy:
+    build:
+      dockerfile: Dockerfile
+      target: node-evm
+    command:
+      - anvil
+      - '--host'
+      - 0.7.143.228
+      - '--port'
+      - '46991'
+      - '--count'
+      - '-1842012111'
+      - '--block-time'
+      - '531644837'
+  someNetwork:
+    build:
+      dockerfile: Dockerfile
+      target: node-evm
+    command:
+      - anvil
+      - '--mnemonic'
+      - >-
+        chalk sick discover husband wink long math satisfy curious rough make
+        alcohol
+  rpc:
+    build:
+      dockerfile: Dockerfile
+      target: proxy-evm
+    ports:
+      - '16:8545'
+    depends_on:
+      amoy:
+        condition: service_healthy
+      someNetwork:
+        condition: service_healthy
