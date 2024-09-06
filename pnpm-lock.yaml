@@ -2603,7 +2603,7 @@ importers:
         specifier: ~0.4.2
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~1.1.1
+        specifier: ~1.1.2
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12

@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 1.1.2
+
+### Patch Changes
+
+- fd3ea33: Renamed lz:validate-safe-configs and lz:validate-rpcs to lz:healthcheck:validate:safe-configs and lz:healthcheck:validate:rpcs, respectively
+- 7ad6485: Task to validate RPC URLs within hardhat.config.ts
+
 ## 1.1.1
 
 ### Patch Changes
