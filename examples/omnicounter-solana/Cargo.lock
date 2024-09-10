@@ -719,6 +719,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "endpoint-mock"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "cpi-helper",
+ "solana-program",
+]
+
+[[package]]
 name = "feature-probe"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

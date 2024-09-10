@@ -6,6 +6,7 @@ coverage.json
 target
 typechain
 typechain-types
+test-ledger
 
 # Hardhat files
 cache
