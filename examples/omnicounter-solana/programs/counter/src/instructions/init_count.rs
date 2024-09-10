@@ -1,5 +1,5 @@
 use crate::*;
-use oapp::endpoint::{instructions::RegisterOAppParams};
+use oapp::endpoint::{instructions::RegisterOAppParams, ID as ENDPOINT_ID};
 
 #[derive(Accounts)]
 #[instruction(params: InitCountParams)]
@@ -47,7 +47,7 @@ impl InitCount<'_> {
         let register_params = RegisterOAppParams { delegate: ctx.accounts.count.admin };
         let seeds: &[&[u8]] = &[COUNT_SEED, &[ctx.accounts.count.id], &[ctx.accounts.count.bump]];
         oapp::endpoint_cpi::register_oapp(
-            params.endpoint,
+            ENDPOINT_ID,
             ctx.accounts.count.key(),
             ctx.remaining_accounts,
             seeds,

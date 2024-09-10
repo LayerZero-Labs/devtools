@@ -7,6 +7,7 @@ skip-lint = false
 
 [programs.localnet]
 omnicounter = '2tLJfE12h5RY7vJqK6i41taeg8ejzigoFXduBanDV4Cu'
+endpoint = '76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6'
 
 [registry]
 url = "https://api.apr.dev"
