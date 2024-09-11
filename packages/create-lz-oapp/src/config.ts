@@ -55,6 +55,13 @@ export const EXAMPLES: Example[] = [
                   directory: 'examples/oft-solana',
                   ref,
               },
+              {
+                  id: 'oft-solana-v2',
+                  label: 'OFT v2 (Solana)',
+                  repository,
+                  directory: 'examples/oft-solana-v2',
+                  ref,
+              },
           ]
         : []),
 ]
