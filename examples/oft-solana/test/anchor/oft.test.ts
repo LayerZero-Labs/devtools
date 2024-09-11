@@ -42,6 +42,7 @@ describe('OFT', () => {
         await provider.sendAndConfirm(new anchor.web3.Transaction().add(...createMintIxs), [wallet.payer, mintKp])
 
         // step 2, create the OFT token
+        // const initOftIx = await OftTools.createInitOftIx()
         const initOftIx = await OftTools.createInitNativeOftIx(
             OFT_PROGRAM_ID,
             wallet.publicKey,
