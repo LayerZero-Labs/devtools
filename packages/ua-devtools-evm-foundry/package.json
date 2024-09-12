@@ -12,14 +12,14 @@
   ],
   "scripts": {},
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.34",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.34",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.34",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.42",
+    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.42",
+    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.42",
     "@layerzerolabs/oapp-evm": "^0.0.2",
-    "@layerzerolabs/oft-evm": "^0.0.9",
+    "@layerzerolabs/oft-evm": "^0.0.11",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "forge-std": "git://github.com:foundry-rs/forge-std.git"
+    "forge-std": "github:foundry-rs/forge-std"
   },
   "publishConfig": {
     "access": "public"
