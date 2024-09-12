@@ -80,47 +80,44 @@ importers:
       '@babel/core':
         specifier: ^7.23.9
         version: 7.23.9
-      '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^1.0.1
-        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
-        specifier: ~2.3.34
+        specifier: ~2.3.39
         version: 2.3.39(typescript@5.5.4)
       '@layerzerolabs/lz-definitions':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39
       '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.39)(@layerzerolabs/lz-evm-v1-0.7@2.3.39)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.2
-        version: 0.0.2(@layerzerolabs/lz-evm-messagelib-v2@2.3.39)(@layerzerolabs/lz-evm-protocol-v2@2.3.39)(@layerzerolabs/lz-evm-v1-0.7@2.3.39)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)
+        specifier: ^0.0.4
+        version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.0.9
-        version: 0.0.9(@layerzerolabs/lz-evm-messagelib-v2@2.3.39)(@layerzerolabs/lz-evm-oapp-v2@2.3.42)(@layerzerolabs/lz-evm-protocol-v2@2.3.39)(@layerzerolabs/lz-evm-v1-0.7@2.3.39)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)
+        specifier: ^0.0.11
+        version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39
       '@layerzerolabs/solhint-config':
-        specifier: ^2.3.34
+        specifier: ^2.3.39
         version: 2.3.39(typescript@5.5.4)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~0.2.10
+        specifier: ~0.2.12
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.3.3
+        specifier: ~0.3.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
