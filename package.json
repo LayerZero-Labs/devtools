@@ -31,7 +31,7 @@
     ]
   },
   "resolutions": {
-    "es5-ext": "https://github.com/LayerZero-Labs/es5-ext",
+    "es5-ext": "git://github.com/LayerZero-Labs/es5-ext",
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1",
     "rustbn.js": "^0.3.0"

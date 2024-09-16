@@ -26,7 +26,6 @@ export const getTestHre = (args: Partial<HardhatArguments>): HardhatRuntimeEnvir
         environment.tasks,
         environment.scopes,
         context.environmentExtenders,
-        context.experimentalHardhatNetworkMessageTraceHooks,
         userConfig,
         context.providerExtenders
         // This is a bit annoying - the environmentExtenders are not stronly typed
