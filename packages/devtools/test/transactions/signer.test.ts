@@ -31,6 +31,7 @@ describe('transactions/signer', () => {
                 it('should return no successes and no errors when called with an empty array', async () => {
                     const signAndSend = jest.fn().mockRejectedValue('Oh no')
                     const sign = jest.fn().mockRejectedValue('Oh god no')
+                    // @ts-expect-error we don't care about the implementation here
                     const signerFactory: OmniSignerFactory = () => ({ signAndSend, sign })
                     const signAndSendTransactions = createSignAndSend(signerFactory)
 

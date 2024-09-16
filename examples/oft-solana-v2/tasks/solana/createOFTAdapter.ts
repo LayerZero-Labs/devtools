@@ -21,7 +21,7 @@ import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OFT_SEED, OftProgram, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
@@ -31,7 +31,7 @@ interface Args {
     eid: EndpointId
     programId: string
 }
-
+// TODO convert this. see createOFT.ts
 task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT Adapter Config account')
     .addParam('programId', 'The OFT Program id')
     .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
@@ -153,12 +153,13 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
         // 4. Create new account (OFT Adapter Config)
 
         // Create the OFT Adapter Config initialization instruction
-        const adapterIx = await OftTools.createInitAdapterOftIx(
+        const adapterIx = await OftTools.createInitOftIx(
             OFT_PROGRAM_ID, // OFT Program ID
             web3WalletKeyPair.publicKey, // Payer
             web3WalletKeyPair.publicKey, // Admin
             web3TokenKeyPair.publicKey, // SPL Token Mint Account
             web3LockboxKeypair.publicKey, // Lockbox account
+            OftProgram.types.OFTType.Adapter,
             SHARED_DECIMALS, // Number of shared decimals
             undefined, // Endpoint program ID
             TOKEN_PROGRAM_ID // Token program ID

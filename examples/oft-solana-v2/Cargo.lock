@@ -686,7 +686,7 @@ checksum = "f7144d30dcf0fafbce74250a3963025d8d52177934239851c917d29f1df280c2"
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
 dependencies = [
  "bs58 0.5.1",
  "proc-macro2",
@@ -893,12 +893,12 @@ checksum = "3dca9240753cf90908d7e4aac30f630662b02aebaa1b58a3cadabdb23385b58b"
 [[package]]
 name = "endpoint"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
 dependencies = [
  "anchor-lang",
  "cpi-helper",
  "messagelib-interface",
- "solana-helper 0.1.0 (git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main)",
+ "solana-helper",
  "solana-program",
  "utils",
 ]
@@ -1259,7 +1259,7 @@ dependencies = [
 [[package]]
 name = "messagelib-interface"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
 dependencies = [
  "anchor-lang",
 ]
@@ -1359,7 +1359,7 @@ dependencies = [
 [[package]]
 name = "oapp"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
 dependencies = [
  "anchor-lang",
  "endpoint",
@@ -1372,7 +1372,7 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "oapp",
- "solana-helper 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "solana-helper",
  "utils",
 ]
 
@@ -1870,17 +1870,6 @@ name = "solana-helper"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09c6deff8c48efb84b5828db064ad9873ef3445f129f888b4b6a664bd5220e35"
-dependencies = [
- "bs58 0.5.1",
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "solana-helper"
-version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
 dependencies = [
  "bs58 0.5.1",
  "proc-macro2",
@@ -2487,7 +2476,7 @@ dependencies = [
 [[package]]
 name = "utils"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?branch=main#0e3186dae2ab157d4b84c6c03571bae6986075d0"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
 dependencies = [
  "anchor-lang",
 ]

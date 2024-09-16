@@ -8,60 +8,85 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-<h1 align="center">Unaudited Omnichain Fungible Token (OFT) Solana Example</h1>
+<h1 align="center">Omnichain Fungible Token (OFT) Solana Example</h1>
 
-> [!WARNING]  
-> This OFT Solana Example is NOT AUDITED and currently an experimental build that is subject to changes.
-> It should not be used in production.
-## Installation
-
-#### Installing dependencies
+## Setup
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
+
+### Installing Dependencies
 
 ```bash
 pnpm install
 ```
 
-#### Compiling your program
-
-```bash
-pnpm compile
-```
-
-#### Running tests
+### Running tests
 
 ```bash
 pnpm test
 ```
 
-### Preparing OFT Program ID
+## Deploy
+
+### Prepare the OFT Program ID
 
 Create `programId` keypair files by running:
 
 ```bash
-solana-keygen new -o target/deploy/endpoint-keypair.json
-solana-keygen new -o target/deploy/oft-keypair.json
+solana-keygen new -o target/deploy/endpoint-keypair.json --force
+solana-keygen new -o target/deploy/oft-keypair.json --force
 
 anchor keys sync
 ```
 
-:warning: You will want to use the `--force` flag to generate your own keypair if these keys already exist.
+:warning: `--force` flag overwrites the existing keys with the ones you generate.
+:warning: Ensure that [lib.rs](./programs/oft/src/lib.rs) has the updated programId.
 
-### Deploying OFT Program
-
-#### Using `anchor`
+### Building and Deploying the OFT Program
 
 ```bash
-anchor build -v
+anchor build -v # verification flag enabled
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u mainnet-beta
 ```
 
-#### Using `solana-verify`
+### Create Mint
 
 ```bash
-solana-verify build
-solana program deploy --program-id target/deploy/oft-keypair.json target/deploy/oft.so -u mainnet-beta
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
-please visit [Solana Verify CLI](https://github.com/Ellipsis-Labs/solana-verifiable-build) and [Deploy a Solana Program with the CLI](https://docs.solanalabs.com/cli/examples/deploy-a-program) for more detail.
+Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
+
+### Deploy a sepolia OFT peer
+
+```bash
+pnpm hardhat lz:deploy # follow the prompts
+```
+
+Note:  If you are on testnet, consider using `MyOFTMock` to allow test token minting.
+
+### Initialize the OFT
+
+:warning:  Only do this the first time you are initializing the OFT.
+
+```bash
+npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
+```
+
+### Wire
+
+```bash
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+```
+
+### Send SOL -> Sepolia
+
+```bash
+npx hardhat lz:oft:solana:send --amount 10000000 --from-eid 40168 --to 0x0e251d9095dD128292A28eB383127d05d95BBD17 --to-eid 40161 --mint HE9UiPyDLaLHDq3qsemq4wBydRYoztaRcDYYs9Pn2mWs --program-id Fe4hzE5k82eXVa7gMVgsF76K5VZ3nTsLSwPDEJQn8dbv
+```
+
+### Send Sepolia -> SOL
+
+```bash
+npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to WHKCfkxo59jmFTgmQG3ZQQSjShJnBpsugSCMrtee96x
+```
