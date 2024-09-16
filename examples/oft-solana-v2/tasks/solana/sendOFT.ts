@@ -102,7 +102,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         // Derive peer address and fetch peer information
         const deriver = new OftPDADeriver(oftProgramId)
         const [peerAddress] = deriver.peer(oftConfigPda, destinationEid)
-        const peerInfo = await OftProgram.accounts.Peer.fromAccountAddress(connection, peerAddress)
+        const peerInfo = await OftProgram.accounts.PeerConfig.fromAccountAddress(connection, peerAddress)
 
         // Set up send helper and convert recipient address to bytes32
         const sendHelper = new SendHelper()
@@ -120,15 +120,16 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             Options.newOptions().addExecutorLzReceiveOption(0, 0).toBytes(),
             Array.from(recipientAddressBytes32),
             false, // payInZRO
+            // @ts-ignore
             undefined, // tokenEscrow
             undefined, // composeMsg
-            peerInfo.address,
+            peerInfo.peerAddress,
             await sendHelper.getQuoteAccounts(
                 connection,
                 keypair.publicKey,
                 oftConfigPda,
                 destinationEid,
-                hexlify(peerInfo.address)
+                hexlify(peerInfo.peerAddress)
             ),
             undefined, // Endpoint program ID
             TOKEN_PROGRAM_ID // SPL Token Program
@@ -142,6 +143,8 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             oftProgramId, // OFT Program
             keypair.publicKey, // payer
             mintPublicKey, // tokenMint
+            // @ts-ignore
+            undefined, // tokenEscrow
             toWeb3JsPublicKey(tokenAccount[0]), // tokenSource
             destinationEid,
             BigInt(amount),
@@ -151,8 +154,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             feeQuote.nativeFee,
             undefined, // payInZRO
             undefined,
-            undefined,
-            peerInfo.address,
+            peerInfo.peerAddress,
             undefined,
             undefined, // Endpoint program ID
             TOKEN_PROGRAM_ID // SPL Token Program
