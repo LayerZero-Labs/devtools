@@ -1,5 +1,12 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.3.0
+
+### Minor Changes
+
+- b4a12d3: Update Hardhat Runtime Environemnt constructor
+- b4a12d3: Update hardhat runtime environment factory to match the new environment constuctor
+
 ## 0.2.7
 
 ### Patch Changes

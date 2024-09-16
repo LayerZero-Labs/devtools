@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.1.0
+
+### Minor Changes
+
+- b4a12d3: Update hardhat runtime environment factory to match the new environment constuctor
+
 ## 0.0.6
 
 ### Patch Changes

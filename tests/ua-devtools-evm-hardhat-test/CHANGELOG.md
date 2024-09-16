@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.5.0
+
+### Minor Changes
+
+- b4a12d3: Update hardhat runtime environment factory to match the new environment constuctor
+
 ## 0.4.1
 
 ### Patch Changes

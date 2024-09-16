@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.3.0
+
+### Minor Changes
+
+- b4a12d3: Update hardhat runtime environment factory to match the new environment constuctor
+
 ## 0.2.14
 
 ### Patch Changes
