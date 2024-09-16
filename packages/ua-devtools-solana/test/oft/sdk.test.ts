@@ -5,9 +5,9 @@ import { OFT } from '@/oft'
 import { makeBytes32, normalizePeer } from '@layerzerolabs/devtools'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { printJson } from '@layerzerolabs/io-devtools'
-import { EndpointProgram, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
-const createSetEnforcedOptionsIxMock = OftTools.createSetEnforcedOptionsIx as jest.Mock
+const createSetEnforcedOptionsIxMock = {} as jest.Mock
 
 jest.mock('@layerzerolabs/lz-solana-sdk-v2', () => {
     const actual = jest.requireActual('@layerzerolabs/lz-solana-sdk-v2')

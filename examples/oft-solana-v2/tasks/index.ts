@@ -1,7 +1,7 @@
 import './common/wire'
+import './evm/send'
 import './solana/createOFT'
 import './solana/createOFTAdapter'
-import './solana/mintTo'
 import './solana/sendOFT'
 import './solana/setFreezeAuthority'
 import './solana/setOFTMintAuthority'

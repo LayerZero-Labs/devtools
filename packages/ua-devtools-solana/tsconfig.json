@@ -3,6 +3,7 @@
   "exclude": ["dist", "node_modules"],
   "include": ["src", "test", "*.config.ts"],
   "compilerOptions": {
+    "target": "es2020",
     "experimentalDecorators": true,
     "types": ["node", "jest"],
     "paths": {

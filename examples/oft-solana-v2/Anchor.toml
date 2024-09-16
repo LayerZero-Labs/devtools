@@ -6,7 +6,7 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-oft = "DedTHbArERodxB2D46kuSek4VWB86FNXPqrfbpJbsis4"
+oft = "2cgnjeyiJNHWN6MjwQ8AavrpA8VHeeG4p2AhYfTXUADB"
 
 [registry]
 url = "https://api.apr.dev"

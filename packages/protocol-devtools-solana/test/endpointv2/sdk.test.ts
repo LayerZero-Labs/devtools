@@ -4,7 +4,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { EndpointV2 } from '@/endpointv2'
 import { formatEid, normalizePeer } from '@layerzerolabs/devtools'
 import { EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
-import { Uln302SetUlnConfig } from '@layerzerolabs/protocol-devtools'
+import { Uln302ConfigType, Uln302SetUlnConfig } from '@layerzerolabs/protocol-devtools'
 
 describe('endpointv2/sdk', () => {
     // FIXME These tests are using a mainnet OFT deployment and are potentially very fragile
@@ -252,7 +252,7 @@ describe('endpointv2/sdk', () => {
             const ulnAddress = await sdk.getSendLibrary(oftConfig.toBase58(), eid)
             expect(ulnAddress).not.toBeUndefined()
 
-            const config = await sdk.getAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid)
+            const config = await sdk.getAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, Uln302ConfigType.Send)
 
             // FIXME This test is prone to be flaky since it check sthe mainnet configuration that can change anytime
             expect(config).toEqual({
@@ -278,37 +278,55 @@ describe('endpointv2/sdk', () => {
             expect(ulnAddress).not.toBeUndefined()
 
             expect(
-                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
-                    confirmations: BigInt(32),
-                    optionalDVNThreshold: 0,
-                    requiredDVNs: [
-                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
-                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
-                    ],
-                    optionalDVNs: [],
-                })
+                await sdk.hasAppUlnConfig(
+                    oftConfig.toBase58(),
+                    ulnAddress!,
+                    eid,
+                    {
+                        confirmations: BigInt(32),
+                        optionalDVNThreshold: 0,
+                        requiredDVNs: [
+                            '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                            'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                        ],
+                        optionalDVNs: [],
+                    },
+                    Uln302ConfigType.Send
+                )
             ).toBeTruthy()
 
             expect(
-                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
-                    confirmations: BigInt(32),
-                    optionalDVNThreshold: 0,
-                    requiredDVNs: [
-                        // We flip the DVNs
-                        'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
-                        '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
-                    ],
-                    optionalDVNs: [],
-                })
+                await sdk.hasAppUlnConfig(
+                    oftConfig.toBase58(),
+                    ulnAddress!,
+                    eid,
+                    {
+                        confirmations: BigInt(32),
+                        optionalDVNThreshold: 0,
+                        requiredDVNs: [
+                            // We flip the DVNs
+                            'GPjyWr8vCotGuFubDpTxDxy9Vj1ZeEN4F2dwRmFiaGab',
+                            '4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb',
+                        ],
+                        optionalDVNs: [],
+                    },
+                    Uln302ConfigType.Send
+                )
             ).toBeTruthy()
 
             expect(
-                await sdk.hasAppUlnConfig(oftConfig.toBase58(), ulnAddress!, eid, {
-                    confirmations: BigInt(0),
-                    optionalDVNThreshold: 0,
-                    requiredDVNs: [],
-                    optionalDVNs: [],
-                })
+                await sdk.hasAppUlnConfig(
+                    oftConfig.toBase58(),
+                    ulnAddress!,
+                    eid,
+                    {
+                        confirmations: BigInt(0),
+                        optionalDVNThreshold: 0,
+                        requiredDVNs: [],
+                        optionalDVNs: [],
+                    },
+                    Uln302ConfigType.Send
+                )
             ).toBeFalsy()
         })
     })
@@ -327,7 +345,7 @@ describe('endpointv2/sdk', () => {
 
             const params = await sdk.getUlnConfigParams(sendUln!, [
                 {
-                    type: 'send',
+                    type: Uln302ConfigType.Send,
                     eid: EndpointId.ETHEREUM_V2_MAINNET,
                     ulnConfig: {
                         confirmations: BigInt(32),
@@ -340,7 +358,7 @@ describe('endpointv2/sdk', () => {
                     },
                 },
                 {
-                    type: 'receive',
+                    type: Uln302ConfigType.Receive,
                     eid: EndpointId.ETHEREUM_V2_MAINNET,
                     ulnConfig: {
                         confirmations: BigInt(32),
@@ -371,7 +389,7 @@ describe('endpointv2/sdk', () => {
             expect(sendUln).not.toBeUndefined()
 
             const sendConfigParam: Uln302SetUlnConfig = {
-                type: 'send',
+                type: Uln302ConfigType.Send,
                 eid: EndpointId.ETHEREUM_V2_MAINNET,
                 ulnConfig: {
                     confirmations: BigInt(32),
@@ -385,7 +403,7 @@ describe('endpointv2/sdk', () => {
             }
 
             const receiveConfigParam: Uln302SetUlnConfig = {
-                type: 'receive',
+                type: Uln302ConfigType.Receive,
                 eid: EndpointId.ETHEREUM_V2_MAINNET,
                 ulnConfig: {
                     confirmations: BigInt(32),
