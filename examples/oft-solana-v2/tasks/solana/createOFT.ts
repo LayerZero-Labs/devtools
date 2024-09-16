@@ -27,7 +27,7 @@ import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { OFT_SEED, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OFT_SEED, OftProgram, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
 
 import { createSolanaConnectionFactory } from '../common/utils'
 import getFee from '../utils/getFee'
@@ -162,12 +162,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         })
 
         // Initialize the OFT using the OFT Config and the token mint
-        const oftConfigMintIx = await OftTools.createInitNativeOftIx(
+        const oftConfigMintIx = await OftTools.createInitOftIx(
             OFT_PROGRAM_ID, // OFT Program ID
             web3WalletKeyPair.publicKey, // Payer
             web3WalletKeyPair.publicKey, // Admin
             web3TokenKeyPair.publicKey, // Mint account
             web3WalletKeyPair.publicKey, // OFT Mint Authority
+            OftProgram.types.OFTType.Native,
             SHARED_DECIMALS, // OFT Shared Decimals
             TOKEN_PROGRAM_ID // Token Program ID
         )
