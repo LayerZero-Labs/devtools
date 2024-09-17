@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.1.1
+
+### Patch Changes
+
+- b2a9ef9: Fix API breakage from monorepo
+
 ## 0.1.0
 
 ### Minor Changes
