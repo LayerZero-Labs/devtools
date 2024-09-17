@@ -19,7 +19,6 @@ import {
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import bs58 from 'bs58'
@@ -168,8 +167,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
             web3WalletKeyPair.publicKey, // Admin
             web3TokenKeyPair.publicKey, // Mint account
             web3WalletKeyPair.publicKey, // OFT Mint Authority
-            SHARED_DECIMALS, // OFT Shared Decimals
-            TOKEN_PROGRAM_ID // Token Program ID
+            SHARED_DECIMALS // OFT Shared Decimals
         )
 
         // Convert the instruction to UMI format
