@@ -170,7 +170,7 @@ teardown() {
 @test "should work with yarn & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache" npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -181,7 +181,7 @@ teardown() {
 @test "should work with yarn & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
-    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-evm" npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -192,7 +192,7 @@ teardown() {
 @test "should work with yarn & onft721 example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-onft-evm" npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -203,7 +203,7 @@ teardown() {
 @test "should work with yarn & oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-adapter-evm" npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -214,7 +214,7 @@ teardown() {
 @test "should work with yarn & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-solana"
 
-    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
