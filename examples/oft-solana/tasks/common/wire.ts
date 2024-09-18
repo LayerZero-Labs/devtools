@@ -14,7 +14,7 @@ import {
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
 
-import { keyPair, publicKey } from './types'
+import { keyPair } from './types'
 import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFactory } from './utils'
 
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
@@ -47,7 +47,7 @@ task(TASK_LZ_OAPP_WIRE)
     //
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, false)
+    .addParam('solanaProgramId', 'The OFT program ID to use')
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
@@ -164,7 +164,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
     //
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, false)
+    .addParam('solanaProgramId', 'The OFT program ID to use')
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })
