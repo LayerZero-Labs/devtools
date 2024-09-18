@@ -5,7 +5,6 @@ import { firstFactory } from '@layerzerolabs/devtools'
 import { SUBTASK_LZ_SIGN_AND_SEND, inheritTask, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
-import { OftProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
@@ -48,7 +47,7 @@ task(TASK_LZ_OAPP_WIRE)
     //
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', OftProgram.OFT_DEFAULT_PROGRAM_ID, publicKey, true)
+    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, false)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
@@ -165,7 +164,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
     //
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', OftProgram.OFT_DEFAULT_PROGRAM_ID, publicKey, true)
+    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, false)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })
