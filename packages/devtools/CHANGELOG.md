@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.26
+
+### Patch Changes
+
+- 5e48ed5: Move sign and send hardhat subtask to a generic flow function
+
 ## 0.3.25
 
 ### Patch Changes

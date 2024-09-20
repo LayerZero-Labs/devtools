@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 1.2.1
+
+### Patch Changes
+
+- 5e48ed5: Move sign and send hardhat subtask to a generic flow function
+- Updated dependencies [5e48ed5]
+  - @layerzerolabs/devtools@0.3.26
+
 ## 1.2.0
 
 ### Minor Changes

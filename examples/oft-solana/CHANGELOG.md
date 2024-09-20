@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.1.2
+
+### Patch Changes
+
+- 982682e: Typographical issues in code fixed
+
 ## 0.1.1
 
 ### Patch Changes
