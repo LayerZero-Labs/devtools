@@ -152,10 +152,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             undefined, // payInZRO
             undefined,
             undefined,
-            peerInfo.address,
-            undefined,
-            undefined, // Endpoint program ID
-            TOKEN_PROGRAM_ID // SPL Token Program
+            peerInfo.address
         )
 
         // Convert the instruction and create the transaction builder

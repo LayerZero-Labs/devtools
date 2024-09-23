@@ -6,7 +6,7 @@ import { mplToolbox, setComputeUnitPrice } from '@metaplex-foundation/mpl-toolbo
 import { TransactionBuilder, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsInstruction, fromWeb3JsKeypair, fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID, getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
+import { getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
 import { Keypair, PublicKey } from '@solana/web3.js'
 import { getExplorerLink } from '@solana-developers/helpers'
 import bs58 from 'bs58'
@@ -68,12 +68,11 @@ task('lz:oft:solana:mint', 'Mint tokens on Solana using OFT pass-through')
         const amount = taskArgs.amount * 10 ** mintInfo.decimals
 
         const oftMintIx = await OftTools.createMintToIx(
-            TOKEN_PROGRAM_ID,
+            oftProgramId,
             keypair.publicKey,
             mintPublicKey,
             web3TokenAccount.address, // which account to mint to?
-            BigInt(amount),
-            oftProgramId
+            BigInt(amount)
         )
 
         // Convert the instruction and create the transaction builder
