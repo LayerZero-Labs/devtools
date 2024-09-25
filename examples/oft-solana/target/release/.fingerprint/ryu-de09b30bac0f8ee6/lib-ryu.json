@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 13901881936739684103,
+  "profile": 2698644804294220970,
+  "path": 13465877298802363030,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/ryu-de09b30bac0f8ee6/dep-lib-ryu"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 10387617312689919117,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,22 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"serde\"]",
+  "target": 3944525917282885983,
+  "profile": 3188463645652688667,
+  "path": 13779146966674072303,
+  "deps": [
+    [2511671586729554969, "serde", false, 2454450587829667163],
+    [12065847578846483130, "build_script_build", false, 14303454133517829750]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/bv-b8e3b86352a7c422/dep-lib-bv"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 251181567152240604,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

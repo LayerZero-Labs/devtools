@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 9102904644320696625,
+  "profile": 3188463645652688667,
+  "path": 10382145417881802144,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/arrayvec-4189f9e1e628e42f/dep-lib-arrayvec"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 5019420986621020735,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

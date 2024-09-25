@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"ahash\", \"default\", \"inline-more\"]",
+  "target": 11240190406153278838,
+  "profile": 3188463645652688667,
+  "path": 15241119535884937173,
+  "deps": [[1385435641494999048, "ahash", false, 507922988412191780]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/hashbrown-57dd8b40dc6816d5/dep-lib-hashbrown"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 6228333144549390726,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

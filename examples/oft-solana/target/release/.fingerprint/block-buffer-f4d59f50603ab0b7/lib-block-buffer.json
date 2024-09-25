@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 2661632913477203689,
+  "profile": 2698644804294220970,
+  "path": 8209796033669215454,
+  "deps": [[9665562089965330559, "generic_array", false, 6343765945418764421]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/block-buffer-f4d59f50603ab0b7/dep-lib-block-buffer"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 5573904726092117450,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

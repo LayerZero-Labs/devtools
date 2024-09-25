@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"use_std\"]",
+  "target": 10519268927367075084,
+  "profile": 3188463645652688667,
+  "path": 362064403132038691,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/either-9ff3b5caa500dd9d/dep-lib-either"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 14516623572814205243,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

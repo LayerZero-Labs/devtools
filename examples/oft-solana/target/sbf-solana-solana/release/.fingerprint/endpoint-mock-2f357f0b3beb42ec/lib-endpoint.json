@@ -1,0 +1,23 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\"]",
+  "target": 6107046483636637190,
+  "profile": 3188463645652688667,
+  "path": 7528091008635138290,
+  "deps": [
+    [11801153916378791904, "cpi_helper", false, 16548518043810055821],
+    [12429659319598416725, "solana_program", false, 7303987539608618261],
+    [17799424100627658783, "anchor_lang", false, 17109321934776971255]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/endpoint-mock-2f357f0b3beb42ec/dep-lib-endpoint"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 14380101448264896774,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

@@ -1,0 +1,24 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 9917183286999838868,
+  "profile": 1200860260873630964,
+  "path": 6308545411440724201,
+  "deps": [
+    [1404949221071535394, "syn", false, 6614054177343322872],
+    [10695905396679492879, "sha2", false, 12570610433770433562],
+    [14268468010440576439, "quote", false, 6668915474389045628],
+    [18024560886749334364, "proc_macro2", false, 5572812654988425261]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/spl-program-error-derive-a3bf1da5a2c533ae/dep-lib-spl-program-error-derive"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 11099004514195028943,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

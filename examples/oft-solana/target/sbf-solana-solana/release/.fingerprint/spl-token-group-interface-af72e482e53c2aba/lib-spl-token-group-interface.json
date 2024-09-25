@@ -1,0 +1,25 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 11671771869809553652,
+  "profile": 3188463645652688667,
+  "path": 8774212533137509370,
+  "deps": [
+    [9735507446013342355, "bytemuck", false, 13246009465362108721],
+    [12429659319598416725, "solana_program", false, 7303987539608618261],
+    [12721529348200318034, "spl_discriminator", false, 11123519650159231686],
+    [14076619431157552070, "spl_pod", false, 14770598764945394716],
+    [15958755999927479103, "spl_program_error", false, 6592165551075041772]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/spl-token-group-interface-af72e482e53c2aba/dep-lib-spl-token-group-interface"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 16304136225629880748,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

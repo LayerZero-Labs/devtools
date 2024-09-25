@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\", \"std\"]",
+  "target": 15092883694774753783,
+  "profile": 4374887572363265115,
+  "path": 9737265402022342515,
+  "deps": [[2511671586729554969, "serde", false, 13215870152324874135]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/serde_bytes-2a5deb7ff2cfcdd4/dep-lib-serde_bytes"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 3345639006982784610,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

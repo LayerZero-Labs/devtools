@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
  * @dev Abstract contract for implementing rate limiting functionality. This contract provides a basic framework for
  * rate limiting how often a function can be executed. It is designed to be inherited by other contracts requiring rate
  * limiting capabilities to protect resources or services from excessive use.
+ * @dev The ordering of transactions within a given block (timestamp) affects the consumed capacity.
  *
  * Example 1: Max rate limit reached at beginning of window. As time continues the amount of in flights comes down.
  *

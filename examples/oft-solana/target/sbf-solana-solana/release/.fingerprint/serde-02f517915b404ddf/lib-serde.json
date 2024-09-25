@@ -1,0 +1,22 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\", \"derive\", \"rc\", \"serde_derive\", \"std\"]",
+  "target": 12518487807107382959,
+  "profile": 3188463645652688667,
+  "path": 2238092508877172843,
+  "deps": [
+    [2511671586729554969, "build_script_build", false, 6523868111665619613],
+    [9796133154792906827, "serde_derive", false, 14897792866998077392]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/serde-02f517915b404ddf/dep-lib-serde"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 3767376778934503013,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

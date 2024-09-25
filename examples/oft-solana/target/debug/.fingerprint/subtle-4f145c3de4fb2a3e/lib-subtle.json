@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\", \"i128\", \"std\"]",
+  "target": 2381105110234990629,
+  "profile": 4374887572363265115,
+  "path": 4411926335853005038,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/subtle-4f145c3de4fb2a3e/dep-lib-subtle"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 9136318916805708739,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

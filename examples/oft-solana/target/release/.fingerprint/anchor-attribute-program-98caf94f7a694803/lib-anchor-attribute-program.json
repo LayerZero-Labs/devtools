@@ -1,0 +1,23 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 4826661155331400911,
+  "profile": 2698644804294220970,
+  "path": 6316640833818411348,
+  "deps": [
+    [11455168883382479139, "anchor_syn", false, 6638551479764105553],
+    [14268468010440576439, "quote", false, 10370803683883206838],
+    [17143850428905299221, "syn", false, 12825306316841814616]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/anchor-attribute-program-98caf94f7a694803/dep-lib-anchor-attribute-program"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 1142320104774464017,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

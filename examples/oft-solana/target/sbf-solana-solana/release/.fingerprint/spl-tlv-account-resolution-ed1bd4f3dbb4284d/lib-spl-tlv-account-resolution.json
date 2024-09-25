@@ -1,0 +1,31 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 5177955529928182724,
+  "profile": 3188463645652688667,
+  "path": 8157294598514451420,
+  "deps": [
+    [9735507446013342355, "bytemuck", false, 13246009465362108721],
+    [
+      10715929651261308883,
+      "spl_type_length_value",
+      false,
+      13399290802746519957
+    ],
+    [12429659319598416725, "solana_program", false, 7303987539608618261],
+    [12721529348200318034, "spl_discriminator", false, 11123519650159231686],
+    [14076619431157552070, "spl_pod", false, 14770598764945394716],
+    [15958755999927479103, "spl_program_error", false, 6592165551075041772]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/spl-tlv-account-resolution-ed1bd4f3dbb4284d/dep-lib-spl-tlv-account-resolution"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 1605554454393937167,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

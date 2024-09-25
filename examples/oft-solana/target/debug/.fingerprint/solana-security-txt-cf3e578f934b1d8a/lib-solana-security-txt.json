@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 1417998757229115830,
+  "profile": 4374887572363265115,
+  "path": 12210630930095615517,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/solana-security-txt-cf3e578f934b1d8a/dep-lib-solana-security-txt"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 923739031677685173,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

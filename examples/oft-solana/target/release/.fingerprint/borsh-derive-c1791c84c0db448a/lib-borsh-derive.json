@@ -1,0 +1,30 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 14484299583844374162,
+  "profile": 2698644804294220970,
+  "path": 14107986990553682248,
+  "deps": [
+    [
+      2345288959107110519,
+      "borsh_schema_derive_internal",
+      false,
+      11303466927216521952
+    ],
+    [3971538142687143787, "proc_macro_crate", false, 3526534483134295764],
+    [8324001644593655249, "borsh_derive_internal", false, 10077114346943969767],
+    [17143850428905299221, "syn", false, 12825306316841814616],
+    [18024560886749334364, "proc_macro2", false, 10891235928785598606]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/borsh-derive-c1791c84c0db448a/dep-lib-borsh-derive"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 6341613096556135379,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

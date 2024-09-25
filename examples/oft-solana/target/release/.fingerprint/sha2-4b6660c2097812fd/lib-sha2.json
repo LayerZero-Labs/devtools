@@ -1,0 +1,23 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\", \"std\"]",
+  "target": 6041420389508982234,
+  "profile": 2698644804294220970,
+  "path": 12383389484680269026,
+  "deps": [
+    [2452538001284770427, "cfg_if", false, 8381792765416055830],
+    [5175268589010080688, "cpufeatures", false, 6118045449858231982],
+    [8784844846616271080, "digest", false, 2959819706455060760]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/sha2-4b6660c2097812fd/dep-lib-sha2"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 13125521705435454745,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

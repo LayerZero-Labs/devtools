@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 2297296889237502566,
+  "profile": 2698644804294220970,
+  "path": 3556188944742864032,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/rustversion-536cb45f5fc0800e/dep-build-script-build-script-build"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 11946384680894284015,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

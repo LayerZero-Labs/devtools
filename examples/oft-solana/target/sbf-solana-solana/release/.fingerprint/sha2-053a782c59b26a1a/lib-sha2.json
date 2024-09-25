@@ -1,0 +1,22 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\", \"std\"]",
+  "target": 6041420389508982234,
+  "profile": 3188463645652688667,
+  "path": 12383389484680269026,
+  "deps": [
+    [2452538001284770427, "cfg_if", false, 9063430194078788619],
+    [8784844846616271080, "digest", false, 280318270749468987]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/sha2-053a782c59b26a1a/dep-lib-sha2"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 13125521705435454745,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

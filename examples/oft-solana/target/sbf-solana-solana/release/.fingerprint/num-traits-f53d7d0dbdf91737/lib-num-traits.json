@@ -1,0 +1,21 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\", \"i128\", \"std\"]",
+  "target": 8569585236844867542,
+  "profile": 3188463645652688667,
+  "path": 8463717656700928062,
+  "deps": [
+    [10448766010662481490, "build_script_build", false, 1731535754843536829]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/num-traits-f53d7d0dbdf91737/dep-lib-num-traits"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 14621636500951049976,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}
