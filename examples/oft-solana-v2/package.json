@@ -22,6 +22,7 @@
     "hardhat-deploy": "^0.12.1"
   },
   "devDependencies": {
+    "@LayerZero-Labs/oft-v2-solana-sdk": "2.3.42.oft-rc.1",
     "@coral-xyz/anchor": "^0.29.0",
     "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/devtools-evm": "~0.4.2",
@@ -33,7 +34,6 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
-    "@layerzerolabs/lz-solana-sdk-v2": "2.3.39-rdg",
     "@layerzerolabs/lz-v2-utilities": "2.3.39",
     "@layerzerolabs/oapp-evm": "^0.0.4",
     "@layerzerolabs/oft-evm": "^0.0.11",
