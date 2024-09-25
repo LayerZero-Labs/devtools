@@ -1,5 +1,5 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
-import { OftTools, EndpointProgram, OftProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { accounts, oft, SetOFTConfigParams } from '@layerzerolabs/oft-v2-solana-sdk'
 import {
     type OmniAddress,
     type OmniTransaction,
@@ -18,11 +18,36 @@ import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
 import { type Logger, printBoolean, printJson } from '@layerzerolabs/io-devtools'
 import { mapError, AsyncRetriable } from '@layerzerolabs/devtools'
 import { OmniSDK } from '@layerzerolabs/devtools-solana'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import assert from 'assert'
+import {
+    createNoopSigner,
+    publicKey,
+    type PublicKey as UmiPublicKey,
+    Signer,
+    TransactionBuilder,
+    Umi,
+    WrappedInstruction,
+} from '@metaplex-foundation/umi'
+import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
+import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 
 export class OFT extends OmniSDK implements IOApp {
+    /*
+     * `@layerzerolabs/oft-v2-solana-sdk` is an OFT-specific Kinobi-based sdk, which
+     * is oriented towards the Umi client.  `@layerzerolabs/lz-solana-sdk-v2` is a
+     * Solita-based SDK oriented towards all other LayerZero Solana Endpoint programs,
+     * and is tailored to the web3.js client.
+     * As such, this OFT implementation uses oft-v2-solana-sdk to generate transaction
+     * data,then convert it into the web3js transaction format for signing and sending.
+     */
+    protected readonly umi: Umi
+    protected readonly umiUserAccount: UmiPublicKey
+    protected readonly umiProgramId: UmiPublicKey
+    protected readonly umiPublicKey: UmiPublicKey
+
     constructor(
         connection: Connection,
         point: OmniPoint,
@@ -31,6 +56,11 @@ export class OFT extends OmniSDK implements IOApp {
         logger?: Logger
     ) {
         super(connection, point, userAccount, logger)
+        // cache Umi objects for later use
+        this.umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
+        this.umiUserAccount = fromWeb3JsPublicKey(userAccount)
+        this.umiProgramId = fromWeb3JsPublicKey(this.programId)
+        this.umiPublicKey = fromWeb3JsPublicKey(this.publicKey)
     }
 
     @AsyncRetriable()
@@ -38,12 +68,13 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.debug(`Getting owner`)
 
         const config = await mapError(
-            () => OftProgram.accounts.OftConfig.fromAccountAddress(this.connection, this.publicKey),
+            () => {
+                return accounts.fetchOFTStore(this.umi, this.umiPublicKey)
+            },
             (error) => new Error(`Failed to get owner for ${this.label}: ${error}`)
         )
 
-        const owner = config.admin.toBase58()
-
+        const owner = config.admin
         return this.logger.debug(`Got owner: ${owner}`), owner
     }
 
@@ -56,24 +87,56 @@ export class OFT extends OmniSDK implements IOApp {
         return this.logger.debug(`Checked whether ${address} is an owner (${owner}): ${printBoolean(isOwner)}`), isOwner
     }
 
+    protected async getSetOftConfigIxAccounts(): Promise<{ oftStore: UmiPublicKey; admin: Signer }> {
+        return {
+            oftStore: this.umiPublicKey,
+            admin: (await this.getOwner()) as unknown as Signer,
+        }
+    }
+
+    protected async generateSetOftConfigIx(
+        params: SetOFTConfigParams,
+        programs: { oft: UmiPublicKey; endpoint?: UmiPublicKey }
+    ): Promise<WrappedInstruction> {
+        const accounts = await this.getSetOftConfigIxAccounts()
+        return oft.setOFTConfig(accounts, params, programs)
+    }
+
     async setOwner(address: OmniAddress): Promise<OmniTransaction> {
         this.logger.debug(`Setting owner to ${address}`)
 
-        const transaction = await mapError(
-            async () =>
-                new Transaction().add(
-                    await OftTools.createTransferAdminIx(
-                        this.programId,
-                        this.userAccount, // Signer
-                        this.publicKey, // OFT Config account
-                        new PublicKey(address) // Owner account
-                    )
-                ),
-            (error) => new Error(`Failed to set owner for ${this.label} to ${address}: ${error}`)
+        const web3Transaction = new Transaction()
+        const ix = oft.setOFTConfig(
+            {
+                oftStore: this.umiPublicKey,
+                admin: (await this.getOwner()) as unknown as Signer,
+            },
+            {
+                __kind: 'Admin',
+                admin: publicKey(address),
+            },
+            {
+                oft: this.umiProgramId,
+            }
         )
+        const txBuilder = new TransactionBuilder([ix])
+        txBuilder.getInstructions().forEach((umiInstruction) => {
+            const web3Instruction = new TransactionInstruction({
+                programId: new PublicKey(umiInstruction.programId),
+                keys: umiInstruction.keys.map((key) => ({
+                    pubkey: new PublicKey(key.pubkey),
+                    isSigner: key.isSigner,
+                    isWritable: key.isWritable,
+                })),
+                data: Buffer.from(umiInstruction.data), // Data is a Buffer in both formats
+            })
+
+            // Add the instruction to the Web3.js transaction
+            web3Transaction.add(web3Instruction)
+        })
 
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(web3Transaction)),
             description: `Setting owner to ${address}`,
         }
     }
@@ -84,7 +147,7 @@ export class OFT extends OmniSDK implements IOApp {
 
         return new EndpointV2(
             this.connection,
-            { eid: this.point.eid, address: EndpointProgram.PROGRAM_ID.toBase58() },
+            { eid: this.point.eid, address: '76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6' } as OmniPoint,
             this.userAccount
         )
     }
@@ -95,7 +158,7 @@ export class OFT extends OmniSDK implements IOApp {
 
         this.logger.debug(`Getting peer for ${eidLabel}`)
         try {
-            const peer = await OftTools.getPeerAddress(this.connection, this.programId, this.publicKey, eid)
+            const peer = await oft.getPeerAddress(this.umi.rpc, this.umiPublicKey, eid, this.umiProgramId)
 
             // We run the hex string we got through a normalization/denormalization process
             // that will ensure that zero addresses will get stripped
@@ -126,14 +189,38 @@ export class OFT extends OmniSDK implements IOApp {
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
 
-        this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
-
-        const transaction = new Transaction().add(
-            await OftTools.createSetPeerIx(this.programId, this.userAccount, this.publicKey, eid, normalizedPeer)
+        const web3Transaction = new Transaction()
+        const ix = oft.setPeerConfig(
+            {
+                oftStore: this.umiPublicKey,
+                admin: (await this.getOwner()) as unknown as Signer,
+            },
+            {
+                __kind: 'PeerAddress',
+                peer: normalizedPeer,
+                remote: eid,
+            },
+            publicKey(this.programId)
         )
+        const txBuilder = new TransactionBuilder([ix])
+        txBuilder.getInstructions().forEach((umiInstruction) => {
+            const web3Instruction = new TransactionInstruction({
+                programId: new PublicKey(umiInstruction.programId),
+                keys: umiInstruction.keys.map((key) => ({
+                    pubkey: new PublicKey(key.pubkey),
+                    isSigner: key.isSigner,
+                    isWritable: key.isWritable,
+                })),
+                data: Buffer.from(umiInstruction.data), // Data is a Buffer in both formats
+            })
 
+            // Add the instruction to the Web3.js transaction
+            web3Transaction.add(web3Instruction)
+        })
+
+        this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(web3Transaction)),
             description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`,
         }
     }
@@ -161,21 +248,42 @@ export class OFT extends OmniSDK implements IOApp {
     async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
         this.logger.debug(`Setting delegate to ${delegate}`)
 
-        const transaction = await mapError(
-            async () => {
-                const instruction = await OftTools.createSetDelegateIx(
-                    this.programId,
-                    this.userAccount,
-                    this.publicKey,
-                    new PublicKey(delegate)
-                )
-                return new Transaction().add(instruction)
-            },
-            (error) => new Error(`Failed to set delegate for ${this.label} to ${delegate}: ${error}`)
-        )
+        const owner = await this.getOwner()
+        const ownerKey = publicKey(owner!)
+        const delegate2 = publicKey(delegate)
+        const admin = createNoopSigner(ownerKey)
 
+        const ix = oft.setOFTConfig(
+            {
+                oftStore: this.umiPublicKey,
+                admin: admin,
+            },
+            {
+                __kind: 'Delegate',
+                delegate: delegate2,
+            },
+            {
+                oft: this.umiProgramId,
+            }
+        )
+        const web3Transaction = new Transaction()
+        const txBuilder = new TransactionBuilder([ix])
+        txBuilder.getInstructions().forEach((umiInstruction) => {
+            const web3Instruction = new TransactionInstruction({
+                programId: new PublicKey(umiInstruction.programId),
+                keys: umiInstruction.keys.map((key) => ({
+                    pubkey: new PublicKey(key.pubkey),
+                    isSigner: key.isSigner,
+                    isWritable: key.isWritable,
+                })),
+                data: Buffer.from(umiInstruction.data), // Data is a Buffer in both formats
+            })
+
+            // Add the instruction to the Web3.js transaction
+            web3Transaction.add(web3Instruction)
+        })
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(web3Transaction)),
             description: `Setting delegate to ${delegate}`,
         }
     }
@@ -189,7 +297,7 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.verbose(`Getting enforced options for ${eidLabel} and message type ${msgType}`)
 
         try {
-            const options = await OftTools.getEnforcedOptions(this.connection, this.programId, this.publicKey, eid)
+            const options = await oft.getEnforcedOptions(this.umi.rpc, this.umiPublicKey, eid, this.umiProgramId)
             const optionsForMsgType = msgType === MSG_TYPE_SEND ? options.send : options.sendAndCall
 
             return toHex(optionsForMsgType)
@@ -207,28 +315,55 @@ export class OFT extends OmniSDK implements IOApp {
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {
         this.logger.verbose(`Setting enforced options to ${printJson(enforcedOptions)}`)
 
-        const transaction = new Transaction()
         const optionsByEidAndMsgType = this.reduceEnforcedOptions(enforcedOptions)
         const emptyOptions = Options.newOptions().toBytes()
 
+        const web3Transaction = new Transaction()
+        let txBuilder = new TransactionBuilder()
         for (const [eid, optionsByMsgType] of optionsByEidAndMsgType) {
             const sendOption = optionsByMsgType.get(MSG_TYPE_SEND) ?? emptyOptions
             const sendAndCallOption = optionsByMsgType.get(MSG_TYPE_SEND_AND_CALL) ?? emptyOptions
-
-            const instruction = await OftTools.createSetEnforcedOptionsIx(
-                this.programId, // OFT Program ID
-                this.userAccount, // your admin address
-                this.publicKey, // your OFT Config
-                eid, // destination endpoint id for the options to apply to
-                sendOption,
-                sendAndCallOption
+            const ix = oft.setPeerConfig(
+                {
+                    oftStore: this.umiPublicKey,
+                    admin: (await this.getOwner()) as unknown as Signer,
+                },
+                {
+                    __kind: 'EnforcedOptions',
+                    send: sendOption,
+                    sendAndCall: sendAndCallOption,
+                    remote: eid,
+                },
+                this.umiProgramId
             )
-
-            transaction.add(instruction)
+            console.dir(
+                {
+                    eid,
+                    sendOption,
+                    sendAndCallOption,
+                },
+                { depth: null }
+            )
+            txBuilder = txBuilder.add([ix])
         }
 
+        txBuilder.getInstructions().forEach((umiInstruction) => {
+            const web3Instruction = new TransactionInstruction({
+                programId: new PublicKey(umiInstruction.programId),
+                keys: umiInstruction.keys.map((key) => ({
+                    pubkey: new PublicKey(key.pubkey),
+                    isSigner: key.isSigner,
+                    isWritable: key.isWritable,
+                })),
+                data: Buffer.from(umiInstruction.data), // Data is a Buffer in both formats
+            })
+
+            // Add the instruction to the Web3.js transaction
+            web3Transaction.add(web3Instruction)
+        })
+
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(web3Transaction)),
             description: `Setting enforced options to ${printJson(enforcedOptions)}`,
         }
     }

@@ -1,36 +1,59 @@
-// Import necessary functions and classes from Solana SDKs
 import assert from 'assert'
-import fs from 'fs'
 
-import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
+import { web3 } from '@coral-xyz/anchor'
+import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import {
-    AuthorityType,
-    findAssociatedTokenPda,
-    mplToolbox,
-    setAuthority,
-    setComputeUnitPrice,
-} from '@metaplex-foundation/mpl-toolbox'
-import {
+    EddsaInterface,
+    KeypairSigner,
+    PublicKey,
     TransactionBuilder,
+    Umi,
     createSignerFromKeypair,
-    generateSigner,
-    percentAmount,
+    publicKey,
     signerIdentity,
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { fromWeb3JsInstruction, fromWeb3JsPublicKey, toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
-import { PublicKey } from '@solana/web3.js'
-import { getExplorerLink } from '@solana-developers/helpers'
+import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
+import {
+    fromWeb3JsInstruction,
+    fromWeb3JsPublicKey,
+    toWeb3JsInstruction,
+    toWeb3JsKeypair,
+    toWeb3JsPublicKey,
+} from '@metaplex-foundation/umi-web3js-adapters'
+import {
+    ExtensionType,
+    TOKEN_PROGRAM_ID,
+    createAssociatedTokenAccountInstruction,
+    createInitializeMintInstruction,
+    createInitializeTransferFeeConfigInstruction,
+    createMintToInstruction,
+    createMultisig,
+    getAssociatedTokenAddressSync,
+    getMintLen,
+} from '@solana/spl-token'
+import {
+    Connection,
+    Finality,
+    Keypair,
+    RpcResponseAndContext,
+    SignatureResult,
+    SystemProgram,
+    TransactionInstruction,
+} from '@solana/web3.js'
 import bs58 from 'bs58'
+import { sha256 } from 'ethereumjs-util'
 import { task } from 'hardhat/config'
 
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { OFT_SEED, OftProgram, OftTools } from '@layerzerolabs/lz-solana-sdk-v2'
+import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { buildVersionedTransaction } from '@layerzerolabs/lz-solana-sdk-v2'
+import { OFT_DECIMALS, OftPDA, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { createSolanaConnectionFactory } from '../common/utils'
-import getFee from '../utils/getFee'
+
+export const TRANSFER_FEE_BPS = 200n // 2%
+export const MAX_TRANSFER_FEE = BigInt(Math.pow(10, OFT_DECIMALS))
 
 interface Args {
     amount: number
@@ -38,28 +61,125 @@ interface Args {
     programId: string
 }
 
-task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config account')
+export interface OftKeys {
+    escrow: KeypairSigner
+    mint: KeypairSigner
+    tokenMintAuthority: PublicKey
+    tokenWithdrawableAuthority: KeypairSigner
+    transferFeeConfigAuthority: KeypairSigner
+    oappAdmin: KeypairSigner
+    oappAdminTokenAccount?: PublicKey
+    oftStore: PublicKey
+}
+
+async function initMint(umi: Umi, keys: OftKeys, tokenProgram: PublicKey, enableTransferFee = false): Promise<void> {
+    const connection = new web3.Connection(umi.rpc.getEndpoint())
+    const multiSigKey = await createMultisig(
+        connection,
+        toWeb3JsKeypair(keys.oappAdmin),
+        [toWeb3JsPublicKey(keys.oftStore), toWeb3JsPublicKey(keys.oappAdmin.publicKey)],
+        1,
+        undefined,
+        {
+            commitment: 'confirmed',
+            preflightCommitment: 'confirmed',
+        },
+        toWeb3JsPublicKey(tokenProgram)
+    )
+    keys.tokenMintAuthority = fromWeb3JsPublicKey(multiSigKey) // can set tokenMinAuthority to keys.oftConfig
+
+    const mintLen = getMintLen(enableTransferFee ? [ExtensionType.TransferFeeConfig] : [])
+    const mintLamports = await connection.getMinimumBalanceForRentExemption(mintLen)
+    const mintAmount = 1000000000n
+
+    const tokenAccount = getAssociatedTokenAddressSync(
+        toWeb3JsPublicKey(keys.mint.publicKey),
+        toWeb3JsPublicKey(keys.oappAdmin.publicKey), // owner,
+        false,
+        toWeb3JsPublicKey(tokenProgram)
+    )
+    keys.oappAdminTokenAccount = fromWeb3JsPublicKey(tokenAccount)
+
+    // create mint token
+    const createMintIx = [
+        web3.SystemProgram.createAccount({
+            fromPubkey: toWeb3JsPublicKey(keys.oappAdmin.publicKey),
+            newAccountPubkey: toWeb3JsPublicKey(keys.mint.publicKey),
+            space: mintLen,
+            lamports: mintLamports,
+            programId: toWeb3JsPublicKey(tokenProgram),
+        }),
+    ]
+    if (enableTransferFee) {
+        createMintIx.push(
+            createInitializeTransferFeeConfigInstruction(
+                toWeb3JsPublicKey(keys.mint.publicKey),
+                toWeb3JsPublicKey(keys.transferFeeConfigAuthority.publicKey),
+                toWeb3JsPublicKey(keys.tokenWithdrawableAuthority.publicKey),
+                parseInt(TRANSFER_FEE_BPS.toString()), // 2%,
+                MAX_TRANSFER_FEE, // 1 tokens max fee,
+                toWeb3JsPublicKey(tokenProgram)
+            )
+        )
+    }
+    createMintIx.push(
+        createInitializeMintInstruction(
+            toWeb3JsPublicKey(keys.mint.publicKey),
+            OFT_DECIMALS,
+            toWeb3JsPublicKey(keys.tokenMintAuthority), // mint authority
+            null,
+            toWeb3JsPublicKey(tokenProgram)
+        ),
+        createAssociatedTokenAccountInstruction(
+            toWeb3JsPublicKey(keys.oappAdmin.publicKey), // payer
+            tokenAccount,
+            toWeb3JsPublicKey(keys.oappAdmin.publicKey), // mint
+            toWeb3JsPublicKey(keys.mint.publicKey), // owner
+            toWeb3JsPublicKey(tokenProgram)
+        ),
+        createMintToInstruction(
+            toWeb3JsPublicKey(keys.mint.publicKey),
+            tokenAccount,
+            toWeb3JsPublicKey(keys.tokenMintAuthority),
+            mintAmount,
+            [toWeb3JsKeypair(keys.oappAdmin)],
+            toWeb3JsPublicKey(tokenProgram)
+        )
+    )
+
+    await sendAndConfirm(umi, createMintIx, [keys.oappAdmin, keys.mint])
+}
+
+export async function sendAndConfirm(
+    umi: Umi,
+    instructions: web3.TransactionInstruction[],
+    signers: KeypairSigner[]
+): Promise<void> {
+    await new TransactionBuilder(
+        instructions.map((ix) => {
+            return {
+                instruction: fromWeb3JsInstruction(ix),
+                signers: signers,
+                bytesCreatedOnChain: 0,
+            }
+        }),
+        { feePayer: signers[0] }
+    ).sendAndConfirm(umi, { send: { preflightCommitment: 'confirmed', commitment: 'confirmed' } })
+}
+
+task('solinit', 'Mints new SPL Token and creates new OFT Config account')
     .addParam('programId', 'The OFT Program id')
-    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
-    .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, types.int)
+    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
     .setAction(async (taskArgs: Args) => {
         const privateKey = process.env.SOLANA_PRIVATE_KEY
         assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-
-        // 1. Setup UMI environment using environment variables (private key and Solana RPC)
-
         const connectionFactory = createSolanaConnectionFactory()
         const connection = await connectionFactory(taskArgs.eid)
-
-        // Initialize UMI with the Solana RPC URL and necessary tools
         const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
 
         // Generate a wallet keypair from the private key stored in the environment
         const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
-
-        // Convert the UMI keypair to a format compatible with web3.js
-        // This is necessary as the @layerzerolabs/lz-solana-sdk-v2 library uses web3.js keypairs
-        const web3WalletKeyPair = toWeb3JsKeypair(umiWalletKeyPair)
 
         // Create a signer object for UMI to use in transactions
         const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
@@ -68,22 +188,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         umi.use(signerIdentity(umiWalletSigner))
 
         // Define the OFT Program ID based on the task arguments
-        const OFT_PROGRAM_ID = new PublicKey(taskArgs.programId)
+        const OFT_PROGRAM_ID = publicKey(taskArgs.programId)
 
-        // Number of decimals for the token (recommended value for SHARED_DECIMALS is 6)
         const LOCAL_DECIMALS = 9
-
-        // Define the number of shared decimals for the token
-        // The OFT Standard handles differences in decimal precision before every cross-chain
-        // by "cleaning" the dust off of the amount to send by dividing by a `decimalConversionRate`.
-        // For example, when you send a value of 123456789012345678 (18 decimals):
-        //
-        // decimalConversionRate = 10^(localDecimals − sharedDecimals) = 10^(18−6) = 10^12
-        // 123456789012345678 / 10^12 = 123456.789012345678 = 123456
-        // amount = 123456 * 10^12 = 12345600000000000
-        //
-        // For more information, see the OFT Standard documentation:
-        // https://docs.layerzero.network/v2/developers/solana/oft/native#token-transfer-precision
         const SHARED_DECIMALS = 6
 
         // Interface to hold account details for saving later
@@ -101,117 +208,91 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Config acc
         // 2. Generate the accounts we want to create (SPL Token)
 
         // Generate a new keypair for the SPL token mint account
-        const token = generateSigner(umi)
+        // const token = generateSigner(umi)
 
-        // Convert the UMI keypair to web3.js compatible keypair
-        const web3TokenKeyPair = toWeb3JsKeypair(token)
+        const eddsa: EddsaInterface = createWeb3JsEddsa()
 
-        // Get the average compute unit price
-        // getFee() uses connection.getRecentPrioritizationFees() to get recent fees and averages them
-        const { averageFeeExcludingZeros } = await getFee(connection)
-        const computeUnitPrice = BigInt(Math.round(averageFeeExcludingZeros))
+        const oftDeriver = new OftPDA(OFT_PROGRAM_ID)
+        const oftName = 'fafo6' // TODO getDeployName(tokenInfo)
 
-        // Create and mint the SPL token using UMI
-        const createTokenTx = await createAndMint(umi, {
-            mint: token, // New token account
-            name: 'Mock', // Token name
-            symbol: 'Mock', // Token symbol
-            isMutable: true, // Allow token metadata to be mutable
-            decimals: LOCAL_DECIMALS, // Number of decimals for the token
-            uri: '', // URI for token metadata
-            sellerFeeBasisPoints: percentAmount(0), // Fee percentage
-            authority: umiWalletSigner, // Authority for the token mint
-            amount: taskArgs.amount, // Initial amount to mint
-            tokenOwner: umiWalletSigner.publicKey, // Owner of the token
-            tokenStandard: TokenStandard.Fungible, // Token type (Fungible)
-        })
-            .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice * BigInt(2) }))
-            .sendAndConfirm(umi)
+        let ixs: TransactionInstruction[] = []
+        let signers: Keypair[] = []
 
-        // Log the transaction and token mint details
-        const createTokenTransactionSignature = bs58.encode(createTokenTx.signature)
-        const createTokenLink = getExplorerLink('tx', createTokenTransactionSignature.toString(), 'mainnet-beta')
-        console.log(`✅ Token Mint Complete! View the transaction here: ${createTokenLink}`)
+        const lockBox = eddsa.createKeypairFromSeed(sha256(Buffer.from(`${oftName}-v2-lockbox`, 'utf-8')))
+        const escrowPK = lockBox.publicKey
+        const [oftStorePda] = oftDeriver.oftStore(escrowPK)
+        console.dir(oftStorePda, { depth: null })
 
-        // Find the associated token account using the generated token mint
-        const tokenAccount = findAssociatedTokenPda(umi, {
-            mint: token.publicKey,
-            owner: umiWalletSigner.publicKey,
-        })
+        // TODO handle adapter case too
+        // if (tokenInfo.type === 'OFT')
 
-        console.log(`Your token account is: ${tokenAccount[0]}`)
+        const mintKp = eddsa.createKeypairFromSeed(sha256(Buffer.from(`${oftName}-v2`, 'utf-8')))
+        const mintPK = mintKp.publicKey
+        console.dir(mintPK)
 
-        // 3. Derive OFT Config from those accounts and program ID
-
-        // Derive the OFT Config public key from the token mint keypair and OFT Program ID
-        const [oftConfig] = PublicKey.findProgramAddressSync(
-            [Buffer.from(OFT_SEED), web3TokenKeyPair.publicKey.toBuffer()],
-            OFT_PROGRAM_ID
+        const multiSigKey = await createMultisig(
+            connection,
+            toWeb3JsKeypair(umiWalletKeyPair),
+            [toWeb3JsPublicKey(oftStorePda), toWeb3JsPublicKey(umiWalletKeyPair.publicKey)],
+            1,
+            undefined,
+            undefined,
+            TOKEN_PROGRAM_ID
         )
 
-        console.log(`OFT Config:`, oftConfig)
-
-        // 4. Create new account (OFT Config)
-
-        // Create a new transaction to transfer mint authority to the OFT Config account and initialize a new native OFT
-        const setAuthorityTx = setAuthority(umi, {
-            owned: token.publicKey, // SPL Token mint account
-            owner: umiWalletKeyPair.publicKey, // Current authority of the token mint
-            authorityType: AuthorityType.MintTokens, // Authority type to transfer
-            newAuthority: fromWeb3JsPublicKey(oftConfig), // New authority (OFT Config)
-        })
-
-        // Initialize the OFT using the OFT Config and the token mint
-        const oftConfigMintIx = await OftTools.createInitOftIx(
-            OFT_PROGRAM_ID, // OFT Program ID
-            web3WalletKeyPair.publicKey, // Payer
-            web3WalletKeyPair.publicKey, // Admin
-            web3TokenKeyPair.publicKey, // Mint account
-            web3WalletKeyPair.publicKey, // OFT Mint Authority
-            OftProgram.types.OFTType.Native,
-            SHARED_DECIMALS, // OFT Shared Decimals
-            TOKEN_PROGRAM_ID // Token Program ID
-        )
-
-        // Convert the instruction to UMI format
-        const convertedInstruction = fromWeb3JsInstruction(oftConfigMintIx)
-
-        // Build the transaction with the OFT Config initialization instruction
-        const configBuilder = new TransactionBuilder([
+        const createMintIxs = [
+            SystemProgram.createAccount({
+                fromPubkey: toWeb3JsPublicKey(umiWalletKeyPair.publicKey),
+                newAccountPubkey: toWeb3JsPublicKey(mintPK),
+                space: getMintLen([]),
+                lamports: await connection.getMinimumBalanceForRentExemption(getMintLen([])),
+                programId: TOKEN_PROGRAM_ID,
+            }),
+            createInitializeMintInstruction(
+                toWeb3JsPublicKey(mintPK),
+                LOCAL_DECIMALS,
+                multiSigKey,
+                multiSigKey,
+                TOKEN_PROGRAM_ID
+            ),
+        ]
+        const initOftIx = oft.initOft(
             {
-                instruction: convertedInstruction,
-                signers: [umiWalletSigner],
-                bytesCreatedOnChain: 0,
+                payer: createSignerFromKeypair({ eddsa: eddsa }, umiWalletKeyPair),
+                admin: umiWalletKeyPair.publicKey,
+                mint: mintPK,
+                escrow: createSignerFromKeypair({ eddsa: eddsa }, lockBox),
             },
-        ])
+            types.OFTType.Native,
+            OFT_DECIMALS,
+            {
+                oft: OFT_PROGRAM_ID,
+            }
+        )
+        ixs = [...createMintIxs, toWeb3JsInstruction(initOftIx.instruction)]
+        signers = [umiWalletKeyPair, mintKp, lockBox]
 
-        // Set the fee payer and send the transaction
-        const oftConfigTransaction = await setAuthorityTx
-            .add(configBuilder)
-            .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice * BigInt(4) }))
-            .sendAndConfirm(umi)
-
-        // Log the transaction details
-        const oftConfigSignature = bs58.encode(oftConfigTransaction.signature)
-        const oftConfigLink = getExplorerLink('tx', oftConfigSignature.toString(), 'mainnet-beta')
-        console.log(`✅ You created an OFT, view the transaction here: ${oftConfigLink}`)
-
-        // Save the account details to a JSON file
-        const accountsJson: AccountsJson = {
-            timestamp: new Date().toISOString(),
-            accounts: [
-                { name: 'SPL Token Mint Account', publicKey: web3TokenKeyPair.publicKey.toString() },
-                { name: 'OFT Config Account', publicKey: oftConfig.toString() },
-                { name: 'OFT Program ID', publicKey: taskArgs.programId },
-            ],
-        }
-
-        const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
-        if (!fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir, { recursive: true })
-        }
-
-        // Write the JSON file to the specified directory
-        fs.writeFileSync(`${outputDir}/OFT.json`, JSON.stringify(accountsJson, null, 2))
-        console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
+        const t = await sendAndConfirmTx(connection, signers, ixs)
+        console.dir(t, { depth: null })
     })
+
+interface TxResult {
+    hash: string
+    resp: RpcResponseAndContext<SignatureResult>
+}
+
+const sendAndConfirmTx = async (
+    connection: Connection,
+    signer: Keypair[] | Keypair, // the first one is the payer
+    ixs: TransactionInstruction[],
+    commitment: Finality = 'confirmed'
+): Promise<TxResult> => {
+    const signers: Keypair | Keypair[] = Array.isArray(signer)
+        ? signer.map((s) => toWeb3JsKeypair(s))
+        : [toWeb3JsKeypair(signer)]
+    const tx = await buildVersionedTransaction(connection, signers[0].publicKey, ixs)
+    tx.sign(signers)
+    const hash = await connection.sendTransaction(tx, { skipPreflight: true })
+    const resp = await connection.confirmTransaction(hash, commitment)
+    return { hash, resp }
+}

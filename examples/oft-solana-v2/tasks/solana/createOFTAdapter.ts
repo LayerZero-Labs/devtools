@@ -31,7 +31,7 @@ interface Args {
     eid: EndpointId
     programId: string
 }
-
+// TODO convert this. see createOFT.ts
 task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT Adapter Config account')
     .addParam('programId', 'The OFT Program id')
     .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)

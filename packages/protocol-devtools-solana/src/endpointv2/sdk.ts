@@ -530,14 +530,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () =>
-                this.program.initOAppNonce(
-                    this.connection,
-                    this.userAccount,
-                    eid,
-                    new PublicKey(oapp),
-                    normalizePeer(peer, eid)
-                ),
+            () => this.program.initOAppNonce(this.userAccount, eid, new PublicKey(oapp), normalizePeer(peer, eid)),
             (error) =>
                 new Error(
                     `Failed to init nonce for ${this.label} for OApp ${oapp} and peer ${peer} on ${eidLabel}: ${error}`
@@ -583,7 +576,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp send library for OApp ${oapp} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => this.program.initSendLibrary(this.connection, this.userAccount, new PublicKey(oapp), eid),
+            () => this.program.initSendLibrary(this.userAccount, new PublicKey(oapp), eid),
             (error) =>
                 new Error(`Failed to init send library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
         )
@@ -622,7 +615,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp receive library for OApp ${oapp} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => this.program.initReceiveLibrary(this.connection, this.userAccount, new PublicKey(oapp), eid),
+            () => this.program.initReceiveLibrary(this.userAccount, new PublicKey(oapp), eid),
             (error) =>
                 new Error(`Failed to init receive library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
         )
@@ -674,7 +667,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                     : (this.logger.debug(`Using ULN at ${libPublicKey} to initialize OApp config`),
                       new UlnProgram.Uln(libPublicKey))
 
-                return this.program.initOappConfig(
+                return this.program.initOAppConfig(
                     this.userAccount,
                     msgLibInterface,
                     this.userAccount,
