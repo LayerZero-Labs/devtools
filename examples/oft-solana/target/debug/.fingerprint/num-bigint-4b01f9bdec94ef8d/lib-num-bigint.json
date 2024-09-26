@@ -1,0 +1,22 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 17292421766420122114,
+  "profile": 1200860260873630964,
+  "path": 18254240661021099857,
+  "deps": [
+    [697600182380285322, "num_integer", false, 1424000326015583957],
+    [10448766010662481490, "num_traits", false, 7798934953540883659]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/num-bigint-4b01f9bdec94ef8d/dep-lib-num-bigint"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 10601054166942238371,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

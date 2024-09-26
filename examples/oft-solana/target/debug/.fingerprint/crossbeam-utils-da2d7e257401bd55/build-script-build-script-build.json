@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\", \"std\"]",
+  "target": 427768481117760528,
+  "profile": 16040360076513104253,
+  "path": 10189286013453653023,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/crossbeam-utils-da2d7e257401bd55/dep-build-script-build-script-build"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 1609393243086812936,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,22 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 295758560010665018,
+  "profile": 3188463645652688667,
+  "path": 7924459146286908212,
+  "deps": [
+    [1385435641494999048, "build_script_build", false, 2444428202389912236],
+    [4254328441789853856, "once_cell", false, 3395575763089008129]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/ahash-2bfccbe5776fd668/dep-lib-ahash"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 6548036084630991988,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

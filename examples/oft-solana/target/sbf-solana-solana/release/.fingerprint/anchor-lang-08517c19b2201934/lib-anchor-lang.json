@@ -1,0 +1,67 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"event-cpi\"]",
+  "target": 2711443150433578712,
+  "profile": 3188463645652688667,
+  "path": 1290448260377203389,
+  "deps": [
+    [
+      1658759658318661119,
+      "anchor_attribute_constant",
+      false,
+      17188770829609957323
+    ],
+    [2298489633419329899, "thiserror", false, 7090176474286122022],
+    [3075441122728359113, "anchor_derive_accounts", false, 4409757429478129448],
+    [4748012609204464776, "arrayref", false, 1529890762667734634],
+    [4790332501662844689, "base64", false, 18291716275240963735],
+    [
+      5393551795602478524,
+      "anchor_attribute_account",
+      false,
+      13771161020459912205
+    ],
+    [8612759544182637449, "borsh", false, 4492319204086294125],
+    [9735507446013342355, "bytemuck", false, 13246009465362108721],
+    [
+      10133515453419392106,
+      "anchor_attribute_program",
+      false,
+      11282549600789072549
+    ],
+    [
+      11170119568398293030,
+      "anchor_attribute_event",
+      false,
+      3680586558764026011
+    ],
+    [11228387426131597774, "getrandom", false, 13925162708451202602],
+    [
+      11550433528139364110,
+      "anchor_attribute_access_control",
+      false,
+      14973172029916910627
+    ],
+    [12088280702837278959, "anchor_derive_serde", false, 377617839528150407],
+    [12429659319598416725, "solana_program", false, 7303987539608618261],
+    [12639858850933718058, "bincode", false, 17831710165348767278],
+    [
+      14789944396528076442,
+      "anchor_attribute_error",
+      false,
+      2604286293713944041
+    ],
+    [15956619405605670111, "anchor_derive_space", false, 17769400202250372314]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/anchor-lang-08517c19b2201934/dep-lib-anchor-lang"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 8904873174815195710,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

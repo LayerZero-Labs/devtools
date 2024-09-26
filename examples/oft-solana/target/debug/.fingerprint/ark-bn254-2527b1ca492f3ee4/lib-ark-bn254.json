@@ -1,0 +1,23 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"curve\", \"default\", \"scalar_field\"]",
+  "target": 14557660582147703192,
+  "profile": 4374887572363265115,
+  "path": 17925029028022737799,
+  "deps": [
+    [1043979679572436616, "ark_std", false, 2716296122962770429],
+    [9676171204883382918, "ark_ec", false, 12670246008095163284],
+    [16546267729176824362, "ark_ff", false, 14680432914476772256]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/ark-bn254-2527b1ca492f3ee4/dep-lib-ark-bn254"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 7442577124610122788,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

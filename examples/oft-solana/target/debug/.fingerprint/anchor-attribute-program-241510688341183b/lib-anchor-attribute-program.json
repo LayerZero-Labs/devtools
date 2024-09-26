@@ -1,0 +1,23 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"idl-build\"]",
+  "target": 4826661155331400911,
+  "profile": 1200860260873630964,
+  "path": 7809294209421682858,
+  "deps": [
+    [11455168883382479139, "anchor_syn", false, 11665408143357311320],
+    [14268468010440576439, "quote", false, 6668915474389045628],
+    [17143850428905299221, "syn", false, 614478595927183521]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/anchor-attribute-program-241510688341183b/dep-lib-anchor-attribute-program"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 1142320104774464017,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,25 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 2189567929979314021,
+  "profile": 2698644804294220970,
+  "path": 14585704276687402436,
+  "deps": [
+    [1954840786535925237, "bs58", false, 14325238051006169254],
+    [11455168883382479139, "anchor_syn", false, 6638551479764105553],
+    [14268468010440576439, "quote", false, 10370803683883206838],
+    [17143850428905299221, "syn", false, 12825306316841814616],
+    [18024560886749334364, "proc_macro2", false, 10891235928785598606]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/anchor-attribute-account-da791828df696810/dep-lib-anchor-attribute-account"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 10060468667075376672,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

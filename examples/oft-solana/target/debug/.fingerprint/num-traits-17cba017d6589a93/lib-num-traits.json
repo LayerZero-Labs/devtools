@@ -1,0 +1,21 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\", \"i128\", \"std\"]",
+  "target": 8569585236844867542,
+  "profile": 4374887572363265115,
+  "path": 17576607764114771008,
+  "deps": [
+    [10448766010662481490, "build_script_build", false, 1049354481777042088]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/num-traits-17cba017d6589a93/dep-lib-num-traits"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 14621636500951049976,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

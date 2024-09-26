@@ -1,0 +1,1 @@
+cargo:rerun-if-env-changed=ENDPOINT_ID

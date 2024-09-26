@@ -1,0 +1,30 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"chinese-simplified\", \"chinese-traditional\", \"default\", \"french\", \"italian\", \"japanese\", \"korean\", \"spanish\"]",
+  "target": 13355904631023289439,
+  "profile": 4374887572363265115,
+  "path": 2732058903095498270,
+  "deps": [
+    [288937492735761168, "sha2", false, 4439745925946041165],
+    [1098045598771442027, "rustc_hash", false, 13143419837556406166],
+    [2298489633419329899, "thiserror", false, 3310519276281178368],
+    [4192557874542178643, "hmac", false, 8057657266576321095],
+    [4254328441789853856, "once_cell", false, 17486965484366793079],
+    [7879775654530620242, "zeroize", false, 13079762986397394748],
+    [14778545527639897399, "rand", false, 143952285190153025],
+    [15385174687058817474, "unicode_normalization", false, 3071714233479593555],
+    [16045357212464686133, "anyhow", false, 4746133585167977696],
+    [16491198307650699111, "pbkdf2", false, 8682896485300367263]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/tiny-bip39-43137678c6632cd9/dep-lib-bip39"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 4238724394037399451,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,21 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\"]",
+  "target": 1229535848872979174,
+  "profile": 3188463645652688667,
+  "path": 2296207372465012311,
+  "deps": [
+    [5748077777622396073, "build_script_build", false, 17734203378421973212]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/memoffset-c0771d62cc4f8e72/dep-lib-memoffset"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 1371205671251306698,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

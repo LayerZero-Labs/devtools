@@ -1,0 +1,72 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"derive\", \"event-cpi\", \"init-if-needed\"]",
+  "target": 2711443150433578712,
+  "profile": 3188463645652688667,
+  "path": 1290448260377203389,
+  "deps": [
+    [
+      1658759658318661119,
+      "anchor_attribute_constant",
+      false,
+      11038892122596457857
+    ],
+    [2298489633419329899, "thiserror", false, 7090176474286122022],
+    [
+      3075441122728359113,
+      "anchor_derive_accounts",
+      false,
+      18296986684307260285
+    ],
+    [4748012609204464776, "arrayref", false, 1529890762667734634],
+    [4790332501662844689, "base64", false, 18291716275240963735],
+    [
+      5393551795602478524,
+      "anchor_attribute_account",
+      false,
+      4754894596944626677
+    ],
+    [8612759544182637449, "borsh", false, 4492319204086294125],
+    [9735507446013342355, "bytemuck", false, 13246009465362108721],
+    [
+      10133515453419392106,
+      "anchor_attribute_program",
+      false,
+      12443134900843878736
+    ],
+    [
+      11170119568398293030,
+      "anchor_attribute_event",
+      false,
+      6008039318902160606
+    ],
+    [11228387426131597774, "getrandom", false, 13925162708451202602],
+    [
+      11550433528139364110,
+      "anchor_attribute_access_control",
+      false,
+      16033077568267873944
+    ],
+    [12088280702837278959, "anchor_derive_serde", false, 17399149368147454967],
+    [12429659319598416725, "solana_program", false, 7303987539608618261],
+    [12639858850933718058, "bincode", false, 17831710165348767278],
+    [
+      14789944396528076442,
+      "anchor_attribute_error",
+      false,
+      14912202819472652600
+    ],
+    [15956619405605670111, "anchor_derive_space", false, 17769400202250372314]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/anchor-lang-bddf76bfb4c24747/dep-lib-anchor-lang"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 8904873174815195710,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

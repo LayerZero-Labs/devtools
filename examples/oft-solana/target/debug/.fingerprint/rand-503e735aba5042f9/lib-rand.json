@@ -1,0 +1,23 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"alloc\", \"default\", \"getrandom\", \"libc\", \"rand_chacha\", \"std\", \"std_rng\"]",
+  "target": 17786277519600763311,
+  "profile": 4374887572363265115,
+  "path": 11905286864529155118,
+  "deps": [
+    [1565494060434293766, "rand_core", false, 5231355720350237328],
+    [12017018019769837221, "rand_chacha", false, 9664887944520257279],
+    [16859105048871006744, "libc", false, 11491423921144751700]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/rand-503e735aba5042f9/dep-lib-rand"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 16964019146302480911,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}
