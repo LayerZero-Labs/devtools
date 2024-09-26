@@ -7,12 +7,6 @@ pragma solidity ^0.8.0;
  * rate limiting how often a function can be executed. It is designed to be inherited by other contracts requiring rate
  * limiting capabilities to protect resources or services from excessive use.
  * @dev The ordering of transactions within a given block (timestamp) affects the consumed capacity.
- * @dev Carefully consider the minimum window duration for the given blockchain.  For example, on Ethereum, the minimum
- * window duration should be at least 12 seconds.  If a window less than 12 seconds is configured, then the rate limit
- * will effectively reset with each block, rendering rate limiting ineffective.
- * @dev Carefully consider the proportion of the limit to the window.  If the limit is much smaller than the window, the
- * decay function is lossy.  Consider using a limit that is greater than or equal to the window to avoid this.  This is
- * especially important for blockchains with short average block times.
  *
  * Example 1: Max rate limit reached at beginning of window. As time continues the amount of in flights comes down.
  *
