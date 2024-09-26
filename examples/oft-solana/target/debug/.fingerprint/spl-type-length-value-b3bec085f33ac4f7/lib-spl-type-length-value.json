@@ -1,0 +1,25 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 17120371479894415366,
+  "profile": 4374887572363265115,
+  "path": 3523137541285157086,
+  "deps": [
+    [9735507446013342355, "bytemuck", false, 12223220478637495621],
+    [12429659319598416725, "solana_program", false, 1203654611034628866],
+    [12721529348200318034, "spl_discriminator", false, 18067030901907706043],
+    [14076619431157552070, "spl_pod", false, 2550406807790647570],
+    [15958755999927479103, "spl_program_error", false, 10506528088460762279]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/spl-type-length-value-b3bec085f33ac4f7/dep-lib-spl-type-length-value"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 7878827123444773043,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

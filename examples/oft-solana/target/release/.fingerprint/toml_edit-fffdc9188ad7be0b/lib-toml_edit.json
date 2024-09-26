@@ -1,0 +1,23 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\"]",
+  "target": 2019625632009298928,
+  "profile": 2698644804294220970,
+  "path": 17024987825729511627,
+  "deps": [
+    [5005212103935869559, "toml_datetime", false, 6783679830059584810],
+    [5481336202574641354, "indexmap", false, 5144495909494175405],
+    [8812168443749698079, "winnow", false, 11310361339724414945]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/toml_edit-fffdc9188ad7be0b/dep-lib-toml_edit"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 17436163843096124214,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

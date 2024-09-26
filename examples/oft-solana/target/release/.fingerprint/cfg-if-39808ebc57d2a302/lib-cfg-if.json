@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 10623512480563079566,
+  "profile": 2698644804294220970,
+  "path": 3405027487889883587,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/cfg-if-39808ebc57d2a302/dep-lib-cfg-if"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 8462187951337715540,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

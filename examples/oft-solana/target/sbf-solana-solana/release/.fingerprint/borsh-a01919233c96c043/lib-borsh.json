@@ -1,0 +1,22 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"default\", \"std\"]",
+  "target": 5127993436019407528,
+  "profile": 3188463645652688667,
+  "path": 11908885452558358469,
+  "deps": [
+    [1759060122986695407, "borsh_derive", false, 4194580761713395011],
+    [16284710795702459458, "hashbrown", false, 303814625394962269]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/borsh-a01919233c96c043/dep-lib-borsh"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 7032358266178414993,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

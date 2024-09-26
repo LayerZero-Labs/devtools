@@ -6,6 +6,7 @@ pragma solidity ^0.8.0;
  * @dev Abstract contract for implementing rate limiting functionality. This contract provides a basic framework for
  * rate limiting how often a function can be executed. It is designed to be inherited by other contracts requiring rate
  * limiting capabilities to protect resources or services from excessive use.
+ * @dev The ordering of transactions within a given block (timestamp) affects the consumed capacity.
  * @dev Carefully consider the minimum window duration for the given blockchain.  For example, on Ethereum, the minimum
  * window duration should be at least 12 seconds.  If a window less than 12 seconds is configured, then the rate limit
  * will effectively reset with each block, rendering rate limiting ineffective.
@@ -100,6 +101,7 @@ pragma solidity ^0.8.0;
  *                          [ --------------- Extended 60 Second Window --------------- ]
  */
 abstract contract RateLimiter {
+
     /**
      * @notice Rate Limit struct.
      * @param amountInFlight The amount in the current window.
@@ -197,16 +199,11 @@ abstract contract RateLimiter {
         uint256 _window
     ) internal view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
         uint256 timeSinceLastDeposit = block.timestamp - _lastUpdated;
-        if (timeSinceLastDeposit >= _window) {
-            currentAmountInFlight = 0;
-            amountCanBeSent = _limit;
-        } else {
-            // @dev Presumes linear decay.
-            uint256 decay = (_limit * timeSinceLastDeposit) / _window;
-            currentAmountInFlight = _amountInFlight <= decay ? 0 : _amountInFlight - decay;
-            // @dev In the event the _limit is lowered, and the 'in-flight' amount is higher than the _limit, set to 0.
-            amountCanBeSent = _limit <= currentAmountInFlight ? 0 : _limit - currentAmountInFlight;
-        }
+        // @dev Presumes linear decay.
+        uint256 decay = (_limit * timeSinceLastDeposit) / (_window > 0 ? _window : 1); // prevent division by zero
+        currentAmountInFlight = _amountInFlight <= decay ? 0 : _amountInFlight - decay;
+        // @dev In the event the _limit is lowered, and the 'in-flight' amount is higher than the _limit, set to 0.
+        amountCanBeSent = _limit <= currentAmountInFlight ? 0 : _limit - currentAmountInFlight;
     }
 
     /**

@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\", \"std\"]",
+  "target": 16778825523953873731,
+  "profile": 4374887572363265115,
+  "path": 15270691286337368678,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/base64-5a97829561cf8179/dep-lib-base64"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 13936919950537592407,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

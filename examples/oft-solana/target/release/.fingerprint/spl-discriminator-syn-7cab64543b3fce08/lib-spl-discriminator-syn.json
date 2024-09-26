@@ -1,0 +1,25 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 13799310233543270848,
+  "profile": 2698644804294220970,
+  "path": 8598635675795540547,
+  "deps": [
+    [1404949221071535394, "syn", false, 5960524180572047084],
+    [2298489633419329899, "thiserror", false, 13447108363913416784],
+    [10695905396679492879, "sha2", false, 9917127747155509215],
+    [14268468010440576439, "quote", false, 10370803683883206838],
+    [18024560886749334364, "proc_macro2", false, 10891235928785598606]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/spl-discriminator-syn-7cab64543b3fce08/dep-lib-spl-discriminator-syn"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 6654599643056530256,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

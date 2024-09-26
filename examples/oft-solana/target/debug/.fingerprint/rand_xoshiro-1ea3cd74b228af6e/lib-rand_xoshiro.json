@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 15514529190776828435,
+  "profile": 4374887572363265115,
+  "path": 2017664317542635989,
+  "deps": [[1565494060434293766, "rand_core", false, 5231355720350237328]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/rand_xoshiro-1ea3cd74b228af6e/dep-lib-rand_xoshiro"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 10630710798610827097,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,19 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 9860137908366838602,
+  "profile": 4374887572363265115,
+  "path": 13061849613285960783,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/termcolor-ef44b2132c88503d/dep-lib-termcolor"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 5219475942417176210,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,24 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 9447695263407467602,
+  "profile": 4374887572363265115,
+  "path": 6198499065454573083,
+  "deps": [
+    [2452538001284770427, "cfg_if", false, 7874151136989217199],
+    [5175268589010080688, "cpufeatures", false, 4356935279416284296],
+    [5649061304421201683, "opaque_debug", false, 17071283726053722101],
+    [13594484355859278190, "universal_hash", false, 15823506490228737221]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/polyval-8708bee6aaae58c1/dep-lib-polyval"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 404937006016954110,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

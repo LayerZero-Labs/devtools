@@ -1,0 +1,22 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"default\"]",
+  "target": 427768481117760528,
+  "profile": 1200860260873630964,
+  "path": 10918750128317808932,
+  "deps": [
+    [241033544353054525, "cc", false, 7384896479529313514],
+    [7246516264653013740, "rustc_version", false, 13520322909305668088]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/solana-program-aee0f24218e73384/dep-build-script-build-script-build"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 14952398421033132331,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

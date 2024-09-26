@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 13901881936739684103,
+  "profile": 3188463645652688667,
+  "path": 13465877298802363030,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/ryu-e02b2ecd93320ca8/dep-lib-ryu"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 10387617312689919117,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

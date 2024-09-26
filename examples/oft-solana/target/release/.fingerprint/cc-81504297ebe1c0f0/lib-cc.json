@@ -1,0 +1,23 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"jobserver\", \"libc\", \"once_cell\", \"parallel\"]",
+  "target": 15023190189141807623,
+  "profile": 2698644804294220970,
+  "path": 11699398725740937005,
+  "deps": [
+    [1438437697209609444, "jobserver", false, 6511060487230475653],
+    [4254328441789853856, "once_cell", false, 7284697375023570765],
+    [16859105048871006744, "libc", false, 11141477385706467511]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/cc-81504297ebe1c0f0/dep-lib-cc"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 5862599371499774553,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

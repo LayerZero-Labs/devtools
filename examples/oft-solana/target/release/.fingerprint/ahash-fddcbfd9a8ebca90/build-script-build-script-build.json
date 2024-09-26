@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 2297296889237502566,
+  "profile": 2698644804294220970,
+  "path": 9359506309676653466,
+  "deps": [[16079472387499994964, "version_check", false, 7148617229007022302]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/ahash-fddcbfd9a8ebca90/dep-build-script-build-script-build"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 6548036084630991988,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 14371082279898781439,
+  "profile": 2698644804294220970,
+  "path": 3429361798332895749,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/toml_datetime-7166a0688ad02461/dep-lib-toml_datetime"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 4457034034663589510,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

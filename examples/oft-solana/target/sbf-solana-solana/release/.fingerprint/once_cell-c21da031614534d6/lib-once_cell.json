@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"alloc\", \"race\", \"unstable\"]",
+  "target": 14856186769647684053,
+  "profile": 3188463645652688667,
+  "path": 5886578489526898883,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/once_cell-c21da031614534d6/dep-lib-once_cell"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 14177539708254521827,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

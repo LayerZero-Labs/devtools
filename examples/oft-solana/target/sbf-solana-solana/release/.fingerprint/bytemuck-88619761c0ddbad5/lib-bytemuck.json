@@ -1,0 +1,21 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"bytemuck_derive\", \"derive\"]",
+  "target": 15295123418435159834,
+  "profile": 3188463645652688667,
+  "path": 8253228380914654443,
+  "deps": [
+    [14197677014818337129, "bytemuck_derive", false, 1642791440291280673]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/bytemuck-88619761c0ddbad5/dep-lib-bytemuck"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 5417891915809776353,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

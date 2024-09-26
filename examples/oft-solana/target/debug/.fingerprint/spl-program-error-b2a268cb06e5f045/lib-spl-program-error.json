@@ -1,0 +1,30 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[]",
+  "target": 8661389626633791902,
+  "profile": 4374887572363265115,
+  "path": 16420488960669456618,
+  "deps": [
+    [
+      1051294603777616573,
+      "spl_program_error_derive",
+      false,
+      10440216571903862794
+    ],
+    [2298489633419329899, "thiserror", false, 3310519276281178368],
+    [10448766010662481490, "num_traits", false, 4649147534634803568],
+    [11226986003760870092, "num_derive", false, 1237207449797747731],
+    [12429659319598416725, "solana_program", false, 1203654611034628866]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/spl-program-error-b2a268cb06e5f045/dep-lib-spl-program-error"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 8646517047602869353,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

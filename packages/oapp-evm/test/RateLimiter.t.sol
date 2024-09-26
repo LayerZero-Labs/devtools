@@ -41,6 +41,24 @@ contract RateLimiterTest is RateLimiterImpl, Test {
         rateLimiterImpl.outflow(dstEid, sendLimit);
     }
 
+    function _setRateLimit(uint32 _dstEid, uint256 _limit, uint256 _window) internal {
+        RateLimiter.RateLimitConfig[] memory rateLimitConfigs = new RateLimiter.RateLimitConfig[](1);
+        rateLimitConfigs[0] = RateLimiter.RateLimitConfig(_dstEid, _limit, _window);
+        rateLimiterImpl.setRateLimits(rateLimitConfigs);
+    }
+
+    function test_inflights_during_window_reduction() public {
+        _setRateLimit(dstEid, 100, 100);
+        rateLimiterImpl.outflow(dstEid, 100);
+        _setRateLimit(dstEid, 40, 60);
+
+        vm.warp(60 seconds);
+
+        (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
+        assertEq(amountInFlight, 60);
+        assertEq(amountCanBeSent, 0);
+    }
+
     function test_over_max_rate_limit() public {
         vm.expectRevert(abi.encodeWithSelector(RateLimiter.RateLimitExceeded.selector));
         rateLimiterImpl.outflow(dstEid, 101 ether);
@@ -98,8 +116,8 @@ contract RateLimiterTest is RateLimiterImpl, Test {
             decay = (sendLimit * times[i]) / window;
             vm.warp(times[i]);
             (amountInFlight, amountCanBeSent) = rateLimiterImpl.getAmountCanBeSent(dstEid);
-            assertEq(amountInFlight, sendLimit - decay);
-            assertEq(amountCanBeSent, decay);
+            assertEq(amountInFlight, decay < sendLimit ? sendLimit - decay : 0);
+            assertEq(amountCanBeSent, decay < sendLimit ? decay : sendLimit);
         }
     }
 

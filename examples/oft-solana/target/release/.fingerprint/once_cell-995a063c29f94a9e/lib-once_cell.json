@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[\"alloc\", \"default\", \"race\", \"std\"]",
+  "target": 14856186769647684053,
+  "profile": 2698644804294220970,
+  "path": 5886578489526898883,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "release/.fingerprint/once_cell-995a063c29f94a9e/dep-lib-once_cell"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 14177539708254521827,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}

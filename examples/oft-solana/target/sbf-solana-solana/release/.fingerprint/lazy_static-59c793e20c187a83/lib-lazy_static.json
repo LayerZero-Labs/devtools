@@ -1,0 +1,19 @@
+{
+  "rustc": 14420554242111463434,
+  "features": "[]",
+  "target": 1623840821729021818,
+  "profile": 3188463645652688667,
+  "path": 17411670992673686556,
+  "deps": [],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "sbf-solana-solana/release/.fingerprint/lazy_static-59c793e20c187a83/dep-lib-lazy_static"
+      }
+    }
+  ],
+  "rustflags": ["-Zremap-cwd-prefix="],
+  "metadata": 111743654650316589,
+  "config": 2202906307356721367,
+  "compile_kind": 11910797420234664848
+}

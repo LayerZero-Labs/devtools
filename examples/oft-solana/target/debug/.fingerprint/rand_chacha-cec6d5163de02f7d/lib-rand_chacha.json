@@ -1,0 +1,22 @@
+{
+  "rustc": 12152928357286724068,
+  "features": "[\"std\"]",
+  "target": 3291831172522752161,
+  "profile": 4374887572363265115,
+  "path": 3974460537354002258,
+  "deps": [
+    [1565494060434293766, "rand_core", false, 5231355720350237328],
+    [4511957894497802922, "ppv_lite86", false, 2205325549818039718]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug/.fingerprint/rand_chacha-cec6d5163de02f7d/dep-lib-rand_chacha"
+      }
+    }
+  ],
+  "rustflags": [],
+  "metadata": 2235018391756195449,
+  "config": 2202906307356721367,
+  "compile_kind": 0
+}
