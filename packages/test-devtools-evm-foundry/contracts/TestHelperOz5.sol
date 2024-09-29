@@ -3,8 +3,8 @@
 pragma solidity ^0.8.18;
 
 // Forge
-import { Test } from "forge-std/Test.sol";
-import "forge-std/console.sol";
+import { Test } from "forge-std/src/Test.sol";
+import "forge-std/src/console.sol";
 
 // Oz
 import { DoubleEndedQueue } from "@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol";
