@@ -80,8 +80,7 @@ pub fn compute_fee_and_adjust_amount(
     {
         let mut amount_received_ld =
             oft_store.remove_dust(get_post_fee_amount_ld(token_mint, amount_ld)?);
-        let amount_sent_ld =
-            oft_store.remove_dust(get_pre_fee_amount_ld(token_mint, amount_received_ld)?);
+        let amount_sent_ld = get_pre_fee_amount_ld(token_mint, amount_received_ld)?;
 
         // remove the oft fee from the amount_received_ld
         let oft_fee_ld = oft_store.remove_dust(calculate_fee(
