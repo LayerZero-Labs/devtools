@@ -41,7 +41,8 @@ impl RateLimiter {
         let current_time: u64 = Clock::get()?.unix_timestamp.try_into().unwrap();
         if current_time > self.last_refill_time {
             let time_elapsed_in_seconds = current_time - self.last_refill_time;
-            new_tokens += time_elapsed_in_seconds * self.refill_per_second;
+            new_tokens = new_tokens
+                .saturating_add(time_elapsed_in_seconds.saturating_mul(self.refill_per_second));
         }
         self.tokens = std::cmp::min(self.capacity, self.tokens.saturating_add(new_tokens));
 
