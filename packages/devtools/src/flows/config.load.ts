@@ -1,5 +1,5 @@
 import { createLogger, importDefault, isFile, isReadable, Logger, printZodErrors } from '@layerzerolabs/io-devtools'
-import type { ZodType, ZodTypeDef } from 'zod'
+import type { SafeParseReturnType, ZodType, ZodTypeDef } from 'zod'
 import type { OmniGraph } from '@/omnigraph'
 import { resolve } from 'path'
 
@@ -88,7 +88,17 @@ export const configLoadFlow = async <TOmniGraph = OmniGraph>({
     // whether there are no missing nodes etc)
     logger.verbose(`Validating the structure of config file '${absolutePath}'`)
 
-    const configParseResult = await configSchema.safeParseAsync(rawConfigMaterialized)
+    // We'll try/catch the schema validation (even though we are using the "safe" version,
+    // zod will just throw if any of the schema transformations throw)
+    //
+    // We do this so that we can prepend the error message with a more meaningful one
+    let configParseResult: SafeParseReturnType<unknown, TOmniGraph>
+    try {
+        configParseResult = await configSchema.safeParseAsync(rawConfigMaterialized)
+    } catch (error) {
+        throw new Error(`Config from file '${configPath}' is invalid: ${error}`)
+    }
+
     if (configParseResult.success === false) {
         const userFriendlyErrors = printZodErrors(configParseResult.error)
 
