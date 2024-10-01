@@ -4,6 +4,9 @@ import { printZodErrors } from '@/stdio/printer'
 import { resolve } from 'path'
 import { z } from 'zod'
 
+/**
+ * @deprecated Please use `configLoadFlow` from `@layerzerolabs/devtools`
+ */
 export const createConfigLoader =
     <TConfig>(schema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>, logger = createModuleLogger('config loader')) =>
     async (path: string): Promise<TConfig> => {
@@ -58,7 +61,7 @@ export const createConfigLoader =
         // whether there are no missing nodes etc)
         logger.verbose(`Validating the structure of config file '${absolutePath}'`)
 
-        const configParseResult = schema.safeParse(rawConfigMaterialized)
+        const configParseResult = await schema.safeParseAsync(rawConfigMaterialized)
         if (configParseResult.success === false) {
             const userFriendlyErrors = printZodErrors(configParseResult.error)
 

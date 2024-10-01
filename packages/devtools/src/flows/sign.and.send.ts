@@ -24,6 +24,8 @@ export interface SignAndSendFlowArgs {
     createSigner: OmniSignerFactory
 }
 
+export type SignAndSendFlow = (args: SignAndSendFlowArgs) => Promise<SignAndSendResult>
+
 /**
  * Sign and send flow is responsible for submitting (i.e. signing and sending)
  * a list of transactions using the signer factory.
@@ -34,7 +36,7 @@ export interface SignAndSendFlowArgs {
  * @param {SignAndSendFlowArgs}
  * @returns {Promise<SignAndSendResult>}
  */
-export const signAndSendFlow = async ({
+export const signAndSendFlow: SignAndSendFlow = async ({
     ci,
     logger = createLogger(),
     transactions,

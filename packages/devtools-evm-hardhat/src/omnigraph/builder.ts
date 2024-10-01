@@ -7,6 +7,14 @@ import { createOmniGraphHardhatTransformer } from './transformations'
  * OmniGraphBuilderHardhat houses all hardhat-specific utilities for building OmniGraphs
  *
  * It is not an instantiable class - it only provides static utilities for working with OmniGraph
+ *
+ * @deprecated Transform the graph using the transformation function from `createOmniGraphHardhatTransformer()` directly:
+ *
+ * ```
+ * const hardhatGraph: OmniGraphHardhat<TNodeConfig, TEdgeConfig>
+ * const transformer = createOmniGraphHardhatTransformer()
+ * const graph = await transformer(hardhatGraph)
+ * ```
  */
 export class OmniGraphBuilderHardhat {
     static async fromConfig<TNodeConfig, TEdgeConfig>(
