@@ -1,4 +1,5 @@
 ---
+"@layerzerolabs/devtools": patch
 "@layerzerolabs/ua-devtools-evm-hardhat": patch
 ---
 
