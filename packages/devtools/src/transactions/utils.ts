@@ -1,5 +1,6 @@
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OmniTransaction } from './types'
+import { SignAndSendResult } from './signer'
 
 const isNonNullable = <T>(value: T | null | undefined): value is T => value != null
 
@@ -22,3 +23,5 @@ export const groupTransactionsByEid = (transactions: OmniTransaction[]): Map<End
             ]),
         new Map<EndpointId, OmniTransaction[]>()
     )
+
+export const isFailedSignAndSendResult = ([, failed]: SignAndSendResult): boolean => failed.length > 0

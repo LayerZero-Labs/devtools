@@ -1,5 +1,5 @@
 import { SUBTASK_LZ_OAPP_WIRE_CONFIGURE } from '@/constants'
-import { configExecuteFlow, OmniTransaction } from '@layerzerolabs/devtools'
+import { createConfigExecuteFlow, OmniTransaction } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { IOApp, OAppOmniGraph, configureOApp } from '@layerzerolabs/ua-devtools'
@@ -13,7 +13,9 @@ const action: ActionType<SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>> = async
     configurator = configureOApp,
     sdkFactory = createOAppFactory(createConnectedContractFactory()),
 }): Promise<OmniTransaction[]> =>
-    configExecuteFlow({ graph, configurator, sdkFactory, logger: createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE) })
+    createConfigExecuteFlow({ configurator, sdkFactory, logger: createModuleLogger(SUBTASK_LZ_OAPP_WIRE_CONFIGURE) })({
+        graph,
+    })
 
 subtask(SUBTASK_LZ_OAPP_WIRE_CONFIGURE, 'Create a list of OmniTransactions that configure your OApp', action)
     .addParam('graph', 'Configuration graph', undefined, types.any)
