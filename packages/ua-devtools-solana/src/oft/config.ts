@@ -57,7 +57,7 @@ export const addRemote: OAppConfigurator = createConfigureEdges(
         const logger = createOFTLogger()
 
         if (typeof sdk.addRemote !== 'function') {
-            return logger.warn(`Could not find configureOft() method on OFT SDK, skipping`), undefined
+            return logger.warn(`Could not find addRemote() method on OFT SDK, skipping`), undefined
         }
 
         return sdk.addRemote(to.eid)
@@ -69,7 +69,7 @@ export const setPeer: OAppConfigurator = createConfigureEdges(
         const logger = createOFTLogger()
 
         if (typeof sdk.initPeer !== 'function') {
-            return logger.warn(`Could not find configureOft() method on OFT SDK, skipping`), undefined
+            return logger.warn(`Could not find setPeer() method on OFT SDK, skipping`), undefined
         }
 
         return sdk.initPeer(to.eid, to.address)
