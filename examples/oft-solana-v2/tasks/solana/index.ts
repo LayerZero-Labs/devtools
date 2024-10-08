@@ -1,4 +1,4 @@
-import { Keypair as UmiKeypair } from '@metaplex-foundation/umi/dist/types/Keypair'
+import { Keypair as UmiKeypair } from '@metaplex-foundation/umi'
 import { toWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import {
     Connection,

@@ -63,11 +63,11 @@ Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solana
 pnpm hardhat lz:deploy # follow the prompts
 ```
 
-Note:  If you are on testnet, consider using `MyOFTMock` to allow test token minting.
+Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting.
 
 ### Initialize the OFT
 
-:warning:  Only do this the first time you are initializing the OFT.
+:warning: Only do this the first time you are initializing the OFT.
 
 ```bash
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
