@@ -648,7 +648,7 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-solana-sdk-v2':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
       '@layerzerolabs/lz-v2-utilities':
         specifier: 2.3.39
@@ -660,7 +660,7 @@ importers:
         specifier: ^0.0.11
         version: 0.0.11(@layerzerolabs/lz-evm-messagelib-v2@2.3.44)(@layerzerolabs/lz-evm-protocol-v2@2.3.44)(@layerzerolabs/lz-evm-v1-0.7@2.3.44)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)
       '@layerzerolabs/oft-v2-solana-sdk':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
