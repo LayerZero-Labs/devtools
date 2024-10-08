@@ -5,13 +5,12 @@ pragma solidity ^0.8.22;
 import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "./OFTCore.sol";
 
 /**
- * [AWAITING AUDIT]
  *
  * @title NativeOFTAdapter
  * @dev NativeOFTAdapter is a contract that adapts native currency to the OFT functionality.
  *
  * @dev WARNING: ONLY 1 of these should exist for a given global mesh,
- * unless you make a NON-default implementation of OFT and needs to be done very carefully.
+ * unless you make a NON-default implementation of OFT, which needs to be done very carefully.
  * @dev WARNING: The default NativeOFTAdapter implementation assumes LOSSLESS transfers, ie. 1 native in, 1 native out.
  */
 abstract contract NativeOFTAdapter is OFTCore {
