@@ -1,5 +1,5 @@
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD } from '@/constants/tasks'
-import { configLoadFlow, type OmniGraph } from '@layerzerolabs/devtools'
+import { createConfigLoadFlow, type OmniGraph } from '@layerzerolabs/devtools'
 import { createOmniGraphHardhatTransformer, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { subtask } from 'hardhat/config'
@@ -11,11 +11,10 @@ const action: ActionType<SubtaskLoadConfigTaskArgs> = async ({
     schema,
     task,
 }): Promise<OmniGraph<unknown, unknown>> =>
-    configLoadFlow({
-        configPath,
+    createConfigLoadFlow({
         configSchema: schema.transform(createOmniGraphHardhatTransformer()),
         logger: createModuleLogger(`${task}${SUBTASK_LZ_OAPP_CONFIG_LOAD}`),
-    })
+    })({ configPath })
 
 subtask(SUBTASK_LZ_OAPP_CONFIG_LOAD, 'Loads and transforms OmniGraphHardhat into an OmniGraph', action)
     .addParam('configPath', 'Path to the config file', undefined, types.string)
