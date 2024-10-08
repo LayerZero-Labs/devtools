@@ -5,7 +5,7 @@ import { resolve } from 'path'
 import { z } from 'zod'
 
 /**
- * @deprecated Please use `configLoadFlow` from `@layerzerolabs/devtools`
+ * @deprecated Please use `createConfigLoadFlow` from `@layerzerolabs/devtools`
  */
 export const createConfigLoader =
     <TConfig>(schema: z.ZodSchema<TConfig, z.ZodTypeDef, unknown>, logger = createModuleLogger('config loader')) =>

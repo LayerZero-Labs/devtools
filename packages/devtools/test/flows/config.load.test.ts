@@ -1,4 +1,4 @@
-import { configLoadFlow } from '@/flows/config.load'
+import { createConfigLoadFlow } from '@/flows/config.load'
 import { importDefault, isFile, isReadable } from '@layerzerolabs/io-devtools'
 import { z } from 'zod'
 
@@ -20,12 +20,12 @@ describe('flows/config.load', () => {
         isReadableMock.mockReset()
     })
 
-    describe('configLoadFlow', () => {
+    describe('createConfigLoadFlow', () => {
         it('should reject if the path is not a file', async () => {
             isFileMock.mockReturnValue(false)
 
             await expect(
-                configLoadFlow({ configPath: './myconfig.ts', configSchema: z.unknown() })
+                createConfigLoadFlow({ configSchema: z.unknown() })({ configPath: './myconfig.ts' })
             ).rejects.toMatchSnapshot()
         })
 
@@ -34,7 +34,7 @@ describe('flows/config.load', () => {
             isReadableMock.mockReturnValue(false)
 
             await expect(
-                configLoadFlow({ configPath: './myconfig.ts', configSchema: z.unknown() })
+                createConfigLoadFlow({ configSchema: z.unknown() })({ configPath: './myconfig.ts' })
             ).rejects.toMatchSnapshot()
         })
 
@@ -44,7 +44,9 @@ describe('flows/config.load', () => {
             importDefaultMock.mockRejectedValue('No way')
 
             await expect(
-                configLoadFlow({ configPath: './myconfig.ts', configSchema: z.unknown() })
+                createConfigLoadFlow({ configSchema: z.unknown() })({
+                    configPath: './myconfig.ts',
+                })
             ).rejects.toMatchSnapshot()
         })
 
@@ -55,7 +57,9 @@ describe('flows/config.load', () => {
                 importDefaultMock.mockResolvedValue({ bad: 'config' })
 
                 await expect(
-                    configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                    createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                        configPath: './myconfig.ts',
+                    })
                 ).rejects.toMatchSnapshot()
             })
 
@@ -65,7 +69,9 @@ describe('flows/config.load', () => {
                 importDefaultMock.mockResolvedValue({ good: 'config' })
 
                 await expect(
-                    configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                    createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                        configPath: './myconfig.ts',
+                    })
                 ).resolves.toMatchSnapshot()
             })
         })
@@ -82,7 +88,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).rejects.toMatchSnapshot()
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
@@ -97,7 +105,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).rejects.toMatchSnapshot()
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
@@ -112,7 +122,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).resolves.toEqual({ good: 'config' })
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
@@ -129,7 +141,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).rejects.toMatchSnapshot()
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
@@ -144,7 +158,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).rejects.toMatchSnapshot()
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
@@ -159,7 +175,9 @@ describe('flows/config.load', () => {
                     importDefaultMock.mockResolvedValue(configFunctionMock)
 
                     await expect(
-                        configLoadFlow({ configPath: './myconfig.ts', configSchema: z.object({ good: z.string() }) })
+                        createConfigLoadFlow({ configSchema: z.object({ good: z.string() }) })({
+                            configPath: './myconfig.ts',
+                        })
                     ).resolves.toEqual({ good: 'config' })
 
                     expect(configFunctionMock).toHaveBeenCalledTimes(1)
