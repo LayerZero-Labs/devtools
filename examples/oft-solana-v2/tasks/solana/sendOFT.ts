@@ -1,5 +1,6 @@
 import assert from 'assert'
 
+import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
 import { findAssociatedTokenPda, mplToolbox, setComputeUnitLimit } from '@metaplex-foundation/mpl-toolbox'
 import { TransactionBuilder, createSignerFromKeypair, publicKey, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
@@ -77,12 +78,12 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
 
         // Fetch token metadata
         // TODO fix
-        // const mintInfo = (await fetchDigitalAsset(umi, publicKey(tokenAccount[0]))).mint
+        umi.programs.bind('splToken', 'splToken2022')
+        const mintInfo = (await fetchDigitalAsset(umi, umiMintPublicKey)).mint
+        const amount = taskArgs.amount * 10 ** mintInfo.decimals // TODO
         const destinationEid: EndpointId = taskArgs.toEid
-        const amount = taskArgs.amount //* 10 ** 9 // TODO
 
         // Derive peer address and fetch peer information
-        const peerAddress = await oft.getPeerAddress(umi.rpc, oftStorePda, destinationEid, oftProgramId)
         const recipientAddressBytes32 = addressToBytes32(taskArgs.to)
 
         const accounts = {
