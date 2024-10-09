@@ -10,5 +10,5 @@ setup() {
 }
 
 @test "should output version" {
-    npx --no build-lz-options --version
+    npx --yes build-lz-options --version
 }

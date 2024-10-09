@@ -10,9 +10,9 @@ setup() {
 }
 
 @test "should output version" {
-    npx --no @layerzerolabs/verify-contract --version
+    npx --yes @layerzerolabs/verify-contract --version
 }
 
 @test "should output help" {
-    npx --no @layerzerolabs/verify-contract --help
+    npx --yes @layerzerolabs/verify-contract --help
 }

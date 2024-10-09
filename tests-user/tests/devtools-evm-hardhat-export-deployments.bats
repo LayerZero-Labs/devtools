@@ -10,9 +10,9 @@ setup() {
 }
 
 @test "should output version" {
-    npx --no @layerzerolabs/export-deployments --version
+    npx --yes @layerzerolabs/export-deployments --version
 }
 
 @test "should output help" {
-    npx --no @layerzerolabs/export-deployments --help
+    npx --yes @layerzerolabs/export-deployments --help
 }

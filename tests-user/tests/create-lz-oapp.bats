@@ -27,11 +27,11 @@ teardown() {
 }
 
 @test "should output version" {
-    npx --no create-lz-oapp --version
+    npx --yes create-lz-oapp --version
 }
 
 @test "should fail if --destination is missing in CI mode" {
-    run npx --no create-lz-oapp --ci --example oft
+    run npx --yes create-lz-oapp --ci --example oft
 
     assert_failure
     assert_output --partial "Missing argument: --destination must be specified in CI mode"
@@ -41,7 +41,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/existing"
     mkdir -p "$DESTINATION"
 
-    run npx --no create-lz-oapp --ci --example oft --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
 
     assert_failure
     assert_output --regexp "Directory '.*?' already exists"
@@ -51,7 +51,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/file.json"
     touch $DESTINATION
 
-    run npx --no create-lz-oapp --ci --example oft --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION
     assert_failure
     assert_output --regexp "File '.*?' already exists"
 }
@@ -59,7 +59,7 @@ teardown() {
 @test "should fail if --example is missing in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run npx --no create-lz-oapp --ci --destination $DESTINATION
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION
 
     assert_failure
     assert_output --partial "Missing argument: --example must be specified in CI mode"
@@ -69,7 +69,7 @@ teardown() {
 @test "should fail if --example is not valid in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run npx --no create-lz-oapp --ci --destination $DESTINATION --example wat
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION --example wat
 
     assert_failure
     assert [ ! -d $DESTINATION ]
@@ -78,7 +78,7 @@ teardown() {
 @test "should fail if --package-manager is not valid in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/unused"
 
-    run npx --no create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
+    run npx --yes create-lz-oapp --ci --destination $DESTINATION --example oft --package-manager wroom
 
     assert_failure
     assert_output --partial "manager wroom not found"
@@ -91,7 +91,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
     local MNEMONIC="test test test test test test test test test test test junk"
 
-    npx --no create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
@@ -107,7 +107,7 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
     local MNEMONIC="test test test test test test test test test test test junk"
 
-    npx --no create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
     MNEMONIC=$MNEMONIC run pnpm hardhat lz:deploy --ci
@@ -120,7 +120,7 @@ teardown() {
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    npx --no create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -131,7 +131,7 @@ teardown() {
 @test "should work with pnpm & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft"
 
-    npx --no create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -142,7 +142,7 @@ teardown() {
 @test "should work with pnpm & onft721 example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-onft721"
 
-    npx --no create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -153,7 +153,7 @@ teardown() {
 @test "should work with pnpm & oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter"
 
-    npx --no create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -164,7 +164,7 @@ teardown() {
 @test "should work with pnpm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
-    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --no create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -173,7 +173,7 @@ teardown() {
 @test "should work with yarn & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache" npx --no create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache" npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -184,7 +184,7 @@ teardown() {
 @test "should work with yarn & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-evm" npx --no create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-evm" npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -195,7 +195,7 @@ teardown() {
 @test "should work with yarn & onft721 example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-onft-evm" npx --no create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-onft-evm" npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -206,7 +206,7 @@ teardown() {
 @test "should work with yarn & oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-adapter-evm" npx --no create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-adapter-evm" npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -217,7 +217,7 @@ teardown() {
 @test "should work with yarn & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-solana"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --no create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -226,7 +226,7 @@ teardown() {
 @test "should work with npm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp"
 
-    npx --no create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
@@ -237,7 +237,7 @@ teardown() {
 @test "should work with npm & oft example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
-    npx --no create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example oft --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
@@ -248,7 +248,7 @@ teardown() {
 @test "should work with npm & onft721 example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
-    npx --no create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
@@ -259,7 +259,7 @@ teardown() {
 @test "should work with npm & oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
 
-    npx --no create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager npm
+    npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
@@ -270,7 +270,7 @@ teardown() {
 @test "should work with npm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-solana"
 
-    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --no create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
+    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test

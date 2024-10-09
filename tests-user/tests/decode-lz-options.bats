@@ -10,5 +10,5 @@ setup() {
 }
 
 @test "should output version" {
-    npx --no decode-lz-options --version
+    npx --yes decode-lz-options --version
 }
