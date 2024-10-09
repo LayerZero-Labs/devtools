@@ -6,6 +6,13 @@ pragma solidity ^0.8.0;
  * @dev Abstract contract for implementing rate limiting functionality. This contract provides a basic framework for
  * rate limiting how often a function can be executed. It is designed to be inherited by other contracts requiring rate
  * limiting capabilities to protect resources or services from excessive use.
+ * @dev The ordering of transactions within a given block (timestamp) affects the consumed capacity.
+ * @dev Carefully consider the minimum window duration for the given blockchain.  For example, on Ethereum, the minimum
+ * window duration should be at least 12 seconds.  If a window less than 12 seconds is configured, then the rate limit
+ * will effectively reset with each block, rendering rate limiting ineffective.
+ * @dev Carefully consider the proportion of the limit to the window.  If the limit is much smaller than the window, the
+ * decay function is lossy.  Consider using a limit that is greater than or equal to the window to avoid this.  This is
+ * especially important for blockchains with short average block times.
  *
  * Example 1: Max rate limit reached at beginning of window. As time continues the amount of in flights comes down.
  *
@@ -94,6 +101,7 @@ pragma solidity ^0.8.0;
  *                          [ --------------- Extended 60 Second Window --------------- ]
  */
 abstract contract RateLimiter {
+
     /**
      * @notice Rate Limit struct.
      * @param amountInFlight The amount in the current window.
@@ -165,7 +173,7 @@ abstract contract RateLimiter {
                 RateLimit storage rl = rateLimits[_rateLimitConfigs[i].dstEid];
 
                 // @dev Ensure we checkpoint the existing rate limit as to not retroactively apply the new decay rate.
-                _checkAndUpdateRateLimit(_rateLimitConfigs[i].dstEid, 0);
+                _outflow(_rateLimitConfigs[i].dstEid, 0);
 
                 // @dev Does NOT reset the amountInFlight/lastUpdated of an existing rate limit.
                 rl.limit = _rateLimitConfigs[i].limit;
@@ -191,16 +199,11 @@ abstract contract RateLimiter {
         uint256 _window
     ) internal view virtual returns (uint256 currentAmountInFlight, uint256 amountCanBeSent) {
         uint256 timeSinceLastDeposit = block.timestamp - _lastUpdated;
-        if (timeSinceLastDeposit >= _window) {
-            currentAmountInFlight = 0;
-            amountCanBeSent = _limit;
-        } else {
-            // @dev Presumes linear decay.
-            uint256 decay = (_limit * timeSinceLastDeposit) / _window;
-            currentAmountInFlight = _amountInFlight <= decay ? 0 : _amountInFlight - decay;
-            // @dev In the event the _limit is lowered, and the 'in-flight' amount is higher than the _limit, set to 0.
-            amountCanBeSent = _limit <= currentAmountInFlight ? 0 : _limit - currentAmountInFlight;
-        }
+        // @dev Presumes linear decay.
+        uint256 decay = (_limit * timeSinceLastDeposit) / (_window > 0 ? _window : 1); // prevent division by zero
+        currentAmountInFlight = _amountInFlight <= decay ? 0 : _amountInFlight - decay;
+        // @dev In the event the _limit is lowered, and the 'in-flight' amount is higher than the _limit, set to 0.
+        amountCanBeSent = _limit <= currentAmountInFlight ? 0 : _limit - currentAmountInFlight;
     }
 
     /**
@@ -210,7 +213,7 @@ abstract contract RateLimiter {
      * @param _dstEid The destination endpoint id.
      * @param _amount The amount to check for rate limit constraints.
      */
-    function _checkAndUpdateRateLimit(uint32 _dstEid, uint256 _amount) internal virtual {
+    function _outflow(uint32 _dstEid, uint256 _amount) internal virtual {
         // @dev By default dstEid that have not been explicitly set will return amountCanBeSent == 0.
         RateLimit storage rl = rateLimits[_dstEid];
 
@@ -225,5 +228,17 @@ abstract contract RateLimiter {
         // @dev Update the storage to contain the new amount and current timestamp.
         rl.amountInFlight = currentAmountInFlight + _amount;
         rl.lastUpdated = block.timestamp;
+    }
+
+    /**
+     * @notice To be used when you want to calculate your rate limits as a function of net outbound AND inbound.
+     * ie. If you move 150 out, and 100 in, you effective inflight should be 50.
+     * Does not need to update decay values, as the inflow is effective immediately.
+     * @param _srcEid The source endpoint id.
+     * @param _amount The amount to inflow back and deduct from amountInFlight.
+     */
+    function _inflow(uint32 _srcEid, uint256 _amount) internal virtual {
+        RateLimit storage rl = rateLimits[_srcEid];
+        rl.amountInFlight = _amount >= rl.amountInFlight ? 0 : rl.amountInFlight - _amount;
     }
 }
