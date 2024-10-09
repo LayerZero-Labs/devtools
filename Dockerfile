@@ -209,7 +209,7 @@ COPY --from=solana /root/.solana/bin /root/.solana/bin
 # Get EVM tooling
 COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
 COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
-COPY --from=evm /root/.foundry/bin /root/.foundry/bin
+COPY --from=evm /root/.foundry /root/.foundry
 COPY --from=evm /root/.svm /root/.svm
 
 # Enable corepack, new node package manager manager
