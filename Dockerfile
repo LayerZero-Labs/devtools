@@ -202,7 +202,8 @@ ENV PATH="/root/.aptos/bin/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$P
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
-# Get solana & avm CLI
+# Get solana tooling
+COPY --from=evm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=solana /root/.avm /root/.avm
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
