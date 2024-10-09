@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-foundry",
-  "version": "0.2.12",
+  "version": "1.0.0",
   "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.3",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.3",
     "@layerzerolabs/oapp-evm": "^0.0.4",
-    "@layerzerolabs/oft-evm": "^0.0.11",
+    "@layerzerolabs/oft-evm": "^0.1.0",
     "@openzeppelin/contracts": "^4.9.5 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.9.5 || ^5.0.0"
   },

@@ -38,7 +38,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
     "@layerzerolabs/oapp-evm": "^0.0.4",
-    "@layerzerolabs/oft-evm": "^0.0.11",
+    "@layerzerolabs/oft-evm": "^0.1.0",
     "@openzeppelin/contracts": "^4.9.5",
     "@openzeppelin/contracts-upgradeable": "^4.9.5",
     "hardhat": "^2.22.10",
