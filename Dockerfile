@@ -62,8 +62,7 @@ RUN apt-get install --yes \
     # Utilities required to build solana
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
     # Utilities required to build aptos CLI
-    # grcov lcov libssl-dev lld cmake clang
-    libssl-dev libdw-dev
+    libssl-dev libdw-dev lld
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
