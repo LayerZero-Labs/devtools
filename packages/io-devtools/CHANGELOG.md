@@ -1,5 +1,12 @@
 # @layerzerolabs/io-devtools
 
+## 0.1.13
+
+### Patch Changes
+
+- 834f317: Turn configLoadFlow into createConfigLoadFLow factory
+- 5e76c71: Move config loading into a flow
+
 ## 0.1.12
 
 ### Patch Changes

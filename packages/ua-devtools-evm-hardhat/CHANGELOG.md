@@ -1,5 +1,21 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 4.0.1
+
+### Patch Changes
+
+- 46ed921: Move configuration execution into a flow
+- 834f317: Turn configLoadFlow into createConfigLoadFLow factory
+- 811a692: Turn existing flows into flow factories
+- 5e76c71: Move config loading into a flow
+- Updated dependencies [46ed921]
+- Updated dependencies [834f317]
+- Updated dependencies [811a692]
+- Updated dependencies [5e76c71]
+  - @layerzerolabs/devtools@0.3.27
+  - @layerzerolabs/io-devtools@0.1.13
+  - @layerzerolabs/devtools-evm-hardhat@1.2.2
+
 ## 4.0.0
 
 ### Minor Changes
