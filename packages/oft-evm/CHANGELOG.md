@@ -1,5 +1,15 @@
 # @layerzerolabs/oft-evm
 
+## 0.1.0
+
+### Minor Changes
+
+- 2bf12c9: Added NativeOFTAdapter implementation
+
+### Patch Changes
+
+- @layerzerolabs/oapp-evm@0.0.4
+
 ## 0.0.11
 
 ### Patch Changes

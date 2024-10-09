@@ -40,7 +40,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
-    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.12",
+    "@layerzerolabs/test-devtools-evm-foundry": "~1.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2"

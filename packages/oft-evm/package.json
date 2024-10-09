@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-evm",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "description": "LayerZero Labs reference EVM OmniChain Fungible Token (OFT) implementation",
   "keywords": [
     "LayerZero",
@@ -49,7 +49,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
     "@layerzerolabs/oapp-evm": "^0.0.4",
-    "@layerzerolabs/test-devtools-evm-foundry": "~0.2.12",
+    "@layerzerolabs/test-devtools-evm-foundry": "~1.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
