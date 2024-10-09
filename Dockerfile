@@ -90,6 +90,11 @@ RUN git clone -b devnet --depth 1 https://github.com/aptos-labs/aptos-core.git
 # Switch to the repository
 WORKDIR /app/aptos/aptos-core
 
+# Configure cargo. We want to provide a way of limiting cargo resources
+# on the github runner since it is not large enough to support multiple cargo builds
+ARG CARGO_BUILD_JOBS=
+ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+
 # Install aptos from source
 RUN cargo build --package aptos --profile cli
 
@@ -115,6 +120,11 @@ RUN aptos --version
 FROM machine AS solana
 
 WORKDIR /app/solana
+
+# Configure cargo. We want to provide a way of limiting cargo resources
+# on the github runner since it is not large enough to support multiple cargo builds
+ARG CARGO_BUILD_JOBS=
+ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.17
