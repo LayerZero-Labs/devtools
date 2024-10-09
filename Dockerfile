@@ -12,9 +12,9 @@
 # so the code will still work on node 18.16.0
 ARG NODE_VERSION=20.10.0
 
-# We will allow consumers to override the default base image
+# We will allow consumers to override build stages with prebuilt images
 # 
-# This will allow CI environments to supply the prebuilt base image
+# This will allow CI environments to supply the prebuilt images
 # while not breaking the flow for local development
 # 
 # Local development does not by default have access to GHCR and would require
@@ -36,27 +36,14 @@ ARG EVM_NODE_IMAGE=node-evm-hardhat
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#          Base node image with just the build tools
+#          Base machine image with system packages
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION AS base
+FROM node:$NODE_VERSION AS machine
 
-ARG RUST_TOOLCHAIN_VERSION=1.75.0
-ARG SOLANA_VERSION=1.18.17
-ARG SVM_RS_VERSION=0.5.4
-ARG ANCHOR_VERSION=0.30.1
-ARG SOLC_VERSION=0.8.22
-
-WORKDIR /app
-
-# We'll add an empty NPM_TOKEN to suppress any warnings
-ENV NPM_TOKEN=
-# Since we either install prebuilt binary for Solana or build from source, we need to include both
-# paths to binaries in the path
-ENV PATH="/root/.avm/bin:/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:/root/.local/share/solana/install/active_release/bin:$PATH"
-ENV NPM_CONFIG_STORE_DIR=/pnpm
+ENV PATH="/root/.cargo/bin:$PATH"
 
 # Update package lists
 RUN apt update
@@ -65,7 +52,7 @@ RUN apt update
 RUN apt-get update
 
 # Add required packages
-RUN apt-get install --yes --fix-missing \
+RUN apt-get install --yes \
     # expect is a utility that can be used to test CLI scripts
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
@@ -76,72 +63,155 @@ RUN apt-get install --yes --fix-missing \
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
     # Utilities required to build aptos CLI
     # grcov lcov libssl-dev lld cmake clang
-    libssl-dev
+    libssl-dev libdw-dev
 
 # Install rust
+ARG RUST_TOOLCHAIN_VERSION=1.75.0
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
+# Install docker
+RUN curl -sSL https://get.docker.com/ | sh
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds Aptos developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS aptos
+
+WORKDIR /app/aptos
+
+# Grab Aptos source code
+RUN git clone -b devnet --depth 1 https://github.com/aptos-labs/aptos-core.git
+
+# Switch to the repository
+WORKDIR /app/aptos/aptos-core
+
 # Install aptos from source
-RUN git clone --depth 1 https://github.com/aptos-labs/aptos-core.git
-
-WORKDIR /app/aptos-core
-
-# RUN ./scripts/dev_setup.sh
-
 RUN cargo build --package aptos --profile cli
 
-RUN ./target/cli/aptos --version
+# Copy the build artifacts
+RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/
 
-WORKDIR /app
+# Delete the source files
+RUN rm -rf /app/aptos/aptos-core
 
-
-# # Install aptos
-# RUN \
-#     # First we try to download prebuilt binaries for Solana
-#     curl -fsSL "https://aptos.dev/scripts/install_cli.py" | python3 || \
-#     # If that doesn't work, we'll need to build Solana from source
-#     (\
-#     # We download the source code and extract the archive
-#     curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-#     # Then run the installer
-#     ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana \
-#     )
-
+# Make sure we can execute the binary
+ENV PATH="/root/.aptos/bin:$PATH"
 RUN aptos --version
 
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds Solana developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS solana
+
+WORKDIR /app/solana
+
+# Install Solana using a binary with a fallback to installing from source
+ARG SOLANA_VERSION=1.18.17
 RUN \
     # First we try to download prebuilt binaries for Solana
-    curl --proto '=https' --tlsv1.2 -sSf https://release.solana.com/v${SOLANA_VERSION}/install | sh -s || \
+    (\
+    curl --proto '=https' --tlsv1.2 -sSf https://release.solana.com/v${SOLANA_VERSION}/install | sh -s && \
+    mkdir -p /root/.solana && \
+    # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
+    cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
+    ) || \
     # If that doesn't work, we'll need to build Solana from source
     (\
     # We download the source code and extract the archive
     curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
     # Then run the installer
-    ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana \
+    ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only /root/.solana \
     )
 
-# Delete the source files (only left behind if solana was build from source)
+# Delete the source files (only left behind if solana was built from source)
 RUN rm -rf ./solana-*
 
 # Install AVM - Anchor version manager for Solana
 RUN cargo install --git https://github.com/coral-xyz/anchor avm
 
 # Install anchor
+ARG ANCHOR_VERSION=0.30.1
 RUN avm install ${ANCHOR_VERSION}
 RUN avm use ${ANCHOR_VERSION}
 
+# Make sure we can execute the binaries
+ENV PATH="/root/.avm/bin:/root/.solana/bin:$PATH"
+RUN anchor --version
+RUN avm --version
+RUN solana --version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds EVM developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS evm
+
 # Install foundry
+ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
+ARG SVM_RS_VERSION=0.5.4
 RUN cargo install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
+ARG SOLC_VERSION=0.8.22
 RUN svm install ${SOLC_VERSION}
 
-# Install docker
-RUN curl -sSL https://get.docker.com/ | sh
+# Make sure we can execute the binaries
+RUN forge --version
+RUN anvil --version
+RUN chisel --version
+RUN cast --version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Base node image with just the build tools
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS base
+
+WORKDIR /app
+
+# We'll add an empty NPM_TOKEN to suppress any warnings
+ENV NPM_TOKEN=
+ENV NPM_CONFIG_STORE_DIR=/pnpm
+ENV PATH="/root/.aptos/bin/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+
+# Get aptos CLI
+COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+
+# Get solana & avm CLI
+COPY --from=solana /root/.avm/bin /root/.avm/bin
+COPY --from=solana /root/.solana/bin /root/.solana/bin
+
+# Get EVM tooling
+COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
+COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
+COPY --from=evm /root/.foundry/bin /root/.foundry/bin
+COPY --from=evm /root/.svm /root/.svm
 
 # Enable corepack, new node package manager manager
 # 
