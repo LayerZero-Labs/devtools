@@ -17,6 +17,9 @@ setup() {
 
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
+
+    # Install the binary so that we avoid race conditions
+    npm install -g @layerzerolabs/devtools-cli
 }
 
 teardown() {
@@ -24,19 +27,19 @@ teardown() {
 }
 
 @test "should output version" {
-    npx --yes @layerzerolabs/devtools-cli --version
+    npx --no @layerzerolabs/devtools-cli --version
 }
 
 @test "should output help" {
-    npx --yes @layerzerolabs/devtools-cli --help
+    npx --no @layerzerolabs/devtools-cli --help
 }
 
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --no create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
 
-    run npx --yes @layerzerolabs/devtools-cli oapp wire --setup ./imaginary.layerzero.setup.ts --oapp-config ./layerzero.config.ts --dry-run
+    run npx --no @layerzerolabs/devtools-cli oapp wire --setup ./imaginary.layerzero.setup.ts --oapp-config ./layerzero.config.ts --dry-run
     assert_output --partial "This command is just a placeholder. Please use @layerzerolabs/toolbox-hardhat package for the time being."
 }
