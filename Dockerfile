@@ -55,14 +55,17 @@ WORKDIR /app
 ENV NPM_TOKEN=
 # Since we either install prebuilt binary for Solana or build from source, we need to include both
 # paths to binaries in the path
-ENV PATH "/root/.avm/bin:/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:/root/.local/share/solana/install/active_release/bin:$PATH"
+ENV PATH="/root/.avm/bin:/root/.cargo/bin:/root/.foundry/bin:/root/.solana/bin:/root/.local/share/solana/install/active_release/bin:$PATH"
 ENV NPM_CONFIG_STORE_DIR=/pnpm
+
+# Update package lists
+RUN apt update
 
 # Update the system packages
 RUN apt-get update
 
 # Add required packages
-RUN apt-get install --yes \
+RUN apt-get install --yes --fix-missing \
     # expect is a utility that can be used to test CLI scripts
     # 
     # See a tutorial here https://www.baeldung.com/linux/bash-interactive-prompts
@@ -70,10 +73,41 @@ RUN apt-get install --yes \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    # Utilities required to build aptos CLI
+    # grcov lcov libssl-dev lld cmake clang
+    libssl-dev
 
 # Install rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+
+# Install aptos from source
+RUN git clone --depth 1 https://github.com/aptos-labs/aptos-core.git
+
+WORKDIR /app/aptos-core
+
+# RUN ./scripts/dev_setup.sh
+
+RUN cargo build --package aptos --profile cli
+
+RUN ./target/cli/aptos --version
+
+WORKDIR /app
+
+
+# # Install aptos
+# RUN \
+#     # First we try to download prebuilt binaries for Solana
+#     curl -fsSL "https://aptos.dev/scripts/install_cli.py" | python3 || \
+#     # If that doesn't work, we'll need to build Solana from source
+#     (\
+#     # We download the source code and extract the archive
+#     curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+#     # Then run the installer
+#     ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only ~/.solana \
+#     )
+
+RUN aptos --version
 
 RUN \
     # First we try to download prebuilt binaries for Solana
