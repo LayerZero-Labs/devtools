@@ -45,6 +45,13 @@ export const EXAMPLES: Example[] = [
         directory: 'examples/oft-adapter',
         ref,
     },
+    {
+        id: 'native-oft-adapter',
+        label: 'NativeOFTAdapter',
+        repository,
+        directory: 'examples/native-oft-adapter',
+        ref,
+    },
     // The Solana OFT example is feature flagged for the time being
     ...(process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE
         ? [
