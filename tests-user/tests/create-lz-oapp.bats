@@ -201,9 +201,9 @@ teardown() {
 }
 
 @test "should work with yarn & onft721 example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-onft721"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-onft-evm" npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-onft721-evm" npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -212,7 +212,7 @@ teardown() {
 }
 
 @test "should work with yarn & oft-adapter example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-adapter"
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-adapter-evm" npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
@@ -223,7 +223,7 @@ teardown() {
 }
 
 @test "should work with yarn & native-oft-adapter example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp"
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-native-oft-adapter"
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-native-oft-adapter-evm" npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
@@ -265,7 +265,7 @@ teardown() {
 }
 
 @test "should work with npm & onft721 example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-onft721"
 
     npx --yes create-lz-oapp --ci --example onft721 --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
@@ -276,7 +276,7 @@ teardown() {
 }
 
 @test "should work with npm & oft-adapter example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-adapter"
 
     npx --yes create-lz-oapp --ci --example oft-adapter --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
@@ -287,7 +287,7 @@ teardown() {
 }
 
 @test "should work with npm & native-oft-adapter example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft"
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-native-oft-adapter"
 
     npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
