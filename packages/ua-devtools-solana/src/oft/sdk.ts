@@ -176,11 +176,35 @@ export class OFT extends OmniSDK implements IOApp {
                 new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
+        const admin = createNoopSigner(this.umiUserAccount)
+        const oftStore = this.umiPublicKey
 
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
             ...(await this.createTransaction(
-                this._umiToWeb3Tx([await this._createSetPeerAddressIx(normalizedPeer, eid)])
+                this._umiToWeb3Tx([
+                    await this._createSetPeerAddressIx(normalizedPeer, eid),
+                    oft.initSendLibrary({ admin, oftStore }, eid),
+                    oft.initReceiveLibrary({ admin, oftStore }, eid),
+                    oft.setSendLibrary(
+                        { admin, oftStore },
+                        {
+                            sendLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                            remoteEid: eid,
+                        }
+                    ),
+                    oft.setReceiveLibrary(
+                        { admin, oftStore },
+                        {
+                            receiveLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                            remoteEid: eid,
+                        }
+                    ),
+                    await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid),
+                    await this._setPeerFeeBpsIx(eid),
+                    oft.initOAppNonce({ admin, oftStore }, eid, normalizedPeer),
+                    await this._createSetPeerAddressIx(normalizedPeer, eid),
+                ])
             )),
             description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`,
         }
