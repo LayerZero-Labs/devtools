@@ -74,7 +74,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            CARGO_BUILD_JOBS=1
+            CARGO_BUILD_JOBS=2
 
   build-node-evm:
     name: Build EVM node image
