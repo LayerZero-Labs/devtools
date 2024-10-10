@@ -1,5 +1,11 @@
 # decode-lz-options
 
+## 0.0.6
+
+### Patch Changes
+
+- c81205d: Fix the binary binding for decode-lz-options
+
 ## 0.0.5
 
 ### Patch Changes
