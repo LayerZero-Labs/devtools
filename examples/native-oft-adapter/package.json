@@ -29,7 +29,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
     "@layerzerolabs/lz-v2-utilities": "^2.3.39",
     "@layerzerolabs/oapp-evm": "^0.0.4",
-    "@layerzerolabs/oft-evm": "^0.0.11",
+    "@layerzerolabs/oft-evm": "^0.1.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^2.3.39",
     "@layerzerolabs/test-devtools-evm-foundry": "~0.2.12",
