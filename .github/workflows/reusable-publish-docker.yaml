@@ -65,7 +65,7 @@ jobs:
           #
           # See more about how the build can be distributed here
           # https://docs.docker.com/build/ci/github-actions/multi-platform/
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           target: base
           tags: ${{ steps.meta.outputs.tags }}
