@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "bin": {
-    "build-lz-options": "./cli.js"
+    "decode-lz-options": "./cli.js"
   },
   "files": [
     "cli.js",
