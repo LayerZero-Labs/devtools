@@ -82,11 +82,11 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 ### Send SOL -> Sepolia
 
 ```bash
-npx hardhat lz:oft:solana:send --amount 10000000 --from-eid 40168 --to 0x0e251d9095dD128292A28eB383127d05d95BBD17 --to-eid 40161 --mint HE9UiPyDLaLHDq3qsemq4wBydRYoztaRcDYYs9Pn2mWs --program-id Fe4hzE5k82eXVa7gMVgsF76K5VZ3nTsLSwPDEJQn8dbv
+npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
 
 ### Send Sepolia -> SOL
 
 ```bash
-npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to WHKCfkxo59jmFTgmQG3ZQQSjShJnBpsugSCMrtee96x
+npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
 ```

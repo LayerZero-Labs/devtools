@@ -1,13 +1,24 @@
 import assert from 'assert'
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 
-import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
-import { EddsaInterface, createSignerFromKeypair, publicKey, signerIdentity } from '@metaplex-foundation/umi'
+import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
+import { mplToolbox, setAuthority } from '@metaplex-foundation/mpl-toolbox'
+import {
+    EddsaInterface,
+    createSignerFromKeypair,
+    percentAmount,
+    publicKey,
+    signerIdentity,
+} from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
-import { toWeb3JsInstruction, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID, createInitializeMintInstruction, createMultisig, getMintLen } from '@solana/spl-token'
-import { SystemProgram } from '@solana/web3.js'
+import {
+    fromWeb3JsPublicKey,
+    toWeb3JsInstruction,
+    toWeb3JsKeypair,
+    toWeb3JsPublicKey,
+} from '@metaplex-foundation/umi-web3js-adapters'
+import { TOKEN_PROGRAM_ID, createMultisig } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { sha256 } from 'ethereumjs-util'
 import { task } from 'hardhat/config'
@@ -57,6 +68,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         const [oftStorePda] = oftDeriver.oftStore(escrowPK)
         const mintKp = eddsa.createKeypairFromSeed(sha256(Buffer.from(`${oftName}-v2`, 'utf-8')))
         const mintPK = mintKp.publicKey
+        const token = createSignerFromKeypair(umi, mintKp)
 
         const multiSigKey = await createMultisig(
             connection,
@@ -67,23 +79,21 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             undefined,
             TOKEN_PROGRAM_ID
         )
+        const createTokenTx = await createAndMint(umi, {
+            mint: token, // New token account
+            name: 'MockOFT', // Token name
+            symbol: 'MOFT', // Token symbol
+            isMutable: true, // Allow token metadata to be mutable
+            decimals: LOCAL_DECIMALS, // Number of decimals for the token
+            uri: '', // URI for token metadata
+            sellerFeeBasisPoints: percentAmount(0), // Fee percentage
+            authority: umiWalletSigner, // Authority for the token mint
+            amount: taskArgs.amount ?? 0, // Initial amount to mint
+            tokenOwner: umiWalletSigner.publicKey, // Owner of the token
+            tokenStandard: TokenStandard.Fungible, // Token type (Fungible)
+        }).sendAndConfirm(umi)
+        console.log(`createTokenTx: ${createTokenTx.result}`)
 
-        const createMintIxs = [
-            SystemProgram.createAccount({
-                fromPubkey: toWeb3JsPublicKey(umiWalletKeyPair.publicKey),
-                newAccountPubkey: toWeb3JsPublicKey(mintPK),
-                space: getMintLen([]),
-                lamports: await connection.getMinimumBalanceForRentExemption(getMintLen([])),
-                programId: TOKEN_PROGRAM_ID,
-            }),
-            createInitializeMintInstruction(
-                toWeb3JsPublicKey(mintPK),
-                LOCAL_DECIMALS,
-                multiSigKey,
-                multiSigKey,
-                TOKEN_PROGRAM_ID
-            ),
-        ]
         const initOftIx = oft.initOft(
             {
                 payer: createSignerFromKeypair({ eddsa: eddsa }, umiWalletKeyPair),
@@ -97,11 +107,27 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 oft: programId,
             }
         )
-        const ixs = [...createMintIxs, toWeb3JsInstruction(initOftIx.instruction)]
-        const signers = [umiWalletKeyPair, mintKp, lockBox]
+        const ixs = [toWeb3JsInstruction(initOftIx.instruction)]
+        const signers = [umiWalletKeyPair, lockBox]
 
         const txResult = await sendAndConfirmTx(connection, signers, ixs)
         console.log(`initOFT transaction hash: ${txResult.hash}}`)
+
+        const setMintAuthorityTx = await setAuthority(umi, {
+            owned: token.publicKey,
+            owner: umiWalletSigner,
+            newAuthority: fromWeb3JsPublicKey(multiSigKey),
+            authorityType: 0,
+        }).sendAndConfirm(umi)
+        console.log(`setMintAuthorityTx: ${setMintAuthorityTx.result}`)
+
+        const setFreezeAuthorityTx = await setAuthority(umi, {
+            owned: token.publicKey,
+            owner: umiWalletSigner,
+            newAuthority: fromWeb3JsPublicKey(multiSigKey),
+            authorityType: 1,
+        }).sendAndConfirm(umi)
+        console.log(`setFreezeAuthorityTx: ${setFreezeAuthorityTx.result}`)
 
         const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
         if (!existsSync(outputDir)) {

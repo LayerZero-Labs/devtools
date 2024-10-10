@@ -80,7 +80,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         // TODO fix
         umi.programs.bind('splToken', 'splToken2022')
         const mintInfo = (await fetchDigitalAsset(umi, umiMintPublicKey)).mint
-        const amount = taskArgs.amount * 10 ** mintInfo.decimals // TODO
+        const amount = taskArgs.amount * 10 ** mintInfo.decimals
         const destinationEid: EndpointId = taskArgs.toEid
 
         // Derive peer address and fetch peer information
