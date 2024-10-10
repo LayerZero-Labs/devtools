@@ -20,7 +20,6 @@ import {
 } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID, createMultisig } from '@solana/spl-token'
 import bs58 from 'bs58'
-import { sha256 } from 'ethereumjs-util'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
@@ -37,13 +36,11 @@ interface Args {
     amount: number
     eid: EndpointId
     programId: string
-    oftName: string
 }
 
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
     .addParam('programId', 'The OFT Program id')
     .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
-    .addParam('oftName', 'oft name', undefined, devtoolsTypes.string, true)
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
     .setAction(async (taskArgs: Args) => {
         const privateKey = process.env.SOLANA_PRIVATE_KEY
@@ -61,12 +58,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
 
         const eddsa: EddsaInterface = createWeb3JsEddsa()
         const oftDeriver = new OftPDA(programId)
-        const oftName = taskArgs.oftName ?? taskArgs.programId
 
-        const lockBox = eddsa.createKeypairFromSeed(sha256(Buffer.from(`${oftName}-v2-lockbox`, 'utf-8')))
+        const lockBox = eddsa.generateKeypair()
         const escrowPK = lockBox.publicKey
         const [oftStorePda] = oftDeriver.oftStore(escrowPK)
-        const mintKp = eddsa.createKeypairFromSeed(sha256(Buffer.from(`${oftName}-v2`, 'utf-8')))
+        const mintKp = eddsa.generateKeypair()
         const mintPK = mintKp.publicKey
         const token = createSignerFromKeypair(umi, mintKp)
 
@@ -92,7 +88,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             tokenOwner: umiWalletSigner.publicKey, // Owner of the token
             tokenStandard: TokenStandard.Fungible, // Token type (Fungible)
         }).sendAndConfirm(umi)
-        console.log(`createTokenTx: ${createTokenTx.result}`)
+        console.log(`createTokenTx: ${await umi.rpc.getTransaction(createTokenTx.signature)}`)
 
         const initOftIx = oft.initOft(
             {
@@ -119,7 +115,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             newAuthority: fromWeb3JsPublicKey(multiSigKey),
             authorityType: 0,
         }).sendAndConfirm(umi)
-        console.log(`setMintAuthorityTx: ${setMintAuthorityTx.result}`)
+        console.log(`setMintAuthorityTx: ${await umi.rpc.getTransaction(setMintAuthorityTx.signature)}`)
 
         const setFreezeAuthorityTx = await setAuthority(umi, {
             owned: token.publicKey,
@@ -127,7 +123,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             newAuthority: fromWeb3JsPublicKey(multiSigKey),
             authorityType: 1,
         }).sendAndConfirm(umi)
-        console.log(`setFreezeAuthorityTx: ${setFreezeAuthorityTx.result}`)
+        console.log(`setFreezeAuthorityTx: ${await umi.rpc.getTransaction(setFreezeAuthorityTx.signature)}`)
 
         const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
         if (!existsSync(outputDir)) {
@@ -139,7 +135,6 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             `${outputDir}/OFT.json`,
             JSON.stringify(
                 {
-                    oftName,
                     programId: taskArgs.programId,
                     mint: mintPK,
                     escrow: escrowPK,

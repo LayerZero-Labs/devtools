@@ -6,7 +6,7 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
 // If you do use an address, ensure artifacts exists.
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFTMock',
+    contractName: 'MyOFT',
 }
 
 const solanaContract: OmniPointHardhat = {

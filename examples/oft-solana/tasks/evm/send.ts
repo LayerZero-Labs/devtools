@@ -15,7 +15,7 @@ interface TaskArguments {
 
 const action: ActionType<TaskArguments> = async ({ dstEid, amount, to }, hre: HardhatRuntimeEnvironment) => {
     const signer = await hre.ethers.getNamedSigner('deployer')
-    const tokenName = 'MyOFTMock'
+    const tokenName = 'MyOFT'
     // @ts-ignore
     const token = (await hre.ethers.getContract(tokenName)).connect(signer)
     console.log(`sender token: ${token.address}`)

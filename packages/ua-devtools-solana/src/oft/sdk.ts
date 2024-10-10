@@ -186,20 +186,20 @@ export class OFT extends OmniSDK implements IOApp {
                     await this._createSetPeerAddressIx(normalizedPeer, eid),
                     oft.initSendLibrary({ admin, oftStore }, eid),
                     oft.initReceiveLibrary({ admin, oftStore }, eid),
-                    oft.setSendLibrary(
-                        { admin, oftStore },
-                        {
-                            sendLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                            remoteEid: eid,
-                        }
-                    ),
-                    oft.setReceiveLibrary(
-                        { admin, oftStore },
-                        {
-                            receiveLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                            remoteEid: eid,
-                        }
-                    ),
+                    // oft.setSendLibrary(
+                    //     { admin, oftStore },
+                    //     {
+                    //         sendLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                    //         remoteEid: eid,
+                    //     }
+                    // ),
+                    // oft.setReceiveLibrary(
+                    //     { admin, oftStore },
+                    //     {
+                    //         receiveLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
+                    //         remoteEid: eid,
+                    //     }
+                    // ),
                     await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid),
                     await this._setPeerFeeBpsIx(eid),
                     oft.initOAppNonce({ admin, oftStore }, eid, normalizedPeer),

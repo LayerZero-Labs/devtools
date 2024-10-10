@@ -52,28 +52,4 @@ export const initConfig: OAppConfigurator = createConfigureEdges(
     })
 )
 
-export const addRemote: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(async ({ vector: { to } }, sdk: OFT) => {
-        const logger = createOFTLogger()
-
-        if (typeof sdk.addRemote !== 'function') {
-            return logger.warn(`Could not find addRemote() method on OFT SDK, skipping`), undefined
-        }
-
-        return sdk.addRemote(to.eid)
-    })
-)
-
-export const setPeer: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(async ({ vector: { to } }, sdk: OFT) => {
-        const logger = createOFTLogger()
-
-        if (typeof sdk.initPeer !== 'function') {
-            return logger.warn(`Could not find setPeer() method on OFT SDK, skipping`), undefined
-        }
-
-        return sdk.initPeer(to.eid, to.address)
-    })
-)
-
-export const initOFTAccounts = createConfigureMultiple(initConfig, addRemote, setPeer)
+export const initOFTAccounts = createConfigureMultiple(initConfig)
