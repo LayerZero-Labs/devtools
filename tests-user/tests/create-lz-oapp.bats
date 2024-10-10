@@ -19,7 +19,7 @@ setup() {
     PROJECTS_DIRECTORY=$(mktemp -d)
 
     # Install the binary so that we avoid race conditions
-    npm install -g create-lz-oapp
+    flock --verbose bats.lock npm install -g create-lz-oapp
 }
 
 teardown() {
