@@ -1,9 +1,9 @@
 use anchor_lang::prelude::*;
 
 pub mod compose_msg_codec;
-mod errors;
-mod events;
-mod instructions;
+pub mod errors;
+pub mod events;
+pub mod instructions;
 pub mod msg_codec;
 pub mod state;
 
@@ -14,13 +14,15 @@ use oapp::{
     endpoint::{MessagingFee, MessagingReceipt},
     LzReceiveParams,
 };
+use solana_helper::program_id_from_env;
 use state::*;
 
-declare_id!("CUinP3FqxxPGxhnmTSMDJM9rnKW6urhDugecXV13eZdK");
+declare_id!(Pubkey::new_from_array(program_id_from_env!(
+    "OFT_ID",
+    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
+)));
 
-pub const OFT_VERSION: u64 = 1;
-pub const OFT_SDK_VERSION: u64 = 1;
-pub const OFT_SEED: &[u8] = b"Oft";
+pub const OFT_SEED: &[u8] = b"OFT";
 pub const PEER_SEED: &[u8] = b"Peer";
 pub const ENFORCED_OPTIONS_SEED: &[u8] = b"EnforcedOptions";
 pub const LZ_RECEIVE_TYPES_SEED: &[u8] = oapp::LZ_RECEIVE_TYPES_SEED;
@@ -29,62 +31,51 @@ pub const LZ_RECEIVE_TYPES_SEED: &[u8] = oapp::LZ_RECEIVE_TYPES_SEED;
 pub mod oft {
     use super::*;
 
-    pub fn version(_ctx: Context<GetVersion>) -> Result<Version> {
-        Ok(Version { sdk_version: OFT_SDK_VERSION, oft_version: OFT_VERSION })
+    pub fn oft_version(_ctx: Context<OFTVersion>) -> Result<Version> {
+        Ok(Version { interface: 2, message: 1 })
     }
 
-    pub fn init_oft(mut ctx: Context<InitOft>, params: InitOftParams) -> Result<()> {
-        InitOft::apply(&mut ctx, &params)
-    }
-
-    pub fn init_adapter_oft(
-        mut ctx: Context<InitAdapterOft>,
-        params: InitAdapterOftParams,
-    ) -> Result<()> {
-        InitAdapterOft::apply(&mut ctx, &params)
+    pub fn init_oft(mut ctx: Context<InitOFT>, params: InitOFTParams) -> Result<()> {
+        InitOFT::apply(&mut ctx, &params)
     }
 
     // ============================== Admin ==============================
-    pub fn transfer_admin(
-        mut ctx: Context<TransferAdmin>,
-        params: TransferAdminParams,
+    pub fn set_oft_config(
+        mut ctx: Context<SetOFTConfig>,
+        params: SetOFTConfigParams,
     ) -> Result<()> {
-        TransferAdmin::apply(&mut ctx, &params)
+        SetOFTConfig::apply(&mut ctx, &params)
     }
 
-    pub fn set_peer(mut ctx: Context<SetPeer>, params: SetPeerParams) -> Result<()> {
-        SetPeer::apply(&mut ctx, &params)
-    }
-
-    pub fn set_enforced_options(
-        mut ctx: Context<SetEnforcedOptions>,
-        params: SetEnforcedOptionsParams,
+    pub fn set_peer_config(
+        mut ctx: Context<SetPeerConfig>,
+        params: SetPeerConfigParams,
     ) -> Result<()> {
-        SetEnforcedOptions::apply(&mut ctx, &params)
+        SetPeerConfig::apply(&mut ctx, &params)
     }
 
-    pub fn set_mint_authority(
-        mut ctx: Context<SetMintAuthority>,
-        params: SetMintAuthorityParams,
-    ) -> Result<()> {
-        SetMintAuthority::apply(&mut ctx, &params)
+    pub fn set_pause(mut ctx: Context<SetPause>, params: SetPauseParams) -> Result<()> {
+        SetPause::apply(&mut ctx, &params)
     }
 
-    pub fn mint_to(mut ctx: Context<MintTo>, params: MintToParams) -> Result<()> {
-        MintTo::apply(&mut ctx, &params)
+    pub fn withdraw_fee(mut ctx: Context<WithdrawFee>, params: WithdrawFeeParams) -> Result<()> {
+        WithdrawFee::apply(&mut ctx, &params)
     }
 
     // ============================== Public ==============================
 
-    pub fn quote_oft(ctx: Context<QuoteOft>, params: QuoteOftParams) -> Result<QuoteOftResult> {
-        QuoteOft::apply(&ctx, &params)
+    pub fn quote_oft(ctx: Context<QuoteOFT>, params: QuoteOFTParams) -> Result<QuoteOFTResult> {
+        QuoteOFT::apply(&ctx, &params)
     }
 
-    pub fn quote(ctx: Context<Quote>, params: QuoteParams) -> Result<MessagingFee> {
-        Quote::apply(&ctx, &params)
+    pub fn quote_send(ctx: Context<QuoteSend>, params: QuoteSendParams) -> Result<MessagingFee> {
+        QuoteSend::apply(&ctx, &params)
     }
 
-    pub fn send(mut ctx: Context<Send>, params: SendParams) -> Result<MessagingReceipt> {
+    pub fn send(
+        mut ctx: Context<Send>,
+        params: SendParams,
+    ) -> Result<(MessagingReceipt, OFTReceipt)> {
         Send::apply(&mut ctx, &params)
     }
 
@@ -98,25 +89,13 @@ pub mod oft {
     ) -> Result<Vec<oapp::endpoint_cpi::LzAccount>> {
         LzReceiveTypes::apply(&ctx, &params)
     }
-
-    pub fn set_rate_limit(
-        mut ctx: Context<SetRateLimit>,
-        params: SetRateLimitParams,
-    ) -> Result<()> {
-        SetRateLimit::apply(&mut ctx, &params)
-    }
-
-    // Set the LayerZero endpoint delegate for OApp admin functions
-    pub fn set_delegate(mut ctx: Context<SetDelegate>, params: SetDelegateParams) -> Result<()> {
-        SetDelegate::apply(&mut ctx, &params)
-    }
 }
 
 #[derive(Accounts)]
-pub struct GetVersion {}
+pub struct OFTVersion {}
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
 pub struct Version {
-    pub sdk_version: u64,
-    pub oft_version: u64,
+    pub interface: u64,
+    pub message: u64,
 }
