@@ -6,7 +6,7 @@ setup() {
     load "../lib/bats-assert/load.bash"
 
     # Install the binary so that we avoid race conditions
-    npm install -g @layerzerolabs/verify-contract
+    flock --verbose bats.lock npm install -g @layerzerolabs/verify-contract
 }
 
 @test "should output version" {

@@ -6,7 +6,7 @@ setup() {
     load "../lib/bats-assert/load.bash"
 
     # Install the binary so that we avoid race conditions
-    npm install -g decode-lz-options
+    flock --verbose bats.lock npm install -g decode-lz-options
 }
 
 @test "should output version" {

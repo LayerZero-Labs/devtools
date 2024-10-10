@@ -19,7 +19,7 @@ setup() {
     PROJECTS_DIRECTORY=$(mktemp -d)
 
     # Install the binary so that we avoid race conditions
-    npm install -g @layerzerolabs/devtools-cli
+    flock --verbose bats.lock npm install -g @layerzerolabs/devtools-cli
 }
 
 teardown() {
