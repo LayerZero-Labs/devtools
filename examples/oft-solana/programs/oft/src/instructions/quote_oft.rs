@@ -1,60 +1,62 @@
 use crate::*;
+use anchor_spl::token_interface::Mint;
 
 #[derive(Accounts)]
-#[instruction(params: QuoteOftParams)]
-pub struct QuoteOft<'info> {
+#[instruction(params: QuoteOFTParams)]
+pub struct QuoteOFT<'info> {
     #[account(
-        seeds = [OFT_SEED, &get_oft_config_seed(&oft_config).to_bytes()],
-        bump = oft_config.bump
+        seeds = [OFT_SEED, oft_store.token_escrow.as_ref()],
+        bump = oft_store.bump
     )]
-    pub oft_config: Account<'info, OftConfig>,
+    pub oft_store: Account<'info, OFTStore>,
     #[account(
         seeds = [
             PEER_SEED,
-            &oft_config.key().to_bytes(),
+            oft_store.key().as_ref(),
             &params.dst_eid.to_be_bytes()
         ],
         bump = peer.bump
     )]
-    pub peer: Account<'info, Peer>,
-    #[account(
-        address = oft_config.token_mint,
-    )]
-    pub token_mint: InterfaceAccount<'info, anchor_spl::token_interface::Mint>,
+    pub peer: Account<'info, PeerConfig>,
+    #[account(address = oft_store.token_mint)]
+    pub token_mint: InterfaceAccount<'info, Mint>,
 }
 
-impl QuoteOft<'_> {
-    pub fn apply(ctx: &Context<QuoteOft>, params: &QuoteOftParams) -> Result<QuoteOftResult> {
-        // 1. Quote the amount with token2022 fee and dedust it
-        let amount_received_ld = ctx.accounts.oft_config.remove_dust(get_post_fee_amount_ld(
-            &ctx.accounts.oft_config.ext,
-            &ctx.accounts.token_mint,
-            params.amount_ld,
-        )?);
-        require!(amount_received_ld >= params.min_amount_ld, OftError::SlippageExceeded);
+impl QuoteOFT<'_> {
+    pub fn apply(ctx: &Context<QuoteOFT>, params: &QuoteOFTParams) -> Result<QuoteOFTResult> {
+        require!(!ctx.accounts.oft_store.paused, OFTError::Paused);
 
-        // amount_sent_ld does not have to be dedusted
-        let amount_sent_ld = get_pre_fee_amount_ld(
-            &ctx.accounts.oft_config.ext,
+        let (amount_sent_ld, amount_received_ld, oft_fee_ld) = compute_fee_and_adjust_amount(
+            params.amount_ld,
+            &ctx.accounts.oft_store,
             &ctx.accounts.token_mint,
-            amount_received_ld,
+            ctx.accounts.peer.fee_bps,
         )?;
+        require!(amount_received_ld >= params.min_amount_ld, OFTError::SlippageExceeded);
+
         let oft_limits = OFTLimits { min_amount_ld: 0, max_amount_ld: 0xffffffffffffffff };
-        let oft_fee_details = if amount_received_ld < amount_sent_ld {
+        let mut oft_fee_details = if amount_received_ld + oft_fee_ld < amount_sent_ld {
             vec![OFTFeeDetail {
-                fee_amount_ld: amount_sent_ld - amount_received_ld,
+                fee_amount_ld: amount_sent_ld - oft_fee_ld - amount_received_ld,
                 description: "Token2022 Transfer Fee".to_string(),
             }]
         } else {
             vec![]
         };
+        // cross chain fee
+        if oft_fee_ld > 0 {
+            oft_fee_details.push(OFTFeeDetail {
+                fee_amount_ld: oft_fee_ld,
+                description: "Cross Chain Fee".to_string(),
+            });
+        }
         let oft_receipt = OFTReceipt { amount_sent_ld, amount_received_ld };
-        Ok(QuoteOftResult { oft_limits, oft_fee_details, oft_receipt })
+        Ok(QuoteOFTResult { oft_limits, oft_fee_details, oft_receipt })
     }
 }
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
-pub struct QuoteOftParams {
+pub struct QuoteOFTParams {
     pub dst_eid: u32,
     pub to: [u8; 32],
     pub amount_ld: u64,
@@ -65,7 +67,7 @@ pub struct QuoteOftParams {
 }
 
 #[derive(Clone, AnchorSerialize, AnchorDeserialize)]
-pub struct QuoteOftResult {
+pub struct QuoteOFTResult {
     pub oft_limits: OFTLimits,
     pub oft_fee_details: Vec<OFTFeeDetail>,
     pub oft_receipt: OFTReceipt,

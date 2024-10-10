@@ -1,7 +1,5 @@
-pub mod enforced_options;
 pub mod oft;
-pub mod peer;
+pub mod peer_config;
 
-pub use enforced_options::*;
 pub use oft::*;
-pub use peer::*;
+pub use peer_config::*;

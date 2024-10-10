@@ -1,10 +1,16 @@
 use crate::*;
 
+pub const ENFORCED_OPTIONS_SEND_MAX_LEN: usize = 512;
+pub const ENFORCED_OPTIONS_SEND_AND_CALL_MAX_LEN: usize = 1024;
+
 #[account]
 #[derive(InitSpace)]
-pub struct Peer {
-    pub address: [u8; 32],
-    pub rate_limiter: Option<RateLimiter>,
+pub struct PeerConfig {
+    pub peer_address: [u8; 32],
+    pub enforced_options: EnforcedOptions,
+    pub outbound_rate_limiter: Option<RateLimiter>,
+    pub inbound_rate_limiter: Option<RateLimiter>,
+    pub fee_bps: Option<u16>,
     pub bump: u8,
 }
 
@@ -35,7 +41,8 @@ impl RateLimiter {
         let current_time: u64 = Clock::get()?.unix_timestamp.try_into().unwrap();
         if current_time > self.last_refill_time {
             let time_elapsed_in_seconds = current_time - self.last_refill_time;
-            new_tokens += time_elapsed_in_seconds * self.refill_per_second;
+            new_tokens = new_tokens
+                .saturating_add(time_elapsed_in_seconds.saturating_mul(self.refill_per_second));
         }
         self.tokens = std::cmp::min(self.capacity, self.tokens.saturating_add(new_tokens));
 
@@ -50,7 +57,36 @@ impl RateLimiter {
                 self.tokens = new_tokens;
                 Ok(())
             },
-            None => Err(error!(OftError::RateLimitExceeded)),
+            None => Err(error!(OFTError::RateLimitExceeded)),
         }
     }
 }
+
+#[derive(Clone, Default, AnchorSerialize, AnchorDeserialize, InitSpace)]
+pub struct EnforcedOptions {
+    #[max_len(ENFORCED_OPTIONS_SEND_MAX_LEN)]
+    pub send: Vec<u8>,
+    #[max_len(ENFORCED_OPTIONS_SEND_AND_CALL_MAX_LEN)]
+    pub send_and_call: Vec<u8>,
+}
+
+impl EnforcedOptions {
+    pub fn get_enforced_options(&self, composed_msg: &Option<Vec<u8>>) -> Vec<u8> {
+        if composed_msg.is_none() {
+            self.send.clone()
+        } else {
+            self.send_and_call.clone()
+        }
+    }
+
+    pub fn combine_options(
+        &self,
+        compose_msg: &Option<Vec<u8>>,
+        extra_options: &Vec<u8>,
+    ) -> Result<Vec<u8>> {
+        let enforced_options = self.get_enforced_options(compose_msg);
+        oapp::options::combine_options(enforced_options, extra_options)
+    }
+}
+
+utils::generate_account_size_test!(EnforcedOptions, enforced_options_test);
