@@ -158,7 +158,7 @@ ARG ANCHOR_VERSION=0.30.1
 RUN cargo install --git https://github.com/coral-xyz/anchor --tag v${ANCHOR_VERSION} anchor-cli
 
 # Make sure we can execute the binaries
-ENV PATH="/root/.avm/bin:/root/.solana/bin:$PATH"
+ENV PATH="/root/.solana/bin:$PATH"
 RUN anchor --version
 RUN solana --version
 
@@ -208,7 +208,7 @@ WORKDIR /app
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
-ENV PATH="/root/.aptos/bin/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+ENV PATH="/root/.aptos/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
 
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
@@ -233,6 +233,7 @@ RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
+RUN aptos --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
