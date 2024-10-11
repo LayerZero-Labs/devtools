@@ -37,7 +37,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           image: devtools-dev-base
-          target: base
+          target: machine
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
