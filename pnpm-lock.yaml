@@ -417,7 +417,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.3.25
+        specifier: ~0.3.28
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~0.4.2
@@ -426,7 +426,7 @@ importers:
         specifier: ^1.2.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~0.1.7
+        specifier: ~0.2.0
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -468,7 +468,7 @@ importers:
         specifier: ^0.4.3
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ^1.0.6
+        specifier: ^2.0.0
         version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^2.3.39
@@ -495,7 +495,7 @@ importers:
         specifier: ~4.0.0
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
-        specifier: ~1.0.5
+        specifier: ~2.0.0
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
@@ -651,7 +651,7 @@ importers:
         specifier: ^0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.0.7
+        specifier: ^0.0.8
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1244,7 +1244,7 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.25
+        specifier: ~0.3.28
         version: link:../devtools
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12
@@ -1745,10 +1745,10 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.25
+        specifier: ~0.3.28
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~0.1.7
+        specifier: ~0.2.0
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12
@@ -2324,10 +2324,10 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.3.25
+        specifier: ~0.3.28
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~0.1.7
+        specifier: ~0.2.0
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12
@@ -2348,7 +2348,7 @@ importers:
         specifier: ~0.4.3
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~1.0.6
+        specifier: ~2.0.0
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.2.9

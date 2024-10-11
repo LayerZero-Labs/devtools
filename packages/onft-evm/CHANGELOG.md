@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.8
+
+### Patch Changes
+
+- 6a07bb7: Incorporate solana-oft-v2 example
+
 ## 0.0.7
 
 ### Patch Changes

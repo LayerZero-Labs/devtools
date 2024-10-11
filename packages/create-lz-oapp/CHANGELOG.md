@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.2.0
+
+### Minor Changes
+
+- 6a07bb7: Incorporate solana-oft-v2 example
+
 ## 0.1.24
 
 ### Patch Changes
