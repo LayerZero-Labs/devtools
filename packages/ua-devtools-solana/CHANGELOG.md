@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 2.0.0
+
+### Major Changes
+
+- 6a07bb7: Incorporate solana-oft-v2 example
+
+### Patch Changes
+
+- Updated dependencies [6a07bb7]
+  - @layerzerolabs/protocol-devtools-solana@2.0.0
+  - @layerzerolabs/devtools-solana@0.2.0
+  - @layerzerolabs/devtools@0.3.28
+
 ## 1.0.5
 
 ### Patch Changes
