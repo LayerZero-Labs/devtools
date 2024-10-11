@@ -42,6 +42,36 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+  build-node-evm:
+    name: Build EVM node image
+    runs-on: ubuntu-latest-16xlarge
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          image: devtools-dev-node-evm-hardhat
+          target: node-evm-hardhat
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
   push-base:
     name: Push base image
     runs-on: ubuntu-latest-4xlarge
@@ -56,7 +86,24 @@ jobs:
         uses: ./.github/workflows/actions/merge-docker-image
         with:
           image: devtools-dev-base
-          target: base
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  push-node-evm:
+    name: Push EVM node image
+    runs-on: ubuntu-latest-4xlarge
+    needs:
+      - build-node-evm
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/merge-docker-image
+        with:
+          image: devtools-dev-node-evm-hardhat
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
