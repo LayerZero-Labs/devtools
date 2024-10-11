@@ -62,9 +62,11 @@ runs:
       id: build
       uses: docker/build-push-action@v6
       with:
-        platforms: ${{ inputs.platform }}
+        context: .
         target: ${{ inputs.target }}
-        outputs: type=image,name=${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
+        platforms: ${{ inputs.platform }}
+        provenance: false
+        outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
         labels: ${{ steps.meta.outputs.labels }}
         annotations: ${{ steps.meta.outputs.annotations }}
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}

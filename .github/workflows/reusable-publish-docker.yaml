@@ -33,7 +33,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build image
+      - name: Push image digest
         uses: ./.github/workflows/actions/docker-build-image
         with:
           image: devtools-dev-base
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build image
+      - name: Push image digest
         uses: ./.github/workflows/actions/docker-build-image
         with:
           image: devtools-dev-node-evm-hardhat
