@@ -65,7 +65,6 @@ runs:
         platforms: ${{ inputs.platform }}
         target: ${{ inputs.target }}
         outputs: type=image,name=${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
-        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         annotations: ${{ steps.meta.outputs.annotations }}
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
