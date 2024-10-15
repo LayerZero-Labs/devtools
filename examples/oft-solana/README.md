@@ -14,6 +14,12 @@
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
 
+### Get the code
+
+```bash
+LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
+```
+
 ### Installing Dependencies
 
 ```bash
