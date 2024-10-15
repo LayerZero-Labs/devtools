@@ -1,3 +1,61 @@
+# Utilizing the LayerZero CLI Tool
+
+Quick start your development with our `create-lz-oapp` CLI utility. This command-line tool facilitates the creation of a new omnichain project, and will set up the necessary environment and dependencies for your development. Get started with the CLI utility by running the command below in your terminal:
+
+```bash
+npx create-lz-oapp@latest
+```
+If you do not have the most required packages already installed you will be prompted to install them - to proceed simply enter ```y``` in the terminal and then you will be greeted by the CLI utility
+
+
+## Using Hardhat Tasks Step-by-Step
+
+### Step 1: Deploy the OFT Contract
+
+Run the following command to deploy the OFT example contract:
+
+```bash
+npx hardhat lz:deploy --network <network-name>
+```
+
+### Step 2: Initialize OAPP Config
+
+Run the following command to initialize the OAPP configuration:
+
+```bash
+npx hardhat lz:oapp:config:init --network <network-name>
+```
+
+### Step 3: Wire OAPP Config
+
+Run the following command to wire the OAPP configuration:
+
+```bash
+npx hardhat lz:oapp:config:wire --network <network-name>
+```
+
+### Step 4: Send Tokens
+
+Run the following command to send tokens to a destination address:
+
+```bash
+npx hardhat send-token --to <destination-address> --amount <amount> --network <network-name>
+```
+
+By the end of Step 4, you will have sent an OFT cross-chain! Welcome to the omnichain future. 
+
+## Additional Resources
+
+[LayerZero Documentation](https://docs.layerzero.network/v2)
+
+[Hardhat Documentation](https://hardhat.org/hardhat-runner/docs/getting-started#overview)
+
+[TypeScript Documentation](https://www.typescriptlang.org/docs/)
+
+### Remember to reach out in the LayerZero Discord community if you need any assistance or have questions along the way
+
+___
+
 <p align="center">
   <a href="https://layerzero.network">
     <img alt="LayerZero" style="width: 400px" src="https://docs.layerzero.network/img/LayerZero_Logo_White.svg"/>
