@@ -16,7 +16,7 @@ import { OAppSender } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.so
 import { OFTMsgCodec } from "../contracts/libs/OFTMsgCodec.sol";
 import { OFTComposeMsgCodec } from "../contracts/libs/OFTComposeMsgCodec.sol";
 
-import { IOFT, SendParam, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
+import { IOFT, SendParam, OFTFeeDetail, OFTLimit, OFTReceipt } from "../contracts/interfaces/IOFT.sol";
 import { OFT } from "../contracts/OFT.sol";
 import { NativeOFTAdapter } from "../contracts/NativeOFTAdapter.sol";
 import { OFTAdapter } from "../contracts/OFTAdapter.sol";
@@ -663,5 +663,39 @@ contract OFTTest is TestHelperOz5 {
         // does revert because inspector is set
         vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
         (message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
+    }
+
+    function test_quoteOFT(address _to, uint256 _amountToSendLD) public {
+        // 1. Bound the _amountToSendLD to ensure MaxSlippage is not encountered.
+        _amountToSendLD = bound(_amountToSendLD, 1e12, type(uint256).max);
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(_to),
+            _amountToSendLD,
+            0, // intentionally set to 0
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0),
+            "",
+            ""
+        );
+
+        // 2. Test OFT.quoteOFT()
+        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) = aOFT.quoteOFT(sendParam);
+        assertEq(0, oftLimit.minAmountLD);
+        uint256 maxLD = aOFT.decimalConversionRate() * type(uint64).max;
+        assertEq(maxLD, oftLimit.maxAmountLD);
+        assertEq(0, oftFeeDetails.length);
+        uint256 dustRemoved = aOFT.asOFTMock().removeDust(_amountToSendLD);
+        assertEq(dustRemoved, oftReceipt.amountReceivedLD);
+        assertEq(dustRemoved, oftReceipt.amountSentLD);
+
+        // 3. Test OFTAdapter.quoteOFT()
+        (oftLimit, oftFeeDetails, oftReceipt) = cOFTAdapter.quoteOFT(sendParam);
+        assertEq(0, oftLimit.minAmountLD);
+        maxLD = cOFTAdapter.decimalConversionRate() * type(uint64).max;
+        assertEq(maxLD, oftLimit.maxAmountLD);
+        assertEq(0, oftFeeDetails.length);
+        dustRemoved = cOFTAdapter.asOFTAdapterMock().removeDust(_amountToSendLD);
+        assertEq(dustRemoved, oftReceipt.amountReceivedLD);
+        assertEq(dustRemoved, oftReceipt.amountSentLD);
     }
 }
