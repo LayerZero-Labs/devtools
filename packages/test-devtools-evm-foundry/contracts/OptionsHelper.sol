@@ -91,19 +91,17 @@ contract OptionsHelper {
                     executorGas += gas;
                     executorValue += value;
                     payload = abi.encodePacked(executorGas, executorValue);
-                } else if (_executorOptionType == ExecutorOptions.OPTION_TYPE_NATIVE_DROP) {
+                } else if (optionType == ExecutorOptions.OPTION_TYPE_NATIVE_DROP) {
                     // Since there is a receiver in the nativeDrop options, do we do this differently?
                     (value, receiver) = this.decodeNativeDropOption(op);
                     executorValue += value;
                     payload = abi.encodePacked(executorValue, receiver);
-                } else if (_executorOptionType == ExecutorOptions.OPTION_TYPE_LZCOMPOSE) {
+                } else if (optionType == ExecutorOptions.OPTION_TYPE_LZCOMPOSE) {
                     (index, gas, value) = this.decodeLzComposeOption(op);
                     executorGas += gas;
                     executorValue += value;
                     payload = abi.encodePacked(index, executorGas, executorValue);
                 }
-            } else {
-                revert("OptionsHelper: executor option not found");
             }
             cursor = nextCursor;
         }
