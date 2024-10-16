@@ -34,7 +34,7 @@ const getPrioritizationFees = async (
         }
 
         // Extract slots and sort them
-        const slots = prioritizationFeeObjects.map((feeObject) => feeObject.slot).sort((a, b) => a - b)
+        // const slots = prioritizationFeeObjects.map((feeObject) => feeObject.slot).sort((a, b) => a - b)
 
         // Calculate the average including zero fees
         const averageFeeIncludingZeros =

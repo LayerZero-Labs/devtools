@@ -1,41 +1,22 @@
 import assert from 'assert'
 
 import { fetchDigitalAsset } from '@metaplex-foundation/mpl-token-metadata'
-import {
-    fetchAddressLookupTable,
-    findAssociatedTokenPda,
-    mplToolbox,
-    setComputeUnitLimit,
-    setComputeUnitPrice,
-} from '@metaplex-foundation/mpl-toolbox'
-import {
-    AddressLookupTableInput,
-    TransactionBuilder,
-    createSignerFromKeypair,
-    signerIdentity,
-} from '@metaplex-foundation/umi'
+import { findAssociatedTokenPda, mplToolbox, setComputeUnitLimit } from '@metaplex-foundation/mpl-toolbox'
+import { TransactionBuilder, createSignerFromKeypair, publicKey, signerIdentity } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import {
-    fromWeb3JsInstruction,
-    fromWeb3JsKeypair,
-    fromWeb3JsPublicKey,
-    toWeb3JsPublicKey,
-} from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { fromWeb3JsKeypair } from '@metaplex-foundation/umi-web3js-adapters'
 import { Keypair, PublicKey } from '@solana/web3.js'
-import { getExplorerLink, getSimulationComputeUnits } from '@solana-developers/helpers'
+import { getExplorerLink } from '@solana-developers/helpers'
 import bs58 from 'bs58'
-import { hexlify } from 'ethers/lib/utils'
 import { task } from 'hardhat/config'
 
 import { formatEid } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFT_SEED, OftPDADeriver, OftProgram, OftTools, SendHelper } from '@layerzerolabs/lz-solana-sdk-v2'
-import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
+import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
+import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { createSolanaConnectionFactory } from '../common/utils'
-import getFee from '../utils/getFee'
 
 interface Args {
     amount: number
@@ -44,6 +25,7 @@ interface Args {
     toEid: EndpointId
     programId: string
     mint: string
+    escrow: string
 }
 
 const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
@@ -59,6 +41,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
     .addParam('toEid', 'The destination endpoint ID', undefined, types.eid)
     .addParam('mint', 'The OFT token mint public key', undefined, types.string)
     .addParam('programId', 'The OFT program ID', undefined, types.string)
+    .addParam('escrow', 'The OFT escrow public key', undefined, types.string)
     .setAction(async (taskArgs: Args) => {
         const privateKey = process.env.SOLANA_PRIVATE_KEY
         assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
@@ -78,118 +61,93 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
         umi.use(signerIdentity(umiWalletSigner))
 
         // Define OFT program and token mint public keys
-        const oftProgramId = new PublicKey(taskArgs.programId)
-        const mintPublicKey = new PublicKey(taskArgs.mint)
-        const umiMintPublicKey = fromWeb3JsPublicKey(mintPublicKey)
+        const oftProgramId = publicKey(taskArgs.programId)
+        const umiMintPublicKey = publicKey(taskArgs.mint)
+        const umiEscrowPublicKey = publicKey(taskArgs.escrow)
 
         // Find the associated token account
         const tokenAccount = findAssociatedTokenPda(umi, {
             mint: umiMintPublicKey,
             owner: umiWalletSigner.publicKey,
         })
+        console.dir({ tokenAccount })
 
-        // Derive the OFT configuration PDA
-        const [oftConfigPda] = PublicKey.findProgramAddressSync(
-            [Buffer.from(OFT_SEED), mintPublicKey.toBuffer()],
-            oftProgramId
-        )
+        // Derive the OFTStore PDA
+        const oftPda = new OftPDA(oftProgramId)
+        const [oftStorePda] = oftPda.oftStore(umiEscrowPublicKey)
 
         // Fetch token metadata
+        // TODO fix
+        umi.programs.bind('splToken', 'splToken2022')
         const mintInfo = (await fetchDigitalAsset(umi, umiMintPublicKey)).mint
-        const destinationEid: EndpointId = taskArgs.toEid
         const amount = taskArgs.amount * 10 ** mintInfo.decimals
+        const destinationEid: EndpointId = taskArgs.toEid
 
         // Derive peer address and fetch peer information
-        const deriver = new OftPDADeriver(oftProgramId)
-        const [peerAddress] = deriver.peer(oftConfigPda, destinationEid)
-        const peerInfo = await OftProgram.accounts.Peer.fromAccountAddress(connection, peerAddress)
-
-        // Set up send helper and convert recipient address to bytes32
-        const sendHelper = new SendHelper()
         const recipientAddressBytes32 = addressToBytes32(taskArgs.to)
 
-        // Quote the fee for the cross-chain transfer
-        const feeQuote = await OftTools.quoteWithUln(
-            connection,
-            oftProgramId, // OFT Program
-            keypair.publicKey,
-            mintPublicKey,
-            destinationEid,
-            BigInt(amount),
-            (BigInt(amount) * BigInt(9)) / BigInt(10),
-            Options.newOptions().addExecutorLzReceiveOption(0, 0).toBytes(),
-            Array.from(recipientAddressBytes32),
-            false, // payInZRO
-            undefined, // tokenEscrow
-            undefined, // composeMsg
-            peerInfo.address,
-            await sendHelper.getQuoteAccounts(
-                connection,
-                keypair.publicKey,
-                oftConfigPda,
-                destinationEid,
-                hexlify(peerInfo.address)
-            ),
-            undefined, // Endpoint program ID
-            TOKEN_PROGRAM_ID // SPL Token Program
-        )
-
-        console.log(feeQuote)
-
-        // Create the instruction for sending tokens
-        const sendInstruction = await OftTools.sendWithUln(
-            connection,
-            oftProgramId, // OFT Program
-            keypair.publicKey, // payer
-            mintPublicKey, // tokenMint
-            toWeb3JsPublicKey(tokenAccount[0]), // tokenSource
-            destinationEid,
-            BigInt(amount),
-            (BigInt(amount) * BigInt(9)) / BigInt(10),
-            Options.newOptions().addExecutorLzReceiveOption(0, 0).toBytes(),
-            Array.from(recipientAddressBytes32),
-            feeQuote.nativeFee,
-            undefined, // payInZRO
-            undefined,
-            undefined,
-            peerInfo.address
-        )
-
-        // Convert the instruction and create the transaction builder
-        const convertedInstruction = fromWeb3JsInstruction(sendInstruction)
-        const transactionBuilder = new TransactionBuilder([
+        const accounts = {
+            payer: umiWalletSigner,
+            tokenMint: umiMintPublicKey,
+            tokenEscrow: umiEscrowPublicKey,
+            tokenSource: tokenAccount[0],
+        }
+        console.dir({
+            oftConfigPda: oftStorePda,
+            payer: umiWalletSigner.publicKey,
+            tokenMint: umiMintPublicKey,
+            tokenEscrow: umiEscrowPublicKey,
+        })
+        const { nativeFee } = await oft.quote(
+            umi.rpc,
             {
-                instruction: convertedInstruction,
-                signers: [umiWalletSigner],
-                bytesCreatedOnChain: 0,
+                payer: umiWalletSigner.publicKey,
+                tokenMint: umiMintPublicKey,
+                tokenEscrow: umiEscrowPublicKey,
             },
-        ])
-
-        // Fetch simulation compute units and set compute unit price
-        const { averageFeeExcludingZeros } = await getFee(connection)
-        const priorityFee = Math.round(averageFeeExcludingZeros)
-        const computeUnitPrice = BigInt(priorityFee)
-        console.log(`Compute unit price: ${computeUnitPrice}`)
-
-        const addressLookupTableInput: AddressLookupTableInput = await fetchAddressLookupTable(
-            umi,
-            fromWeb3JsPublicKey(lookupTableAddress)
+            {
+                payInLzToken: false,
+                to: Buffer.from(recipientAddressBytes32),
+                dstEid: destinationEid,
+                amountLd: BigInt(amount),
+                minAmountLd: 1n,
+                options: Buffer.from(''),
+                composeMsg: Buffer.from(''),
+            },
+            {
+                oft: oftProgramId,
+            }
         )
-        const { value: lookupTableAccount } = await connection.getAddressLookupTable(new PublicKey(lookupTableAddress))
-        const computeUnits = await getSimulationComputeUnits(connection, [sendInstruction], keypair.publicKey, [
-            lookupTableAccount!,
-        ])
+        console.dir({ nativeFee })
 
-        // Build and send the transaction
-        const transactionSignature = await transactionBuilder
-            .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice * BigInt(4) }))
-            .add(setComputeUnitLimit(umi, { units: computeUnits! * 1.1 }))
-            .setAddressLookupTables([addressLookupTableInput])
+        const ix = await oft.send(
+            umi.rpc,
+            accounts,
+            {
+                to: Buffer.from(recipientAddressBytes32),
+                dstEid: destinationEid,
+                amountLd: BigInt(amount),
+                minAmountLd: (BigInt(amount) * BigInt(9)) / BigInt(10),
+                options: Buffer.from(''),
+                composeMsg: Buffer.from(''),
+                nativeFee,
+            },
+            {
+                oft: oftProgramId,
+            }
+        )
+
+        const tx = new TransactionBuilder([ix])
+        // TODO fix
+        const transactionSignature = await tx
+            // .add(setComputeUnitPrice(umi, { microLamports: computeUnitPrice * BigInt(4) }))
+            .add(setComputeUnitLimit(umi, { units: 500000 }))
+            // .setAddressLookupTables([addressLookupTableInput])
             .sendAndConfirm(umi)
-
-        // Encode the transaction signature and generate explorer links
+        //
+        // // Encode the transaction signature and generate explorer links
         const transactionSignatureBase58 = bs58.encode(transactionSignature.signature)
-        const solanaTxLink = getExplorerLink('tx', transactionSignatureBase58.toString(), 'mainnet-beta')
+        const solanaTxLink = getExplorerLink('tx', transactionSignatureBase58.toString(), 'mainnet-beta') // TODO fix
         const layerZeroTxLink = `https://layerzeroscan.com/tx/${transactionSignatureBase58}`
 
         console.log(`✅ Sent ${taskArgs.amount} token(s) to destination EID: ${destinationEid}!`)

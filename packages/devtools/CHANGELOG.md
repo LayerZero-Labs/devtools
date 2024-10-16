@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.3.28
+
+### Patch Changes
+
+- 6a07bb7: Incorporate solana-oft-v2 example
+
 ## 0.3.27
 
 ### Patch Changes
