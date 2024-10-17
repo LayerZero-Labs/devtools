@@ -153,13 +153,18 @@ RUN \
 # Delete the source files (only left behind if solana was built from source)
 RUN rm -rf ./solana-*
 
+# Install AVM - Anchor version manager for Solana
+RUN cargo install --git https://github.com/coral-xyz/anchor avm
+
 # Install anchor
 ARG ANCHOR_VERSION=0.30.1
-RUN cargo install --git https://github.com/coral-xyz/anchor --tag v${ANCHOR_VERSION} anchor-cli
+RUN avm install ${ANCHOR_VERSION}
+RUN avm use ${ANCHOR_VERSION}
 
 # Make sure we can execute the binaries
-ENV PATH="/root/.solana/bin:$PATH"
+ENV PATH="/root/.avm/bin:/root/.solana/bin:$PATH"
 RUN anchor --version
+RUN avm --version
 RUN solana --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -208,13 +213,15 @@ WORKDIR /app
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
-ENV PATH="/root/.aptos/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
 
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
 # Get solana tooling
 COPY --from=solana /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+COPY --from=solana /root/.cargo/bin/avm /root/.cargo/bin/avm
+COPY --from=solana /root/.avm /root/.avm
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get EVM tooling
@@ -233,6 +240,7 @@ RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
+RUN avm --version
 RUN aptos --version
 RUN forge --version
 RUN anvil --version
