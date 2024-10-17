@@ -69,13 +69,47 @@ contract OptionsHelper {
         (bytes memory executorOpts, ) = ulnOptions.decode(_options);
 
         uint256 cursor;
+
+        // Used to accumulate the total gas and value for the chained executor options
+        uint128 executorGas;
+        uint128 executorValue;
+
+        // Accumulated payload
+        bytes memory payload = new bytes(0);
+
         while (cursor < executorOpts.length) {
             (uint8 optionType, bytes memory op, uint256 nextCursor) = this.nextExecutorOption(executorOpts, cursor);
+
+            // There are 3 kinds of executor options -- lzReceive, nativeDrop, lzCompose.
             if (optionType == _executorOptionType) {
-                return (true, op);
+                uint128 gas;
+                uint128 value;
+                bytes32 receiver;
+                uint16 index;
+                if (optionType == ExecutorOptions.OPTION_TYPE_LZRECEIVE) {
+                    (gas, value) = this.decodeLzReceiveOption(op);
+                    executorGas += gas;
+                    executorValue += value;
+                    payload = abi.encodePacked(executorGas, executorValue);
+                } else if (optionType == ExecutorOptions.OPTION_TYPE_NATIVE_DROP) {
+                    // Since there is a receiver in the nativeDrop options, do we do this differently?
+                    (value, receiver) = this.decodeNativeDropOption(op);
+                    executorValue += value;
+                    payload = abi.encodePacked(executorValue, receiver);
+                } else if (optionType == ExecutorOptions.OPTION_TYPE_LZCOMPOSE) {
+                    (index, gas, value) = this.decodeLzComposeOption(op);
+                    executorGas += gas;
+                    executorValue += value;
+                    payload = abi.encodePacked(index, executorGas, executorValue);
+                }
             }
             cursor = nextCursor;
         }
+
+        if (payload.length == 0) {
+            return (false, payload);
+        }
+        return (true, payload);
     }
 
     function nextExecutorOption(
