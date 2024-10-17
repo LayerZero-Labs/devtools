@@ -115,8 +115,7 @@ task('lz:oft-adapter:solana:create', 'Mints new SPL Token, Lockbox, and new OFT 
             web3WalletKeyPair.publicKey // The wallet for which you're getting or creating the ATA
         )
 
-        // todo mint the amount
-        if (taskArgs.amount) {
+        if (taskArgs.amount && taskArgs.amount > 0) {
             const mintIx = createMintToInstruction(
                 toWeb3JsPublicKey(mintPK),
                 toWeb3JsPublicKey(umiWalletSigner.publicKey),

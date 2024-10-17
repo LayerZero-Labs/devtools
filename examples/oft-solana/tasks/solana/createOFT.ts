@@ -75,7 +75,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             undefined,
             TOKEN_PROGRAM_ID
         )
-        const createTokenTx = await createAndMint(umi, {
+        // amount cannot be 0, use undefined to represent "none"
+        const amount = taskArgs.amount == 0 ? undefined : taskArgs.amount
+        await createAndMint(umi, {
             mint: token, // New token account
             name: 'MockOFT', // Token name
             symbol: 'MOFT', // Token symbol
@@ -84,11 +86,10 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             uri: '', // URI for token metadata
             sellerFeeBasisPoints: percentAmount(0), // Fee percentage
             authority: umiWalletSigner, // Authority for the token mint
-            amount: taskArgs.amount ?? 0, // Initial amount to mint
+            amount, // Initial amount to mint.  If 0, pass undefined.
             tokenOwner: umiWalletSigner.publicKey, // Owner of the token
             tokenStandard: TokenStandard.Fungible, // Token type (Fungible)
         }).sendAndConfirm(umi)
-        console.log(`createTokenTx: ${await umi.rpc.getTransaction(createTokenTx.signature)}`)
 
         const initOftIx = oft.initOft(
             {
@@ -107,23 +108,21 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         const signers = [umiWalletKeyPair, lockBox]
 
         const txResult = await sendAndConfirmTx(connection, signers, ixs)
-        console.log(`initOFT transaction hash: ${txResult.hash}}`)
+        console.log(`initOFT transaction hash: ${txResult.hash}`)
 
-        const setMintAuthorityTx = await setAuthority(umi, {
+        await setAuthority(umi, {
             owned: token.publicKey,
             owner: umiWalletSigner,
             newAuthority: fromWeb3JsPublicKey(multiSigKey),
             authorityType: 0,
-        }).sendAndConfirm(umi)
-        console.log(`setMintAuthorityTx: ${await umi.rpc.getTransaction(setMintAuthorityTx.signature)}`)
+        }).sendAndConfirm(umi, { confirm: { commitment: 'confirmed' } })
 
-        const setFreezeAuthorityTx = await setAuthority(umi, {
+        await setAuthority(umi, {
             owned: token.publicKey,
             owner: umiWalletSigner,
             newAuthority: fromWeb3JsPublicKey(multiSigKey),
             authorityType: 1,
-        }).sendAndConfirm(umi)
-        console.log(`setFreezeAuthorityTx: ${await umi.rpc.getTransaction(setFreezeAuthorityTx.signature)}`)
+        }).sendAndConfirm(umi, { confirm: { commitment: 'confirmed' } })
 
         const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
         if (!existsSync(outputDir)) {
