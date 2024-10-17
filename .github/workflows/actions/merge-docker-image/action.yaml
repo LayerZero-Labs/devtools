@@ -11,7 +11,7 @@ inputs:
   namespace:
     description: "Docker image namespace"
     required: true
-    default: ${{ github.repository_owner }}
+    default: layerzero-labs
   username:
     description: "Docker registry username"
     required: true
