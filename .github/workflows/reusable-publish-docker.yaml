@@ -12,6 +12,9 @@ name: Build base development images
 on:
   workflow_call:
   workflow_dispatch:
+  push:
+    branches:
+      - platforms
 
 jobs:
   build-base:
