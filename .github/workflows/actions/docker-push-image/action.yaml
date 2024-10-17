@@ -58,8 +58,10 @@ runs:
       shell: bash
       working-directory: ${{ inputs.digest-path }}
       run: |
-        docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}@sha256:%s ' *)
+        docker buildx imagetools create \
+        $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+        $(jq -cr '.annotations | map("--annotation " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+        $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}@sha256:%s ' *)
 
     - name: Inspect image
       shell: bash
