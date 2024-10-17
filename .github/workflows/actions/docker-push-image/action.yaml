@@ -51,7 +51,7 @@ runs:
           ${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}
         tags: |
           type=ref,event=branch
-          type=raw,value=FIXME,enable={{is_default_branch}}
+          type=raw,value=latest,enable={{is_default_branch}}
           type=raw,value=${{ github.sha }}
 
     - name: Create manifest list and push
