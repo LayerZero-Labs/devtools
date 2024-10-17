@@ -64,6 +64,7 @@ runs:
       with:
         target: ${{ inputs.target }}
         platforms: ${{ inputs.platform }}
+        provenance: false
         outputs: type=image,name=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
         labels: ${{ steps.meta.outputs.labels }}
         annotations: ${{ steps.meta.outputs.annotations }}
