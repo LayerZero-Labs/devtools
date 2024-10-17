@@ -43,7 +43,7 @@ const action: ActionType<TaskArguments> = async ({ dstEid, amount, to }, hre: Ha
 
     const [msgFee] = await token.functions.quoteSend(sendParam, false)
     console.dir(msgFee)
-    const txResponse = await token.functions.send(sendParam, msgFee, '0x0e251d9095dD128292A28eB383127d05d95BBD17', {
+    const txResponse = await token.functions.send(sendParam, msgFee, signer.address, {
         value: msgFee.nativeFee,
         gasLimit: 500_000,
     })
