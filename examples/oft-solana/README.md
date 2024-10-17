@@ -100,7 +100,6 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
 ```
 
-
 ## Common Errors
 
 ### "AnchorError occurred. Error Code: DeclaredProgramIdMismatch. Error Number: 4100. Error Message: The declared program id does not match the actual program id."
@@ -110,8 +109,8 @@ to running `solana program deploy...`.
 
 ### `anchor build -v` fails
 
-There are known issues with downloading rust crates in older versions of docker.  Please ensure you are using the most
-up-to-date docker version.  The issue manifests similar to:
+There are known issues with downloading rust crates in older versions of docker. Please ensure you are using the most
+up-to-date docker version. The issue manifests similar to:
 
 ```bash
 anchor build -v
@@ -142,4 +141,4 @@ Error during Docker build: Failed to build program
 Error: Failed to build program
 ```
 
-Note:  The error occurs after attempting to update crates.io index.
+Note: The error occurs after attempting to update crates.io index.
