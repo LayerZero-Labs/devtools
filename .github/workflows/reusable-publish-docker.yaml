@@ -86,7 +86,6 @@ jobs:
         uses: ./.github/workflows/actions/merge-docker-image
         with:
           image: devtools-dev-base
-          platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -104,6 +103,5 @@ jobs:
         uses: ./.github/workflows/actions/merge-docker-image
         with:
           image: devtools-dev-node-evm-hardhat
-          platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
