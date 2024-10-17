@@ -59,9 +59,9 @@ runs:
       working-directory: ${{ inputs.digest-path }}
       run: |
         docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-          $(printf '${{ inputs.image }}@sha256:%s ' *)
+          $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}@sha256:%s ' *)
 
     - name: Inspect image
       shell: bash
       run: |
-        docker buildx imagetools inspect ${{ inputs.image }}:${{ steps.meta.outputs.version }}
+        docker buildx imagetools inspect ${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:${{ steps.meta.outputs.version }}
