@@ -71,7 +71,7 @@ runs:
         cache-from: type=gha,scope=build-${{ env.PLATFORM_PAIR }}
         cache-to: type=gha,mode=max,scope=build-${{ env.PLATFORM_PAIR }}
         build-args: |
-          CARGO_BUILD_JOBS=8
+          CARGO_BUILD_JOBS=4
 
     - name: Export digest
       shell: bash

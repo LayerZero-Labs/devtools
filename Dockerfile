@@ -195,6 +195,9 @@ RUN solana --version
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
+ARG CARGO_BUILD_JOBS=default
+ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+
 # Install foundry
 ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash
