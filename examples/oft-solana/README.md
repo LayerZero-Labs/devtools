@@ -58,10 +58,24 @@ anchor build -v # verification flag enabled
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u mainnet-beta
 ```
 
-### Create Mint
+### Create the OFT
+
+For OFT:
 
 ```bash
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
+```
+
+For OFTAdapter:
+
+```bash
+pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
+```
+
+For OFT Mint-And-Burn Adapter (MABA):
+
+```bash
+pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
 Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
