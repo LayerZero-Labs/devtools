@@ -1,5 +1,16 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 2.0.0
+
+### Major Changes
+
+- 19ca394: OptionHelper now accumulates chained options
+
+### Patch Changes
+
+- @layerzerolabs/oapp-evm@0.0.4
+- @layerzerolabs/oft-evm@0.1.0
+
 ## 1.0.0
 
 ### Patch Changes
