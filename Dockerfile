@@ -118,7 +118,37 @@ RUN aptos --version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#          Image that builds Solana developer tooling
+#               Image that builds AVM & Anchor
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS avm
+
+WORKDIR /app/avm
+
+# Configure cargo. We want to provide a way of limiting cargo resources
+# on the github runner since it is not large enough to support multiple cargo builds
+ARG CARGO_BUILD_JOBS=default
+ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+
+# Install AVM - Anchor version manager for Solana
+RUN cargo install --git https://github.com/coral-xyz/anchor avm
+
+# Install anchor
+ARG ANCHOR_VERSION=0.30.1
+RUN avm install ${ANCHOR_VERSION}
+RUN avm use ${ANCHOR_VERSION}
+
+ENV PATH="/root/.avm/bin:$PATH"
+RUN anchor --version
+RUN avm --version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#                 Image that builds Solana CLI
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -150,21 +180,8 @@ RUN \
     ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only /root/.solana \
     )
 
-# Delete the source files (only left behind if solana was built from source)
-RUN rm -rf ./solana-*
-
-# Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm
-
-# Install anchor
-ARG ANCHOR_VERSION=0.30.1
-RUN avm install ${ANCHOR_VERSION}
-RUN avm use ${ANCHOR_VERSION}
-
 # Make sure we can execute the binaries
-ENV PATH="/root/.avm/bin:/root/.solana/bin:$PATH"
-RUN anchor --version
-RUN avm --version
+ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -177,6 +194,9 @@ RUN solana --version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
+
+ARG CARGO_BUILD_JOBS=default
+ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install foundry
 ENV PATH="/root/.foundry/bin:$PATH"
@@ -213,15 +233,15 @@ WORKDIR /app
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
-ENV PATH="/root/.aptos/bin/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
 
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
 # Get solana tooling
-COPY --from=solana /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=solana /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=solana /root/.avm /root/.avm
+COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
+COPY --from=avm /root/.avm /root/.avm
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get EVM tooling
@@ -241,6 +261,7 @@ RUN pnpm --version
 RUN git --version
 RUN anchor --version
 RUN avm --version
+RUN aptos --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
