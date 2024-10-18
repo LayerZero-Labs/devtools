@@ -19,8 +19,8 @@ describe('common/accounts', () => {
     beforeAll(() => {
         connectionFactory = createConnectionFactory(
             createRpcUrlFactory({
-                [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA_MAINNET,
-                [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
+                [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana',
+                [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET || 'https://api.testnet.solana.com',
             })
         )
     })
