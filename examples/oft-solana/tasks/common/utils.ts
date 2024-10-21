@@ -11,7 +11,12 @@ import {
     formatEid,
 } from '@layerzerolabs/devtools'
 import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hardhat'
-import { OmniSignerSolana, createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
+import {
+    OmniSignerSolana,
+    OmniSignerSolanaSquads,
+    createConnectionFactory,
+    createRpcUrlFactory,
+} from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
@@ -64,13 +69,19 @@ export const createSdkFactory = (
     return firstFactory<[OmniPoint], IOApp>(evmSdkfactory, solanaSdkFactory)
 }
 
-export const createSolanaSignerFactory = (wallet: Keypair, connectionFactory = createSolanaConnectionFactory()) => {
+export const createSolanaSignerFactory = (
+    wallet: Keypair,
+    connectionFactory = createSolanaConnectionFactory(),
+    multisigKey?: PublicKey
+) => {
     return async (eid: EndpointId): Promise<OmniSigner<OmniTransactionResponse<OmniTransactionReceipt>>> => {
         assert(
             endpointIdToChainType(eid) === ChainType.SOLANA,
             `Solana signer factory can only create signers for Solana networks. Received ${formatEid(eid)}`
         )
 
-        return new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
+        return multisigKey
+            ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
+            : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
     }
 }
