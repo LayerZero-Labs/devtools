@@ -4,8 +4,9 @@ import { task, types } from 'hardhat/config'
 import { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'
 
 import { makeBytes32 } from '@layerzerolabs/devtools'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
-// const getUSD0Address = (networkName: string) => (isSepolia(networkName) ? USD0_SEPOLIA_ADDRESS : USD0_ARBSEP_ADDRESS)
+import { getLayerZeroScanLink } from '../solana'
 
 interface TaskArguments {
     dstEid: number
@@ -18,11 +19,10 @@ const action: ActionType<TaskArguments> = async ({ dstEid, amount, to }, hre: Ha
     const tokenName = 'MyOFT'
     // @ts-ignore
     const token = (await hre.ethers.getContract(tokenName)).connect(signer)
-    console.log(`sender token: ${token.address}`)
 
     // if (isSepolia(hre.network.name)) {
     //     // @ts-ignore
-    //     const erc20Token = (await hre.ethers.getContractAt(IERC20, getUSD0Address(hre.network.name))).connect(signer)
+    //     const erc20Token = (await hre.ethers.getContractAt(IERC20, address)).connect(signer)
     //     const approvalTxResponse = await erc20Token.approve(token.address, amount)
     //     const approvalTxReceipt = await approvalTxResponse.wait()
     //     console.log(`approve: ${amount}: ${approvalTxReceipt.transactionHash}`)
@@ -38,17 +38,16 @@ const action: ActionType<TaskArguments> = async ({ dstEid, amount, to }, hre: Ha
         composeMsg: '0x',
         oftCmd: '0x',
     }
-
-    console.dir({ sendParam }, { depth: null })
-
     const [msgFee] = await token.functions.quoteSend(sendParam, false)
-    console.dir(msgFee)
     const txResponse = await token.functions.send(sendParam, msgFee, signer.address, {
         value: msgFee.nativeFee,
         gasLimit: 500_000,
     })
     const txReceipt = await txResponse.wait()
     console.log(`send: ${amount} to ${to}: ${txReceipt.transactionHash}`)
+    console.log(
+        `Track cross-chain transfer here: ${getLayerZeroScanLink(txReceipt.transactionHash, dstEid == EndpointId.SOLANA_V2_TESTNET)}`
+    )
 }
 
 task('send', 'Sends a transaction', action)

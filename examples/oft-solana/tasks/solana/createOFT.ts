@@ -1,147 +1,202 @@
-import assert from 'assert'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
-
 import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
-import { mplToolbox, setAuthority } from '@metaplex-foundation/mpl-toolbox'
+import { setAuthority } from '@metaplex-foundation/mpl-toolbox'
 import {
-    EddsaInterface,
+    createNoopSigner,
     createSignerFromKeypair,
     percentAmount,
     publicKey,
-    signerIdentity,
+    transactionBuilder,
 } from '@metaplex-foundation/umi'
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
-import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
-import {
-    fromWeb3JsPublicKey,
-    toWeb3JsInstruction,
-    toWeb3JsKeypair,
-    toWeb3JsPublicKey,
-} from '@metaplex-foundation/umi-web3js-adapters'
-import { TOKEN_PROGRAM_ID, createMultisig } from '@solana/spl-token'
+import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
-import { OFT_DECIMALS, OftPDA, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { createSolanaConnectionFactory } from '../common/utils'
+import { createMintAuthorityMultisig } from './multisig'
 
-import { sendAndConfirmTx } from './index'
+import { deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
-const LOCAL_DECIMALS = 9
+const DEFAULT_LOCAL_DECIMALS = 9
 
-interface Args {
+interface CreateOFTTaskArgs {
+    /**
+     * The initial supply to mint on solana.
+     */
     amount: number
+
+    /**
+     * The endpoint ID for the Solana network.
+     */
     eid: EndpointId
+
+    /**
+     * The number of decimal places to use for the token.
+     */
+    localDecimals: number
+
+    /**
+     * The optional token mint ID, for Mint-And-Burn-Adapter only.
+     */
+    mint?: string
+
+    /**
+     * The name of the token.
+     */
+    name: string
+
+    /**
+     * The program ID for the OFT program.
+     */
     programId: string
+
+    /**
+     * The seller fee basis points.
+     */
+    sellerFeeBasisPoints: number
+
+    /**
+     * The symbol of the token.
+     */
+    symbol: string
+
+    /**
+     * Whether the token metadata is mutable.
+     */
+    tokenMetadataIsMutable: boolean
+
+    /**
+     * The token program ID, for Mint-And-Burn-Adapter only.
+     */
+    tokenProgram: string
+
+    /**
+     * The URI for the token metadata.
+     */
+    uri: string
 }
 
+// Define a Hardhat task for creating OFT on Solana
+// * Create the SPL Multisig account for mint authority
+// * Mint the new SPL Token
+// * Initialize the OFT Store account
+// * Set the mint/freeze authority to the multisig account
+// Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
-    .addParam('programId', 'The OFT Program id')
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
-    .setAction(async (taskArgs: Args) => {
-        const privateKey = process.env.SOLANA_PRIVATE_KEY
-        assert(!!privateKey, 'SOLANA_PRIVATE_KEY is not defined in the environment variables.')
-        const connectionFactory = createSolanaConnectionFactory()
-        const connection = await connectionFactory(taskArgs.eid)
-        const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
-
-        // Generate a wallet keypair from the private key stored in the environment
-        const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
-        const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
-        umi.use(signerIdentity(umiWalletSigner))
-
-        const programId = publicKey(taskArgs.programId)
-
-        const eddsa: EddsaInterface = createWeb3JsEddsa()
-        const oftDeriver = new OftPDA(programId)
-
-        const lockBox = eddsa.generateKeypair()
-        const escrowPK = lockBox.publicKey
-        const [oftStorePda] = oftDeriver.oftStore(escrowPK)
-        const mintKp = eddsa.generateKeypair()
-        const mintPK = mintKp.publicKey
-        const token = createSignerFromKeypair(umi, mintKp)
-
-        const multiSigKey = await createMultisig(
-            connection,
-            toWeb3JsKeypair(umiWalletKeyPair),
-            [toWeb3JsPublicKey(oftStorePda), toWeb3JsPublicKey(umiWalletKeyPair.publicKey)],
-            1,
-            undefined,
-            undefined,
-            TOKEN_PROGRAM_ID
-        )
-        // amount cannot be 0, use undefined to represent "none"
-        const amount = taskArgs.amount == 0 ? undefined : taskArgs.amount
-        await createAndMint(umi, {
-            mint: token, // New token account
-            name: 'MockOFT', // Token name
-            symbol: 'MOFT', // Token symbol
-            isMutable: true, // Allow token metadata to be mutable
-            decimals: LOCAL_DECIMALS, // Number of decimals for the token
-            uri: '', // URI for token metadata
-            sellerFeeBasisPoints: percentAmount(0), // Fee percentage
-            authority: umiWalletSigner, // Authority for the token mint
-            amount, // Initial amount to mint.  If 0, pass undefined.
-            tokenOwner: umiWalletSigner.publicKey, // Owner of the token
-            tokenStandard: TokenStandard.Fungible, // Token type (Fungible)
-        }).sendAndConfirm(umi)
-
-        const initOftIx = oft.initOft(
-            {
-                payer: createSignerFromKeypair({ eddsa: eddsa }, umiWalletKeyPair),
-                admin: umiWalletKeyPair.publicKey,
-                mint: mintPK,
-                escrow: createSignerFromKeypair({ eddsa: eddsa }, lockBox),
-            },
-            types.OFTType.Native,
-            OFT_DECIMALS,
-            {
-                oft: programId,
+    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
+    .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
+    .addParam('mint', 'The Token mint public key (used for MABA only)', '', devtoolsTypes.string)
+    .addParam('programId', 'The OFT Program id')
+    .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int)
+    .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
+    .addParam('tokenMetadataIsMutable', 'Token metadata is mutable', true, devtoolsTypes.boolean)
+    .addParam(
+        'tokenProgram',
+        'The Token Program public key (used for MABA only)',
+        TOKEN_PROGRAM_ID.toBase58(),
+        devtoolsTypes.string
+    )
+    .addParam('uri', 'URI for token metadata', '', devtoolsTypes.string)
+    .setAction(
+        async ({
+            amount,
+            eid,
+            localDecimals: decimals,
+            mint: mintStr,
+            name,
+            programId: programIdStr,
+            sellerFeeBasisPoints,
+            symbol,
+            tokenMetadataIsMutable: isMutable,
+            tokenProgram: tokenProgramStr,
+            uri,
+        }: CreateOFTTaskArgs) => {
+            const isMABA = !!mintStr
+            if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
+                throw new Error('Non-Mint-And-Burn-Adapter does not support custom token programs')
             }
-        )
-        const ixs = [toWeb3JsInstruction(initOftIx.instruction)]
-        const signers = [umiWalletKeyPair, lockBox]
-
-        const txResult = await sendAndConfirmTx(connection, signers, ixs)
-        console.log(`initOFT transaction hash: ${txResult.hash}`)
-
-        await setAuthority(umi, {
-            owned: token.publicKey,
-            owner: umiWalletSigner,
-            newAuthority: fromWeb3JsPublicKey(multiSigKey),
-            authorityType: 0,
-        }).sendAndConfirm(umi, { confirm: { commitment: 'confirmed' } })
-
-        await setAuthority(umi, {
-            owned: token.publicKey,
-            owner: umiWalletSigner,
-            newAuthority: fromWeb3JsPublicKey(multiSigKey),
-            authorityType: 1,
-        }).sendAndConfirm(umi, { confirm: { commitment: 'confirmed' } })
-
-        const outputDir = `./deployments/${endpointIdToNetwork(taskArgs.eid)}`
-        if (!existsSync(outputDir)) {
-            mkdirSync(outputDir, { recursive: true })
-        }
-
-        // Write the JSON file to the specified directory
-        writeFileSync(
-            `${outputDir}/OFT.json`,
-            JSON.stringify(
-                {
-                    programId: taskArgs.programId,
-                    mint: mintPK,
-                    escrow: escrowPK,
-                    oftStore: oftStorePda,
-                },
-                null,
-                4
+            if (isMABA && amount) {
+                throw new Error('Mint-And-Burn-Adapter does not support minting tokens')
+            }
+            const tokenProgramId = publicKey(tokenProgramStr)
+            const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
+            const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
+            const mintAuthorityPublicKey = await createMintAuthorityMultisig(
+                connection,
+                toWeb3JsKeypair(umiWalletKeyPair),
+                toWeb3JsPublicKey(oftStorePda),
+                toWeb3JsPublicKey(tokenProgramId) // Only configurable for MABA
             )
-        )
-        console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
-    })
+            console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
+
+            const mint = isMABA
+                ? createNoopSigner(publicKey(mintStr))
+                : createSignerFromKeypair(umi, eddsa.generateKeypair())
+            const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
+            if (!isMABA) {
+                const createTokenTx = await createAndMint(umi, {
+                    mint,
+                    name,
+                    symbol,
+                    isMutable,
+                    decimals,
+                    uri,
+                    sellerFeeBasisPoints: percentAmount(sellerFeeBasisPoints),
+                    authority: umiWalletSigner, // authority is transferred later
+                    amount,
+                    tokenOwner: umiWalletSigner.publicKey,
+                    tokenStandard: TokenStandard.Fungible,
+                }).sendAndConfirm(umi)
+                console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
+            }
+
+            const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)
+            const { signature } = await transactionBuilder()
+                .add(
+                    oft.initOft(
+                        {
+                            payer: umiWalletSigner,
+                            admin: umiWalletKeyPair.publicKey,
+                            mint: mint.publicKey,
+                            escrow: lockboxSigner,
+                        },
+                        types.OFTType.Native,
+                        OFT_DECIMALS,
+                        {
+                            oft: programId,
+                            token: tokenProgramId,
+                        }
+                    )
+                )
+                .sendAndConfirm(umi)
+            console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
+
+            if (!isMABA) {
+                const { signature } = await transactionBuilder()
+                    .add(
+                        setAuthority(umi, {
+                            owned: mint.publicKey,
+                            owner: umiWalletSigner,
+                            newAuthority: fromWeb3JsPublicKey(mintAuthorityPublicKey),
+                            authorityType: 0,
+                        })
+                    )
+                    .add(
+                        setAuthority(umi, {
+                            owned: mint.publicKey,
+                            owner: umiWalletSigner,
+                            newAuthority: fromWeb3JsPublicKey(mintAuthorityPublicKey),
+                            authorityType: 1,
+                        })
+                    )
+                    .sendAndConfirm(umi)
+                console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
+            }
+            output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)
+        }
+    )
