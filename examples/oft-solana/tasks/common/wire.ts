@@ -26,6 +26,7 @@ interface Args {
     logLevel: LogLevel
     solanaProgramId: PublicKey
     solanaSecretKey?: Keypair
+    multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
 }
 
@@ -48,6 +49,7 @@ task(TASK_LZ_OAPP_WIRE)
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
+    .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
@@ -103,7 +105,7 @@ task(TASK_LZ_OAPP_WIRE)
         const sdkFactory = createSdkFactory(userAccount, programId, connectionFactory)
 
         // We'll also need a signer factory
-        const solanaSignerFactory = createSolanaSignerFactory(wallet, connectionFactory)
+        const solanaSignerFactory = createSolanaSignerFactory(wallet, connectionFactory, args.multisigKey)
 
         //
         //
