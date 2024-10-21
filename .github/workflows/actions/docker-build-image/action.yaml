@@ -24,6 +24,10 @@ inputs:
   password:
     description: "Docker registry password"
     required: true
+  digest-name:
+    description: "Unique name for the produced digests. Must be unique for a workflow run"
+    required: true
+    default: digest
   digest-path:
     description: "Output digests directory path, without a trailing slash"
     required: true
@@ -83,7 +87,7 @@ runs:
     - name: Upload digest
       uses: actions/upload-artifact@v4
       with:
-        name: digests-${{ env.PLATFORM_PAIR }}
+        name: ${{ inputs.digest-name }}-${{ env.PLATFORM_PAIR }}
         path: ${{ inputs.digest-path }}/*
         if-no-files-found: error
         retention-days: 1

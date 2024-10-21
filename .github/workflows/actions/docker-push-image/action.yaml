@@ -18,6 +18,10 @@ inputs:
   password:
     description: "Docker registry password"
     required: true
+  digest-name:
+    description: "Unique name for the produced digests. Must be unique for a workflow run"
+    required: true
+    default: digest
   digest-path:
     description: "Digests directory path, without a trailing slash"
     required: true
@@ -30,8 +34,12 @@ runs:
       uses: actions/download-artifact@v4
       with:
         path: ${{ inputs.digest-path }}
-        pattern: digests-*
+        pattern: ${{ inputs.digest-name }}-*
         merge-multiple: true
+
+    - name: FIXME Debug artifacts
+      shell: bash
+      run: ls -al ${{ inputs.digest-path }}/${{ inputs.digest-name }}
 
     - name: Log in to the Container registry
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
@@ -53,6 +61,13 @@ runs:
           type=ref,event=branch
           type=raw,value=latest,enable={{is_default_branch}}
           type=raw,value=${{ github.sha }}
+
+    - name: FIXME Debug docker
+      shell: bash
+      run: |
+        echo $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+        echo $(jq -cr '.annotations | map("--annotation " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+        echo $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}@sha256:%s ' *)
 
     - name: Create manifest list and push
       shell: bash

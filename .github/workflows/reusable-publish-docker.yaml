@@ -14,6 +14,9 @@ on:
   workflow_dispatch:
 
 jobs:
+  #
+  # Build the base image and push it as digests
+  #
   build-base:
     name: Build base image
     runs-on: ubuntu-latest-16xlarge
@@ -33,15 +36,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Push image digest
+      - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
         with:
+          # The name of the image
           image: devtools-dev-base
+          # The target stage of the Dockerfile
           target: base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: base
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+  #
+  # Build the EVM node image and push it as digests
+  #
   build-node-evm:
     name: Build EVM node image
     runs-on: ubuntu-latest-16xlarge
@@ -63,15 +74,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Push image digest
+      - name: Build image & push the digest
         uses: ./.github/workflows/actions/docker-build-image
         with:
+          # The name of the image
           image: devtools-dev-node-evm-hardhat
+          # The target stage of the Dockerfile
           target: node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-evm-hardhat
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+  #
+  # Collect the base image digests and push them to GHCR
+  #
   push-base:
     name: Push base image
     runs-on: ubuntu-latest-4xlarge
@@ -83,12 +102,21 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Push image
-        uses: ./.github/workflows/actions/merge-docker-image
+        uses: ./.github/workflows/actions/docker-push-image
         with:
+          # The name of the image
           image: devtools-dev-base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: base
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+  #
+  # Collect the EVM node image digests and push them to GHCR
+  #
   push-node-evm:
     name: Push EVM node image
     runs-on: ubuntu-latest-4xlarge
@@ -100,8 +128,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Push image
-        uses: ./.github/workflows/actions/merge-docker-image
+        uses: ./.github/workflows/actions/docker-push-image
         with:
+          # The name of the image
           image: devtools-dev-node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-evm-hardhat
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
