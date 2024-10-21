@@ -65,8 +65,8 @@ runs:
     - name: FIXME Debug docker
       shell: bash
       run: |
-        echo $(jq -cr '.tags | map("-t \"" + . + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-        echo $(jq -cr '.annotations | map("--annotation \"" + . + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+        echo $(jq -cr '.tags | map("-t \"" + . + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
+        echo $(jq -cr '.annotations | map("--annotation \"" + . + "\"") | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON")
         echo $(printf '${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}@sha256:%s ' *)
 
     - name: Create manifest list and push
