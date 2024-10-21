@@ -53,6 +53,9 @@ jobs:
   #
   # Build the EVM node image and push it as digests
   #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
   build-node-evm:
     name: Build EVM node image
     runs-on: ubuntu-latest-16xlarge
