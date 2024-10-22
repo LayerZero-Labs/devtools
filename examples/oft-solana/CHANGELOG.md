@@ -1,5 +1,16 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.2.0
+
+### Minor Changes
+
+- ccba37b: Bump for solana oftv2
+
+### Patch Changes
+
+- 019cd52: Bump for new Solana Implementation Version
+- 4ca5233: Enable squadsv4 CLI support
+
 ## 0.1.5
 
 ### Patch Changes
