@@ -13,11 +13,10 @@ on:
   workflow_call:
   workflow_dispatch:
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAMESPACE: ${{ github.repository_owner }}
-
 jobs:
+  #
+  # Build the base image and push it as digests
+  #
   build-base:
     name: Build base image
     runs-on: ubuntu-latest-16xlarge
@@ -26,59 +25,40 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
         with:
-          registry: ${{ env.REGISTRY }}
+          # The name of the image
+          image: devtools-dev-base
+          # The target stage of the Dockerfile
+          target: base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: base
+          platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
-        with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/devtools-dev-base
-          tags: |
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ github.sha }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push base image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
-        with:
-          provenance: false
-          context: .
-          # linux/arm64 platform build is timing out on github runners
-          # most probably due to memory limitations of the runner
-          #
-          # Since this platform is only used on local M1/2/3 machines
-          # and can be built locally, we'll disable the CI/CD build
-          # instead of going for much more complex distributed matrix build
-          #
-          # See more about how the build can be distributed here
-          # https://docs.docker.com/build/ci/github-actions/multi-platform/
-          platforms: linux/amd64
-          push: true
-          target: base
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            CARGO_BUILD_JOBS=2
-
+  #
+  # Build the EVM node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
   build-node-evm:
     name: Build EVM node image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-latest-16xlarge
     needs:
       - build-base
 
@@ -86,41 +66,79 @@ jobs:
       contents: read
       packages: write
 
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
         with:
-          registry: ${{ env.REGISTRY }}
+          # The name of the image
+          image: devtools-dev-node-evm-hardhat
+          # The target stage of the Dockerfile
+          target: node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-evm-hardhat
+          platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
-        with:
-          images: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/devtools-dev-node-evm-hardhat
-          tags: |
-            type=ref,event=branch
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=raw,value=${{ github.sha }}
+  #
+  # Collect the base image digests and push them to GHCR
+  #
+  push-base:
+    name: Push base image
+    runs-on: ubuntu-latest-4xlarge
+    needs:
+      - build-base
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Build and push EVM node image
-        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
         with:
-          provenance: false
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          target: node-evm-hardhat
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # The name of the image
+          image: devtools-dev-base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: base
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the EVM node image digests and push them to GHCR
+  #
+  push-node-evm:
+    name: Push EVM node image
+    runs-on: ubuntu-latest-4xlarge
+    needs:
+      - build-node-evm
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-evm-hardhat
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
