@@ -55,6 +55,8 @@ services:
         condition: service_healthy
       network-tango:
         condition: service_healthy
+      network-ton:
+        condition: service_healthy
     logging:
       driver: none
     # The default containerized setup will specify the network URLs
