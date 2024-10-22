@@ -111,8 +111,8 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~1.0.0
-        version: 1.0.0(@layerzerolabs/lz-evm-messagelib-v2@2.3.44)(@layerzerolabs/lz-evm-protocol-v2@2.3.44)(@layerzerolabs/lz-evm-v1-0.7@2.3.44)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)
+        specifier: ^2.0.0
+        version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
         version: link:../../packages/toolbox-foundry
@@ -5794,26 +5794,6 @@ packages:
       solhint: 4.1.1(typescript@5.5.3)
     transitivePeerDependencies:
       - typescript
-    dev: true
-
-  /@layerzerolabs/test-devtools-evm-foundry@1.0.0(@layerzerolabs/lz-evm-messagelib-v2@2.3.44)(@layerzerolabs/lz-evm-protocol-v2@2.3.44)(@layerzerolabs/lz-evm-v1-0.7@2.3.44)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2):
-    resolution: {integrity: sha512-7TwAz1G7lGf7NXHzg9rVJgRkXd5MIvBdBv55LnFnlC6JrMpZPXVK8L8C70/apuEtba1RE2nUbMLOzS5vrOLudA==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^2.3.3
-      '@layerzerolabs/lz-evm-protocol-v2': ^2.3.3
-      '@layerzerolabs/lz-evm-v1-0.7': ^2.3.3
-      '@layerzerolabs/oapp-evm': ^0.0.4
-      '@layerzerolabs/oft-evm': ^0.1.0
-      '@openzeppelin/contracts': ^4.9.5 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.9.5 || ^5.0.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 2.3.44(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.44)(@layerzerolabs/lz-evm-v1-0.7@2.3.44)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 2.3.44(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 2.3.44(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
-      '@layerzerolabs/oapp-evm': link:packages/oapp-evm
-      '@layerzerolabs/oft-evm': link:packages/oft-evm
-      '@openzeppelin/contracts': 5.0.2
-      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
     dev: true
 
   /@manypkg/find-root@1.1.0:
