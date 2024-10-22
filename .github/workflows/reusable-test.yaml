@@ -88,8 +88,8 @@ jobs:
           DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
-          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET }}
-          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET }}
+          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
+          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
