@@ -32,6 +32,12 @@ ARG BASE_IMAGE=base
 # while not breaking the flow for local development
 ARG EVM_NODE_IMAGE=node-evm-hardhat
 
+# We will provide a way for consumers to override the default TON node image
+# 
+# This will allow CI environments to supply the prebuilt TON node image
+# while not breaking the flow for local development
+ARG TON_NODE_IMAGE=node-ton-my-local-ton
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -62,7 +68,9 @@ RUN apt-get install --yes \
     # Utilities required to build solana
     pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
     # Utilities required to build aptos CLI
-    libssl-dev libdw-dev lld
+    libssl-dev libdw-dev lld \
+    # Required for TON to run
+    libatomic1 libssl-dev
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
@@ -188,6 +196,35 @@ RUN solana --version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
+#          Image that builds TON developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine as ton
+
+WORKDIR /app/ton
+
+RUN apt-get install -y \
+    curl \
+    unzip
+
+RUN <<-EOF
+    case "$(uname -m)" in
+        aarch64) TON_ARCH="arm64" ;;
+        x86_64) TON_ARCH="x86_64" ;;
+        *) exit 1 ;;
+    esac
+
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-${TON_ARCH}.zip > ton.zip
+    unzip -qq -d bin ton
+    chmod a+x bin/*
+EOF
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
 #          Image that builds EVM developer tooling
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -233,7 +270,8 @@ WORKDIR /app
 # We'll add an empty NPM_TOKEN to suppress any warnings
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
-ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$PATH"
+ENV TON_PATH="/root/.ton/bin"
+ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$PATH"
 
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
@@ -243,6 +281,9 @@ COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
 COPY --from=solana /root/.solana/bin /root/.solana/bin
+
+# Get TON tooling
+COPY --from=ton /app/ton/bin /root/.ton/bin
 
 # Get EVM tooling
 COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
@@ -268,6 +309,7 @@ RUN chisel --version
 RUN cast --version
 RUN solc --version
 RUN solana --version
+RUN func -V
 RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -365,6 +407,78 @@ ENTRYPOINT pnpm start
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM $EVM_NODE_IMAGE AS node-evm
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that builds a MyLocalTON TON node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM ubuntu:24.04 AS node-ton-my-local-ton
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Update system packages
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --yes \
+    curl \
+    # Java
+    openjdk-17-jdk \
+    # Python
+    python3-pip \
+    # Build tools
+    # 
+    # gcc-13 and gcc-13-aarch64-linux-gnu are required for the arm64 platform
+    # since without them glibc version incompatibility will prevent ton-http-api from running
+    gcc-13 gcc-13-aarch64-linux-gnu libc6 libc6-dev \
+    # TON complains about not having this
+    lsb-release tzdata
+
+
+# Install Ton HTTP API
+# 
+# Ubuntu 24 introduced a preventive measure that prevents installation of
+# system wide pip packages. Unfortunately no workarounds (apt-get install python3-ton-http-api; pipx install ton-http-api)
+# seem to be working in this case so we'll just add --break-system-packages and hope for the best
+RUN pip install --user --break-system-packages ton-http-api
+
+# Download MyLocalTon
+# 
+# The TON jars are separated by architecture, currently there is the x86-64 one and the arm64 one
+# but unfortunately the release URLs don't match the output from uname so we need to do a bit of plumbing
+# 
+# TODO We might need to use the testnet version (not sure whether the mainnet one allows us to fund accounts)
+RUN <<-EOF
+    case "$(uname -m)" in
+        aarch64) TON_ARCH="arm64" ;;
+        x86_64) TON_ARCH="x86-64" ;;
+        *) exit 1 ;;
+    esac
+
+    curl -sLf https://github.com/neodix42/MyLocalTon/releases/download/v120/MyLocalTon-${TON_ARCH}.jar --output MyLocalTon.jar
+EOF
+
+# We want to keep the internals of the EVM node images encapsulated so we supply the healthcheckk as a part of the definition
+HEALTHCHECK --start-period=30s --interval=5s --retries=30 CMD curl -sSf http://127.0.0.1:8081
+
+# Run the shit
+ENTRYPOINT ["java", "-jar", "MyLocalTon.jar", "nogui", "ton-http-api"]
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that runs a TON node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM $TON_NODE_IMAGE AS node-ton
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
