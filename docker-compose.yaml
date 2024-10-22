@@ -11,7 +11,7 @@
 services:
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
-  #        Network nodes, one for every hardhat network
+  #       EVM Network nodes, one for every hardhat network
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
   network-vengaboys:
@@ -28,6 +28,16 @@ services:
     extends:
       file: docker-compose.templates.yaml
       service: evm-node
+
+  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
+  #
+  #                       The TON local node
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  network-ton:
+    extends:
+      file: docker-compose.templates.yaml
+      service: ton-node
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -60,6 +70,7 @@ services:
       - NETWORK_URL_BRITNEY=http://network-britney:8545
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
       - NETWORK_URL_TANGO=http://network-tango:8545
+      - NETWORK_URL_TON=http://network-ton:8081/jsonRPC
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
       # Passing environment variables that control the solana tests
       - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
