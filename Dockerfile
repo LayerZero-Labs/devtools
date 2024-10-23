@@ -283,13 +283,13 @@ ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$
 # COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
-COPY --from=ton /app/ton/bin /root/.ton/bin
+# COPY --from=ton /app/ton/bin /root/.ton/bin
 
 # Get EVM tooling
-COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
-COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
-COPY --from=evm /root/.foundry /root/.foundry
-COPY --from=evm /root/.svm /root/.svm
+# COPY --from=evm /root/.cargo/bin/solc /root/.cargo/bin/solc
+# COPY --from=evm /root/.cargo/bin/svm /root/.cargo/bin/svm
+# COPY --from=evm /root/.foundry /root/.foundry
+# COPY --from=evm /root/.svm /root/.svm
 
 # Enable corepack, new node package manager manager
 # 
@@ -303,13 +303,13 @@ RUN git --version
 # RUN anchor --version
 # RUN avm --version
 # RUN aptos --version
-RUN forge --version
-RUN anvil --version
-RUN chisel --version
-RUN cast --version
-RUN solc --version
+# RUN forge --version
+# RUN anvil --version
+# RUN chisel --version
+# RUN cast --version
+# RUN solc --version
 # RUN solana --version
-RUN func -V
+# RUN func -V
 RUN docker compose version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
