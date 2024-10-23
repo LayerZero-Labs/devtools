@@ -73,12 +73,12 @@ runs:
         labels: ${{ steps.meta.outputs.labels }}
         annotations: ${{ steps.meta.outputs.annotations }}
         cache-from: |
-          type=gha,scope=build-${{ inputs.digest-name }}-${{ env.PLATFORM_PAIR }}
+          type=gha,scope=build-${{ env.PLATFORM_PAIR }}
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:${{ github.ref_name }}
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:docker-cache
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:main
         cache-to: |
-          type=gha,mode=max,scope=build-${{ inputs.digest-name }}-${{ env.PLATFORM_PAIR }}
+          type=gha,mode=max,scope=build-${{ env.PLATFORM_PAIR }}
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:${{ github.ref_name }}
         build-args: |
           CARGO_BUILD_JOBS=4
