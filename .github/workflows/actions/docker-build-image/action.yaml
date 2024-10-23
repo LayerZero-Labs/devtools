@@ -74,12 +74,12 @@ runs:
         annotations: ${{ steps.meta.outputs.annotations }}
         cache-from: |
           type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:${{ github.ref_name }}
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:docker-cache
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:main
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ github.ref_name }}-${{ env.PLATFORM_PAIR }}
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-docker-cache-${{ env.PLATFORM_PAIR }}
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-main-${{ env.PLATFORM_PAIR }}
         cache-to: |
           type=gha,mode=max,scope=build-${{ env.PLATFORM_PAIR }}
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:${{ github.ref_name }}
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ github.ref_name }}-${{ env.PLATFORM_PAIR }}
         build-args: |
           CARGO_BUILD_JOBS=4
 
