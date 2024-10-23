@@ -85,6 +85,7 @@ abstract contract OFTAdapterUpgradeable is OFTCoreUpgradeable {
 
     /**
      * @dev Burns tokens from the sender's specified balance, ie. pull method.
+     * @param _from The address to debit from.
      * @param _amountLD The amount of tokens to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
      * @param _dstEid The destination chain ID.
@@ -97,13 +98,14 @@ abstract contract OFTAdapterUpgradeable is OFTCoreUpgradeable {
      * a pre/post balance check will need to be done to calculate the amountReceivedLD.
      */
     function _debit(
+        address _from,
         uint256 _amountLD,
         uint256 _minAmountLD,
         uint32 _dstEid
     ) internal virtual override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
         // @dev Lock tokens by moving them into this contract from the caller.
-        innerToken.safeTransferFrom(msg.sender, address(this), amountSentLD);
+        innerToken.safeTransferFrom(_from, address(this), amountSentLD);
     }
 
     /**

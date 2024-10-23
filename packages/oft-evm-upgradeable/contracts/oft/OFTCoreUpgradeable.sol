@@ -202,6 +202,7 @@ abstract contract OFTCoreUpgradeable is
         // - amountSentLD is the amount in local decimals that was ACTUALLY sent/debited from the sender.
         // - amountReceivedLD is the amount in local decimals that will be received/credited to the recipient on the remote OFT instance.
         (uint256 amountSentLD, uint256 amountReceivedLD) = _debit(
+            msg.sender,
             _sendParam.amountLD,
             _sendParam.minAmountLD,
             _sendParam.dstEid
@@ -388,6 +389,7 @@ abstract contract OFTCoreUpgradeable is
 
     /**
      * @dev Internal function to perform a debit operation.
+     * @param _from The address to debit from.
      * @param _amountLD The amount to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
      * @param _dstEid The destination endpoint ID.
@@ -398,6 +400,7 @@ abstract contract OFTCoreUpgradeable is
      * @dev Depending on OFT implementation the _amountLD could differ from the amountReceivedLD.
      */
     function _debit(
+        address _from,
         uint256 _amountLD,
         uint256 _minAmountLD,
         uint32 _dstEid

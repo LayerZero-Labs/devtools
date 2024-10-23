@@ -69,6 +69,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
 
     /**
      * @dev Burns tokens from the sender's specified balance.
+     * @param _from The address to debit the tokens from.
      * @param _amountLD The amount of tokens to send in local decimals.
      * @param _minAmountLD The minimum amount to send in local decimals.
      * @param _dstEid The destination chain ID.
@@ -76,6 +77,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
      * @return amountReceivedLD The amount received in local decimals on the remote.
      */
     function _debit(
+        address _from,
         uint256 _amountLD,
         uint256 _minAmountLD,
         uint32 _dstEid
@@ -86,7 +88,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
         // therefore amountSentLD CAN differ from amountReceivedLD.
 
         // @dev Default OFT burns on src.
-        _burn(msg.sender, amountSentLD);
+        _burn(_from, amountSentLD);
     }
 
     /**
