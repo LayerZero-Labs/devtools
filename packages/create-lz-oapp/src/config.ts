@@ -50,6 +50,12 @@ export const EXAMPLES: Example[] = [
         label: 'NativeOFTAdapter',
         repository,
         directory: 'examples/native-oft-adapter',
+    },
+    {
+        id: 'oft-upgradeable',
+        label: 'Upgradeable OFT',
+        repository,
+        directory: 'examples/oft-upgradeable',
         ref,
     },
     // The Solana OFT example is feature flagged for the time being
