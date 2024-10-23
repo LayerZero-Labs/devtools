@@ -40,7 +40,10 @@ runs:
       shell: bash
       run: |
         platform=${{ inputs.platform }}
+        ref=${{ github.ref_name }}
+
         echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+        echo "REF_NAME=${ref//[^a-zA-Z0-9_-]/-}" >> $GITHUB_ENV
 
     - name: Log in to the Container registry
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d
@@ -74,12 +77,12 @@ runs:
         annotations: ${{ steps.meta.outputs.annotations }}
         cache-from: |
           type=gha,scope=build-${{ env.PLATFORM_PAIR }}
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ github.ref_name }}-${{ env.PLATFORM_PAIR }}
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ env.REF_NAME }}-${{ env.PLATFORM_PAIR }}
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-docker-cache-${{ env.PLATFORM_PAIR }}
           type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-main-${{ env.PLATFORM_PAIR }}
         cache-to: |
           type=gha,mode=max,scope=build-${{ env.PLATFORM_PAIR }}
-          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ github.ref_name }}-${{ env.PLATFORM_PAIR }}
+          type=registry,ref=${{ inputs.registry }}/${{ inputs.namespace }}/${{ inputs.image }}:cache-${{ env.REF_NAME }}-${{ env.PLATFORM_PAIR }}
         build-args: |
           CARGO_BUILD_JOBS=4
 
