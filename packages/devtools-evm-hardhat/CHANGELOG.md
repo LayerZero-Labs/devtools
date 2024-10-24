@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 1.2.3
+
+### Patch Changes
+
+- 35b7cfa: Fix an issue with outdated hardhat deploy cache
+- Updated dependencies [4d94521]
+  - @layerzerolabs/export-deployments@0.0.12
+
 ## 1.2.2
 
 ### Patch Changes

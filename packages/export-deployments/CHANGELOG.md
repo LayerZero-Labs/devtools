@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.12
+
+### Patch Changes
+
+- 4d94521: Add an `--exclude-files` CLI option to export-deployments
+
 ## 0.0.11
 
 ### Patch Changes

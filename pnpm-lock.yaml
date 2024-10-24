@@ -1245,7 +1245,7 @@ importers:
   packages/devtools-evm-hardhat:
     dependencies:
       '@layerzerolabs/export-deployments':
-        specifier: ~0.0.11
+        specifier: ~0.0.12
         version: link:../export-deployments
       '@safe-global/protocol-kit':
         specifier: ^1.3.0
@@ -2939,7 +2939,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/export-deployments':
-        specifier: ~0.0.11
+        specifier: ~0.0.12
         version: link:../../packages/export-deployments
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12
