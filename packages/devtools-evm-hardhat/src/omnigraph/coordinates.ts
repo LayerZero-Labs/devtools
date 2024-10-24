@@ -81,7 +81,7 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
                     // Hardhat deploy does not call its setup function when we call getDeploymentsFromAddress
                     // so we need to force it to do so
                     //
-                    // Since thee setup function is not available on the deployments extension, we need to trigger it indirectly
+                    // Since the setup function is not available on the deployments extension, we need to trigger it indirectly
                     await env.deployments.all()
 
                     return await env.deployments.getDeploymentsFromAddress(address)

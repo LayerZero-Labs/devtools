@@ -6,6 +6,7 @@ import {
     logLevelOption,
     networksOption,
     outputPathOption,
+    skipDeploymentFilesOption,
 } from '@/cli/options'
 import { COLORS, SUCCESS_SYMBOL } from '@/common/logger'
 import { createIncludeDirent, generateSafe } from '@/index'
@@ -29,11 +30,13 @@ new Command('export-deployments')
     .addOption(logLevelOption)
     .addOption(networksOption)
     .addOption(deploymentFilesOption)
+    .addOption(skipDeploymentFilesOption)
     .addOption(generatorOption)
     .action(
         async (args: {
             deployments: string
             files?: string[]
+            exclude?: string[]
             networks?: string[]
             logLevel: LogLevel
             outDir: string
@@ -47,7 +50,7 @@ new Command('export-deployments')
                 generateSafe({
                     deploymentsDir: args.deployments,
                     outDir: args.outDir,
-                    includeDeploymentFile: createIncludeDirent(args.files),
+                    includeDeploymentFile: createIncludeDirent(args.files, args.exclude),
                     includeNetworkDir: createIncludeDirent(args.networks),
                     generator: args.generator,
                 }),

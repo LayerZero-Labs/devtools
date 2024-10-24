@@ -23,7 +23,12 @@ export const contractNamesOption = new Option(
 
 export const deploymentFilesOption = new Option(
     '-f,--files <deployment file name>',
-    'Comma-separated list of case-sensitive deployment file names to verify'
+    'Comma-separated list of case-sensitive deployment file names to include in the export'
+).argParser((value: string) => value.trim().split(/\s*,\s*/))
+
+export const skipDeploymentFilesOption = new Option(
+    '--exclude-files <deployment file name>',
+    'Comma-separated list of case-sensitive deployment file names to exclude from the export'
 ).argParser((value: string) => value.trim().split(/\s*,\s*/))
 
 export const generatorOption = new Option('-g,--generator <generator type>', 'Type of generator to use')
