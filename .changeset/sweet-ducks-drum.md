@@ -3,4 +3,4 @@
 "@layerzerolabs/export-deployments": patch
 ---
 
-Add an exclude CLI option to export-deployments
+Add an `--exclude-files` CLI option to export-deployments
