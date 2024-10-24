@@ -63,15 +63,29 @@ export const createContractFactory = (environmentFactory = createGetHreByEid()):
             // with complete and partial ABIs
             //
             // To handle this case we'll merge the ABIs to make sure we have all the methods available
-            const deployments = await env.deployments.getDeploymentsFromAddress(address).catch(async () => {
-                // Hardhat deploy does not call its setup function when we call getDeploymentsFromAddress
-                // so we need to force it to do so
-                //
-                // Since thee setup function is not available on the deployments extension, we need to trigger it indirectly
-                await env.deployments.all()
+            const deployments = await env.deployments
+                .getDeploymentsFromAddress(address)
+                .then(
+                    (deployments) =>
+                        (
+                            // We want to handle a case in which no deployments are returned
+                            // because the store has been cleared
+                            assert(
+                                deployments.length > 0,
+                                `Could not find a deployment for address '${address}' on ${networkLabel}`
+                            ),
+                            deployments
+                        )
+                )
+                .catch(async () => {
+                    // Hardhat deploy does not call its setup function when we call getDeploymentsFromAddress
+                    // so we need to force it to do so
+                    //
+                    // Since thee setup function is not available on the deployments extension, we need to trigger it indirectly
+                    await env.deployments.all()
 
-                return await env.deployments.getDeploymentsFromAddress(address)
-            })
+                    return await env.deployments.getDeploymentsFromAddress(address)
+                })
             assert(deployments.length > 0, `Could not find a deployment for address '${address}' on ${networkLabel}`)
 
             const mergedAbis = deployments.flatMap((deployment) => deployment.abi)
