@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/export-deployments",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Export hardhat deploy deployments file into typescript",
   "repository": {
     "type": "git",

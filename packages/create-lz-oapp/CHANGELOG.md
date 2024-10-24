@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.2.1
+
+### Patch Changes
+
+- ce122b0: Integrated NativeOFTAdapter example and added to cli
+
 ## 0.2.0
 
 ### Minor Changes
