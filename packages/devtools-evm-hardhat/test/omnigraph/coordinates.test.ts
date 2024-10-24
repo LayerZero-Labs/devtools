@@ -10,9 +10,11 @@ import { makeZeroAddress } from '@layerzerolabs/devtools-evm'
 import { createGetHreByEid } from '@/runtime'
 import { Artifact } from 'hardhat/types'
 
-jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
-
 describe('omnigraph/coordinates', () => {
+    beforeEach(() => {
+        jest.spyOn(DeploymentsManager.prototype, 'getChainId').mockResolvedValue('1')
+    })
+
     afterEach(() => {
         jest.restoreAllMocks()
     })
