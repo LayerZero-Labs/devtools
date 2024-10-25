@@ -177,7 +177,16 @@ teardown() {
 
     LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
-    pnpm compile
+    # 
+    # Solana is not great when it comes to single machine parallelism
+    # and provides no way of overriding the cache directory.
+    # 
+    # See https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/cargo-build-sbf/src/main.rs#L225
+    # 
+    # In order to avoid flaky tests with multiple solana builds running in parallel,
+    # we need to flock the cache for the duration of the build
+    # 
+    flock ~/.cache/solana pnpm compile
     pnpm test
 }
 
@@ -241,7 +250,16 @@ teardown() {
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
-    yarn compile
+    # 
+    # Solana is not great when it comes to single machine parallelism
+    # and provides no way of overriding the cache directory.
+    # 
+    # See https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/cargo-build-sbf/src/main.rs#L225
+    # 
+    # In order to avoid flaky tests with multiple solana builds running in parallel,
+    # we need to flock the cache for the duration of the build
+    # 
+    flock ~/.cache/solana yarn compile
     yarn test
 }
 
@@ -305,6 +323,15 @@ teardown() {
 
     LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
-    npm run compile
+    # 
+    # Solana is not great when it comes to single machine parallelism
+    # and provides no way of overriding the cache directory.
+    # 
+    # See https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/cargo-build-sbf/src/main.rs#L225
+    # 
+    # In order to avoid flaky tests with multiple solana builds running in parallel,
+    # we need to flock the cache for the duration of the build
+    # 
+    flock ~/.cache/solana npm run compile
     npm run test
 }
