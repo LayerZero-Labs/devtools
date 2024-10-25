@@ -6,7 +6,7 @@ import {
     logLevelOption,
     networksOption,
     outputPathOption,
-    skipDeploymentFilesOption,
+    excludeDeploymentFilesOption,
 } from '@/cli/options'
 import { COLORS, SUCCESS_SYMBOL } from '@/common/logger'
 import { createIncludeDirent, generateSafe } from '@/index'
@@ -30,13 +30,13 @@ new Command('export-deployments')
     .addOption(logLevelOption)
     .addOption(networksOption)
     .addOption(deploymentFilesOption)
-    .addOption(skipDeploymentFilesOption)
+    .addOption(excludeDeploymentFilesOption)
     .addOption(generatorOption)
     .action(
         async (args: {
             deployments: string
             files?: string[]
-            exclude?: string[]
+            excludeFiles?: string[]
             networks?: string[]
             logLevel: LogLevel
             outDir: string
