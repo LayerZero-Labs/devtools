@@ -15,21 +15,33 @@ import {
     SyntaxKind,
     createPrinter,
     ListFormat,
+    Identifier,
+    TypeNode,
 } from 'typescript'
 import { stringify } from 'fp-ts/lib/Json'
 import { Ord } from 'fp-ts/lib/string'
 
 export const createConst =
     (modifiers: ModifierLike[] = []) =>
-    (name: string | BindingName) =>
+    (name: string | BindingName, type?: TypeNode) =>
     (expression: Expression) =>
         factory.createVariableStatement(
             modifiers,
             factory.createVariableDeclarationList(
-                [factory.createVariableDeclaration(name, undefined, undefined, expression)],
+                [factory.createVariableDeclaration(name, undefined, type, expression)],
                 NodeFlags.Const
             )
         )
+
+export const createTypeOf = factory.createTypeQueryNode
+
+export const createTypeReferenceNode = factory.createTypeReferenceNode
+
+export const createTypeDeclaration =
+    (modifiers: ModifierLike[] = []) =>
+    (name: Identifier) =>
+    (type: TypeNode) =>
+        factory.createTypeAliasDeclaration(modifiers, name, undefined, type)
 
 /**
  * Wraps an expression with "as const"
@@ -38,10 +50,7 @@ export const createConst =
  * @returns {Expression}
  */
 export const creteAsConst = (expression: Expression): Expression =>
-    factory.createAsExpression(
-        expression,
-        factory.createTypeReferenceNode(factory.createIdentifier('const'), undefined)
-    )
+    factory.createAsExpression(expression, createTypeReferenceNode(createIdentifier('const'), undefined))
 
 export const createIdentifier = factory.createIdentifier
 
@@ -68,6 +77,18 @@ export const recordToObjectLiteral = flow(
         factory.createPropertyAssignment(factory.createStringLiteral(key), value)
     ),
     (properties) => factory.createObjectLiteralExpression(properties, true)
+)
+
+export const recordToRecordType = flow(
+    R.collect(Ord)((key: string, value: Identifier) =>
+        factory.createPropertySignature(
+            undefined,
+            factory.createStringLiteral(key),
+            undefined,
+            createTypeReferenceNode(value)
+        )
+    ),
+    (properties) => factory.createTypeLiteralNode(properties)
 )
 
 /**
