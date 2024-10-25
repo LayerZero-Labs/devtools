@@ -26,7 +26,7 @@ export const deploymentFilesOption = new Option(
     'Comma-separated list of case-sensitive deployment file names to include in the export'
 ).argParser((value: string) => value.trim().split(/\s*,\s*/))
 
-export const skipDeploymentFilesOption = new Option(
+export const excludeDeploymentFilesOption = new Option(
     '--exclude-files <deployment file name>',
     'Comma-separated list of case-sensitive deployment file names to exclude from the export'
 ).argParser((value: string) => value.trim().split(/\s*,\s*/))

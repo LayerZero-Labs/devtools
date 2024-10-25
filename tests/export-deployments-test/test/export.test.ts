@@ -28,6 +28,12 @@ describe(`export`, () => {
             expect(isDirectory('../generated')).toBeFalse()
         })
 
+        it('should not export excluded contracts', async () => {
+            const result = runExpect('export-exclude')
+
+            expect(result.status).toBe(0)
+        })
+
         it('should export all contracts', async () => {
             const result = runExpect('export-all')
 

@@ -35,5 +35,6 @@ expect eof
 
 # And export the deployments, excluding the Test deployment
 spawn npx --yes @layerzerolabs/export-deployments --exclude-files Test
-expect "No files generated, exiting"
+# The CLI now generates an index & contracts file even if there were no contractes passed in
+expect "Generated 2 files:"
 expect eof
