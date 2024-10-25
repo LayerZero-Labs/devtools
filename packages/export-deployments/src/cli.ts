@@ -50,7 +50,7 @@ new Command('export-deployments')
                 generateSafe({
                     deploymentsDir: args.deployments,
                     outDir: args.outDir,
-                    includeDeploymentFile: createIncludeDirent(args.files, args.exclude),
+                    includeDeploymentFile: createIncludeDirent(args.files, args.excludeFiles),
                     includeNetworkDir: createIncludeDirent(args.networks),
                     generator: args.generator,
                 }),
