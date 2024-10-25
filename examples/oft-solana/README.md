@@ -158,3 +158,38 @@ Error: Failed to build program
 ```
 
 Note: The error occurs after attempting to update crates.io index.
+
+### When sending tokens from Solana `The value of "offset" is out of range. It must be >= 0 and <= 32. Received 41`
+
+If you receive this error, it may be caused by an improperly configured executor address in your `layerzero.config.ts`
+configuration file. The value for this address is not the programId from listed as `LZ Executor` in the
+[deployed endpoints page](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts).
+Instead, this address is the Executor Config PDA. It can be derived using the following:
+
+```typescript
+const executorProgramId = "6doghB248px58JSSwG4qejQ46kFMW4AMj7vzJnWZHNZn";
+console.log(new ExecutorPDADeriver("executorProgramId").config());
+```
+
+The result is:
+
+```text
+AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK
+```
+
+The full error message looks similar to below:
+
+```text
+RangeError [ERR_OUT_OF_RANGE]: The value of "offset" is out of range. It must be >= 0 and <= 32. Received 41
+    at new NodeError (node:internal/errors:405:5)
+    at boundsError (node:internal/buffer:88:9)
+    at Buffer.readUInt32LE (node:internal/buffer:222:5)
+    at Object.read (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/beets/numbers.ts:51:16)
+    at Object.toFixedFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/beets/collections.ts:142:23)
+    at fixBeetFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/beet.fixable.ts:23:17)
+    at FixableBeetArgsStruct.toFixedFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:85:40)
+    at fixBeetFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/beet.fixable.ts:23:17)
+    at FixableBeetStruct.toFixedFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:85:40)
+    at FixableBeetStruct.deserialize (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:59:17) {
+  code: 'ERR_OUT_OF_RANGE'
+```
