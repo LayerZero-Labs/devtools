@@ -144,7 +144,7 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN cargo install --git https://github.com/coral-xyz/anchor avm
 
 # Install anchor
-ARG ANCHOR_VERSION=0.30.1
+ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
 RUN avm use ${ANCHOR_VERSION}
 
