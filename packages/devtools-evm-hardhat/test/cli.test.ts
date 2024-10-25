@@ -54,7 +54,9 @@ describe('cli', () => {
         it('should not parse invalid strings', () => {
             fc.assert(
                 fc.property(fc.string(), (eid) => {
+                    // We filter out the values that by any slim chance could be valid endpoint IDs
                     fc.pre(EndpointId[eid] == null)
+                    fc.pre(EndpointId[parseInt(eid)] == null)
 
                     expect(() => types.eid.parse('eid', eid)).toThrow()
                 })
