@@ -1,0 +1,132 @@
+{
+  "abi": [
+    {
+      "type": "error",
+      "name": "InvalidOptionType",
+      "inputs": [
+        { "name": "optionType", "type": "uint16", "internalType": "uint16" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidSize",
+      "inputs": [
+        { "name": "max", "type": "uint256", "internalType": "uint256" },
+        { "name": "actual", "type": "uint256", "internalType": "uint256" }
+      ]
+    }
+  ],
+  "bytecode": {
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212209378e38f42010cc0113687ef454e6d9e9e5a50accb3e8232d6cd9e4f31caa93064736f6c63430008160033",
+    "sourceMap": "524:7881:10:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;524:7881:10;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212209378e38f42010cc0113687ef454e6d9e9e5a50accb3e8232d6cd9e4f31caa93064736f6c63430008160033",
+    "sourceMap": "524:7881:10:-:0;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"optionType\",\"type\":\"uint16\"}],\"name\":\"InvalidOptionType\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"actual\",\"type\":\"uint256\"}],\"name\":\"InvalidSize\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"Library for building and encoding various message options.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"OptionsBuilder\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/oapp/libs/OptionsBuilder.sol\":\"OptionsBuilder\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/oapp/libs/OptionsBuilder.sol\":{\"keccak256\":\"0x9ba881395fe0906e40d9222c318b8c74d45cc4035369db4a4c6c7d5de2c42378\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bae80a870a797838741f3fcffc57ae6216487ea0640a0f9707efd13a7830372f\",\"dweb:/ipfs/QmVHqnqVP9De8X2ZiDRAn6LXnoUD3Xm7PHWGYrRD1EuBEG\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol\":{\"keccak256\":\"0x2beee03cdf59a9bc72e94d08b69cb2e908725f4ceabb48651494938100e21e35\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://d88e121a39e74309f3575417df2318e2d2ee8bc8314e68dbf78544a9c393b141\",\"dweb:/ipfs/QmRojBRAyENK21HnjevAWeoZZxtWkYZubB9Y78vCJPYeU6\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol\":{\"keccak256\":\"0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d\",\"dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol\":{\"keccak256\":\"0xaad3c72ef43480d2253fd48b394e8fb7286d009991d2bc4e61be58ce48ac5ee9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b8c02b14f954416ba2148b389c87da8378ac8dd16ba3d458cbbfba8b0fd8639f\",\"dweb:/ipfs/Qmd2EEQhYL2VmgJi1V4uiHM2WcYxF9iBtxSgcFkbS21rQD\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol\":{\"keccak256\":\"0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2\",\"dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav\"]},\"node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/BytesLib.sol\":{\"keccak256\":\"0xa5b10f04797d5a10a9ba07855108b6bd695940e6a3d128927b2f74a0d359868a\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://a38d7680aacbb18dae659876b396b73bcc8f759672213f8a0efc4129e2648535\",\"dweb:/ipfs/QmfKFnwpTEGAnbRnZxMuv3mRCG9S9WMjFhFL23bftBT2Jq\"]},\"node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol\":{\"keccak256\":\"0xe19a4d5f31d2861e7344e8e535e2feafb913d806d3e2b5fe7782741a2a7094fe\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4aed79c0fa6f0546ed02f2f683e8f77f0fd2ed7eb34d8bbf3d373c9a6d95b13c\",\"dweb:/ipfs/QmWqVz6UAVqmnWU5pqYPt1o6iDEZyPaBraAA3rKfTTSfYj\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            { "internalType": "uint16", "name": "optionType", "type": "uint16" }
+          ],
+          "type": "error",
+          "name": "InvalidOptionType"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint256", "name": "max", "type": "uint256" },
+            { "internalType": "uint256", "name": "actual", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "InvalidSize"
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/oapp/libs/OptionsBuilder.sol": "OptionsBuilder"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/oapp/libs/OptionsBuilder.sol": {
+        "keccak256": "0x9ba881395fe0906e40d9222c318b8c74d45cc4035369db4a4c6c7d5de2c42378",
+        "urls": [
+          "bzz-raw://bae80a870a797838741f3fcffc57ae6216487ea0640a0f9707efd13a7830372f",
+          "dweb:/ipfs/QmVHqnqVP9De8X2ZiDRAn6LXnoUD3Xm7PHWGYrRD1EuBEG"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol": {
+        "keccak256": "0x2beee03cdf59a9bc72e94d08b69cb2e908725f4ceabb48651494938100e21e35",
+        "urls": [
+          "bzz-raw://d88e121a39e74309f3575417df2318e2d2ee8bc8314e68dbf78544a9c393b141",
+          "dweb:/ipfs/QmRojBRAyENK21HnjevAWeoZZxtWkYZubB9Y78vCJPYeU6"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol": {
+        "keccak256": "0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875",
+        "urls": [
+          "bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d",
+          "dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol": {
+        "keccak256": "0xaad3c72ef43480d2253fd48b394e8fb7286d009991d2bc4e61be58ce48ac5ee9",
+        "urls": [
+          "bzz-raw://b8c02b14f954416ba2148b389c87da8378ac8dd16ba3d458cbbfba8b0fd8639f",
+          "dweb:/ipfs/Qmd2EEQhYL2VmgJi1V4uiHM2WcYxF9iBtxSgcFkbS21rQD"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol": {
+        "keccak256": "0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28",
+        "urls": [
+          "bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2",
+          "dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/BytesLib.sol": {
+        "keccak256": "0xa5b10f04797d5a10a9ba07855108b6bd695940e6a3d128927b2f74a0d359868a",
+        "urls": [
+          "bzz-raw://a38d7680aacbb18dae659876b396b73bcc8f759672213f8a0efc4129e2648535",
+          "dweb:/ipfs/QmfKFnwpTEGAnbRnZxMuv3mRCG9S9WMjFhFL23bftBT2Jq"
+        ],
+        "license": "Unlicense"
+      },
+      "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
+        "keccak256": "0xe19a4d5f31d2861e7344e8e535e2feafb913d806d3e2b5fe7782741a2a7094fe",
+        "urls": [
+          "bzz-raw://4aed79c0fa6f0546ed02f2f683e8f77f0fd2ed7eb34d8bbf3d373c9a6d95b13c",
+          "dweb:/ipfs/QmWqVz6UAVqmnWU5pqYPt1o6iDEZyPaBraAA3rKfTTSfYj"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 10
+}
