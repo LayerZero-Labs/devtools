@@ -59,6 +59,8 @@
     "CI",
 
     "RPC_URL_SOLANA_MAINNET",
-    "RPC_URL_SOLANA_TESTNET"
+    "RPC_URL_SOLANA_TESTNET",
+
+    "NODE_ENV"
   ]
 }
