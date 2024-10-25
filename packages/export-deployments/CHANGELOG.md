@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.13
+
+### Patch Changes
+
+- 6daefb4: Fix a CLI option that has not been typed correctly
+
 ## 0.0.12
 
 ### Patch Changes
