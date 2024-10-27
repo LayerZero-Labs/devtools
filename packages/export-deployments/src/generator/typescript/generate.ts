@@ -11,10 +11,14 @@ import {
     createExportConst,
     createIdentifier,
     createStringLiteral,
+    createTypeDeclaration,
+    createTypeOf,
+    createTypeReferenceNode,
     creteAsConst,
     normalizeIdentifierName,
     printTSFile,
     recordToObjectLiteral,
+    recordToRecordType,
     runtimeObjectToExpressionSafe,
 } from './typescript'
 import { OutputFile } from '../types'
@@ -111,6 +115,8 @@ const contractsInformationSafe = flow(
  */
 const createAbiIdentifier = (index: number) => createIdentifier(`abi${index}`)
 
+const createAbiTypeIdentifier = (index: number) => createIdentifier(`Abi${index}`)
+
 /**
  * Converts GroupedContractInformation into a TypeScript file contents string.
  *
@@ -146,12 +152,30 @@ const transformGroupedContractInformation = ({ addresses, abis, transactionHashe
                 E.map((declarations) => [
                     // We'll return all the variable declarations
                     ...declarations,
+                    // Then we'll add their types
+                    ...pipe(
+                        declarations,
+                        A.mapWithIndex((index) =>
+                            pipe(
+                                createTypeDeclaration()(createAbiTypeIdentifier(index))(
+                                    createTypeOf(createAbiIdentifier(index))
+                                )
+                            )
+                        )
+                    ),
+                    // Then we'll add the type of the 'abis' object
+                    pipe(
+                        abiIndexesByNetworkName,
+                        R.map(createAbiTypeIdentifier),
+                        recordToRecordType,
+                        createTypeDeclaration()(createIdentifier('Abis'))
+                    ),
                     // And we'll add an object export to map network names to the ABIs
                     pipe(
                         abiIndexesByNetworkName,
                         R.map(createAbiIdentifier),
                         recordToObjectLiteral,
-                        createExportConst('abis')
+                        createExportConst('abis', createTypeReferenceNode('Abis'))
                     ),
                 ])
             ),

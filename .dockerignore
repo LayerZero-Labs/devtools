@@ -11,6 +11,9 @@ docker-*.yaml
 .github
 .husky
 .turbo
+.netrc
+.env
+.env*
 
 # Misc
 *ignore
