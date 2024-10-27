@@ -1,4 +1,10 @@
-import { TokenStandard, createAndMint } from '@metaplex-foundation/mpl-token-metadata'
+import {
+    CreateV1InstructionAccounts,
+    CreateV1InstructionArgs,
+    TokenStandard,
+    createV1,
+    mintV1,
+} from '@metaplex-foundation/mpl-token-metadata'
 import { setAuthority } from '@metaplex-foundation/mpl-toolbox'
 import {
     createNoopSigner,
@@ -139,19 +145,31 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 : createSignerFromKeypair(umi, eddsa.generateKeypair())
             const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
             if (!isMABA) {
-                const createTokenTx = await createAndMint(umi, {
+                const createV1Args: CreateV1InstructionAccounts & CreateV1InstructionArgs = {
                     mint,
                     name,
                     symbol,
-                    isMutable,
                     decimals,
                     uri,
+                    isMutable,
                     sellerFeeBasisPoints: percentAmount(sellerFeeBasisPoints),
                     authority: umiWalletSigner, // authority is transferred later
-                    amount,
-                    tokenOwner: umiWalletSigner.publicKey,
                     tokenStandard: TokenStandard.Fungible,
-                }).sendAndConfirm(umi)
+                }
+                const txBuilder = transactionBuilder().add(createV1(umi, createV1Args))
+                if (amount) {
+                    txBuilder.add(
+                        mintV1(umi, {
+                            ...createV1Args,
+                            mint: publicKey(createV1Args.mint),
+                            authority: umiWalletSigner,
+                            amount,
+                            tokenOwner: umiWalletSigner.publicKey,
+                            tokenStandard: TokenStandard.Fungible,
+                        })
+                    )
+                }
+                const createTokenTx = await txBuilder.sendAndConfirm(umi)
                 console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
             }
 
