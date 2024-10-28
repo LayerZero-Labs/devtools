@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.2.1
+
+### Patch Changes
+
+- ff5972b: Fix createOFT should allow 0 amount
+
 ## 0.2.0
 
 ### Minor Changes
