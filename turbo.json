@@ -37,6 +37,7 @@
     }
   },
   "globalDependencies": ["tsconfig.json"],
+  "globalEnv": ["NODE_ENV"],
   "globalPassThroughEnv": [
     "LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING",
     "LZ_DEVTOOLS_ENABLE_SOLANA_TESTS",
@@ -59,8 +60,6 @@
     "CI",
 
     "RPC_URL_SOLANA_MAINNET",
-    "RPC_URL_SOLANA_TESTNET",
-
-    "NODE_ENV"
+    "RPC_URL_SOLANA_TESTNET"
   ]
 }
