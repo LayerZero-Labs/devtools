@@ -5,10 +5,9 @@ pragma solidity ^0.8.0;
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { MyOAppAlt } from "./mocks/OAppAltMock.sol";
-import { TestHelperOz5 } from "/workspaces/devtools/packages/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
-import { MessagingParams, MessagingReceipt } from "/workspaces/devtools/examples/oapp/node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
-import { OptionsBuilder } from "/workspaces/devtools/examples/oapp/node_modules/@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
-
+import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { MessagingParams, MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
+import { OptionsBuilder } from "../contracts/libs/OptionsBuilder.sol";
 contract EndpointV2AltTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
