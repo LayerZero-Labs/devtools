@@ -103,8 +103,8 @@ contract TestHelperOz5 is Test, OptionsHelper {
         executorValueCap = _valueCap;
     }
 
-    function setUpEndpoints(uint8 _endpointNum) public {
-        createEndpoints(_endpointNum, LibraryType.UltraLightNode, new address[](_endpointNum));
+    function setUpEndpoints(uint8 _endpointNum, LibraryType _libraryType) public {
+        createEndpoints(_endpointNum, _libraryType, new address[](_endpointNum));
     }
     /**
      * @notice Sets up endpoints for testing.
