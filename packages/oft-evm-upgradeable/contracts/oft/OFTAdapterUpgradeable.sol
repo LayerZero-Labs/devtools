@@ -54,7 +54,7 @@ abstract contract OFTAdapterUpgradeable is OFTCoreUpgradeable {
      *
      * @dev In the case of OFTAdapter, address(this) and erc20 are NOT the same contract.
      */
-    function token() external view returns (address) {
+    function token() public view returns (address) {
         return address(innerToken);
     }
 

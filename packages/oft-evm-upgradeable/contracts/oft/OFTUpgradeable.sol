@@ -39,7 +39,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
      *
      * @dev In the case of OFT, address(this) and erc20 are the same contract.
      */
-    function token() external view returns (address) {
+    function token() public view returns (address) {
         return address(this);
     }
 
