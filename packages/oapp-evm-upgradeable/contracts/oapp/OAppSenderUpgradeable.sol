@@ -90,8 +90,8 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
         uint256 messageValue = _payNative(_fee.nativeFee);
         if (_fee.lzTokenFee > 0) _payLzToken(_fee.lzTokenFee);
 
-        // solhint-disable-next-line check-send-result
         return
+            // solhint-disable-next-line check-send-result
             endpoint.send{ value: messageValue }(
                 MessagingParams(_dstEid, _getPeerOrRevert(_dstEid), _message, _options, _fee.lzTokenFee > 0),
                 _refundAddress

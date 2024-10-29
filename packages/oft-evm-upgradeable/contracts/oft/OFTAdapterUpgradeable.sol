@@ -49,20 +49,6 @@ abstract contract OFTAdapterUpgradeable is OFTCoreUpgradeable {
     function __OFTAdapter_init_unchained() internal onlyInitializing {}
 
     /**
-     * @notice Retrieves interfaceID and the version of the OFT.
-     * @return interfaceId The interface ID.
-     * @return version The version.
-     *
-     * @dev interfaceId: This specific interface ID is '0x02e49c2c'.
-     * @dev version: Indicates a cross-chain compatible msg encoding with other OFTs.
-     * @dev If a new feature is added to the OFT cross-chain msg encoding, the version will be incremented.
-     * ie. localOFT version(x,1) CAN send messages to remoteOFT version(x,1)
-     */
-    function oftVersion() external pure virtual returns (bytes4 interfaceId, uint64 version) {
-        return (type(IOFT).interfaceId, 1);
-    }
-
-    /**
      * @dev Retrieves the address of the underlying ERC20 implementation.
      * @return The address of the adapted ERC-20 token.
      *
