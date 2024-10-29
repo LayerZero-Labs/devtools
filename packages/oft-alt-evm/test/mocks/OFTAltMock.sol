@@ -3,16 +3,16 @@ pragma solidity ^0.8.0;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { OFT } from "../../contracts/OFT.sol";
-import { SendParam } from "../../contracts/OFTCore.sol";
+import { OFTAlt } from "../../contracts/OFTAlt.sol";
+import { SendParam } from "../../contracts/OFTAltCore.sol";
 
-contract OFTMock is OFT {
+contract OFTAltMock is OFTAlt {
     constructor(
         string memory _name,
         string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) OFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
+    ) OFTAlt(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     function mint(address _to, uint256 _amount) public {
         _mint(_to, _amount);

@@ -2,7 +2,8 @@
 
 pragma solidity ^0.8.20;
 
-import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+// TODO: Change this import to @layerzerolabs/oapp-alt-evm once the package is published
+import { OAppAlt, Origin } from "/workspaces/devtools/packages/oapp-alt-evm/contracts/oapp/OAppAlt.sol";
 import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { IOAppMsgInspector } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol";
 
@@ -16,7 +17,7 @@ import { OFTComposeMsgCodec } from "./libs/OFTComposeMsgCodec.sol";
  * @title OFTCore
  * @dev Abstract contract for the OftChain (OFT) token.
  */
-abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3 {
+abstract contract OFTAltCore is IOFT, OAppAlt, OAppPreCrimeSimulator, OAppOptionsType3 {
     using OFTMsgCodec for bytes;
     using OFTMsgCodec for bytes32;
 
@@ -51,7 +52,7 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
      * @param _endpoint The address of the LayerZero endpoint.
      * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
      */
-    constructor(uint8 _localDecimals, address _endpoint, address _delegate) OApp(_endpoint, _delegate) {
+    constructor(uint8 _localDecimals, address _endpoint, address _delegate) OAppAlt(_endpoint, _delegate) {
         if (_localDecimals < sharedDecimals()) revert InvalidLocalDecimals();
         decimalConversionRate = 10 ** (_localDecimals - sharedDecimals());
     }

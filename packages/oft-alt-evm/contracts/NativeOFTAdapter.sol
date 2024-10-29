@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.22;
 
-import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "./OFTCore.sol";
+import { MessagingFee, MessagingReceipt, OFTAltCore, OFTReceipt, SendParam } from "./OFTAltCore.sol";
 
 /**
  *
@@ -13,8 +13,7 @@ import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "
  * unless you make a NON-default implementation of OFT, which needs to be done very carefully.
  * @dev WARNING: The default NativeOFTAdapter implementation assumes LOSSLESS transfers, ie. 1 native in, 1 native out.
  */
-abstract contract NativeOFTAdapter is OFTCore {
-
+abstract contract NativeOFTAdapter is OFTAltCore {
     error IncorrectMessageValue(uint256 provided, uint256 required);
     error CreditFailed(address to, uint256 amountLD, bytes revertData);
 
@@ -27,7 +26,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint8 _localDecimals,
         address _lzEndpoint,
         address _delegate
-    ) OFTCore(_localDecimals, _lzEndpoint, _delegate) {}
+    ) OFTAltCore(_localDecimals, _lzEndpoint, _delegate) {}
 
     /**
      * @dev Returns the address of the native token
@@ -109,7 +108,7 @@ abstract contract NativeOFTAdapter is OFTCore {
         uint32 /*_srcEid*/
     ) internal virtual override returns (uint256 amountReceivedLD) {
         // @dev Transfer tokens to the recipient.
-        (bool success, bytes memory data) = payable(_to).call{value: _amountLD}("");
+        (bool success, bytes memory data) = payable(_to).call{ value: _amountLD }("");
         if (!success) {
             revert CreditFailed(_to, _amountLD, data);
         }
