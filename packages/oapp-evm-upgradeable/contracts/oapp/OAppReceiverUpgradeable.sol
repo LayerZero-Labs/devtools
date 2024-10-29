@@ -15,7 +15,7 @@ abstract contract OAppReceiverUpgradeable is IOAppReceiver, OAppCoreUpgradeable 
 
     // @dev The version of the OAppReceiver implementation.
     // @dev Version is bumped when changes are made to this contract.
-    uint64 internal constant RECEIVER_VERSION = 1;
+    uint64 internal constant RECEIVER_VERSION = 2;
 
     /**
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to

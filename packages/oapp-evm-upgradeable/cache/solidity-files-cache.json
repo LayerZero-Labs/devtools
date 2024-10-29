@@ -66,8 +66,8 @@
       "seenByCompiler": true
     },
     "contracts/oapp/OAppReceiverUpgradeable.sol": {
-      "lastModificationDate": 1730225147516,
-      "contentHash": "b48ad271e9f24c1ff7c23e250695cc11",
+      "lastModificationDate": 1730231377397,
+      "contentHash": "50cac4959f785fdb188ddc8e39fe942b",
       "sourceName": "contracts/oapp/OAppReceiverUpgradeable.sol",
       "compilerSettings": {
         "solc": {
@@ -118,7 +118,7 @@
         "OAppReceiverUpgradeable": {
           "0.8.22": {
             "path": "OAppReceiverUpgradeable.sol/OAppReceiverUpgradeable.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "25cb1a922e594dad99d2e4e125d44b18"
           }
         }
       },
@@ -244,7 +244,7 @@
         "OAppUpgradeable": {
           "0.8.22": {
             "path": "OAppUpgradeable.sol/OAppUpgradeable.json",
-            "build_id": "a9c23b8c27758155e23a1b7f0e5ac00c"
+            "build_id": "25cb1a922e594dad99d2e4e125d44b18"
           }
         }
       },
@@ -7057,6 +7057,7 @@
     }
   },
   "builds": [
+    "25cb1a922e594dad99d2e4e125d44b18",
     "2602d2a4dbe9666c92ef47d4d578566a",
     "669889c9d8e75a6d3a49e22199629c6f",
     "a9c23b8c27758155e23a1b7f0e5ac00c"
