@@ -251,7 +251,8 @@ abstract contract OFTCoreUpgradeable is
 
         // @dev Optionally inspect the message and options depending if the OApp owner has set a msg inspector.
         // @dev If it fails inspection, needs to revert in the implementation. ie. does not rely on return boolean
-        if ($.msgInspector != address(0)) IOAppMsgInspector($.msgInspector).inspect(message, options);
+        address inspector = $.msgInspector; // caches the msgInspector to avoid potential double storage read
+        if (inspector != address(0)) IOAppMsgInspector(inspector).inspect(message, options);
     }
 
     /**
