@@ -2,21 +2,24 @@
 
 pragma solidity ^0.8.0;
 
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { MyOAppAlt } from "./mocks/OAppAltMock.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { MessagingParams, MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { OptionsBuilder } from "../contracts/oapp/libs/OptionsBuilder.sol";
+import { console } from "forge-std/console.sol";
+
 contract EndpointV2AltTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
-    address[] public altToken;
+    uint32 private aEid = 1;
     ERC20Mock nativeTokenMock_A = new ERC20Mock("NativeAltTokens_A", "NAT_A");
+
+    uint32 private bEid = 2;
     ERC20Mock nativeTokenMock_B = new ERC20Mock("NativeAltTokens_B", "NAT_B");
 
-    uint32 private aEid = 1;
-    uint32 private bEid = 2;
+    address[] public altToken;
 
     MyOAppAlt private aOApp;
     MyOAppAlt private bOApp;
@@ -27,6 +30,10 @@ contract EndpointV2AltTest is TestHelperOz5 {
 
     bytes32 receiverB32 = bytes32(uint256(uint160(address(bOApp))));
     string message = "Hello world";
+
+    address endpointAlt;
+
+    bytes options;
 
     function setUp() public override {
         vm.deal(userA, 1000 ether);
@@ -49,6 +56,9 @@ contract EndpointV2AltTest is TestHelperOz5 {
         oapps[0] = address(aOApp);
         oapps[1] = address(bOApp);
         this.wireOApps(oapps);
+
+        endpointAlt = address(aOApp.endpoint());
+        options = bytes("");
     }
 
     function test_constructor() public {
@@ -59,9 +69,6 @@ contract EndpointV2AltTest is TestHelperOz5 {
         assertEq(address(bOApp.endpoint()), address(endpoints[bEid]));
     }
     function test_Send_WithAlt() public {
-        address endpointAlt = address(aOApp.endpoint());
-        bytes memory options = new bytes(0);
-
         vm.startPrank(userA);
 
         MessagingParams memory msgParams = MessagingParams(bEid, receiverB32, abi.encode(message), options, false);
@@ -83,18 +90,14 @@ contract EndpointV2AltTest is TestHelperOz5 {
     }
 
     function test_OAppSend_WithAlt() public {
-        address endpointAlt = address(aOApp.endpoint());
-        bytes memory options = new bytes(0);
-
         vm.startPrank(userA);
 
         uint256 quoteFee = aOApp.quote(bEid, message, options, false).nativeFee;
         uint256 twiceQuoteFee = quoteFee * 2;
 
         nativeTokenMock_A.mint(userA, twiceQuoteFee);
-        nativeTokenMock_A.transfer(address(endpointAlt), twiceQuoteFee);
-
-        MessagingReceipt memory receipt = aOApp.send(bEid, message, "");
+        IERC20(nativeTokenMock_A).approve(address(aOApp), twiceQuoteFee);
+        MessagingReceipt memory receipt = aOApp.send(bEid, message, options, twiceQuoteFee);
 
         assertEq(receipt.fee.nativeFee, quoteFee);
         assertEq(receipt.fee.lzTokenFee, 0);
@@ -102,5 +105,18 @@ contract EndpointV2AltTest is TestHelperOz5 {
         assertEq(nativeTokenMock_A.balanceOf(address(endpointAlt)), 0);
         assertEq(nativeTokenMock_A.balanceOf(userA), quoteFee);
         assertEq(nativeTokenMock_A.balanceOf(endpointSetup.sendLibs[0]), quoteFee);
+    }
+
+    function test_OAppSend_WithAlt_WithVerify() public {
+        options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+
+        uint256 preETHBalance_userA = userA.balance;
+
+        test_OAppSend_WithAlt();
+
+        verifyPackets(bEid, addressToBytes32(address(bOApp)));
+
+        uint256 postETHBalance_userA = userA.balance;
+        assertEq(preETHBalance_userA, postETHBalance_userA);
     }
 }
