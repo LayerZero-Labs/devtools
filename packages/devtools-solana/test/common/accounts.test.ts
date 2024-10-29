@@ -11,7 +11,7 @@ describe('common/accounts', () => {
     //
     // We need to run our own Solana node with the OFT account cloned
     // so that we can isolate these tests
-    const oftConfig = { eid: EndpointId.SOLANA_V2_MAINNET, address: '8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC' }
+    const oftConfig = { eid: EndpointId.SOLANA_V2_TESTNET, address: 'HvbS7Q8xzSZm8C8rk6dkNNdtozbYsbQuqVBP2CMvNW9p' }
 
     let connectionFactory: ConnectionFactory
     let getAccountInfoMock: jest.SpyInstance
