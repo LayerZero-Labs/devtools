@@ -27,7 +27,7 @@ contract EndpointV2AltTest is TestHelperOz5 {
     uint256 private initialBalance = 100 ether;
 
     bytes32 receiverB32 = bytes32(uint256(uint160(address(bOApp))));
-    address refundAddress = payable(address(123));
+    string message = "Hello world";
 
     function setUp() public override {
         vm.deal(userA, 1000 ether);
@@ -61,22 +61,47 @@ contract EndpointV2AltTest is TestHelperOz5 {
     }
     function test_Send_WithAlt() public {
         address endpointAlt = address(aOApp.endpoint());
-        bytes memory message;
+        bytes memory options = new bytes(0);
 
         vm.startPrank(userA);
 
-        nativeTokenMock_A.mint(userA, 200);
-        nativeTokenMock_A.transfer(address(endpointAlt), 200);
+        MessagingParams memory msgParams = MessagingParams(bEid, receiverB32, abi.encode(message), options, false);
 
-        // send with 200 alt, but only accept 100 alt
-        MessagingParams memory msgParams = MessagingParams(bEid, receiverB32, message, "", false);
-        MessagingReceipt memory receipt = aOApp.endpoint().send(msgParams, refundAddress);
+        uint256 quoteFee = aOApp.endpoint().quote(msgParams, address(this)).nativeFee;
+        uint256 twiceQuoteFee = quoteFee * 2;
 
-        assertEq(receipt.fee.nativeFee, 100);
+        nativeTokenMock_A.mint(userA, twiceQuoteFee);
+        nativeTokenMock_A.transfer(address(endpointAlt), twiceQuoteFee);
+
+        MessagingReceipt memory receipt = aOApp.endpoint().send(msgParams, userA);
+
+        assertEq(receipt.fee.nativeFee, quoteFee);
         assertEq(receipt.fee.lzTokenFee, 0);
 
         assertEq(nativeTokenMock_A.balanceOf(address(endpointAlt)), 0);
-        assertEq(nativeTokenMock_A.balanceOf(refundAddress), 100);
-        assertEq(nativeTokenMock_A.balanceOf(endpointSetup.sendLibs[0]), 100);
+        assertEq(nativeTokenMock_A.balanceOf(userA), quoteFee);
+        assertEq(nativeTokenMock_A.balanceOf(endpointSetup.sendLibs[0]), quoteFee);
+    }
+
+    function test_OAppSend_WithAlt() public {
+        address endpointAlt = address(aOApp.endpoint());
+        bytes memory options = new bytes(0);
+
+        vm.startPrank(userA);
+
+        uint256 quoteFee = aOApp.quote(bEid, message, options, false).nativeFee;
+        uint256 twiceQuoteFee = quoteFee * 2;
+
+        nativeTokenMock_A.mint(userA, twiceQuoteFee);
+        nativeTokenMock_A.transfer(address(endpointAlt), twiceQuoteFee);
+
+        MessagingReceipt memory receipt = aOApp.send(bEid, message, "");
+
+        assertEq(receipt.fee.nativeFee, quoteFee);
+        assertEq(receipt.fee.lzTokenFee, 0);
+
+        assertEq(nativeTokenMock_A.balanceOf(address(endpointAlt)), 0);
+        assertEq(nativeTokenMock_A.balanceOf(userA), quoteFee);
+        assertEq(nativeTokenMock_A.balanceOf(endpointSetup.sendLibs[0]), quoteFee);
     }
 }
