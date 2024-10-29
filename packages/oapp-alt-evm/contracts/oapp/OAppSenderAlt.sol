@@ -16,6 +16,7 @@ abstract contract OAppSenderAlt is OAppCore {
     // Custom error messages
     error NotEnoughNative(uint256 msgValue);
     error LzTokenUnavailable();
+    error NativeTokenUnavailable();
 
     // @dev The version of the OAppSender implementation.
     // @dev Version is bumped when changes are made to this contract.
@@ -79,12 +80,12 @@ abstract contract OAppSenderAlt is OAppCore {
         address _refundAddress
     ) internal virtual returns (MessagingReceipt memory receipt) {
         // @dev Push corresponding fees to the endpoint, any excess is sent back to the _refundAddress from the endpoint.
-        uint256 messageValue = _payNative(_fee.nativeFee);
+        _payNative(_fee.nativeFee);
         if (_fee.lzTokenFee > 0) _payLzToken(_fee.lzTokenFee);
 
         return
             // solhint-disable-next-line check-send-result
-            endpoint.send{ value: messageValue }(
+            endpoint.send(
                 MessagingParams(_dstEid, _getPeerOrRevert(_dstEid), _message, _options, _fee.lzTokenFee > 0),
                 _refundAddress
             );
@@ -93,7 +94,6 @@ abstract contract OAppSenderAlt is OAppCore {
     /**
      * @dev Internal function to pay the native fee associated with the message.
      * @param _nativeFee The native fee to be paid.
-     * @return nativeFee The amount of native currency paid.
      *
      * @dev If the OApp needs to initiate MULTIPLE LayerZero messages in a single transaction,
      * this will need to be overridden because msg.value would contain multiple lzFees.
@@ -102,7 +102,13 @@ abstract contract OAppSenderAlt is OAppCore {
      * @dev The endpoint is EITHER/OR, ie. it will NOT support both types of native payment at a time.
      */
     function _payNative(uint256 _nativeFee) internal virtual returns (uint256 nativeFee) {
-        if (msg.value != _nativeFee) revert NotEnoughNative(msg.value);
+        // @dev Cannot cache the token because it is not immutable in the endpoint.
+        address nativeToken = endpoint.nativeToken();
+        if (nativeToken == address(0)) revert NativeTokenUnavailable();
+
+        // Pay Native token fee by sending tokens to the endpoint.
+        IERC20(nativeToken).safeTransferFrom(msg.sender, address(endpoint), _nativeFee);
+
         return _nativeFee;
     }
 

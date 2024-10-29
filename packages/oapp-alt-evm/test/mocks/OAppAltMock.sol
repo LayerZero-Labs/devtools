@@ -21,10 +21,11 @@ contract MyOAppAlt is OAppAlt {
     function send(
         uint32 _dstEid,
         string memory _message,
-        bytes calldata _options
+        bytes calldata _options,
+        uint256 _nativeFee
     ) external payable returns (MessagingReceipt memory receipt) {
         bytes memory _payload = abi.encode(_message);
-        receipt = _lzSend(_dstEid, _payload, _options, MessagingFee(msg.value, 0), payable(msg.sender));
+        receipt = _lzSend(_dstEid, _payload, _options, MessagingFee(_nativeFee, 0), payable(msg.sender));
     }
 
     /**
