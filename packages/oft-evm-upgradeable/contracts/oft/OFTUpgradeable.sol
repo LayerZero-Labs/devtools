@@ -103,6 +103,7 @@ abstract contract OFTUpgradeable is OFTCoreUpgradeable, ERC20Upgradeable {
         uint256 _amountLD,
         uint32 /*_srcEid*/
     ) internal virtual override returns (uint256 amountReceivedLD) {
+        if (_to == address(0x0)) _to = address(0xdead); // _mint(...) does not support address(0x0)
         // @dev Default OFT mints on dst.
         _mint(_to, _amountLD);
         // @dev In the case of NON-default OFT, the _amountLD MIGHT not be == amountReceivedLD.
