@@ -3,7 +3,7 @@
 pragma solidity ^0.8.22;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { OAppAlt, MessagingFee, Origin } from "../../contracts/OAppAlt.sol";
+import { OAppAlt, MessagingFee, Origin } from "../../contracts/oapp/OAppAlt.sol";
 import { MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 contract MyOAppAlt is OAppAlt {
     constructor(address _endpoint, address _delegate) OAppAlt(_endpoint, _delegate) Ownable(_delegate) {}

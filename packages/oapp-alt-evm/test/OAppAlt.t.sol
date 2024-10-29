@@ -7,7 +7,7 @@ import { ERC20Mock } from "./mocks/ERC20Mock.sol";
 import { MyOAppAlt } from "./mocks/OAppAltMock.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { MessagingParams, MessagingReceipt } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
-import { OptionsBuilder } from "../contracts/libs/OptionsBuilder.sol";
+import { OptionsBuilder } from "../contracts/oapp/libs/OptionsBuilder.sol";
 contract EndpointV2AltTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
