@@ -96,7 +96,7 @@ services:
         echo "create-lz-oapp:repository   ${LAYERZERO_EXAMPLES_REPOSITORY_URL}"
         echo "create-lz-oapp:ref          ${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
 
-        /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests --jobs 3
+        /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
       # If we want to clone from github.com, we'll need its public keys added to our SSH config
       # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
