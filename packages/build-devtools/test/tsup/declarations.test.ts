@@ -34,32 +34,6 @@ describe('tsup/declarations', () => {
         })
     })
 
-    describe('if not enabled in production environment', () => {
-        let NODE_ENV: string | undefined
-
-        beforeAll(() => {
-            NODE_ENV = process.env.NODE_ENV
-        })
-
-        afterAll(() => {
-            process.env.NODE_ENV = NODE_ENV
-        })
-
-        it('should not run tsc', async () => {
-            await fc.assert(
-                fc.asyncProperty(fc.oneof(fc.string(), fc.constantFrom(undefined)), async (env) => {
-                    fc.pre(env !== 'production')
-
-                    const plugin = createDeclarationBuild({ enabled: false })
-
-                    await plugin.buildEnd.call(pluginContext)
-
-                    expect(spawnSyncMock).not.toHaveBeenCalled()
-                })
-            )
-        })
-    })
-
     describe('if enabled explicitly', () => {
         it('should run tsc', async () => {
             const plugin = createDeclarationBuild({ enabled: true })
@@ -72,13 +46,11 @@ describe('tsup/declarations', () => {
         })
     })
 
-    describe('if enabled in production environment', () => {
+    describe('if not in production environment', () => {
         let NODE_ENV: string | undefined
 
         beforeAll(() => {
             NODE_ENV = process.env.NODE_ENV
-
-            process.env.NODE_ENV = 'production'
         })
 
         afterAll(() => {
@@ -105,6 +77,34 @@ describe('tsup/declarations', () => {
             )
 
             expect(spawnSyncMock).toHaveBeenCalledTimes(1)
+        })
+    })
+
+    describe('if in production environment', () => {
+        let NODE_ENV: string | undefined
+
+        beforeAll(() => {
+            NODE_ENV = process.env.NODE_ENV
+
+            process.env.NODE_ENV = 'production'
+        })
+
+        afterAll(() => {
+            process.env.NODE_ENV = NODE_ENV
+        })
+
+        it('should not run tsc', async () => {
+            await fc.assert(
+                fc.asyncProperty(fc.oneof(fc.string(), fc.constantFrom(undefined)), async (env) => {
+                    fc.pre(env !== 'production')
+
+                    const plugin = createDeclarationBuild({ enabled: undefined })
+
+                    await plugin.buildEnd.call(pluginContext)
+
+                    expect(spawnSyncMock).not.toHaveBeenCalled()
+                })
+            )
         })
     })
 })
