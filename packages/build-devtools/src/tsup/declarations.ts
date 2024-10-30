@@ -31,7 +31,7 @@ type Plugin = Exclude<Options['plugins'], undefined>[number]
 const LOG_LABEL = 'DMAP'
 
 export const createDeclarationBuild = ({
-    enabled = process.env.NODE_ENV === 'production',
+    enabled = process.env.NODE_ENV !== 'production',
     tsc = 'tsc',
     tsConfig = 'tsconfig.build.json',
     outDir: outDirOption,
