@@ -1,3 +1,1 @@
-export const hello = () => {
-    return 'Hello from ua-devtools-initia'
-}
+export * from './oft/sdk'
