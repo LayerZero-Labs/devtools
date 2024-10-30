@@ -96,7 +96,6 @@ abstract contract OFTCoreUpgradeable is
      * accommodate the different version of Ownable.
      */
     function __OFTCore_init(address _delegate) internal onlyInitializing {
-        __OAppCore_init(_delegate);
         __OApp_init(_delegate);
         __OAppPreCrimeSimulator_init();
         __OAppOptionsType3_init();
