@@ -1,5 +1,5 @@
 {
-  "name": "@layerzerolabs/oapp-evm",
+  "name": "@layerzerolabs/oapp-alt-evm",
   "version": "0.0.4",
   "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
   "keywords": [
@@ -12,7 +12,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LayerZero-Labs/devtools.git",
-    "directory": "packages/oapp-evm"
+    "directory": "packages/oapp-alt-evm"
   },
   "license": "MIT",
   "exports": {
