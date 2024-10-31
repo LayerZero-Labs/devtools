@@ -31,7 +31,17 @@ services:
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
-  #                       The TON local node
+  #                       Solana local node
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  network-solana:
+    extends:
+      file: docker-compose.templates.yaml
+      service: solana-node
+
+  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
+  #
+  #                         TON local node
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
   network-ton:

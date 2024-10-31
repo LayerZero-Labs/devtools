@@ -25,3 +25,8 @@ services:
   network-tango:
     ports:
       - "10003:8545"
+
+  network-solana:
+    ports:
+      - "10005:8899"
+      - "10006:8900"
