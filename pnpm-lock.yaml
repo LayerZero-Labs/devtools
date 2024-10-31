@@ -741,7 +741,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools':
-        specifier: ^0.3.28
+        specifier: ~0.3.28
         version: link:../../packages/devtools
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
