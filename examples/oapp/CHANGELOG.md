@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.3.1
+
+### Patch Changes
+
+- 9ab480a: foundry.toml QOL improvements
+
 ## 0.3.0
 
 ### Minor Changes
