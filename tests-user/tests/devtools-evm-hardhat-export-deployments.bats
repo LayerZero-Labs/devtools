@@ -4,9 +4,6 @@ setup() {
     # Load bats-assert and bats-support
     load "../lib/bats-support/load.bash"
     load "../lib/bats-assert/load.bash"
-
-    # Install the binary so that we avoid race conditions
-    flock --verbose bats.lock npm install -g @layerzerolabs/export-deployments
 }
 
 @test "should output version" {
