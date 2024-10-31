@@ -26,7 +26,7 @@ interface Args {
     logLevel: LogLevel
     solanaProgramId: PublicKey
     solanaSecretKey?: Keypair
-    multisigKey?: PublicKey
+    clear?: PublicKey
     internalConfigurator?: OAppConfigurator
 }
 
