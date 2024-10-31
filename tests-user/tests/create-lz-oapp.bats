@@ -17,9 +17,6 @@ setup() {
 
     # Setup a directory for all the projects created by this test
     PROJECTS_DIRECTORY=$(mktemp -d)
-
-    # Install the binary so that we avoid race conditions
-    flock --verbose bats.lock npm install -g create-lz-oapp
 }
 
 teardown() {
