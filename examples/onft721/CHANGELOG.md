@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.1.1
+
+### Patch Changes
+
+- 9ab480a: foundry.toml QOL improvements
+
 ## 0.1.0
 
 ### Minor Changes

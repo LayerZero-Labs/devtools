@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/onft-evm",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "LayerZero Labs reference EVM OmniChain Non Fungible Token (ONFT) implementation",
   "keywords": [
     "LayerZero",

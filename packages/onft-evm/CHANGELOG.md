@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.0.9
+
+### Patch Changes
+
+- 9ab480a: foundry.toml QOL improvements
+
 ## 0.0.8
 
 ### Patch Changes
