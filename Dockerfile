@@ -494,6 +494,9 @@ ENV PATH="/root/.solana/bin:$PATH"
 
 COPY --from=solana /root/.solana/bin/solana-test-validator /root/.solana/bin/solana-test-validator
 
+# Make sure the binary is there
+RUN solana-test-validator --version
+
 # By default the test validator will expose the following ports:
 # 
 # Gossip:                       1024
