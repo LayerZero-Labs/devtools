@@ -79,7 +79,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                     amountLd: BigInt(amount),
                     minAmountLd: 1n,
                     options: Buffer.from(''),
-                    composeMsg: Buffer.from(''),
+                    composeMsg: undefined,
                 },
                 {
                     oft: oftProgramId,
@@ -100,7 +100,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                     amountLd: BigInt(amount),
                     minAmountLd: (BigInt(amount) * BigInt(9)) / BigInt(10),
                     options: Buffer.from(''),
-                    composeMsg: Buffer.from(''),
+                    composeMsg: undefined,
                     nativeFee,
                 },
                 {
