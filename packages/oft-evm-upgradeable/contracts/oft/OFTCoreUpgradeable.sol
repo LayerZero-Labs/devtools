@@ -31,7 +31,7 @@ abstract contract OFTCoreUpgradeable is
     }
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.oftcore")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant OFTCoreStorageLocation =
+    bytes32 private constant OFT_CORE_STORAGE_LOCATION =
         0x41db8a78b0206aba5c54bcbfc2bda0d84082a84eb88e680379a57b9e9f653c00;
 
     // @notice Provides a conversion rate when swapping between denominations of SD and LD
@@ -59,7 +59,7 @@ abstract contract OFTCoreUpgradeable is
 
     function _getOFTCoreStorage() internal pure returns (OFTCoreStorage storage $) {
         assembly {
-            $.slot := OFTCoreStorageLocation
+            $.slot := OFT_CORE_STORAGE_LOCATION
         }
     }
 

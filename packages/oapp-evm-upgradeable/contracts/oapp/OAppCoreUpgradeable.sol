@@ -15,12 +15,12 @@ abstract contract OAppCoreUpgradeable is IOAppCore, OwnableUpgradeable {
     }
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.oappcore")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant OAppCoreStorageLocation =
+    bytes32 private constant OAPP_CORE_STORAGE_LOCATION =
         0x72ab1bc1039b79dc4724ffca13de82c96834302d3c7e0d4252232d4b2dd8f900;
 
     function _getOAppCoreStorage() internal pure returns (OAppCoreStorage storage $) {
         assembly {
-            $.slot := OAppCoreStorageLocation
+            $.slot := OAPP_CORE_STORAGE_LOCATION
         }
     }
 

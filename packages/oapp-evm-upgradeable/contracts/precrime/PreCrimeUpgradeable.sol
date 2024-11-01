@@ -20,7 +20,7 @@ abstract contract PreCrimeUpgradeable is OwnableUpgradeable, IPreCrime {
     }
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.precrime")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant PreCrimeStorageLocation =
+    bytes32 private constant PRE_CRIME_STORAGE_LOCATION =
         0x56af11d8938063b7ae95a808f88d40c589be3bbf4cb6facdbc642a7b38e01f00;
 
     uint16 internal constant CONFIG_VERSION = 2;
@@ -40,7 +40,7 @@ abstract contract PreCrimeUpgradeable is OwnableUpgradeable, IPreCrime {
 
     function _getPreCrimeStorage() internal pure returns (PreCrimeStorage storage $) {
         assembly {
-            $.slot := PreCrimeStorageLocation
+            $.slot := PRE_CRIME_STORAGE_LOCATION
         }
     }
 

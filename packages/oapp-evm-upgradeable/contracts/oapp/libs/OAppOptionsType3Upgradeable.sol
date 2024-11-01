@@ -16,14 +16,14 @@ abstract contract OAppOptionsType3Upgradeable is IOAppOptionsType3, OwnableUpgra
     }
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.oappoptionstype3")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant OAppOptionsType3StorageLocation =
+    bytes32 private constant OAPP_OPTIONS_TYPE_3_STORAGE_LOCATION =
         0x8d2bda5d9f6ffb5796910376005392955773acee5548d0fcdb10e7c264ea0000;
 
     uint16 internal constant OPTION_TYPE_3 = 3;
 
     function _getOAppOptionsType3Storage() internal pure returns (OAppOptionsType3Storage storage $) {
         assembly {
-            $.slot := OAppOptionsType3StorageLocation
+            $.slot := OAPP_OPTIONS_TYPE_3_STORAGE_LOCATION
         }
     }
 
