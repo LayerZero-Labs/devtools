@@ -306,7 +306,7 @@ abstract contract OFTCoreUpgradeable is
             // @dev The off-chain executor will listen and process the msg based on the src-chain-callers compose options passed.
             // @dev The index is used when a OApp needs to compose multiple msgs on lzReceive.
             // For default OFT implementation there is only 1 compose msg per lzReceive, thus its always 0.
-            endpoint.sendCompose(toAddress, _guid, 0, /* the index of the composed message*/ composeMsg);
+            endpoint.sendCompose(toAddress, _guid, 0 /* the index of the composed message*/, composeMsg);
         }
 
         emit OFTReceived(_guid, _origin.srcEid, toAddress, amountReceivedLD);
