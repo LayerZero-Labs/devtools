@@ -28,7 +28,7 @@ contract PreCrimeV2UpgradeableMock is PreCrimeUpgradeable {
         for (uint256 i = 0; i < _packets.length; i++) {
             InboundPacket memory packet = _packets[i];
             if (IOAppPreCrimeSimulator(simulator).isPeer(packet.origin.srcEid, packet.origin.sender)) {
-                return preCrimePeers();
+                return getPreCrimePeers();
             }
         }
         return (new PreCrimePeer[](0));

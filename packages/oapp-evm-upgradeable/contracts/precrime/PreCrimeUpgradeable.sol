@@ -76,7 +76,7 @@ abstract contract PreCrimeUpgradeable is OwnableUpgradeable, IPreCrime {
         }
     }
 
-    function getPreCrimePeers() external view returns (PreCrimePeer[] memory) {
+    function getPreCrimePeers() public view returns (PreCrimePeer[] memory) {
         PreCrimeStorage storage $ = _getPreCrimeStorage();
         return $.preCrimePeers;
     }
@@ -136,11 +136,6 @@ abstract contract PreCrimeUpgradeable is OwnableUpgradeable, IPreCrime {
 
     function version() external pure returns (uint64 major, uint8 minor) {
         return (2, 0);
-    }
-
-    function preCrimePeers() internal view returns (PreCrimePeer[] storage) {
-        PreCrimeStorage storage $ = _getPreCrimeStorage();
-        return $.preCrimePeers;
     }
 
     function _checkResultsCompleteness(InboundPacket[] memory _packets, uint32[] memory _eids) internal {
