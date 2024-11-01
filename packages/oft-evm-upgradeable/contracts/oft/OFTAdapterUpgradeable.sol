@@ -26,6 +26,7 @@ abstract contract OFTAdapterUpgradeable is OFTCoreUpgradeable {
      * @dev Constructor for the OFTAdapter contract.
      * @param _token The address of the ERC-20 token to be adapted.
      * @param _lzEndpoint The LayerZero endpoint address.
+     * @dev _token must implement the IERC20 interface, and include a decimals() function.
      */
     constructor(
         address _token,
