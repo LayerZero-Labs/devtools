@@ -18,10 +18,13 @@ abstract contract OAppReceiverUpgradeable is IOAppReceiver, OAppCoreUpgradeable 
     uint64 internal constant RECEIVER_VERSION = 2;
 
     /**
+     * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OAppReceiver_init() internal onlyInitializing {}
+    function __OAppReceiver_init(address _delegate) internal onlyInitializing {
+        __OAppCore_init(_delegate);
+    }
 
     function __OAppReceiver_init_unchained() internal onlyInitializing {}
 

@@ -22,10 +22,13 @@ abstract contract OAppSenderUpgradeable is OAppCoreUpgradeable {
     uint64 internal constant SENDER_VERSION = 1;
 
     /**
+     * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
      * @dev Ownable is not initialized here on purpose. It should be initialized in the child contract to
      * accommodate the different version of Ownable.
      */
-    function __OAppSender_init() internal onlyInitializing {}
+    function __OAppSender_init(address _delegate) internal onlyInitializing {
+        __OAppCore_init(_delegate);
+    }
 
     function __OAppSender_init_unchained() internal onlyInitializing {}
 
