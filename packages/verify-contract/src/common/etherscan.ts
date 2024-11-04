@@ -1,7 +1,7 @@
-import { type Logger } from '@layerzerolabs/io-devtools'
+import { type Logger, sleep } from '@layerzerolabs/io-devtools'
 import { LicenseType } from './licenses'
 import { z } from 'zod'
-import { retry, sleep } from './promises'
+import { retry } from './promises'
 import EventEmitter from 'events'
 import got from 'got'
 
