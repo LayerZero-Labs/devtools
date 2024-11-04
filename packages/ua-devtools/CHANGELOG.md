@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools
 
+## 1.0.6
+
+### Patch Changes
+
+- 2a46de8: Fixes configureOAppDelegates configurator ordering
+
 ## 1.0.5
 
 ### Patch Changes
