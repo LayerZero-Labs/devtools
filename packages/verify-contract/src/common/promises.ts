@@ -1,10 +1,5 @@
 import assert from 'assert'
 
-export const sleep = (timeout: number) =>
-    new Promise((resolve) => {
-        setTimeout(resolve, timeout)
-    })
-
 /**
  * Simple async retry functionality
  *
