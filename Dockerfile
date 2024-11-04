@@ -32,6 +32,12 @@ ARG BASE_IMAGE=base
 # while not breaking the flow for local development
 ARG EVM_NODE_IMAGE=node-evm-hardhat
 
+# We will provide a way for consumers to override the default Solana node image
+# 
+# This will allow CI environments to supply the prebuilt Solana node image
+# while not breaking the flow for local development
+ARG SOLANA_NODE_IMAGE=node-solana-test-validator
+
 # We will provide a way for consumers to override the default TON node image
 # 
 # This will allow CI environments to supply the prebuilt TON node image
@@ -171,11 +177,11 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install Solana using a binary with a fallback to installing from source
-ARG SOLANA_VERSION=1.18.17
+ARG SOLANA_VERSION=1.18.26
 RUN \
     # First we try to download prebuilt binaries for Solana
     (\
-    curl --proto '=https' --tlsv1.2 -sSf https://release.solana.com/v${SOLANA_VERSION}/install | sh -s && \
+    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
     mkdir -p /root/.solana && \
     # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
     cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
@@ -183,9 +189,12 @@ RUN \
     # If that doesn't work, we'll need to build Solana from source
     (\
     # We download the source code and extract the archive
-    curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+    curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
     # Then run the installer
-    ./solana-${SOLANA_VERSION}/scripts/cargo-install-all.sh --validator-only /root/.solana \
+    # 
+    # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
+    # See here https://github.com/inflation/jpegxl-rs/issues/60
+    ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
     )
 
 # Make sure we can execute the binaries
@@ -468,6 +477,43 @@ HEALTHCHECK --start-period=30s --interval=5s --retries=30 CMD curl -sSf http://1
 
 # Run the shit
 ENTRYPOINT ["java", "-jar", "MyLocalTon.jar", "nogui", "ton-http-api"]
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that runs a local Solana node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS node-solana-test-validator
+
+ENV PATH="/root/.solana/bin:$PATH"
+
+COPY --from=solana /root/.solana/bin/solana-test-validator /root/.solana/bin/solana-test-validator
+
+# Make sure the binary is there
+RUN solana-test-validator --version
+
+# By default the test validator will expose the following ports:
+# 
+# Gossip:                       1024
+# TPU:                          1027
+# JSON RPC:                     8899
+# WebSocket:                    8900
+ENTRYPOINT ["solana-test-validator"]
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#                   Image that runs a Solana node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM $SOLANA_NODE_IMAGE AS node-solana
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
