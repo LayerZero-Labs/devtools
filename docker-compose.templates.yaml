@@ -55,3 +55,17 @@ services:
       options:
         max-size: "5m"
         compress: "false"
+
+  # Solana node for testing purposes
+  solana-node:
+    build:
+      dockerfile: Dockerfile
+      target: node-solana
+      args:
+        SOLANA_NODE_IMAGE: ${DEVTOOLS_SOLANA_NODE_IMAGE:-node-solana-test-validator}
+
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"
