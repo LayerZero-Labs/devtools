@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.31
+
+### Patch Changes
+
+- 36446d0: Add sleep helper to io-devtools
+
 ## 1.1.30
 
 ### Patch Changes

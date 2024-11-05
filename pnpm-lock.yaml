@@ -2588,7 +2588,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.12
+        specifier: ~0.1.14
         version: link:../io-devtools
       '@solidity-parser/parser':
         specifier: ^0.16.1
