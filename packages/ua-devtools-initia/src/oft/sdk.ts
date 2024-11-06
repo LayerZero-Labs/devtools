@@ -1,20 +1,3 @@
-// import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
-// import { Stage } from '@layerzerolabs/lz-definitions'
-
-// // your oft contract address.
-// const address = '0x123'
-// const url = 'https://rpc.initiation-1.initia.xyz/'
-// // url is the initia chain full node url
-// const sdk = new InitiaSDK({
-//     stage: Stage.SANDBOX,
-//     provider: InitiaProvider.from(url),
-//     accounts: {
-//         oft: address,
-//     },
-// })
-// // false means native type, true is adapter type.
-// export const oft = new Oft(sdk, false)
-
 import { SDK as InitiaSDK } from '@layerzerolabs/lz-initia-sdk-v2'
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
 import {
@@ -26,7 +9,7 @@ import {
 import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { InitiaProvider } from '@layerzerolabs/lz-corekit-initia'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
-// import { TransactionResponse } from '@layerzerolabs/move-definitions'
+import { MnemonicAndPath } from '@layerzerolabs/move-definitions'
 // import { TransactionResponse } from '@layerzerlabs/move-suite'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 // import { Endpoint as EndpointV2 } from '@layerzerolabs/lz-movevm-sdk-v2'
@@ -38,8 +21,9 @@ export class OFT implements IOApp {
     public readonly point: OmniPoint
     public readonly oft: Oft<MnemonicKey>
     private readonly mnemonic: string
+    private readonly path: string
 
-    constructor(address: string, url: string, mnemonic: string) {
+    constructor(address: string, url: string, mnemonic: string, path: string) {
         this.sdk = new InitiaSDK({
             stage: Stage.TESTNET,
             provider: InitiaProvider.from(url),
@@ -49,6 +33,8 @@ export class OFT implements IOApp {
             },
         })
         this.mnemonic = mnemonic
+        this.path = path
+
         this.oft = new Oft(this.sdk, false)
         this.point = {
             eid: 40326 as EndpointId,
@@ -61,15 +47,13 @@ export class OFT implements IOApp {
     }
 
     async getOwner(): Promise<string | undefined> {
-        console.log(`Getting owner`)
-        this.sdk.accounts
-
-        return undefined
+        const owner = await this.oft.getAdmin()
+        return owner
     }
 
     async setOwner(newOwner: string): Promise<OmniTransaction> {
-        const owner = newOwner
-        return owner as unknown as OmniTransaction
+        const tx = await this.oft.transferAdmin(new MnemonicKey({ mnemonic: this.mnemonic }), newOwner)
+        return tx as unknown as OmniTransaction
     }
 
     async hasOwner(): Promise<boolean> {
@@ -78,7 +62,7 @@ export class OFT implements IOApp {
     }
 
     async getEndpointSDK(): Promise<IEndpointV2> {
-        // Replace with actual implementation
+        // TODO: implement
         throw new Error('Not implemented')
     }
 
@@ -103,10 +87,24 @@ export class OFT implements IOApp {
     //     raw: unknown;
     // }
 
-    async setPeer(eid: EndpointId, peer: string | null | undefined): Promise<OmniTransaction> {
-        const signer = new MnemonicKey({ mnemonic: this.mnemonic })
+    async setPeer(eid: number, peer: string | null | undefined): Promise<OmniTransaction> {
+        const [, , coin_type, account, , index] = this.path.split('/')
+        const mnemonicKey = new MnemonicKey({
+            mnemonic: this.mnemonic,
+            account: parseInt(account!),
+            index: parseInt(index!),
+            coinType: parseInt(coin_type!),
+        })
+        console.log('bech32 address:', mnemonicKey.accAddress)
+        const signer: MnemonicAndPath = { path: this.path, mnemonic: this.mnemonic }
         const encodedPeer = peer ? new TextEncoder().encode(peer) : new Uint8Array(0)
         console.log('encodedPeer:', encodedPeer)
+        try {
+            await this.oft.setPeer(signer, eid, encodedPeer)
+        } catch (e) {
+            console.log('error:', e)
+        }
+
         const response = await this.oft.setPeer(signer, eid, encodedPeer)
 
         const omniTransaction: OmniTransaction = {
@@ -117,7 +115,8 @@ export class OFT implements IOApp {
     }
 
     async getDelegate(): Promise<string | undefined> {
-        return undefined
+        const delegate = await this.oft.getDelegate()
+        return delegate
     }
 
     async isDelegate(address: string): Promise<boolean> {
@@ -133,14 +132,8 @@ export class OFT implements IOApp {
     }
 
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {
-        if (eid === undefined) {
-            throw new Error('Endpoint ID is undefined')
-        }
-        if (msgType === undefined) {
-            throw new Error('Message type is undefined')
-        }
-        // Replace with actual implementation
-        throw new Error('Not implemented')
+        const enforcedOptions = await this.oft.getEnforcedOptions(eid, msgType)
+        return enforcedOptions
     }
 
     async setEnforcedOptions(enforcedOptions: OAppEnforcedOptionParam[]): Promise<OmniTransaction> {

@@ -1,0 +1,32 @@
+{
+  "name": "@layerzerolabs/oft-initia-example",
+  "version": "0.0.0",
+  "scripts": {
+    "clean": "rm -rf artifacts cache out",
+    "compile": "$npm_execpath run compile:hardhat",
+    "compile:hardhat": "hardhat compile",
+    "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
+    "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "test": "$npm_execpath run test:hardhat",
+    "test:hardhat": "hardhat test"
+  },
+  "dependencies": {
+    "@initia/initia.js": "^0.2.11",
+    "@layerzerolabs/lz-definitions": "^3.0.10",
+    "@layerzerolabs/lz-initia-cli": "3.0.10",
+    "@layerzerolabs/lz-utilities": "3.0.7",
+    "@layerzerolabs/toolbox-hardhat": "^0.1.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.10"
+  },
+  "devDependencies": {
+    "@initia/initia.js": "^0.2.11",
+    "@layerzerolabs/lz-definitions": "^3.0.10",
+    "@layerzerolabs/lz-initia-cli": "3.0.10",
+    "@layerzerolabs/lz-utilities": "3.0.7",
+    "@layerzerolabs/toolbox-hardhat": "^0.1.0",
+    "dotenv": "^16.4.5"
+  }
+}
