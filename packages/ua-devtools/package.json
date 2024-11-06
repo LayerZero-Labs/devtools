@@ -33,8 +33,8 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-definitions": "^2.3.39",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.39",
+    "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/protocol-devtools": "~0.4.3",
     "@layerzerolabs/test-devtools": "~0.2.9",
     "@swc/core": "^1.4.0",
@@ -51,8 +51,8 @@
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-definitions": "^2.3.3",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.3",
+    "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/protocol-devtools": "~0.4.3",
     "zod": "^3.22.4"
   },
