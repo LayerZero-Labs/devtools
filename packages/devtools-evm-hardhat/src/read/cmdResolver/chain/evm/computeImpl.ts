@@ -1,4 +1,5 @@
 import { Interface } from '@ethersproject/abi'
+import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import { ComputeEVM, ComputeSetting } from '@layerzerolabs/lz-v2-utilities'
 
 import { EVMViewFunctionBase } from '@/read/cmdResolver/chain/evm/base'
@@ -15,22 +16,25 @@ export class ComputeEVMImplSdk extends EVMViewFunctionBase implements IComputeEV
         responses: { request: string; response: string }[]
     ): Promise<string> {
         let mappedResponses: string[]
+        const logger = createModuleLogger('ComputeEVMImplSdk')
         const computeSetting = compute.computeHeader.computeSetting
 
         this.validateComputeSetting(computeSetting)
 
         if (computeSetting !== ComputeSetting.OnlyReduce) {
-            mappedResponses = await this.lzMap(compute, responses, timeMarker)
-            console.log(`Finished lzMap for ${compute.to}`)
+            mappedResponses = await this.lzMap(compute, responses, timeMarker, logger)
+            logger.verbose(`Finished lzMap for ${compute.to}`)
         } else {
+            logger.info('OnlyReduce setting is used. Skipping map step.')
             mappedResponses = responses.map((r) => r.response)
         }
 
         if (computeSetting === ComputeSetting.OnlyMap) {
+            logger.info('OnlyMap setting is used. Skipping reduce step.')
             return mappedResponses.join('')
         }
 
-        return this.lzReduce(compute, cmd, mappedResponses, timeMarker)
+        return this.lzReduce(compute, cmd, mappedResponses, timeMarker, logger)
     }
 
     private validateComputeSetting(computeSetting: ComputeSetting): void {
@@ -42,7 +46,8 @@ export class ComputeEVMImplSdk extends EVMViewFunctionBase implements IComputeEV
     private async lzMap(
         compute: ComputeEVM,
         responses: { request: string; response: string }[],
-        timeMarker: ResolvedTimeMarker
+        timeMarker: ResolvedTimeMarker,
+        logger: Logger
     ): Promise<string[]> {
         const oAppInterface = new Interface(iOAppMapperAbi)
 
@@ -51,7 +56,7 @@ export class ComputeEVMImplSdk extends EVMViewFunctionBase implements IComputeEV
                 const mapCallData = oAppInterface.encodeFunctionData('lzMap', ['0x' + r.request, '0x' + r.response])
 
                 const mappedResponse = await this.callContract(mapCallData, compute.to, timeMarker.blockNumber)
-                console.log(`Mapped response for ${compute.to}: ${mappedResponse}`)
+                logger.debug(`Mapped response for request ${r.request}: ${mappedResponse}`)
                 return oAppInterface.decodeFunctionResult('lzMap', `0x${mappedResponse}`)[0].replace('0x', '')
             })
         )
@@ -61,7 +66,8 @@ export class ComputeEVMImplSdk extends EVMViewFunctionBase implements IComputeEV
         compute: ComputeEVM,
         cmd: string,
         responses: string[],
-        timeMarker: ResolvedTimeMarker
+        timeMarker: ResolvedTimeMarker,
+        logger: Logger
     ): Promise<string> {
         const oAppInterface = new Interface(iOAppReducerAbi)
 
@@ -71,7 +77,7 @@ export class ComputeEVMImplSdk extends EVMViewFunctionBase implements IComputeEV
         ])
 
         const response = await this.callContract(reduceCallData, compute.to, timeMarker.blockNumber)
-        console.log(`Reduced response for ${compute.to}: ${response}`)
+        logger.debug(`Reduced response: ${response}`)
         return oAppInterface.decodeFunctionResult('lzReduce', `0x${response}`)[0].replace('0x', '')
     }
 }

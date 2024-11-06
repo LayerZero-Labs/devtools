@@ -1,5 +1,6 @@
 import { EndpointBasedFactory } from '@layerzerolabs/devtools'
 import { RevertError } from '@layerzerolabs/devtools-evm'
+import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import {
     Command,
     CommandRequest,
@@ -73,16 +74,19 @@ export class CommandResolverSdk implements ICommandResolverSdk {
     }
 
     public async resolveCmd(cmd: string, timeMarkers: ResolvedTimestampTimeMarker[]): Promise<string> {
+        const logger = createModuleLogger('CommandResolverSdk')
         const decodedCommand = Command.decode(cmd.replace('0x', ''))
 
         try {
+            logger.info(`Resolving requests`)
             const responses = await Promise.all(
                 decodedCommand.requests.map(async (request) =>
-                    this.resolveRequest(request, findRequestResolvedTimeMarker(request, timeMarkers))
+                    this.resolveRequest(request, findRequestResolvedTimeMarker(request, timeMarkers), logger)
                 )
             )
 
             if (!decodedCommand.compute) {
+                logger.info('No compute information in command, returning concatenated responses')
                 return responses.map((lr) => lr.response).join('')
             }
 
@@ -102,7 +106,8 @@ export class CommandResolverSdk implements ICommandResolverSdk {
 
     private async resolveRequest(
         request: CommandRequest,
-        timeMarker: ResolvedTimeMarker
+        timeMarker: ResolvedTimeMarker,
+        logger: Logger
     ): Promise<{ request: string; response: string }> {
         switch (request.requestHeader.resolverType) {
             case ResolverType.SingleViewFunctionEVMCall: {
@@ -110,6 +115,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
                 const response = await (
                     await this.options.singleViewFunctionEVMCallSdkFactory(requestEvm.targetEid)
                 ).resolve(requestEvm, timeMarker)
+                logger.debug(`Resolved request ${requestEvm.encode()}: ${response}`)
                 return { request: requestEvm.encode(), response }
             }
             default:

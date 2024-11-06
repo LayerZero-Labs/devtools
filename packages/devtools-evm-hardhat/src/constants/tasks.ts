@@ -14,4 +14,4 @@ export const TASK_LZ_VALIDATE_SAFE_CONFIGS = 'lz:healthcheck:validate:safe-confi
 
 export const TASK_LZ_VALIDATE_RPCS = 'lz:healthcheck:validate:rpcs'
 
-export const TASK_LZ_RESOLVE_COMMAND = 'lz:read:resolve-command'
+export const TASK_LZ_READ_RESOLVE_COMMAND = 'lz:read:resolve-command'

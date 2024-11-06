@@ -1449,6 +1449,9 @@ importers:
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.12
         version: 3.0.12
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.12
       '@layerzerolabs/test-devtools':
         specifier: ~0.3.0
         version: link:../test-devtools
