@@ -40,24 +40,30 @@ const config: LzInitiaConfig = {
     // defaultDeployer: Account.fromPrivateKey({ privateKey: process.env.DEFAULT_DEPLOYER })
     gasPrice: {
         // [INITIA_SANDBOX_LOCAL]: '0.000004000',
-        [INITIA_TESTNET]: '10000',
+        // [INITIA_TESTNET]: '10000',
         // [INITIA_MAINNET]: '0.000004000',
     },
     // 3: baseModules: i think this is the path to the other modules that are needed for the deployment
     // baseModules: ['PATH_TO_ANOTHER_LZ_INITIA_CONFIG_FILE'],
     // 5: getMoveContext uses modules.add
     modules: {
-        // 1: lzInitiaConfig.modules[moduleName] gets module that should be deployed
-        // layerzero_common: {
-        MyOFT: {
-            modulePath: 'programs/oft', // 6: modulePath is the path to the file
-            addresses: {
-                MyOFT: '_',
-            },
-            deployer: {
-                'initia-sandbox-local': MNEMONIC_KEY,
-            },
-        },
+        //     // 1: lzInitiaConfig.modules[moduleName] gets module that should be deployed
+        //     // layerzero_common: {
+        //     MyOFT: {
+        //         modulePath: 'programs/oft', // 6: modulePath is the path to the file
+        //         addresses: {
+        //             MyOFT: '_',
+        //         },
+        //         deployer: {
+        //             'initia-sandbox-local': MNEMONIC_KEY,
+        //         },
+        //     },
+        //     Memecoin: {
+        //         modulePath: 'programs/memecoin',
+        //         addresses: {
+        //             Memecoin: '_',
+        //         },
+        //     },
     },
 }
 

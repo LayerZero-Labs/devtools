@@ -528,8 +528,8 @@ importers:
         specifier: ^3.0.10
         version: 3.0.10
       '@layerzerolabs/lz-initia-cli':
-        specifier: 3.0.10
-        version: 3.0.10(ethers@5.7.2)
+        specifier: 3.0.11
+        version: 3.0.11(ethers@5.7.2)
       '@layerzerolabs/lz-utilities':
         specifier: 3.0.7
         version: 3.0.7
@@ -2207,7 +2207,7 @@ importers:
         version: 2.16.2
       ink:
         specifier: ^3.2.0
-        version: 3.2.0(react@17.0.2)
+        version: 3.2.0(@types/react@17.0.75)(react@17.0.2)
       ink-gradient:
         specifier: ^2.0.0
         version: 2.0.0(ink@3.2.0)(react@17.0.2)
@@ -5676,7 +5676,7 @@ packages:
         optional: true
     dependencies:
       chalk: 4.1.2
-      ink: 3.2.0(react@17.0.2)
+      ink: 3.2.0(@types/react@17.0.75)(react@17.0.2)
       ink-gradient: 2.0.0(ink@3.2.0)(react@17.0.2)
       ink-table: 3.1.0(ink@3.2.0)(react@17.0.2)
       logform: 2.6.0
@@ -5705,11 +5705,11 @@ packages:
       - debug
     dev: false
 
-  /@layerzerolabs/lz-config-types@3.0.10(ethers@5.7.2):
-    resolution: {integrity: sha512-cAuU9qdtn/VsxuleIpr92Psp3kQMJtYtOaalaxf2LRJDu1FOKB1HT4uH6A2LesTnVKHZiiQ+DMlEPKdE7V88/g==}
+  /@layerzerolabs/lz-config-types@3.0.11(ethers@5.7.2):
+    resolution: {integrity: sha512-iHKcO6DDF98K/4G+tvshfgQwr7PPYAVdzJfr/7dgp4BeTqmy3RE95pBf4LTabolk+3/0TxBav3in9hlK1tIP7g==}
     dependencies:
-      '@layerzerolabs/lz-core': 3.0.10
-      '@layerzerolabs/lz-definitions': 3.0.10
+      '@layerzerolabs/lz-core': 3.0.11
+      '@layerzerolabs/lz-definitions': 3.0.11
       '@safe-global/protocol-kit': 1.3.0(ethers@5.7.2)
       tiny-invariant: 1.3.3
     transitivePeerDependencies:
@@ -5736,10 +5736,10 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-core@3.0.10:
-    resolution: {integrity: sha512-HC7ho31mkKFAb0D/uDBNJNFy3r0kRGux3iodksp1hRiZD+UtKOxZoeN+QWjBnD7wT2gULvkJ80v/Sfm6klc0vQ==}
+  /@layerzerolabs/lz-core@3.0.11:
+    resolution: {integrity: sha512-oqKjqPj201H1BRoFBFqzqvcio2o6P37w5h8AoNTTGXnwaAO7sD+PLE1Ql9TGpeCYCp2kQwD2VdOit+N5zCQCXQ==}
     dependencies:
-      '@layerzerolabs/lz-foundation': 3.0.10
+      '@layerzerolabs/lz-foundation': 3.0.11
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.5.0
       '@noble/secp256k1': 1.7.1
@@ -5836,6 +5836,12 @@ packages:
     resolution: {integrity: sha512-DLynlfrP5sU0YJ5ryOApCehI1OJrgtWbaFQZEAIjx9duFGsR3/kx7qHQF2654A2eNe4r/y4PzOm4RHAyrnaAMw==}
     dependencies:
       tiny-invariant: 1.3.3
+
+  /@layerzerolabs/lz-definitions@3.0.11:
+    resolution: {integrity: sha512-1WVi2VziB6plwyE9otT26+jS2M7M4naoJIMNUPfXpUAYE68hZBtw6gtYJ0IngLmtcYaVkTDrV0GUoPn/O55PIA==}
+    dependencies:
+      tiny-invariant: 1.3.3
+    dev: false
 
   /@layerzerolabs/lz-evm-messagelib-v2@2.3.44(@axelar-network/axelar-gmp-sdk-solidity@5.9.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@2.3.44)(@layerzerolabs/lz-evm-v1-0.7@2.3.44)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-2HZMjV0KZH0e3W2KL/H8HvE3I7QMJw1no46IQ5LpGSvxIm5Ri45tnQAynbmEbRyKXrRSP3Brkvkc2U7VrfZ/Cg==}
@@ -6131,11 +6137,11 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-foundation@3.0.10:
-    resolution: {integrity: sha512-0lAe44Hb1Nrm9WLxBRXBPVaoD3wR6dqmkK6WUgrTH5DmtVeSNs6RkfyXvHTEZH7nHNwr2B9VM/QE9pKtFfmPiQ==}
+  /@layerzerolabs/lz-foundation@3.0.11:
+    resolution: {integrity: sha512-xyT/ddPPCXU00BfsYTBYdEUQ/xqvtHYzRXjBwEva/lW4d4rpwRN+er363QrUbZTR+kzisK6peK3wb3XozQ9hfQ==}
     dependencies:
-      '@layerzerolabs/lz-definitions': 3.0.10
-      '@layerzerolabs/lz-utilities': 3.0.10
+      '@layerzerolabs/lz-definitions': 3.0.11
+      '@layerzerolabs/lz-utilities': 3.0.11
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.5.0
       '@noble/secp256k1': 1.7.1
@@ -6161,15 +6167,15 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@layerzerolabs/lz-initia-cli@3.0.10(ethers@5.7.2):
-    resolution: {integrity: sha512-WLKg219BzJ6nS0AwgwOhoUXx/Rbm/QvgrSpZCBlk+SuR+/ebqVxmT3PyevnXgF6yrh1vyzo6cDUhenpzfQuG/w==}
+  /@layerzerolabs/lz-initia-cli@3.0.11(ethers@5.7.2):
+    resolution: {integrity: sha512-TGD1u9TMl/TbsFqLoTjcgB/2mrjG/wJe/ATf2WZY6h7pplKKDKH3zKZI9/iXpQEj7F0TrT+RJd8cJdK32slXGg==}
     hasBin: true
     dependencies:
       '@commander-js/extra-typings': 12.1.0(commander@12.1.0)
       '@initia/initia.js': 0.2.19
-      '@layerzerolabs/lz-config-types': 3.0.10(ethers@5.7.2)
-      '@layerzerolabs/lz-definitions': 3.0.10
-      '@layerzerolabs/lz-utilities': 3.0.10
+      '@layerzerolabs/lz-config-types': 3.0.11(ethers@5.7.2)
+      '@layerzerolabs/lz-definitions': 3.0.11
+      '@layerzerolabs/lz-utilities': 3.0.11
       commander: 12.1.0
       find-up: 5.0.0
       glob: 10.3.10
@@ -6258,13 +6264,13 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-utilities@3.0.10:
-    resolution: {integrity: sha512-BgPx0K89Qsi9tsA9R/yevzHLg3kiWqIkIuo1QOeopDQEUsoTMz1wivuPwf7Rg8RE98HBtLDF0aro9I1ZKXGSNg==}
+  /@layerzerolabs/lz-utilities@3.0.11:
+    resolution: {integrity: sha512-PbBW3eAXBT5Oso7W6qXeGvQ8F5s+lxO5Abh16t7CvFleVamrcZjZ1NqWXGgrDJAc+nE7GwFk1DItNF60gj1FdA==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/providers': 5.7.2
       '@initia/initia.js': 0.2.19
-      '@layerzerolabs/lz-definitions': 3.0.10
+      '@layerzerolabs/lz-definitions': 3.0.11
       '@noble/hashes': 1.5.0
       '@noble/secp256k1': 1.7.1
       '@solana/web3.js': 1.95.3
@@ -6497,7 +6503,7 @@ packages:
       fp-ts: 2.16.2
       hardhat: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
       hardhat-deploy: 0.12.4
-      ink: 3.2.0(react@17.0.2)
+      ink: 3.2.0(@types/react@17.0.75)(react@17.0.2)
       ink-gradient: 2.0.0(ink@3.2.0)(react@17.0.2)
       ink-table: 3.1.0(ink@3.2.0)(react@17.0.2)
       react: 17.0.2
@@ -12792,45 +12798,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  /ink@3.2.0(react@17.0.2):
-    resolution: {integrity: sha512-firNp1q3xxTzoItj/eOOSZQnYSlyrWks5llCTVX37nJ59K3eXbQ8PtzCguqo8YI19EELo5QxaKnJd4VxzhU8tg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      '@types/react': '>=16.8.0'
-      react: '>=16.8.0'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      ansi-escapes: 4.3.2
-      auto-bind: 4.0.0
-      chalk: 4.1.2
-      cli-boxes: 2.2.1
-      cli-cursor: 3.1.0
-      cli-truncate: 2.1.0
-      code-excerpt: 3.0.0
-      indent-string: 4.0.0
-      is-ci: 2.0.0
-      lodash: 4.17.21
-      patch-console: 1.0.0
-      react: 17.0.2
-      react-devtools-core: 4.28.5
-      react-reconciler: 0.26.2(react@17.0.2)
-      scheduler: 0.20.2
-      signal-exit: 3.0.7
-      slice-ansi: 3.0.0
-      stack-utils: 2.0.6
-      string-width: 4.2.3
-      type-fest: 0.12.0
-      widest-line: 3.1.0
-      wrap-ansi: 6.2.0
-      ws: 7.5.10
-      yoga-layout-prebuilt: 1.10.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
 
   /internal-slot@1.0.6:
     resolution: {integrity: sha512-Xj6dv+PsbtwyPpEflsejS+oIZxmMlV44zAhG479uYu89MsjcYOhCFnNyKrkJrihbsiasQyY0afoCl/9BLR65bg==}

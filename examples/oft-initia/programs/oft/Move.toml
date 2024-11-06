@@ -1,11 +1,14 @@
 [package]
 # name = "oft"
-name = "MyOFT"
+# name = "MyOFT"
+name = "tes"
 version = "0.0.0"
 authors = []
 
 [addresses]
-MyOFT = "_"
+# MyOFT = "_"
+# memecoin = "_"
+tes = "_"
 # oft = "_"
 # oft_common = "_"
 # router_node_0 = "_"
@@ -62,9 +65,9 @@ MyOFT = "_"
 # dvn = "0x234234"
 
 [dependencies.InitiaStdlib]
-git = "https://github.com/initia-labs/movevm.git"
-rev = "b810effbdb28e330c5d29eaf25e7b05299c418e1"
-subdir = "precompile/modules/initia_stdlib"
+# git = "https://github.com/initia-labs/movevm.git"
+# rev = "b810effbdb28e330c5d29eaf25e7b05299c418e1"
+# subdir = "precompile/modules/initia_stdlib"
 
 [dependencies]
 # endpoint_v2_common = { local = "../../endpoint_v2_common" }

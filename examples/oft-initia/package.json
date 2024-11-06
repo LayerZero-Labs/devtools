@@ -15,7 +15,7 @@
   "dependencies": {
     "@initia/initia.js": "^0.2.11",
     "@layerzerolabs/lz-definitions": "^3.0.10",
-    "@layerzerolabs/lz-initia-cli": "3.0.10",
+    "@layerzerolabs/lz-initia-cli": "3.0.11",
     "@layerzerolabs/lz-utilities": "3.0.7",
     "@layerzerolabs/toolbox-hardhat": "^0.1.0",
     "dotenv": "^16.4.5",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@initia/initia.js": "^0.2.11",
     "@layerzerolabs/lz-definitions": "^3.0.10",
-    "@layerzerolabs/lz-initia-cli": "3.0.10",
+    "@layerzerolabs/lz-initia-cli": "3.0.11",
     "@layerzerolabs/lz-utilities": "3.0.7",
     "@layerzerolabs/toolbox-hardhat": "^0.1.0",
     "dotenv": "^16.4.5"
