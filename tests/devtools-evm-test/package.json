@@ -24,7 +24,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/devtools-evm": "~0.4.2",
-    "@layerzerolabs/lz-definitions": "^2.3.39",
+    "@layerzerolabs/lz-definitions": "^3.0.12",
     "@layerzerolabs/test-devtools": "~0.2.9",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
