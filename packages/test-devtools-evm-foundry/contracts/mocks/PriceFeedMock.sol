@@ -28,6 +28,8 @@ contract PriceFeedMock is ILayerZeroPriceFeed, Ownable {
 
     ILayerZeroEndpointV2 public endpoint;
 
+    error LZ_PriceFeed_NotAnOPStack(uint32 l2Eid);
+
     // ============================ Constructor ===================================
 
     // @dev oz4/5 breaking change... Ownable constructor
