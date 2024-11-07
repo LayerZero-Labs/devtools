@@ -4,8 +4,8 @@ import type { JsonRpcProvider } from '@ethersproject/providers'
 import type { EndpointBasedFactory } from '@layerzerolabs/devtools'
 import type { ProviderFactory } from '@layerzerolabs/devtools-evm'
 
-import { ComputeEVMImplSdk } from '@/read/cmdResolver/chain/evm/computeImpl'
-import { SingleViewFunctionEVMCallImplSdk } from '@/read/cmdResolver/chain/evm/viewImpl'
+import { ComputeEVMImplSdk } from '@/read/commandResolver/chain/evm/computeImpl'
+import { SingleViewFunctionEVMCallImplSdk } from '@/read/commandResolver/chain/evm/viewImpl'
 import { IComputeEVMSdk, ISingleViewFunctionEVMCallSdk } from '@/read/types'
 import { createProviderFactory } from '@/provider'
 

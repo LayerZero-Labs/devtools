@@ -60,7 +60,10 @@ const findResolvedTimeMarker = (
     resolvedTimeMarkers: ResolvedTimestampTimeMarker[]
 ): ResolvedTimestampTimeMarker => {
     const resolvedTimeMarker = resolvedTimeMarkers.find(
-        (tm) => tm.timestamp === timeMarker.timestamp && tm.blockConfirmation === timeMarker.blockConfirmation
+        (tm) =>
+            tm.eid === timeMarker.eid &&
+            tm.timestamp === timeMarker.timestamp &&
+            tm.blockConfirmation === timeMarker.blockConfirmation
     )
 
     if (!resolvedTimeMarker) {
@@ -114,7 +117,7 @@ export const findComputeResolvedTimeMarker = (
 
 export const groupByEid = <T extends { eid: EndpointId }>(arr: T[]): Map<number, T[]> => {
     return arr.reduce((acc, item) => {
-        if (!acc[item.eid]) {
+        if (!acc.has(item.eid)) {
             acc.set(item.eid, [])
         }
         acc.get(item.eid)!.push(item)

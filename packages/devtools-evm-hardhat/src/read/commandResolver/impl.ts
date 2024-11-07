@@ -39,11 +39,15 @@ export class CommandResolverSdk implements ICommandResolverSdk {
         }
     ) {}
 
-    public async extractTimeMarkers(cmd: string): Promise<{
+    public decodeCommand(command: string): Command {
+        return Command.decode(command.replace('0x', ''))
+    }
+
+    public async extractTimeMarkers(command: string): Promise<{
         blockNumberTimeMarkers: BlockNumberTimeMarker[]
         timestampTimeMarkers: TimestampTimeMarker[]
     }> {
-        const decodedCommand = Command.decode(cmd.replace('0x', ''))
+        const decodedCommand = Command.decode(command.replace('0x', ''))
 
         const timeMarkers: TimeMarker[] = []
 
@@ -73,9 +77,9 @@ export class CommandResolverSdk implements ICommandResolverSdk {
         }
     }
 
-    public async resolveCmd(cmd: string, timeMarkers: ResolvedTimestampTimeMarker[]): Promise<string> {
+    public async resolveCommand(command: string, timeMarkers: ResolvedTimestampTimeMarker[]): Promise<string> {
         const logger = createModuleLogger('CommandResolverSdk')
-        const decodedCommand = Command.decode(cmd.replace('0x', ''))
+        const decodedCommand = Command.decode(command.replace('0x', ''))
 
         try {
             logger.info(`Resolving requests`)
@@ -91,7 +95,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
             }
 
             return await this.resolveCompute(
-                cmd,
+                command,
                 decodedCommand.compute,
                 findComputeResolvedTimeMarker(decodedCommand.compute, timeMarkers),
                 responses
@@ -124,7 +128,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
     }
 
     private async resolveCompute(
-        cmd: string,
+        command: string,
         compute: Compute,
         timeMarker: ResolvedTimeMarker,
         responses: { request: string; response: string }[]
@@ -134,7 +138,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
                 const computeEvm = compute as ComputeEVM
                 return await (
                     await this.options.computeEVMSdkFactory(computeEvm.targetEid)
-                ).resolve(cmd, computeEvm, timeMarker, responses)
+                ).resolve(command, computeEvm, timeMarker, responses)
             }
             default:
                 throw new Error(`Unsupported compute type: ${compute.computeHeader.computeType}`)

@@ -33,23 +33,23 @@ const action: ActionType<TaskArgs> = async ({ command, logLevel = 'info' }, _hre
     const timeMarkerResolverSdk = await timeMarkerResolverSdkFactory()
     const timeMarkerValidatorSdk = await timeMarkerValidatorSdkFactory()
 
+    const decodedCommand = commandResolverSdk.decodeCommand(command)
+
+    logger.info(`Decoded command: ${printJson(decodedCommand)}`)
+
     const { timestampTimeMarkers, blockNumberTimeMarkers } = await commandResolverSdk.extractTimeMarkers(command)
     const resolvedTimestampTimeMarkers = await timeMarkerResolverSdk.resolveTimestampTimeMarkers(timestampTimeMarkers)
 
     logger.info(`Resolved timestamp time markers: ${printJson(resolvedTimestampTimeMarkers)}`)
-
-    await timeMarkerValidatorSdk.checkResolvedTimeMarkerValidity(resolvedTimestampTimeMarkers)
-
-    logger.verbose(`Timestamp time markers are valid`)
 
     await timeMarkerValidatorSdk.assertTimeMarkerBlockConfirmations([
         ...resolvedTimestampTimeMarkers,
         ...blockNumberTimeMarkers,
     ])
 
-    logger.verbose(`Block confirmations are resolved`)
+    logger.verbose(`Time markers have enough block confirmations`)
 
-    const resolvedPayload = await commandResolverSdk.resolveCmd(command, resolvedTimestampTimeMarkers)
+    const resolvedPayload = await commandResolverSdk.resolveCommand(command, resolvedTimestampTimeMarkers)
 
     logger.info(`Resolved payload: ${resolvedPayload}`)
     return resolvedPayload

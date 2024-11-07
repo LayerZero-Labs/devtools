@@ -2,7 +2,7 @@ import { Interface } from '@ethersproject/abi'
 import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import { ComputeEVM, ComputeSetting } from '@layerzerolabs/lz-v2-utilities'
 
-import { EVMViewFunctionBase } from '@/read/cmdResolver/chain/evm/base'
+import { EVMViewFunctionBase } from '@/read/commandResolver/chain/evm/base'
 import type { IComputeEVMSdk, ResolvedTimeMarker } from '@/read/types'
 
 const iOAppMapperAbi = ['function lzMap(bytes calldata _request, bytes calldata _response) view returns (bytes)']
