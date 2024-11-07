@@ -34,8 +34,8 @@ contract MyOFTTest is TestHelperOz5 {
     OFTMock private aOFT;
     OFTMock private bOFT;
 
-    address private userA = address(0x1);
-    address private userB = address(0x2);
+    address private userA = makeAddr("userA");
+    address private userB = makeAddr("userB");
     uint256 private initialBalance = 100 ether;
 
     function setUp() public virtual override {
