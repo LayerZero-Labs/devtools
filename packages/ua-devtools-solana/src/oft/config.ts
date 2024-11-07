@@ -11,6 +11,7 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { isOmniPointOnSolana } from '@layerzerolabs/devtools-solana'
 import type { IOApp, OAppConfigurator, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OFT } from './sdk'
+// import { initReceiveLibrary, initSendLibrary } from '@layerzerolabs/oft-v2-solana-sdk'
 
 const createOFTLogger = () => createModuleLogger('OFT')
 

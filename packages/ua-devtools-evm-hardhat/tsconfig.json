@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
+    "target": "es2020",
     "types": ["node", "jest"],
     "paths": {
       "@/*": ["./src/*"]

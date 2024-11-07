@@ -209,7 +209,7 @@ export const getNetworkNameForEidMaybe = (
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
 ): string | undefined => {
     // We are using getEidsByNetworkName to get the nice validation of network config
-    const eidsByNetworkName = getEidsByNetworkName(hre)
+    const eidsByNetworkName = { ...getEidsByNetworkName(hre), 'solana-testnet': EndpointId.SOLANA_V2_TESTNET }
 
     for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
         if (networkEid === eid) {

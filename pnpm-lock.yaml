@@ -603,7 +603,7 @@ importers:
         specifier: ~3.0.1
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~4.0.0
+        specifier: ^4.0.1
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
         specifier: ~2.0.0
@@ -2418,6 +2418,9 @@ importers:
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ~1.2.2
         version: link:../devtools-evm-hardhat
+      '@layerzerolabs/devtools-solana':
+        specifier: ~0.2.0
+        version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.13
         version: link:../io-devtools
@@ -2436,12 +2439,21 @@ importers:
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~1.2.1
         version: link:../protocol-devtools-evm
+      '@layerzerolabs/protocol-devtools-solana':
+        specifier: ^2.0.0
+        version: link:../protocol-devtools-solana
       '@layerzerolabs/ua-devtools':
         specifier: ~1.0.5
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
         specifier: ~3.0.1
         version: link:../ua-devtools-evm
+      '@layerzerolabs/ua-devtools-solana':
+        specifier: ~2.0.0
+        version: link:../ua-devtools-solana
+      '@solana/web3.js':
+        specifier: ^1.95.4
+        version: 1.95.4
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -2451,6 +2463,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      bs58:
+        specifier: ^6.0.0
+        version: 6.0.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
@@ -7080,6 +7095,30 @@ packages:
       - utf-8-validate
     dev: true
 
+  /@solana/web3.js@1.95.4:
+    resolution: {integrity: sha512-sdewnNEA42ZSMxqkzdwEWi6fDgzwtJHaQa5ndUGEJYtoOnM6X5cvPmjoTUp7/k7bRrVAxfBgDnvQQHD6yhlLYw==}
+    dependencies:
+      '@babel/runtime': 7.25.6
+      '@noble/curves': 1.4.2
+      '@noble/hashes': 1.4.0
+      '@solana/buffer-layout': 4.0.1
+      agentkeepalive: 4.5.0
+      bigint-buffer: 1.1.5
+      bn.js: 5.2.1
+      borsh: 0.7.0
+      bs58: 4.0.1
+      buffer: 6.0.3
+      fast-stable-stringify: 1.0.0
+      jayson: 4.1.1
+      node-fetch: 2.7.0
+      rpc-websockets: 9.0.2
+      superstruct: 2.0.2
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+    dev: true
+
   /@solidity-parser/parser@0.16.2:
     resolution: {integrity: sha512-PI9NfoA3P8XK2VBkK5oIfRgKDsicwDZfkVq9ZTBCQYGOP1N2owgY2dyLGyU5/J/hQs8KRk55kdmvTLjy3Mu3vg==}
     dependencies:
@@ -8201,7 +8240,7 @@ packages:
   /axios@0.21.4(debug@4.3.4):
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.5(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.4)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -10843,8 +10882,8 @@ packages:
   /fn.name@1.1.0:
     resolution: {integrity: sha512-GRnmB5gPyJpAhTQdSZTSp9uaPSvl09KoYcMQtsB9rQoOmzs9dH6ffeccH+Z+cv6P68Hu5bC6JjRh4Ah/mHSNRw==}
 
-  /follow-redirects@1.15.5(debug@4.3.4):
-    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
+  /follow-redirects@1.15.6(debug@4.3.4):
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
