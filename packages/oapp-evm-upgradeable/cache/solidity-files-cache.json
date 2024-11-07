@@ -59,15 +59,15 @@
         "OAppCoreUpgradeable": {
           "0.8.22": {
             "path": "OAppCoreUpgradeable.sol/OAppCoreUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/oapp/OAppReceiverUpgradeable.sol": {
-      "lastModificationDate": 1730465183494,
-      "contentHash": "50cac4959f785fdb188ddc8e39fe942b",
+      "lastModificationDate": 1731002688774,
+      "contentHash": "6c9270a2829f84d24b8da2617bbcefb8",
       "sourceName": "contracts/oapp/OAppReceiverUpgradeable.sol",
       "compilerSettings": {
         "solc": {
@@ -118,15 +118,15 @@
         "OAppReceiverUpgradeable": {
           "0.8.22": {
             "path": "OAppReceiverUpgradeable.sol/OAppReceiverUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/oapp/OAppSenderUpgradeable.sol": {
-      "lastModificationDate": 1730465183495,
-      "contentHash": "50ead64aa42c0b3309de6c60a72459d6",
+      "lastModificationDate": 1731002688774,
+      "contentHash": "bb39decdd229e8c4f4f9d99fc407c8f3",
       "sourceName": "contracts/oapp/OAppSenderUpgradeable.sol",
       "compilerSettings": {
         "solc": {
@@ -179,15 +179,15 @@
         "OAppSenderUpgradeable": {
           "0.8.22": {
             "path": "OAppSenderUpgradeable.sol/OAppSenderUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "contracts/oapp/OAppUpgradeable.sol": {
-      "lastModificationDate": 1730465183495,
-      "contentHash": "afdd73ab347859f0ced12948cb363ef6",
+      "lastModificationDate": 1731002688774,
+      "contentHash": "d6e410f8173b4d26d43a87f5b26f9a3c",
       "sourceName": "contracts/oapp/OAppUpgradeable.sol",
       "compilerSettings": {
         "solc": {
@@ -244,7 +244,7 @@
         "OAppUpgradeable": {
           "0.8.22": {
             "path": "OAppUpgradeable.sol/OAppUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -295,7 +295,7 @@
         "OAppOptionsType3Upgradeable": {
           "0.8.22": {
             "path": "OAppOptionsType3Upgradeable.sol/OAppOptionsType3Upgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -358,7 +358,7 @@
         "OAppPreCrimeSimulatorUpgradeable": {
           "0.8.22": {
             "path": "OAppPreCrimeSimulatorUpgradeable.sol/OAppPreCrimeSimulatorUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -422,7 +422,7 @@
         "PreCrimeUpgradeable": {
           "0.8.22": {
             "path": "PreCrimeUpgradeable.sol/PreCrimeUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -490,7 +490,7 @@
         "PreCrimeE1Upgradeable": {
           "0.8.22": {
             "path": "PreCrimeE1Upgradeable.sol/PreCrimeE1Upgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -536,7 +536,7 @@
         "MessageLibBase": {
           "0.8.22": {
             "path": "MessageLibBase.sol/MessageLibBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -595,7 +595,7 @@
         "ReceiveLibBaseE2": {
           "0.8.22": {
             "path": "ReceiveLibBaseE2.sol/ReceiveLibBaseE2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -653,7 +653,7 @@
         "SendLibBase": {
           "0.8.22": {
             "path": "SendLibBase.sol/SendLibBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -721,15 +721,15 @@
         "SendLibBaseE2": {
           "0.8.22": {
             "path": "SendLibBaseE2.sol/SendLibBaseE2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol": {
-      "lastModificationDate": 1729620163164,
-      "contentHash": "6611b1246e91c7e160c7682c33af6c4e",
+      "lastModificationDate": 1730934640295,
+      "contentHash": "858de940d9da7bde1b49b548dde047b1",
       "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol",
       "compilerSettings": {
         "solc": {
@@ -763,6 +763,7 @@
       },
       "imports": [
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
@@ -775,15 +776,15 @@
         "IExecutor": {
           "0.8.22": {
             "path": "IExecutor.sol/IExecutor.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol": {
-      "lastModificationDate": 1729620163164,
-      "contentHash": "ccd3c9f71ab46b75d8d606adf415eacb",
+      "lastModificationDate": 1730934640295,
+      "contentHash": "99639689f646471c98f0e69da75cd98e",
       "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
       "compilerSettings": {
         "solc": {
@@ -818,6 +819,7 @@
       "imports": [
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
@@ -830,7 +832,7 @@
         "IExecutorFeeLib": {
           "0.8.22": {
             "path": "IExecutorFeeLib.sol/IExecutorFeeLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -876,7 +878,7 @@
         "ILayerZeroExecutor": {
           "0.8.22": {
             "path": "ILayerZeroExecutor.sol/ILayerZeroExecutor.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -922,7 +924,53 @@
         "ILayerZeroPriceFeed": {
           "0.8.22": {
             "path": "ILayerZeroPriceFeed.sol/ILayerZeroPriceFeed.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol": {
+      "lastModificationDate": 1730934640295,
+      "contentHash": "8d8a3699cbb42b38efc7d42cb72df7d1",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.8.0",
+      "artifacts": {
+        "ILayerZeroReadExecutor": {
+          "0.8.22": {
+            "path": "ILayerZeroReadExecutor.sol/ILayerZeroReadExecutor.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -968,7 +1016,7 @@
         "ILayerZeroTreasury": {
           "0.8.22": {
             "path": "ILayerZeroTreasury.sol/ILayerZeroTreasury.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1014,7 +1062,55 @@
         "IWorker": {
           "0.8.22": {
             "path": "IWorker.sol/IWorker.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol": {
+      "lastModificationDate": 1730934640295,
+      "contentHash": "3f6e7baf384cd5e0749c85e482baab64",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol"
+      ],
+      "versionRequirement": "^0.8.20",
+      "artifacts": {
+        "ExecutorOptions": {
+          "0.8.22": {
+            "path": "libs/ExecutorOptions.sol/ExecutorOptions.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1060,7 +1156,7 @@
         "SafeCall": {
           "0.8.22": {
             "path": "SafeCall.sol/SafeCall.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1120,7 +1216,7 @@
         "ReceiveUlnBase": {
           "0.8.22": {
             "path": "ReceiveUlnBase.sol/ReceiveUlnBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1198,7 +1294,7 @@
         "SendUlnBase": {
           "0.8.22": {
             "path": "SendUlnBase.sol/SendUlnBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1247,15 +1343,15 @@
         "UlnBase": {
           "0.8.22": {
             "path": "UlnBase.sol/UlnBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol": {
-      "lastModificationDate": 1729620163170,
-      "contentHash": "d6473eb2f5eee4789e889d0a13685611",
+      "lastModificationDate": 1730934640296,
+      "contentHash": "65b0d0b3468b6d063592cc863452d977",
       "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
       "compilerSettings": {
         "solc": {
@@ -1289,22 +1385,23 @@
       },
       "imports": [
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
-        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol"
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol"
       ],
       "versionRequirement": ">=0.8.0",
       "artifacts": {
         "IDVN": {
           "0.8.22": {
             "path": "IDVN.sol/IDVN.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol": {
-      "lastModificationDate": 1729620163170,
-      "contentHash": "987cd85145921cff7d812431333457ce",
+      "lastModificationDate": 1730934640296,
+      "contentHash": "dc8cc7fb359caf112256286c53278fa8",
       "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
       "compilerSettings": {
         "solc": {
@@ -1339,14 +1436,15 @@
       "imports": [
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
-        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol"
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol"
       ],
       "versionRequirement": ">=0.8.0",
       "artifacts": {
         "IDVNFeeLib": {
           "0.8.22": {
             "path": "IDVNFeeLib.sol/IDVNFeeLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1392,7 +1490,53 @@
         "ILayerZeroDVN": {
           "0.8.22": {
             "path": "ILayerZeroDVN.sol/ILayerZeroDVN.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol": {
+      "lastModificationDate": 1730934640296,
+      "contentHash": "9c580377c4d65761ee7c745e091eebce",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [],
+      "versionRequirement": ">=0.8.0",
+      "artifacts": {
+        "ILayerZeroReadDVN": {
+          "0.8.22": {
+            "path": "ILayerZeroReadDVN.sol/ILayerZeroReadDVN.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1438,7 +1582,7 @@
         "IReceiveUlnE2": {
           "0.8.22": {
             "path": "IReceiveUlnE2.sol/IReceiveUlnE2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1488,7 +1632,104 @@
         "DVNOptions": {
           "0.8.22": {
             "path": "DVNOptions.sol/DVNOptions.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol": {
+      "lastModificationDate": 1730934640297,
+      "contentHash": "d423f12abbb7ca043aeb62444ded5431",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol"
+      ],
+      "versionRequirement": "^0.8.20",
+      "artifacts": {
+        "ReadCmdCodecV1": {
+          "0.8.22": {
+            "path": "ReadCmdCodecV1.sol/ReadCmdCodecV1.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol": {
+      "lastModificationDate": 1730934640297,
+      "contentHash": "59d5fc012288202ddf31d903eb995b8b",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol"
+      ],
+      "versionRequirement": "^0.8.20",
+      "artifacts": {
+        "SupportedCmdTypesLib": {
+          "0.8.22": {
+            "path": "SupportedCmdTypes.sol/SupportedCmdTypesLib.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1541,7 +1782,56 @@
         "UlnOptions": {
           "0.8.22": {
             "path": "UlnOptions.sol/UlnOptions.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol": {
+      "lastModificationDate": 1730934640297,
+      "contentHash": "b5778918cebe480dced00c80a2435a11",
+      "sourceName": "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol"
+      ],
+      "versionRequirement": "^0.8.20",
+      "artifacts": {
+        "ReadLibBase": {
+          "0.8.22": {
+            "path": "ReadLibBase.sol/ReadLibBase.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1587,7 +1877,7 @@
         "IUltraLightNode301": {
           "0.8.22": {
             "path": "IUltraLightNode301.sol/IUltraLightNode301.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1642,7 +1932,7 @@
         "MessageLibManager": {
           "0.8.22": {
             "path": "MessageLibManager.sol/MessageLibManager.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1693,7 +1983,7 @@
         "MessagingChannel": {
           "0.8.22": {
             "path": "MessagingChannel.sol/MessagingChannel.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1743,7 +2033,7 @@
         "MessagingComposer": {
           "0.8.22": {
             "path": "MessagingComposer.sol/MessagingComposer.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1792,7 +2082,7 @@
         "MessagingContext": {
           "0.8.22": {
             "path": "MessagingContext.sol/MessagingContext.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1838,7 +2128,7 @@
         "ILayerZeroComposer": {
           "0.8.22": {
             "path": "ILayerZeroComposer.sol/ILayerZeroComposer.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1889,7 +2179,7 @@
         "ILayerZeroEndpointV2": {
           "0.8.22": {
             "path": "ILayerZeroEndpointV2.sol/ILayerZeroEndpointV2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1941,7 +2231,7 @@
         "ILayerZeroReceiver": {
           "0.8.22": {
             "path": "ILayerZeroReceiver.sol/ILayerZeroReceiver.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -1990,7 +2280,7 @@
         "IMessageLib": {
           "0.8.22": {
             "path": "IMessageLib.sol/IMessageLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2036,7 +2326,7 @@
         "IMessageLibManager": {
           "0.8.22": {
             "path": "IMessageLibManager.sol/IMessageLibManager.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2082,7 +2372,7 @@
         "IMessagingChannel": {
           "0.8.22": {
             "path": "IMessagingChannel.sol/IMessagingChannel.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2128,7 +2418,7 @@
         "IMessagingComposer": {
           "0.8.22": {
             "path": "IMessagingComposer.sol/IMessagingComposer.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2174,7 +2464,7 @@
         "IMessagingContext": {
           "0.8.22": {
             "path": "IMessagingContext.sol/IMessagingContext.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2228,7 +2518,7 @@
         "ISendLib": {
           "0.8.22": {
             "path": "ISendLib.sol/ISendLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2274,7 +2564,7 @@
         "AddressCast": {
           "0.8.22": {
             "path": "AddressCast.sol/AddressCast.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2320,7 +2610,7 @@
         "CalldataBytesLib": {
           "0.8.22": {
             "path": "CalldataBytesLib.sol/CalldataBytesLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2366,7 +2656,7 @@
         "Errors": {
           "0.8.22": {
             "path": "Errors.sol/Errors.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2414,7 +2704,7 @@
         "GUID": {
           "0.8.22": {
             "path": "GUID.sol/GUID.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2465,7 +2755,7 @@
         "Transfer": {
           "0.8.22": {
             "path": "Transfer.sol/Transfer.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2517,7 +2807,7 @@
         "BlockedMessageLib": {
           "0.8.22": {
             "path": "BlockedMessageLib.sol/BlockedMessageLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2563,7 +2853,7 @@
         "BitMaps": {
           "0.8.22": {
             "path": "BitMaps.sol/BitMaps.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2611,7 +2901,7 @@
         "ExecutorOptions": {
           "0.8.22": {
             "path": "ExecutorOptions.sol/ExecutorOptions.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2667,7 +2957,7 @@
         "PacketV1Codec": {
           "0.8.22": {
             "path": "PacketV1Codec.sol/PacketV1Codec.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2715,7 +3005,7 @@
         "ILayerZeroEndpoint": {
           "0.8.22": {
             "path": "ILayerZeroEndpoint.sol/ILayerZeroEndpoint.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2761,7 +3051,7 @@
         "ILayerZeroUltraLightNodeV2": {
           "0.8.22": {
             "path": "ILayerZeroUltraLightNodeV2.sol/ILayerZeroUltraLightNodeV2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2807,7 +3097,7 @@
         "ILayerZeroUserApplicationConfig": {
           "0.8.22": {
             "path": "ILayerZeroUserApplicationConfig.sol/ILayerZeroUserApplicationConfig.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2859,7 +3149,7 @@
         "IOAppCore": {
           "0.8.22": {
             "path": "IOAppCore.sol/IOAppCore.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2905,7 +3195,7 @@
         "IOAppOptionsType3": {
           "0.8.22": {
             "path": "IOAppOptionsType3.sol/IOAppOptionsType3.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -2958,7 +3248,7 @@
         "IOAppReceiver": {
           "0.8.22": {
             "path": "IOAppReceiver.sol/IOAppReceiver.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3016,7 +3306,7 @@
         "IOAppPreCrimeSimulator": {
           "0.8.22": {
             "path": "IOAppPreCrimeSimulator.sol/IOAppPreCrimeSimulator.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3062,7 +3352,7 @@
         "IPreCrime": {
           "0.8.22": {
             "path": "IPreCrime.sol/IPreCrime.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3119,15 +3409,15 @@
         "PacketDecoder": {
           "0.8.22": {
             "path": "Packet.sol/PacketDecoder.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol": {
-      "lastModificationDate": 1729622816664,
-      "contentHash": "ade306dc5e4187689103bdcedca44793",
+      "lastModificationDate": 1731000263177,
+      "contentHash": "585c08391f36534f3a89fedf3b40da0a",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol",
       "compilerSettings": {
         "solc": {
@@ -3173,21 +3463,21 @@
         "OptionsHelper": {
           "0.8.22": {
             "path": "contracts/OptionsHelper.sol/OptionsHelper.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "UlnOptionsMock": {
           "0.8.22": {
             "path": "contracts/OptionsHelper.sol/UlnOptionsMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol": {
-      "lastModificationDate": 1729620160985,
-      "contentHash": "d71e778cc00705e1aeb09ca4826da925",
+      "lastModificationDate": 1731002688808,
+      "contentHash": "facf2ca95bc0b23146bbb5e850b1847e",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol",
       "compilerSettings": {
         "solc": {
@@ -3228,8 +3518,10 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
@@ -3237,9 +3529,13 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
@@ -3273,6 +3569,7 @@
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
@@ -3319,21 +3616,21 @@
         "IOAppSetPeer": {
           "0.8.22": {
             "path": "TestHelperOz5.sol/IOAppSetPeer.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "TestHelperOz5": {
           "0.8.22": {
             "path": "TestHelperOz5.sol/TestHelperOz5.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNFeeLibMock.sol": {
-      "lastModificationDate": 1729620160981,
-      "contentHash": "42f4c18092346e04d395f407b765d956",
+      "lastModificationDate": 1731002688809,
+      "contentHash": "170b0d08e1e4f8a33f3fbed0d535ba06",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNFeeLibMock.sol",
       "compilerSettings": {
         "solc": {
@@ -3371,7 +3668,10 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
@@ -3388,15 +3688,15 @@
         "DVNFeeLibMock": {
           "0.8.22": {
             "path": "DVNFeeLibMock.sol/DVNFeeLibMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNMock.sol": {
-      "lastModificationDate": 1729620160982,
-      "contentHash": "2675715ba35ee4282e8afb6d385f40d4",
+      "lastModificationDate": 1731002688809,
+      "contentHash": "9b68b3acbd9ccb7d475d86d021eb5797",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNMock.sol",
       "compilerSettings": {
         "solc": {
@@ -3429,40 +3729,113 @@
         }
       },
       "imports": [
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/MessageLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/ReceiveLibBaseE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingComposer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingContext.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/GUID.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/BlockedMessageLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
         "node_modules/@layerzerolabs/lz-evm-v1-0.7/contracts/interfaces/ILayerZeroUltraLightNodeV2.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNFeeLibMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/EndpointV2Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorFeeLibMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/WorkerMock.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/BytesLib.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/test.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Base.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdAssertions.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdChains.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdCheats.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdError.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdInvariant.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdJson.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdMath.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdStorage.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdStyle.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdUtils.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Test.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Vm.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/console.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/console2.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/interfaces/IMulticall3.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/mocks/MockERC20.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/mocks/MockERC721.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/safeconsole.sol",
         "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
         "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
         "node_modules/@openzeppelin/contracts/utils/Address.sol",
         "node_modules/@openzeppelin/contracts/utils/Context.sol",
         "node_modules/@openzeppelin/contracts/utils/Pausable.sol",
+        "node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol",
         "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
         "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
-        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
+        "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol"
       ],
       "versionRequirement": "^0.8.20",
       "artifacts": {
         "DVNMock": {
           "0.8.22": {
             "path": "DVNMock.sol/DVNMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3535,15 +3908,15 @@
         "EndpointV2Mock": {
           "0.8.22": {
             "path": "EndpointV2Mock.sol/EndpointV2Mock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorFeeLibMock.sol": {
-      "lastModificationDate": 1729620160982,
-      "contentHash": "c58454b6921d026ecfc5f58380de636a",
+      "lastModificationDate": 1731002898144,
+      "contentHash": "61754af5047d1c044fcc1b136266a1be",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorFeeLibMock.sol",
       "compilerSettings": {
         "solc": {
@@ -3580,7 +3953,9 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
@@ -3588,7 +3963,6 @@
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol",
-        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
         "node_modules/@openzeppelin/contracts/access/Ownable.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
@@ -3601,15 +3975,15 @@
         "ExecutorFeeLibMock": {
           "0.8.22": {
             "path": "ExecutorFeeLibMock.sol/ExecutorFeeLibMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol": {
-      "lastModificationDate": 1729620160982,
-      "contentHash": "d82c4d8edde097de6c4e0d3080f58c60",
+      "lastModificationDate": 1731002688809,
+      "contentHash": "eb71bbe24ae0f31125dd159e14f4fd16",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
       "compilerSettings": {
         "solc": {
@@ -3645,6 +4019,7 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
@@ -3675,7 +4050,7 @@
         "ExecutorMock": {
           "0.8.22": {
             "path": "ExecutorMock.sol/ExecutorMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3723,7 +4098,7 @@
         "MultiSigMock": {
           "0.8.22": {
             "path": "MultiSigMock.sol/MultiSigMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3783,7 +4158,154 @@
         "PriceFeedMock": {
           "0.8.22": {
             "path": "PriceFeedMock.sol/PriceFeedMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
+          }
+        }
+      },
+      "seenByCompiler": true
+    },
+    "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol": {
+      "lastModificationDate": 1731002688809,
+      "contentHash": "e9c420d7377df689ad35586f5f8ab08e",
+      "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
+      "compilerSettings": {
+        "solc": {
+          "optimizer": { "enabled": true, "runs": 200 },
+          "metadata": {
+            "useLiteralContent": false,
+            "bytecodeHash": "ipfs",
+            "appendCBOR": true
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ]
+            }
+          },
+          "evmVersion": "paris",
+          "viaIR": false,
+          "libraries": {}
+        },
+        "vyper": {
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": { "*": ["abi", "evm.bytecode", "evm.deployedBytecode"] }
+          }
+        }
+      },
+      "imports": [
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/MessageLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/ReceiveLibBaseE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBaseE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/UlnBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingComposer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingContext.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ISendLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/GUID.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Transfer.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/BlockedMessageLib.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol",
+        "node_modules/@layerzerolabs/lz-evm-v1-0.7/contracts/interfaces/ILayerZeroUltraLightNodeV2.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNFeeLibMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/DVNMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/EndpointV2Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorFeeLibMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/WorkerMock.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/BytesLib.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/test.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Base.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdAssertions.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdChains.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdCheats.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdError.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdInvariant.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdJson.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdMath.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdStorage.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdStyle.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/StdUtils.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Test.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/Vm.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/console.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/console2.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/interfaces/IMulticall3.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/mocks/MockERC20.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/mocks/MockERC721.sol",
+        "node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/safeconsole.sol",
+        "node_modules/@openzeppelin/contracts/access/AccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/IAccessControl.sol",
+        "node_modules/@openzeppelin/contracts/access/Ownable.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
+        "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+        "node_modules/@openzeppelin/contracts/utils/Address.sol",
+        "node_modules/@openzeppelin/contracts/utils/Context.sol",
+        "node_modules/@openzeppelin/contracts/utils/Pausable.sol",
+        "node_modules/@openzeppelin/contracts/utils/ReentrancyGuard.sol",
+        "node_modules/@openzeppelin/contracts/utils/cryptography/ECDSA.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol",
+        "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol",
+        "node_modules/@openzeppelin/contracts/utils/structs/DoubleEndedQueue.sol"
+      ],
+      "versionRequirement": "^0.8.20",
+      "artifacts": {
+        "ReadLib1002Mock": {
+          "0.8.22": {
+            "path": "ReadLib1002Mock.sol/ReadLib1002Mock.json",
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -3848,14 +4370,14 @@
         "ReceiveUln302Mock": {
           "0.8.22": {
             "path": "ReceiveUln302Mock.sol/ReceiveUln302Mock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol": {
-      "lastModificationDate": 1729620160984,
+      "lastModificationDate": 1730323654265,
       "contentHash": "2df252777e9c24558408d755458a8202",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
       "compilerSettings": {
@@ -3897,8 +4419,10 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
@@ -3906,9 +4430,13 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
@@ -3942,6 +4470,7 @@
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
@@ -3988,14 +4517,14 @@
         "SendUln302Mock": {
           "0.8.22": {
             "path": "SendUln302Mock.sol/SendUln302Mock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol": {
-      "lastModificationDate": 1729620160984,
+      "lastModificationDate": 1730128673811,
       "contentHash": "74a16623553fbb5bfabc0e2e50e21bd4",
       "sourceName": "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
       "compilerSettings": {
@@ -4037,8 +4566,10 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
@@ -4046,9 +4577,13 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
@@ -4082,6 +4617,7 @@
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
@@ -4128,7 +4664,7 @@
         "SimpleMessageLibMock": {
           "0.8.22": {
             "path": "SimpleMessageLibMock.sol/SimpleMessageLibMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4194,7 +4730,7 @@
         "WorkerMock": {
           "0.8.22": {
             "path": "WorkerMock.sol/WorkerMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4240,7 +4776,7 @@
         "BytesLib": {
           "0.8.22": {
             "path": "BytesLib.sol/BytesLib.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4286,7 +4822,7 @@
         "DSTest": {
           "0.8.22": {
             "path": "test.sol/DSTest.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4335,19 +4871,19 @@
         "CommonBase": {
           "0.8.22": {
             "path": "Base.sol/CommonBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "ScriptBase": {
           "0.8.22": {
             "path": "Base.sol/ScriptBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "TestBase": {
           "0.8.22": {
             "path": "Base.sol/TestBase.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4396,7 +4932,7 @@
         "StdAssertions": {
           "0.8.22": {
             "path": "StdAssertions.sol/StdAssertions.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4444,7 +4980,7 @@
         "StdChains": {
           "0.8.22": {
             "path": "StdChains.sol/StdChains.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4494,13 +5030,13 @@
         "StdCheats": {
           "0.8.22": {
             "path": "StdCheats.sol/StdCheats.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "StdCheatsSafe": {
           "0.8.22": {
             "path": "StdCheats.sol/StdCheatsSafe.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4546,7 +5082,7 @@
         "stdError": {
           "0.8.22": {
             "path": "StdError.sol/stdError.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4592,7 +5128,7 @@
         "StdInvariant": {
           "0.8.22": {
             "path": "StdInvariant.sol/StdInvariant.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4640,7 +5176,7 @@
         "stdJson": {
           "0.8.22": {
             "path": "StdJson.sol/stdJson.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4686,7 +5222,7 @@
         "stdMath": {
           "0.8.22": {
             "path": "StdMath.sol/stdMath.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4734,13 +5270,13 @@
         "stdStorage": {
           "0.8.22": {
             "path": "StdStorage.sol/stdStorage.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "stdStorageSafe": {
           "0.8.22": {
             "path": "StdStorage.sol/stdStorageSafe.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4788,7 +5324,7 @@
         "StdStyle": {
           "0.8.22": {
             "path": "StdStyle.sol/StdStyle.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4839,7 +5375,7 @@
         "StdUtils": {
           "0.8.22": {
             "path": "StdUtils.sol/StdUtils.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4905,7 +5441,7 @@
         "Test": {
           "0.8.22": {
             "path": "Test.sol/Test.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -4951,13 +5487,13 @@
         "Vm": {
           "0.8.22": {
             "path": "Vm.sol/Vm.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "VmSafe": {
           "0.8.22": {
             "path": "Vm.sol/VmSafe.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5003,7 +5539,7 @@
         "console": {
           "0.8.22": {
             "path": "console.sol/console.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5049,7 +5585,7 @@
         "console2": {
           "0.8.22": {
             "path": "console2.sol/console2.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5095,7 +5631,7 @@
         "IMulticall3": {
           "0.8.22": {
             "path": "IMulticall3.sol/IMulticall3.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5141,7 +5677,7 @@
         "MockERC20": {
           "0.8.22": {
             "path": "MockERC20.sol/MockERC20.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5187,13 +5723,13 @@
         "IERC721TokenReceiver": {
           "0.8.22": {
             "path": "MockERC721.sol/IERC721TokenReceiver.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "MockERC721": {
           "0.8.22": {
             "path": "MockERC721.sol/MockERC721.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5239,7 +5775,7 @@
         "safeconsole": {
           "0.8.22": {
             "path": "safeconsole.sol/safeconsole.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5290,7 +5826,7 @@
         "AccessControl": {
           "0.8.22": {
             "path": "AccessControl.sol/AccessControl.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5336,7 +5872,7 @@
         "IAccessControl": {
           "0.8.22": {
             "path": "IAccessControl.sol/IAccessControl.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5382,7 +5918,7 @@
         "Ownable": {
           "0.8.22": {
             "path": "Ownable.sol/Ownable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5428,7 +5964,7 @@
         "IERC1967": {
           "0.8.22": {
             "path": "IERC1967.sol/IERC1967.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5474,19 +6010,19 @@
         "IERC1155Errors": {
           "0.8.22": {
             "path": "draft-IERC6093.sol/IERC1155Errors.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "IERC20Errors": {
           "0.8.22": {
             "path": "draft-IERC6093.sol/IERC20Errors.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "IERC721Errors": {
           "0.8.22": {
             "path": "draft-IERC6093.sol/IERC721Errors.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5538,7 +6074,7 @@
         "ERC1967Proxy": {
           "0.8.22": {
             "path": "ERC1967Proxy.sol/ERC1967Proxy.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5588,7 +6124,7 @@
         "ERC1967Utils": {
           "0.8.22": {
             "path": "ERC1967Utils.sol/ERC1967Utils.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5634,7 +6170,7 @@
         "Proxy": {
           "0.8.22": {
             "path": "Proxy.sol/Proxy.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5680,7 +6216,7 @@
         "IBeacon": {
           "0.8.22": {
             "path": "IBeacon.sol/IBeacon.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5738,7 +6274,7 @@
         "ProxyAdmin": {
           "0.8.22": {
             "path": "ProxyAdmin.sol/ProxyAdmin.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5796,13 +6332,13 @@
         "ITransparentUpgradeableProxy": {
           "0.8.22": {
             "path": "TransparentUpgradeableProxy.sol/ITransparentUpgradeableProxy.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "TransparentUpgradeableProxy": {
           "0.8.22": {
             "path": "TransparentUpgradeableProxy.sol/TransparentUpgradeableProxy.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5853,7 +6389,7 @@
         "ERC20": {
           "0.8.22": {
             "path": "ERC20.sol/ERC20.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5899,7 +6435,7 @@
         "IERC20": {
           "0.8.22": {
             "path": "IERC20.sol/IERC20.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5947,7 +6483,7 @@
         "IERC20Metadata": {
           "0.8.22": {
             "path": "IERC20Metadata.sol/IERC20Metadata.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -5993,7 +6529,7 @@
         "IERC20Permit": {
           "0.8.22": {
             "path": "IERC20Permit.sol/IERC20Permit.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6043,7 +6579,7 @@
         "SafeERC20": {
           "0.8.22": {
             "path": "SafeERC20.sol/SafeERC20.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6089,7 +6625,7 @@
         "Address": {
           "0.8.22": {
             "path": "Address.sol/Address.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6135,7 +6671,7 @@
         "Context": {
           "0.8.22": {
             "path": "Context.sol/Context.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6181,7 +6717,7 @@
         "Pausable": {
           "0.8.22": {
             "path": "Pausable.sol/Pausable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6227,7 +6763,7 @@
         "ReentrancyGuard": {
           "0.8.22": {
             "path": "ReentrancyGuard.sol/ReentrancyGuard.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6273,7 +6809,7 @@
         "StorageSlot": {
           "0.8.22": {
             "path": "StorageSlot.sol/StorageSlot.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6319,7 +6855,7 @@
         "ECDSA": {
           "0.8.22": {
             "path": "ECDSA.sol/ECDSA.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6367,7 +6903,7 @@
         "ERC165": {
           "0.8.22": {
             "path": "ERC165.sol/ERC165.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6413,7 +6949,7 @@
         "IERC165": {
           "0.8.22": {
             "path": "IERC165.sol/IERC165.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6459,7 +6995,7 @@
         "SafeCast": {
           "0.8.22": {
             "path": "SafeCast.sol/SafeCast.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6505,7 +7041,7 @@
         "DoubleEndedQueue": {
           "0.8.22": {
             "path": "DoubleEndedQueue.sol/DoubleEndedQueue.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6554,7 +7090,7 @@
         "OwnableUpgradeable": {
           "0.8.22": {
             "path": "OwnableUpgradeable.sol/OwnableUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6600,7 +7136,7 @@
         "Initializable": {
           "0.8.22": {
             "path": "Initializable.sol/Initializable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6648,7 +7184,7 @@
         "ContextUpgradeable": {
           "0.8.22": {
             "path": "ContextUpgradeable.sol/ContextUpgradeable.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6702,20 +7238,20 @@
         "OptionsHelper": {
           "0.8.22": {
             "path": "OptionsHelper.sol/OptionsHelper.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         },
         "UlnOptionsMock": {
           "0.8.22": {
             "path": "OptionsHelper.sol/UlnOptionsMock.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     },
     "test/PreCrimeV2.t.sol": {
-      "lastModificationDate": 1730465183497,
+      "lastModificationDate": 1731002688775,
       "contentHash": "46ec55bc8d833575e0b170ca5fe76a92",
       "sourceName": "test/PreCrimeV2.t.sol",
       "compilerSettings": {
@@ -6759,8 +7295,10 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroPriceFeed.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroReadExecutor.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroTreasury.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IWorker.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/SafeCall.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/ReceiveUlnBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/SendUlnBase.sol",
@@ -6768,9 +7306,13 @@
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IDVNFeeLib.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroDVN.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/ILayerZeroReadDVN.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/interfaces/IReceiveUlnE2.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/ReadCmdCodecV1.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/SupportedCmdTypes.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol",
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/readlib/ReadLibBase.sol",
         "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/uln301/interfaces/IUltraLightNode301.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol",
         "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessagingChannel.sol",
@@ -6807,6 +7349,7 @@
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ExecutorMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/MultiSigMock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/PriceFeedMock.sol",
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReadLib1002Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/ReceiveUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SendUln302Mock.sol",
         "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/mocks/SimpleMessageLibMock.sol",
@@ -6866,7 +7409,7 @@
         "PreCrimeV2Test": {
           "0.8.22": {
             "path": "PreCrimeV2.t.sol/PreCrimeV2Test.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6918,7 +7461,7 @@
         "ERC20Mock": {
           "0.8.22": {
             "path": "ERC20Mock.sol/ERC20Mock.json",
-            "build_id": "669889c9d8e75a6d3a49e22199629c6f"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -6982,7 +7525,7 @@
         "PreCrimeV2SimulatorUpgradeableMock": {
           "0.8.22": {
             "path": "PreCrimeV2SimulatorUpgradeableMock.sol/PreCrimeV2SimulatorUpgradeableMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
@@ -7049,15 +7592,12 @@
         "PreCrimeV2UpgradeableMock": {
           "0.8.22": {
             "path": "PreCrimeV2UpgradeableMock.sol/PreCrimeV2UpgradeableMock.json",
-            "build_id": "62a8074768976c227225e5b653bbc587"
+            "build_id": "f92e82f64bea998e7b291b50ba7aab4f"
           }
         }
       },
       "seenByCompiler": true
     }
   },
-  "builds": [
-    "62a8074768976c227225e5b653bbc587",
-    "669889c9d8e75a6d3a49e22199629c6f"
-  ]
+  "builds": ["f92e82f64bea998e7b291b50ba7aab4f"]
 }
