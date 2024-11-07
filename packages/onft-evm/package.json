@@ -46,7 +46,7 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/oapp-evm": "^0.0.4",
+    "@layerzerolabs/oapp-evm": "~0.0.4",
     "@layerzerolabs/test-devtools-evm-foundry": "~2.0.0",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@openzeppelin/contracts": "^5.0.2",

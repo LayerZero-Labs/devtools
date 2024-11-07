@@ -99,10 +99,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -210,7 +210,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -321,10 +321,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -432,10 +432,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -564,10 +564,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-v2-solana-sdk':
         specifier: 3.0.0
@@ -576,7 +576,7 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44
       '@layerzerolabs/protocol-devtools':
-        specifier: ^0.4.3
+        specifier: ~0.4.3
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ^2.0.0
@@ -762,16 +762,16 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oapp-evm-upgradeable':
-        specifier: ^0.0.1
+        specifier: ~0.0.1
         version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
         specifier: ^0.1.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-evm-upgradeable':
-        specifier: ^0.0.1
+        specifier: ~0.0.1
         version: link:../../packages/oft-evm-upgradeable
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -885,10 +885,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.0.9
+        specifier: ~0.0.9
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1709,7 +1709,7 @@ importers:
         specifier: ~2.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ~0.1.9
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -1734,13 +1734,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~2.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ~0.1.9
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -1761,13 +1761,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~2.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ~0.1.9
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -1791,19 +1791,19 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/oapp-evm-upgradeable':
-        specifier: ^0.0.1
+        specifier: ~0.0.1
         version: link:../oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../oft-evm
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~2.0.0
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ~0.1.9
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -1927,7 +1927,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~2.0.0
@@ -2179,10 +2179,10 @@ importers:
   packages/test-devtools-evm-foundry:
     dependencies:
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../oft-evm
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
@@ -2195,7 +2195,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ~0.1.9
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -2228,10 +2228,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^0.1.0
+        specifier: ~0.1.0
         version: link:../oft-evm
       '@openzeppelin/contracts':
         specifier: ^4.9.5
@@ -2883,7 +2883,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~1.0.2
@@ -3351,7 +3351,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~1.0.2
@@ -3495,7 +3495,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.0.4
+        specifier: ~0.0.4
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~1.0.2
