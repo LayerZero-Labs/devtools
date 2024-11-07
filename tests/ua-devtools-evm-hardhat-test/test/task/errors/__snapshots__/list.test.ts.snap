@@ -4,6 +4,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
 [
   [
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -65,6 +85,21 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "OAppCore",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppRead",
       "Error": "OwnableInvalidOwner(address)",
       "Signature": "0x1e4fbdf7",
     },
@@ -180,6 +215,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "DefaultOApp",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "DefaultOAppRead",
       "Error": "OwnableInvalidOwner(address)",
       "Signature": "0x1e4fbdf7",
     },
@@ -1319,6 +1374,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x990776ea",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1523,6 +1598,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
 [
   [
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1629,6 +1724,51 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OAppCore",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "OAppRead",
       "Error": "OwnableUnauthorizedAccount(address)",
       "Signature": "0x118cdaa7",
     },
@@ -1969,6 +2109,56 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "DefaultOApp",
+      "Error": "OwnableUnauthorizedAccount(address)",
+      "Signature": "0x118cdaa7",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "InvalidOptions(bytes)",
+      "Signature": "0x9a6d49cd",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "DefaultOAppRead",
+      "Error": "OwnableInvalidOwner(address)",
+      "Signature": "0x1e4fbdf7",
+    },
+    {
+      "Contract": "DefaultOAppRead",
       "Error": "OwnableUnauthorizedAccount(address)",
       "Signature": "0x118cdaa7",
     },
@@ -5571,6 +5761,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IWorker",
       "Error": "Worker_RoleRenouncingDisabled()",
       "Signature": "0xdec9f031",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
       "Contract": "DVNOptions",

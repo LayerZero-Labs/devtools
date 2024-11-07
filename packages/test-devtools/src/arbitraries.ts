@@ -1,6 +1,6 @@
 import fc from 'fast-check'
-import { ChainType, EndpointId, endpointIdToChainType, Stage } from '@layerzerolabs/lz-definitions'
-import { BIP39_WORDLIST, ENDPOINT_IDS } from './constants'
+import { ChainType, ChannelId, EndpointId, endpointIdToChainType, Stage } from '@layerzerolabs/lz-definitions'
+import { BIP39_WORDLIST, CHANNEL_IDS, ENDPOINT_IDS } from './constants'
 import { entropyToMnemonic } from '@scure/bip39'
 import bs58 from 'bs58'
 
@@ -23,6 +23,8 @@ export const aptosAddressArbitrary = fc.hexaString({ minLength: 64, maxLength: 6
 export const solanaAddressArbitrary = fc.uint8Array({ minLength: 32, maxLength: 32 }).map((bytes) => bs58.encode(bytes))
 
 export const endpointArbitrary: fc.Arbitrary<EndpointId> = fc.constantFrom(...ENDPOINT_IDS)
+
+export const channelIdArbitrary: fc.Arbitrary<ChannelId> = fc.constantFrom(...CHANNEL_IDS)
 
 export const evmEndpointArbitrary = endpointArbitrary.filter((eid) => endpointIdToChainType(eid) === ChainType.EVM)
 

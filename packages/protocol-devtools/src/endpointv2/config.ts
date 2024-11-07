@@ -6,6 +6,7 @@ export const configureEndpointV2: EndpointV2Configurator = async (graph, createS
         await configureEndpointV2RegisterLibraries(graph, createSdk),
         await configureEndpointV2DefaultReceiveLibraries(graph, createSdk),
         await configureEndpointV2DefaultSendLibraries(graph, createSdk),
+        await configureEndpointV2DefaultReadLibraries(graph, createSdk),
     ])
 
 export const configureEndpointV2RegisterLibraries: EndpointV2Configurator = async (graph, createSdk) => {
@@ -20,6 +21,12 @@ export const configureEndpointV2RegisterLibraries: EndpointV2Configurator = asyn
             ),
         new OmniPointMap<Set<Bytes32>>()
     )
+
+    graph.contracts.forEach(({ point, config }) => {
+        config.readChannelConfigs?.forEach(({ defaultReadLibrary }) =>
+            librariesByEndpoint.getOrElse(point, () => new Set<string>()).add(defaultReadLibrary)
+        )
+    })
 
     return flattenTransactions(
         await Promise.all(
@@ -68,6 +75,40 @@ export const configureEndpointV2DefaultSendLibraries: EndpointV2Configurator = a
                 }
 
                 return [await sdk.setDefaultSendLibrary(to.eid, config.defaultSendLibrary)]
+            })
+        )
+    )
+
+export const configureEndpointV2DefaultReadLibraries: EndpointV2Configurator = async (graph, createSdk) =>
+    flattenTransactions(
+        await Promise.all(
+            graph.contracts.map(async ({ point, config }): Promise<OmniTransaction[]> => {
+                const sdk = await createSdk(point)
+
+                const transactions: OmniTransaction[] = []
+
+                for (const { channelId, defaultReadLibrary } of config.readChannelConfigs ?? []) {
+                    const sendAddress = await sdk.getDefaultSendLibrary(channelId)
+
+                    // If the library is already set as default, do nothing
+                    if (defaultReadLibrary === sendAddress) {
+                        continue
+                    } else {
+                        transactions.push(await sdk.setDefaultSendLibrary(channelId, defaultReadLibrary))
+                    }
+
+                    const receiveAddress = await sdk.getDefaultReceiveLibrary(channelId)
+
+                    // If the library is already set as default, do nothing
+                    if (defaultReadLibrary === receiveAddress) {
+                        continue
+                    } else {
+                        // TODO READ: Grace period should be configurable
+                        transactions.push(await sdk.setDefaultReceiveLibrary(channelId, defaultReadLibrary))
+                    }
+                }
+
+                return transactions
             })
         )
     )

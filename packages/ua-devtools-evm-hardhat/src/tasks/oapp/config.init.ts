@@ -18,11 +18,13 @@ import {
 } from 'typescript'
 import { generateLzConfig } from '@/oapp/typescript/typescript'
 import { writeFileSync } from 'fs'
+import { generateReadLzConfig } from '@/oapp-read/typescript/typescript'
 
 interface TaskArgs {
     contractName: string
     oappConfig: string
     logLevel?: string
+    lzRead?: boolean
 }
 
 /**
@@ -32,7 +34,10 @@ interface TaskArgs {
  *
  * @returns {Promise<string>}
  */
-const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel = 'info' }, hre): Promise<string> => {
+const action: ActionType<TaskArgs> = async (
+    { contractName, oappConfig, logLevel = 'info', lzRead = false },
+    hre
+): Promise<string> => {
     printLogo()
 
     // We'll set the global logging level to get as much info as needed
@@ -91,7 +96,9 @@ const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel
 
     const printer = createPrinter()
     const sourceFile: SourceFile = createSourceFile(oappConfig, '', ScriptTarget.ESNext, true, ScriptKind.TS)
-    const generatedLzConfig: NodeArray<Statement> = await generateLzConfig(selectedNetworks, contractName)
+    const generatedLzConfig: NodeArray<Statement> = lzRead
+        ? await generateReadLzConfig(selectedNetworks, contractName)
+        : await generateLzConfig(selectedNetworks, contractName)
     const layerZeroConfigContent: string = printer.printList(ListFormat.MultiLine, generatedLzConfig, sourceFile)
     writeFileSync(oappConfig, layerZeroConfigContent)
     return oappConfig
@@ -101,3 +108,4 @@ task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file', action)
     .addParam('oappConfig', 'Path to the new LayerZero OApp config', undefined, types.string)
     .addParam('contractName', 'Name of contract in deployments folder', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
+    .addFlag('lzRead', 'Create config file for OAppRead')

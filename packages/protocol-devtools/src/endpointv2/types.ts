@@ -17,9 +17,11 @@ import type {
     Uln302UlnConfig,
     Uln302UlnUserConfig,
 } from '@/uln302/types'
+import type { IUlnRead, UlnReadUlnConfig, UlnReadUlnUserConfig } from '@/ulnRead/types'
 
 export interface IEndpointV2 extends IOmniSDK {
     getUln302SDK(address: OmniAddress): Promise<IUln302>
+    getUlnReadSDK(address: OmniAddress): Promise<IUlnRead>
 
     getDelegate(oapp: OmniAddress): Promise<OmniAddress | undefined>
     isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean>
@@ -167,6 +169,21 @@ export interface IEndpointV2 extends IOmniSDK {
     ): Promise<Uln302UlnConfig>
 
     /**
+     * Gets the Read ULN config for a given OApp, library and a destination
+     * channel ID.
+     *
+     * This function will not take the default configs into account
+     * as opposed to `getUlnReadConfig`
+     *
+     * @see {@link getUlnReadConfig}
+     *
+     * @param {PossiblyBytes} oapp OApp address
+     * @param {PossiblyBytes} uln Library address
+     * @param {number} channelId Channel ID
+     */
+    getAppUlnReadConfig(oapp: OmniAddress, uln: OmniAddress, channelId: number): Promise<UlnReadUlnConfig>
+
+    /**
      * Checks whether a given `config` is set explicitly for a given OApp
      * on a particular ULN
      *
@@ -187,9 +204,35 @@ export interface IEndpointV2 extends IOmniSDK {
         type: Uln302ConfigType
     ): Promise<boolean>
 
+    /**
+     * Checks whether a given `config` is set explicitly for a given OApp
+     * on a particular ULN
+     *
+     * @see {@link IUlnRead.hasAppUlnConfig}
+     *
+     * @param {OmniAddress} oapp
+     * @param {OmniAddress} uln
+     * @param {number} channelId
+     * @param {UlnReadUlnUserConfig} config
+     * @returns {Promise<boolean>} `true` if the config has been explicitly set, `false` otherwise
+     */
+    hasAppUlnReadConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        channelId: number,
+        config: UlnReadUlnUserConfig
+    ): Promise<boolean>
+
     setUlnConfig(oapp: OmniAddress, uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction[]>
 
+    setUlnReadConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        setUlnConfig: UlnReadSetUlnConfig[]
+    ): Promise<OmniTransaction[]>
+
     getUlnConfigParams(uln: OmniAddress, setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]>
+    getUlnReadConfigParams(uln: OmniAddress, setUlnConfig: UlnReadSetUlnConfig[]): Promise<SetConfigParam[]>
     getExecutorConfigParams(uln: OmniAddress, setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]>
     setConfig(oapp: OmniAddress, uln: OmniAddress, setConfigParam: SetConfigParam[]): Promise<OmniTransaction[]>
 
@@ -205,6 +248,11 @@ export interface Uln302SetUlnConfig {
     type: Uln302ConfigType
     eid: EndpointId
     ulnConfig: Uln302UlnUserConfig
+}
+
+export interface UlnReadSetUlnConfig {
+    channelId: number
+    ulnConfig: UlnReadUlnUserConfig
 }
 
 export interface SetConfigParam {
@@ -237,7 +285,16 @@ export interface EndpointV2EdgeConfig {
     defaultSendLibrary: OmniAddress
 }
 
-export type EndpointV2OmniGraph = OmniGraph<unknown, EndpointV2EdgeConfig>
+export interface ReadChannelConfig {
+    channelId: number
+    defaultReadLibrary: OmniAddress
+}
+
+export interface EndpointV2NodeConfig {
+    readChannelConfigs?: ReadChannelConfig[]
+}
+
+export type EndpointV2OmniGraph = OmniGraph<EndpointV2NodeConfig, EndpointV2EdgeConfig>
 
 export type EndpointV2Factory<TEndpointV2 extends IEndpointV2 = IEndpointV2, TOmniPoint = OmniPoint> = OmniSDKFactory<
     TEndpointV2,

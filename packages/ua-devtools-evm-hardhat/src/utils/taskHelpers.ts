@@ -1,6 +1,12 @@
 import { formatOmniPoint, type OmniAddress } from '@layerzerolabs/devtools'
-import type { IEndpointV2, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import type {
+    IEndpointV2,
+    Timeout,
+    Uln302ExecutorConfig,
+    Uln302UlnConfig,
+    UlnReadUlnConfig,
+} from '@layerzerolabs/protocol-devtools'
+import { ChannelId, EndpointId } from '@layerzerolabs/lz-definitions'
 
 export async function getSendConfig(
     endpointV2Sdk: IEndpointV2,
@@ -137,4 +143,100 @@ export async function getReceiveConfig(
         : await localReceiveUlnSDK.getUlnConfig(eid, address)
 
     return [receiveLibrary, receiveUlnConfig, receiveLibraryTimeout]
+}
+
+export async function getReadConfig(
+    endpointV2Sdk: IEndpointV2,
+    channelIds: number[] = [ChannelId.READ_CHANNEL_1],
+    address?: OmniAddress,
+    custom: boolean = false
+): Promise<[OmniAddress, UlnReadUlnConfig, number][] | undefined> {
+    const availableChannels = Object.keys(ChannelId)
+        .filter((key) => !isNaN(Number(key)))
+        .map((key) => Number(key))
+        .sort((a, b) => b - a)
+
+    if (channelIds.length > availableChannels.length) {
+        throw new Error(`Number of channels requested exceeds the number of possible channels`)
+    }
+
+    for (const channel of channelIds) {
+        if (!availableChannels.includes(channel)) {
+            throw new Error(`Channel ${channel} is not available`)
+        }
+    }
+
+    const sortedChannelIds = channelIds.sort((a, b) => b - a)
+
+    const readConfigs: [OmniAddress, UlnReadUlnConfig, number][] = []
+
+    for (const channelId of sortedChannelIds) {
+        let readLibrary
+        let localReadUlnSDK
+
+        /**
+         * if custom is true then get the custom send uln config
+         */
+        if (custom) {
+            if (address == null) {
+                throw new Error(`Must pass in OApp address when custom param is set to true`)
+            }
+            // Using sendLibrary of channelId to get the readLibrary
+            const isDefault = await endpointV2Sdk.isDefaultSendLibrary(address, channelId)
+            /**
+             * need to return sendLibrary == AddressZero when custom config is using default send library
+             */
+            readLibrary = isDefault
+                ? '0x0000000000000000000000000000000000000000'
+                : await endpointV2Sdk.getSendLibrary(address, channelId)
+            if (readLibrary == null) {
+                throw new Error(
+                    `Custom Send Library not set from ${formatOmniPoint(endpointV2Sdk.point)} to ${channelId}`
+                )
+            }
+            /**
+             * if using a custom send library use it to retrieve the custom ULN
+             * else get the default send library and use it to retrieve the default ULN
+             */
+            if (!isDefault) {
+                localReadUlnSDK = await endpointV2Sdk.getUlnReadSDK(readLibrary)
+            } else {
+                const defaultSendLib = await endpointV2Sdk.getDefaultSendLibrary(channelId)
+                if (defaultSendLib == null) {
+                    throw new Error(
+                        `Default Send Library not set from ${formatOmniPoint(endpointV2Sdk.point)} to ${channelId}`
+                    )
+                }
+                localReadUlnSDK = await endpointV2Sdk.getUlnReadSDK(defaultSendLib)
+            }
+        } else {
+            /**
+             * else if address is defined get the actual send uln config
+             * else get the default send uln config
+             */
+            readLibrary =
+                address == null
+                    ? await endpointV2Sdk.getDefaultSendLibrary(channelId)
+                    : await endpointV2Sdk.getSendLibrary(address, channelId)
+            if (readLibrary == null) {
+                throw new Error(
+                    `Default Send Library not set from ${formatOmniPoint(endpointV2Sdk.point)} to ${channelId}`
+                )
+            }
+            localReadUlnSDK = await endpointV2Sdk.getUlnReadSDK(readLibrary)
+        }
+
+        /**
+         * if custom is true then get the custom send uln config
+         * else if address is defined get the actual send uln config
+         * else get the default send uln config
+         */
+        const readUlnConfig = custom
+            ? await localReadUlnSDK.getAppUlnConfig(channelId, address)
+            : await localReadUlnSDK.getUlnConfig(channelId, address)
+
+        readConfigs.push([readLibrary, readUlnConfig, channelId])
+    }
+
+    return readConfigs
 }
