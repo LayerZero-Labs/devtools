@@ -561,7 +561,7 @@ importers:
         specifier: 3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
       '@layerzerolabs/lz-v2-utilities':
-        specifier: 3.0.12
+        specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
         specifier: ^0.0.4
@@ -588,7 +588,7 @@ importers:
         specifier: ~2.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: 0.3.0
+        specifier: ~0.3.0
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
