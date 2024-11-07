@@ -85,7 +85,7 @@ export const createDeployEndpointV2 =
         await deployments.delete('ExecutorFeeLib')
         const executorFeeLib = await deployments.deploy('ExecutorFeeLib', {
             from: deployer,
-            args: [DEFAULT_NATIVE_DECIMALS_RATE],
+            args: [network.config.eid, DEFAULT_NATIVE_DECIMALS_RATE],
         })
 
         await Promise.all(
@@ -135,6 +135,7 @@ export const createDeployEndpointV2 =
         const dvn = await deployments.deploy('DVN', {
             from: deployer,
             args: [
+                network.config.eid, // localEidV2
                 network.config.eid, // vid
                 [sendUln302.address], // messageLibs
                 priceFeed.address, // priceFeed
@@ -149,6 +150,7 @@ export const createDeployEndpointV2 =
             contract: 'DVN',
             from: deployer,
             args: [
+                network.config.eid, // localEidV2
                 network.config.eid, // vid
                 [sendUln302.address], // messageLibs
                 priceFeed.address, // priceFeed
@@ -163,6 +165,7 @@ export const createDeployEndpointV2 =
             contract: 'DVN',
             from: deployer,
             args: [
+                network.config.eid, // localEidV2
                 network.config.eid, // vid
                 [sendUln302.address], // messageLibs
                 priceFeed.address, // priceFeed
@@ -175,7 +178,7 @@ export const createDeployEndpointV2 =
         await deployments.delete('DVNFeeLib')
         const dvnFeeLib = await deployments.deploy('DVNFeeLib', {
             from: deployer,
-            args: [DEFAULT_NATIVE_DECIMALS_RATE],
+            args: [network.config.eid, DEFAULT_NATIVE_DECIMALS_RATE],
         })
 
         const dvnContract = new Contract(dvn.address, dvn.abi).connect(signer)
