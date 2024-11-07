@@ -1,10 +1,17 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { printRecord } from '@layerzerolabs/io-devtools'
-import { getExecutorDstConfig } from '@/utils/taskHelpers'
 import { TASK_LZ_OAPP_CONFIG_GET_EXECUTOR } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import { assertDefinedNetworks, getEidsByNetworkName, types } from '@layerzerolabs/devtools-evm-hardhat'
+import {
+    assertDefinedNetworks,
+    createOmniPointHardhatTransformer,
+    createProviderFactory,
+    getEidForNetworkName,
+    getEidsByNetworkName,
+    types,
+} from '@layerzerolabs/devtools-evm-hardhat'
+import { createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 
 interface TaskArgs {
     logLevel?: string
@@ -21,16 +28,28 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
         : //  But here a=we are taking them from hardhat config so no assertion is necessary
           Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
 
+    const pointTransformer = createOmniPointHardhatTransformer()
+    const executorFactory = createExecutorFactory(createProviderFactory())
+
     const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
-        configs[localNetworkName] = {}
+        const localEid = getEidForNetworkName(localNetworkName)
+
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) {
                 continue
             }
-            const executorDstConfig = await getExecutorDstConfig(localNetworkName, remoteNetworkName)
 
-            configs[localNetworkName]![remoteNetworkName] = executorDstConfig
+            const remoteEid = getEidForNetworkName(localNetworkName)
+
+            const executorOmniPoint = await pointTransformer({ eid: localEid, contractName: 'Executor' })
+            const executor = await executorFactory(executorOmniPoint)
+            const executorDstConfig = await executor.getDstConfig(remoteEid)
+
+            configs[localNetworkName] = {
+                ...configs[localNetworkName],
+                [remoteNetworkName]: executorDstConfig,
+            }
 
             console.log(
                 printRecord({
