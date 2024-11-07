@@ -18,6 +18,11 @@ import assert from 'assert'
 import memoize from 'micro-memoize'
 import { subtask, task } from 'hardhat/config'
 
+const SOLANA_NETWORKS = {
+    'solana-testnet': EndpointId.SOLANA_V2_TESTNET,
+    'solana-mainnet': EndpointId.SOLANA_V2_MAINNET,
+}
+
 /**
  * Helper type for when we need to grab something asynchronously by the network name
  */
@@ -206,10 +211,13 @@ export const getEidForNetworkName = (
  */
 export const getNetworkNameForEidMaybe = (
     eid: EndpointId,
-    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
+    includeSolana = true
 ): string | undefined => {
     // We are using getEidsByNetworkName to get the nice validation of network config
-    const eidsByNetworkName = { ...getEidsByNetworkName(hre), 'solana-testnet': EndpointId.SOLANA_V2_TESTNET }
+    const eidsByNetworkName = includeSolana
+        ? { ...getEidsByNetworkName(hre), ...SOLANA_NETWORKS }
+        : getEidsByNetworkName(hre)
 
     for (const [networkName, networkEid] of Object.entries(eidsByNetworkName)) {
         if (networkEid === eid) {

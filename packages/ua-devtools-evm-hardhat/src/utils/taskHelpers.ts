@@ -1,11 +1,5 @@
 import { OmniAddress } from '@layerzerolabs/devtools'
-import {
-    ExecutorDstConfig,
-    Timeout,
-    Uln302ConfigType,
-    Uln302ExecutorConfig,
-    Uln302UlnConfig,
-} from '@layerzerolabs/protocol-devtools'
+import { ExecutorDstConfig, Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
     createContractFactory,
     createOmniPointHardhatTransformer,
@@ -14,11 +8,34 @@ import {
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createEndpointV2Factory, createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { EndpointV2 } from '@layerzerolabs/protocol-devtools-solana'
-import { createConnectionFactory, createRpcUrlFactory } from '@layerzerolabs/devtools-solana'
-import { PublicKey } from '@solana/web3.js'
+import { getSolanaReceiveConfig, getSolanaSendConfig } from '@layerzerolabs/ua-devtools-solana'
+import { isSolana } from '@/utils/index'
+
+const getEid = (networkName: string): EndpointId => {
+    if (!isSolana(networkName)) {
+        return getEidForNetworkName(networkName)
+    } else {
+        if (networkName.endsWith('testnet')) {
+            return EndpointId.SOLANA_V2_TESTNET
+        } else if (networkName.endsWith('mainnet')) {
+            return EndpointId.SOLANA_V2_MAINNET
+        }
+        throw new Error(`unknown network: ${networkName}`)
+    }
+}
 
 export async function getSendConfig(
+    localNetworkName: string,
+    remoteNetworkName: string,
+    address?: OmniAddress,
+    custom: boolean = false
+): Promise<[OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined> {
+    return isSolana(localNetworkName)
+        ? getSolanaSendConfig(getEid(localNetworkName), getEid(remoteNetworkName), address!)
+        : getEVMSendConfig(localNetworkName, remoteNetworkName, address, custom)
+}
+
+export async function getEVMSendConfig(
     localNetworkName: string,
     remoteNetworkName: string,
     address?: OmniAddress,
@@ -96,14 +113,6 @@ export async function getSendConfig(
     return [sendLibrary, sendUlnConfig, sendExecutorConfig]
 }
 
-export const createSolanaConnectionFactory = () =>
-    createConnectionFactory(
-        createRpcUrlFactory({
-            [EndpointId.SOLANA_V2_MAINNET]: process.env.RPC_URL_SOLANA,
-            [EndpointId.SOLANA_V2_TESTNET]: process.env.RPC_URL_SOLANA_TESTNET,
-        })
-    )
-
 export async function getReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
@@ -111,64 +120,13 @@ export async function getReceiveConfig(
     custom: boolean = false
 ): Promise<[OmniAddress, Uln302UlnConfig, Timeout] | undefined> {
     const localEid = getEid(localNetworkName)
-    // const remoteEid = getEid(remoteNetworkName)
-    if (localEid != EndpointId.SOLANA_V2_TESTNET) {
-        return getReceiveConfigEVM(localNetworkName, remoteNetworkName, address, custom)
+    if (!isSolana(localNetworkName)) {
+        return getEVMReceiveConfig(localNetworkName, remoteNetworkName, address, custom)
     }
-    const remoteEid = getEid(remoteNetworkName)
-
-    const connection = await createSolanaConnectionFactory()(localEid)
-    console.log(connection.rpcEndpoint)
-    const oappOmnipoint = { eid: localEid, address: address! }
-    console.dir(address)
-
-    const endpoint = new EndpointV2(
-        connection,
-        { eid: localEid, address: '76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6' },
-        new PublicKey('WHKCfkxo59jmFTgmQG3ZQQSjShJnBpsugSCMrtee96x')
-    )
-    // const peer = makeBytes32('0xAF43af790931f3bD68B3DFF8fAeb0307cDC108e2')
-    const receiveLibrary = await endpoint.getReceiveLibrary(oappOmnipoint.address, remoteEid)
-    console.dir({ receiveLibrary }, { depth: null })
-    const defaultReceiveLibrary = await endpoint.getDefaultReceiveLibrary(remoteEid)
-    console.dir({ defaultReceiveLibrary }, { depth: null })
-    const sendLibrary = await endpoint.getSendLibrary(oappOmnipoint.address, remoteEid)
-    console.dir({ sendLibrary }, { depth: null })
-    const receiveConfig = await endpoint.getAppUlnConfig(
-        oappOmnipoint.address,
-        '7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH',
-        remoteEid,
-        Uln302ConfigType.Receive
-    )
-    console.dir({ config: receiveConfig }, { depth: null })
-    const sendConfig = await endpoint.getAppUlnConfig(
-        oappOmnipoint.address,
-        '7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH',
-        remoteEid,
-        Uln302ConfigType.Send
-    )
-    console.dir({ sendConfig }, { depth: null })
-    const executorConfig = await (
-        await endpoint.getUln302SDK(oappOmnipoint.address)
-    ).getAppExecutorConfig(remoteEid, oappOmnipoint.address)
-    console.dir({ executorConfig }, { depth: null })
-    throw new Error('fuck you')
+    return getSolanaReceiveConfig(localEid, getEid(remoteNetworkName), address!)
 }
 
-const getEid = (networkName: string): EndpointId => {
-    if (!networkName.startsWith('solana')) {
-        return getEidForNetworkName(networkName)
-    } else {
-        if (networkName.endsWith('testnet')) {
-            return EndpointId.SOLANA_V2_TESTNET
-        } else if (networkName.endsWith('mainnet')) {
-            return EndpointId.SOLANA_V2_MAINNET
-        }
-        throw new Error(`unknown network: ${networkName}`)
-    }
-}
-
-export async function getReceiveConfigEVM(
+export async function getEVMReceiveConfig(
     localNetworkName: string,
     remoteNetworkName: string,
     address?: OmniAddress,

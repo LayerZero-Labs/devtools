@@ -41,6 +41,7 @@ import {
     ULN_CONFIG,
     ZERO,
 } from '@/oapp/typescript/constants'
+import { isSolana } from '@/utils'
 
 const retryThreeTimes = createRetryFactory(createSimpleRetryStrategy<[string, string]>(3))
 
@@ -167,7 +168,7 @@ export const createContractsAndConnections = async (
 
         const connections = await Promise.all(
             Array.from(contractMap)
-                .filter(([toNetwork]) => fromNetwork !== toNetwork)
+                .filter(([toNetwork]) => fromNetwork !== toNetwork && !isSolana(fromNetwork))
                 .map(([toNetwork, toContract]) =>
                     createDefaultConfig(fromNetwork, toNetwork).then((defaultConfig) =>
                         factory.createObjectLiteralExpression([

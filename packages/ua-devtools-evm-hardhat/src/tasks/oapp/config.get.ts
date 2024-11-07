@@ -9,6 +9,7 @@ import type { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
 import type { SubtaskLoadConfigTaskArgs } from './types'
+import { isSolana } from '@/utils'
 
 interface TaskArgs {
     logLevel?: string
@@ -46,20 +47,24 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
                 continue
             }
 
+            const localIsSolana = isSolana(localNetworkName)
             // OApp User Set Config
-            const receiveCustomConfig = await getReceiveConfig(
-                localNetworkName,
-                remoteNetworkName,
-                addresses[index],
-                true
-            )
-            const sendCustomConfig = await getSendConfig(localNetworkName, remoteNetworkName, addresses[index], true)
+            const receiveCustomConfig = localIsSolana
+                ? undefined
+                : await getReceiveConfig(localNetworkName, remoteNetworkName, addresses[index], true)
+            const sendCustomConfig = localIsSolana
+                ? undefined
+                : await getSendConfig(localNetworkName, remoteNetworkName, addresses[index], true)
             const [sendCustomLibrary, sendCustomUlnConfig, sendCustomExecutorConfig] = sendCustomConfig ?? []
             const [receiveCustomLibrary, receiveCustomUlnConfig] = receiveCustomConfig ?? []
 
             // Default Config
-            const receiveDefaultConfig = await getReceiveConfig(localNetworkName, remoteNetworkName)
-            const sendDefaultConfig = await getSendConfig(localNetworkName, remoteNetworkName)
+            const receiveDefaultConfig = localIsSolana
+                ? undefined
+                : await getReceiveConfig(localNetworkName, remoteNetworkName)
+            const sendDefaultConfig = localIsSolana
+                ? undefined
+                : await getSendConfig(localNetworkName, remoteNetworkName)
             const [sendDefaultLibrary, sendDefaultUlnConfig, sendDefaultExecutorConfig] = sendDefaultConfig ?? []
             const [receiveDefaultLibrary, receiveDefaultUlnConfig] = receiveDefaultConfig ?? []
 

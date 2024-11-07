@@ -57,8 +57,6 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                 tokenProgramId,
             })
 
-            console.log(`tokenAccount: ${tokenAccount[0]}`)
-            return
             if (!tokenAccount) {
                 throw new Error(
                     `No token account found for mint ${mintStr} and owner ${umiWalletSigner.publicKey} in program ${tokenProgramId}`
