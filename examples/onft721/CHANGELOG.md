@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.1.2
+
+### Patch Changes
+
+- 4d35182: Added unit tests for `MyONFT721.sol` example
+
 ## 0.1.1
 
 ### Patch Changes
