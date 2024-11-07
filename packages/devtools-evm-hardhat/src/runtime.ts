@@ -212,7 +212,7 @@ export const getEidForNetworkName = (
 export const getNetworkNameForEidMaybe = (
     eid: EndpointId,
     hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
-    includeSolana = true
+    includeSolana = false
 ): string | undefined => {
     // We are using getEidsByNetworkName to get the nice validation of network config
     const eidsByNetworkName = includeSolana
@@ -237,13 +237,15 @@ export const getNetworkNameForEidMaybe = (
  *
  * @param {EndpointId} eid
  * @param {HardhatRuntimeEnvironment | undefined} [hre]
+ * @param {boolean} includeSolana Include solana in addition to hre.networks
  * @returns {string}
  */
 export const getNetworkNameForEid = (
     eid: EndpointId,
-    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment()
+    hre: HardhatRuntimeEnvironment = getDefaultRuntimeEnvironment(),
+    includeSolana: boolean = false
 ): string => {
-    const networkName = getNetworkNameForEidMaybe(eid, hre)
+    const networkName = getNetworkNameForEidMaybe(eid, hre, includeSolana)
 
     // Here we error out if there are no networks with this eid
     return assert(networkName != null, `Could not find a network for eid ${eid} (${formatEid(eid)})`), networkName

@@ -29,7 +29,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
     } satisfies SubtaskLoadConfigTaskArgs)
 
     graph.contracts.forEach((contract) => {
-        networks.push(getNetworkNameForEid(contract.point.eid))
+        networks.push(getNetworkNameForEid(contract.point.eid, undefined, true))
         addresses.push(contract.point.address)
     })
 
