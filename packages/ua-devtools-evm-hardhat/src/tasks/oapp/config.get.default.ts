@@ -44,7 +44,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
                 continue
             }
 
-            const remoteEid = getEidForNetworkName(localNetworkName)
+            const remoteEid = getEidForNetworkName(remoteNetworkName)
 
             const endpointV2OmniPoint = await pointTransformer({ eid: localEid, contractName: 'EndpointV2' })
             const endpointV2Sdk = await endpointV2Factory(endpointV2OmniPoint)
