@@ -1,4 +1,4 @@
-module Memecoin {
+module my_wallet::Memecoin {
     struct Counter has key {
         value: u64
     }

@@ -13,6 +13,7 @@
     "test:hardhat": "hardhat test"
   },
   "dependencies": {
+    "@initia/builder.js": "^0.2.2",
     "@initia/initia.js": "^0.2.11",
     "@layerzerolabs/lz-definitions": "^3.0.10",
     "@layerzerolabs/lz-initia-cli": "3.0.11",

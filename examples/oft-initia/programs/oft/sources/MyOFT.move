@@ -1,4 +1,4 @@
-module MyOFT {
+module my_wallet::MyOFT {
     struct Counter has key {
         value: u64
     }

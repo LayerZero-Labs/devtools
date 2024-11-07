@@ -49,15 +49,16 @@ const config: LzInitiaConfig = {
     modules: {
         //     // 1: lzInitiaConfig.modules[moduleName] gets module that should be deployed
         //     // layerzero_common: {
-        //     MyOFT: {
-        //         modulePath: 'programs/oft', // 6: modulePath is the path to the file
-        //         addresses: {
-        //             MyOFT: '_',
-        //         },
-        //         deployer: {
-        //             'initia-sandbox-local': MNEMONIC_KEY,
-        //         },
-        //     },
+        MyOFT: {
+            modulePath: 'programs/oft', // 6: modulePath is the path to the file
+            addresses: {
+                MyOFT: '_',
+            },
+            deployer: {
+                'initia-sandbox-local': MNEMONIC_KEY,
+                'initia-testnet': MNEMONIC_KEY,
+            },
+        },
         //     Memecoin: {
         //         modulePath: 'programs/memecoin',
         //         addresses: {
