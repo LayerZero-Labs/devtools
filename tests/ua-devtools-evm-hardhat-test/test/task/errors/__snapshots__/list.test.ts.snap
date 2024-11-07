@@ -4,6 +4,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
 [
   [
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1354,6 +1374,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x990776ea",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1557,6 +1597,26 @@ exports[`task lz:errors:list should print all errors with matching signature if 
 exports[`task lz:errors:list should print all matching errors if \`containing\` argument is not supplied 1`] = `
 [
   [
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
     {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
@@ -5701,6 +5761,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IWorker",
       "Error": "Worker_RoleRenouncingDisabled()",
       "Signature": "0xdec9f031",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
     },
     {
       "Contract": "DVNOptions",
