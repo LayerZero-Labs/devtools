@@ -8,6 +8,7 @@ export interface OmniTransaction {
     description?: string
     gasLimit?: string | bigint | number
     value?: string | bigint | number
+    functionName?: string
 }
 
 export interface OmniTransactionWithResponse<TReceipt extends OmniTransactionReceipt = OmniTransactionReceipt> {
