@@ -10,8 +10,12 @@ import {
     Statement,
     VariableStatement,
 } from 'typescript'
-import { createRetryFactory, createSimpleRetryStrategy, formatEid, OmniAddress } from '@layerzerolabs/devtools'
-import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
+import { formatEid, OmniAddress } from '@layerzerolabs/devtools'
+import {
+    createOmniPointHardhatTransformer,
+    createProviderFactory,
+    getEidForNetworkName,
+} from '@layerzerolabs/devtools-evm-hardhat'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { Timeout, Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import {
@@ -41,8 +45,7 @@ import {
     ULN_CONFIG,
     ZERO,
 } from '@/oapp/typescript/constants'
-
-const retryThreeTimes = createRetryFactory(createSimpleRetryStrategy<[string, string]>(3))
+import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 
 /**
  * Normalizes the identifier name by replacing hyphens with underscores.
@@ -379,10 +382,19 @@ export const creatReceiveConfig = (receiveDefaultUlnConfig: Uln302UlnConfig): Pr
 export const createDefaultConfig = async (fromNetwork: string, toNetwork: string): Promise<PropertyAssignment> => {
     let sendDefaultConfig: [OmniAddress, Uln302UlnConfig, Uln302ExecutorConfig] | undefined
     let receiveDefaultConfig: [OmniAddress, Uln302UlnConfig, Timeout] | undefined
+
+    const pointTransformer = createOmniPointHardhatTransformer()
+    const endpointV2Factory = createEndpointV2Factory(createProviderFactory())
+
+    const fromEid = getEidForNetworkName(fromNetwork)
+    const endpointV2OmniPoint = await pointTransformer({ eid: fromEid, contractName: 'EndpointV2' })
+    const endpointV2Sdk = await endpointV2Factory(endpointV2OmniPoint)
+    const toEid = getEidForNetworkName(toNetwork)
+
     try {
         ;[sendDefaultConfig, receiveDefaultConfig] = await Promise.all([
-            retryThreeTimes(getSendConfig)(fromNetwork, toNetwork),
-            retryThreeTimes(getReceiveConfig)(fromNetwork, toNetwork),
+            getSendConfig(endpointV2Sdk, toEid),
+            getReceiveConfig(endpointV2Sdk, toEid),
         ])
     } catch (error) {
         console.error('Failed to get send and receive default configs:', error)
