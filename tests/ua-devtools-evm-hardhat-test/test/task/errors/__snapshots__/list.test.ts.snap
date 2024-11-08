@@ -260,6 +260,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "ExecutorFeeLib",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
       "Error": "Executor_InvalidLzReceiveOption()",
       "Signature": "0x4796aee1",
     },
@@ -309,6 +314,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0xc667af3e",
     },
     {
+      "Contract": "SimpleReadExecutor",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
       "Contract": "IExecutorFeeLib",
       "Error": "Executor_InvalidExecutorOptions(uint256)",
       "Signature": "0x990776ea",
@@ -354,6 +364,36 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x4fa6ecac",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "DVNWrapper_InvalidAdminCount()",
+      "Signature": "0xef95039c",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "DVNWrapper_InvalidRole(bytes32)",
+      "Signature": "0x1ab99ae1",
+    },
+    {
       "Contract": "SimpleMessageLib",
       "Error": "InvalidEndpoint(address,address)",
       "Signature": "0x87a64839",
@@ -394,6 +434,16 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x0fbdec0a",
     },
     {
+      "Contract": "OAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
       "Contract": "OAppReceiver",
       "Error": "InvalidDelegate()",
       "Signature": "0xb5863604",
@@ -412,6 +462,31 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OAppSender",
       "Error": "InvalidEndpointCall()",
       "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "CmdCodecV1Mock",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "CmdCodecV1Mock",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
     },
     {
       "Contract": "OmniCounter",
@@ -477,6 +552,16 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
       "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
     },
     {
       "Contract": "OFT",
@@ -654,9 +739,49 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x2697e1c2",
     },
     {
+      "Contract": "DVN",
+      "Error": "MultiSig_InvalidSigner()",
+      "Signature": "0x5cbf6e26",
+    },
+    {
       "Contract": "DVNFeeLib",
       "Error": "DVN_InvalidDVNOptions(uint256)",
       "Signature": "0x04eb6e0c",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "MultiSig_InvalidSigner()",
+      "Signature": "0x5cbf6e26",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
     },
     {
       "Contract": "CCIPDVNAdapter",
@@ -709,6 +834,21 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x04eb6e0c",
     },
     {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
       "Contract": "UlnOptions",
       "Error": "LZ_ULN_InvalidLegacyType1Option()",
       "Signature": "0x0dc652a8",
@@ -727,6 +867,111 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "UlnOptions",
       "Error": "LZ_ULN_InvalidWorkerOptions(uint256)",
       "Signature": "0x6592671c",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "DVN_InvalidDVNIdx()",
+      "Signature": "0xd3d3d9bc",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "DVN_InvalidDVNOptions(uint256)",
+      "Signature": "0x04eb6e0c",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidAmount(uint256,uint256)",
+      "Signature": "0xb79d1263",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidCmdHash()",
+      "Signature": "0x660e96ee",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidConfigType(uint32)",
+      "Signature": "0x0cb84e82",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidEid()",
+      "Signature": "0x3e96df16",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidExecutor()",
+      "Signature": "0x76df55a6",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidOptionalDVNCount()",
+      "Signature": "0xe35436c6",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidOptionalDVNThreshold()",
+      "Signature": "0xf92940be",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidPacketHeader()",
+      "Signature": "0x864d08b3",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidPacketVersion()",
+      "Signature": "0x7952a82f",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidReceiver()",
+      "Signature": "0xa4884a59",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidRequiredDVNCount()",
+      "Signature": "0x55a01c02",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidLegacyType1Option()",
+      "Signature": "0x0dc652a8",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidLegacyType2Option()",
+      "Signature": "0xc0927c56",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidWorkerId(uint8)",
+      "Signature": "0x6780cfaf",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidWorkerOptions(uint256)",
+      "Signature": "0x6592671c",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidExecutor()",
+      "Signature": "0x76df55a6",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidOptionalDVNCount()",
+      "Signature": "0xe35436c6",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidOptionalDVNThreshold()",
+      "Signature": "0xf92940be",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidRequiredDVNCount()",
+      "Signature": "0x55a01c02",
     },
     {
       "Contract": "AddressSizeConfig",
@@ -2134,6 +2379,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "ExecutorFeeLib",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
       "Error": "Executor_InvalidLzReceiveOption()",
       "Signature": "0x4796aee1",
     },
@@ -2156,6 +2406,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "ExecutorFeeLib",
       "Error": "Executor_UnsupportedOptionType(uint8)",
       "Signature": "0x052e5515",
+    },
+    {
+      "Contract": "ExecutorFeeLib",
+      "Error": "Executor_ZeroCalldataSizeProvided()",
+      "Signature": "0x6cc33f06",
     },
     {
       "Contract": "ExecutorFeeLib",
@@ -2373,6 +2628,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x6b7a9310",
     },
     {
+      "Contract": "SimpleReadExecutor",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
       "Contract": "Treasury",
       "Error": "LZ_Treasury_LzTokenNotEnabled()",
       "Signature": "0x1cf849b7",
@@ -2466,6 +2726,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IExecutorFeeLib",
       "Error": "Executor_UnsupportedOptionType(uint8)",
       "Signature": "0x052e5515",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "Executor_ZeroCalldataSizeProvided()",
+      "Signature": "0x6cc33f06",
     },
     {
       "Contract": "IExecutorFeeLib",
@@ -2658,12 +2923,87 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x17751237",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "Transfer",
       "Error": "Transfer_NativeFailed(address,uint256)",
       "Signature": "0x465bc834",
     },
     {
       "Contract": "Transfer",
+      "Error": "Transfer_ToAddressIsZero()",
+      "Signature": "0x6b7a9310",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "CallReverted(uint256,bytes)",
+      "Signature": "0x3b4c7a5f",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "DVNWrapper_InvalidAdminCount()",
+      "Signature": "0xef95039c",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "DVNWrapper_InvalidRole(bytes32)",
+      "Signature": "0x1ab99ae1",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "DVNWrapper_RoleRenouncingDisabled()",
+      "Signature": "0x8051ea01",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "NotEnoughGas(uint256,uint256,uint256)",
+      "Signature": "0x2bb3e3ba",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "Transfer_NativeFailed(address,uint256)",
+      "Signature": "0x465bc834",
+    },
+    {
+      "Contract": "EssenceDVNWrapper",
+      "Error": "Transfer_ToAddressIsZero()",
+      "Signature": "0x6b7a9310",
+    },
+    {
+      "Contract": "MultiCall",
+      "Error": "CallReverted(uint256,bytes)",
+      "Signature": "0x3b4c7a5f",
+    },
+    {
+      "Contract": "MultiCall",
+      "Error": "NotEnoughGas(uint256,uint256,uint256)",
+      "Signature": "0x2bb3e3ba",
+    },
+    {
+      "Contract": "MultiCall",
+      "Error": "Transfer_NativeFailed(address,uint256)",
+      "Signature": "0x465bc834",
+    },
+    {
+      "Contract": "MultiCall",
       "Error": "Transfer_ToAddressIsZero()",
       "Signature": "0x6b7a9310",
     },
@@ -2788,6 +3128,41 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0xc26bebcc",
     },
     {
+      "Contract": "OAppRead",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
+    },
+    {
+      "Contract": "OAppRead",
+      "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
+    },
+    {
       "Contract": "OAppReceiver",
       "Error": "InvalidDelegate()",
       "Signature": "0xb5863604",
@@ -2839,6 +3214,56 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "OAppSender",
+      "Error": "OnlyPeer(uint32,bytes32)",
+      "Signature": "0xc26bebcc",
+    },
+    {
+      "Contract": "CmdCodecV1Mock",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "CmdCodecV1Mock",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidDelegate()",
+      "Signature": "0xb5863604",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidEndpointCall()",
+      "Signature": "0x0fbdec0a",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "LzTokenUnavailable()",
+      "Signature": "0x5373352a",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "NoPeer(uint32)",
+      "Signature": "0xf6ff4fb7",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "NotEnoughNative(uint256)",
+      "Signature": "0x9f704120",
+    },
+    {
+      "Contract": "LzReadCounter",
+      "Error": "OnlyEndpoint(address)",
+      "Signature": "0x91ac5e4f",
+    },
+    {
+      "Contract": "LzReadCounter",
       "Error": "OnlyPeer(uint32,bytes32)",
       "Signature": "0xc26bebcc",
     },
@@ -3021,6 +3446,16 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "OptionsBuilder",
       "Error": "InvalidSize(uint256,uint256)",
       "Signature": "0x3256c04c",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
     },
     {
       "Contract": "RateLimiter",
@@ -3534,6 +3969,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "DVN",
+      "Error": "MultiSig_InvalidSigner()",
+      "Signature": "0x5cbf6e26",
+    },
+    {
+      "Contract": "DVN",
       "Error": "MultiSig_OnlySigner()",
       "Signature": "0x067f63e5",
     },
@@ -3551,6 +3991,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "DVN",
       "Error": "MultiSig_StateAlreadySet(address,bool)",
       "Signature": "0x58c8d2a0",
+    },
+    {
+      "Contract": "DVN",
+      "Error": "MultiSig_StateNotSet(address,bool)",
+      "Signature": "0x7e1e4ae2",
     },
     {
       "Contract": "DVN",
@@ -3589,13 +4034,38 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "DVNFeeLib",
+      "Error": "DVN_INVALID_INPUT_LENGTH()",
+      "Signature": "0xb54ecc38",
+    },
+    {
+      "Contract": "DVNFeeLib",
       "Error": "DVN_InvalidDVNOptions(uint256)",
       "Signature": "0x04eb6e0c",
     },
     {
       "Contract": "DVNFeeLib",
+      "Error": "DVN_TimestampOutOfRange(uint32,uint64)",
+      "Signature": "0x0c5a8d23",
+    },
+    {
+      "Contract": "DVNFeeLib",
       "Error": "DVN_UnsupportedOptionType(uint8)",
       "Signature": "0x7085244b",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
     },
     {
       "Contract": "DVNFeeLib",
@@ -3606,6 +4076,16 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "DVNFeeLib",
       "Error": "Transfer_ToAddressIsZero()",
       "Signature": "0x6b7a9310",
+    },
+    {
+      "Contract": "DVNFeeLib",
+      "Error": "UnsupportedTargetEid()",
+      "Signature": "0x50fae9eb",
+    },
+    {
+      "Contract": "MultiSig",
+      "Error": "MultiSig_InvalidSigner()",
+      "Signature": "0x5cbf6e26",
     },
     {
       "Contract": "MultiSig",
@@ -3629,8 +4109,33 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "MultiSig",
+      "Error": "MultiSig_StateNotSet(address,bool)",
+      "Signature": "0x7e1e4ae2",
+    },
+    {
+      "Contract": "MultiSig",
       "Error": "MultiSig_UnorderedSigners()",
       "Signature": "0x0bf526fe",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "SimpleReadDVN",
+      "Error": "UnsupportedTargetEid()",
+      "Signature": "0x50fae9eb",
     },
     {
       "Contract": "CCIPDVNAdapter",
@@ -4054,6 +4559,16 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
     },
     {
       "Contract": "IDVNFeeLib",
+      "Error": "DVN_INVALID_INPUT_LENGTH()",
+      "Signature": "0xb54ecc38",
+    },
+    {
+      "Contract": "IDVNFeeLib",
+      "Error": "DVN_TimestampOutOfRange(uint32,uint64)",
+      "Signature": "0x0c5a8d23",
+    },
+    {
+      "Contract": "IDVNFeeLib",
       "Error": "DVN_UnsupportedOptionType(uint8)",
       "Signature": "0x7085244b",
     },
@@ -4113,6 +4628,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0x04eb6e0c",
     },
     {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidCmd()",
+      "Signature": "0x87a7f379",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidType()",
+      "Signature": "0xb9688461",
+    },
+    {
+      "Contract": "ReadCmdCodecV1",
+      "Error": "InvalidVersion()",
+      "Signature": "0xa9146eeb",
+    },
+    {
+      "Contract": "SupportedCmdTypesLib",
+      "Error": "UnsupportedTargetEid()",
+      "Signature": "0x50fae9eb",
+    },
+    {
       "Contract": "UlnOptions",
       "Error": "LZ_ULN_InvalidLegacyType1Option()",
       "Signature": "0x0dc652a8",
@@ -4136,6 +4671,176 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "UlnOptions",
       "Error": "LZ_ULN_UnsupportedOptionType(uint16)",
       "Signature": "0x41705130",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "DVN_InvalidDVNIdx()",
+      "Signature": "0xd3d3d9bc",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "DVN_InvalidDVNOptions(uint256)",
+      "Signature": "0x04eb6e0c",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_MessageLib_OnlyEndpoint()",
+      "Signature": "0x467409c3",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_AtLeastOneDVN()",
+      "Signature": "0x9b5f9f7a",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_CannotWithdrawAltToken()",
+      "Signature": "0xb77f5044",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidAmount(uint256,uint256)",
+      "Signature": "0xb79d1263",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidCmdHash()",
+      "Signature": "0x660e96ee",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidConfigType(uint32)",
+      "Signature": "0x0cb84e82",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidEid()",
+      "Signature": "0x3e96df16",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidExecutor()",
+      "Signature": "0x76df55a6",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidOptionalDVNCount()",
+      "Signature": "0xe35436c6",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidOptionalDVNThreshold()",
+      "Signature": "0xf92940be",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidPacketHeader()",
+      "Signature": "0x864d08b3",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidPacketVersion()",
+      "Signature": "0x7952a82f",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidReceiver()",
+      "Signature": "0xa4884a59",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_InvalidRequiredDVNCount()",
+      "Signature": "0x55a01c02",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_NotTreasury()",
+      "Signature": "0x96830d1e",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_Unsorted()",
+      "Signature": "0xc0762a5d",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_UnsupportedEid(uint32)",
+      "Signature": "0x0ff03e54",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_RL_Verifying()",
+      "Signature": "0x28ca4b51",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidLegacyType1Option()",
+      "Signature": "0x0dc652a8",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidLegacyType2Option()",
+      "Signature": "0xc0927c56",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidWorkerId(uint8)",
+      "Signature": "0x6780cfaf",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_InvalidWorkerOptions(uint256)",
+      "Signature": "0x6592671c",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "LZ_ULN_UnsupportedOptionType(uint16)",
+      "Signature": "0x41705130",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "Transfer_NativeFailed(address,uint256)",
+      "Signature": "0x465bc834",
+    },
+    {
+      "Contract": "ReadLib1002",
+      "Error": "Transfer_ToAddressIsZero()",
+      "Signature": "0x6b7a9310",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_AtLeastOneDVN()",
+      "Signature": "0x9b5f9f7a",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidExecutor()",
+      "Signature": "0x76df55a6",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidOptionalDVNCount()",
+      "Signature": "0xe35436c6",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidOptionalDVNThreshold()",
+      "Signature": "0xf92940be",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_InvalidRequiredDVNCount()",
+      "Signature": "0x55a01c02",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_Unsorted()",
+      "Signature": "0xc0762a5d",
+    },
+    {
+      "Contract": "ReadLibBase",
+      "Error": "LZ_RL_UnsupportedEid(uint32)",
+      "Signature": "0x0ff03e54",
     },
     {
       "Contract": "AddressSizeConfig",
@@ -4836,6 +5541,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "IExecutorFeeLib",
       "Error": "Executor_UnsupportedOptionType(uint8)",
       "Signature": "0x052e5515",
+    },
+    {
+      "Contract": "IExecutorFeeLib",
+      "Error": "Executor_ZeroCalldataSizeProvided()",
+      "Signature": "0x6cc33f06",
     },
     {
       "Contract": "IExecutorFeeLib",

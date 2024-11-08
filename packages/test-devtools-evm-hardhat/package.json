@@ -34,9 +34,9 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/oapp-evm": "^0.0.4",
     "@layerzerolabs/oft-evm": "^0.1.0",
     "@openzeppelin/contracts": "^4.9.5",
