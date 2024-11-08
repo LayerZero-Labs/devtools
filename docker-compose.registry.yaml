@@ -62,6 +62,9 @@ services:
         pnpm build
         pnpm release:version
         pnpm release:publish
+    volumes:
+      # We'll need to provide the changeset files for this step
+      - ./.changeset:/app/.changeset
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
