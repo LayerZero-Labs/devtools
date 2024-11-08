@@ -6,6 +6,6 @@
   "linked": [],
   "access": "restricted",
   "baseBranch": "origin/main",
-  "updateInternalDependencies": "always",
+  "updateInternalDependencies": "patch",
   "ignore": []
 }
