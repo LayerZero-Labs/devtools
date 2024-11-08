@@ -97,9 +97,6 @@ services:
         # And finally we commit the results
         git add -A
         git commit --allow-empty -q -m "🚀 Version packages"
-
-        # The last step is to prepare the repository for dumb HTTP transport
-        git update-server-info
     volumes:
       # We'll need to provide the changeset files for this step
       - ./.changeset:/app/.changeset
@@ -118,15 +115,16 @@ services:
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
   github:
-    image: busybox:1.37.0
+    image: rockstorm/git-server:2.45
     depends_on:
       publish:
         condition: service_completed_successfully
     ports:
-      - "9889:9889"
-    entrypoint: ["busybox", "httpd", "-f", "-v", "-p", "9889", "-h", "/srv"]
+      - "2222:22"
+    environment:
+      GIT_PASSWORD: devtools
     volumes:
-      - repository:/srv/devtools
+      - repository:/srv/git/devtools
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -167,6 +165,9 @@ services:
         # present on the host machine - instead, we'll get the actual container environment values
         echo "create-lz-oapp:repository   $${LAYERZERO_EXAMPLES_REPOSITORY_URL}"
         echo "create-lz-oapp:ref          $${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
+
+        # Now we need to authenticate to the local repository
+        ssh git@github -p 2222 -y
 
         # Now we run the user tests
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
