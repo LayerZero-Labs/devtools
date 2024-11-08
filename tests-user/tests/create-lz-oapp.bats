@@ -117,7 +117,7 @@ teardown() {
 @test "should work with pnpm & oapp example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp"
 
-    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example oapp --destination $DESTINATION --package-manager pnpm --log-level debug
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -161,7 +161,7 @@ teardown() {
 @test "should work with pnpm & native-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-native-oft-adapter"
 
-    npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
+    npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm --log-level debug
     cd "$DESTINATION"
     pnpm compile
     pnpm test
