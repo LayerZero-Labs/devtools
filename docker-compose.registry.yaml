@@ -91,7 +91,7 @@ services:
         git config --global user.name "Devtools Bot"
 
         # Since we don't want to be bringing the repository state (i.e. the .git directory)
-        # to this image, we'll initialize a repository in thecontainer
+        # to this image, we'll initialize a repository in the container
         git init -b main
 
         # And finally we commit the results
