@@ -136,8 +136,6 @@ jobs:
       - name: Test
         run: pnpm test:user
         env:
-          LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
-          LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
           DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
           # And the prebuilt hardhat EVM node image

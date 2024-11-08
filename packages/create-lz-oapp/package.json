@@ -27,7 +27,7 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "./cli.js",
-    "test": "jest --ci"
+    "test": "jest --ci --passWithNoTests"
   },
   "dependencies": {
     "yoga-layout-prebuilt": "^1.10.0"
@@ -48,10 +48,10 @@
     "ink-select-input": "^4.2.2",
     "ink-spinner": "^4.0.3",
     "ink-text-input": "^4.0.3",
+    "isomorphic-git": "~1.27.1",
     "jest": "^29.7.0",
     "prompts": "^2.4.2",
     "react": "^17.0.2",
-    "tiged": "^2.12.6",
     "ts-node": "^10.9.2",
     "tsup": "~8.0.1",
     "typescript": "^5.4.4",

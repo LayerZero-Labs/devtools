@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": false,
+    "declarationMap": false,
     "jsx": "react",
     "lib": ["dom", "dom.Iterable", "es2022"],
     "resolveJsonModule": true,
@@ -11,6 +12,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "files": ["./types/tiged.d.ts"],
   "include": ["src", "test", "types"]
 }

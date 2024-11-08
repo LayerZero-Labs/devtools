@@ -83,9 +83,50 @@ services:
         # This step can remain after the above step has been removed and the cloning logic updated
         pnpm release:version
         pnpm release:publish
+
+        # Now we commit changes to a local git repository
+        # 
+        # First we setup the git user
+        git config --global user.email "devtools@layerzerolabs.org"
+        git config --global user.name "Devtools Bot"
+
+        # Since we don't want to be bringing the repository state (i.e. the .git directory)
+        # to this image, we'll initialize a repository in the container
+        git init -b main
+
+        # And finally we commit the results
+        git add -A
+        git commit --allow-empty -q -m "🚀 Version packages"
+
+        # The last step is to prepare the repository for dumb HTTP transport
+        git update-server-info
     volumes:
       # We'll need to provide the changeset files for this step
       - ./.changeset:/app/.changeset
+      # We'll also bring the .gitignore in since we don't want to be committing the files we normally ignore
+      - ./.gitignore:/app/.gitignore
+      # We'll provide a volume for examples so that we can share them
+      # with the tests
+      #
+      # This is done because the dependencies in examples might change
+      # after we apply the changesets & publish the local packages
+      - repository:/app
+
+  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
+  #
+  #                 Serves local git repository
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  github:
+    image: busybox:1.37.0
+    depends_on:
+      publish:
+        condition: service_completed_successfully
+    ports:
+      - "9889:9889"
+    entrypoint: ["busybox", "httpd", "-f", "-v", "-p", "9889", "-h", "/srv"]
+    volumes:
+      - repository:/srv/devtools
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -98,6 +139,8 @@ services:
       args:
         BASE_IMAGE: ${DEVTOOLS_BASE_IMAGE:-base}
     depends_on:
+      github:
+        condition: service_started
       publish:
         condition: service_completed_successfully
     # create-lz-oapp allows us to specify the repository/ref we pull the examples from
@@ -108,7 +151,7 @@ services:
     # If these are not provided, for example if running on a local machine,
     # we'll default them to our repository and empty ref
     environment:
-      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL}
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-http://github:9889/devtools/.git}
       - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
     working_dir: /app
     command:
@@ -128,6 +171,7 @@ services:
         # Now we run the user tests
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
+      - repository:/srv/repository
       # If we want to clone from github.com, we'll need its public keys added to our SSH config
       # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
       #
@@ -135,3 +179,6 @@ services:
       - ./tests-user/ssh/known_hosts:/root/.ssh/known_hosts
       # The testing library and test suites
       - ./tests-user:/app/tests-user
+
+volumes:
+  repository:
