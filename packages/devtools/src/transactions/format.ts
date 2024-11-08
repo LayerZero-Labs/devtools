@@ -8,6 +8,7 @@ export const formatOmniTransaction = (
     OmniAddress: transaction.point.address,
     OmniContract: transaction.point.contractName,
     'Function Name': transaction.functionName,
+    'Function Arguments': transaction.functionArgs,
     Description: transaction.description,
     Data: transaction.data,
     Value: transaction.value,
