@@ -80,6 +80,9 @@ importers:
       '@babel/core':
         specifier: ^7.23.9
         version: 7.23.9
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^1.2.0
+        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -111,7 +114,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ^2.0.0
+        specifier: ~2.0.0
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
