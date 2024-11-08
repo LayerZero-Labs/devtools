@@ -162,10 +162,11 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         admins
                     );
 
-                    libSetup.executorLib = new ExecutorFeeLib();
+                    libSetup.executorLib = new ExecutorFeeLib(endpointSetup.eidList[i]);
                     libSetup.executor.setWorkerFeeLib(address(libSetup.executorLib));
 
                     libSetup.dvn = new DVN(
+                        endpointSetup.eidList[i],
                         i + 1,
                         messageLibs,
                         address(endpointSetup.priceFeed),
@@ -173,7 +174,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         1,
                         admins
                     );
-                    libSetup.dvnLib = new DVNFeeLib(1e18);
+                    libSetup.dvnLib = new DVNFeeLib(endpointSetup.eidList[i], 1e18);
                     libSetup.dvn.setWorkerFeeLib(address(libSetup.dvnLib));
                 }
 

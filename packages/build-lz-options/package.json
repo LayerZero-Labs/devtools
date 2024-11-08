@@ -37,7 +37,7 @@
     "@layerzerolabs/devtools": "~0.3.25",
     "@layerzerolabs/devtools-evm": "~0.4.2",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.39",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@types/prompts": "^2.4.9",
     "@types/react": "^17.0.74",
     "commander": "^11.1.0",
