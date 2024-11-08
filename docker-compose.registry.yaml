@@ -149,7 +149,7 @@ services:
     # If these are not provided, for example if running on a local machine,
     # we'll default them to our repository and empty ref
     environment:
-      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-http://github:9889/devtools/.git}
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-ssh://git@localhost:2222/srv/git/devtools.git}
       - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
     working_dir: /app
     command:
