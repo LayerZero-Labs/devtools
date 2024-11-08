@@ -5,7 +5,7 @@ import { isPackageManagerAvailable } from './utilities/installation'
  * To enable example development in a custom repository
  * we open the repository URL field to be taken from the environment
  */
-const repository = process.env['LAYERZERO_EXAMPLES_REPOSITORY_URL'] || 'https://github.com/LayerZero-Labs/devtools.git'
+const repository = process.env.LAYERZERO_EXAMPLES_REPOSITORY_URL || 'https://github.com/LayerZero-Labs/devtools.git'
 
 /**
  * To enable example development in a custom branch,
@@ -14,7 +14,7 @@ const repository = process.env['LAYERZERO_EXAMPLES_REPOSITORY_URL'] || 'https://
  * `LAYERZERO_EXAMPLES_REPOSITORY_REF` can then be set to something like `#develop` or `#my-custom-branch`
  * to take the examples from a tag, a branch or a commit hash
  */
-const ref = process.env['LAYERZERO_EXAMPLES_REPOSITORY_REF'] || ''
+const ref = process.env.LAYERZERO_EXAMPLES_REPOSITORY_REF || ''
 
 export const EXAMPLES: Example[] = [
     {
