@@ -1,23 +1,24 @@
 import { InvalidOptionArgumentError, Option } from 'commander'
-import { AVAILABLE_PACKAGE_MANAGERS, EXAMPLES } from './config'
+import { getAvailablePackageManagers, getExamples } from './config'
 import { LogLevel, isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
+import type { Example } from './types'
 
-export const packageManagerOption = new Option('-p,--package-manager <name>', 'Node package manager to use')
-    .choices(AVAILABLE_PACKAGE_MANAGERS.map(({ id }) => id))
-    .argParser((id) => {
-        const manager = AVAILABLE_PACKAGE_MANAGERS.find((p) => p.id === id)
-        if (manager == null) {
-            throw new InvalidOptionArgumentError(`Package manager ${id} not found`)
-        }
+export const createPackageManagerOption = (packageManagers = getAvailablePackageManagers()) =>
+    new Option('-p,--package-manager <name>', 'Node package manager to use')
+        .choices(packageManagers.map(({ id }) => id))
+        .argParser((id) => {
+            const manager = packageManagers.find((p) => p.id === id)
+            if (manager == null) {
+                throw new InvalidOptionArgumentError(`Package manager ${id} not found`)
+            }
 
-        return manager
-    })
+            return manager
+        })
 
-export const exampleOption = new Option('-e,--example <name>', 'Example project')
-    .choices(EXAMPLES.map(({ id }) => id))
-    .argParser((id) => {
-        const example = EXAMPLES.find((e) => e.id === id)
+export const createExampleOption = (examples: Example[] = getExamples()) =>
+    new Option('-e,--example <name>', 'Example project').choices(examples.map(({ id }) => id)).argParser((id) => {
+        const example = examples.find((e) => e.id === id)
         if (example == null) {
             throw new InvalidOptionArgumentError(`Example ${id} not found`)
         }
