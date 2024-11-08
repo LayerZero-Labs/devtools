@@ -3,18 +3,18 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppEdgeConfig, OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
+const abstractContract: OmniPointHardhat = {
+    eid: EndpointId.ABSTRACT_V2_TESTNET,
+    contractName: 'MyONFT721',
+}
+
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
     contractName: 'MyONFT721',
 }
 
-const fujiContract: OmniPointHardhat = {
-    eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyONFT721',
-}
-
-const amoyContract: OmniPointHardhat = {
-    eid: EndpointId.AMOY_V2_TESTNET,
+const zksyncContract: OmniPointHardhat = {
+    eid: EndpointId.ZKSYNCSEP_V2_TESTNET,
     contractName: 'MyONFT721',
 }
 
@@ -39,44 +39,44 @@ const DEFAULT_EDGE_CONFIG: OAppEdgeConfig = {
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
-            contract: fujiContract,
+            contract: abstractContract,
         },
         {
             contract: sepoliaContract,
         },
         {
-            contract: amoyContract,
+            contract: zksyncContract,
         },
     ],
     connections: [
         {
-            from: fujiContract,
+            from: abstractContract,
             to: sepoliaContract,
             config: DEFAULT_EDGE_CONFIG,
         },
         {
-            from: fujiContract,
-            to: amoyContract,
+            from: abstractContract,
+            to: zksyncContract,
             config: DEFAULT_EDGE_CONFIG,
         },
         {
             from: sepoliaContract,
-            to: fujiContract,
+            to: abstractContract,
             config: DEFAULT_EDGE_CONFIG,
         },
         {
             from: sepoliaContract,
-            to: amoyContract,
+            to: zksyncContract,
             config: DEFAULT_EDGE_CONFIG,
         },
         {
-            from: amoyContract,
+            from: zksyncContract,
             to: sepoliaContract,
             config: DEFAULT_EDGE_CONFIG,
         },
         {
-            from: amoyContract,
-            to: fujiContract,
+            from: zksyncContract,
+            to: abstractContract,
             config: DEFAULT_EDGE_CONFIG,
         },
     ],
