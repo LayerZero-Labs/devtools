@@ -87,8 +87,8 @@ services:
         # Now we commit changes to a local git repository
         # 
         # First we setup the git user
-        git config user.email "devtools@layerzerolabs.org"
-        git config user.name "Devtools Bot"
+        git config --global user.email "devtools@layerzerolabs.org"
+        git config --global user.name "Devtools Bot"
 
         # Since we don't want to be bringing the repository state (i.e. the .git directory)
         # to this image, we'll initialize a repository in thecontainer
