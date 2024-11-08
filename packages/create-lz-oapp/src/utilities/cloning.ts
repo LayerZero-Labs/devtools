@@ -1,48 +1,40 @@
-import { Config, Example } from '@/types'
+import { Config } from '@/types'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { mkdtemp, rm } from 'fs/promises'
-import { resolve } from 'path'
-import tiged from 'tiged'
+import { join, resolve } from 'path'
 import { clone } from 'isomorphic-git'
-
-/**
- * Helper function to satisfy the `tiged` repository URL specification
- *
- * @param example `Example`
- * @returns `string` Repository URL compatible with `tiged`
- */
-export const createExampleGitURL = (example: Example): string => {
-    return [
-        example.repository,
-        example.directory ? '/' + example.directory.replace(/^\//, '') : undefined,
-        example.ref ? '#' + example.ref.replace(/^#/, '') : undefined,
-    ]
-        .filter(Boolean)
-        .join('')
-}
+import http from 'isomorphic-git/http/node'
+import fs from 'fs/promises'
 
 export const cloneExample = async ({ example, destination }: Config) => {
     const logger = createModuleLogger('cloning')
-
-    const url = createExampleGitURL(example)
-    logger.verbose(`Cloning example from ${url} to ${destination}`)
-
-    const emitter = tiged(url, {
-        disableCache: true,
-        mode: 'git',
-        verbose: true,
-    })
+    logger.verbose(`Cloning example ${example.label} from ${example.repository} to ${destination}`)
 
     logger.verbose(`Creating temporary directory for cloning`)
-    const tmpDir = await mkdtemp('devtools-')
-    logger.verbose(`Created temporary directory for cloning in ${tmpDir}`)
+    const dir = await mkdtemp('devtools-')
+    logger.verbose(`Created temporary directory for cloning in ${dir}`)
 
     try {
-        clone({})
-        // First we clone the whole proejct
-        await emitter.clone(destination)
+        logger.verbose(`Cloning ${example.repository} to temporary directory ${dir}`)
 
-        logger.verbose(`Cloned example from ${url} to ${destination}`)
+        // First we clone the whole thing into a temporary directory
+        await clone({
+            url: example.repository,
+            ref: example.ref,
+            dir,
+            fs,
+            http,
+            depth: 1,
+        })
+
+        const exampleDir = example.directory ? join(dir, example.directory) : dir
+        logger.verbose(`Copying example code from ${exampleDir} to ${destination}`)
+
+        // Then we copy the example subdirectory into the destination
+        await fs.rename(exampleDir, resolve(destination))
+
+        logger.verbose(`Copied example code from ${exampleDir} to ${destination}`)
+
         logger.verbose(`Cleaning up`)
 
         // Then we cleanup what we don't want to be included
@@ -51,8 +43,10 @@ export const cloneExample = async ({ example, destination }: Config) => {
         try {
             // Let's make sure to clean up after us
             await rm(destination, { recursive: true, force: true })
-        } catch {
-            // If the cleanup fails let's just do nothing for now
+        } catch (error) {
+            logger.warn(
+                `Failed to clean up destination directory ${destination} after a failed cloning attempt: ${error}`
+            )
         }
 
         if (error instanceof Error && 'code' in error) {
@@ -79,6 +73,13 @@ export const cloneExample = async ({ example, destination }: Config) => {
         }
 
         throw new CloningError(`Unknown error: ${error}`)
+    } finally {
+        try {
+            // We need to clean up the temporary directory
+            rm(dir, { recursive: true, force: true })
+        } catch (error) {
+            logger.verbose(`Failed to clean up temporary directory ${dir}: ${error}`)
+        }
     }
 }
 
