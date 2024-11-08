@@ -97,6 +97,9 @@ services:
         # And finally we commit the results
         git add -A
         git commit --allow-empty -q -m "🚀 Version packages"
+
+        # The last step is to prepare the repository for dumb HTTP transport
+        git update-server-info
     volumes:
       # We'll need to provide the changeset files for this step
       - ./.changeset:/app/.changeset
@@ -108,6 +111,22 @@ services:
       # This is done because the dependencies in examples might change
       # after we apply the changesets & publish the local packages
       - repository:/app
+
+  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
+  #
+  #                 Serves local git repository
+  #
+  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+  github:
+    image: busybox:1.37.0
+    depends_on:
+      publish:
+        condition: service_completed_successfully
+    ports:
+      - "9889:9889"
+    entrypoint: ["busybox", "httpd", "-f", "-v", "-p", "9889", "-h", "/srv"]
+    volumes:
+      - repository:/srv/devtools
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -130,7 +149,7 @@ services:
     # If these are not provided, for example if running on a local machine,
     # we'll default them to our repository and empty ref
     environment:
-      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-file:///srv/repository}
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-http://github:9889/devtools/.git}
       - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
     working_dir: /app
     command:
