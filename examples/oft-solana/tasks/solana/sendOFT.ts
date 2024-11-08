@@ -1,10 +1,13 @@
-import { findAssociatedTokenPda, setComputeUnitLimit } from '@metaplex-foundation/mpl-toolbox'
-import { TransactionBuilder, publicKey } from '@metaplex-foundation/umi'
+import assert from 'assert'
+
+import { fetchAddressLookupTable, findAssociatedTokenPda, setComputeUnitLimit } from '@metaplex-foundation/mpl-toolbox'
+import { AddressLookupTableInput, PublicKey, TransactionBuilder, publicKey } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
+import { formatEid } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
@@ -21,6 +24,11 @@ interface Args {
     mint: string
     escrow: string
     tokenProgram: string
+}
+
+const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
+    [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
+    [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
 }
 
 // Define a Hardhat task for sending OFT from Solana
@@ -108,9 +116,16 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                     token: tokenProgramId,
                 }
             )
+            const lookupTableAddress = LOOKUP_TABLE_ADDRESS[fromEid]
+            assert(lookupTableAddress != null, `No lookup table found for ${formatEid(fromEid)}`)
+            const addressLookupTableInput: AddressLookupTableInput = await fetchAddressLookupTable(
+                umi,
+                lookupTableAddress
+            )
 
             const { signature } = await new TransactionBuilder([ix])
                 .add(setComputeUnitLimit(umi, { units: 500_000 }))
+                .setAddressLookupTables([addressLookupTableInput])
                 .sendAndConfirm(umi)
             const transactionSignatureBase58 = bs58.encode(signature)
             console.log(`✅ Sent ${amount} token(s) to destination EID: ${toEid}!`)
