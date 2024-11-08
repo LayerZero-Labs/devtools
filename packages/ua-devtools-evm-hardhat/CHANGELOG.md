@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 4.0.2
+
+### Patch Changes
+
+- 98171f0: Clean up implementations for config getter hardhat tasks
+- Updated dependencies [4022ded]
+  - @layerzerolabs/devtools@0.3.29
+
 ## 4.0.1
 
 ### Patch Changes
