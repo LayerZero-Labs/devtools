@@ -163,6 +163,7 @@ teardown() {
 
     npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
+    cat package.json
     pnpm compile
     pnpm test
     pnpm lint
