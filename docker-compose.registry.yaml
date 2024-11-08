@@ -167,7 +167,8 @@ services:
         echo "create-lz-oapp:ref          $${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
 
         # Now we need to authenticate to the local repository
-        ssh git@github -p 2222 -y
+        # FIXME We gott pass the password using sshpass
+        # ssh git@github -p 2222 -y
 
         # Now we run the user tests
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
