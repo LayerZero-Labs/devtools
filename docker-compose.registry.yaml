@@ -139,6 +139,8 @@ services:
       args:
         BASE_IMAGE: ${DEVTOOLS_BASE_IMAGE:-base}
     depends_on:
+      github:
+        condition: service_started
       publish:
         condition: service_completed_successfully
     # create-lz-oapp allows us to specify the repository/ref we pull the examples from
