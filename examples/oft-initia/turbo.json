@@ -1,4 +1,5 @@
 {
+  "env": ["DEPLOYER_PATH", "DEPLOYER_MNEMONIC", "SUFFIX_EXECUTOR"],
   "extends": ["//"],
   "pipeline": {
     "compile": {

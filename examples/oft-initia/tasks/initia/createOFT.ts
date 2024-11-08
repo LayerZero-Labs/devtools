@@ -1,7 +1,7 @@
 import { Chain, Stage, Network, EndpointVersion } from '@layerzerolabs/lz-definitions'
 import { task, types } from 'hardhat/config'
 import { deploy } from '@layerzerolabs/lz-initia-cli'
-import config from '../../initia.config'
+import config from '../../old-initia.config'
 import { addModule } from '../utils/utils'
 
 // steps for deploying contract:
@@ -14,6 +14,8 @@ import { addModule } from '../utils/utils'
 //    [addresses]
 //    yourModuleName = "_"
 // 3: run script npx hardhat lz:oft:initia:create --module yourModuleName --stage testnet
+// In solana you first run a build script
+// TODO: pass in Eid endstead of stage and based on that set the mainnet or testnet
 
 export default task('lz:oft:initia:create', 'Creates a new OFT')
     .addParam('module', 'Name of the module to deploy', undefined, types.string)

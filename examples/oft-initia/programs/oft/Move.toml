@@ -1,13 +1,12 @@
 [package]
 # name = "oft"
-# name = "MyOFT"
-name = "my_wallet"
+name = "MyOFT"
+# name = "my_wallet"
 version = "0.0.0"
 authors = []
 
 [addresses]
-# MyOFT = "_"
-# memecoin = "_"
+MyOFT = "_"
 my_wallet = "_"
 # oft = "_"
 # oft_common = "_"

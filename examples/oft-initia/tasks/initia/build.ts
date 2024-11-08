@@ -1,48 +1,109 @@
-// /* eslint-disable turbo/no-undeclared-env-vars */
-// import { RESTClient, MnemonicKey, Wallet } from '@initia/initia.js'
-// import 'dotenv/config'
+// import { build } from '@layerzerolabs/lz-initia-cli'
+// import { Command, createOption } from '@commander-js/extra-typings'
 
-// async function checkBalance() {
-//     const rest = new RESTClient('https://rest.testnet.initia.xyz', {
-//         chainId: 'initiation-2',
-//         gasPrices: '0.15uinit',
-//         gasAdjustment: '1.75',
-//     })
+// import { Network } from '@layerzerolabs/lz-definitions'
 
-//     const DEPLOYER_PATH = process.env.DEPLOYER_PATH
-//     const DEPLOYER_MNEMONIC = process.env.DEPLOYER_MNEMONIC
+// import { LzInitiaConfig } from '@layerzerolabs/lz-initia-cli'
 
-//     const [, , COIN_TYPE, ACCOUNT, , INDEX] = DEPLOYER_PATH!.split('/')
-//     const key = new MnemonicKey({
-//         mnemonic: DEPLOYER_MNEMONIC,
-//         account: parseInt(ACCOUNT!),
-//         index: parseInt(INDEX!),
-//         coinType: parseInt(COIN_TYPE!),
-//     })
+// const command = new Command()
 
-//     const wallet = new Wallet(rest, key)
+// export { command }
 
-//     try {
-//         const address = wallet.key.accAddress
+// command
+//     .name('build')
+//     .description('build Initia program')
+//     .addOption(createOption('-m, --modules <modules...>', 'modules').makeOptionMandatory(true))
+//     .addOption(
+//         createOption(
+//             '-p, --module-paths <paths...>',
+//             'module paths of modules, use the path in lz-initia.config.ts if not specify'
+//         ).makeOptionMandatory(false)
+//     )
+//     .addOption(createOption('-n, --network <network>', 'network').makeOptionMandatory(true))
+//     .addOption(createOption('-v, --variant <variant>', 'variant').makeOptionMandatory(false))
+//     .addOption(createOption('-sb, --skip-build', 'skip build').default(false))
+//     .action(
+//         async (
+//             options: {
+//                 network: string
+//                 modules: string[]
+//                 modulePaths?: string[]
+//                 variant?: string
+//                 skipBuild: boolean
+//             },
+//             cmd
+//         ) => {
 
-//         const balances = await rest.bank.balance(address)
+//             // const context = cmd.getOptionValue('__CONTEXT__') as LzInitiaConfig
+//             // const { skipBuild, modules, network, variant, modulePaths } = options
+//             // // replace the modulePath in context with the modulePaths from command line
+//             // console.log('Module paths:', modulePaths);
+//             // if (modulePaths !== undefined) {
+//             //     for (let i = 0; i < modulePaths.length; i++) {
+//             //         const module = modules[i]
+//             //         const moduleConfig = context.modules[module]
+//             //         if (moduleConfig !== undefined) {
+//             //             moduleConfig.modulePath = modulePaths[i]
+//             //         }
+//             //     }
+//             // }
+//             // for (const module of modules) {
+//             //     console.log('Building module:', module);
+//             //     console.log('Context:', context);
+//             //     console.log('Network:', network);
+//             //     console.log('Skip build:', skipBuild);
+//             //     console.log('Variant:', variant ?? context.modules[module]?.variant);
 
-//         console.log('Wallet Address:', address)
-//         console.log('Balances:', balances.toString())
-//     } catch (error) {
-//         console.error('Error fetching balance:', error)
-//     }
-// }
+//             //     await build(module, context, network as Network, skipBuild, variant ?? context.modules[module]?.variant)
+//             // }
+//         }
+//     )
 
-// checkBalance()
+// // /* eslint-disable turbo/no-undeclared-env-vars */
+// // import { RESTClient, MnemonicKey, Wallet } from '@initia/initia.js'
+// // import 'dotenv/config'
 
-import { MoveBuilder } from '@initia/builder.js'
+// // async function checkBalance() {
+// //     const rest = new RESTClient('https://rest.testnet.initia.xyz', {
+// //         chainId: 'initiation-2',
+// //         gasPrices: '0.15uinit',
+// //         gasAdjustment: '1.75',
+// //     })
 
-const path = './sources'
+// //     const DEPLOYER_PATH = process.env.DEPLOYER_PATH
+// //     const DEPLOYER_MNEMONIC = process.env.DEPLOYER_MNEMONIC
 
-async function buildModule() {
-    const builder = new MoveBuilder(path, {})
-    await builder.build()
-}
+// //     const [, , COIN_TYPE, ACCOUNT, , INDEX] = DEPLOYER_PATH!.split('/')
+// //     const key = new MnemonicKey({
+// //         mnemonic: DEPLOYER_MNEMONIC,
+// //         account: parseInt(ACCOUNT!),
+// //         index: parseInt(INDEX!),
+// //         coinType: parseInt(COIN_TYPE!),
+// //     })
 
-buildModule()
+// //     const wallet = new Wallet(rest, key)
+
+// //     try {
+// //         const address = wallet.key.accAddress
+
+// //         const balances = await rest.bank.balance(address)
+
+// //         console.log('Wallet Address:', address)
+// //         console.log('Balances:', balances.toString())
+// //     } catch (error) {
+// //         console.error('Error fetching balance:', error)
+// //     }
+// // }
+
+// // checkBalance()
+
+// // import { MoveBuilder } from '@initia/builder.js'
+
+// // const path = './sources'
+
+// // async function buildModule() {
+// //     const builder = new MoveBuilder(path, {})
+// //     await builder.build()
+// // }
+
+// // buildModule()
