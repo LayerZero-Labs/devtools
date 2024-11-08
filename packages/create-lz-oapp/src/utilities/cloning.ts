@@ -1,8 +1,9 @@
 import { Config, Example } from '@/types'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
-import { rm } from 'fs/promises'
+import { mkdtemp, rm } from 'fs/promises'
 import { resolve } from 'path'
 import tiged from 'tiged'
+import { clone } from 'isomorphic-git'
 
 /**
  * Helper function to satisfy the `tiged` repository URL specification
@@ -32,7 +33,12 @@ export const cloneExample = async ({ example, destination }: Config) => {
         verbose: true,
     })
 
+    logger.verbose(`Creating temporary directory for cloning`)
+    const tmpDir = await mkdtemp('devtools-')
+    logger.verbose(`Created temporary directory for cloning in ${tmpDir}`)
+
     try {
+        clone({})
         // First we clone the whole proejct
         await emitter.clone(destination)
 
