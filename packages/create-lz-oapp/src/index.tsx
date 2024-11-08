@@ -13,10 +13,10 @@ import { printLogo } from "@layerzerolabs/io-devtools/swag";
 import { version } from "../package.json";
 import {
   ciOption,
+  createExampleOption,
+  createPackageManagerOption,
   destinationOption,
-  exampleOption,
   logLevelOption,
-  packageManagerOption,
 } from "./options";
 import type { Config, Example, PackageManager } from "./types";
 import { DefaultErrorMessage } from "./components/error";
@@ -34,9 +34,9 @@ new Command("create-lz-oapp")
   .version(version)
   .addOption(ciOption)
   .addOption(destinationOption)
-  .addOption(exampleOption)
+  .addOption(createExampleOption())
   .addOption(logLevelOption)
-  .addOption(packageManagerOption)
+  .addOption(createPackageManagerOption())
   .action(async (args: Args) => {
     printLogo();
 
