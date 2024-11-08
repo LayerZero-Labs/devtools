@@ -66,14 +66,17 @@ const config: HardhatUserConfig = {
         },
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
-            accounts,
-        },
         'abstract-testnet': {
             eid: EndpointId.ABSTRACT_V2_TESTNET,
             url: process.env.RPC_URL_ABSTRACT || 'https://api.testnet.abs.xyz',
+            accounts,
+            zksync: true, // This flag is crucial for zkSync networks
+            ethNetwork: 'sepolia', // Use 'sepolia' to match the Ethereum network Abstract Sepolia is using
+            verifyURL: 'https://api-explorer-verify.testnet.abs.xyz/contract_verification', // Adjusted API URL for Abstract Sepolia
+        },
+        'sepolia-testnet': {
+            eid: EndpointId.SEPOLIA_V2_TESTNET,
+            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
         },
         'zksync-testnet': {
