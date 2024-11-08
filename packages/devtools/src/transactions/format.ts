@@ -3,9 +3,11 @@ import { formatEid } from '@/omnigraph/format'
 
 export const formatOmniTransaction = (
     transaction: OmniTransaction
-): Record<string, string | number | bigint | undefined> => ({
+): Record<string, string | number | bigint | undefined | null> => ({
     Endpoint: formatEid(transaction.point.eid),
     OmniAddress: transaction.point.address,
+    OmniContract: transaction.point.contractName,
+    'Function Name': transaction.functionName,
     Description: transaction.description,
     Data: transaction.data,
     Value: transaction.value,
