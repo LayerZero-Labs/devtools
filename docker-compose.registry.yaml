@@ -83,9 +83,31 @@ services:
         # This step can remain after the above step has been removed and the cloning logic updated
         pnpm release:version
         pnpm release:publish
+
+        # Now we commit changes to a local git repository
+        # 
+        # First we setup the git user
+        git config user.email "devtools@layerzerolabs.org"
+        git config user.name "Devtools Bot"
+
+        # Since we don't want to be bringing the repository state (i.e. the .git directory)
+        # to this image, we'll initialize a repository in thecontainer
+        git init -b main
+
+        # And finally we commit the results
+        git add -A
+        git commit --allow-empty -q -m "🚀 Version packages"
     volumes:
       # We'll need to provide the changeset files for this step
       - ./.changeset:/app/.changeset
+      # We'll also bring the .gitignore in since we don't want to be committing the files we normally ignore
+      - ./.gitignore:/app/.gitignore
+      # We'll provide a volume for examples so that we can share them
+      # with the tests
+      #
+      # This is done because the dependencies in examples might change
+      # after we apply the changesets & publish the local packages
+      - repository:/app
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -108,7 +130,7 @@ services:
     # If these are not provided, for example if running on a local machine,
     # we'll default them to our repository and empty ref
     environment:
-      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL}
+      - LAYERZERO_EXAMPLES_REPOSITORY_URL=${LAYERZERO_EXAMPLES_REPOSITORY_URL:-/srv/repository}
       - LAYERZERO_EXAMPLES_REPOSITORY_REF=${LAYERZERO_EXAMPLES_REPOSITORY_REF}
     working_dir: /app
     command:
@@ -128,6 +150,7 @@ services:
         # Now we run the user tests
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
+      - repository:/srv/repository
       # If we want to clone from github.com, we'll need its public keys added to our SSH config
       # otherwise git clone would trigger an interactive prompt asking us to add a server fingerprint
       #
@@ -135,3 +158,6 @@ services:
       - ./tests-user/ssh/known_hosts:/root/.ssh/known_hosts
       # The testing library and test suites
       - ./tests-user:/app/tests-user
+
+volumes:
+  repository:
