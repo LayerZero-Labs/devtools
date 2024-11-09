@@ -26,7 +26,7 @@ interface TaskArgs {
 }
 
 /**
- * Helper function to determine if the endpoint id is Solana
+ * Helper function to determine if the point is Solana
  * @param point {OmniPoint}
  */
 const isSolana = (point: OmniPoint) => endpointIdToChainType(point.eid) === ChainType.SOLANA

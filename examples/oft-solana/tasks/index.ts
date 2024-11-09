@@ -1,4 +1,4 @@
-import './common/get'
+import './common/config.get'
 import './common/wire'
 import './evm/send'
 import './solana/createOFT'

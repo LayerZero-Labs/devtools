@@ -99,6 +99,7 @@ export async function getReceiveConfig(
         if (receiveAppLibrary == null) {
             throw new Error(`Default Receive Library not set from ${formatOmniPoint(endpointV2Sdk.point)} to ${eid}`)
         }
+
         /**
          * use receiveAppLibrary from getReceiveLibrary return to get correct uln
          */
