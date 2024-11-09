@@ -1,5 +1,20 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 3.0.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/protocol-devtools-solana@3.0.0
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/devtools-solana@1.0.0
+  - @layerzerolabs/ua-devtools@2.0.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 2.0.0
 
 ### Major Changes

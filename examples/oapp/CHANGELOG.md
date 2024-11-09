@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.4.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.3.1
 
 ### Patch Changes
