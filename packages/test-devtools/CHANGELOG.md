@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.3.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.2.9
 
 ### Patch Changes
