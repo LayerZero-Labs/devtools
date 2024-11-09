@@ -1,5 +1,24 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.5.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/test-devtools-evm-hardhat@0.4.0
+  - @layerzerolabs/ua-devtools-evm-hardhat@5.0.0
+  - @layerzerolabs/protocol-devtools-evm@2.0.0
+  - @layerzerolabs/devtools-evm-hardhat@2.0.0
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/ua-devtools-evm@4.0.0
+  - @layerzerolabs/devtools-evm@1.0.0
+  - @layerzerolabs/ua-devtools@2.0.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 0.4.0
 
 ### Minor Changes
