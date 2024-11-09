@@ -59,10 +59,16 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+        'ethereum-mainnet': {
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
+            url:
+                process.env.RPC_URL_ETHEREUM ||
+                'https://maximum-necessary-seed.quiknode.pro/7847436b72fe0d6928e1bf2bea1d814760168a29/',
             accounts,
+            gas: 1_000_000,
+            oftAdapter: {
+                tokenAddress: '0x1D741878DbC5131878Effe913345FD434DCAE0d9',
+            },
         },
     },
     namedAccounts: {
