@@ -31,14 +31,14 @@ const deploy: DeployFunction = async (hre) => {
     //     eid: EndpointId.AVALANCHE_V2_TESTNET
     //   }
     // }
-    const endpointV2Deployment = '0xe2Ef622A13e71D9Dd2BBd12cd4b27e1516FA8a09'
+    const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
             'MyONFT721', // name
             'ONFT', // symbol
-            endpointV2Deployment, // LayerZero's EndpointV2 address
+            endpointV2Deployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
         ],
         log: true,
