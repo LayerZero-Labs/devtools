@@ -4,9 +4,10 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out",
-    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
+    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:hardhat:zksync",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
+    "compile:hardhat:zksync": "$npm_execpath hardhat compile --network zksync-testnet",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
