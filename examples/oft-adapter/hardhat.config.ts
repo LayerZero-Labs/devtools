@@ -72,6 +72,10 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
             accounts,
         },
+        hardhat: {
+            // Need this for testing because TestHelperReadOz5.sol is exceeding the compiled contract size limit
+            allowUnlimitedContractSize: true,
+        },
     },
     namedAccounts: {
         deployer: {

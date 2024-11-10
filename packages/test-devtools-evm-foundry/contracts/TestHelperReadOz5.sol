@@ -48,11 +48,14 @@ interface IOAppSetReadChannel {
 }
 
 /**
- * @title TestHelperOz5
- * @notice Helper contract for setting up and managing LayerZero test environments.
+ * @title TestHelperReadOz5
+ * @notice Helper contract for setting up and managing LayerZero test environments. This
+ * contract is the same as TestHelperOz5, but with additional functions for setting up
+ * OApps for LzRead. It was split because it was causing the contract to exceed the compiled
+ * size limit. Keeping them separate until a better solution is found.
  * @dev Extends Foundry's Test contract and provides utility functions for setting up mock endpoints and OApps.
  */
-contract TestHelperOz5 is Test, OptionsHelper {
+contract TestHelperReadOz5 is Test, OptionsHelper {
     enum LibraryType {
         UltraLightNode,
         SimpleMessageLib

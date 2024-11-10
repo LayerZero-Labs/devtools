@@ -5,7 +5,7 @@ pragma solidity ^0.8.20;
 import { BytesLib } from "solidity-bytes-utils/contracts/BytesLib.sol";
 import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
 
-import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol";
+import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol";
 import { DVNOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol";
 
 /**
@@ -75,6 +75,25 @@ library OptionsBuilder {
     ) internal pure onlyType3(_options) returns (bytes memory) {
         bytes memory option = ExecutorOptions.encodeNativeDropOption(_amount, _receiver);
         return addExecutorOption(_options, ExecutorOptions.OPTION_TYPE_NATIVE_DROP, option);
+    }
+
+    // /**
+    //  * @dev Adds an executor native drop option to the existing options.
+    //  * @param _options The existing options container.
+    //  * @param _amount The amount for the native value that is airdropped to the 'receiver'.
+    //  * @param _receiver The receiver address for the native drop option.
+    //  * @return options The updated options container.
+    //  *
+    //  * @dev When multiples of this option are added, they are summed by the executor on the remote chain.
+    //  */
+    function addExecutorLzReadOption(
+        bytes memory _options,
+        uint128 _gas,
+        uint32 _size,
+        uint128 _value
+    ) internal pure onlyType3(_options) returns (bytes memory) {
+        bytes memory option = ExecutorOptions.encodeLzReadOption(_gas, _size, _value);
+        return addExecutorOption(_options, ExecutorOptions.OPTION_TYPE_LZREAD, option);
     }
 
     /**

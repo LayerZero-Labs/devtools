@@ -60,6 +60,10 @@ export const getExamples = (): Example[] => {
             directory: 'examples/oft-upgradeable',
             ref,
         },
+        // OApp Read examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_READ_EXAMPLE
+            ? [{ id: 'oapp-read', label: 'OAppRead', repository, directory: 'examples/oapp-read', ref }]
+            : []),
         // The Solana OFT example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE
             ? [
