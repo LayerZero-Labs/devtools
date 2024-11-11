@@ -193,3 +193,14 @@ RangeError [ERR_OUT_OF_RANGE]: The value of "offset" is out of range. It must be
     at FixableBeetStruct.deserialize (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:59:17) {
   code: 'ERR_OUT_OF_RANGE'
 ```
+
+### Failed while deploying the Solana OFT `Error: Account allocation failed: unable to confirm transaction. This can happen in situations such as transaction expiration and insufficient fee-payer funds`
+
+This error is caused by the inability to confirm the transaction in time, or by running out of funds. This is not
+specific to OFT deployment, but Solana programs in general. Fortunately, you can retry by recovering the program key and
+re-running with `--buffer` flag similar to the following:
+
+```bash
+solana-keygen recover -o recover.json
+solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
+```
