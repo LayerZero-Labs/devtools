@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 5.0.1
+
+### Patch Changes
+
+- 2540bb1: solana support for lz:oapp:config:get
+
 ## 5.0.0
 
 ### Minor Changes

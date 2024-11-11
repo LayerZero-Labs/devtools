@@ -603,7 +603,7 @@ importers:
         specifier: ~4.0.0
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~5.0.0
+        specifier: ~5.0.1
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
         specifier: ~3.0.0
