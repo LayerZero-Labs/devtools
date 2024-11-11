@@ -81,7 +81,7 @@ const config: HardhatUserConfig = {
         // You can tell hardhat toolbox not to include any deployments (hover over the property name to see full docs)
         deploymentSourcePackages: [],
         // You can tell hardhat not to include any artifacts either
-        artifactSourcePackages: [],
+        // artifactSourcePackages: [],
     },
 }
 
