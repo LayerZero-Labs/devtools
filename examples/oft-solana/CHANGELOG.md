@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.3.1
+
+### Patch Changes
+
+- 2540bb1: solana support for lz:oapp:config:get
+
 ## 0.3.0
 
 ### Minor Changes
