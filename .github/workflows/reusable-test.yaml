@@ -106,7 +106,7 @@ jobs:
       # We'll collect the docker compose logs from all containers on failure
       - name: Store docker logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ./logs
 
@@ -153,6 +153,6 @@ jobs:
       # We'll collect the docker compose logs from all containers on failure
       - name: Store docker logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: ./logs
