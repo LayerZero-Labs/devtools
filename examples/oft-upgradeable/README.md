@@ -17,6 +17,12 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 
 <p align="center">Template project for getting started with LayerZero's <code>OFT</code> contract standard.</p>
 
+:warning: With great power comes great responsibility. Upgradeable contracts are powerful, but they also come with
+risks. Please ensure you understand the risks before deploying an upgradeable contract. For more information on the
+limitations of upgradeable contracts, please see the
+[OpenZeppelin documentation](https://docs.openzeppelin.com/contracts/5.x/upgradeable). Further, consider fully testing
+any and all upgrades thoroughly before deploying to production.
+
 <p align="left>
 
 - [So What is an Omnichain Fungible Token?](#so-what-is-an-omnichain-fungible-token)
