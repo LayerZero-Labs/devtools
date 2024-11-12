@@ -247,7 +247,7 @@ jobs:
     name: Push Aptos node image
     runs-on: ubuntu-latest-4xlarge
     needs:
-      - build-node-aptos-local-testnet
+      - build-node-aptos
 
     steps:
       - name: Checkout repository
