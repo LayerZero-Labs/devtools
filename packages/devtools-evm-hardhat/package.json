@@ -60,7 +60,6 @@
     "@layerzerolabs/io-devtools": "~0.1.13",
     "@layerzerolabs/lz-definitions": "^3.0.12",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.12",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/test-devtools": "~0.3.0",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.4.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",

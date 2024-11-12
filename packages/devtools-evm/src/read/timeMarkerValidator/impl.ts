@@ -4,11 +4,11 @@ import { groupByEid } from '@/read/common'
 import type {
     ResolvedTimeMarker,
     ResolvedTimestampTimeMarker,
-    TimeMarkerValidatorSdk,
+    ITimeMarkerValidatorSdk,
     ITimeMarkerValidatorChainSdk,
 } from '@/read/types'
 
-export class TimeMarkerValidatorImplSdk implements TimeMarkerValidatorSdk {
+export class TimeMarkerValidatorSdk implements ITimeMarkerValidatorSdk {
     constructor(
         private options: {
             chainTimeMarkerValidatorSdkFactory: EndpointBasedFactory<ITimeMarkerValidatorChainSdk>

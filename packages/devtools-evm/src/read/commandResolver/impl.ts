@@ -1,5 +1,4 @@
 import { EndpointBasedFactory } from '@layerzerolabs/devtools'
-import { RevertError } from '@layerzerolabs/devtools-evm'
 import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import {
     Command,
@@ -25,11 +24,13 @@ import type {
     ICommandResolverSdk,
     IComputeEVMSdk,
     ISingleViewFunctionEVMCallSdk,
+    RequestResponsePair,
     ResolvedTimeMarker,
     ResolvedTimestampTimeMarker,
     TimeMarker,
     TimestampTimeMarker,
 } from '@/read/types'
+import { RevertError } from '@/errors'
 
 export class CommandResolverSdk implements ICommandResolverSdk {
     constructor(
@@ -112,7 +113,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
         request: CommandRequest,
         timeMarker: ResolvedTimeMarker,
         logger: Logger
-    ): Promise<{ request: string; response: string }> {
+    ): Promise<RequestResponsePair> {
         switch (request.requestHeader.resolverType) {
             case ResolverType.SingleViewFunctionEVMCall: {
                 const requestEvm = request as SingleViewFunctionEVMCall
@@ -131,7 +132,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
         command: string,
         compute: Compute,
         timeMarker: ResolvedTimeMarker,
-        responses: { request: string; response: string }[]
+        responses: RequestResponsePair[]
     ): Promise<string> {
         switch (compute.computeHeader.computeType) {
             case ComputeType.SingleViewFunctionEVMCall: {

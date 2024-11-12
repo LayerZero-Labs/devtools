@@ -17,3 +17,8 @@ export interface IComputeEVMSdk {
         }[]
     ): Promise<string>
 }
+
+export interface RequestResponsePair {
+    request: string
+    response: string
+}
