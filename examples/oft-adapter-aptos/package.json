@@ -1,0 +1,11 @@
+{
+  "name": "@layerzerolabs/oft-adapter-aptos",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf build",
+    "compile": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
+    "test": "aptos move test --dev --skip-fetch-latest-git-deps"
+  }
+}
