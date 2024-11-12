@@ -368,29 +368,12 @@ RUN \
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM $BASE_IMAGE AS node-aptos-local-testnet-builder
-
-# This stage only exists so that we can reuse the docker layer cache
-# when providing $BASE_IMAGE
-# 
-# Docker does not allow COPY --from=${ARG} syntax so we create this stage
-# using the $BASE_IMAGE ARG and then copy from it to node-aptos-local-testnet
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-#              Image that builds an Aptos node
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS node-aptos-local-testnet
 
 ENV PATH="/root/.aptos/bin:$PATH"
 
 # Get aptos CLI
-COPY --from=node-aptos-local-testnet-builder /root/.aptos/bin /root/.aptos/bin
+COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
 # We'll provide a default healthcheck by asking for the chain information
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8080/v1 || exit 1
