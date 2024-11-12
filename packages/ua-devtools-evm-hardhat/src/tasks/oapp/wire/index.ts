@@ -91,18 +91,18 @@ const action: ActionType<TaskArgs> = async (
     )
     const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
 
+    // Then create the wire flow
     const wireFlow = createWireFlow({
         logger,
+        // We use hardhat subtasks to provide the option to override certain behaviors on a more granular level
         executeConfig: ({ graph }) => hre.run(configureSubtask, { graph } satisfies SubtaskConfigureTaskArgs),
-        signAndSend: ({ transactions }) => (
-            console.warn('HERERE', transactions),
+        signAndSend: ({ transactions }) =>
             hre.run(signAndSendSubtask, {
                 ci,
                 logger,
                 createSigner,
                 transactions,
-            } satisfies SignAndSendTaskArgs)
-        ),
+            } satisfies SignAndSendTaskArgs),
     })
 
     // And run the wire flow
