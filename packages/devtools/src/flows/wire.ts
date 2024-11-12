@@ -5,7 +5,6 @@ import type { SignAndSendFlow } from './sign.and.send'
 import type { OmniGraph } from '@/omnigraph'
 import { formatOmniTransaction, type OmniTransaction, type SignAndSendResult } from '@/transactions'
 import { printRecords } from '@layerzerolabs/io-devtools/swag'
-import { AssertionError } from 'assert'
 
 export interface CreateWireFlowArgs<TOmniGraph extends OmniGraph> {
     logger?: Logger
@@ -64,12 +63,14 @@ export const createWireFlow =
             // Print the outstanding transactions
             printRecords(transactions.map(formatOmniTransaction))
 
-            // And scream
-            throw new AssertionError({
-                message: `The OApp is not fully wired`,
-                expected: [],
-                actual: transactions,
-            })
+            // Mark the process as failed (if not already marked)
+            //
+            // TODO This is a bit ugly since we might not be running this in a standalone process
+            // so we might want to move the assert functionality outside of this flow
+            process.exitCode = process.exitCode || 1
+
+            // Return the list of pending transactions
+            return [[], [], transactions]
         }
 
         // Tell the user about the transactions
