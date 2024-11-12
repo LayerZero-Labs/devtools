@@ -294,6 +294,8 @@ importers:
         specifier: ^5.4.4
         version: 5.5.3
 
+  examples/oapp-aptos: {}
+
   examples/oft:
     devDependencies:
       '@babel/core':
@@ -518,6 +520,10 @@ importers:
       typescript:
         specifier: ^5.4.4
         version: 5.5.3
+
+  examples/oft-adapter-aptos: {}
+
+  examples/oft-aptos: {}
 
   examples/oft-solana:
     devDependencies:
@@ -11614,7 +11620,7 @@ packages:
     dependencies:
       foreground-child: 3.1.1
       jackspeak: 2.3.6
-      minimatch: 9.0.4
+      minimatch: 9.0.5
       minipass: 7.1.2
       path-scurry: 1.10.1
     dev: true
@@ -14025,11 +14031,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /minipass@7.0.4:
-    resolution: {integrity: sha512-jYofLM5Dam9279rdkWzqHozUo4ybjdZmCsDHePy5V/PbBcVMiSZR97gmAy45aqi8CK1lG2ECd356FU86avfwUQ==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    dev: true
-
   /minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -14640,7 +14641,7 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dependencies:
       lru-cache: 10.1.0
-      minipass: 7.0.4
+      minipass: 7.1.2
     dev: true
 
   /path-scurry@2.0.0:
