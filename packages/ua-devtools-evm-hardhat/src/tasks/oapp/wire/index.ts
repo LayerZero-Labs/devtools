@@ -94,13 +94,15 @@ const action: ActionType<TaskArgs> = async (
     const wireFlow = createWireFlow({
         logger,
         executeConfig: ({ graph }) => hre.run(configureSubtask, { graph } satisfies SubtaskConfigureTaskArgs),
-        signAndSend: ({ transactions }) =>
+        signAndSend: ({ transactions }) => (
+            console.warn('HERERE', transactions),
             hre.run(signAndSendSubtask, {
                 ci,
                 logger,
                 createSigner,
                 transactions,
-            } satisfies SignAndSendTaskArgs),
+            } satisfies SignAndSendTaskArgs)
+        ),
     })
 
     // And run the wire flow
