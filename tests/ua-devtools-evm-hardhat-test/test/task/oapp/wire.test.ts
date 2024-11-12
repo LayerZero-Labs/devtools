@@ -42,6 +42,13 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
     // Helper matcher object that checks for OmniTransaction objects
     const expectTransaction = { data: expect.any(String), point: expectOmniPoint, description: expect.any(String) }
     const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expectTransaction }
+    const expectLogger = expect.objectContaining({
+        info: expect.any(Function),
+        warn: expect.any(Function),
+        error: expect.any(Function),
+        debug: expect.any(Function),
+        verbose: expect.any(Function),
+    })
 
     const CONFIGS_BASE_DIR = relative(cwd(), join(__dirname, '__data__', 'configs'))
     const configPathFixture = (fileName: string): string => {
@@ -283,6 +290,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     transactions: expect.any(Array),
                     ci: false,
                     createSigner,
+                    logger: expectLogger,
                 },
                 {},
                 undefined
@@ -318,6 +326,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     transactions: expect.any(Array),
                     ci: false,
                     createSigner,
+                    expectLogger,
                 },
                 {},
                 undefined
@@ -347,6 +356,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     transactions: expect.any(Array),
                     ci: false,
                     createSigner,
+                    expectLogger,
                 },
                 {},
                 undefined
