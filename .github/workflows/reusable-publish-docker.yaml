@@ -51,6 +51,47 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
   #
+  # Build the Aptos node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
+  build-node-aptos:
+    name: Build Aptos node image
+    runs-on: ubuntu-latest-16xlarge
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-aptos-local-testnet
+          # The target stage of the Dockerfile
+          target: node-aptos-local-testnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-aptos-local-testnet
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
   # Build the EVM node image and push it as digests
   #
   # We build the node images after we're done with the base so that we can use the docker layer cache
@@ -131,6 +172,7 @@ jobs:
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
   #
   # Build the TON node image and push it as digests
   #
@@ -195,6 +237,32 @@ jobs:
           #
           # This needs to match the digest name of the build stage
           digest-name: base
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the Aptos node image digests and push them to GHCR
+  #
+  push-node-aptos:
+    name: Push Aptos node image
+    runs-on: ubuntu-latest-4xlarge
+    needs:
+      - build-node-aptos-local-testnet
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-aptos-local-testnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-aptos-local-testnet
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
