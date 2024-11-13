@@ -1,6 +1,8 @@
 ---
+"@layerzerolabs/test-setup-devtools-evm-hardhat": minor
 "@layerzerolabs/ua-devtools-evm-hardhat-test": minor
 "@layerzerolabs/protocol-devtools-solana": minor
+"@layerzerolabs/ua-devtools-evm-hardhat": minor
 "@layerzerolabs/protocol-devtools-evm": minor
 "@layerzerolabs/protocol-devtools": minor
 "@layerzerolabs/toolbox-hardhat": minor
