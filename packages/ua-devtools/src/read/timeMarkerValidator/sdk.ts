@@ -1,4 +1,4 @@
-import type { EndpointBasedFactory } from '@/types'
+import { EndpointBasedFactory } from '@layerzerolabs/devtools'
 import { groupByEid, type ResolvedTimeMarker, type ResolvedTimestampTimeMarker } from '@/read'
 
 import { ITimeMarkerValidator, ITimeMarkerValidatorChain } from './types'

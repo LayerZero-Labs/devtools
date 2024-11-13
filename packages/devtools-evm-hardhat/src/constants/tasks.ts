@@ -13,5 +13,3 @@ export const TASK_LZ_TEST_SIMULATION_STOP = 'lz:test:simulation:stop'
 export const TASK_LZ_VALIDATE_SAFE_CONFIGS = 'lz:healthcheck:validate:safe-configs'
 
 export const TASK_LZ_VALIDATE_RPCS = 'lz:healthcheck:validate:rpcs'
-
-export const TASK_LZ_READ_RESOLVE_COMMAND = 'lz:read:resolve-command'

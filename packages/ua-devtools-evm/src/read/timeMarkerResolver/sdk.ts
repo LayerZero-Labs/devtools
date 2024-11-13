@@ -1,6 +1,6 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { isBlockMatchingTimestamp, type BlockTime, type ITimeMarkerResolverChain } from '@layerzerolabs/devtools'
+import { isBlockMatchingTimestamp, type BlockTime, type ITimeMarkerResolverChain } from '@layerzerolabs/ua-devtools'
 
 const updateLowerBoundBlock = (lowerBoundBlock: BlockTime | null, potentialBlock: BlockTime): BlockTime | null => {
     // This is a max function between two blocks

@@ -34,10 +34,12 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
+    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/address": "~5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/io-devtools": "~0.1.12",

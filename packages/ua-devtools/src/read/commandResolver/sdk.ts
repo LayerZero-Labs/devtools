@@ -1,3 +1,4 @@
+import { EndpointBasedFactory } from '@layerzerolabs/devtools'
 import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import {
     Command,
@@ -20,7 +21,6 @@ import {
     type TimeMarker,
     type TimestampTimeMarker,
 } from '@/read'
-import { EndpointBasedFactory } from '@/types'
 
 import type { ICommandResolver, RequestResponsePair, IComputerEVM, ISingleViewFunctionCallerEVM } from './types'
 

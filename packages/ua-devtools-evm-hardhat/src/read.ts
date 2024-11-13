@@ -1,9 +1,8 @@
 import pMemoize from 'p-memoize'
 
 import type { JsonRpcProvider } from '@ethersproject/providers'
+import type { EndpointBasedFactory, Factory } from '@layerzerolabs/devtools'
 import type {
-    EndpointBasedFactory,
-    Factory,
     ICommandResolver,
     IComputerEVM,
     ISingleViewFunctionCallerEVM,
@@ -11,18 +10,17 @@ import type {
     ITimeMarkerResolver,
     ITimeMarkerValidatorChain,
     ITimeMarkerValidator,
-} from '@layerzerolabs/devtools'
-import type { ProviderFactory } from '@layerzerolabs/devtools-evm'
+} from '@layerzerolabs/ua-devtools'
+import { type ProviderFactory } from '@layerzerolabs/devtools-evm'
+import { createProviderFactory } from '@layerzerolabs/devtools-evm-hardhat'
 
 import {
     ComputerEVM,
     EVMTimeMarkerResolverChain,
     EVMTimeMarkerValidatorChain,
     SingleViewFunctionCallerEVM,
-} from '@layerzerolabs/devtools-evm'
-import { CommandResolver, TimeMarkerResolver, TimeMarkerValidator } from '@layerzerolabs/devtools'
-
-import { createProviderFactory } from '@/provider'
+} from '@layerzerolabs/ua-devtools-evm'
+import { CommandResolver, TimeMarkerResolver, TimeMarkerValidator } from '@layerzerolabs/ua-devtools'
 
 export const createSingleViewFunctionCallerEVMFactory = (
     providerFactory: ProviderFactory<JsonRpcProvider> = createProviderFactory()

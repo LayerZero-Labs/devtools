@@ -3,9 +3,8 @@ import { formatEid, isZero, mapError, tapError } from '@layerzerolabs/devtools'
 import { createModuleLogger, type Logger } from '@layerzerolabs/io-devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import { ContractNotFoundError } from '@/read/'
-import { parseGenericError } from '@/errors'
-import { BytesSchema } from '@/schema'
+import { ContractNotFoundError, BytesSchema } from '@/read/'
+import { parseGenericError } from '@layerzerolabs/devtools-evm'
 
 export class EVMViewFunctionBase {
     constructor(

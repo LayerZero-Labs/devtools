@@ -1218,9 +1218,6 @@ importers:
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.12
         version: 3.0.12
-      '@layerzerolabs/lz-v2-utilities':
-        specifier: ^3.0.12
-        version: 3.0.12
       '@layerzerolabs/test-devtools':
         specifier: ~0.3.0
         version: link:../test-devtools
@@ -1359,9 +1356,6 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.12
-        version: 3.0.12
-      '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/test-devtools':
@@ -2520,6 +2514,9 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
+      '@ethersproject/abi':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/address':
         specifier: ~5.7.0
         version: 5.7.0
@@ -2532,6 +2529,9 @@ importers:
       '@ethersproject/contracts':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/providers':
+        specifier: ^5.7.0
+        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.4.0
         version: link:../devtools
@@ -2611,6 +2611,9 @@ importers:
       '@ethersproject/hash':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/providers':
+        specifier: ^5.7.0
+        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.4.0
         version: link:../devtools

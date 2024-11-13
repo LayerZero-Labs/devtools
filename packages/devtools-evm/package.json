@@ -53,7 +53,6 @@
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^3.0.12",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/test-devtools": "~0.3.0",
     "@safe-global/safe-core-sdk-types": "^2.3.0",
     "@swc/core": "^1.4.0",
@@ -81,7 +80,6 @@
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^3.0.12",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "fp-ts": "^2.16.2",
     "zod": "^3.22.4"
   },

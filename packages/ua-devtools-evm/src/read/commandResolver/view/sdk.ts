@@ -2,11 +2,11 @@ import {
     type ISingleViewFunctionCallerEVM,
     ResolvedTimeMarker,
     UnresolvableCommandError,
-} from '@layerzerolabs/devtools'
+} from '@layerzerolabs/ua-devtools'
 import { SingleViewFunctionEVMCall } from '@layerzerolabs/lz-v2-utilities'
 
 import { ContractNotFoundError, EVMViewFunctionBase } from '@/read'
-import { RevertError } from '@/errors'
+import { RevertError } from '@layerzerolabs/devtools-evm'
 
 export class SingleViewFunctionCallerEVM extends EVMViewFunctionBase implements ISingleViewFunctionCallerEVM {
     public async resolve(request: SingleViewFunctionEVMCall, timeMarker: ResolvedTimeMarker): Promise<string> {

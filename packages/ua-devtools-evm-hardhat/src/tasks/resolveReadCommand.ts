@@ -2,9 +2,9 @@ import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { createLogger, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
+import { types } from '@layerzerolabs/devtools-evm-hardhat'
 
 import { createCommandResolverFactory, createTimeMarkerResolverFactory, createTimeMarkerValidatorFactory } from '@/read'
-import { types } from '@/cli'
 import { TASK_LZ_READ_RESOLVE_COMMAND } from '@/constants/tasks'
 
 interface TaskArgs {

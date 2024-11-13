@@ -7,7 +7,7 @@ import {
     type ResolvedTimestampTimeMarker,
     type ResolvedTimeMarker,
     type BlockTime,
-} from '@layerzerolabs/devtools'
+} from '@layerzerolabs/ua-devtools'
 
 export class EVMTimeMarkerValidatorChain implements ITimeMarkerValidatorChain {
     constructor(

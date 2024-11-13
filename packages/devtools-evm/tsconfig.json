@@ -1,18 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "exclude": ["dist", "node_modules"],
-  "include": [
-    "src",
-    "test",
-    "*.config.ts",
-    "../devtools/src/read/timeMarkerResolver/sdk.ts",
-    "../devtools/src/read/timeMarkerResolver/index.ts",
-    "../devtools/src/read/timeMarkerResolver/types.ts",
-    "../devtools/src/read/timeMarkerValidator/sdk.ts",
-    "../devtools/src/read/timeMarkerValidator/index.ts",
-    "../devtools/src/read/timeMarkerValidator/types.ts",
-    "../devtools/src/read/commandResolver/sdk.ts"
-  ],
+  "include": ["src", "test", "*.config.ts"],
   "compilerOptions": {
     "types": ["node", "jest"],
     "paths": {
