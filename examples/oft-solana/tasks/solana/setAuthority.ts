@@ -13,8 +13,6 @@ import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
-const DEFAULT_LOCAL_DECIMALS = 9
-
 interface CreateOFTTaskArgs {
     /**
      * The endpoint ID for the Solana network.
