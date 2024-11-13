@@ -43,6 +43,13 @@ interface SetAuthorityTaskArgs {
      * The token program ID, for Mint-And-Burn-Adapter only.
      */
     tokenProgram: string
+
+    /**
+     * If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in
+     * losing the ability to mint new tokens for everything but the OFTStore.  You should really be intentional about
+     * using this flag, as it is not reversible.
+     */
+    onlyOFTStore: boolean
 }
 
 /**
@@ -84,7 +91,13 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
     .addParam('mint', 'The Token mint public key (used for MABA only)')
     .addParam('programId', 'The OFT Program id')
     .addParam('escrow', 'The OFT escrow public key')
-    .addParam('additionalMinters', 'Comma-separated list of additional minters')
+    .addParam('additionalMinters', 'Comma-separated list of additional minters', '', devtoolsTypes.string)
+    .addOptionalParam(
+        'onlyOFTStore',
+        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
+        false,
+        devtoolsTypes.boolean
+    )
     .addParam(
         'tokenProgram',
         'The Token Program public key (used for MABA only)',
@@ -99,10 +112,19 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             programId: programIdStr,
             tokenProgram: tokenProgramStr,
             additionalMinters: additionalMintersStr,
+            onlyOFTStore,
         }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
             const tokenProgram = publicKey(tokenProgramStr)
+            if (!additionalMintersStr) {
+                if (!onlyOFTStore) {
+                    throw new Error('If you want to proceed with only the OFTStore, please specify --onlyOFTStore')
+                }
+                console.log(
+                    'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
+                )
+            }
             const additionalMinters = additionalMintersStr.split(',').map((minter) => new PublicKey(minter))
             const mint = new PublicKey(mintStr)
             const newMintAuthority = await createMintAuthorityMultisig(
