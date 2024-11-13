@@ -398,18 +398,6 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
 
-        it('should work if the lzRead flag is used', async () => {
-            await deployContract('OAppRead')
-            const oappConfig = configPathFixture('valid.config.read.js')
-
-            promptToContinueMock.mockResolvedValue(false)
-
-            const result = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true, lzRead: true })
-
-            expect(result).toEqual([[expectTransactionWithReceipt, expectTransactionWithReceipt], [], []])
-            expect(promptToContinueMock).not.toHaveBeenCalled()
-        })
-
         describe('if a transaction fails', () => {
             let sendTransactionMock: jest.SpyInstance
 

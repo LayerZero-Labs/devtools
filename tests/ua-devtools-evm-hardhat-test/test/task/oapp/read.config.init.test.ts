@@ -1,14 +1,12 @@
 import hre from 'hardhat'
 import {
-    TASK_LZ_OAPP_CONFIG_INIT,
     TASK_LZ_OAPP_CONFIG_GET_DEFAULT,
-    TASK_LZ_OAPP_WIRE,
+    TASK_LZ_OAPP_READ_WIRE,
+    TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL,
+    TASK_LZ_OAPP_READ_CONFIG_INIT,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { deployContract, setupDefaultEndpointV2 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
-import { getTestHre } from '@layerzerolabs/test-devtools-evm-hardhat'
 import * as fs from 'fs'
-import { getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
-import { formatEid } from '@layerzerolabs/devtools'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 
 jest.mock('@layerzerolabs/io-devtools', () => {
@@ -23,7 +21,7 @@ jest.mock('@layerzerolabs/io-devtools', () => {
 
 const promptToContinueMock = promptToContinue as jest.Mock
 
-describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
+describe(`task ${TASK_LZ_OAPP_READ_CONFIG_INIT}`, () => {
     const actual = './layerzero_actual.config.js'
     const expected = './layerzero_expected.config.js'
 
@@ -41,7 +39,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
         // since we want to be able to tun the task using spawnSync
         await deployContract('EndpointV2', true)
         await setupDefaultEndpointV2()
-        await deployContract('OApp')
+        await deployContract('OAppRead')
     })
 
     afterEach(async () => {
@@ -50,79 +48,29 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
         fs.existsSync(expected) && fs.unlinkSync(expected)
     })
 
-    it('should throw an error if there are no networks configured with eid', async () => {
-        const { promptToSelectMultipleMock } = await getPromptMocks()
-        const hre = getTestHre({ config: './hardhat.config.without-eids.ts' })
-        await expect(hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: 'MyOApp' })).rejects.toThrow()
-        expect(promptToSelectMultipleMock).not.toHaveBeenCalled()
-    })
-
-    it('should ask the user to select networks for the config', async () => {
-        const { promptToSelectMultipleMock } = await getPromptMocks()
-        promptToSelectMultipleMock.mockResolvedValue(['britney'])
-
-        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: 'MyOApp', oappConfig: actual })
-
-        expect(promptToSelectMultipleMock).toHaveBeenCalledWith(
-            `Select the networks to include in your OApp config`,
-            expect.objectContaining({
-                options: [
-                    {
-                        title: 'britney',
-                        value: 'britney',
-                        disabled: false,
-                        hint: `Connected to ${formatEid(getEidForNetworkName('britney'))}`,
-                    },
-                    {
-                        title: 'tango',
-                        value: 'tango',
-                        disabled: false,
-                        hint: `Connected to ${formatEid(getEidForNetworkName('tango'))}`,
-                    },
-                    {
-                        title: 'vengaboys',
-                        value: 'vengaboys',
-                        disabled: false,
-                        hint: `Connected to ${formatEid(getEidForNetworkName('vengaboys'))}`,
-                    },
-                    {
-                        title: 'hardhat',
-                        value: 'hardhat',
-                        disabled: true,
-                    },
-                    {
-                        title: 'localhost',
-                        value: 'localhost',
-                        disabled: true,
-                    },
-                ],
-            })
-        )
-    })
-
-    it('should generate a LayerZero Configuration with the two selected networks', async () => {
+    it('should generate a LayerZero Read Configuration with the two selected networks', async () => {
         const { promptToSelectMultipleMock } = await getPromptMocks()
         const networks = ['britney', 'tango']
         promptToSelectMultipleMock.mockResolvedValue(networks)
-        const contractName = 'MyOApp'
-        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
+        const contractName = 'MyOAppRead'
+        await hre.run(TASK_LZ_OAPP_READ_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
 
         // generate an expected LayerZero Config file to compare
-        await generateExpectedLzConfig(expected, networks, contractName)
+        await generateExpectedLzConfig(expected, networks, contractName, true)
         const expectedContent = fs.readFileSync(expected, 'utf-8')
         const actualContent = fs.readFileSync(actual, 'utf-8')
         expect(expectedContent).toEqual(actualContent)
     })
 
-    it('should generate a LayerZero Configuration with the three selected networks and then wire using generated config', async () => {
+    it('should generate a LayerZero Read Configuration with the three selected networks and then wire using generated config', async () => {
         const { promptToSelectMultipleMock } = await getPromptMocks()
         const networks = ['britney', 'tango', 'vengaboys']
         promptToSelectMultipleMock.mockResolvedValue(networks)
-        const contractName = 'DefaultOApp'
-        await hre.run(TASK_LZ_OAPP_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
+        const contractName = 'DefaultOAppRead'
+        await hre.run(TASK_LZ_OAPP_READ_CONFIG_INIT, { contractName: contractName, oappConfig: actual })
 
         // generate an expected LayerZero Config file to compare
-        await generateExpectedLzConfig(expected, networks, contractName)
+        await generateExpectedLzConfig(expected, networks, contractName, true)
 
         const expectedContent = fs.readFileSync(expected, 'utf-8')
         const actualContent = fs.readFileSync(actual, 'utf-8')
@@ -135,7 +83,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_INIT}`, () => {
             .mockResolvedValueOnce(false) // We don't want to see the list
             .mockResolvedValueOnce(true) // We want to continue
 
-        const [, errors] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+        const [, errors] = await hre.run(TASK_LZ_OAPP_READ_WIRE, { oappConfig })
         expect(errors).toEqual([])
     })
 })
@@ -154,7 +102,7 @@ async function generateExpectedLzConfig(filename: string, networks: string[], co
                 `const ${network}Contract = {\n    eid: ${getTestEndpoint(network)},\n    contractName: "${contractName}"\n};`
         )
         .join('\n')
-    const contractsArray = networks.map((network) => `{ contract: ${network}Contract }`).join(', ')
+    const contractsArray = await getReadContractsArray(networks)
     const connectionsArray = await getConnectionsArray(networks ?? [])
     const exportContent = `\nexport default { contracts: [${contractsArray}], connections: [${connectionsArray}] };\n`
     const lzConfigContent = endpointIdImportStatement + networkContractVariables + exportContent
@@ -218,6 +166,38 @@ async function getConnectionsArray(networks: string[]) {
 }
 
 /**
+ * Builds contract array string using passed in selected networks.
+ * Calls TASK_LZ_OAPP_CONFIG_GET_DEFAULT to get default values for all pathways
+ * @param {string[]} networks
+ * @return {string} string representation of the connections array
+ *
+ *         connections: [
+ *             {
+ *                from: firstContract,
+ *                to: secondContract,
+ *                config:{...}
+ *             },
+ *             {
+ *                from: secondContract,
+ *                to: firstContract,
+ *                config:{...}
+ *             }
+ *         ]
+ */
+async function getReadContractsArray(networks: string[]) {
+    const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL, {
+        networks,
+    })
+
+    let contractsContent = ''
+    for (const from of networks) {
+        contractsContent += `{ contract: ${from}Contract, config: ${buildDefaultReadConfig(getDefaultConfigTask[from])} }, `
+    }
+    contractsContent = contractsContent.substring(0, contractsContent.length - 2)
+    return contractsContent
+}
+
+/**
  * Builds config string with passed in defaults.
  *
  * @param {Record<string, Record<string, unknown>>} defaultConfig
@@ -240,6 +220,34 @@ function buildDefaultConfig(defaultConfig: Record<string, Record<string, unknown
         `receiveConfig: { ulnConfig: { confirmations: ${defaultConfig.receiveUlnConfig?.confirmations}, requiredDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(defaultConfig.receiveUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${defaultConfig.receiveUlnConfig?.optionalDVNThreshold ?? 0} } }` +
         ` }`
     )
+}
+
+/**
+ * Builds config string with passed in defaults for ReadLib.
+ *
+ * @param {Record<string, Record<string, unknown>>} defaultConfig
+ * @return {string} string representing config
+ *
+ *      config: {
+ *           readChannelConfigs: [
+ *              {
+ *                channelId: 1,
+ *                readLibrary: "0x0000000000000000000000000000000000000000",
+ *                ulnConfig: {...},
+ *              }
+ *           ]
+ *      }
+ */
+function buildDefaultReadConfig(defaultConfig: Record<string, Record<string, Record<string, unknown>>>): string {
+    let readChannelConfigs = ''
+
+    for (const [channelId, config] of Object.entries(defaultConfig)) {
+        readChannelConfigs += `{ channelId: ${channelId}, readLibrary: "${config.defaultReadLibrary}", ulnConfig: { executor: "${config.readUlnConfig?.executor}", requiredDVNs: ${handleDvns(config.readUlnConfig?.requiredDVNs as string[])}, optionalDVNs: ${handleDvns(config.readUlnConfig?.optionalDVNs as string[])}, optionalDVNThreshold: ${config.readUlnConfig?.optionalDVNThreshold ?? 0} } }, `
+    }
+
+    readChannelConfigs = readChannelConfigs.substring(0, readChannelConfigs.length - 2)
+
+    return `{ readChannelConfigs: [` + readChannelConfigs + `] }`
 }
 
 /**
