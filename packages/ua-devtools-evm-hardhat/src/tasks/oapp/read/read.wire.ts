@@ -1,6 +1,11 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
+import {
+    SUBTASK_LZ_OAPP_CONFIG_LOAD,
+    SUBTASK_LZ_OAPP_READ_WIRE_CONFIGURE,
+    SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
+    TASK_LZ_OAPP_READ_WIRE,
+} from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
 import {
     types,
@@ -12,13 +17,12 @@ import {
 import { OmniTransaction } from '@layerzerolabs/devtools'
 import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
-import type { SubtaskConfigureTaskArgs } from './types'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
-import './subtask.configure'
-import { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
+import './read.subtask.configure'
+import { OAppReadOmniGraphHardhatSchema } from '@/oapp-read'
+import { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
-import { OAppOmniGraphHardhatSchema } from '@/oapp'
 
 interface TaskArgs {
     oappConfig: string
@@ -82,13 +86,16 @@ const action: ActionType<TaskArgs> = async (
     // Now we can load and validate the config
     const graph = await hre.run(loadConfigSubtask, {
         configPath: oappConfigPath,
-        schema: OAppOmniGraphHardhatSchema,
-        task: TASK_LZ_OAPP_WIRE,
+        schema: OAppReadOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_READ_WIRE,
     } satisfies SubtaskLoadConfigTaskArgs)
 
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)
 
+    // If using the default configuration subtask and we are wiring an OAppRead,
+    // we'll switch to the OAppRead configuration subtask
+    configureSubtask = SUBTASK_LZ_OAPP_READ_WIRE_CONFIGURE
     // We'll get the list of OmniTransactions using a subtask to allow for developers
     // to use this as a hook and extend the configuration
     logger.debug(`Using ${configureSubtask} subtask to get the configuration`)
@@ -158,7 +165,7 @@ const action: ActionType<TaskArgs> = async (
     return signAndSendResult
 }
 
-task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
+task(TASK_LZ_OAPP_READ_WIRE, 'Wire LayerZero OApp', action)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addParam(
@@ -171,7 +178,7 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     .addParam(
         'configureSubtask',
         'Override the default configuration subtask',
-        SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
+        SUBTASK_LZ_OAPP_READ_WIRE_CONFIGURE,
         types.string,
         true
     )

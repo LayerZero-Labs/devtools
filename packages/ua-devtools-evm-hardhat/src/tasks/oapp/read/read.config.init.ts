@@ -1,6 +1,6 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import { TASK_LZ_OAPP_CONFIG_INIT } from '@/constants/tasks'
+import { TASK_LZ_OAPP_READ_CONFIG_INIT } from '@/constants/tasks'
 import { formatEid } from '@layerzerolabs/devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { createLogger, pluralizeNoun, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
@@ -16,8 +16,8 @@ import {
     SourceFile,
     Statement,
 } from 'typescript'
-import { generateLzConfig } from '@/oapp/typescript/typescript'
 import { writeFileSync } from 'fs'
+import { generateReadLzConfig } from '@/oapp-read/typescript/typescript'
 
 interface TaskArgs {
     contractName: string
@@ -91,13 +91,13 @@ const action: ActionType<TaskArgs> = async ({ contractName, oappConfig, logLevel
 
     const printer = createPrinter()
     const sourceFile: SourceFile = createSourceFile(oappConfig, '', ScriptTarget.ESNext, true, ScriptKind.TS)
-    const generatedLzConfig: NodeArray<Statement> = await generateLzConfig(selectedNetworks, contractName)
+    const generatedLzConfig: NodeArray<Statement> = await generateReadLzConfig(selectedNetworks, contractName)
     const layerZeroConfigContent: string = printer.printList(ListFormat.MultiLine, generatedLzConfig, sourceFile)
     writeFileSync(oappConfig, layerZeroConfigContent)
     return oappConfig
 }
 
-task(TASK_LZ_OAPP_CONFIG_INIT, 'Initialize an OApp configuration file', action)
+task(TASK_LZ_OAPP_READ_CONFIG_INIT, 'Initialize an OApp configuration file', action)
     .addParam('oappConfig', 'Path to the new LayerZero OApp config', undefined, types.string)
     .addParam('contractName', 'Name of contract in deployments folder', undefined, types.string)
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)

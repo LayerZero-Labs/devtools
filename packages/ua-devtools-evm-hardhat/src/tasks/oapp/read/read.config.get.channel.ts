@@ -14,7 +14,7 @@ import { OAppReadNodeConfig } from '@layerzerolabs/ua-devtools'
 import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 
 import { getReadConfig } from '@/utils/taskHelpers'
-import { TASK_LZ_OAPP_CONFIG_GET_READ } from '@/constants'
+import { TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL } from '@/constants'
 
 interface TaskArgs {
     logLevel?: string
@@ -100,8 +100,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
 }
 
 task(
-    TASK_LZ_OAPP_CONFIG_GET_READ,
-    'Outputs the Default OApp Read Config. Each config contains read channels, default libraries, and Uln configs',
+    TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL,
+    'Outputs the Default OApp Read Channel Config. Each config contains read channels, default libraries, and Uln configs',
     action
 )
     .addParam('networks', 'Comma-separated list of networks', undefined, types.csv, true)

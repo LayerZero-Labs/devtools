@@ -1,14 +1,13 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
-import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
-import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
+import { getReadConfig, getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_READ_CONFIG_GET } from '@/constants/tasks'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { createConnectedContractFactory, getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
-import { OAppOmniGraphHardhatSchema } from '@/oapp'
-import type { SubtaskLoadConfigTaskArgs } from './types'
 import { createDefaultApplicative } from '@layerzerolabs/devtools'
-import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
+import { createOAppReadFactory } from '@layerzerolabs/ua-devtools-evm'
+import { OAppReadOmniGraphHardhatSchema } from '@/oapp-read'
 
 interface TaskArgs {
     logLevel?: string
@@ -25,12 +24,12 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
     // We'll load and process the graph, resolving the addresses in the process
     const graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
         configPath: oappConfig,
-        schema: OAppOmniGraphHardhatSchema,
-        task: TASK_LZ_OAPP_CONFIG_GET,
-    } satisfies SubtaskLoadConfigTaskArgs)
+        schema: OAppReadOmniGraphHardhatSchema,
+        task: TASK_LZ_OAPP_READ_CONFIG_GET,
+    })
 
     // Now let's prepare some connectors
-    const sdkFactory = createOAppFactory(createConnectedContractFactory())
+    const sdkFactory = createOAppReadFactory(createConnectedContractFactory())
 
     // And a container to store the results
     const configs: Record<string, Record<string, unknown>> = {}
@@ -109,6 +108,73 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
         )
     })
 
+    // For lzRead, we'll also go over the read channels configs
+    tasks.push(
+        ...graph.contracts.map(({ point, config }) => async () => {
+            const oAppReadSdk = await sdkFactory(point)
+            const endpointV2Sdk = await oAppReadSdk.getEndpointSDK()
+
+            if (config?.readChannelConfigs == null) {
+                return
+            }
+
+            const channelIds = config.readChannelConfigs.map(({ channelId }) => channelId)
+
+            // OApp User Set Config
+            const readCustomConfig = await getReadConfig(endpointV2Sdk, channelIds, point.address, true)
+
+            // Default Config
+            const readDefaultConfig = await getReadConfig(endpointV2Sdk, channelIds)
+
+            // OApp Config
+            const readOAppConfig = await getReadConfig(endpointV2Sdk, channelIds, point.address)
+
+            const localNetworkName = getNetworkNameForEid(point.eid)
+
+            for (let i = 0; i < channelIds.length; i++) {
+                const channelId = channelIds[i]
+                const [readCustomLibrary, readCustomUlnConfig, customChannelId] = (readCustomConfig ?? [])[i] ?? []
+                const [readDefaultLibrary, readDefaultUlnConfig, defaultChannelId] = (readDefaultConfig ?? [])[i] ?? []
+                const [readOAppLibrary, readOAppUlnConfig, oAppChannelId] = (readOAppConfig ?? [])[i] ?? []
+
+                // Update the global state
+                configs[localNetworkName] = {
+                    ...configs[localNetworkName],
+                    [channelId!]: {
+                        defaultReadLibrary: readOAppLibrary,
+                        readUlnConfig: readOAppUlnConfig,
+                    },
+                }
+
+                console.log(
+                    printCrossTable(
+                        [
+                            {
+                                localNetworkName,
+                                channelId: customChannelId,
+                                readLibrary: readCustomLibrary,
+                                readUlnConfig: readCustomUlnConfig,
+                            },
+                            {
+                                localNetworkName,
+                                channelId: defaultChannelId,
+                                readLibrary: readDefaultLibrary,
+                                readUlnConfig: readDefaultUlnConfig,
+                            },
+                            {
+                                localNetworkName,
+                                channelId: oAppChannelId,
+                                readLibrary: readOAppLibrary,
+                                readUlnConfig: readOAppUlnConfig,
+                            },
+                        ],
+                        ['', 'Custom OApp Read Config', 'Default OApp Read Config', 'Active OApp Read Config']
+                    )
+                )
+            }
+        })
+    )
+
     // We allow this script to be executed either in parallel or in series
     const applicative = createDefaultApplicative(logger)
     await applicative(tasks)
@@ -117,7 +183,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
 }
 
 task(
-    TASK_LZ_OAPP_CONFIG_GET,
+    TASK_LZ_OAPP_READ_CONFIG_GET,
     'Outputs Custom OApp Config, Default OApp Config, and Active OApp Config. Each config contains Send & Receive Libraries, Send Uln & Executor Configs, and Receive Executor Configs',
     action
 )

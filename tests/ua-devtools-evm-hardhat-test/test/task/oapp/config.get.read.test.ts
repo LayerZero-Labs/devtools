@@ -5,7 +5,7 @@ import {
 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createContractFactory, getEidForNetworkName } from '@layerzerolabs/devtools-evm-hardhat'
 import hre from 'hardhat'
-import { TASK_LZ_OAPP_CONFIG_GET_READ } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { omniContractToPoint } from '@layerzerolabs/devtools-evm'
 import { printJson } from '@layerzerolabs/io-devtools'
 import { OAppReadNodeConfig } from '@layerzerolabs/ua-devtools'
@@ -21,7 +21,7 @@ jest.mock('@layerzerolabs/io-devtools', () => {
     }
 })
 
-describe(`task ${TASK_LZ_OAPP_CONFIG_GET_READ}`, () => {
+describe(`task ${TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL}`, () => {
     const networks = ['vengaboys', 'britney', 'tango']
 
     beforeEach(async () => {
@@ -32,7 +32,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_READ}`, () => {
     })
 
     it('should return default configurations with passed in networks param', async () => {
-        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_READ, { networks })
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL, { networks })
         const contractFactory = createContractFactory()
 
         for (const localNetwork of networks) {
@@ -59,7 +59,7 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_READ}`, () => {
     })
 
     it('should print out default config in json form', async () => {
-        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_CONFIG_GET_READ, {
+        const getDefaultConfigTask = await hre.run(TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL, {
             networks,
             json: true,
         })
@@ -96,13 +96,23 @@ describe(`task ${TASK_LZ_OAPP_CONFIG_GET_READ}`, () => {
     })
 
     it(`should fail if not defined networks have been passed`, async () => {
-        const result = spawnSync('npx', ['hardhat', TASK_LZ_OAPP_CONFIG_GET_READ, '--networks', 'whatever,yomama'])
+        const result = spawnSync('npx', [
+            'hardhat',
+            TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL,
+            '--networks',
+            'whatever,yomama',
+        ])
 
         expect(result.status).toBe(1)
     })
 
     it(`should not fail if defined networks have been passed`, async () => {
-        const result = spawnSync('npx', ['hardhat', TASK_LZ_OAPP_CONFIG_GET_READ, `--networks`, networks.join(',')])
+        const result = spawnSync('npx', [
+            'hardhat',
+            TASK_LZ_OAPP_READ_CONFIG_GET_CHANNEL,
+            `--networks`,
+            networks.join(','),
+        ])
 
         expect(result.status).toBe(0)
     })
