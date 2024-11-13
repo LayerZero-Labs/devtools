@@ -1,11 +1,6 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
-import {
-    SUBTASK_LZ_OAPP_CONFIG_LOAD,
-    SUBTASK_LZ_OAPP_READ_WIRE_CONFIGURE,
-    SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
-    TASK_LZ_OAPP_WIRE,
-} from '@/constants/tasks'
+import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
 import {
     types,
@@ -32,7 +27,6 @@ interface TaskArgs {
     dryRun?: boolean
     assert?: boolean
     safe?: boolean
-    lzRead?: boolean
     signer?: SignerDefinition
     /**
      * Name of a custom config loading subtask
@@ -65,7 +59,6 @@ const action: ActionType<TaskArgs> = async (
         assert = false,
         safe = false,
         signer,
-        lzRead = false,
         loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
         configureSubtask = SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
         signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
@@ -96,11 +89,6 @@ const action: ActionType<TaskArgs> = async (
     // At this point we are ready to create the list of transactions
     logger.verbose(`Creating a list of wiring transactions`)
 
-    // If using the default configuration subtask and we are wiring an OAppRead,
-    // we'll switch to the OAppRead configuration subtask
-    if (configureSubtask === SUBTASK_LZ_OAPP_WIRE_CONFIGURE && lzRead) {
-        configureSubtask = SUBTASK_LZ_OAPP_READ_WIRE_CONFIGURE
-    }
     // We'll get the list of OmniTransactions using a subtask to allow for developers
     // to use this as a hook and extend the configuration
     logger.debug(`Using ${configureSubtask} subtask to get the configuration`)
@@ -201,5 +189,4 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
         'Will not execute any transactions and fail if there are any transactions required to configure the OApp'
     )
     .addFlag('safe', 'Use gnosis safe to sign transactions')
-    .addFlag('lzRead', 'Wire an OAppRead')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)

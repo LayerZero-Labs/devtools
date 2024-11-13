@@ -1,23 +1,21 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
 import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
-import { getReadConfig, getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
+import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { createConnectedContractFactory, getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
 import type { SubtaskLoadConfigTaskArgs } from './types'
 import { createDefaultApplicative } from '@layerzerolabs/devtools'
-import { createOAppFactory, createOAppReadFactory } from '@layerzerolabs/ua-devtools-evm'
-import { OAppReadOmniGraphHardhatSchema } from '@/oapp-read'
+import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 
 interface TaskArgs {
     logLevel?: string
     oappConfig: string
-    lzRead?: boolean
 }
 
-const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig, lzRead = false }, hre) => {
+const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, hre) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 
@@ -32,9 +30,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig, lzR
     } satisfies SubtaskLoadConfigTaskArgs)
 
     // Now let's prepare some connectors
-    const sdkFactory = lzRead
-        ? createOAppReadFactory(createConnectedContractFactory())
-        : createOAppFactory(createConnectedContractFactory())
+    const sdkFactory = createOAppFactory(createConnectedContractFactory())
 
     // And a container to store the results
     const configs: Record<string, Record<string, unknown>> = {}
@@ -113,76 +109,6 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig, lzR
         )
     })
 
-    // For lzRead, we'll also go over the read channels configs
-    if (lzRead) {
-        tasks.push(
-            ...(graph as OAppReadOmniGraph).contracts.map(({ point, config }) => async () => {
-                const oAppReadSdk = await sdkFactory(point)
-                const endpointV2Sdk = await oAppReadSdk.getEndpointSDK()
-
-                if (config?.readChannelConfigs == null) {
-                    return
-                }
-
-                const channelIds = config.readChannelConfigs.map(({ channelId }) => channelId)
-
-                // OApp User Set Config
-                const readCustomConfig = await getReadConfig(endpointV2Sdk, channelIds, point.address, true)
-
-                // Default Config
-                const readDefaultConfig = await getReadConfig(endpointV2Sdk, channelIds)
-
-                // OApp Config
-                const readOAppConfig = await getReadConfig(endpointV2Sdk, channelIds, point.address)
-
-                const localNetworkName = getNetworkNameForEid(point.eid)
-
-                for (let i = 0; i < channelIds.length; i++) {
-                    const channelId = channelIds[i]
-                    const [readCustomLibrary, readCustomUlnConfig, customChannelId] = (readCustomConfig ?? [])[i] ?? []
-                    const [readDefaultLibrary, readDefaultUlnConfig, defaultChannelId] =
-                        (readDefaultConfig ?? [])[i] ?? []
-                    const [readOAppLibrary, readOAppUlnConfig, oAppChannelId] = (readOAppConfig ?? [])[i] ?? []
-
-                    // Update the global state
-                    configs[localNetworkName] = {
-                        ...configs[localNetworkName],
-                        [channelId!]: {
-                            defaultReadLibrary: readOAppLibrary,
-                            readUlnConfig: readOAppUlnConfig,
-                        },
-                    }
-
-                    console.log(
-                        printCrossTable(
-                            [
-                                {
-                                    localNetworkName,
-                                    channelId: customChannelId,
-                                    readLibrary: readCustomLibrary,
-                                    readUlnConfig: readCustomUlnConfig,
-                                },
-                                {
-                                    localNetworkName,
-                                    channelId: defaultChannelId,
-                                    readLibrary: readDefaultLibrary,
-                                    readUlnConfig: readDefaultUlnConfig,
-                                },
-                                {
-                                    localNetworkName,
-                                    channelId: oAppChannelId,
-                                    readLibrary: readOAppLibrary,
-                                    readUlnConfig: readOAppUlnConfig,
-                                },
-                            ],
-                            ['', 'Custom OApp Read Config', 'Default OApp Read Config', 'Active OApp Read Config']
-                        )
-                    )
-                }
-            })
-        )
-    }
-
     // We allow this script to be executed either in parallel or in series
     const applicative = createDefaultApplicative(logger)
     await applicative(tasks)
@@ -197,4 +123,3 @@ task(
 )
     .addParam('logLevel', 'Logging level. One of: error, warn, info, verbose, debug, silly', 'info', types.logLevel)
     .addParam('oappConfig', 'Path to your LayerZero OApp config', undefined, types.string)
-    .addFlag('lzRead', 'Get configurations for read channels')
