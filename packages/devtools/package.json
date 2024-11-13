@@ -40,6 +40,7 @@
     "@ethersproject/constants": "~5.7.0",
     "@layerzerolabs/io-devtools": "~0.1.13",
     "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/test-devtools": "~0.3.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
@@ -57,6 +58,7 @@
     "@ethersproject/bytes": "~5.7.0",
     "@layerzerolabs/io-devtools": "~0.1.13",
     "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "zod": "^3.22.4"
   },
   "publishConfig": {

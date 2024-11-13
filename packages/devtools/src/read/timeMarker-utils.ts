@@ -7,24 +7,37 @@ import {
     SingleViewFunctionEVMCall,
     TimestampBlockConfiguration,
 } from '@layerzerolabs/lz-v2-utilities'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-
+import type { EndpointId } from '@layerzerolabs/lz-definitions'
 import type {
     BlockTime,
     ResolvedTimeMarker,
     ResolvedTimestampTimeMarker,
     TimeMarker,
     TimestampTimeMarker,
-} from '@/read/types'
+} from './types'
 
-export const dedup = <T>(arr: T[], isEqual: (a: T, b: T) => boolean): T[] => {
-    return arr.reduce<T[]>((acc, item) => {
-        if (!acc.some((existingItem) => isEqual(existingItem, item))) {
-            acc.push(item)
-        }
-        return acc
-    }, [])
+export const dedup =
+    <T>(isEqual: (a: T, b: T) => boolean) =>
+    (arr: T[]): T[] => {
+        return arr.reduce<T[]>((acc, item) => {
+            if (!acc.some((existingItem) => isEqual(existingItem, item))) {
+                acc.push(item)
+            }
+            return acc
+        }, [])
+    }
+
+export const isEqualTimeMarker = (a: TimeMarker, b: TimeMarker): boolean => {
+    return (
+        a.eid === b.eid &&
+        a.isBlockNumber === b.isBlockNumber &&
+        a.blockNumber === b.blockNumber &&
+        a.timestamp === b.timestamp &&
+        a.blockConfirmation === b.blockConfirmation
+    )
 }
+
+export const dedupTimeMarkers = dedup<TimeMarker>(isEqualTimeMarker)
 
 export const extractTimeMarker = (req: SingleViewFunctionEVMCall | ComputeEVM): TimeMarker => {
     const baseTimeMarker = {
@@ -43,16 +56,6 @@ export const extractTimeMarker = (req: SingleViewFunctionEVMCall | ComputeEVM): 
         isBlockNumber: true,
         blockNumber: Number(req.blockNumber!),
     }
-}
-
-export const isEqualTimeMarker = (a: TimeMarker, b: TimeMarker): boolean => {
-    return (
-        a.eid === b.eid &&
-        a.isBlockNumber === b.isBlockNumber &&
-        a.blockNumber === b.blockNumber &&
-        a.timestamp === b.timestamp &&
-        a.blockConfirmation === b.blockConfirmation
-    )
 }
 
 const findResolvedTimeMarker = (

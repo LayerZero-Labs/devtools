@@ -1,76 +1,58 @@
 import pMemoize from 'p-memoize'
 
 import type { JsonRpcProvider } from '@ethersproject/providers'
-import type { EndpointBasedFactory, Factory } from '@layerzerolabs/devtools'
+import type {
+    EndpointBasedFactory,
+    Factory,
+    ICommandResolver,
+    IComputerEVM,
+    ISingleViewFunctionCallerEVM,
+    ITimeMarkerResolverChain,
+    ITimeMarkerResolver,
+    ITimeMarkerValidatorChain,
+    ITimeMarkerValidator,
+} from '@layerzerolabs/devtools'
 import type { ProviderFactory } from '@layerzerolabs/devtools-evm'
 
 import {
-    CommandResolverSdk,
-    ComputeEVMSdk,
-    EVMTimeMarkerResolverChainSdk,
-    EVMTimeMarkerValidatorChainSdk,
-    SingleViewFunctionEVMCallSdk,
-    TimeMarkerResolverSdk,
-    TimeMarkerValidatorSdk,
+    ComputerEVM,
+    EVMTimeMarkerResolverChain,
+    EVMTimeMarkerValidatorChain,
+    SingleViewFunctionCallerEVM,
 } from '@layerzerolabs/devtools-evm'
-
-import type {
-    ICommandResolverSdk,
-    IComputeEVMSdk,
-    ISingleViewFunctionEVMCallSdk,
-    ITimeMarkerResolverChainSdk,
-    ITimeMarkerResolverSdk,
-    ITimeMarkerValidatorChainSdk,
-    ITimeMarkerValidatorSdk,
-} from '@layerzerolabs/devtools-evm'
+import { CommandResolver, TimeMarkerResolver, TimeMarkerValidator } from '@layerzerolabs/devtools'
 
 import { createProviderFactory } from '@/provider'
 
-export const createSingleViewFunctionEVMCallSdkFactory = (
+export const createSingleViewFunctionCallerEVMFactory = (
     providerFactory: ProviderFactory<JsonRpcProvider> = createProviderFactory()
-): EndpointBasedFactory<ISingleViewFunctionEVMCallSdk> =>
-    pMemoize(async (eid) => new SingleViewFunctionEVMCallSdk(eid, await providerFactory(eid)))
+): EndpointBasedFactory<ISingleViewFunctionCallerEVM> =>
+    pMemoize(async (eid) => new SingleViewFunctionCallerEVM(eid, await providerFactory(eid)))
 
-export const createComputeEVMSdkFactory = (
+export const createComputerEVMFactory = (
     providerFactory: ProviderFactory<JsonRpcProvider> = createProviderFactory()
-): EndpointBasedFactory<IComputeEVMSdk> => pMemoize(async (eid) => new ComputeEVMSdk(eid, await providerFactory(eid)))
+): EndpointBasedFactory<IComputerEVM> => pMemoize(async (eid) => new ComputerEVM(eid, await providerFactory(eid)))
 
-export const createCommandResolverSdkFactory = (
-    singleViewFunctionEVMCallSdkFactory: EndpointBasedFactory<ISingleViewFunctionEVMCallSdk> = createSingleViewFunctionEVMCallSdkFactory(),
-    computeEVMSdkFactory: EndpointBasedFactory<IComputeEVMSdk> = createComputeEVMSdkFactory()
-): Factory<[], ICommandResolverSdk> =>
-    pMemoize(async () => new CommandResolverSdk({ singleViewFunctionEVMCallSdkFactory, computeEVMSdkFactory }))
+export const createCommandResolverFactory = (
+    singleViewFunctionCallerEVMFactory: EndpointBasedFactory<ISingleViewFunctionCallerEVM> = createSingleViewFunctionCallerEVMFactory(),
+    computerEVMFactory: EndpointBasedFactory<IComputerEVM> = createComputerEVMFactory()
+): Factory<[], ICommandResolver> =>
+    pMemoize(async () => new CommandResolver(singleViewFunctionCallerEVMFactory, computerEVMFactory))
 
-export const createChainTimeMarkerResolverSdkFactory = (
+export const createTimeMarkerResolverChainFactory = (
     providerFactory: ProviderFactory<JsonRpcProvider> = createProviderFactory()
-): EndpointBasedFactory<ITimeMarkerResolverChainSdk> =>
-    pMemoize(
-        async (eid) =>
-            new EVMTimeMarkerResolverChainSdk({
-                eid,
-                provider: await providerFactory(eid),
-            })
-    )
+): EndpointBasedFactory<ITimeMarkerResolverChain> =>
+    pMemoize(async (eid) => new EVMTimeMarkerResolverChain(eid, await providerFactory(eid)))
 
-export const createTimeMarkerResolverSdkFactory = (
-    chainTimeMarkerResolverFactory: EndpointBasedFactory<ITimeMarkerResolverChainSdk> = createChainTimeMarkerResolverSdkFactory()
-): Factory<[], ITimeMarkerResolverSdk> =>
-    pMemoize(
-        async () =>
-            new TimeMarkerResolverSdk({
-                chainTimeMarkerResolverSdkFactory: chainTimeMarkerResolverFactory,
-            })
-    )
+export const createTimeMarkerResolverFactory = (
+    timeMarkerResolverChainFactory: EndpointBasedFactory<ITimeMarkerResolverChain> = createTimeMarkerResolverChainFactory()
+): Factory<[], ITimeMarkerResolver> => pMemoize(async () => new TimeMarkerResolver(timeMarkerResolverChainFactory))
 
-export const createChainTimeMarkerValidatorSdkFactory = (
+export const createTimeMarkerValidatorChainFactory = (
     providerFactory: ProviderFactory<JsonRpcProvider> = createProviderFactory()
-): EndpointBasedFactory<ITimeMarkerValidatorChainSdk> =>
-    pMemoize(async (eid) => new EVMTimeMarkerValidatorChainSdk(eid, await providerFactory(eid)))
+): EndpointBasedFactory<ITimeMarkerValidatorChain> =>
+    pMemoize(async (eid) => new EVMTimeMarkerValidatorChain(eid, await providerFactory(eid)))
 
-export const createTimeMarkerValidatorSdkFactory = (
-    chainTimeMarkerValidatorSdkFactory: EndpointBasedFactory<ITimeMarkerValidatorChainSdk> = createChainTimeMarkerValidatorSdkFactory()
-): Factory<[], ITimeMarkerValidatorSdk> =>
-    pMemoize(
-        async () =>
-            new TimeMarkerValidatorSdk({ chainTimeMarkerValidatorSdkFactory: chainTimeMarkerValidatorSdkFactory })
-    )
+export const createTimeMarkerValidatorFactory = (
+    timeMarkerValidatorChainFactory: EndpointBasedFactory<ITimeMarkerValidatorChain> = createTimeMarkerValidatorChainFactory()
+): Factory<[], ITimeMarkerValidator> => pMemoize(async () => new TimeMarkerValidator(timeMarkerValidatorChainFactory))

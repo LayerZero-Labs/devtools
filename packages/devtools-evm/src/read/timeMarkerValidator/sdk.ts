@@ -1,24 +1,23 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
+import {
+    dedup,
+    isBlockMatchingTimestamp,
+    type ITimeMarkerValidatorChain,
+    type ResolvedTimestampTimeMarker,
+    type ResolvedTimeMarker,
+    type BlockTime,
+} from '@layerzerolabs/devtools'
 
-import { dedup, isBlockMatchingTimestamp } from '@/read/common'
-import type {
-    ITimeMarkerValidatorChainSdk,
-    BlockTime,
-    ResolvedTimeMarker,
-    ResolvedTimestampTimeMarker,
-} from '@/read/types'
-
-export class EVMTimeMarkerValidatorChainSdk implements ITimeMarkerValidatorChainSdk {
+export class EVMTimeMarkerValidatorChain implements ITimeMarkerValidatorChain {
     constructor(
-        private eid: EndpointId,
-        private provider: JsonRpcProvider
+        public readonly eid: EndpointId,
+        protected readonly provider: JsonRpcProvider
     ) {}
 
     async checkResolvedTimeMarkerValidity(tms: Omit<ResolvedTimestampTimeMarker, 'eid'>[]): Promise<void> {
-        const blockNumberToFetch = dedup(
-            tms.map((tms) => [tms.blockNumber, Math.max(tms.blockNumber - 1, 1)]).flat(),
-            (a, b) => a === b
+        const blockNumberToFetch = dedup((a: number, b: number) => a === b)(
+            tms.map((tms) => [tms.blockNumber, Math.max(tms.blockNumber - 1, 1)]).flat()
         )
 
         const timestampMapping: { [blockNumber: number]: number } = {}

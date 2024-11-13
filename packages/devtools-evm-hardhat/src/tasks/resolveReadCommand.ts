@@ -3,11 +3,7 @@ import type { ActionType } from 'hardhat/types'
 import { createLogger, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 
-import {
-    createCommandResolverSdkFactory,
-    createTimeMarkerResolverSdkFactory,
-    createTimeMarkerValidatorSdkFactory,
-} from '@/read'
+import { createCommandResolverFactory, createTimeMarkerResolverFactory, createTimeMarkerValidatorFactory } from '@/read'
 import { types } from '@/cli'
 import { TASK_LZ_READ_RESOLVE_COMMAND } from '@/constants/tasks'
 
@@ -25,9 +21,9 @@ const action: ActionType<TaskArgs> = async ({ command, logLevel = 'info' }, _hre
     // And we'll create a logger for ourselves
     const logger = createLogger()
 
-    const commandResolverSdkFactory = createCommandResolverSdkFactory()
-    const timeMarkerResolverSdkFactory = createTimeMarkerResolverSdkFactory()
-    const timeMarkerValidatorSdkFactory = createTimeMarkerValidatorSdkFactory()
+    const commandResolverSdkFactory = createCommandResolverFactory()
+    const timeMarkerResolverSdkFactory = createTimeMarkerResolverFactory()
+    const timeMarkerValidatorSdkFactory = createTimeMarkerValidatorFactory()
 
     const commandResolverSdk = await commandResolverSdkFactory()
     const timeMarkerResolverSdk = await timeMarkerResolverSdkFactory()

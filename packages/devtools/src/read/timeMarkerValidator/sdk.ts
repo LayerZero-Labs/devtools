@@ -1,26 +1,17 @@
-import { EndpointBasedFactory } from '@layerzerolabs/devtools'
+import type { EndpointBasedFactory } from '@/types'
+import { groupByEid, type ResolvedTimeMarker, type ResolvedTimestampTimeMarker } from '@/read'
 
-import { groupByEid } from '@/read/common'
-import type {
-    ResolvedTimeMarker,
-    ResolvedTimestampTimeMarker,
-    ITimeMarkerValidatorSdk,
-    ITimeMarkerValidatorChainSdk,
-} from '@/read/types'
+import { ITimeMarkerValidator, ITimeMarkerValidatorChain } from './types'
 
-export class TimeMarkerValidatorSdk implements ITimeMarkerValidatorSdk {
-    constructor(
-        private options: {
-            chainTimeMarkerValidatorSdkFactory: EndpointBasedFactory<ITimeMarkerValidatorChainSdk>
-        }
-    ) {}
+export class TimeMarkerValidator implements ITimeMarkerValidator {
+    constructor(protected readonly timeMarkerValidatorChainFactory: EndpointBasedFactory<ITimeMarkerValidatorChain>) {}
 
     public async checkResolvedTimeMarkerValidity(tms: ResolvedTimestampTimeMarker[]): Promise<void> {
         const groupedTimeMarkers = groupByEid(tms)
 
         await Promise.all(
             Array.from(groupedTimeMarkers.entries()).map(async ([eid, markers]) => {
-                const sdk = await this.options.chainTimeMarkerValidatorSdkFactory(eid)
+                const sdk = await this.timeMarkerValidatorChainFactory(eid)
                 await sdk.checkResolvedTimeMarkerValidity(markers)
             })
         )
@@ -31,7 +22,7 @@ export class TimeMarkerValidatorSdk implements ITimeMarkerValidatorSdk {
 
         await Promise.all(
             Array.from(groupedTimeMarkers.entries()).map(async ([eid, markers]) => {
-                const sdk = await this.options.chainTimeMarkerValidatorSdkFactory(eid)
+                const sdk = await this.timeMarkerValidatorChainFactory(eid)
                 await sdk.assertTimeMarkerBlockConfirmations(markers)
             })
         )

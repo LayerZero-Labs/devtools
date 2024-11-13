@@ -1,16 +1,16 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import { formatEid, isZero, mapError, tapError } from '@layerzerolabs/devtools'
-import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
+import { createModuleLogger, type Logger } from '@layerzerolabs/io-devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
 
-import { ContractNotFoundError } from '@/read/common'
+import { ContractNotFoundError } from '@/read/'
 import { parseGenericError } from '@/errors'
 import { BytesSchema } from '@/schema'
 
 export class EVMViewFunctionBase {
     constructor(
         public readonly eid: EndpointId,
-        private readonly provider: JsonRpcProvider,
+        protected readonly provider: JsonRpcProvider,
         protected readonly logger: Logger = createModuleLogger(`EVM View SDK ${new.target.name} @ ${formatEid(eid)}`)
     ) {}
 

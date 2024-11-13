@@ -1,15 +1,22 @@
+import assert from 'assert'
+
 import { Interface } from '@ethersproject/abi'
 import { ComputeEVM, ComputeSetting } from '@layerzerolabs/lz-v2-utilities'
+import {
+    createDefaultApplicative,
+    type RequestResponsePair,
+    type ResolvedTimeMarker,
+    type IComputerEVM,
+    UnresolvableCommandError,
+} from '@layerzerolabs/devtools'
 
-import { EVMViewFunctionBase } from '@/read/commandResolver/chain/evm/base'
-import type { IComputeEVMSdk, RequestResponsePair, ResolvedTimeMarker } from '@/read/types'
-import { assert } from 'console'
-import { createDefaultApplicative } from '@layerzerolabs/devtools'
+import { ContractNotFoundError, EVMViewFunctionBase } from '@/read'
+import { RevertError } from '@/errors'
 
 const iOAppMapperAbi = ['function lzMap(bytes calldata _request, bytes calldata _response) view returns (bytes)']
 const iOAppReducerAbi = ['function lzReduce(bytes calldata _cmd, bytes[] calldata _responses) view returns (bytes)']
 
-export class ComputeEVMSdk extends EVMViewFunctionBase implements IComputeEVMSdk {
+export class ComputerEVM extends EVMViewFunctionBase implements IComputerEVM {
     public async resolve(
         cmd: string,
         compute: ComputeEVM,
@@ -20,24 +27,30 @@ export class ComputeEVMSdk extends EVMViewFunctionBase implements IComputeEVMSdk
 
         this.validateComputeSetting(computeSetting)
 
-        const mapper = ComputeSetting.OnlyReduce
-            ? (r: RequestResponsePair) => {
-                  this.logger.info('OnlyReduce setting is used. Skipping map step.')
-                  return r.response
-              }
-            : (r: RequestResponsePair) => this.lzMap(compute, r, timeMarker)
-        const reducer = ComputeSetting.OnlyMap
-            ? (mappedResponses: string[]) => {
-                  this.logger.info('OnlyMap setting is used. Skipping reduce step.')
-                  return mappedResponses.join('')
-              }
-            : (mappedResponses: string[]) => this.lzReduce(compute, cmd, mappedResponses, timeMarker)
+        try {
+            const mapper = ComputeSetting.OnlyReduce
+                ? (r: RequestResponsePair) => {
+                      this.logger.info('OnlyReduce setting is used. Skipping map step.')
+                      return r.response
+                  }
+                : (r: RequestResponsePair) => this.lzMap(compute, r, timeMarker)
+            const reducer = ComputeSetting.OnlyMap
+                ? (mappedResponses: string[]) => {
+                      this.logger.info('OnlyMap setting is used. Skipping reduce step.')
+                      return mappedResponses.join('')
+                  }
+                : (mappedResponses: string[]) => this.lzReduce(compute, cmd, mappedResponses, timeMarker)
 
-        const applicative = createDefaultApplicative(this.logger)
-        const mapped = await applicative(responses.map((r) => () => mapper(r)))
-        const reduced = await reducer(mapped)
-
-        return reduced
+            const applicative = createDefaultApplicative(this.logger)
+            const mapped = await applicative(responses.map((r) => () => mapper(r)))
+            const reduced = await reducer(mapped)
+            return reduced
+        } catch (error) {
+            if (error instanceof ContractNotFoundError || error instanceof RevertError) {
+                throw new UnresolvableCommandError()
+            }
+            throw error
+        }
     }
 
     private validateComputeSetting(computeSetting: ComputeSetting): void {

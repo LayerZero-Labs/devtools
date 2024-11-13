@@ -1,4 +1,3 @@
-import { EndpointBasedFactory } from '@layerzerolabs/devtools'
 import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
 import {
     Command,
@@ -11,33 +10,24 @@ import {
 } from '@layerzerolabs/lz-v2-utilities'
 
 import {
-    ContractNotFoundError,
-    dedup,
+    type BlockNumberTimeMarker,
+    dedupTimeMarkers,
     extractTimeMarker,
     findComputeResolvedTimeMarker,
     findRequestResolvedTimeMarker,
-    isEqualTimeMarker,
-    UnresolvableCommandError,
-} from '@/read/common'
-import type {
-    BlockNumberTimeMarker,
-    ICommandResolverSdk,
-    IComputeEVMSdk,
-    ISingleViewFunctionEVMCallSdk,
-    RequestResponsePair,
-    ResolvedTimeMarker,
-    ResolvedTimestampTimeMarker,
-    TimeMarker,
-    TimestampTimeMarker,
-} from '@/read/types'
-import { RevertError } from '@/errors'
+    type ResolvedTimeMarker,
+    type ResolvedTimestampTimeMarker,
+    type TimeMarker,
+    type TimestampTimeMarker,
+} from '@/read'
+import { EndpointBasedFactory } from '@/types'
 
-export class CommandResolverSdk implements ICommandResolverSdk {
+import type { ICommandResolver, RequestResponsePair, IComputerEVM, ISingleViewFunctionCallerEVM } from './types'
+
+export class CommandResolver implements ICommandResolver {
     constructor(
-        private options: {
-            singleViewFunctionEVMCallSdkFactory: EndpointBasedFactory<ISingleViewFunctionEVMCallSdk>
-            computeEVMSdkFactory: EndpointBasedFactory<IComputeEVMSdk>
-        }
+        protected readonly singleViewFunctionEVMCallFactory: EndpointBasedFactory<ISingleViewFunctionCallerEVM>,
+        protected readonly computerEVMFactory: EndpointBasedFactory<IComputerEVM>
     ) {}
 
     public decodeCommand(command: string): Command {
@@ -71,7 +61,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
             }
         }
 
-        const dedupedTimeMarkers = dedup(timeMarkers, isEqualTimeMarker)
+        const dedupedTimeMarkers = dedupTimeMarkers(timeMarkers)
         return {
             blockNumberTimeMarkers: dedupedTimeMarkers.filter((tm) => tm.isBlockNumber),
             timestampTimeMarkers: dedupedTimeMarkers.filter((tm) => !tm.isBlockNumber),
@@ -82,31 +72,24 @@ export class CommandResolverSdk implements ICommandResolverSdk {
         const logger = createModuleLogger('CommandResolverSdk')
         const decodedCommand = Command.decode(command.replace('0x', ''))
 
-        try {
-            logger.info(`Resolving requests`)
-            const responses = await Promise.all(
-                decodedCommand.requests.map(async (request) =>
-                    this.resolveRequest(request, findRequestResolvedTimeMarker(request, timeMarkers), logger)
-                )
+        logger.info(`Resolving requests`)
+        const responses = await Promise.all(
+            decodedCommand.requests.map(async (request) =>
+                this.resolveRequest(request, findRequestResolvedTimeMarker(request, timeMarkers), logger)
             )
+        )
 
-            if (!decodedCommand.compute) {
-                logger.info('No compute information in command, returning concatenated responses')
-                return responses.map((lr) => lr.response).join('')
-            }
-
-            return await this.resolveCompute(
-                command,
-                decodedCommand.compute,
-                findComputeResolvedTimeMarker(decodedCommand.compute, timeMarkers),
-                responses
-            )
-        } catch (error) {
-            if (error instanceof ContractNotFoundError || error instanceof RevertError) {
-                throw new UnresolvableCommandError()
-            }
-            throw error
+        if (!decodedCommand.compute) {
+            logger.info('No compute information in command, returning concatenated responses')
+            return responses.map((lr) => lr.response).join('')
         }
+
+        return await this.resolveCompute(
+            command,
+            decodedCommand.compute,
+            findComputeResolvedTimeMarker(decodedCommand.compute, timeMarkers),
+            responses
+        )
     }
 
     private async resolveRequest(
@@ -118,7 +101,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
             case ResolverType.SingleViewFunctionEVMCall: {
                 const requestEvm = request as SingleViewFunctionEVMCall
                 const response = await (
-                    await this.options.singleViewFunctionEVMCallSdkFactory(requestEvm.targetEid)
+                    await this.singleViewFunctionEVMCallFactory(requestEvm.targetEid)
                 ).resolve(requestEvm, timeMarker)
                 logger.debug(`Resolved request ${requestEvm.encode()}: ${response}`)
                 return { request: requestEvm.encode(), response }
@@ -138,7 +121,7 @@ export class CommandResolverSdk implements ICommandResolverSdk {
             case ComputeType.SingleViewFunctionEVMCall: {
                 const computeEvm = compute as ComputeEVM
                 return await (
-                    await this.options.computeEVMSdkFactory(computeEvm.targetEid)
+                    await this.computerEVMFactory(computeEvm.targetEid)
                 ).resolve(command, computeEvm, timeMarker, responses)
             }
             default:

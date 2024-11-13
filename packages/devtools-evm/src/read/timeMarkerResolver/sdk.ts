@@ -1,8 +1,6 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
-import { isBlockMatchingTimestamp } from '@/read/common'
-import type { BlockTime, ITimeMarkerResolverChainSdk } from '@/read/types'
+import { isBlockMatchingTimestamp, type BlockTime, type ITimeMarkerResolverChain } from '@layerzerolabs/devtools'
 
 const updateLowerBoundBlock = (lowerBoundBlock: BlockTime | null, potentialBlock: BlockTime): BlockTime | null => {
     // This is a max function between two blocks
@@ -24,21 +22,19 @@ const calculateAvgBlockTime = (leftBlock: BlockTime, rightBlock: BlockTime): num
     return avgBlockTime
 }
 
-export class EVMTimeMarkerResolverChainSdk implements ITimeMarkerResolverChainSdk {
+export class EVMTimeMarkerResolverChain implements ITimeMarkerResolverChain {
     constructor(
-        private options: {
-            eid: EndpointId
-            provider: JsonRpcProvider
-        }
+        public readonly eid: EndpointId,
+        protected readonly provider: JsonRpcProvider
     ) {}
 
     public async resolveTimestamps(timestamps: number[]): Promise<{ [timestamp: number]: number }> {
-        const provider = this.options.provider
+        const provider = this.provider
         // Starting with an average block time of 1 second
         let avgBlockTime = 1000
 
         if (avgBlockTime <= 0) {
-            throw new Error(`Invalid average block time for ${this.options.eid} chain: ${avgBlockTime} (seconds)`)
+            throw new Error(`Invalid average block time for ${this.eid} chain: ${avgBlockTime} (seconds)`)
         }
         const resolvedTimeMarkers: { [timestamp: number]: number } = {}
 

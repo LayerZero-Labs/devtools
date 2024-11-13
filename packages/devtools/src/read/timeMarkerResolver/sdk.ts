@@ -1,18 +1,10 @@
-import type { EndpointBasedFactory } from '@layerzerolabs/devtools'
+import type { ResolvedTimestampTimeMarker, TimestampTimeMarker } from '@/read'
+import type { EndpointBasedFactory } from '@/types'
 
-import type {
-    ResolvedTimestampTimeMarker,
-    TimestampTimeMarker,
-    ITimeMarkerResolverSdk,
-    ITimeMarkerResolverChainSdk,
-} from '@/read/types'
+import type { ITimeMarkerResolver, ITimeMarkerResolverChain } from './types'
 
-export class TimeMarkerResolverSdk implements ITimeMarkerResolverSdk {
-    constructor(
-        private options: {
-            chainTimeMarkerResolverSdkFactory: EndpointBasedFactory<ITimeMarkerResolverChainSdk>
-        }
-    ) {}
+export class TimeMarkerResolver implements ITimeMarkerResolver {
+    constructor(protected readonly timeMarkerResolverChainFactory: EndpointBasedFactory<ITimeMarkerResolverChain>) {}
 
     public async resolveTimestampTimeMarkers(
         timeMarkers: TimestampTimeMarker[]
@@ -31,7 +23,7 @@ export class TimeMarkerResolverSdk implements ITimeMarkerResolverSdk {
         // Process each group of timeMarkers for each chain
         await Promise.all(
             Array.from(groupedTimeMarkers.entries()).map(async ([eid, markers]) => {
-                const sdk = await this.options.chainTimeMarkerResolverSdkFactory(eid)
+                const sdk = await this.timeMarkerResolverChainFactory(eid)
 
                 // Resolving timestamps to blockNumbers
                 const timestamps = markers
