@@ -336,8 +336,10 @@ contract TestHelperOz5 is Test, OptionsHelper {
         // config up
         for (uint8 i = 0; i < _endpointNum; i++) {
             EndpointV2 endpoint = endpointSetup.endpointList[i];
-            endpoint.setDefaultSendLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i]);
-            endpoint.setDefaultReceiveLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i], 0);
+            if (_libraryType == LibraryType.UltraLightNode) {
+                endpoint.setDefaultSendLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i]);
+                endpoint.setDefaultReceiveLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i], 0);
+            }
             for (uint8 j = 0; j < _endpointNum; j++) {
                 if (i == j) continue;
                 endpoint.setDefaultSendLibrary(j + 1, endpointSetup.sendLibs[i]);
