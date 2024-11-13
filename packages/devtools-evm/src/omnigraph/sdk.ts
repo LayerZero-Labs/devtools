@@ -44,6 +44,7 @@ export abstract class OmniSDK implements IOmniSDK {
 
     constructor(
         public readonly contract: OmniContract,
+        public readonly contractName: string = '',
         protected readonly logger: Logger = createModuleLogger(
             `EVM SDK ${new.target.name} @ ${formatOmniContract(contract)}`
         )
