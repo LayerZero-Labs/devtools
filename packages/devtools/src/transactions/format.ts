@@ -6,7 +6,7 @@ export const formatOmniTransaction = (
 ): Record<string, string | number | bigint | undefined | null | OmniTransactionMetadata> => ({
     Endpoint: formatEid(transaction.point.eid),
     OmniAddress: transaction.point.address,
-    OmniContract: transaction.point.contractName,
+    OmniContract: transaction.metadata?.contractName,
     'Function Name': transaction.metadata?.functionName,
     'Function Arguments': transaction.metadata?.functionArgs,
     Description: transaction.description,

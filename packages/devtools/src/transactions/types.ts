@@ -12,6 +12,7 @@ export interface OmniTransaction {
 }
 
 export interface OmniTransactionMetadata {
+    contractName?: string
     functionName?: string
     functionArgs?: string
 }
