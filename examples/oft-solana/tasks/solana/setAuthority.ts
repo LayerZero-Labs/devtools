@@ -13,7 +13,7 @@ import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
-interface CreateOFTTaskArgs {
+interface SetAuthorityTaskArgs {
     /**
      * The endpoint ID for the Solana network.
      */
@@ -99,7 +99,7 @@ task('lz:oft:solana:setauthority', 'Mints new SPL Token and creates new OFT Stor
             programId: programIdStr,
             tokenProgram: tokenProgramStr,
             additionalMinters: additionalMintersStr,
-        }: CreateOFTTaskArgs) => {
+        }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
             const tokenProgram = publicKey(tokenProgramStr)
