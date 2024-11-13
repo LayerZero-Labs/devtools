@@ -62,21 +62,22 @@ export const checkMultisigSigners = async (
         throw new Error('Provided address is not an SPL Token multisig account')
     }
 
-    // Multisig accounts have a specific layout:
-    // - The first 36 bytes are metadata (including number of signers and padding)
-    // - Each signer public key is 32 bytes, starting from offset 36
+    // Multisig accounts have a specific layout based on the Multisig interface:
     const data = accountInfo.data
+
+    // Extract the number of required signers (m) and total possible signers (n)
     const numRequiredSigners = data[0]
-    if (numRequiredSigners != 1) {
+    const numTotalSigners = data[1]
+
+    if (numRequiredSigners !== 1) {
         throw new Error('Multisig account must have 1 required signer')
     }
 
-    // Number of total possible signers (`n`) is at byte offset 1
-    const numTotalSigners = data[1]
-
-    // Signer public keys start from byte offset 36, with each key being 32 bytes long
+    // Initialize an array to hold the signers
     const signers: PublicKey[] = []
-    const signerOffset = 36 // Offset to the first signer
+
+    // Extract each signer public key based on the Multisig interface
+    const signerOffset = 3 // Offset to the first signer in the data
     const signerSize = 32 // Each signer address is 32 bytes
 
     for (let i = 0; i < numTotalSigners; i++) {
@@ -89,11 +90,7 @@ export const checkMultisigSigners = async (
     }
 
     for (const signer of expectedSigners) {
-        let found = false
         if (!signers.find((s) => s.toBase58() == signer.toBase58())) {
-            found = true
-        }
-        if (!found) {
             throw new Error(`Signer ${signer.toBase58()} not found in multisig account`)
         }
     }
