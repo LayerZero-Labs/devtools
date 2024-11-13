@@ -87,10 +87,10 @@ const getAuthorityTypeString = (authorityType: AuthorityType) => {
 // * Set Freeze Authority
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and set the mint/freeze authority')
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
-    .addParam('mint', 'The Token mint public key (used for MABA only)')
+    .addParam('eid', 'Solana mainnet or testnet eid', undefined, devtoolsTypes.eid)
+    .addParam('mint', 'The Token Mint public key')
     .addParam('programId', 'The OFT Program id')
-    .addParam('escrow', 'The OFT escrow public key')
+    .addParam('escrow', 'The OFT Escrow public key')
     .addParam('additionalMinters', 'Comma-separated list of additional minters', '', devtoolsTypes.string)
     .addOptionalParam(
         'onlyOFTStore',
