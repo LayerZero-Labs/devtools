@@ -29,16 +29,12 @@ export class ComputerEVM extends EVMViewFunctionBase implements IComputerEVM {
 
         try {
             const mapper = ComputeSetting.OnlyReduce
-                ? (r: RequestResponsePair) => {
-                      this.logger.info('OnlyReduce setting is used. Skipping map step.')
-                      return r.response
-                  }
+                ? (this.logger.info('OnlyReduce setting is used. Skipping map step.'),
+                  (r: RequestResponsePair) => r.response)
                 : (r: RequestResponsePair) => this.lzMap(compute, r, timeMarker)
             const reducer = ComputeSetting.OnlyMap
-                ? (mappedResponses: string[]) => {
-                      this.logger.info('OnlyMap setting is used. Skipping reduce step.')
-                      return mappedResponses.join('')
-                  }
+                ? (this.logger.info('OnlyMap setting is used. Skipping reduce step.'),
+                  (mappedResponses: string[]) => mappedResponses.join(''))
                 : (mappedResponses: string[]) => this.lzReduce(compute, cmd, mappedResponses, timeMarker)
 
             const applicative = createDefaultApplicative(this.logger)
@@ -47,6 +43,7 @@ export class ComputerEVM extends EVMViewFunctionBase implements IComputerEVM {
             return reduced
         } catch (error) {
             if (error instanceof ContractNotFoundError || error instanceof RevertError) {
+                this.logger.error(`Error on resolving compute section of command: ${error}`)
                 throw new UnresolvableCommandError()
             }
             throw error

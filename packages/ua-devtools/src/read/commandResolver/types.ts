@@ -27,10 +27,7 @@ export interface IComputerEVM {
         cmd: string,
         compute: ComputeEVM,
         timeMarker: ResolvedTimeMarker,
-        responses: {
-            request: string
-            response: string
-        }[]
+        responses: RequestResponsePair[]
     ): Promise<string>
 }
 

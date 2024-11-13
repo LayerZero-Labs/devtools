@@ -17,10 +17,10 @@ export class EVMTimeMarkerValidatorChain implements ITimeMarkerValidatorChain {
 
     async checkResolvedTimeMarkerValidity(tms: Omit<ResolvedTimestampTimeMarker, 'eid'>[]): Promise<void> {
         const blockNumberToFetch = dedup((a: number, b: number) => a === b)(
-            tms.map((tms) => [tms.blockNumber, Math.max(tms.blockNumber - 1, 1)]).flat()
+            tms.flatMap((tms) => [tms.blockNumber, Math.max(tms.blockNumber - 1, 1)])
         )
 
-        const timestampMapping: { [blockNumber: number]: number } = {}
+        const timestampMapping: Record<number, number> = {}
 
         await Promise.all(
             blockNumberToFetch.map(async (blockNumber) => {

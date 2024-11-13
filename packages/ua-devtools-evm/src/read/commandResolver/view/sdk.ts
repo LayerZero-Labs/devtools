@@ -14,6 +14,7 @@ export class SingleViewFunctionCallerEVM extends EVMViewFunctionBase implements 
             return await this.callContract('0x' + request.calldata, request.to, timeMarker.blockNumber)
         } catch (error) {
             if (error instanceof ContractNotFoundError || error instanceof RevertError) {
+                this.logger.error(`Error on resolving request section of command: ${error}`)
                 throw new UnresolvableCommandError()
             }
             throw error

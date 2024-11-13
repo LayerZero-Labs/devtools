@@ -1,6 +1,7 @@
 import type { JsonRpcProvider } from '@ethersproject/providers'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { isBlockMatchingTimestamp, type BlockTime, type ITimeMarkerResolverChain } from '@layerzerolabs/ua-devtools'
+import assert from 'assert'
 
 const updateLowerBoundBlock = (lowerBoundBlock: BlockTime | null, potentialBlock: BlockTime): BlockTime | null => {
     // This is a max function between two blocks
@@ -13,6 +14,7 @@ const updateUpperBoundBlock = (upperBoundBlock: BlockTime | null, potentialBlock
 }
 
 const calculateAvgBlockTime = (leftBlock: BlockTime, rightBlock: BlockTime): number => {
+    assert(rightBlock.number != leftBlock.number, 'Invalid block: The two blocks have the same number')
     const avgBlockTime = (rightBlock.timestamp - leftBlock.timestamp) / (rightBlock.number - leftBlock.number)
 
     if (avgBlockTime < 0) {
@@ -33,9 +35,6 @@ export class EVMTimeMarkerResolverChain implements ITimeMarkerResolverChain {
         // Starting with an average block time of 1 second
         let avgBlockTime = 1000
 
-        if (avgBlockTime <= 0) {
-            throw new Error(`Invalid average block time for ${this.eid} chain: ${avgBlockTime} (seconds)`)
-        }
         const resolvedTimeMarkers: { [timestamp: number]: number } = {}
 
         // deduplicate timestamps

@@ -4,7 +4,11 @@ import { createLogger, printJson, setDefaultLogLevel } from '@layerzerolabs/io-d
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 
-import { createCommandResolverFactory, createTimeMarkerResolverFactory, createTimeMarkerValidatorFactory } from '@/read'
+import {
+    createCommandResolverFactory,
+    createTimeMarkerResolverFactory,
+    createTimeMarkerValidatorFactory,
+} from '@/tasks/read/factory'
 import { TASK_LZ_READ_RESOLVE_COMMAND } from '@/constants/tasks'
 
 interface TaskArgs {
@@ -34,6 +38,9 @@ const action: ActionType<TaskArgs> = async ({ command, logLevel = 'info' }, _hre
     logger.info(`Decoded command: ${printJson(decodedCommand)}`)
 
     const { timestampTimeMarkers, blockNumberTimeMarkers } = await commandResolverSdk.extractTimeMarkers(command)
+
+    logger.verbose(`Extracted time markers: ${printJson({ timestampTimeMarkers, blockNumberTimeMarkers })}`)
+
     const resolvedTimestampTimeMarkers = await timeMarkerResolverSdk.resolveTimestampTimeMarkers(timestampTimeMarkers)
 
     logger.info(`Resolved timestamp time markers: ${printJson(resolvedTimestampTimeMarkers)}`)

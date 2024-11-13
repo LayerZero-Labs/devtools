@@ -28,7 +28,7 @@ export class EVMViewFunctionBase {
                 ),
             (error) => {
                 const parsedError = parseGenericError(error)
-                this.logger.error(`Error calling contract on chain ${formatEid(this.eid)} :`, parsedError)
+                this.logger.error(`Error calling contract on chain ${formatEid(this.eid)} : ${parsedError}`)
                 return parsedError
             }
         )
@@ -36,7 +36,7 @@ export class EVMViewFunctionBase {
         await tapError(
             () => BytesSchema.parse(result),
             (error) => {
-                this.logger.error(`Error parsing result from contract call on chain ${formatEid(this.eid)} :`, error)
+                this.logger.error(`Error parsing result from contract call on chain ${formatEid(this.eid)} : ${error}`)
             }
         )
 
