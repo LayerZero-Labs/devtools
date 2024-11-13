@@ -2514,6 +2514,9 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
     devDependencies:
+      '@ethersproject/abi':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@ethersproject/address':
         specifier: ~5.7.0
         version: 5.7.0
@@ -2526,6 +2529,9 @@ importers:
       '@ethersproject/contracts':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/providers':
+        specifier: ^5.7.0
+        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.4.0
         version: link:../devtools
@@ -2605,6 +2611,9 @@ importers:
       '@ethersproject/hash':
         specifier: ^5.7.0
         version: 5.7.0
+      '@ethersproject/providers':
+        specifier: ^5.7.0
+        version: 5.7.2
       '@layerzerolabs/devtools':
         specifier: ~0.4.0
         version: link:../devtools

@@ -43,6 +43,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/hash": "^5.7.0",
+    "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/devtools-evm-hardhat": "~2.0.0",
