@@ -89,7 +89,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     getUlnReadSDK(_address: OmniAddress): Promise<IUlnRead> {
-        throw new Error('Method not implemented.')
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     @AsyncRetriable()
@@ -391,7 +391,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         _uln: OmniAddress,
         _setUlnConfig: UlnReadSetUlnConfig[]
     ): Promise<OmniTransaction[]> {
-        throw new Error('Method not implemented.')
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     async setExecutorConfig(
@@ -475,7 +475,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
      * @see {@link IUlnRead.getAppUlnConfig}
      */
     getAppUlnReadConfig(_oapp: OmniAddress, _uln: OmniAddress, _channelId: number): Promise<UlnReadUlnConfig> {
-        throw new Error('Method not implemented.')
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     /**
@@ -505,7 +505,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         _channelId: number,
         _config: UlnReadUlnUserConfig
     ): Promise<boolean> {
-        throw new Error('Method not implemented.')
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     @AsyncRetriable()
@@ -533,7 +533,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     getUlnReadConfigParams(_uln: OmniAddress, _setUlnConfig: UlnReadSetUlnConfig[]): Promise<SetConfigParam[]> {
-        throw new Error('Method not implemented.')
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     async getExecutorConfigParams(

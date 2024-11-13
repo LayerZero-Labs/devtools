@@ -12,6 +12,7 @@ import {
     types,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { createExecutorFactory } from '@layerzerolabs/protocol-devtools-evm'
+import { printLogo } from '@layerzerolabs/io-devtools/swag'
 
 interface TaskArgs {
     logLevel?: string
@@ -19,6 +20,7 @@ interface TaskArgs {
 }
 
 const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: networksArgument }, hre) => {
+    printLogo()
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
 

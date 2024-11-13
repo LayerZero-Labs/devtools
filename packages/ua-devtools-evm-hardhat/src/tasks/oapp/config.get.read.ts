@@ -1,9 +1,7 @@
 import { ActionType } from 'hardhat/types'
 import { task } from 'hardhat/config'
-import { createLogger, printJson, printRecord } from '@layerzerolabs/io-devtools'
-import { getReadConfig } from '@/utils/taskHelpers'
-import { TASK_LZ_OAPP_CONFIG_GET_READ } from '@/constants'
-import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import { createLogger, printJson, printRecord, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
+import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import {
     assertDefinedNetworks,
     createOmniPointHardhatTransformer,
@@ -15,6 +13,9 @@ import {
 import { OAppReadNodeConfig } from '@layerzerolabs/ua-devtools'
 import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 
+import { getReadConfig } from '@/utils/taskHelpers'
+import { TASK_LZ_OAPP_CONFIG_GET_READ } from '@/constants'
+
 interface TaskArgs {
     logLevel?: string
     networks?: string[]
@@ -22,6 +23,7 @@ interface TaskArgs {
 }
 
 const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: networksArgument, json }, hre) => {
+    printLogo()
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)
     const logger = createLogger()

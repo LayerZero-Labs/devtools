@@ -294,7 +294,7 @@ export interface EndpointV2NodeConfig {
     readChannelConfigs?: ReadChannelConfig[]
 }
 
-export type EndpointV2OmniGraph = OmniGraph<EndpointV2NodeConfig, EndpointV2EdgeConfig>
+export type EndpointV2OmniGraph = OmniGraph<EndpointV2NodeConfig | undefined, EndpointV2EdgeConfig>
 
 export type EndpointV2Factory<TEndpointV2 extends IEndpointV2 = IEndpointV2, TOmniPoint = OmniPoint> = OmniSDKFactory<
     TEndpointV2,
