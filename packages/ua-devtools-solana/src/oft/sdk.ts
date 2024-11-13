@@ -414,7 +414,7 @@ export class OFT extends OmniSDK implements IOApp {
                 this._umiToWeb3Tx([
                     oft.initConfig(
                         {
-                            admin: await this._getOwnerSigner(),
+                            admin: await this._getDelegate(),
                             oftStore: this.umiPublicKey,
                             payer: createNoopSigner(this.umiUserAccount),
                         },
@@ -476,7 +476,7 @@ export class OFT extends OmniSDK implements IOApp {
         return oft.setOFTConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: (await this.getOwner()) as unknown as Signer,
+                admin: await this._getDelegate(),
             },
             param,
             {
@@ -503,7 +503,7 @@ export class OFT extends OmniSDK implements IOApp {
         return oft.setPeerConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: await this._getOwnerSigner(),
+                admin: await this._getDelegate(),
             },
             param,
             this.umiProgramId
@@ -574,12 +574,9 @@ export class OFT extends OmniSDK implements IOApp {
         return web3Transaction
     }
 
-    protected async _getOwnerSigner(): Promise<Signer> {
-        const owner = await this.getOwner()
-        if (!owner) {
-            throw new Error(`No owner found for ${this.label}`)
-        }
-        return createNoopSigner(publicKey(owner))
+    protected async _getDelegate(): Promise<Signer> {
+        const delegate = await oft.getDelegate(this.umi.rpc, this.umiPublicKey)
+        return createNoopSigner(publicKey(delegate))
     }
 }
 
