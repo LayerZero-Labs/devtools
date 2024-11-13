@@ -44,7 +44,7 @@ Deploys your contract to any of the available networks in your [`hardhat.config.
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME --lz-read</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/start"><code>npx hardhat lz:oapp-read:config:init --oapp-config YOUR_OAPP_CONFIG --contract-name CONTRACT_NAME</code></a> </summary>
 
  <br>
 
@@ -55,7 +55,7 @@ It also generates setting for using lzRead in each individual network
 You can run this task by providing the `contract-name` you want to set for the config and `file-name` you want to generate:
 
 ```bash
-npx hardhat lz:oapp:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME --lz-read
+npx hardhat lz:oapp-read:config:init --contract-name CONTRACT_NAME --oapp-config FILE_NAME
 ```
 
 This will create a `layerzero.config.ts` in your working directory populated with your contract name and connections for every pathway possible between your hardhat networks and lzRead configuration for all networks:
@@ -165,7 +165,7 @@ export default {
 </details>
 
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>npx hardhat lz:oapp:wire --oapp-config YOUR_OAPP_CONFIG --lz-read</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring"><code>npx hardhat lz:oapp-read:wire --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -198,7 +198,7 @@ It will also make the following calls per network for a fully defined config fil
 To use this task, run:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE --lz-read
+npx hardhat lz:oapp-read:wire --oapp-config YOUR_LAYERZERO_CONFIG_FILE
 ```
 
 Whenever you make changes to the configuration, run `lz:oapp:wire` again. The task will check your current configuration, and only apply NEW changes.
@@ -223,7 +223,7 @@ networks: {
 
 </details>
 <details>
-<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>npx hardhat lz:oapp:config:get --oapp-config YOUR_OAPP_CONFIG --lz-read</code></a> </summary>
+<summary> <a href="https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/wiring#checking-pathway-config"><code>npx hardhat lz:oapp-read:config:get --oapp-config YOUR_OAPP_CONFIG</code></a> </summary>
 
  <br>
 
@@ -435,7 +435,7 @@ By following these steps, you can focus more on creating innovative omnichain so
 Fill out your `layerzero.config.ts` with the contracts you want to connect. You can generate the default config file for your declared hardhat networks by running:
 
 ```bash
-npx hardhat lz:oapp:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-config [CONFIG_NAME] --lz-read
+npx hardhat lz:oapp-read:config:init --contract-name [YOUR_CONTRACT_NAME] --oapp-config [CONFIG_NAME]
 ```
 
 > [!NOTE]
@@ -622,7 +622,7 @@ contracts: [
 To set these config settings, run:
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --lz-read
+npx hardhat lz:oapp-read:wire --oapp-config layerzero.config.ts
 ```
 
 <p align="center">

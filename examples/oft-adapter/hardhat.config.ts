@@ -73,7 +73,7 @@ const config: HardhatUserConfig = {
             accounts,
         },
         hardhat: {
-            // Need this for testing because TestHelperReadOz5.sol is exceeding the compiled contract size limit
+            // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
         },
     },
