@@ -53,6 +53,7 @@ export const checkMultisigSigners = async (
             return accountInfo
         },
         {
+            maxDelay: 30000,
             numOfAttempts: 10,
             startingDelay: 5000,
         }
