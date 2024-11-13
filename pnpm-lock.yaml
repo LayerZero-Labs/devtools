@@ -1953,6 +1953,9 @@ importers:
       '@layerzerolabs/devtools':
         specifier: ~0.4.0
         version: link:../devtools
+      '@layerzerolabs/io-devtools':
+        specifier: ~0.1.14
+        version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.12
         version: 3.0.12
@@ -6089,6 +6092,7 @@ packages:
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.12.1
+      solidity-bytes-utils: 0.8.2
     dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4):
@@ -6101,6 +6105,7 @@ packages:
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.12.4
+      solidity-bytes-utils: 0.8.2
     dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1):
@@ -6113,6 +6118,7 @@ packages:
       '@openzeppelin/contracts': 5.0.2
       '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
       hardhat-deploy: 0.12.1
+      solidity-bytes-utils: 0.8.2
     dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4):

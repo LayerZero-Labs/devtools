@@ -14,6 +14,7 @@ const DEFAULT_NATIVE_DECIMALS_RATE = '18' //ethers.utils.parseUnits('1', 18).toS
  * - EndpointV2
  * - SendUln302
  * - ReceiveUln302
+ * - ReadLib
  * - PriceFeed
  * - Executor
  * - ExecutorFeeLib
@@ -49,6 +50,12 @@ export const createDeployEndpointV2 =
             args: [endpointV2Deployment.address],
         })
 
+        await deployments.delete('ReadLib1002')
+        const readLib1002 = await deployments.deploy('ReadLib1002', {
+            from: deployer,
+            args: [endpointV2Deployment.address, 0, 0],
+        })
+
         await deployments.delete('SendUln302_Opt2')
         const SendUln302_Opt2 = await deployments.deploy('SendUln302_Opt2', {
             contract: 'SendUln302',
@@ -61,6 +68,13 @@ export const createDeployEndpointV2 =
             contract: 'ReceiveUln302',
             from: deployer,
             args: [endpointV2Deployment.address],
+        })
+
+        await deployments.delete('ReadLib1002_Opt2')
+        const readLib1002_Opt2 = await deployments.deploy('ReadLib1002_Opt2', {
+            contract: 'ReadLib1002',
+            from: deployer,
+            args: [endpointV2Deployment.address, 0, 1],
         })
 
         await Promise.all(
@@ -198,8 +212,10 @@ export const createDeployEndpointV2 =
                 EndpointV2: endpointV2Deployment.address,
                 SendUln302: sendUln302.address,
                 ReceiveUln302: receiveUln302.address,
+                ReadLib1002: readLib1002.address,
                 SendUln302_Opt2: SendUln302_Opt2.address,
                 ReceiveUln302_Opt2: ReceiveUln302_Opt2.address,
+                ReadLib1002_Opt2: readLib1002_Opt2.address,
                 PriceFeed: priceFeed.address,
                 Executor: executor.address,
                 ExecutorFeeLib: executorFeeLib.address,

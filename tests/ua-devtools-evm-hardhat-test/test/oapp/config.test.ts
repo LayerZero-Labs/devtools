@@ -34,7 +34,7 @@ import {
     getLibraryAddress,
 } from '@layerzerolabs/test-setup-devtools-evm-hardhat'
 import { createSignAndSend, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
-import { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
+import { IEndpointV2, Uln302ConfigType } from '@layerzerolabs/protocol-devtools'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 describe('oapp/config', () => {
@@ -838,6 +838,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                         ...(await ethEndpointV2Sdk.getExecutorConfigParams(ethSendLibrary, [
@@ -858,6 +859,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                     ])
@@ -885,6 +887,7 @@ describe('oapp/config', () => {
                                         optionalDVNs: [ethDvnAddress],
                                         optionalDVNThreshold: 1,
                                     },
+                                    type: Uln302ConfigType.Send,
                                 },
                             ])),
                         ])
@@ -912,6 +915,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                     ])
@@ -1135,6 +1139,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: ethReceiveUlnDVNs,
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                         ...(await ethEndpointV2Sdk.getUlnConfigParams(ethReceiveLibrary, [
@@ -1146,6 +1151,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: ethReceiveUlnDVNs,
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                     ])
@@ -1165,6 +1171,7 @@ describe('oapp/config', () => {
                                         optionalDVNs: ethReceiveUlnDVNs,
                                         optionalDVNThreshold: 1,
                                     },
+                                    type: Uln302ConfigType.Receive,
                                 },
                             ])),
                         ])
@@ -1183,6 +1190,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: ethReceiveUlnDVNs,
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                     ])
@@ -1275,6 +1283,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                     ])),
@@ -1288,6 +1297,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                     ])),
@@ -1411,6 +1421,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                     ])),
@@ -1424,6 +1435,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                     ])),
@@ -1538,6 +1550,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Send,
                             },
                         ])),
                     ])),
@@ -1551,6 +1564,7 @@ describe('oapp/config', () => {
                                     optionalDVNs: [ethDvnAddress],
                                     optionalDVNThreshold: 1,
                                 },
+                                type: Uln302ConfigType.Receive,
                             },
                         ])),
                     ])),
