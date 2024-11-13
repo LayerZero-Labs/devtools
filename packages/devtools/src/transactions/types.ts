@@ -8,6 +8,10 @@ export interface OmniTransaction {
     description?: string
     gasLimit?: string | bigint | number
     value?: string | bigint | number
+    metadata?: OmniTransactionMetadata
+}
+
+export interface OmniTransactionMetadata {
     functionName?: string
     functionArgs?: string
 }

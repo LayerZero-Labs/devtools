@@ -2,4 +2,4 @@
 "@layerzerolabs/devtools": patch
 ---
 
-Adding optional functionName property to OmniTransaction
+Adding optional metadata property to OmniTransaction
