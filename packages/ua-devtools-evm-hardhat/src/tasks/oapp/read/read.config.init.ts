@@ -25,6 +25,7 @@ interface TaskArgs {
     logLevel?: string
 }
 
+// TODO READ: This task is just copying and change some parameters from config.init.ts, make them more generic
 /**
  * This task will initialize a config file based on user input
  *

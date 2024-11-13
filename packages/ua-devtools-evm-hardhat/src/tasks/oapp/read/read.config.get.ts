@@ -14,6 +14,7 @@ interface TaskArgs {
     oappConfig: string
 }
 
+// TODO READ: This task is just copying and change some parameters from config.get.ts, make them more generic
 const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, hre) => {
     // We'll set the global logging level to get as much info as needed
     setDefaultLogLevel(logLevel)

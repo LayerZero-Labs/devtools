@@ -54,6 +54,7 @@ interface TaskArgs {
     signAndSendSubtask?: string
 }
 
+// TODO READ: This task is just copying and change some parameters from wire/index.ts, make them more generic
 const action: ActionType<TaskArgs> = async (
     {
         oappConfig: oappConfigPath,
