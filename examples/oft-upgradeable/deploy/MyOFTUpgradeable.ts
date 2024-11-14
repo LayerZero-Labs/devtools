@@ -21,7 +21,6 @@ const deploy: DeployFunction = async (hre) => {
         skipIfAlreadyDeployed: false,
         proxy: {
             proxyContract: 'OpenZeppelinTransparentProxy',
-            checkABIConflict: false,
             owner: signer.address,
             execute: {
                 init: {
