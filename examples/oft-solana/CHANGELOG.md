@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.1
+
+### Patch Changes
+
+- 63238e9: Add ability to swap out the mint authority with a new SPL multisig
+
 ## 0.4.0
 
 ### Minor Changes

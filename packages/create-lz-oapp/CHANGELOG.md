@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.3.1
+
+### Patch Changes
+
+- b63ed66: Add test for OAppRead creation
+
 ## 0.3.0
 
 ### Minor Changes
