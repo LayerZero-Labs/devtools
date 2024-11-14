@@ -21,7 +21,7 @@ const deploy: DeployFunction = async (hre) => {
 
     await deploy(contractName, {
         from: signer.address,
-        args: ['0xc6c04Bf4B21B08e000e50b94e3CE9F6dFe121932', endpointV2Deployment.address], // replace '0x' with the address of the ERC-20 token
+        args: ['0x', endpointV2Deployment.address], // replace '0x' with the address of the ERC-20 token
         log: true,
         waitConfirmations: 1,
         skipIfAlreadyDeployed: false,
