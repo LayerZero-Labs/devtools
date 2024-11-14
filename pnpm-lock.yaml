@@ -806,6 +806,9 @@ importers:
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
+      exponential-backoff:
+        specifier: ~3.1.1
+        version: 3.1.1
       fp-ts:
         specifier: ^2.16.2
         version: 2.16.2
@@ -11620,7 +11623,6 @@ packages:
 
   /exponential-backoff@3.1.1:
     resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
-    dev: false
 
   /express@4.18.2:
     resolution: {integrity: sha512-5/PsL6iGPdfQ/lKM1UuielYgv3BUoJfz1aUwU9vHZ+J7gyvwdQXFEBIEIaxeGf0GIcreATNyBExtalisDbuMqQ==}

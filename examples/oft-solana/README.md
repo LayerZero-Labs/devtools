@@ -116,6 +116,17 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
 ```
 
+### Set a new Mint Authority Multisig
+
+If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
+```
+
+The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
+included in the `--additional-minters` list.
+
 ## Common Errors
 
 ### "AnchorError occurred. Error Code: DeclaredProgramIdMismatch. Error Number: 4100. Error Message: The declared program id does not match the actual program id."
