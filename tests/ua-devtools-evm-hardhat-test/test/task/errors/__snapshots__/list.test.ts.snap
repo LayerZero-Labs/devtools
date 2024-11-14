@@ -4,6 +4,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
 [
   [
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -22,21 +42,6 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Contract": "AddressCast",
       "Error": "AddressCast_InvalidSizeForAddress()",
       "Signature": "0x18456c9b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzComposeOption()",
-      "Signature": "0x8b4aa70b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzReceiveOption()",
-      "Signature": "0x4796aee1",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
     },
     {
       "Contract": "OApp",
@@ -1354,6 +1359,26 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
       "Signature": "0x990776ea",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1480,6 +1505,11 @@ exports[`task lz:errors:list should print all errors with matching name if \`con
     },
     {
       "Contract": "EndpointV2Mock",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "EndpointV2Mock",
       "Error": "Executor_InvalidLzReceiveOption()",
       "Signature": "0x4796aee1",
     },
@@ -1558,6 +1588,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
 [
   [
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -1576,21 +1626,6 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "AddressCast",
       "Error": "AddressCast_InvalidSizeForAddress()",
       "Signature": "0x18456c9b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzComposeOption()",
-      "Signature": "0x8b4aa70b",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidLzReceiveOption()",
-      "Signature": "0x4796aee1",
-    },
-    {
-      "Contract": "ExecutorOptions",
-      "Error": "Executor_InvalidNativeDropOption()",
-      "Signature": "0xc3a1858e",
     },
     {
       "Contract": "OApp",
@@ -5703,6 +5738,26 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Signature": "0xdec9f031",
     },
     {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzComposeOption()",
+      "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidLzReceiveOption()",
+      "Signature": "0x4796aee1",
+    },
+    {
+      "Contract": "ExecutorOptions",
+      "Error": "Executor_InvalidNativeDropOption()",
+      "Signature": "0xc3a1858e",
+    },
+    {
       "Contract": "DVNOptions",
       "Error": "DVN_InvalidDVNIdx()",
       "Signature": "0xd3d3d9bc",
@@ -5986,6 +6041,11 @@ exports[`task lz:errors:list should print all matching errors if \`containing\` 
       "Contract": "EndpointV2Mock",
       "Error": "Executor_InvalidLzComposeOption()",
       "Signature": "0x8b4aa70b",
+    },
+    {
+      "Contract": "EndpointV2Mock",
+      "Error": "Executor_InvalidLzReadOption()",
+      "Signature": "0xdeb7fe42",
     },
     {
       "Contract": "EndpointV2Mock",
