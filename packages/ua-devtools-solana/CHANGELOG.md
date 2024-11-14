@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.1
+
+### Patch Changes
+
+- 8cd6a65: Fix Squads Multisig Support
+
 ## 4.0.0
 
 ### Patch Changes
