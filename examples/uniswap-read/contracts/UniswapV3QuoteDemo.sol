@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // Import necessary interfaces and contracts
-import {IQuoterV2} from "@uniswap/v3-periphery/contracts/interfaces/IQuoterV2.sol";
+import { IQuoterV2 } from "@uniswap/v3-periphery/contracts/interfaces/IQuoterV2.sol";
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -10,7 +10,7 @@ import { ILayerZeroEndpointV2, MessagingFee, MessagingReceipt, Origin } from "@l
 import { AddressCast } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol";
 
 import { ReadCodecV1, EVMCallComputeV1, EVMCallRequestV1 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/ReadCodecV1.sol";
-import { OAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
+import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { OAppRead } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppRead.sol";
 
 /**
@@ -194,8 +194,8 @@ contract UniswapV3QuoteDemo is OAppRead, OAppOptionsType3 {
             });
 
             // @notice Encode the function call
-            // @dev From Uniswap Docs, this function is not marked view because it relies on calling non-view 
-            // functions and reverting to compute the result. It is also not gas efficient and should not 
+            // @dev From Uniswap Docs, this function is not marked view because it relies on calling non-view
+            // functions and reverting to compute the result. It is also not gas efficient and should not
             // be called on-chain. We take advantage of lzRead to call this function off-chain and get the result
             // returned back on-chain to the OApp's _lzReceive method.
             // https://docs.uniswap.org/contracts/v3/reference/periphery/interfaces/IQuoterV2
