@@ -1,4 +1,5 @@
-import Squads, { Wallet } from '@sqds/sdk'
+import * as multisig from '@sqds/multisig'
+
 import {
     type OmniSigner,
     type OmniTransaction,
@@ -142,8 +143,6 @@ export class OmniSignerSolana extends OmniSignerBase implements OmniSigner {
 }
 
 export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner {
-    protected readonly squads: Squads
-
     constructor(
         eid: EndpointId,
         public readonly connection: Connection,
@@ -152,8 +151,6 @@ export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner
         protected readonly logger: Logger = createModuleLogger('OmniSignerSolanaSquads')
     ) {
         super(eid)
-
-        this.squads = new Squads({ connection, wallet: new Wallet(wallet) })
     }
 
     getPoint(): OmniPoint {
@@ -168,16 +165,33 @@ export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner
         this.assertTransaction(transaction)
 
         const solanaTransaction = deserializeTransactionMessage(transaction.data)
-        const multisigTransaction = await this.squads.createTransaction(this.multiSigAddress, 1)
+        const multisigPda = this.multiSigAddress
+        const multisigInfo = await multisig.accounts.Multisig.fromAccountAddress(this.connection, multisigPda)
+        const currentTransactionIndex = Number(multisigInfo.transactionIndex)
+        const newTransactionIndex = BigInt(currentTransactionIndex + 1)
 
-        for (const instruction of solanaTransaction.instructions) {
-            await this.squads.addInstruction(multisigTransaction.publicKey, instruction)
-        }
+        const [vaultPda] = multisig.getVaultPda({
+            multisigPda: this.multiSigAddress,
+            index: 0,
+        })
 
-        await this.squads.activateTransaction(multisigTransaction.publicKey)
+        const transactionMessage = new TransactionMessage({
+            payerKey: vaultPda,
+            recentBlockhash: (await this.connection.getLatestBlockhash()).blockhash,
+            instructions: solanaTransaction.instructions,
+        })
 
-        const transactionHash = multisigTransaction.publicKey.toBase58()
-
+        const ix = multisig.instructions.vaultTransactionCreate({
+            multisigPda,
+            transactionIndex: newTransactionIndex,
+            creator: this.wallet.publicKey,
+            vaultIndex: 0,
+            ephemeralSigners: 0,
+            transactionMessage: transactionMessage,
+        })
+        const tx = new Transaction().add(ix)
+        const transactionHash = await this.connection.sendTransaction(tx, [this.wallet])
+        await this.connection.confirmTransaction(transactionHash, 'confirmed')
         return {
             transactionHash,
             wait: async () => ({

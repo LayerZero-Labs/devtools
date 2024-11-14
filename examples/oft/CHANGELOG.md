@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-example
 
+## 0.5.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.4.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+## 0.3.1
+
+### Patch Changes
+
+- 9ab480a: foundry.toml QOL improvements
+
 ## 0.3.0
 
 ### Minor Changes

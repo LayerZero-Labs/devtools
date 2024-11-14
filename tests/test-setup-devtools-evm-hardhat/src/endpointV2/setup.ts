@@ -8,7 +8,7 @@ import {
     OmniGraphBuilderHardhat,
     type OmniGraphHardhat,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ChannelId, EndpointId } from '@layerzerolabs/lz-definitions'
 import {
     configureEndpointV2,
     DVNDstConfig,
@@ -25,6 +25,10 @@ import {
     ExecutorDstConfig,
     configureExecutor,
     configureDVN,
+    UlnReadUlnConfig,
+    UlnReadNodeConfig,
+    EndpointV2NodeConfig,
+    configureUlnRead,
 } from '@layerzerolabs/protocol-devtools'
 import {
     createDVNFactory,
@@ -32,15 +36,18 @@ import {
     createExecutorFactory,
     createPriceFeedFactory,
     createUln302Factory,
+    createUlnReadFactory,
 } from '@layerzerolabs/protocol-devtools-evm'
 import { createSignAndSend } from '@layerzerolabs/devtools'
 
 export const ethEndpoint = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'EndpointV2' }
 export const ethReceiveUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const ethSendUln = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302' }
+export const ethReadLib = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReadLib1002' }
 export const ethPriceFeed = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'PriceFeed' }
 export const ethReceiveUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const ethSendUln2_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'SendUln302_Opt2' }
+export const ethReadLib_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'ReadLib1002_Opt2' }
 export const ethExecutor = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'Executor' }
 export const ethDvn = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN' }
 export const ethDvn_Opt2 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 'DVN_Opt2' }
@@ -48,9 +55,11 @@ export const ethDvn_Opt3 = { eid: EndpointId.ETHEREUM_V2_MAINNET, contractName: 
 export const avaxEndpoint = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'EndpointV2' }
 export const avaxReceiveUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const avaxSendUln = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302' }
+export const avaxReadLib = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReadLib1002' }
 export const avaxPriceFeed = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'PriceFeed' }
 export const avaxReceiveUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const avaxSendUln2_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'SendUln302_Opt2' }
+export const avaxReadLib_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'ReadLib1002_Opt2' }
 export const avaxExecutor = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'Executor' }
 export const avaxDvn = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN' }
 export const avaxDvn_Opt2 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName: 'DVN_Opt2' }
@@ -58,9 +67,11 @@ export const avaxDvn_Opt3 = { eid: EndpointId.AVALANCHE_V2_MAINNET, contractName
 export const bscEndpoint = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'EndpointV2' }
 export const bscReceiveUln = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'ReceiveUln302' }
 export const bscSendUln = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'SendUln302' }
+export const bscReadLib = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'ReadLib1002' }
 export const bscPriceFeed = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'PriceFeed' }
 export const bscReceiveUln2_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'ReceiveUln302_Opt2' }
 export const bscSendUln2_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'SendUln302_Opt2' }
+export const bscReadLib_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'ReadLib1002_Opt2' }
 export const bscExecutor = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'Executor' }
 export const bscDvn = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN' }
 export const bscDvn_Opt2 = { eid: EndpointId.BSC_V2_MAINNET, contractName: 'DVN_Opt2' }
@@ -115,6 +126,21 @@ export const getDefaultUlnConfig = (dvnAddress: string): Uln302UlnConfig => {
 }
 
 /**
+ * Helper function to generate the default UlnReadUlnConfig for a given chain.
+ *
+ * @param dvnAddress The local DVN address.
+ * @param executorAddress The local Executor address.
+ */
+export const getDefaultUlnReadConfig = (dvnAddress: string, executorAddress: string): UlnReadUlnConfig => {
+    return {
+        executor: executorAddress,
+        requiredDVNs: [dvnAddress],
+        optionalDVNs: [],
+        optionalDVNThreshold: 0,
+    }
+}
+
+/**
  * Helper function that wires the EndpointV2 infrastructure.
  *
  * The contracts still need to be deployed (use `deployContract`)
@@ -124,6 +150,7 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
     const providerFactory = createProviderFactory()
     const signAndSend = createSignAndSend(createSignerFactory())
     const ulnSdkFactory = createUln302Factory(providerFactory)
+    const ulnReadSdkFactory = createUlnReadFactory(providerFactory)
     const endpointV2SdkFactory = createEndpointV2Factory(providerFactory)
     const priceFeedSdkFactory = createPriceFeedFactory(providerFactory)
     const executorSdkFactory = createExecutorFactory(providerFactory)
@@ -139,6 +166,10 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
     const avaxReceiveUlnPoint = await omnipointTransformer(avaxReceiveUln)
     const bscReceiveUlnPoint = await omnipointTransformer(bscReceiveUln)
 
+    const ethReadLibPoint = await omnipointTransformer(ethReadLib)
+    const avaxReadLibPoint = await omnipointTransformer(avaxReadLib)
+    const bscReadLibPoint = await omnipointTransformer(bscReadLib)
+
     const ethExecutorPoint = await omnipointTransformer(ethExecutor)
     const avaxExecutorPoint = await omnipointTransformer(avaxExecutor)
     const bscExecutorPoint = await omnipointTransformer(bscExecutor)
@@ -150,6 +181,10 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
     const ethUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(ethDvnPoint.address)
     const avaxUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(avaxDvnPoint.address)
     const bscUlnConfig: Uln302UlnConfig = getDefaultUlnConfig(bscDvnPoint.address)
+
+    const ethUlnReadConfig: UlnReadUlnConfig = getDefaultUlnReadConfig(ethDvnPoint.address, ethExecutorPoint.address)
+    const avaxUlnReadConfig: UlnReadUlnConfig = getDefaultUlnReadConfig(avaxDvnPoint.address, avaxExecutorPoint.address)
+    const bscUlnReadConfig: UlnReadUlnConfig = getDefaultUlnReadConfig(bscDvnPoint.address, bscExecutorPoint.address)
 
     // This is the graph for Executor
     const executorConfig: OmniGraphHardhat<unknown, ExecutorEdgeConfig> = {
@@ -494,17 +529,103 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
         connections: [],
     }
 
+    // This is the graph for ReadLib1002
+    const readLibConfig: OmniGraphHardhat<UlnReadNodeConfig, unknown> = {
+        contracts: [
+            {
+                contract: ethReadLib,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, ethUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, ethUlnReadConfig],
+                    ],
+                },
+            },
+            {
+                contract: avaxReadLib,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, avaxUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, avaxUlnReadConfig],
+                    ],
+                },
+            },
+            {
+                contract: bscReadLib,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, bscUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, bscUlnReadConfig],
+                    ],
+                },
+            },
+        ],
+        connections: [],
+    }
+
+    // This is the graph for ReadLib1002
+    const readLibConfig_Opt2: OmniGraphHardhat<UlnReadNodeConfig, unknown> = {
+        contracts: [
+            {
+                contract: ethReadLib_Opt2,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, ethUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, ethUlnReadConfig],
+                    ],
+                },
+            },
+            {
+                contract: avaxReadLib_Opt2,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, avaxUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, avaxUlnReadConfig],
+                    ],
+                },
+            },
+            {
+                contract: bscReadLib_Opt2,
+                config: {
+                    defaultUlnConfigs: [
+                        [ChannelId.READ_CHANNEL_1, bscUlnReadConfig],
+                        [ChannelId.READ_CHANNEL_2, bscUlnReadConfig],
+                    ],
+                },
+            },
+        ],
+        connections: [],
+    }
+
     // This is the graph for EndpointV2
-    const config: OmniGraphHardhat<unknown, EndpointV2EdgeConfig> = {
+    const config: OmniGraphHardhat<EndpointV2NodeConfig, EndpointV2EdgeConfig> = {
         contracts: [
             {
                 contract: ethEndpoint,
+                config: {
+                    readChannelConfigs: [
+                        { channelId: ChannelId.READ_CHANNEL_1, defaultReadLibrary: ethReadLibPoint.address },
+                        { channelId: ChannelId.READ_CHANNEL_2, defaultReadLibrary: ethReadLibPoint.address },
+                    ],
+                },
             },
             {
                 contract: avaxEndpoint,
+                config: {
+                    readChannelConfigs: [
+                        { channelId: ChannelId.READ_CHANNEL_1, defaultReadLibrary: avaxReadLibPoint.address },
+                        { channelId: ChannelId.READ_CHANNEL_2, defaultReadLibrary: avaxReadLibPoint.address },
+                    ],
+                },
             },
             {
                 contract: bscEndpoint,
+                config: {
+                    readChannelConfigs: [
+                        { channelId: ChannelId.READ_CHANNEL_1, defaultReadLibrary: bscReadLibPoint.address },
+                        { channelId: ChannelId.READ_CHANNEL_2, defaultReadLibrary: bscReadLibPoint.address },
+                    ],
+                },
             },
         ],
         connections: [
@@ -578,11 +699,17 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
     const builderReceiveUln = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig)
     const receiveUlnTransactions = await configureUln302(builderReceiveUln.graph, ulnSdkFactory)
 
+    const builderReadLib = await OmniGraphBuilderHardhat.fromConfig(readLibConfig)
+    const readLibTransactions = await configureUlnRead(builderReadLib.graph, ulnReadSdkFactory)
+
     const builderSendUln_Opt2 = await OmniGraphBuilderHardhat.fromConfig(sendUlnConfig_Opt2)
     const sendUlnTransactions_Opt2 = await configureUln302(builderSendUln_Opt2.graph, ulnSdkFactory)
 
     const builderReceiveUln_Opt2 = await OmniGraphBuilderHardhat.fromConfig(receiveUlnConfig_Opt2)
     const receiveUlnTransactions_Opt2 = await configureUln302(builderReceiveUln_Opt2.graph, ulnSdkFactory)
+
+    const buildReadLib_Opt2 = await OmniGraphBuilderHardhat.fromConfig(readLibConfig_Opt2)
+    const readLibTransactions_Opt2 = await configureUlnRead(buildReadLib_Opt2.graph, ulnReadSdkFactory)
 
     const transactions = [
         ...priceFeedTransactions,
@@ -590,9 +717,11 @@ export const setupDefaultEndpointV2 = async (): Promise<void> => {
         ...executorTransactions,
         ...sendUlnTransactions,
         ...receiveUlnTransactions,
+        ...readLibTransactions,
         ...endpointV2Transactions,
         ...sendUlnTransactions_Opt2,
         ...receiveUlnTransactions_Opt2,
+        ...readLibTransactions_Opt2,
     ]
 
     const [_, errors] = await signAndSend(transactions)

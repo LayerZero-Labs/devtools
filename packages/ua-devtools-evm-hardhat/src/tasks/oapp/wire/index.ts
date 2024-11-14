@@ -2,7 +2,6 @@ import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
 import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
-import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
     SUBTASK_LZ_SIGN_AND_SEND,
@@ -17,9 +16,9 @@ import type { SubtaskConfigureTaskArgs } from './types'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
 import './subtask.configure'
-import { OAppOmniGraphHardhatSchema } from '@/oapp'
 import { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
+import { OAppOmniGraphHardhatSchema } from '@/oapp'
 
 interface TaskArgs {
     oappConfig: string
@@ -81,8 +80,7 @@ const action: ActionType<TaskArgs> = async (
     }
 
     // Now we can load and validate the config
-    logger.debug(`Using ${loadConfigSubtask} subtask to load the config`)
-    const graph: OAppOmniGraph = await hre.run(loadConfigSubtask, {
+    const graph = await hre.run(loadConfigSubtask, {
         configPath: oappConfigPath,
         schema: OAppOmniGraphHardhatSchema,
         task: TASK_LZ_OAPP_WIRE,

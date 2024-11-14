@@ -12,8 +12,8 @@ import { OFTMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTMsgCodec.s
 import { Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppReceiver.sol";
 import { Errors } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol";
 import { GUID } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/GUID.sol";
-import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol";
 import { PacketV1Codec } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/PacketV1Codec.sol";
+import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol";
 import { WorkerOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/SendLibBase.sol";
 import { IExecutorFeeLib } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/IExecutorFeeLib.sol";
 import { DVNOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol";
@@ -32,6 +32,8 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
 
     uint32 public immutable eid;
     mapping(address => address) public lzEndpointLookup;
+    mapping(address => bytes) public readResponseLookup;
+    uint32 public readChannelId;
 
     mapping(address receiver => mapping(uint32 srcEid => mapping(bytes32 sender => uint64 nonce)))
         public lazyInboundNonce;
@@ -90,6 +92,7 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
 
         address lzEndpoint = lzEndpointLookup[_params.receiver.bytes32ToAddress()];
         require(lzEndpoint != address(0), "LayerZeroMock: destination LayerZero Endpoint not found");
+        bool isReadMessage = _params.dstEid == readChannelId;
 
         // get the correct outbound nonce
         uint64 latestNonce = _outbound(msg.sender, _params.dstEid, _params.receiver);
@@ -123,19 +126,30 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         // composed calls with correct gas
 
         Origin memory origin = Origin({
-            srcEid: packet.srcEid,
+            // Flip src and dst for read messages
+            srcEid: isReadMessage ? packet.dstEid : packet.srcEid,
             sender: packet.sender.addressToBytes32(),
             nonce: packet.nonce
         });
 
-        bytes memory payload = PacketV1Codec.encodePayload(packet);
-        bytes32 payloadHash = keccak256(payload);
+        bytes32 payloadHash;
+        {
+            bytes memory payload = PacketV1Codec.encodePayload(packet);
+            payloadHash = keccak256(payload);
+        }
+
+        bytes memory receiveMessage;
+        if (isReadMessage) {
+            receiveMessage = readResponseLookup[packet.receiver.bytes32ToAddress()];
+        } else {
+            receiveMessage = packet.message;
+        }
 
         EndpointV2Mock(lzEndpoint).receivePayload{ value: dstAmount }(
             origin,
             packet.receiver.bytes32ToAddress(),
             payloadHash,
-            packet.message,
+            receiveMessage,
             totalGas,
             dstAmount,
             packet.guid
@@ -195,7 +209,7 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         MessagingParams calldata _params,
         address /*_sender*/
     ) internal view returns (MessagingFee memory messagingFee) {
-        (bytes memory executorOptions, ) = splitOptions(_params.options);
+        (bytes memory executorOptions, bytes memory dvnOptions) = UlnOptions.decode(_params.options);
 
         // 2) get Executor fee
         uint256 executorFee = this.getExecutorFee(_params.message.length, executorOptions);
@@ -222,6 +236,14 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
         lzEndpointLookup[destAddr] = lzEndpointAddr;
     }
 
+    function setReadResponse(address destAddr, bytes memory resolvedPayload) external {
+        readResponseLookup[destAddr] = resolvedPayload;
+    }
+
+    function setReadChannelId(uint32 _readChannelId) external {
+        readChannelId = _readChannelId;
+    }
+
     function _decodeExecutorOptions(
         bytes calldata _options
     ) internal view returns (uint256 dstAmount, uint256 totalGas) {
@@ -245,6 +267,10 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
                 dstAmount += nativeDropAmount;
             } else if (optionType == ExecutorOptions.OPTION_TYPE_LZCOMPOSE) {
                 (, uint128 gas, uint128 value) = ExecutorOptions.decodeLzComposeOption(option);
+                dstAmount += value;
+                totalGas += gas;
+            } else if (optionType == ExecutorOptions.OPTION_TYPE_LZREAD) {
+                (uint128 gas, , uint128 value) = ExecutorOptions.decodeLzReadOption(option);
                 dstAmount += value;
                 totalGas += gas;
             } else {
@@ -598,6 +624,10 @@ contract EndpointV2Mock is ILayerZeroEndpointV2, MessagingContext {
                 if (!success) {
                     emit ValueTransferFailed(receiver.bytes32ToAddress(), nativeDropAmount);
                 }
+            } else if (optionType == ExecutorOptions.OPTION_TYPE_LZREAD) {
+                (uint128 gas, , uint128 value) = ExecutorOptions.decodeLzReadOption(option);
+                totalGas += gas;
+                dstAmount += value;
             } else {
                 revert IExecutorFeeLib.Executor_UnsupportedOptionType(optionType);
             }

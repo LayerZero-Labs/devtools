@@ -6,11 +6,14 @@ import { TASK_LZ_OAPP_CONFIG_GET_DEFAULT } from '@/constants'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import {
     assertDefinedNetworks,
+    createOmniPointHardhatTransformer,
+    createProviderFactory,
     getEidForNetworkName,
     getEidsByNetworkName,
     types,
 } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
+import { createEndpointV2Factory } from '@layerzerolabs/protocol-devtools-evm'
 
 interface TaskArgs {
     logLevel?: string
@@ -26,25 +29,32 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
     const networks = networksArgument
         ? // Here we need to check whether the networks have been defined in hardhat config
           assertDefinedNetworks(networksArgument)
-        : //  But here a=we are taking them from hardhat config so no assertion is necessary
+        : //  But here we are taking them from hardhat config so no assertion is necessary
           Object.entries(getEidsByNetworkName(hre)).flatMap(([networkName, eid]) => (eid == null ? [] : [networkName]))
+
+    const pointTransformer = createOmniPointHardhatTransformer()
+    const endpointV2Factory = createEndpointV2Factory(createProviderFactory())
 
     const configs: Record<string, Record<string, unknown>> = {}
     for (const localNetworkName of networks) {
-        configs[localNetworkName] = {}
+        const localEid = getEidForNetworkName(localNetworkName)
+
         for (const remoteNetworkName of networks) {
             if (remoteNetworkName === localNetworkName) {
                 continue
             }
 
-            const receiveConfig = await getReceiveConfig(localNetworkName, remoteNetworkName)
-            const sendConfig = await getSendConfig(localNetworkName, remoteNetworkName)
+            const remoteEid = getEidForNetworkName(remoteNetworkName)
+
+            const endpointV2OmniPoint = await pointTransformer({ eid: localEid, contractName: 'EndpointV2' })
+            const endpointV2Sdk = await endpointV2Factory(endpointV2OmniPoint)
+
+            const receiveConfig = await getReceiveConfig(endpointV2Sdk, remoteEid)
+            const sendConfig = await getSendConfig(endpointV2Sdk, remoteEid)
 
             const [sendLibrary, sendUlnConfig, sendExecutorConfig] = sendConfig ?? []
             const [receiveLibrary, receiveUlnConfig] = receiveConfig ?? []
 
-            const localEid = getEidForNetworkName(localNetworkName)
-            const remoteEid = getEidForNetworkName(remoteNetworkName)
             if (sendLibrary == null) {
                 logger.warn(
                     `SendLibrary is undefined for pathway ${localNetworkName}(${localEid}) -> ${remoteNetworkName}(${remoteEid})`
@@ -72,12 +82,15 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', networks: netwo
                 continue
             }
 
-            configs[localNetworkName]![remoteNetworkName] = {
-                defaultSendLibrary: sendLibrary,
-                defaultReceiveLibrary: receiveLibrary,
-                sendUlnConfig,
-                sendExecutorConfig,
-                receiveUlnConfig,
+            configs[localNetworkName] = {
+                ...configs[localNetworkName],
+                [remoteNetworkName]: {
+                    defaultSendLibrary: sendLibrary,
+                    defaultReceiveLibrary: receiveLibrary,
+                    sendUlnConfig,
+                    sendExecutorConfig,
+                    receiveUlnConfig,
+                },
             }
 
             if (json) {

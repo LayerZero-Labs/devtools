@@ -116,6 +116,17 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
 ```
 
+### Set a new Mint Authority Multisig
+
+If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
+```
+
+The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
+included in the `--additional-minters` list.
+
 ## Common Errors
 
 ### "AnchorError occurred. Error Code: DeclaredProgramIdMismatch. Error Number: 4100. Error Message: The declared program id does not match the actual program id."
@@ -192,4 +203,15 @@ RangeError [ERR_OUT_OF_RANGE]: The value of "offset" is out of range. It must be
     at FixableBeetStruct.toFixedFromData (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:85:40)
     at FixableBeetStruct.deserialize (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:59:17) {
   code: 'ERR_OUT_OF_RANGE'
+```
+
+### Failed while deploying the Solana OFT `Error: Account allocation failed: unable to confirm transaction. This can happen in situations such as transaction expiration and insufficient fee-payer funds`
+
+This error is caused by the inability to confirm the transaction in time, or by running out of funds. This is not
+specific to OFT deployment, but Solana programs in general. Fortunately, you can retry by recovering the program key and
+re-running with `--buffer` flag similar to the following:
+
+```bash
+solana-keygen recover -o recover.json
+solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
 ```

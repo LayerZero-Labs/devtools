@@ -57,11 +57,35 @@ services:
       - /bin/bash
       - -c
       - |
+        # First we configure the registry and provide a fake mock token
         pnpm config set registry http://npm-registry:4873/
         pnpm config set //npm-registry:4873/:_authToken MOCK_TOKEN
-        pnpm build
+
+        # Then we build the packages (we don't need to build the tests or examples)
+        pnpm build --filter='./packages/*'
+
+        # Now we publish the packages
+        #
+        # FIXME This will publish the packages under their current versions, not taking any changesets into account.
+        # Taking changesets into account comes with a convoluted issue:
+        #
+        # Once changesets are applied, package.json files are updated. These changes are not propagated to the repository
+        # from which the examples are being cloned though. So even though the packages will be updated & published,
+        # examples contained in the repository will hold references to their old versions
+        #
+        # The solution is to serve these changes out of a local git repository - very much possible
+        # with one blocker - tiged, an NPM package we use to clone the examples, can only work with github repositories
+        # and does not support e.g. local git repositories as sources
+        pnpm release:publish
+
+        # Now we apply changesets and publish the new versions
+        #
+        # This step can remain after the above step has been removed and the cloning logic updated
         pnpm release:version
         pnpm release:publish
+    volumes:
+      # We'll need to provide the changeset files for this step
+      - ./.changeset:/app/.changeset
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
@@ -91,11 +115,17 @@ services:
       - /bin/bash
       - -c
       - |
+        # First we configure the registry
         pnpm config set registry http://npm-registry:4873/
 
-        echo "create-lz-oapp:repository   ${LAYERZERO_EXAMPLES_REPOSITORY_URL}"
-        echo "create-lz-oapp:ref          ${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
+        # Then we provide some debug information
+        #
+        # Not the double $$ that makes docker compose not interpolate these from environment variables
+        # present on the host machine - instead, we'll get the actual container environment values
+        echo "create-lz-oapp:repository   $${LAYERZERO_EXAMPLES_REPOSITORY_URL}"
+        echo "create-lz-oapp:ref          $${LAYERZERO_EXAMPLES_REPOSITORY_REF}"
 
+        # Now we run the user tests
         /app/tests-user/lib/bats-core/bin/bats --verbose-run --recursive ./tests-user/tests
     volumes:
       # If we want to clone from github.com, we'll need its public keys added to our SSH config

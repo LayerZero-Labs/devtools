@@ -4,6 +4,7 @@
   "include": ["src", "test", "*.config.ts"],
   "compilerOptions": {
     "types": ["node", "jest"],
+    "target": "es2020",
     "experimentalDecorators": true,
     "paths": {
       "@/*": ["./src/*"]

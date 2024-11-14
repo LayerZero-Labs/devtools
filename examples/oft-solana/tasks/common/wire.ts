@@ -167,6 +167,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
     // Only pass this if you deployed a new OFT program, if you are using the default
     // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
+    .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })

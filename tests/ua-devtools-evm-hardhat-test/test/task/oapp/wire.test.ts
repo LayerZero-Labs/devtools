@@ -70,13 +70,15 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         })
 
         it('should fail if the config file does not exist', async () => {
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig: './does-not-exist.js' })).rejects.toMatchSnapshot()
+            await expect(
+                hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig: './does-not-exist.js' })
+            ).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a file', async () => {
             const oappConfig = dirname(configPathFixture('invalid.config.empty.json'))
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail if the config file is not a valid JSON or JS file', async () => {
@@ -84,31 +86,31 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             expect(isFile(oappConfig)).toBeTruthy()
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JSON file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.json')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with an empty JS file', async () => {
             const oappConfig = configPathFixture('invalid.config.empty.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with a malformed JS file (001)', async () => {
             const oappConfig = configPathFixture('invalid.config.001.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
 
         it('should fail with a misconfigured file (001)', async () => {
             const oappConfig = configPathFixture('valid.config.misconfigured.001.js')
 
-            await expect(hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })).rejects.toMatchSnapshot()
+            await expect(hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })).rejects.toMatchSnapshot()
         })
     })
 
@@ -120,7 +122,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should accept a path without an extension', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -128,7 +130,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should exit if there is nothing to wire', async () => {
             const oappConfig = configPathFixture('valid.config.empty.js')
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -137,7 +139,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             const oappConfigAbsolute = configPathFixture('valid.config.empty.js')
             const oappConfig = resolve(oappConfigAbsolute)
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
         })
@@ -145,19 +147,9 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should work with typescript', async () => {
             const oappConfig = configPathFixture('valid.config.empty.ts')
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(promptToContinueMock).not.toHaveBeenCalled()
-        })
-
-        it('should have debug output if requested (so called eye test, check the test output)', async () => {
-            const oappConfig = configPathFixture('valid.config.connected.js')
-
-            promptToContinueMock.mockResolvedValue(false)
-
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, logLevel: 'debug' })
-
-            expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
 
         it('should not ask the user for input if --ci flag is truthy and execute all transactions', async () => {
@@ -165,7 +157,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const result = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+            const result = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, ci: true })
 
             expect(result).toEqual([[expectTransactionWithReceipt, expectTransactionWithReceipt], [], []])
             expect(promptToContinueMock).not.toHaveBeenCalled()
@@ -176,7 +168,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             promptToContinueMock.mockResolvedValue(true)
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(promptToContinueMock).toHaveBeenCalledTimes(2)
         })
@@ -186,7 +178,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             expect(successful).toEqual([])
             expect(errors).toEqual([])
@@ -197,7 +189,11 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should return a list of pending transactions if running in dry run mode', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 
-            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, dryRun: true })
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, {
+                logLevel: 'warn',
+                oappConfig,
+                dryRun: true,
+            })
 
             expect(successful).toEqual([])
             expect(errors).toEqual([])
@@ -208,7 +204,11 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
         it('should set a failure exit code and return a list of pending transactions if running in assert mode', async () => {
             const oappConfig = configPathFixture('valid.config.connected.js')
 
-            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, assert: true })
+            const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, {
+                logLevel: 'warn',
+                oappConfig,
+                assert: true,
+            })
 
             expect(successful).toEqual([])
             expect(errors).toEqual([])
@@ -225,7 +225,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            const [successful, errors] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+            const [successful, errors] = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
             const expectTransactionWithReceipt = { receipt: expect.any(Object), transaction: expect.any(Object) }
 
@@ -241,7 +241,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, signer })
 
             expect(createSignerFactoryMock).toHaveBeenCalledOnce()
             expect(createSignerFactoryMock).toHaveBeenCalledWith(signer)
@@ -255,7 +255,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, safe: true, signer })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
             expect(createGnosisSignerFactory).toHaveBeenCalledWith(signer)
@@ -268,7 +268,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, safe: true })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
 
@@ -297,7 +297,12 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, safe: true, signer: { type: 'address', address: signer } })
+            await hre.run(TASK_LZ_OAPP_WIRE, {
+                logLevel: 'warn',
+                oappConfig,
+                safe: true,
+                signer: { type: 'address', address: signer },
+            })
 
             expect(createGnosisSignerFactory).toHaveBeenCalledOnce()
             expect(createGnosisSignerFactory).toHaveBeenCalledWith({ type: 'address', address: signer })
@@ -326,7 +331,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer: 0 })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, signer: 0 })
 
             expect(createSignerFactory).toHaveBeenCalledOnce()
             expect(createSignerFactory).toHaveBeenCalledWith(0)
@@ -356,7 +361,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 .mockResolvedValueOnce(false) // We don't want to see the list
                 .mockResolvedValueOnce(true) // We want to continue
 
-            await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, signer })
+            await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, signer })
 
             expect(createSignerFactory).toHaveBeenCalledOnce()
             expect(createSignerFactory).toHaveBeenCalledWith(signer)
@@ -383,7 +388,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
 
             promptToContinueMock.mockResolvedValue(false)
 
-            const result = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+            const result = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, ci: true })
 
             expect(result).toEqual([
                 [expectTransactionWithReceipt, expectTransactionWithReceipt, expectTransactionWithReceipt],
@@ -411,7 +416,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 sendTransactionMock.mockRejectedValue(error)
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+                await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig, ci: true })
 
                 expect(process.exitCode).toBe(1)
             })
@@ -423,7 +428,11 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                 sendTransactionMock.mockRejectedValue(error)
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig, ci: true })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, {
+                    logLevel: 'warn',
+                    oappConfig,
+                    ci: true,
+                })
 
                 // The transactions are being grouped by chain and signed in parallel
                 // so we expect one failure per chain
@@ -460,7 +469,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     .mockResolvedValueOnce(true) // We want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
@@ -488,7 +497,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     .mockResolvedValueOnce(false) // We don't want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)
@@ -531,7 +540,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     .mockResolvedValueOnce(true) // We want to retry
 
                 const oappConfig = configPathFixture('valid.config.connected.js')
-                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { oappConfig })
+                const [successful, errors, pending] = await hre.run(TASK_LZ_OAPP_WIRE, { logLevel: 'warn', oappConfig })
 
                 // Check that the user has been asked to retry
                 expect(promptToContinueMock).toHaveBeenCalledWith(`Would you like to preview the failed transactions?`)

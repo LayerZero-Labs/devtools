@@ -1,5 +1,29 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.2.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+## 0.1.2
+
+### Patch Changes
+
+- 4d35182: Added unit tests for `MyONFT721.sol` example
+
+## 0.1.1
+
+### Patch Changes
+
+- 9ab480a: foundry.toml QOL improvements
+
 ## 0.1.0
 
 ### Minor Changes

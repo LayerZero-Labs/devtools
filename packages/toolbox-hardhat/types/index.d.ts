@@ -26,3 +26,4 @@ export type {
     OAppEdgeConfig,
 } from '@layerzerolabs/ua-devtools'
 export type { OAppOmniGraphHardhat } from '@layerzerolabs/ua-devtools-evm-hardhat'
+export type { OAppReadOmniGraphHardhat } from '@layerzerolabs/ua-devtools-evm-hardhat'

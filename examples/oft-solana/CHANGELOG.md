@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.3.1
+
+### Patch Changes
+
+- 2540bb1: solana support for lz:oapp:config:get
+
+## 0.3.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.2.1
 
 ### Patch Changes

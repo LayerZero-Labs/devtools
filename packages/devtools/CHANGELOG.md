@@ -1,5 +1,17 @@
 # @layerzerolabs/devtools
 
+## 0.4.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+## 0.3.29
+
+### Patch Changes
+
+- 4022ded: Add createDefaultApplicative utility
+
 ## 0.3.28
 
 ### Patch Changes

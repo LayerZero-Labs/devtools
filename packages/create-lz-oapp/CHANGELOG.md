@@ -1,5 +1,17 @@
 # create-lz-oapp
 
+## 0.3.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.2.2
+
+### Patch Changes
+
+- b773736: Fix ref option for native-oft-adapter example
+
 ## 0.2.1
 
 ### Patch Changes
