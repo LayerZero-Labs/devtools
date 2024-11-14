@@ -1,5 +1,23 @@
 # @layerzerolabs/test-setup-devtools-evm-hardhat
 
+## 6.0.0
+
+### Minor Changes
+
+- 2fd45ca: Add Deploy and Wire for OApp Read
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+- Updated dependencies [4f5cef2]
+  - @layerzerolabs/protocol-devtools-evm@3.0.0
+  - @layerzerolabs/protocol-devtools@1.1.0
+  - @layerzerolabs/ua-devtools-evm@5.0.0
+  - @layerzerolabs/ua-devtools@3.0.0
+  - @layerzerolabs/devtools@0.4.0
+  - @layerzerolabs/devtools-evm@1.0.0
+  - @layerzerolabs/devtools-evm-hardhat@2.0.0
+
 ## 5.0.0
 
 ### Minor Changes

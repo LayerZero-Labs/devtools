@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
 ## 0.2.0
 
 ### Minor Changes
