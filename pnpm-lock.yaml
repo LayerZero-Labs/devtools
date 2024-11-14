@@ -645,7 +645,7 @@ importers:
         specifier: ^2.0.0
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~1.0.0
+        specifier: ~1.0.1
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39

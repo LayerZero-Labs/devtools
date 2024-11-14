@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.1
+
+### Patch Changes
+
+- 3f43ea5: Make proxies consistent in example
+
 ## 0.2.0
 
 ### Minor Changes
