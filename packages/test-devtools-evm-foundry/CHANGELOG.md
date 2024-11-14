@@ -1,5 +1,18 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 4.0.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+- Updated dependencies [e2395b5]
+  - @layerzerolabs/oapp-evm@0.2.0
+  - @layerzerolabs/oft-evm@2.0.0
+
 ## 3.0.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.5.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
 ## 0.4.0
 
 ### Minor Changes

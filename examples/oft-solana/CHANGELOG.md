@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
 ## 0.3.1
 
 ### Patch Changes

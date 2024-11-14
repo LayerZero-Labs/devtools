@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.0
+
+### Minor Changes
+
+- 2fd45ca: Add Deploy and Wire for OApp Read
+
 ## 0.3.0
 
 ### Minor Changes

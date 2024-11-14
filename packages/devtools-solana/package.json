@@ -45,7 +45,7 @@
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^3.0.12",
-    "@layerzerolabs/test-devtools": "~0.3.0",
+    "@layerzerolabs/test-devtools": "~0.4.0",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
     "@solana/web3.js": "~1.95.3",
     "@sqds/sdk": "~2.0.4",

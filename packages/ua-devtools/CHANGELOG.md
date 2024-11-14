@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools
 
+## 3.0.0
+
+### Minor Changes
+
+- 2fd45ca: Add Deploy and Wire for OApp Read
+- 4f5cef2: Add OApp Read Command Resolver
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+  - @layerzerolabs/protocol-devtools@1.1.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 2.0.0
 
 ### Minor Changes
