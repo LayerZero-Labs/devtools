@@ -27,6 +27,7 @@ interface Args {
     solanaProgramId: PublicKey
     solanaSecretKey?: Keypair
     multisigKey?: PublicKey
+    useSquadsV3?: boolean
     internalConfigurator?: OAppConfigurator
 }
 
@@ -50,6 +51,7 @@ task(TASK_LZ_OAPP_WIRE)
     // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
+    .addParam('useSquadsV3', 'Use Squads V3', false, types.boolean, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
@@ -105,7 +107,12 @@ task(TASK_LZ_OAPP_WIRE)
         const sdkFactory = createSdkFactory(userAccount, programId, connectionFactory)
 
         // We'll also need a signer factory
-        const solanaSignerFactory = createSolanaSignerFactory(wallet, connectionFactory, args.multisigKey)
+        const solanaSignerFactory = createSolanaSignerFactory(
+            wallet,
+            connectionFactory,
+            args.multisigKey,
+            args.useSquadsV3
+        )
 
         //
         //
@@ -168,6 +175,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
     // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
+    .addParam('useSquadsV3', 'Use Squads V3', false, types.boolean, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })

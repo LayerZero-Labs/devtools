@@ -1,4 +1,5 @@
 import * as multisig from '@sqds/multisig'
+import Squads, { Wallet } from '@sqds/sdk'
 
 import {
     type OmniSigner,
@@ -192,6 +193,52 @@ export class OmniSignerSolanaSquads extends OmniSignerBase implements OmniSigner
         const tx = new Transaction().add(ix)
         const transactionHash = await this.connection.sendTransaction(tx, [this.wallet])
         await this.connection.confirmTransaction(transactionHash, 'confirmed')
+        return {
+            transactionHash,
+            wait: async () => ({
+                transactionHash,
+            }),
+        }
+    }
+}
+
+export class OmniSignerSolanaSquadsV3 extends OmniSignerBase implements OmniSigner {
+    protected readonly squads: Squads
+
+    constructor(
+        eid: EndpointId,
+        public readonly connection: Connection,
+        public readonly multiSigAddress: PublicKey,
+        public readonly wallet: Keypair,
+        protected readonly logger: Logger = createModuleLogger('OmniSignerSolanaSquadsV3')
+    ) {
+        super(eid)
+
+        this.squads = new Squads({ connection, wallet: new Wallet(wallet) })
+    }
+
+    getPoint(): OmniPoint {
+        return { eid: this.eid, address: this.wallet.publicKey.toBase58() }
+    }
+
+    async sign(): Promise<string> {
+        throw new Error(`OmniSignerSolanaSquads does not support the sign() method. Please use signAndSend().`)
+    }
+
+    async signAndSend(transaction: OmniTransaction): Promise<OmniTransactionResponse<OmniTransactionReceipt>> {
+        this.assertTransaction(transaction)
+
+        const solanaTransaction = deserializeTransactionMessage(transaction.data)
+        const multisigTransaction = await this.squads.createTransaction(this.multiSigAddress, 1)
+
+        for (const instruction of solanaTransaction.instructions) {
+            await this.squads.addInstruction(multisigTransaction.publicKey, instruction)
+        }
+
+        await this.squads.activateTransaction(multisigTransaction.publicKey)
+
+        const transactionHash = multisigTransaction.publicKey.toBase58()
+
         return {
             transactionHash,
             wait: async () => ({

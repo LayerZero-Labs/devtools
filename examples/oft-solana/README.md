@@ -102,7 +102,8 @@ npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secre
 npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
-With a squads multisig, you can simply append the `--multisigKey` flag to the end of the above command.
+With a SquadsV4 multisig, you can simply append the `--multisig-key` flag to the end of the above command.  If using
+SquadsV3, you can append the `--use-squads-v3` flag.
 
 ### Send SOL -> Sepolia
 

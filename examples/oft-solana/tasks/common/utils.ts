@@ -14,6 +14,7 @@ import { createConnectedContractFactory } from '@layerzerolabs/devtools-evm-hard
 import {
     OmniSignerSolana,
     OmniSignerSolanaSquads,
+    OmniSignerSolanaSquadsV3,
     createConnectionFactory,
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
@@ -72,7 +73,8 @@ export const createSdkFactory = (
 export const createSolanaSignerFactory = (
     wallet: Keypair,
     connectionFactory = createSolanaConnectionFactory(),
-    multisigKey?: PublicKey
+    multisigKey?: PublicKey,
+    useSquadsV3 = false
 ) => {
     return async (eid: EndpointId): Promise<OmniSigner<OmniTransactionResponse<OmniTransactionReceipt>>> => {
         assert(
@@ -80,8 +82,14 @@ export const createSolanaSignerFactory = (
             `Solana signer factory can only create signers for Solana networks. Received ${formatEid(eid)}`
         )
 
-        return multisigKey
-            ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
-            : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
+        if (multisigKey) {
+            return !useSquadsV3
+                ? new OmniSignerSolanaSquads(eid, await connectionFactory(eid), multisigKey, wallet)
+                : new OmniSignerSolanaSquadsV3(eid, await connectionFactory(eid), multisigKey, wallet)
+        }
+        if (useSquadsV3) {
+            throw new Error('SquadsV3 signer factory requires a multisig key')
+        }
+        return new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
     }
 }
