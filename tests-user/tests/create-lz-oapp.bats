@@ -256,8 +256,8 @@ teardown() {
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-oapp-read" LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
-    pnpm compile
-    pnpm test
+    yarn compile
+    yarn test
 }
 
 @test "should work with npm & oapp example in CI mode" {
@@ -329,6 +329,6 @@ teardown() {
 
     LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
-    pnpm compile
-    pnpm test
+    npm run compile
+    npm run test
 }
