@@ -78,7 +78,7 @@ interface CreateOFTTaskArgs {
     /**
      * The CSV list of additional minters.
      */
-    additionalMinters: string
+    additionalMinters?: string[]
 
     /**
      * The token program ID, for Mint-And-Burn-Adapter only.
@@ -90,7 +90,7 @@ interface CreateOFTTaskArgs {
      * losing the ability to mint new tokens for everything but the OFTStore.  You should really be intentional about
      * using this flag, as it is not reversible.
      */
-    onlyOFTStore: boolean
+    onlyOftStore: boolean
 
     /**
      * The URI for the token metadata.
@@ -114,9 +114,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int)
     .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
     .addParam('tokenMetadataIsMutable', 'Token metadata is mutable', true, devtoolsTypes.boolean)
-    .addParam('additionalMinters', 'Comma-separated list of additional minters', '', devtoolsTypes.string)
+    .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
     .addOptionalParam(
-        'onlyOFTStore',
+        'onlyOftStore',
         'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
         false,
         devtoolsTypes.boolean
@@ -139,8 +139,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             sellerFeeBasisPoints,
             symbol,
             tokenMetadataIsMutable: isMutable,
-            additionalMinters: additionalMintersStr,
-            onlyOFTStore,
+            additionalMinters: additionalMintersAsStrings,
+            onlyOftStore,
             tokenProgram: tokenProgramStr,
             uri,
         }: CreateOFTTaskArgs) => {
@@ -154,15 +154,15 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const tokenProgramId = publicKey(tokenProgramStr)
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
-            if (!additionalMintersStr) {
-                if (!onlyOFTStore) {
+            if (!additionalMintersAsStrings) {
+                if (!onlyOftStore) {
                     throw new Error('If you want to proceed with only the OFTStore, please specify --onlyOFTStore')
                 }
                 console.log(
                     'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
                 )
             }
-            const additionalMinters = additionalMintersStr.split(',').map((minter) => new PublicKey(minter))
+            const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
             const mintAuthorityPublicKey = await createMintAuthorityMultisig(
                 connection,
                 toWeb3JsKeypair(umiWalletKeyPair),
