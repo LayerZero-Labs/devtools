@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.4.0
+
+### Minor Changes
+
+- 599b3a1: Add UniswapV3 Quote example
+
 ## 0.3.1
 
 ### Patch Changes
