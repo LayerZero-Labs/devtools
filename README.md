@@ -22,7 +22,7 @@
 
 ## Introduction
 
-This toolkit is designed to streamline the process of building, testing, and deploying omnichain applications (OApps) using LayerZero. This tool is meant to support you through the end-to-end development lifecycle of a cross-chain project.
+This amazing toolkit is designed to streamline the process of building, testing, and deploying omnichain applications (OApps) using LayerZero. This tool is meant to support you through the end-to-end development lifecycle of a cross-chain project.
 
 Visit <a href="https://docs.layerzero.network/" style="color: #a77dff">our developer docs</a> to get started building omnichain applications.
 
