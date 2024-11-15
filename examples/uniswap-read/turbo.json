@@ -1,0 +1,9 @@
+{
+  "extends": ["//"],
+  "pipeline": {
+    "compile": {
+      "dependsOn": ["@layerzerolabs/toolbox-hardhat#build"],
+      "description": "We include this here because for some reason github actions is not taking the dependency into account when building this package"
+    }
+  }
+}
