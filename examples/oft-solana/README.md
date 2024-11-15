@@ -66,8 +66,8 @@ For OFT:
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
-:important:  You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
-multisig. If you do not want to, you must sepcify `--only-oft-store`.  If you choose the latter approach, you can never
+:important: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
+multisig. If you do not want to, you must sepcify `--only-oft-store`. If you choose the latter approach, you can never
 substitute in a different mint authority.
 
 For OFTAdapter:
@@ -82,8 +82,8 @@ For OFT Mint-And-Burn Adapter (MABA):
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
-:important:  You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
-multisig. If you do not want to, you must sepcify `--only-oft-store`.  If you choose the latter approach, you can never
+:important: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
+multisig. If you do not want to, you must sepcify `--only-oft-store`. If you choose the latter approach, you can never
 substitute in a different mint authority.
 
 Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
