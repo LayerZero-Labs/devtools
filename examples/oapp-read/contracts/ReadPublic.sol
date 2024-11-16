@@ -144,10 +144,10 @@ contract ReadPublic is OAppRead, OAppOptionsType3 {
      * @param _message The encoded data received.
      */
     function _lzReceive(
-        Origin calldata, /*_origin*/
-        bytes32, /*_guid*/
+        Origin calldata /*_origin*/,
+        bytes32 /*_guid*/,
         bytes calldata _message,
-        address, /*_executor*/
+        address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
         // Decode the data received from bytes to uint256
