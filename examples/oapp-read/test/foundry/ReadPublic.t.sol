@@ -86,7 +86,7 @@ contract ReadPublicTest is TestHelperOz5 {
 
         // User A initiates the read request on bOApp
         vm.prank(userA);
-        MessagingReceipt memory receipt = bOApp.readData{ value: fee.nativeFee }(
+        bOApp.readData{ value: fee.nativeFee }(
             targetContractAddress,
             targetEid,
             options
