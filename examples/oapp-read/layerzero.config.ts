@@ -2,7 +2,7 @@ import { ChannelId, EndpointId } from '@layerzerolabs/lz-definitions'
 
 import type { OAppReadOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-const arbitrumContract: OmniPointHardhat = {
+const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
     contractName: 'ReadPublic',
 }
@@ -10,7 +10,7 @@ const arbitrumContract: OmniPointHardhat = {
 const config: OAppReadOmniGraphHardhat = {
     contracts: [
         {
-            contract: arbitrumContract,
+            contract: sepoliaContract,
             config: {
                 readLibrary: '0xbcd4CADCac3F767C57c4F402932C4705DF62BEFf',
                 readChannels: [
