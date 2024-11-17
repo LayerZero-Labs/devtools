@@ -86,11 +86,7 @@ contract ReadPublicTest is TestHelperOz5 {
 
         // User A initiates the read request on bOApp
         vm.prank(userA);
-        bOApp.readData{ value: fee.nativeFee }(
-            targetContractAddress,
-            targetEid,
-            options
-        );
+        bOApp.readData{ value: fee.nativeFee }(targetContractAddress, targetEid, options);
 
         // Process the response packet to bOApp on bEid, injecting the data 42
         this.verifyPackets(bEid, addressToBytes32(address(bOApp)), 0, address(0x0), abi.encode(uint256(42)));
