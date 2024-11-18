@@ -37,7 +37,7 @@ interface SetAuthorityTaskArgs {
     /**
      * The CSV list of additional minters.
      */
-    additionalMinters: string
+    additionalMinters?: string[]
 
     /**
      * The token program ID, for Mint-And-Burn-Adapter only.
@@ -49,7 +49,7 @@ interface SetAuthorityTaskArgs {
      * losing the ability to mint new tokens for everything but the OFTStore.  You should really be intentional about
      * using this flag, as it is not reversible.
      */
-    onlyOFTStore: boolean
+    onlyOftStore: boolean
 }
 
 /**
@@ -91,9 +91,9 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
     .addParam('mint', 'The Token Mint public key')
     .addParam('programId', 'The OFT Program id')
     .addParam('escrow', 'The OFT Escrow public key')
-    .addParam('additionalMinters', 'Comma-separated list of additional minters', '', devtoolsTypes.string)
+    .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
     .addOptionalParam(
-        'onlyOFTStore',
+        'onlyOftStore',
         'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
         false,
         devtoolsTypes.boolean
@@ -111,21 +111,21 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             mint: mintStr,
             programId: programIdStr,
             tokenProgram: tokenProgramStr,
-            additionalMinters: additionalMintersStr,
-            onlyOFTStore,
+            additionalMinters: additionalMintersAsStrings,
+            onlyOftStore,
         }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
             const tokenProgram = publicKey(tokenProgramStr)
-            if (!additionalMintersStr) {
-                if (!onlyOFTStore) {
+            if (!additionalMintersAsStrings) {
+                if (!onlyOftStore) {
                     throw new Error('If you want to proceed with only the OFTStore, please specify --onlyOFTStore')
                 }
                 console.log(
                     'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
                 )
             }
-            const additionalMinters = additionalMintersStr.split(',').map((minter) => new PublicKey(minter))
+            const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
             const mint = new PublicKey(mintStr)
             const newMintAuthority = await createMintAuthorityMultisig(
                 connection,
