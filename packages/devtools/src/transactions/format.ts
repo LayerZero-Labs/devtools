@@ -1,9 +1,9 @@
-import { OmniTransaction, OmniTransactionMetadata } from './types'
+import { OmniTransaction } from './types'
 import { formatEid } from '@/omnigraph/format'
 
 export const formatOmniTransaction = (
     transaction: OmniTransaction
-): Record<string, string | number | bigint | undefined | null | OmniTransactionMetadata> => ({
+): Record<string, string | number | bigint | undefined> => ({
     Endpoint: formatEid(transaction.point.eid),
     OmniAddress: transaction.point.address,
     OmniContract: transaction.metadata?.contractName,
