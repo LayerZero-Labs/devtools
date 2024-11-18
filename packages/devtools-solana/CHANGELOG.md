@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-solana
 
+## 1.0.1
+
+### Patch Changes
+
+- 6b9cd85: Fix to use squads v4 client
+
 ## 1.0.0
 
 ### Minor Changes

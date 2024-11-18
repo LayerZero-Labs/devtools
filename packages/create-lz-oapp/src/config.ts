@@ -62,7 +62,16 @@ export const getExamples = (): Example[] => {
         },
         // OApp Read examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_READ_EXAMPLE
-            ? [{ id: 'oapp-read', label: 'OAppRead', repository, directory: 'examples/oapp-read', ref }]
+            ? [
+                  { id: 'oapp-read', label: 'OAppRead', repository, directory: 'examples/oapp-read', ref },
+                  {
+                      id: 'uniswap-read',
+                      label: 'UniswapV3 Quote',
+                      repository,
+                      directory: 'examples/uniswap-read',
+                      ref,
+                  },
+              ]
             : []),
         // The Solana OFT example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE
