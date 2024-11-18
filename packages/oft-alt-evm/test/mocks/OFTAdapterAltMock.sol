@@ -3,14 +3,14 @@ pragma solidity ^0.8.0;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-import { OFTAdapter } from "../../contracts/OFTAdapter.sol";
+import { OFTAdapterAlt } from "../../contracts/OFTAdapterAlt.sol";
 
-contract OFTAdapterMock is OFTAdapter {
+contract OFTAdapterAltMock is OFTAdapterAlt {
     constructor(
         address _token,
         address _lzEndpoint,
         address _delegate
-    ) OFTAdapter(_token, _lzEndpoint, _delegate) Ownable(_delegate) {}
+    ) OFTAdapterAlt(_token, _lzEndpoint, _delegate) Ownable(_delegate) {}
 
     // @dev expose internal functions for testing purposes
     function debit(

@@ -17,7 +17,7 @@ import { IOFT, OFTAltCore } from "./OFTAltCore.sol";
  * IF the 'innerToken' applies something like a transfer fee, the default will NOT work...
  * a pre/post balance check will need to be done to calculate the amountSentLD/amountReceivedLD.
  */
-abstract contract OFTAdapter is OFTAltCore {
+abstract contract OFTAdapterAlt is OFTAltCore {
     using SafeERC20 for IERC20;
 
     IERC20 internal immutable innerToken;
