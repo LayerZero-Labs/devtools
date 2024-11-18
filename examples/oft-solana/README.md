@@ -223,3 +223,45 @@ re-running with `--buffer` flag similar to the following:
 solana-keygen recover -o recover.json
 solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
 ```
+
+### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
+
+The outbound OApp DVN configuration violates a hard CPI size restriction, as you have included too many DVNs in the
+configuration (more than 3 for Solana outbound). As such, you will need to adjust the DVNs to comply with the CPI size
+restriction. The current CPI size restriction is 1280 bytes. The error message looks similar to the following:
+
+```text
+SendTransactionError: Simulation failed.
+Message: Transaction simulation failed: Error processing Instruction 0: Program failed to complete.
+Logs:
+[
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM invoke [1]",
+  "Program log: Instruction: Send",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [2]",
+  "Program log: Instruction: Burn",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1143 of 472804 compute units",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success",
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM consumed 67401 of 500000 compute units",
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM failed: Instruction passed to inner instruction is too large (1388 > 1280)"
+].
+```
+
+[`loosen_cpi_size_restriction`](https://github.com/solana-labs/solana/blob/v1.18.26/programs/bpf_loader/src/syscalls/cpi.rs#L958-L994),
+which allows more lenient CPI size restrictions, is not yet enabled in the current version of Solana devnet or mainnet.
+
+```text
+solana feature status -u devnet --display-all
+```
+
+### When sending tokens from Solana `base64 encoded solana_sdk::transaction::versioned::VersionedTransaction too large: 1728 bytes (max: encoded/raw 1644/1232).`
+
+This error happens when sending for Solana outbound due to the transaction size exceeds the maximum hard limit. To
+alleviate this issue, consider using an Address Lookup Table (ALT) instruction in your transaction. Example ALTs for
+mainnet and testnet (devnet):
+
+| Stage        | Address                                        |
+| ------------ | ---------------------------------------------- |
+| mainnet-beta | `AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB` |
+| devnet       | `9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK` |
+
+More info can be found in the [Solana documentation](https://solana.com/docs/advanced/lookup-tables).
