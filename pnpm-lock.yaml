@@ -687,7 +687,7 @@ importers:
         specifier: ^1.1.0
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ^3.0.0
+        specifier: ~3.0.0
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/protocol-devtools-solana':
         specifier: ^4.0.0
