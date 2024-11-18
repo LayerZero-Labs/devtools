@@ -25,14 +25,7 @@
     }
   },
   "files": [
-    "artifacts/Fee.sol/Fee.json",
-    "artifacts/IFee.sol/IFee.json",
-    "artifacts/IOFT.sol/IOFT.json",
-    "artifacts/OFTComposeMsgCodec.sol/OFTComposeMsgCodec.json",
-    "artifacts/OFTMsgCodec.sol/OFTMsgCodec.json",
-    "artifacts/OFT.sol/OFT.json",
-    "artifacts/OFTAdapter.sol/OFTAdapter.json",
-    "artifacts/OFTCore.sol/OFTCore.json",
+    "artifacts/**/*",
     "contracts/**/*",
     "test/**/*"
   ],
@@ -52,7 +45,8 @@
     "@layerzerolabs/test-devtools-evm-foundry": "~4.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/contracts-upgradeable": "^5.0.2"
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "rimraf": "^5.0.5"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
