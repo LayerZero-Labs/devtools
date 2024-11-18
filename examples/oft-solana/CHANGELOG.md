@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.2
+
+### Patch Changes
+
+- 59cd485: Fix add additional minters to createOFT
+
 ## 0.4.1
 
 ### Patch Changes
