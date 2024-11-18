@@ -330,7 +330,7 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
                     transactions: expect.any(Array),
                     ci: false,
                     createSigner,
-                    expectLogger,
+                    logger: expectLogger,
                 },
                 {},
                 undefined
