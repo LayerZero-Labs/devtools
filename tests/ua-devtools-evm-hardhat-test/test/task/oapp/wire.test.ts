@@ -319,8 +319,12 @@ describe(`task ${TASK_LZ_OAPP_WIRE}`, () => {
             const createSigner = createGnosisSignerFactoryMock.mock.results[0]?.value
             expect(typeof createSigner).toBe('function')
 
+            console.warn('RESULTSSSSSS')
+            console.warn(createGnosisSignerFactoryMock.mock.results)
+
             // Now we check that the sign and send subtask has been called with the correct signer factory
-            expect(hreRunSpy).toHaveBeenCalledWith(
+            expect(hreRunSpy).toHaveBeenNthCalledWith(
+                4,
                 SUBTASK_LZ_SIGN_AND_SEND,
                 {
                     transactions: expect.any(Array),
