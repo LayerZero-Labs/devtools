@@ -130,7 +130,7 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
         bytes memory callData = abi.encodeWithSelector(IExampleContract.add.selector, a, b);
 
         // Create an array of EVMCallRequestV1 with a single read request
-        EVMCallRequestV1[] memory readRequests = new EVMCallRequestV1[](2);
+        EVMCallRequestV1[] memory readRequests = new EVMCallRequestV1[](1);
         readRequests[0] = EVMCallRequestV1({
             appRequestLabel: 1, // Application-specific label for tracking
             targetEid: targetEid, // Endpoint ID of the target chain
