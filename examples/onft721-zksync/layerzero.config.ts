@@ -19,9 +19,16 @@ const zksyncContract: OmniPointHardhat = {
 }
 
 const DEFAULT_EDGE_CONFIG: OAppEdgeConfig = {
+    // Gas can be profiled and enforced based on your contract's needs
     enforcedOptions: [
         {
             msgType: 1,
+            optionType: ExecutorOptionType.LZ_RECEIVE,
+            gas: 100_000,
+            value: 0,
+        },
+        {
+            msgType: 2,
             optionType: ExecutorOptionType.LZ_RECEIVE,
             gas: 100_000,
             value: 0,

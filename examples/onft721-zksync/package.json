@@ -1,6 +1,7 @@
 {
   "name": "@layerzerolabs/onft721-zksync-example",
-  "version": "0.2.0",
+  "version": "0.0.1",
+  "private": true,
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out",
