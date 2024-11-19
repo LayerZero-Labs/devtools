@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.2
+
+### Patch Changes
+
+- c0ff14b: Add in ability to output transaction data to a JSON file
+
 ## 6.0.1
 
 ### Patch Changes
