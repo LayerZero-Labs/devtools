@@ -1,4 +1,5 @@
 import { Factory } from '@/types'
+import { Logger } from '@layerzerolabs/io-devtools'
 import assert from 'assert'
 import { backOff } from 'exponential-backoff'
 
@@ -34,6 +35,22 @@ export const sequence = async <T>(tasks: Task<T>[]): Promise<T[]> => {
  * @returns {Promise<T[]>}
  */
 export const parallel = async <T>(tasks: Task<T>[]): Promise<T[]> => await Promise.all(tasks.map((task) => task()))
+
+/**
+ * Creates a default applicative based on an environment feature flag.
+ *
+ * For now we keep the parallel execution as an opt-in feature flag
+ * before we have a retry logic fully in place for the SDKs
+ *
+ * This is to avoid 429 too many requests errors from the RPCs
+ *
+ * @param logger
+ * @returns
+ */
+export const createDefaultApplicative = (logger?: Logger) =>
+    process.env.LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION
+        ? (logger?.warn(`You are using experimental parallel configuration`), parallel)
+        : sequence
 
 /**
  * Maps the errors coming from a task. Errors thrown from the `toError`

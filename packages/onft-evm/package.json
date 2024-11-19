@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/onft-evm",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "LayerZero Labs reference EVM OmniChain Non Fungible Token (ONFT) implementation",
   "keywords": [
     "LayerZero",
@@ -42,21 +42,21 @@
     "test:forge": "forge test"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
-    "@layerzerolabs/lz-v2-utilities": "^2.3.39",
-    "@layerzerolabs/oapp-evm": "^0.0.4",
-    "@layerzerolabs/test-devtools-evm-foundry": "~2.0.0",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@layerzerolabs/oapp-evm": "^0.2.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~4.0.0",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "rimraf": "^6.0.1"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-protocol-v2": "^2.3.39",
-    "@layerzerolabs/lz-evm-v1-0.7": "^2.3.39",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
     "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
   },

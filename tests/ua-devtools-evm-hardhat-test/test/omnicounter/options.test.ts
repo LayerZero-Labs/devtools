@@ -114,7 +114,7 @@ describe('oapp/options', () => {
         const avaxTestConfig: OAppTestConfig = await getDefaultAvaxConfig()
         const avaxOAppConfig: OAppEdgeConfig = await setUpConfig(avaxTestConfig)
 
-        const config: OmniGraphHardhat<unknown, OAppEdgeConfig> = setUpOmniGraphHardhat(
+        const config: OmniGraphHardhat<undefined, OAppEdgeConfig> = setUpOmniGraphHardhat(
             ethOmniCounter,
             ethOAppConfig,
             avaxOmniCounter,

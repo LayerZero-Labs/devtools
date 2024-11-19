@@ -33,6 +33,20 @@ services:
         max-size: "5m"
         compress: "false"
 
+  # Aptos node for testing purposes
+  aptos-node:
+    build:
+      dockerfile: Dockerfile
+      target: node-aptos
+      args:
+        APTOS_NODE_IMAGE: ${DEVTOOLS_APTOS_NODE_IMAGE:-node-aptos-local-testnet}
+
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"
+
   # EVM node for testing purposes
   evm-node:
     extends:

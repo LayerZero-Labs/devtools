@@ -8,6 +8,9 @@ import type {
     Uln302SetUlnConfig,
     Uln302UlnConfig,
     Uln302UlnUserConfig,
+    UlnReadSetUlnConfig,
+    UlnReadUlnConfig,
+    UlnReadUlnUserConfig,
 } from '@layerzerolabs/protocol-devtools'
 import {
     formatEid,
@@ -29,9 +32,11 @@ import { printJson } from '@layerzerolabs/io-devtools'
 import { ReceiveLibrarySchema } from './schema'
 import { abi } from '@layerzerolabs/lz-evm-sdk-v2/artifacts/contracts/EndpointV2.sol/EndpointV2.json'
 import { Contract } from '@ethersproject/contracts'
+import { UlnRead } from '@/ulnRead'
 
 const CONFIG_TYPE_EXECUTOR = 1
 const CONFIG_TYPE_ULN = 2
+const CONFIG_TYPE_READ_LIB_CONFIG = 1
 
 /**
  * EVM-specific SDK for EndpointV2 contracts
@@ -67,6 +72,19 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         )
 
         return new Uln302(this.contract.contract.provider as Provider, { eid: this.point.eid, address })
+    }
+
+    async getUlnReadSDK(address: OmniAddress): Promise<UlnRead> {
+        this.logger.debug(`Getting UlnRead SDK for address ${address}`)
+
+        assert(
+            !isZero(address),
+            `UlnRead cannot be instantiated: UlnRead address cannot be a zero value for EndpointV2 ${formatOmniPoint(
+                this.point
+            )}`
+        )
+
+        return new UlnRead(this.contract.contract.provider as Provider, { eid: this.point.eid, address })
     }
 
     @AsyncRetriable()
@@ -196,7 +214,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         gracePeriod: bigint
     ): Promise<OmniTransaction> {
         this.logger.debug(
-            `Setting send library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to ULN ${uln} with a grace period of ${gracePeriod}`
+            `Setting receive library for eid ${eid} (${formatEid(eid)}) and OApp ${oapp} to ULN ${uln} with a grace period of ${gracePeriod}`
         )
 
         const data = this.contract.contract.interface.encodeFunctionData('setReceiveLibrary', [
@@ -281,6 +299,17 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return await this.setConfig(oapp, uln, setUlnConfigParams)
     }
 
+    async setUlnReadConfig(
+        oapp: OmniAddress,
+        uln: OmniAddress,
+        setUlnConfig: UlnReadSetUlnConfig[]
+    ): Promise<OmniTransaction[]> {
+        this.logger.debug(`Setting ULN config for OApp ${oapp} to ULN ${uln} with config ${printJson(setUlnConfig)}`)
+
+        const setUlnConfigParams: SetConfigParam[] = await this.getUlnReadConfigParams(uln, setUlnConfig)
+        return await this.setConfig(oapp, uln, setUlnConfigParams)
+    }
+
     async setExecutorConfig(
         oapp: OmniAddress,
         uln: OmniAddress,
@@ -359,6 +388,16 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     /**
+     * @see {@link IEndpointV2.getAppUlnReadConfig}
+     */
+    async getAppUlnReadConfig(oapp: OmniAddress, uln: OmniAddress, channelId: number): Promise<UlnReadUlnConfig> {
+        this.logger.debug(`Getting App ULN read config for eid ${channelId} and OApp ${oapp} and ULN ${uln}`)
+
+        const ulnSdk = await this.getUlnReadSDK(uln)
+        return await ulnSdk.getAppUlnConfig(channelId, oapp)
+    }
+
+    /**
      * @see {@link IEndpointV2.hasAppUlnConfig}
      */
     async hasAppUlnConfig(
@@ -371,6 +410,20 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         const ulnSdk = await this.getUln302SDK(uln)
 
         return ulnSdk.hasAppUlnConfig(eid, oapp, config, type)
+    }
+
+    /**
+     * @see {@link IEndpointV2.hasAppUlnReadConfig}
+     */
+    async hasAppUlnReadConfig(
+        oapp: string,
+        uln: OmniAddress,
+        channelId: number,
+        config: UlnReadUlnUserConfig
+    ): Promise<boolean> {
+        const ulnSdk = await this.getUlnReadSDK(uln)
+
+        return ulnSdk.hasAppUlnConfig(channelId, oapp, config)
     }
 
     @AsyncRetriable()
@@ -402,6 +455,16 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         return setUlnConfig.map(({ eid, ulnConfig }) => ({
             eid,
             configType: CONFIG_TYPE_ULN,
+            config: ulnSdk.encodeUlnConfig(ulnConfig),
+        }))
+    }
+
+    async getUlnReadConfigParams(uln: OmniAddress, setUlnConfig: UlnReadSetUlnConfig[]): Promise<SetConfigParam[]> {
+        const ulnSdk = await this.getUlnReadSDK(uln)
+
+        return setUlnConfig.map(({ channelId, ulnConfig }) => ({
+            eid: channelId,
+            configType: CONFIG_TYPE_READ_LIB_CONFIG,
             config: ulnSdk.encodeUlnConfig(ulnConfig),
         }))
     }

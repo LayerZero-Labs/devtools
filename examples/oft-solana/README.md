@@ -66,6 +66,10 @@ For OFT:
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 ```
 
+:important: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
+multisig. If you do not want to, you must sepcify `--only-oft-store`. If you choose the latter approach, you can never
+substitute in a different mint authority.
+
 For OFTAdapter:
 
 ```bash
@@ -77,6 +81,10 @@ For OFT Mint-And-Burn Adapter (MABA):
 ```bash
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
+
+:important: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
+multisig. If you do not want to, you must sepcify `--only-oft-store`. If you choose the latter approach, you can never
+substitute in a different mint authority.
 
 Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
 
@@ -115,6 +123,17 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 ```bash
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
 ```
+
+### Set a new Mint Authority Multisig
+
+If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
+
+```bash
+pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> --program-id <PROGRAM_ID> --escrow <ESCROW> --additional-minters <MINTERS_CSV>
+```
+
+The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
+included in the `--additional-minters` list.
 
 ## Common Errors
 
@@ -193,3 +212,56 @@ RangeError [ERR_OUT_OF_RANGE]: The value of "offset" is out of range. It must be
     at FixableBeetStruct.deserialize (/Users/user/go/src/github.com/paxosglobal/solana-programs-internal/paxos-lz-oft/node_modules/@metaplex-foundation/beet/src/struct.fixable.ts:59:17) {
   code: 'ERR_OUT_OF_RANGE'
 ```
+
+### Failed while deploying the Solana OFT `Error: Account allocation failed: unable to confirm transaction. This can happen in situations such as transaction expiration and insufficient fee-payer funds`
+
+This error is caused by the inability to confirm the transaction in time, or by running out of funds. This is not
+specific to OFT deployment, but Solana programs in general. Fortunately, you can retry by recovering the program key and
+re-running with `--buffer` flag similar to the following:
+
+```bash
+solana-keygen recover -o recover.json
+solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
+```
+
+### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
+
+The outbound OApp DVN configuration violates a hard CPI size restriction, as you have included too many DVNs in the
+configuration (more than 3 for Solana outbound). As such, you will need to adjust the DVNs to comply with the CPI size
+restriction. The current CPI size restriction is 1280 bytes. The error message looks similar to the following:
+
+```text
+SendTransactionError: Simulation failed.
+Message: Transaction simulation failed: Error processing Instruction 0: Program failed to complete.
+Logs:
+[
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM invoke [1]",
+  "Program log: Instruction: Send",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [2]",
+  "Program log: Instruction: Burn",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 1143 of 472804 compute units",
+  "Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb success",
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM consumed 67401 of 500000 compute units",
+  "Program 2gFsaXeN9jngaKbQvZsLwxqfUrT2n4WRMraMpeL8NwZM failed: Instruction passed to inner instruction is too large (1388 > 1280)"
+].
+```
+
+[`loosen_cpi_size_restriction`](https://github.com/solana-labs/solana/blob/v1.18.26/programs/bpf_loader/src/syscalls/cpi.rs#L958-L994),
+which allows more lenient CPI size restrictions, is not yet enabled in the current version of Solana devnet or mainnet.
+
+```text
+solana feature status -u devnet --display-all
+```
+
+### When sending tokens from Solana `base64 encoded solana_sdk::transaction::versioned::VersionedTransaction too large: 1728 bytes (max: encoded/raw 1644/1232).`
+
+This error happens when sending for Solana outbound due to the transaction size exceeds the maximum hard limit. To
+alleviate this issue, consider using an Address Lookup Table (ALT) instruction in your transaction. Example ALTs for
+mainnet and testnet (devnet):
+
+| Stage        | Address                                        |
+| ------------ | ---------------------------------------------- |
+| mainnet-beta | `AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB` |
+| devnet       | `9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK` |
+
+More info can be found in the [Solana documentation](https://solana.com/docs/advanced/lookup-tables).

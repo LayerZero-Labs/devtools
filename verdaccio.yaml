@@ -61,13 +61,18 @@ packages:
   "@layerzerolabs/toolbox-**": *local-package-rules
 
   # We will not proxy the contract packages
+  "@layerzerolabs/oapp-evm": *local-package-rules
+  "@layerzerolabs/oapp-evm-upgradeable": *local-package-rules
   "@layerzerolabs/oft-evm": *local-package-rules
+  "@layerzerolabs/oft-evm-upgradeable": *local-package-rules
   "@layerzerolabs/onft-evm": *local-package-rules
 
   # And we will not proxy any of the CLI packages
   "build-lz-options": *local-package-rules
   "create-lz-oapp": *local-package-rules
   "decode-lz-options": *local-package-rules
+  "export-deployments": *local-package-rules
+  "verify-contract": *local-package-rules
 
   # The rest of the packages we'll proxy to the public NPM repo
   "**":

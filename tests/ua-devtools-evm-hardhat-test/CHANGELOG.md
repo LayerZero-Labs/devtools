@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.7.0
+
+### Minor Changes
+
+- 2fd45ca: Add Deploy and Wire for OApp Read
+- e2395b5: Add OApp Read Example
+
+## 0.6.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.5.0
 
 ### Minor Changes
