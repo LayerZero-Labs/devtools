@@ -34,7 +34,6 @@
     "contracts/**/*"
   ],
   "scripts": {
-    "build": "$npm_execpath compile",
     "clean": "rimraf .turbo cache out artifacts",
     "compile": "$npm_execpath compile:forge",
     "compile:forge": "forge build",
