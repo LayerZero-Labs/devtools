@@ -68,6 +68,11 @@ const config: HardhatUserConfig = {
         },
     },
     networks: {
+        // We need to allow unlimited size contracts for the hardhat network since
+        // our test helper goes over the contract size limit
+        hardhat: {
+            allowUnlimitedContractSize: true,
+        },
         'abstract-testnet': {
             eid: EndpointId.ABSTRACT_V2_TESTNET,
             url: process.env.RPC_URL_ABSTRACT || 'https://api.testnet.abs.xyz',
