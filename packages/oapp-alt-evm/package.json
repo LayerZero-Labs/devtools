@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "build": "$npm_execpath compile",
-    "clean": "rm -rf .turbo cache artifacts",
+    "clean": "rm -rf .turbo cache artifacts out",
     "compile": "forge build",
     "test": "forge test"
   },
@@ -46,8 +46,7 @@
     "@layerzerolabs/test-devtools-evm-foundry": "~5.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
-    "@openzeppelin/contracts-upgradeable": "^5.0.2",
-    "rimraf": "^5.0.5"
+    "@openzeppelin/contracts-upgradeable": "^5.0.2"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",

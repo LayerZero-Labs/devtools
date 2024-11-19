@@ -1948,9 +1948,6 @@ importers:
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
         version: 5.1.0(@openzeppelin/contracts@5.1.0)
-      rimraf:
-        specifier: ^5.0.5
-        version: 5.0.9
 
   packages/oapp-evm:
     dependencies:
