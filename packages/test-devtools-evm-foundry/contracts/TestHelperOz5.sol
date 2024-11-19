@@ -28,7 +28,8 @@ import { DVNMock as DVN, ExecuteParam, IDVN } from "./mocks/DVNMock.sol";
 import { DVNFeeLibMock as DVNFeeLib } from "./mocks/DVNFeeLibMock.sol";
 import { ExecutorMock as Executor, IExecutor } from "./mocks/ExecutorMock.sol";
 import { PriceFeedMock as PriceFeed, ILayerZeroPriceFeed } from "./mocks/PriceFeedMock.sol";
-import { EndpointV2Mock as EndpointV2 } from "./mocks//EndpointV2Mock.sol";
+import { EndpointV2Mock as EndpointV2 } from "./mocks/EndpointV2Mock.sol";
+import { EndpointV2AltMock as EndpointV2Alt } from "./mocks/EndpointV2AltMock.sol";
 import { ReadLib1002Mock as ReadLib1002 } from "./mocks/ReadLib1002Mock.sol";
 
 // Misc. Mocks
@@ -121,12 +122,19 @@ contract TestHelperOz5 is Test, OptionsHelper {
         executorValueCap = _valueCap;
     }
 
+    function setUpEndpoints(uint8 _endpointNum, LibraryType _libraryType) public {
+        createEndpoints(_endpointNum, _libraryType, new address[](_endpointNum));
+    }
     /**
      * @notice Sets up endpoints for testing.
      * @param _endpointNum The number of endpoints to create.
      * @param _libraryType The type of message library to use (UltraLightNode or SimpleMessageLib).
      */
-    function setUpEndpoints(uint8 _endpointNum, LibraryType _libraryType) public {
+    function createEndpoints(
+        uint8 _endpointNum,
+        LibraryType _libraryType,
+        address[] memory nativeTokenAddresses
+    ) public {
         endpointSetup.endpointList = new EndpointV2[](_endpointNum);
         endpointSetup.eidList = new uint32[](_endpointNum);
         endpointSetup.sendLibs = new address[](_endpointNum);
@@ -139,8 +147,13 @@ contract TestHelperOz5 is Test, OptionsHelper {
             // deploy endpoints
             for (uint8 i = 0; i < _endpointNum; i++) {
                 uint32 eid = i + 1;
+                address nativeToken = nativeTokenAddresses[i];
                 endpointSetup.eidList[i] = eid;
-                endpointSetup.endpointList[i] = new EndpointV2(eid, address(this));
+                if (nativeToken == address(0)) {
+                    endpointSetup.endpointList[i] = new EndpointV2(eid, address(this));
+                } else {
+                    endpointSetup.endpointList[i] = new EndpointV2Alt(eid, address(this), nativeToken);
+                }
                 registerEndpoint(endpointSetup.endpointList[i]);
             }
         }
