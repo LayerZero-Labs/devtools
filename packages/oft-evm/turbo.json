@@ -1,8 +1,0 @@
-{
-  "extends": ["//"],
-  "pipeline": {
-    "build": {
-      "outputs": ["artifacts*/**", "cache*/**", "out/**", "node_modules/**"]
-    }
-  }
-}

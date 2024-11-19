@@ -29,7 +29,6 @@
     "test/**/*"
   ],
   "scripts": {
-    "build": "$npm_execpath compile",
     "clean": "rm -rf .turbo cache artifacts",
     "compile": "$npm_execpath forge build",
     "test": "$npm_execpath forge test"
