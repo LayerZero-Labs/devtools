@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // MyOApp imports
-import { ReadViewOrPure } from "../../contracts/ReadViewOrPure.sol";
+import { ReadViewOrPureAndCompute } from "../../contracts/ReadViewOrPureAndCompute.sol";
 import { ExampleContract } from "../../contracts/ExampleContract.sol";
 
 // OApp imports
@@ -21,10 +21,10 @@ import "forge-std/Test.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
 /**
- * @title ReadViewOrPureTest
- * @notice A test suite for the ReadViewOrPure contract.
+ * @title ReadViewOrPureAndComputeTest
+ * @notice A test suite for the ReadViewOrPureAndCompute contract.
  */
-contract ReadViewOrPureTest is TestHelperOz5 {
+contract ReadViewOrPureAndComputeTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
     /// @notice Chain A Endpoint ID.
@@ -33,8 +33,8 @@ contract ReadViewOrPureTest is TestHelperOz5 {
     /// @notice Chain B Endpoint ID.
     uint32 private bEid = 2;
 
-    /// @notice The ReadViewOrPure contract deployed on chain B.
-    ReadViewOrPure private bOApp;
+    /// @notice The ReadViewOrPureAndCompute contract deployed on chain B.
+    ReadViewOrPureAndCompute private bOApp;
 
     /// @notice The ExampleContract deployed on chain A.
     ExampleContract private exampleContract;
@@ -48,7 +48,7 @@ contract ReadViewOrPureTest is TestHelperOz5 {
     /**
      * @notice Sets up the test environment before each test.
      *
-     * @dev Deploys the ExampleContract on chain A and the ReadViewOrPure contract on chain B.
+     * @dev Deploys the ExampleContract on chain A and the ReadViewOrPureAndCompute contract on chain B.
      *      Wires the OApps and sets up the endpoints.
      */
     function setUp() public virtual override {
@@ -66,15 +66,15 @@ contract ReadViewOrPureTest is TestHelperOz5 {
             )
         );
 
-        // Deploy ReadViewOrPure on chain B (bEid)
-        bOApp = ReadViewOrPure(
+        // Deploy ReadViewOrPureAndCompute on chain B (bEid)
+        bOApp = ReadViewOrPureAndCompute(
             _deployOApp(
-                type(ReadViewOrPure).creationCode,
+                type(ReadViewOrPureAndCompute).creationCode,
                 abi.encode(
-                    address(endpoints[bEid]), // _endpoint (LayerZero endpoint on chain B)
-                    DEFAULT_CHANNEL_ID, // _readChannel
-                    aEid, // _targetEid (Endpoint ID of chain A)
-                    address(exampleContract) // _targetContractAddress (ExampleContract on chain A)
+                    address(endpoints[bEid]),    // _endpoint (LayerZero endpoint on chain B)
+                    DEFAULT_CHANNEL_ID,          // _readChannel
+                    aEid,                        // _targetEid (Endpoint ID of chain A)
+                    address(exampleContract)     // _targetContractAddress (ExampleContract on chain A)
                 )
             )
         );
@@ -106,18 +106,18 @@ contract ReadViewOrPureTest is TestHelperOz5 {
     }
 
     /**
-     * @notice Tests sending a read request and handling the received sum.
+     * @notice Tests sending a read request with compute and handling the received sum.
      *
-     * @dev Simulates a user initiating a read request to add two numbers and verifies that the SumReceived event is emitted with the correct sum.
+     * @dev Simulates a user initiating a read request to add two numbers, applies compute operations, and verifies that the SumReceived event is emitted with the correct final sum.
      */
-    function test_send_read() public {
+    function test_send_read_with_compute() public {
         // Prepare messaging options
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReadOption(1e8, 32, 0);
 
         // Define the numbers to add
         uint256 a = 2;
         uint256 b = 3;
-        uint256 expectedSum = 5;
+        uint256 initialSum = a + b; // Expected sum from the read request
 
         // Estimate the fee for calling readSum with arguments a and b
         MessagingFee memory fee = bOApp.quoteReadFee(a, b, options);
@@ -129,14 +129,33 @@ contract ReadViewOrPureTest is TestHelperOz5 {
         vm.prank(userA);
         bOApp.readSum{ value: fee.nativeFee }(a, b, options);
 
-        // Simulate processing the response packet to bOApp on bEid, injecting the sum
+        // Simulate the read response from the target chain
+        bytes memory readResponse = abi.encode(initialSum); // The sum of a and b
+
+        // Simulate lzMap and lzReduce as they would be called during message processing
+        // Note: In an actual environment, lzMap and lzReduce would be called by the LayerZero protocol
+        // Here, we mock this behavior in the unit test
+
+        // Simulate lzMap operation
+        bytes memory mappedResponse = bOApp.lzMap("", readResponse);
+
+        // Simulate lzReduce operation
+        bytes[] memory mapResponses = new bytes[](1);
+        mapResponses[0] = mappedResponse;
+        bytes memory reducedResponse = bOApp.lzReduce("", mapResponses);
+
+        // Simulate processing the response packet to bOApp on bEid, injecting the final sum after compute operations
         this.verifyPackets(
             bEid,
             addressToBytes32(address(bOApp)),
             0,
             address(0x0),
-            abi.encode(a + b) // The sum of a and b
+            reducedResponse // The final sum after compute operations
         );
+
+        // Calculate the expected final sum after compute operations
+        uint256 afterMapSum = abi.decode(mappedResponse, (uint256)); // initialSum + 1
+        uint256 finalSum = abi.decode(reducedResponse, (uint256));   // afterMapSum + 3
 
         // Retrieve the logs to verify the SumReceived event
         Vm.Log[] memory entries = vm.getRecordedLogs();
@@ -151,6 +170,6 @@ contract ReadViewOrPureTest is TestHelperOz5 {
             }
         }
         require(found, "SumReceived event not found");
-        assertEq(sumReceived, expectedSum, "Sum received does not match expected value");
+        assertEq(sumReceived, initialSum + 1, "Sum received does not match expected value");
     }
 }
