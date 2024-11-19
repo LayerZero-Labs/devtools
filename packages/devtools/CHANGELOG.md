@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools
 
+## 0.4.1
+
+### Patch Changes
+
+- 354ff5e: Move the wiring logic into a flow
+- fce2cfb: Adding optional metadata property to OmniTransaction to improve logging
+
 ## 0.4.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-evm",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
   "keywords": [
     "LayerZero",
@@ -40,7 +40,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~4.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~5.0.0",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2"

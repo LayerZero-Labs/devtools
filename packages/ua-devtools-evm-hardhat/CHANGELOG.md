@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.1
+
+### Patch Changes
+
+- 354ff5e: Move the wiring logic into a flow
+- Updated dependencies [354ff5e]
+- Updated dependencies [fce2cfb]
+  - @layerzerolabs/devtools@0.4.1
+
 ## 6.0.0
 
 ### Minor Changes
