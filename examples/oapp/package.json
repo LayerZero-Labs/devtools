@@ -43,6 +43,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "~18.18.14",
     "chai": "^4.4.1",
+    "concurrently": "~9.1.0",
     "dotenv": "^16.4.1",
     "eslint": "^8.55.0",
     "eslint-plugin-jest-extended": "~2.0.0",

@@ -146,6 +146,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -254,6 +257,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
@@ -362,6 +368,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -476,6 +485,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.1
@@ -587,6 +599,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -794,6 +809,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -935,6 +953,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -1049,6 +1070,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.4.1
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -1169,6 +1193,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -1277,6 +1304,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
       dotenv:
         specifier: ^16.4.1
         version: 16.4.5
@@ -10577,6 +10607,20 @@ packages:
       typedarray: 0.0.6
     dev: true
 
+  /concurrently@9.1.0:
+    resolution: {integrity: sha512-VxkzwMAn4LP7WyMnJNbHN5mKV9L2IbyDjpzemKr99sXNR3GqRNMMHdm7prV1ws9wg7ETj6WUkNOigZVsptwbgg==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      lodash: 4.17.21
+      rxjs: 7.8.1
+      shell-quote: 1.8.1
+      supports-color: 8.1.1
+      tree-kill: 1.2.2
+      yargs: 17.7.2
+    dev: true
+
   /config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
     dependencies:
@@ -16752,6 +16796,12 @@ packages:
 
   /rustbn.js@0.3.0:
     resolution: {integrity: sha512-RXLW0TSDBFlujBgq/ZdWa6ADGKiEFZgSqRdCcSXy8XiPqLPApKwaJjf14ImspysQm2mI8hA3EBWN+IOQReqwtA==}
+    dev: true
+
+  /rxjs@7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+    dependencies:
+      tslib: 2.6.3
     dev: true
 
   /safe-array-concat@1.1.0:
