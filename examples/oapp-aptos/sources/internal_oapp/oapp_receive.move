@@ -65,7 +65,7 @@ module oapp::oapp_receive {
     public fun next_nonce(src_eid: u32, sender: vector<u8>): u64 {
         next_nonce_impl(src_eid, to_bytes32(sender))
     }
-
+ 
     // ==================================================== Helper ====================================================
 
     fun is_native_token(token: &FungibleAsset): bool {
