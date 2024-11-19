@@ -4,7 +4,6 @@ pragma solidity ^0.8.20;
 // Import necessary interfaces and contracts
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-
 import { Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { OAppRead } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppRead.sol";
@@ -24,7 +23,6 @@ interface IExampleContract {
 /// @title ReadViewOrPureAndCompute
 /// @notice An OAppRead contract example that calls a view or pure function from another chain and performs compute operations.
 contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOptionsType3 {
-    
     /// @notice Emitted when the sum is received after compute operations.
     ///
     /// @param sum The final result after computation.
@@ -142,15 +140,6 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
             to: targetContractAddress, // Address of the contract to call
             callData: callData // Encoded function call data
         });
-        readRequests[1] = EVMCallRequestV1({
-            appRequestLabel: 1, // Application-specific label for tracking
-            targetEid: targetEid, // Endpoint ID of the target chain
-            isBlockNum: false, // Use timestamp instead of block number
-            blockNumOrTimestamp: uint64(block.timestamp), // Timestamp to read the state at
-            confirmations: 15, // Number of confirmations to wait for finality
-            to: targetContractAddress, // Address of the contract to call
-            callData: callData // Encoded function call data
-        });
 
         // Create an EVMCallComputeV1 struct with a compute request
         EVMCallComputeV1 memory computeRequest;
@@ -175,7 +164,10 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
      *
      * @return The transformed data after the map operation.
      */
-    function lzMap(bytes calldata /*_request*/, bytes calldata _response) external pure override returns (bytes memory) {
+    function lzMap(
+        bytes calldata /*_request*/,
+        bytes calldata _response
+    ) external pure override returns (bytes memory) {
         uint256 sum = abi.decode(_response, (uint256));
         sum += 1; // Example computation: increment the sum by 1
         return abi.encode(sum);
@@ -189,7 +181,10 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
      *
      * @return The final result after the reduce operation.
      */
-    function lzReduce(bytes calldata /*_cmd*/, bytes[] calldata _responses) external pure override returns (bytes memory) {
+    function lzReduce(
+        bytes calldata /*_cmd*/,
+        bytes[] calldata _responses
+    ) external pure override returns (bytes memory) {
         uint256 totalSum = 0;
         for (uint256 i = 0; i < _responses.length; i++) {
             require(_responses[i].length == 32, "Invalid response length");
@@ -207,10 +202,10 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
      * @param _message The encoded sum received.
      */
     function _lzReceive(
-        Origin calldata, /*_origin*/
-        bytes32, /*_guid*/
+        Origin calldata /*_origin*/,
+        bytes32 /*_guid*/,
         bytes calldata _message,
-        address, /*_executor*/
+        address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
         // Decode the sum received
