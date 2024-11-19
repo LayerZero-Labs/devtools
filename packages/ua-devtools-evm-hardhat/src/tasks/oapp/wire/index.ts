@@ -18,6 +18,7 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
 
 import type { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
+import { writeFileSync } from 'fs'
 
 import './subtask.configure'
 
@@ -49,6 +50,10 @@ interface TaskArgs {
      * This can be useful in situations where a completely sifferent signing logic is required
      */
     signAndSendSubtask?: string
+    /**
+     * Output filename for the generated transactions.
+     */
+    outputFilename?: string
 }
 
 const action: ActionType<TaskArgs> = async (
@@ -63,6 +68,7 @@ const action: ActionType<TaskArgs> = async (
         loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
         configureSubtask = SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
         signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
+        outputFilename,
     },
     hre
 ): Promise<SignAndSendResult> => {
@@ -96,13 +102,18 @@ const action: ActionType<TaskArgs> = async (
         logger,
         // We use hardhat subtasks to provide the option to override certain behaviors on a more granular level
         executeConfig: ({ graph }) => hre.run(configureSubtask, { graph } satisfies SubtaskConfigureTaskArgs),
-        signAndSend: ({ transactions }) =>
-            hre.run(signAndSendSubtask, {
+        signAndSend: ({ transactions }) => {
+            if (outputFilename) {
+                logger.debug(`Writing transactions to ${outputFilename}`)
+                writeFileSync(outputFilename, JSON.stringify(transactions, null, 2))
+            }
+            return hre.run(signAndSendSubtask, {
                 ci,
                 logger,
                 createSigner,
                 transactions,
-            } satisfies SignAndSendTaskArgs),
+            } satisfies SignAndSendTaskArgs)
+        },
     })
 
     // And run the wire flow
@@ -145,3 +156,4 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     )
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
+    .addParam('outputFilename', 'Output filename for the generated transactions', undefined, types.string, true)
