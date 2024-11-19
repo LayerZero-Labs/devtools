@@ -39,9 +39,9 @@
   "scripts": {
     "clean": "rimraf .turbo cache out artifacts",
     "compile": "$npm_execpath compile:forge",
-    "compile:forge": "$npm_execpath forge build",
+    "compile:forge": "forge build",
     "test": "$npm_execpath test:forge",
-    "test:forge": "$npm_execpath forge test"
+    "test:forge": "forge test"
   },
   "devDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
