@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf artifacts cache out",
+    "clean": "rm -rf artifacts artifacts-zk cache out",
     "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:hardhat:zksync",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",

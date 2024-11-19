@@ -2,7 +2,7 @@
   "extends": ["//"],
   "pipeline": {
     "compile": {
-      "outputs": ["artifacts*/**", "cache*/**", "out/**"]
+      "outputs": ["artifacts/**", "artifacts-zk/**", "out/**"]
     }
   }
 }
