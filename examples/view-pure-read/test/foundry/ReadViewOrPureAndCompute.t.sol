@@ -71,10 +71,10 @@ contract ReadViewOrPureAndComputeTest is TestHelperOz5 {
             _deployOApp(
                 type(ReadViewOrPureAndCompute).creationCode,
                 abi.encode(
-                    address(endpoints[bEid]),    // _endpoint (LayerZero endpoint on chain B)
-                    DEFAULT_CHANNEL_ID,          // _readChannel
-                    aEid,                        // _targetEid (Endpoint ID of chain A)
-                    address(exampleContract)     // _targetContractAddress (ExampleContract on chain A)
+                    address(endpoints[bEid]), // _endpoint (LayerZero endpoint on chain B)
+                    DEFAULT_CHANNEL_ID, // _readChannel
+                    aEid, // _targetEid (Endpoint ID of chain A)
+                    address(exampleContract) // _targetContractAddress (ExampleContract on chain A)
                 )
             )
         );
@@ -152,10 +152,6 @@ contract ReadViewOrPureAndComputeTest is TestHelperOz5 {
             address(0x0),
             reducedResponse // The final sum after compute operations
         );
-
-        // Calculate the expected final sum after compute operations
-        uint256 afterMapSum = abi.decode(mappedResponse, (uint256)); // initialSum + 1
-        uint256 finalSum = abi.decode(reducedResponse, (uint256));   // afterMapSum + 3
 
         // Retrieve the logs to verify the SumReceived event
         Vm.Log[] memory entries = vm.getRecordedLogs();
