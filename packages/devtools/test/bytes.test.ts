@@ -120,7 +120,16 @@ describe('bytes', () => {
                     fc.uint8Array({ minLength: 1, maxLength: 32 }),
                     fc.uint8Array({ minLength: 1, maxLength: 32 }),
                     (a, b) => {
-                        fc.pre(a.length !== b.length || a.some((v, i) => v !== b[i]) || b.some((v, i) => v !== a[i]))
+                        // We need to filter out matching arrays
+                        fc.pre(
+                            // We walk over the first array and check that there is at least one non-matching element
+                            //
+                            // We default any missing (undefined) values in the second array to 0
+                            // since any leading zeros are equal to undefined
+                            a.some((v, i) => v !== b[i] || 0) ||
+                                // And we do the same for the second array (since we don't know which one lis longer)
+                                b.some((v, i) => v !== a[i] || 0)
+                        )
 
                         expect(areBytes32Equal(a, b)).toBe(false)
                     }
@@ -134,7 +143,15 @@ describe('bytes', () => {
                     fc.uint8Array({ minLength: 1, maxLength: 32 }),
                     fc.uint8Array({ minLength: 1, maxLength: 32 }),
                     (a, b) => {
-                        fc.pre(a.length !== b.length || a.some((v, i) => v !== b[i]) || b.some((v, i) => v !== a[i]))
+                        fc.pre(
+                            // We walk over the first array and check that there is at least one non-matching element
+                            //
+                            // We default any missing (undefined) values in the second array to 0
+                            // since any leading zeros are equal to undefined
+                            a.some((v, i) => v !== b[i]) ||
+                                // And we do the same for the second array (since we don't know which one lis longer)
+                                b.some((v, i) => v !== a[i])
+                        )
 
                         expect(areBytes32Equal(a, makeBytes32(b))).toBe(false)
                     }
