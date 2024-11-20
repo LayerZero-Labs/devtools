@@ -24,8 +24,7 @@ describe('UniswapV3QuoteDemo Test', function () {
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
 
-        ownerA = signers.at(0)!
-        endpointOwner = signers.at(1)!
+        ;[ownerA, endpointOwner] = signers
 
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
