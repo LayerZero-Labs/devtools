@@ -9,5 +9,7 @@ artifacts/*
 !artifacts/OFTComposeMsgCodec.sol/
 !artifacts/OFTMsgCodec.sol/
 !artifacts/OFT.sol/
+!artifacts/OFTAlt.sol/
+!artifacts/OFTAltAdapter.sol/
 !artifacts/OFTAdapter.sol/
 !artifacts/OFTCore.sol/
