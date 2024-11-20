@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
-    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:anchor",
+    "compile": "concurrently -c auto --names forge,hardhat,anchor '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
     "compile:anchor": "anchor build",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
@@ -77,6 +77,7 @@
     "@types/node": "~18.18.14",
     "bs58": "^6.0.0",
     "chai": "^4.4.1",
+    "concurrently": "~9.1.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.55.0",
     "eslint-plugin-jest-extended": "~2.0.0",
