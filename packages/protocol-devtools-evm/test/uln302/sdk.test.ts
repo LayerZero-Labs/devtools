@@ -196,7 +196,9 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockReset()
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
-                        await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnConfig)).resolves.toBeTruthy()
+                        await expect(
+                            ulnSdk.hasAppUlnConfig(eid, oapp, ulnConfig, Uln302ConfigType.Receive)
+                        ).resolves.toBeTruthy()
                     }
                 ),
                 { numRuns: 20 }
@@ -215,10 +217,15 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...extra,
-                                ...ulnConfig,
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...extra,
+                                    ...ulnConfig,
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeTruthy()
                     }
                 ),
@@ -242,7 +249,9 @@ describe('uln302/sdk', () => {
                     getAppUlnConfigSpy.mockReset()
                     getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
-                    await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig)).resolves.toBeTruthy()
+                    await expect(
+                        ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig, Uln302ConfigType.Receive)
+                    ).resolves.toBeTruthy()
                 }),
                 { numRuns: 20 }
             )
@@ -270,7 +279,9 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockReset()
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
-                        await expect(ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig)).resolves.toBeFalsy()
+                        await expect(
+                            ulnSdk.hasAppUlnConfig(eid, oapp, ulnUserConfig, Uln302ConfigType.Receive)
+                        ).resolves.toBeFalsy()
                     }
                 ),
                 { numRuns: 20 }
@@ -288,11 +299,16 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                requiredDVNs: ulnConfig.requiredDVNs.map(addChecksum),
-                                optionalDVNs: ulnConfig.optionalDVNs.map(addChecksum),
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    requiredDVNs: ulnConfig.requiredDVNs.map(addChecksum),
+                                    optionalDVNs: ulnConfig.optionalDVNs.map(addChecksum),
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeTruthy()
                     }
                 ),
@@ -311,11 +327,16 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                requiredDVNs: ulnConfig.requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),
-                                optionalDVNs: ulnConfig.optionalDVNs.map(addChecksum).sort(compareBytes32Ascending),
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    requiredDVNs: ulnConfig.requiredDVNs.map(addChecksum).sort(compareBytes32Ascending),
+                                    optionalDVNs: ulnConfig.optionalDVNs.map(addChecksum).sort(compareBytes32Ascending),
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeTruthy()
                     }
                 ),
@@ -337,10 +358,15 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                confirmations,
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    confirmations,
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeFalsy()
                     }
                 ),
@@ -362,10 +388,15 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                optionalDVNThreshold,
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    optionalDVNThreshold,
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeFalsy()
                     }
                 ),
@@ -385,10 +416,15 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                requiredDVNs: [...ulnConfig.requiredDVNs, ...extraRequiredDVNs],
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    requiredDVNs: [...ulnConfig.requiredDVNs, ...extraRequiredDVNs],
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeFalsy()
                     }
                 ),
@@ -408,10 +444,15 @@ describe('uln302/sdk', () => {
                         getAppUlnConfigSpy.mockResolvedValue(ulnConfig)
 
                         await expect(
-                            ulnSdk.hasAppUlnConfig(eid, oapp, {
-                                ...ulnConfig,
-                                optionalDVNs: [...ulnConfig.optionalDVNs, ...extraOptionalDVNs],
-                            })
+                            ulnSdk.hasAppUlnConfig(
+                                eid,
+                                oapp,
+                                {
+                                    ...ulnConfig,
+                                    optionalDVNs: [...ulnConfig.optionalDVNs, ...extraOptionalDVNs],
+                                },
+                                Uln302ConfigType.Receive
+                            )
                         ).resolves.toBeFalsy()
                     }
                 ),

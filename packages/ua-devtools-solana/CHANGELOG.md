@@ -1,5 +1,38 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.1
+
+### Patch Changes
+
+- 8cd6a65: Fix Squads Multisig Support
+
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+- Updated dependencies [4f5cef2]
+  - @layerzerolabs/protocol-devtools-solana@4.0.0
+  - @layerzerolabs/protocol-devtools@1.1.0
+  - @layerzerolabs/ua-devtools@3.0.0
+  - @layerzerolabs/devtools@0.4.0
+  - @layerzerolabs/devtools-solana@1.0.0
+
+## 3.0.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/protocol-devtools-solana@3.0.0
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/devtools-solana@1.0.0
+  - @layerzerolabs/ua-devtools@2.0.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 2.0.0
 
 ### Major Changes

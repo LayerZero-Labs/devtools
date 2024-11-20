@@ -22,6 +22,7 @@ node_modules/
 
 # Build artifacts
 dist
+*.dbg.json
 
 # Github actions
 .netrc

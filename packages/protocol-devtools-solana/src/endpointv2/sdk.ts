@@ -1,12 +1,16 @@
 import { MessagingFee } from '@layerzerolabs/protocol-devtools'
 import type {
     IEndpointV2,
+    IUlnRead,
     SetConfigParam,
     Uln302ConfigType,
     Uln302ExecutorConfig,
     Uln302SetUlnConfig,
     Uln302UlnConfig,
     Uln302UlnUserConfig,
+    UlnReadSetUlnConfig,
+    UlnReadUlnConfig,
+    UlnReadUlnUserConfig,
 } from '@layerzerolabs/protocol-devtools'
 import {
     formatEid,
@@ -82,6 +86,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.debug(`Getting Uln302 SDK for address ${address}`)
 
         return new Uln302(this.connection, { eid: this.point.eid, address }, this.userAccount)
+    }
+
+    getUlnReadSDK(_address: OmniAddress): Promise<IUlnRead> {
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     @AsyncRetriable()
@@ -378,6 +386,14 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         throw new TypeError(`setConfig() not implemented on Solana Endpoint SDK`)
     }
 
+    setUlnReadConfig(
+        _oapp: OmniAddress,
+        _uln: OmniAddress,
+        _setUlnConfig: UlnReadSetUlnConfig[]
+    ): Promise<OmniTransaction[]> {
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
+    }
+
     async setExecutorConfig(
         oapp: OmniAddress,
         uln: OmniAddress,
@@ -456,6 +472,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
     }
 
     /**
+     * @see {@link IUlnRead.getAppUlnConfig}
+     */
+    getAppUlnReadConfig(_oapp: OmniAddress, _uln: OmniAddress, _channelId: number): Promise<UlnReadUlnConfig> {
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
+    }
+
+    /**
      * @see {@link IEndpointV2.hasAppUlnConfig}
      */
     async hasAppUlnConfig(
@@ -471,6 +494,18 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
         const ulnSdk = await this.getUln302SDK(uln)
         return ulnSdk.hasAppUlnConfig(eid, oapp, config, type)
+    }
+
+    /**
+     * @see {@link IEndpointV2.hasAppUlnReadConfig}
+     */
+    hasAppUlnReadConfig(
+        _oapp: OmniAddress,
+        _uln: OmniAddress,
+        _channelId: number,
+        _config: UlnReadUlnUserConfig
+    ): Promise<boolean> {
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     @AsyncRetriable()
@@ -495,6 +530,10 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
             configType: type === 'send' ? SetConfigType.SEND_ULN : SetConfigType.RECEIVE_ULN,
             config: ulnSdk.encodeUlnConfig(ulnConfig),
         }))
+    }
+
+    getUlnReadConfigParams(_uln: OmniAddress, _setUlnConfig: UlnReadSetUlnConfig[]): Promise<SetConfigParam[]> {
+        throw new Error('ULN Read functionality is not supported for Solana programs.')
     }
 
     async getExecutorConfigParams(

@@ -1,10 +1,13 @@
-import { EXAMPLES, AVAILABLE_PACKAGE_MANAGERS } from '@/config'
+import { getExamples, getAvailablePackageManagers } from '@/config'
 import prompts, { type Choice } from 'prompts'
 import { handlePromptState, isDirectory, isFile } from '@layerzerolabs/io-devtools'
 import { resolve } from 'path'
 import type { Config } from '@/types'
 
 export const promptForConfig = (config: Partial<Config> = {}): Promise<Config> => {
+    const examples = getExamples()
+    const packageManagers = getAvailablePackageManagers()
+
     return prompts([
         {
             onState: handlePromptState,
@@ -24,21 +27,25 @@ export const promptForConfig = (config: Partial<Config> = {}): Promise<Config> =
             type: 'select',
             name: 'example',
             message: 'Which example would you like to use as a starting point?',
-            choices: EXAMPLES.map((example) => ({
-                title: example.label,
-                value: example,
-                selected: example.id === config.example?.id,
-            })).sort(sortBySelected),
+            choices: examples
+                .map((example) => ({
+                    title: example.label,
+                    value: example,
+                    selected: example.id === config.example?.id,
+                }))
+                .sort(sortBySelected),
         },
         {
             onState: handlePromptState,
             type: 'select',
             name: 'packageManager',
-            choices: AVAILABLE_PACKAGE_MANAGERS.map((packageManager) => ({
-                title: packageManager.label,
-                value: packageManager,
-                selected: packageManager.id === config.packageManager?.id,
-            })).sort(sortBySelected),
+            choices: packageManagers
+                .map((packageManager) => ({
+                    title: packageManager.label,
+                    value: packageManager,
+                    selected: packageManager.id === config.packageManager?.id,
+                }))
+                .sort(sortBySelected),
             message: 'What package manager would you like to use in your project?',
         },
     ])

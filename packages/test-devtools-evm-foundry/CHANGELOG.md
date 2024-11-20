@@ -1,5 +1,49 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 5.1.0
+
+### Minor Changes
+
+- 1b1b3b4: Added EndpointV2Alt support to TestHelper"
+
+### Patch Changes
+
+- @layerzerolabs/oapp-evm@0.3.0
+- @layerzerolabs/oft-evm@3.0.0
+
+## 5.0.0
+
+### Patch Changes
+
+- Updated dependencies [0b6d876]
+  - @layerzerolabs/oapp-evm@0.3.0
+  - @layerzerolabs/oft-evm@3.0.0
+
+## 4.0.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+- Updated dependencies [e2395b5]
+  - @layerzerolabs/oapp-evm@0.2.0
+  - @layerzerolabs/oft-evm@2.0.0
+
+## 3.0.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/oapp-evm@0.1.0
+  - @layerzerolabs/oft-evm@1.0.0
+
 ## 2.0.0
 
 ### Major Changes

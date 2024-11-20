@@ -1,4 +1,7 @@
+import { Contract } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
+
+import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
 const contractName = 'MyOFTAdapterUpgradeable'
 
@@ -7,7 +10,8 @@ const deploy: DeployFunction = async (hre) => {
     const signer = (await hre.ethers.getSigners())[0]
     console.log(`deploying ${contractName} on network: ${hre.network.name} with ${signer.address}`)
 
-    const endpointV2Deployment = await hre.deployments.get('EndpointV2')
+    const { address, abi } = getDeploymentAddressAndAbi(hre.network.name, 'EndpointV2')
+    const endpointV2Deployment = new Contract(address, abi, signer)
     try {
         const proxy = await hre.ethers.getContract('MyOFTUpgradeable')
         console.log(`Proxy: ${proxy.address}`)
@@ -22,7 +26,7 @@ const deploy: DeployFunction = async (hre) => {
         waitConfirmations: 1,
         skipIfAlreadyDeployed: false,
         proxy: {
-            checkABIConflict: false,
+            proxyContract: 'OpenZeppelinTransparentProxy',
             owner: signer.address,
             execute: {
                 init: {

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import { ExecutorOptions } from "@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol";
+import { ExecutorOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol";
 import { UlnOptions } from "@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol";
 
 contract UlnOptionsMock {
@@ -55,6 +55,17 @@ contract OptionsHelper {
         return this.decodeLzComposeOption(option);
     }
 
+    function _parseExecutorLzReadOption(
+        bytes memory _options
+    ) internal view returns (uint128 gas, uint32 size, uint128 value) {
+        (bool exist, bytes memory option) = _getExecutorOptionByOptionType(
+            _options,
+            ExecutorOptions.OPTION_TYPE_LZREAD
+        );
+        require(exist, "OptionsHelper: lzRead option not found");
+        return this.decodeLzReadOption(option);
+    }
+
     function _executorOptionExists(
         bytes memory _options,
         uint8 _executorOptionType
@@ -73,6 +84,7 @@ contract OptionsHelper {
         // Used to accumulate the total gas and value for the chained executor options
         uint128 executorGas;
         uint128 executorValue;
+        uint32 calldataSize;
 
         // Accumulated payload
         bytes memory payload = new bytes(0);
@@ -86,6 +98,7 @@ contract OptionsHelper {
                 uint128 value;
                 bytes32 receiver;
                 uint16 index;
+                uint32 size;
                 if (optionType == ExecutorOptions.OPTION_TYPE_LZRECEIVE) {
                     (gas, value) = this.decodeLzReceiveOption(op);
                     executorGas += gas;
@@ -101,6 +114,12 @@ contract OptionsHelper {
                     executorGas += gas;
                     executorValue += value;
                     payload = abi.encodePacked(index, executorGas, executorValue);
+                } else if (optionType == ExecutorOptions.OPTION_TYPE_LZREAD) {
+                    (gas, size, value) = this.decodeLzReadOption(op);
+                    executorValue += value;
+                    executorGas += gas;
+                    calldataSize += size;
+                    payload = abi.encodePacked(executorGas,calldataSize, executorValue);
                 }
             }
             cursor = nextCursor;
@@ -131,5 +150,11 @@ contract OptionsHelper {
         bytes calldata _option
     ) external pure returns (uint16 index, uint128 gas, uint128 value) {
         return ExecutorOptions.decodeLzComposeOption(_option);
+    }
+
+    function decodeLzReadOption(
+        bytes calldata _option
+    ) external pure returns (uint128 gas, uint32 size, uint128 value) {
+        return ExecutorOptions.decodeLzReadOption(_option);
     }
 }
