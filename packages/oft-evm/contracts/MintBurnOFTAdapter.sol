@@ -10,7 +10,7 @@ import { OFTCore } from "./OFTCore.sol";
 
 /**
  * @title MintBurnOFTAdapter
- * @notice A variant of the standard OFT Adapter that uses mint and burn mechanisms for existing ERC20 token transfers.
+ * @notice A variant of the standard OFT Adapter that uses an existing ERC20's mint and burn mechanisms for cross-chain transfers.
  *
  * @dev Inherits from OFTCore and provides implementations for _debit and _credit functions using a mintable and burnable token.
  */

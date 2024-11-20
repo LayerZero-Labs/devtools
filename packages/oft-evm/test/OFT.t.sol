@@ -524,6 +524,28 @@ contract OFTTest is TestHelperOz5 {
         vm.expectRevert();
         eMinterBurnerMock.burn(attacker, initialBalance);
     }
+    
+    function test_mint_burn_oft_adapter_debit() public virtual {
+        uint256 amountToSendLD = 1 ether;
+        uint256 minAmountToCreditLD = 1 ether;
+        uint32 dstEid = E_EID;
+
+        vm.prank(userE);
+        vm.expectRevert(
+            abi.encodeWithSelector(IOFT.SlippageExceeded.selector, amountToSendLD, minAmountToCreditLD + 1)
+        );
+        eMintBurnOFTAdapter.asMintBurnOFTAdapterMock().debit(amountToSendLD, minAmountToCreditLD + 1, dstEid);
+
+        vm.prank(userE);
+        (uint256 amountDebitedLD, uint256 amountToCreditLD) = eMintBurnOFTAdapter.asMintBurnOFTAdapterMock().debit(
+            amountToSendLD,
+            minAmountToCreditLD,
+            dstEid
+        );
+
+        assertEq(amountDebitedLD, amountToSendLD);
+        assertEq(amountToCreditLD, amountToSendLD);
+    }
 
     function test_mint_burn_oft_adapter_credit() public {
         uint256 amountToCreditLD = 1 ether;
