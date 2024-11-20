@@ -58,8 +58,8 @@
     "@layerzerolabs/devtools": "~0.4.1",
     "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/io-devtools": "~0.1.13",
-    "@layerzerolabs/lz-definitions": "^3.0.12",
-    "@layerzerolabs/lz-evm-sdk-v1": "^3.0.12",
+    "@layerzerolabs/lz-definitions": "^3.0.15",
+    "@layerzerolabs/lz-evm-sdk-v1": "^3.0.15",
     "@layerzerolabs/test-devtools": "~0.4.0",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.0",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
@@ -76,7 +76,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.4.4"
+    "typescript": "^5.6.3"
   },
   "peerDependencies": {
     "@ethersproject/abi": "^5.7.0",

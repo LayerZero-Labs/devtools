@@ -45,9 +45,9 @@
     "@layerzerolabs/devtools": "~0.4.0",
     "@layerzerolabs/devtools-solana": "~1.0.0",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-definitions": "^3.0.12",
-    "@layerzerolabs/lz-solana-sdk-v2": "^3.0.0",
-    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@layerzerolabs/lz-definitions": "^3.0.15",
+    "@layerzerolabs/lz-solana-sdk-v2": "^3.0.15",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.15",
     "@layerzerolabs/protocol-devtools": "~1.1.0",
     "@layerzerolabs/test-devtools": "~0.4.0",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
@@ -63,7 +63,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.4.4",
+    "typescript": "^5.6.3",
     "zod": "^3.22.4"
   },
   "peerDependencies": {

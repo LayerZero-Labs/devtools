@@ -35,7 +35,7 @@
     "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/devtools-evm-hardhat": "~2.0.0",
     "@layerzerolabs/io-devtools": "~0.1.12",
-    "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-definitions": "^3.0.15",
     "@layerzerolabs/protocol-devtools": "~1.1.0",
     "@layerzerolabs/protocol-devtools-evm": "~3.0.0",
     "@layerzerolabs/ua-devtools": "~3.0.0",
@@ -47,7 +47,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.4.4"
+    "typescript": "^5.6.3"
   },
   "peerDependencies": {
     "@ethersproject/providers": "^5.7.2",

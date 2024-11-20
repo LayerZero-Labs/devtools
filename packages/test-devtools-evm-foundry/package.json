@@ -18,16 +18,16 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.15",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.15",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.15",
     "@layerzerolabs/toolbox-foundry": "^0.1.9",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "@types/node": "~18.18.14",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.4"
+    "typescript": "^5.6.3"
   },
   "peerDependencies": {
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
