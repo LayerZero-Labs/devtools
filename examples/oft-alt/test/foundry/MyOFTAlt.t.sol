@@ -101,8 +101,6 @@ contract MyOFTAltTest is TestHelperOz5 {
             )
         );
 
-
-
         // config and wire the ofts
         address[] memory ofts = new address[](3);
         ofts[0] = address(aOFT);
@@ -266,7 +264,8 @@ contract MyOFTAltTest is TestHelperOz5 {
             amountCreditLD,
             abi.encodePacked(addressToBytes32(msg.sender), composeMsg)
         );
-        (uint64 nonce_, uint32 srcEid_, uint256 amountCreditLD_, bytes32 composeFrom_, bytes memory composeMsg_) = this.decodeOFTComposeMsgCodec(message);
+        (uint64 nonce_, uint32 srcEid_, uint256 amountCreditLD_, bytes32 composeFrom_, bytes memory composeMsg_) = this
+            .decodeOFTComposeMsgCodec(message);
 
         assertEq(nonce_, nonce);
         assertEq(srcEid_, srcEid);
@@ -317,7 +316,10 @@ contract MyOFTAltTest is TestHelperOz5 {
     }
 
     function test_toLD(uint64 amountSD) public {
-        assertEq(amountSD * MyOFTAltMock(address(aOFT)).decimalConversionRate(), aOFT.asOFTAltMock().toLD(uint64(amountSD)));
+        assertEq(
+            amountSD * MyOFTAltMock(address(aOFT)).decimalConversionRate(),
+            aOFT.asOFTAltMock().toLD(uint64(amountSD))
+        );
     }
 
     function test_toSD(uint256 amountLD) public {
