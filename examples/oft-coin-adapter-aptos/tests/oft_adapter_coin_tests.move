@@ -9,6 +9,7 @@ module oft::oft_adapter_coin_tests {
     use std::option;
     use std::primary_fungible_store;
     use std::string::utf8;
+    use std::timestamp;
     use std::vector;
 
     use endpoint_v2::test_helpers::setup_layerzero_for_test;
@@ -16,7 +17,10 @@ module oft::oft_adapter_coin_tests {
     use endpoint_v2_common::native_token_test_helpers::mint_native_token_for_test;
     use oft::oapp_core;
     use oft::oapp_store::OAPP_ADDRESS;
+    use oft::oft::remove_dust;
     use oft::oft_adapter_coin::{Self, escrow_address, PlaceholderCoin};
+    use oft::oft_impl_config;
+    use oft::oft_store;
     use oft_common::oft_limit::new_unbounded_oft_limit;
 
     const MAXU64: u64 = 0xffffffffffffffff;
@@ -36,12 +40,11 @@ module oft::oft_adapter_coin_tests {
 
         // Initialize
         setup_layerzero_for_test(@simple_msglib, LOCAL_EID, LOCAL_EID);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
         oft::oapp_test_helper::init_oapp();
-        oft_adapter_coin::initialize(
-            oft_account,
-            6,
-        );
+
+        oft_store::init_module_for_test();
+        oft_adapter_coin::init_module_for_test();
+        oft_impl_config::init_module_for_test();
 
         (mint_cap, burn_cap)
     }
@@ -57,23 +60,26 @@ module oft::oft_adapter_coin_tests {
 
         let coin = coin::mint<PlaceholderCoin>(amount_ld, &mint_cap);
         let (sent, received) = oft_adapter_coin::debit_coin(
+            @444,
             &mut coin,
             min_amount_ld,
             dst_eid,
         );
 
-        // amount sent and received should reflect the amount debited
-        assert!(sent == 123456700, 0);
-        assert!(received == 123456700, 0);
+        // Amount sent and received should reflect the amount debited
+        let dust_removed = remove_dust(amount_ld);
+        assert!(sent == dust_removed, 0);
+        assert!(received == dust_removed, 0);
 
-        // no remaining balance in debited account
+        // Only dust remains in debited account
+        let dust_left = coin::value(&coin);
         let remaining_balance = coin::value(&coin);
-        assert!(remaining_balance == 00, 0);
+        assert!(remaining_balance == dust_left, 0);
         coin::burn(coin, &burn_cap);
 
-        // escrow balance should increase to match
+        // sEcrow balance should increase to match
         let balance = coin::balance<PlaceholderCoin>(escrow_address());
-        assert!(balance == 123456700, 0);
+        assert!(balance == dust_removed, 0);
 
         coin::destroy_mint_cap(mint_cap);
         coin::destroy_burn_cap(burn_cap);
@@ -88,9 +94,9 @@ module oft::oft_adapter_coin_tests {
         let src_eid = 12345;
 
         // debit first to make sure account has balance
-
         let deposit = coin::mint(amount_ld, &mint_cap);
         oft_adapter_coin::debit_coin(
+            @444,
             &mut deposit,
             0,
             src_eid,
@@ -98,7 +104,8 @@ module oft::oft_adapter_coin_tests {
         coin::burn(deposit, &burn_cap);
 
         let balance = coin::balance<PlaceholderCoin>(escrow_address());
-        assert!(balance == amount_ld, 0);
+        let dust_removed = remove_dust(amount_ld);
+        assert!(balance == dust_removed, 0);
 
         let to = @555;
         create_account_for_test(to);
@@ -109,16 +116,16 @@ module oft::oft_adapter_coin_tests {
 
         let credited = oft_adapter_coin::credit(
             to,
-            amount_ld,
+            dust_removed,
             src_eid,
             lz_receive_value,
         );
         // amount credited should reflect the amount credited
-        assert!(credited == 123456700, 0);
+        assert!(credited == dust_removed, 0);
 
         // balance should appear in recipient account
         let balance = coin::balance<PlaceholderCoin>(to);
-        assert!(balance == 123456700, 0);
+        assert!(balance == dust_removed, 0);
 
         // escrow balance should be back to 0
         let balance = coin::balance<PlaceholderCoin>(escrow_address());
@@ -180,12 +187,13 @@ module oft::oft_adapter_coin_tests {
         assert!(balance == 0, 0);
 
         let initial_deposit = coin::mint(amount_ld, &mint_cap);
-        oft_adapter_coin::debit_coin(&mut initial_deposit, amount_ld, src_eid);
+        let dust_removed = remove_dust(amount_ld);
+        oft_adapter_coin::debit_coin(@444, &mut initial_deposit, dust_removed, src_eid);
         coin::burn(initial_deposit, &burn_cap);
 
         oft_adapter_coin::credit(
             to,
-            amount_ld,
+            dust_removed,
             src_eid,
             lz_receive_value,
         );
@@ -203,8 +211,9 @@ module oft::oft_adapter_coin_tests {
 
         // shouldn't take a fee
         let (sent, received) = oft_adapter_coin::debit_view(123456700, 100, 2);
-        assert!(sent == 123456700, 0);
-        assert!(received == 123456700, 0);
+        let dust_removed = remove_dust(123456700);
+        assert!(sent == dust_removed, 0);
+        assert!(received == dust_removed, 0);
 
         coin::destroy_mint_cap(mint_cap);
         coin::destroy_burn_cap(burn_cap);
@@ -242,9 +251,9 @@ module oft::oft_adapter_coin_tests {
         // should pass through the options if none configured
         assert!(options == x"1234", 0);
 
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         oapp_core::set_enforced_options(
-            oft_account,
+            oft_admin,
             dst_eid,
             message_type,
             x"00037777"
@@ -285,11 +294,13 @@ module oft::oft_adapter_coin_tests {
     #[test]
     fun test_oft_limit_and_fees() {
         let (mint_cap, burn_cap) = setup();
+
+        timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
         let (limit, fees) = oft_adapter_coin::oft_limit_and_fees(
             123,
             x"1234",
             123,
-            123,
+            100,
             x"1234",
             x"1234",
             x"1234"

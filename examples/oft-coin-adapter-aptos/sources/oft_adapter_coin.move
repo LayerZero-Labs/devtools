@@ -16,11 +16,17 @@ module oft::oft_adapter_coin {
     use std::signer::address_of;
 
     use endpoint_v2_common::bytes32::Bytes32;
-    use oft::oapp_core::combine_options;
+    use oft::oapp_core::{assert_admin, combine_options};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
+    use oft::oft_impl_config;
+    use oft::oft_impl_config::{
+        assert_not_blocklisted, debit_view_with_possible_fee, fee_details_with_possible_fee,
+        redirect_to_admin_if_blocklisted,
+        release_rate_limit_capacity, try_consume_rate_limit_capacity,
+    };
     use oft_common::oft_fee_detail::OftFeeDetail;
-    use oft_common::oft_limit::{new_unbounded_oft_limit, OftLimit};
+    use oft_common::oft_limit::{Self, OftLimit};
 
     friend oft::oft;
     friend oft::oapp_receive;
@@ -30,12 +36,16 @@ module oft::oft_adapter_coin {
 
     // ************************************************* CONFIGURATION *************************************************
 
-    // *Important*: Update this to be an import from the coin implementation and rename all occurrences to be consistent
+    // *Important*: Replace this with an import of the actual Coin struct, and all references to `Placeholder` should be
+    // renamed to match the struct name
     struct PlaceholderCoin {}
+
+    // *Important*: Update this to be the desired shared decimals of the Coin
+    const SHARED_DECIMALS: u8 = 6;
 
     // *********************************************** END CONFIGURATION ***********************************************
 
-    struct OftAdapterCoinStore has key {
+    struct OftImpl has key {
         escrow_extend_ref: ExtendRef,
     }
 
@@ -46,22 +56,28 @@ module oft::oft_adapter_coin {
     public(friend) fun credit(
         to: address,
         amount_ld: u64,
-        _src_eid: u32,
+        src_eid: u32,
         lz_receive_value: Option<FungibleAsset>,
-    ): u64 acquires OftAdapterCoinStore {
+    ): u64 acquires OftImpl {
         // Default implementation does not make special use of LZ Receive Value sent; just deposit to the OFT address
         option::for_each(lz_receive_value, |fa| primary_fungible_store::deposit(OAPP_ADDRESS(), fa));
 
+        // Release rate limit capacity for the pathway (net inflow)
+        release_rate_limit_capacity(src_eid, amount_ld);
+
         // unlock the amount from escrow
-        let escrow_signer = &object::generate_signer_for_extending(borrow_escrow_extend_ref());
+        let escrow_signer = &object::generate_signer_for_extending(&store().escrow_extend_ref);
         let extracted = coin::withdraw<PlaceholderCoin>(escrow_signer, amount_ld);
-        deposit_coin(to, extracted);
+
+        // Deposit the extracted amount to the recipient, or redirect to the admin if the recipient is blocklisted
+        deposit_coin(redirect_to_admin_if_blocklisted(to, amount_ld), extracted);
 
         amount_ld
     }
 
-    // Unused in this implementation
+    /// Unused in this implementation
     public(friend) fun debit_fungible_asset(
+        _sender: address,
         _fa: &mut FungibleAsset,
         _min_amount_ld: u64,
         _dst_eid: u32,
@@ -69,13 +85,17 @@ module oft::oft_adapter_coin {
         abort ENOT_IMPLEMENTED
     }
 
-    /// The default *debit(Coin)* behavior for a Coin Adapter OFT is to lock the deducted amount in escrow
+    /// The default *debit* behavior for a Coin Adapter OFT is to lock the deducted amount in escrow
     /// @return (amount_sent_ld, amount_received_ld)
     public(friend) fun debit_coin<CoinType>(
+        sender: address,
         coin: &mut Coin<CoinType>,
         min_amount_ld: u64,
         dst_eid: u32,
-    ): (u64, u64) acquires OftAdapterCoinStore {
+    ): (u64, u64) acquires OftImpl {
+        assert_not_blocklisted(sender);
+        try_consume_rate_limit_capacity(dst_eid, min_amount_ld);
+
         // Set the send amount to the amount provided in Coin
         let amount_ld = coin::value(coin);
         let (amount_sent_ld, amount_received_ld) = debit_view(amount_ld, min_amount_ld, dst_eid);
@@ -93,7 +113,7 @@ module oft::oft_adapter_coin {
     /// The default *debit_view* behavior for a Adapter OFT is to remove dust and use remainder as both the sent and
     /// received amounts, reflecting that no additional fees are removed
     public(friend) fun debit_view(amount_ld: u64, min_amount_ld: u64, _dst_eid: u32): (u64, u64) {
-        oft_core::no_fee_debit_view(amount_ld, min_amount_ld)
+        debit_view_with_possible_fee(amount_ld, min_amount_ld)
     }
 
     /// Update this to override the Executor and DVN options of the OFT transmission
@@ -120,25 +140,25 @@ module oft::oft_adapter_coin {
     /// Change this to override the OFT limit and fees provided when quoting. The fees should reflect the difference
     /// between the amount sent and the amount received returned from debit() and debit_view()
     public(friend) fun oft_limit_and_fees(
-        _dst_eid: u32,
+        dst_eid: u32,
         _to: vector<u8>,
-        _amount_ld: u64,
-        _min_amount_ld: u64,
+        amount_ld: u64,
+        min_amount_ld: u64,
         _extra_options: vector<u8>,
         _compose_msg: vector<u8>,
         _oft_cmd: vector<u8>,
     ): (OftLimit, vector<OftFeeDetail>) {
-        (new_unbounded_oft_limit(), vector[])
+        (rate_limited_oft_limit(dst_eid), fee_details_with_possible_fee(amount_ld, min_amount_ld))
     }
 
     // =========================================== Coin Deposit / Withdrawal ==========================================
 
-    // Deposit coin function abstracted from `oft.move` for cross-chain flexibility
+    /// Deposit coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun deposit_coin<CoinType>(account: address, coin: Coin<CoinType>) {
         aptos_account::deposit_coins(account, coin)
     }
 
-    // Withdraw coin function abstracted from `oft.move` for cross-chain flexibility
+    /// Withdraw coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun withdraw_coin<CoinType>(account: &signer, amount_ld: u64): Coin<CoinType> {
         coin::withdraw<CoinType>(account, amount_ld)
     }
@@ -158,37 +178,98 @@ module oft::oft_adapter_coin {
         coin::balance<PlaceholderCoin>(account)
     }
 
+    // ================================================= Configuration ================================================
+
+    /// Set the fee (in BPS) for outbound OFT sends
+    public entry fun set_fee_bps(admin: &signer, fee_bps: u64) {
+        assert_admin(address_of(admin));
+        oft_impl_config::set_fee_bps(fee_bps);
+    }
+
+    #[view]
+    /// Get the fee (in BPS) for outbound OFT sends
+    public fun get_fee_bps(): u64 { oft_impl_config::get_fee_bps() }
+
+    /// Set the blocklist status of a wallet address
+    /// If a wallet is blocklisted
+    /// - OFT sends from the wallet will be blocked
+    /// - OFT receives to the wallet will be be diverted to the admin
+    public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) {
+        assert_admin(address_of(admin));
+        oft_impl_config::set_blocklist(wallet, block);
+    }
+
+    #[view]
+    /// Get the blocklist status of a wallet address
+    public fun is_blocklisted(wallet: address): bool { oft_impl_config::is_blocklisted(wallet) }
+
+    /// Set the rate limit configuration for a given endpoint ID
+    /// The rate limit is the maximum amount of OFT that can be sent to the endpoint within a given window
+    /// The rate limit capacity recovers linearly at a rate of limit / window_seconds
+    public entry fun set_rate_limit(admin: &signer, eid: u32, limit: u64, window_seconds: u64) {
+        assert_admin(address_of(admin));
+        oft_impl_config::set_rate_limit(eid, limit, window_seconds);
+    }
+
+    #[view]
+    /// Get the rate limit configuration for a given endpoint ID
+    /// @return (limit, window_seconds)
+    public fun rate_limit_config(eid: u32): (u64, u64) { oft_impl_config::rate_limit_config(eid) }
+
+    #[view]
+    /// Get the amount of rate limit capacity currently consumed on this pathway
+    public fun rate_limit_in_flight(eid: u32): u64 { oft_impl_config::in_flight(eid) }
+
+    #[view]
+    /// Get the rate limit capacity for a given endpoint ID
+    public fun rate_limit_capacity(eid: u32): u64 { oft_impl_config::rate_limit_capacity(eid) }
+
+    /// Create an OftLimit that reflects the rate limit for a given endpoint ID
+    public fun rate_limited_oft_limit(eid: u32): OftLimit {
+        oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
+    }
+
     // ================================================ Initialization ================================================
 
-    // This initialize function is called from `oft.move`.
-    public entry fun initialize(
-        account: &signer,
-        shared_decimals: u8,
-    ) {
-        assert!(address_of(account) == OAPP_ADDRESS(), EUNAUTHORIZED);
-
-        // Create and register the Escrow Account
+    fun init_module(account: &signer) {
+        // Create and register the Escrow Account owned by the contract
         let constructor_ref = &object::create_named_object(account, b"coin_escrow");
-        object::disable_ungated_transfer(&object::generate_transfer_ref(constructor_ref));
         let escrow_extend_ref = object::generate_extend_ref(constructor_ref);
+
+        // Disable the transfer of the escrow object
+        object::disable_ungated_transfer(&object::generate_transfer_ref(constructor_ref));
+
+        // Register the coin
+        coin::register<PlaceholderCoin>(account);
+
+        // Register the escrow account for the Coin
+        // The escrow object must be registered as an account to be registerable to accept deposits
         let escrow_signer = &object::generate_signer_for_extending(&escrow_extend_ref);
         create_account_if_does_not_exist(address_of(escrow_signer));
-        coin::register<PlaceholderCoin>(escrow_signer);
-        move_to(account, OftAdapterCoinStore { escrow_extend_ref });
+        coin::register<PlaceholderCoin>(move escrow_signer);
 
+        // Save the extend ref to be able to sign for the escrow on credit
+        move_to(account, OftImpl { escrow_extend_ref });
+
+        // Initialize the oft_core
         let local_decimals = coin::decimals<PlaceholderCoin>();
-        oft_core::initialize(account, local_decimals, shared_decimals);
+        oft_core::initialize(local_decimals, SHARED_DECIMALS);
+    }
+
+    #[test_only]
+    public fun init_module_for_test() {
+        init_module(&std::account::create_signer_for_test(OAPP_ADDRESS()));
     }
 
     // ================================================ Storage Helpers ===============================================
 
-    inline fun borrow_escrow_extend_ref(): &ExtendRef {
-        &borrow_global<OftAdapterCoinStore>(OAPP_ADDRESS()).escrow_extend_ref
+    #[view]
+    public fun escrow_address(): address acquires OftImpl {
+        object::address_from_extend_ref(&store().escrow_extend_ref)
     }
 
-    #[view]
-    public fun escrow_address(): address acquires OftAdapterCoinStore {
-        object::address_from_extend_ref(borrow_escrow_extend_ref())
+    inline fun store(): &OftImpl {
+        borrow_global<OftImpl>(OAPP_ADDRESS())
     }
 
     // ================================================== Error Codes =================================================

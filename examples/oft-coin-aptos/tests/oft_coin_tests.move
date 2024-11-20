@@ -8,32 +8,30 @@ module oft::oft_coin_tests {
     use std::object::address_to_object;
     use std::option;
     use std::primary_fungible_store;
+    use std::timestamp;
     use std::vector;
 
     use endpoint_v2::test_helpers::setup_layerzero_for_test;
     use endpoint_v2_common::bytes32;
     use endpoint_v2_common::native_token_test_helpers::mint_native_token_for_test;
     use oft::oapp_core;
-    use oft::oapp_store::OAPP_ADDRESS;
+    use oft::oft::remove_dust;
     use oft::oft_coin::{Self, burn_token_for_test, mint_tokens_for_test, PlaceholderCoin};
+    use oft::oft_impl_config;
+    use oft::oft_store;
     use oft_common::oft_limit::new_unbounded_oft_limit;
 
     const MAXU64: u64 = 0xffffffffffffffff;
-
     const LOCAL_EID: u32 = 101;
 
     fun setup() {
         setup_layerzero_for_test(@simple_msglib, LOCAL_EID, LOCAL_EID);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
-        oft_coin::initialize(
-            oft_account,
-            b"My Test Token",
-            b"MYT",
-            6,
-            8,
-            false,
-        );
+
         oft::oapp_test_helper::init_oapp();
+
+        oft_store::init_module_for_test();
+        oft_coin::init_module_for_test();
+        oft_impl_config::init_module_for_test();
     }
 
     #[test]
@@ -47,19 +45,22 @@ module oft::oft_coin_tests {
         let min_amount_ld = 0u64;
 
         let coin = mint_tokens_for_test<PlaceholderCoin>(amount_ld);
+
+        let dust_removed = remove_dust(amount_ld);
         let (sent, received) = oft_coin::debit_coin(
+            @444,
             &mut coin,
             min_amount_ld,
             dst_eid,
         );
 
         // amount sent and received should reflect the amount debited
-        assert!(sent == 123456700, 0);
-        assert!(received == 123456700, 0);
+        assert!(sent == dust_removed, 0);
+        assert!(received == dust_removed, 0);
 
         // no remaining balance
         let remaining_balance = coin::value(&coin);
-        assert!(remaining_balance == 00, 0);
+        assert!(remaining_balance == amount_ld - dust_removed, 0);
 
         burn_token_for_test(coin);
     }
@@ -125,8 +126,9 @@ module oft::oft_coin_tests {
 
         // shouldn't take a fee
         let (sent, received) = oft_coin::debit_view(123456700, 100, 2);
-        assert!(sent == 123456700, 0);
-        assert!(received == 123456700, 0);
+        let dust_removed = remove_dust(123456700);
+        assert!(sent == dust_removed, 0);
+        assert!(received == dust_removed, 0);
     }
 
     #[test]
@@ -158,9 +160,9 @@ module oft::oft_coin_tests {
         // should pass through the options if none configured
         assert!(options == x"1234", 0);
 
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         oapp_core::set_enforced_options(
-            oft_account,
+            oft_admin,
             dst_eid,
             message_type,
             x"00037777"
@@ -193,11 +195,14 @@ module oft::oft_coin_tests {
 
     #[test]
     fun test_oft_limit_and_fees() {
+        setup();
+
+        timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
         let (limit, fees) = oft_coin::oft_limit_and_fees(
             123,
             x"1234",
             123,
-            123,
+            100,
             x"1234",
             x"1234",
             x"1234"

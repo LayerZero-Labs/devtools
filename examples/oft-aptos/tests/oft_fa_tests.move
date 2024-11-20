@@ -7,14 +7,17 @@ module oft::oft_fa_tests {
     use std::object::address_to_object;
     use std::option;
     use std::primary_fungible_store;
+    use std::string::utf8;
+    use std::timestamp;
     use std::vector;
 
     use endpoint_v2::test_helpers::setup_layerzero_for_test;
     use endpoint_v2_common::bytes32;
     use endpoint_v2_common::native_token_test_helpers::{burn_token_for_test, mint_native_token_for_test};
     use oft::oapp_core;
-    use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_fa::{Self, mint_tokens_for_test};
+    use oft::oft_impl_config;
+    use oft::oft_store;
     use oft_common::oft_limit::new_unbounded_oft_limit;
 
     const MAXU64: u64 = 0xffffffffffffffff;
@@ -23,17 +26,27 @@ module oft::oft_fa_tests {
 
     fun setup() {
         setup_layerzero_for_test(@simple_msglib, LOCAL_EID, LOCAL_EID);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+
+        oft::oapp_test_helper::init_oapp();
+
+        oft_store::init_module_for_test();
+        oft_fa::init_module_for_test();
+        oft_impl_config::init_module_for_test();
         oft_fa::initialize(
-            oft_account,
+            &create_signer_for_test(@oft_admin),
             b"My Test Token",
             b"MYT",
-            b"",
-            b"",
+            b"https://example.com/icon.png",
+            b"https://example.com/project",
             6,
             8,
         );
-        oft::oapp_test_helper::init_oapp();
+
+        assert!(fungible_asset::name(oft::oft::metadata()) == utf8(b"My Test Token"), 0);
+        assert!(fungible_asset::symbol(oft::oft::metadata()) == utf8(b"MYT"), 0);
+        assert!(fungible_asset::icon_uri(oft::oft::metadata()) == utf8(b"https://example.com/icon.png"), 0);
+        assert!(fungible_asset::project_uri(oft::oft::metadata()) == utf8(b"https://example.com/project"), 0);
+        assert!(fungible_asset::decimals(oft::oft::metadata()) == 8, 0);
     }
 
     #[test]
@@ -48,6 +61,7 @@ module oft::oft_fa_tests {
 
         let fa = mint_tokens_for_test(amount_ld);
         let (sent, received) = oft_fa::debit_fungible_asset(
+            @444,
             &mut fa,
             min_amount_ld,
             dst_eid,
@@ -157,9 +171,9 @@ module oft::oft_fa_tests {
         // should pass through the options if none configured
         assert!(options == x"1234", 0);
 
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         oapp_core::set_enforced_options(
-            oft_account,
+            oft_admin,
             dst_eid,
             message_type,
             x"00037777"
@@ -192,11 +206,14 @@ module oft::oft_fa_tests {
 
     #[test]
     fun test_oft_limit_and_fees() {
+        setup();
+
+        timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
         let (limit, fees) = oft_fa::oft_limit_and_fees(
             123,
             x"1234",
             123,
-            123,
+            100,
             x"1234",
             x"1234",
             x"1234"

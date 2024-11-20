@@ -14,12 +14,15 @@ module oft::oft {
     use endpoint_v2::messaging_receipt::MessagingReceipt;
     use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
     use endpoint_v2_common::contract_identity::{DynamicCallRef, get_dynamic_call_ref_caller};
-    use oft::oapp_core::{Self, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
+    use oft::oapp_core::{Self, assert_admin, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
     use oft_common::oft_fee_detail::OftFeeDetail;
     use oft_common::oft_limit::OftLimit;
 
+    // ************************************************* CONFIGURATION *************************************************
+
+    // **Important** Replace `oft_fa` with implementation module used
     use oft::oft_coin::{
         balance as balance_internal,
         build_options,
@@ -30,11 +33,13 @@ module oft::oft {
         deposit_coin,
         inspect_message,
         metadata as metadata_internal,
-        PlaceholderCoin,
         oft_limit_and_fees,
+        PlaceholderCoin,
         send_standards_supported as send_standards_supported_internal,
         withdraw_coin,
     };
+    
+    // *********************************************** END CONFIGURATION ***********************************************
 
     friend oft::oapp_receive;
     friend oft::oapp_compose;
@@ -111,7 +116,7 @@ module oft::oft {
             |message, options| {
                 lz_send(dst_eid, message, options, native_fee, zro_fee)
             },
-            |_nothing| debit_fungible_asset(send_value, min_amount_ld, dst_eid),
+            |_nothing| debit_fungible_asset(sender, send_value, min_amount_ld, dst_eid),
             |amount_received_ld, message_type| build_options(
                 message_type,
                 dst_eid,
@@ -199,7 +204,7 @@ module oft::oft {
             |message, options| {
                 lz_send(dst_eid, message, options, native_fee, zro_fee)
             },
-            |_nothing| debit_coin(send_value, min_amount_ld, dst_eid),
+            |_nothing| debit_coin(sender, send_value, min_amount_ld, dst_eid),
             |amount_received_ld, message_type| build_options(
                 message_type,
                 dst_eid,
@@ -319,7 +324,8 @@ module oft::oft {
 
     // =============================================== Ordered Execution ==============================================
 
-    // Provides the next nonce if executor options request ordered execution; returning 0 for disabled ordered execution
+    /// Provides the next nonce if executor options request ordered execution; returns 0 to indicate ordered execution
+    /// is disabled
     public(friend) fun next_nonce_impl(_src_eid: u32, _sender: Bytes32): u64 {
         0
     }
@@ -337,6 +343,18 @@ module oft::oft {
 
     public fun unpack_oft_receipt(receipt: &OftReceipt): (u64, u64) {
         (receipt.amount_sent_ld, receipt.amount_received_ld)
+    }
+
+    // ==================================================== V1 OFT ====================================================
+
+    /// Set the OFT on the specified EID as a V1 OFT
+    /// This will use the V1 Codec to communicate with the OFT
+    /// Composition is disabled on send for V1 mode
+    /// Composition is available on receive on V1 mode; however the compose message will be delivered to the compose
+    /// recipient will follow the pattern of v2 OFT compose messages (see oft_common::oft_compose_msg_codec)
+    public entry fun set_v1_compatibility_mode(admin: &signer, eid: u32, enabled: bool) {
+        assert_admin(address_of(admin));
+        oft_core::set_v1_compatibility_mode(eid, enabled)
     }
 
     // ===================================================== View =====================================================
@@ -385,6 +403,9 @@ module oft::oft {
     public fun remove_dust(amount_ld: u64): u64 { oft_core::remove_dust(amount_ld) }
 
     #[view]
+    public fun shared_decimals(): u8 { oft_core::shared_decimals() }
+
+    #[view]
     public fun decimal_conversion_rate(): u64 { oft_core::decimal_conversion_rate() }
 
     #[view]
@@ -402,6 +423,12 @@ module oft::oft {
     #[view]
     public fun get_peer(eid: u32): vector<u8> {
         oapp_core::get_peer(eid)
+    }
+
+    #[view]
+    /// Returns whether the peer OFT on an EID is a V1 OFT
+    public fun v1_compatibility_mode(eid: u32): bool {
+        oft_core::v1_compatibility_mode(eid)
     }
 
     // ================================================== Error Codes =================================================
