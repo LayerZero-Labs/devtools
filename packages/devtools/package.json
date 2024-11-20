@@ -39,7 +39,7 @@
     "@ethersproject/bytes": "~5.7.0",
     "@ethersproject/constants": "~5.7.0",
     "@layerzerolabs/io-devtools": "~0.1.13",
-    "@layerzerolabs/lz-definitions": "^3.0.12",
+    "@layerzerolabs/lz-definitions": "^3.0.15",
     "@layerzerolabs/test-devtools": "~0.4.0",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
@@ -50,7 +50,7 @@
     "ts-node": "^10.9.2",
     "tslib": "~2.6.2",
     "tsup": "~8.0.1",
-    "typescript": "^5.4.4",
+    "typescript": "^5.6.3",
     "zod": "^3.22.4"
   },
   "peerDependencies": {

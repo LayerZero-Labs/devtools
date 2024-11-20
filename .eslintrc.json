@@ -1,19 +1,7 @@
 {
   "root": true,
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
-    "node": true,
-    "jest": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier", "turbo"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "plugins": ["prettier", "turbo"],
+  "extends": ["@layerzerolabs/eslint-config-next/recommended", "prettier"],
   "overrides": [
     {
       "files": ["test/**"],
@@ -28,9 +16,26 @@
     "ecmaVersion": 8
   },
   "ignorePatterns": ["node_modules/", "dist/", ".turbo/"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        // The import plugin needs to know about the tsconfigs
+        // so that it can work with the custom path aliases we have setup
+        "project": [
+          "packages/*/tsconfig.json",
+          "tests/*/tsconfig.json",
+          "tsconfig.json"
+        ]
+      }
+    }
+  },
   "rules": {
     "prettier/prettier": "error",
     "curly": "error",
+    // During the transition period to the new lint rules, we'll deescalate the new rules to warnings
+    "import/order": "warn",
+    "import/no-unresolved": "warn",
+    "sort-imports": "warn",
     // This rule needs to be disabled otherwise ESLint will error out
     // on things like TypeScript enums or function types
     "no-unused-vars": "off",
