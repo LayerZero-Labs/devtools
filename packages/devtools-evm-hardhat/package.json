@@ -83,7 +83,7 @@
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.4.0",
+    "@layerzerolabs/devtools": "~0.4.1",
     "@layerzerolabs/devtools-evm": "~1.0.0",
     "@layerzerolabs/io-devtools": "~0.1.13",
     "@layerzerolabs/lz-definitions": "^3.0.12",
