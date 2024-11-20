@@ -8,10 +8,9 @@
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
 </p>
 
-
 <h1 align="center">Omnichain Fungible Token (OFTAdapterAlt and OFTAlt) Example for Alt Endpoints</h1>
 
-# ⚠️ ** This code is currently under audit and should not yet be used in production, the readme might not be complete 
+# ⚠️ \*\* This code is currently under audit and should not yet be used in production, the readme might not be complete
 
 <p align="center">
   <a href="https://docs.layerzero.network/v2/developers/evm/oft/quickstart" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts" style="color: #a77dff">Endpoint, MessageLib, & Executor Addresses</a> | <a
@@ -26,7 +25,6 @@ href="https://docs.layerzero.network/v2/developers/evm/technical-reference/dvn-a
 - [Available Helpers in this Repo](#layerzero-hardhat-helper-tasks)
 
 </p>
-
 
 ## So what is an Omnichain Fungible Token?
 
