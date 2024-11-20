@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-solana-example",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
@@ -26,7 +26,7 @@
     "@ethersproject/bytes": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.1",
     "@layerzerolabs/devtools-evm": "~1.0.0",
-    "@layerzerolabs/devtools-evm-hardhat": "^2.0.0",
+    "@layerzerolabs/devtools-evm-hardhat": "^2.0.1",
     "@layerzerolabs/devtools-solana": "~1.0.1",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
     "@layerzerolabs/io-devtools": "~0.1.11",
