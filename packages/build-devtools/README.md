@@ -23,7 +23,7 @@ pnpm install @layerzerolabs/build-devtools
 ```
 
 ```bash
-pnpm install @layerzerolabs/build-devtools
+yarn install @layerzerolabs/build-devtools
 ```
 
 ```bash
