@@ -1660,7 +1660,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.0
+        specifier: ~0.4.1
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
         specifier: ~1.0.0
