@@ -22,63 +22,158 @@
 
 ## Introduction
 
-This toolkit is designed to streamline the process of building, testing, and deploying omnichain applications (OApps) using LayerZero. This tool is meant to support you through the end-to-end development lifecycle of a cross-chain project.
+Welcome to the **LayerZero Developer Tools Hub**. This repository houses everything related to the LayerZero Developer Experience, including application contract standards, CLI examples, packages, scripting tools, and more. It serves as a central hub for developers to build, test, deploy, and interact with LayerZero-based omnichain applications (OApps).
 
-Visit <a href="https://docs.layerzero.network/" style="color: #a77dff">our developer docs</a> to get started building omnichain applications.
+Visit our <a href="https://docs.layerzero.network/" style="color: #a77dff">developer docs</a> to get started building omnichain applications.
 
-## Bootstrapping an Example Cross-Chain Project
+## Repository Structure
+The primary folders that smart contract developers will find most useful are:
 
-Kick-start your development with our `create-lz-oapp` CLI utility. This command-line tool facilitates the creation of a new omnichain application project, setting up the necessary environment and dependencies:
+`examples/`: Contains various example projects demonstrating how to build with `OApp.sol` (Omnichain App Standard), `OFT.sol` (Omnichain Fungible Tokens), `ONFT.sol` (Omnichain Non-Fungible Tokens), and more. These examples serve as templates and learning resources.
 
-```bash
-npx create-lz-oapp@latest
+`packages/`: Includes a collection of NPM packages, libraries, and tools that facilitate interaction with LayerZero contracts. This includes deployment scripts, CLI tools, protocol devtools, and testing utilities.
+
+### Examples
+
+Here is a list of example projects available in the `examples/` directory:
+
+```
+$ ls examples
+mint-burn-oft-adapter  oapp                 oft                   oft-solana            omnicounter-solana    onft721-zksync
+native-oft-adapter     oapp-read            oft-adapter           oft-upgradeable       onft721               uniswap-read
 ```
 
-Following this, you will be guided through setting up a project template. Choose from a variety of <a href="/examples" style="color: #a77dff">examples</a> to match your project needs.
+### Packages
 
-## Writing Smart Contracts
+Here is a list of packages available in the `packages/` directory:
 
-Our example project offers templates for both the <a href="https://docs.layerzero.network/contracts/oapp" style="color: #a77dff">Omnichain Application (OApp)</a> and <a href="https://docs.layerzero.network/v2/developers/evm/oft/quickstart" style="color: #a77dff">Omnichain Fungible Token (OFT)</a> contracts. Select the template that suits your project:
-
-## Writing Unit Tests
-
-Testing your contracts is crucial. We support both <a href="https://hardhat.org/" style="color: #a77dff">Hardhat</a> and <a href="https://book.getfoundry.sh/" style="color: #a77dff">Foundry</a> frameworks for writing and running unit tests for your LayerZero contracts.
-
-Use `npx hardhat compile` or `forge build` to compile your smart contracts.
-
-Test your contract using `npx hardhat test` or `forge test`.
-
-## Deploying Contracts
-
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
-
-```bash
-npx hardhat lz:deploy
+```
+$ ls packages
+build-devtools            devtools-evm-hardhat      oft-evm                   protocol-devtools-solana  toolbox-hardhat
+build-lz-options          devtools-solana           oft-evm-upgradeable       test-devtools             ua-devtools
+create-lz-oapp            export-deployments        omnicounter-devtools      test-devtools-evm-foundry ua-devtools-evm
+decode-lz-options         io-devtools               omnicounter-devtools-evm  test-devtools-evm-hardhat ua-devtools-evm-hardhat
+devtools                  oapp-alt-evm              onft-evm                  test-devtools-solana      ua-devtools-solana
+devtools-cli              oapp-evm                  oapp-evm-upgradeable      test-devtools-ton         verify-contract
+devtools-evm              oapp-evm-upgradeable      protocol-devtools         toolbox-foundry
 ```
 
-More information about available CLI arguments can be found using the `--help` flag:
+## Getting Started
 
-```bash
-npx hardhat lz:deploy --help
+To get started with the LayerZero Developer Tools, follow these steps:
+
+1. Clone the Repository
+
+```
+git clone https://github.com/layerzerolabs/devtools.git
+cd devtools
 ```
 
-## Configuring contracts
+2. Install Dependencies
 
-The <a href="/examples" style="color: #a77dff">examples</a> come with basic `layerzero.config.ts` files that should get you started on testnet straight away.
+We recommend using `pnpm` as the package manager.
 
-More information on how to configure your `OApp` will be available in our <a href="https://docs.layerzero.network/" style="color: #a77dff">docs</a> soon.
-
-## Wiring Contracts
-
-Pair your deployed contracts using:
-
-```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts
+```
+pnpm install
 ```
 
-By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
+3. Build the Packages
 
-<br></br>
+```
+pnpm build
+```
+
+This will build all the packages and examples in the repository.
+
+## Contributing
+
+We welcome contributions from the community! If you'd like to contribute to the LayerZero Developer Tools by adding new `examples/` or `packages/`, or by improving existing ones, please follow the guidelines below.
+
+### Contribution Guidelines
+
+1. Creating a Changeset
+
+We use Changesets to manage versioning and changelogs.
+
+For new packages or updates to existing packages, create a changeset to record the changes:
+
+```
+pnpm changeset
+```
+
+Follow the prompts to describe your changes.
+
+2. Ensure the Project Builds Successfully
+
+Before submitting your changes, make sure that the project builds without errors:
+
+```
+pnpm build
+```
+
+3. Linting and Code Style
+
+This repository adheres to strict linting rules to maintain code quality.
+
+Run the linter and fix any issues:
+
+```
+pnpm lint:fix
+```
+
+For smart contracts, ensure they comply with:
+
+- [SolidityLang Natspec](https://docs.soliditylang.org/en/latest/style-guide.html)
+- [Coinbase Solidity Style Guide](https://github.com/coinbase/solidity-style-guide)
+
+4. Writing Tests
+
+Add or update unit tests to cover your changes.
+
+Ensure all tests pass:
+
+```
+pnpm test
+```
+
+5. Commit Messages
+
+Use clear and descriptive commit messages following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+
+Example:
+
+```
+feat: add new MintBurnOFTAdapter example
+```
+
+6. Push Changes to Your Fork
+
+```
+git push origin feat/your-feature-name
+```
+
+7. Open a Pull Request
+
+Go to the original repository and click **"New Pull Request."**
+
+Choose your fork and branch as the source and the main repository's main branch as the target.
+
+Provide a clear and detailed description of your changes.
+
+### Reporting Issues
+
+If you encounter any issues or bugs with existing projects, please open an issue on GitHub under the **Issues** tab.
+Provide as much detail as possible, including steps to reproduce the issue.
+
+## Additional Resources
+
+- **Development Guide**: Check out our <a href="/DEVELOPMENT.md" style="color: #a77dff">Development</a> guide for more in-depth information on contributing to the repository.
+
+- **Cheatsheet**: Our <a href="/CHEATSHEET.md" style="color: #a77dff">Cheatsheet</a> provides quick commands and tips.
+
+- **Documentation**: Visit our <a href="https://docs.layerzero.network/" style="color: #a77dff">official documentation</a> for detailed guides and API references.
+
+By utilizing the resources in this repository, you can focus on creating innovative omnichain solutions without worrying about the complexities of cross-chain communication.
 
 <p align="center">
   Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
