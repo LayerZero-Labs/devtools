@@ -21,13 +21,13 @@ Utilities for LayerZero EVM protocol contracts.
 ## Installation
 
 ```bash
-npm install --save @layerzerolabs/protocol-devtools-evm
+pnpm install --save @layerzerolabs/protocol-devtools-evm
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-devtools-evm
+yarn install @layerzerolabs/protocol-devtools-evm
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-devtools-evm
+npm install @layerzerolabs/protocol-devtools-evm
 ```
