@@ -1609,6 +1609,9 @@ importers:
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
       fast-check:
         specifier: ^3.15.1
         version: 3.15.1

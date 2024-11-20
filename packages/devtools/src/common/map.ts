@@ -74,19 +74,19 @@ export abstract class AbstractMap<K, V> implements Map<K, V> {
         return this.#entries.size
     }
 
-    entries(): IterableIterator<[K, V]> {
+    entries() {
         return this.#entries.values()
     }
 
-    keys(): IterableIterator<K> {
+    keys() {
         return this.#keys.values()
     }
 
-    values(): IterableIterator<V> {
+    values() {
         return this.#values.values()
     }
 
-    [Symbol.iterator](): IterableIterator<[K, V]> {
+    [Symbol.iterator]() {
         return this.entries()
     }
 
