@@ -85,6 +85,8 @@ pnpm build
 
 This will build all the packages and examples in the repository.
 
+Review the README for each individual `examples/` project to learn how to interact with and use each sample project. 
+
 ## Contributing
 
 We welcome contributions from the community! If you'd like to contribute to the LayerZero Developer Tools by adding new `examples/` or `packages/`, or by improving existing ones, please follow the guidelines below.
