@@ -133,7 +133,7 @@ contract ReadViewOrPureAndComputeTest is TestHelperOz5 {
         bytes memory readResponse = abi.encode(initialSum); // The sum of a and b
 
         // Simulate lzMap and lzReduce as they would be called during message processing
-        // Note: In an actual environment, lzMap and lzReduce would be called by the LayerZero protocol
+        // Note: In an actual environment, lzMap and lzReduce would be called by the configured DVNs
         // Here, we mock this behavior in the unit test
 
         // Simulate lzMap operation
