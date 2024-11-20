@@ -84,6 +84,8 @@ services:
         pnpm release:version
         pnpm release:publish
     volumes:
+      # Build cache
+      - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # We'll need to provide the changeset files for this step
       - ./.changeset:/app/.changeset
 
