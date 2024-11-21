@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.2
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
 ## 0.2.1
 
 ### Patch Changes

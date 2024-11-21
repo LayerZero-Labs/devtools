@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.3
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
 ## 0.4.2
 
 ### Patch Changes

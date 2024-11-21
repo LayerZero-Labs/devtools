@@ -408,7 +408,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.0
+        specifier: ^2.0.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -642,7 +642,7 @@ importers:
         specifier: ~1.0.0
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.0
+        specifier: ^2.0.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
         specifier: ~1.0.1
@@ -855,7 +855,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.0
+        specifier: ^2.0.1
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1888,7 +1888,7 @@ importers:
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       tsup:
         specifier: ~8.0.1
-        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.5.3)
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -3170,7 +3170,7 @@ importers:
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
       tsup:
         specifier: ^8.0.1
-        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.5.3)
       typescript:
         specifier: ^5.4.4
         version: 5.5.3
@@ -17672,6 +17672,46 @@ packages:
       cac: 6.7.14
       chokidar: 3.6.0
       debug: 4.3.7
+      esbuild: 0.19.11
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      postcss-load-config: 4.0.2(ts-node@10.9.2)
+      resolve-from: 5.0.0
+      rollup: 4.9.6
+      source-map: 0.8.0-beta.0
+      sucrase: 3.35.0
+      tree-kill: 1.2.2
+      typescript: 5.5.3
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+    dev: true
+
+  /tsup@8.0.1(@swc/core@1.4.0)(typescript@5.5.3):
+    resolution: {integrity: sha512-hvW7gUSG96j53ZTSlT4j/KL0q1Q2l6TqGBFc6/mu/L46IoNWqLLUzLRLP1R8Q7xrJTmkDxxDoojV5uCVs1sVOg==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      '@microsoft/api-extractor': ^7.36.0
+      '@swc/core': ^1
+      postcss: ^8.4.12
+      typescript: '>=4.5.0'
+    peerDependenciesMeta:
+      '@microsoft/api-extractor':
+        optional: true
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
+      typescript:
+        optional: true
+    dependencies:
+      '@swc/core': 1.4.0
+      bundle-require: 4.0.2(esbuild@0.19.11)
+      cac: 6.7.14
+      chokidar: 3.6.0
+      debug: 4.3.5
       esbuild: 0.19.11
       execa: 5.1.1
       globby: 11.1.0

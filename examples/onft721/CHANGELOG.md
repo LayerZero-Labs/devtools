@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.1
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
 ## 0.3.0
 
 ### Minor Changes
