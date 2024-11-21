@@ -60,13 +60,6 @@ export const getExamples = (): Example[] => {
                       directory: 'examples/oft-upgradeable',
                       ref,
                   },
-                  {
-                      id: 'uniswap-read',
-                      label: 'UniswapV3 Quote',
-                      repository,
-                      directory: 'examples/uniswap-read',
-                      ref,
-                  },
               ]
             : []),
         // Native OFT Adapter example is feature flagged for the time being
@@ -77,13 +70,6 @@ export const getExamples = (): Example[] => {
                       label: 'NativeOFTAdapter',
                       repository,
                       directory: 'examples/native-oft-adapter',
-                      ref,
-                  },
-                  {
-                      id: 'uniswap-read',
-                      label: 'UniswapV3 Quote',
-                      repository,
-                      directory: 'examples/uniswap-read',
                       ref,
                   },
               ]
