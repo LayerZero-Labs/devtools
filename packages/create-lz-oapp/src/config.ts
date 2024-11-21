@@ -48,14 +48,18 @@ export const getExamples = (): Example[] => {
         },
         // ZK-Solc examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
-            ? [
-                  { id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref },
-              ]
+            ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
             : []),
         // Upgradeable contract examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_UPGRADEABLE_EXAMPLE
             ? [
-                  { id: 'oft-upgradeable', label: 'UpgradeableOFT', repository, directory: 'examples/oft-upgradeable', ref },
+                  {
+                      id: 'oft-upgradeable',
+                      label: 'UpgradeableOFT',
+                      repository,
+                      directory: 'examples/oft-upgradeable',
+                      ref,
+                  },
                   {
                       id: 'uniswap-read',
                       label: 'UniswapV3 Quote',
@@ -68,7 +72,13 @@ export const getExamples = (): Example[] => {
         // Native OFT Adapter example is feature flagged for the time being
         ...(process.env.LZ_ENABLE_NATIVE_EXAMPLE
             ? [
-                  { id: 'native-oft-adapter', label: 'NativeOFTAdapter', repository, directory: 'examples/native-oft-adapter', ref },
+                  {
+                      id: 'native-oft-adapter',
+                      label: 'NativeOFTAdapter',
+                      repository,
+                      directory: 'examples/native-oft-adapter',
+                      ref,
+                  },
                   {
                       id: 'uniswap-read',
                       label: 'UniswapV3 Quote',
