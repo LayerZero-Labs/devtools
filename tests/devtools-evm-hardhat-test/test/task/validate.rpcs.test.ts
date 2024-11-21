@@ -34,11 +34,8 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
         })
 
         it('should not allow both --networks and --stage arguments together', async () => {
-            const result = spawnSync(
-                'npx',
-                ['hardhat', TASK_LZ_VALIDATE_RPCS, '--networks', 'mainnet,bsc-mainnet', '--stage', 'mainnet'],
-                { encoding: 'utf8', stdio: 'inherit' }
-            )
+            const result = runExpect('validate-with-networks-and-stage')
+
             expect(result.status).not.toBe(0)
         })
 

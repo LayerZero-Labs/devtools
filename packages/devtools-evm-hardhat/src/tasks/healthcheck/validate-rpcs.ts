@@ -10,6 +10,7 @@ import { getEidsByNetworkName } from '@/runtime'
 import { BaseProvider, JsonRpcProvider, WebSocketProvider } from '@ethersproject/providers'
 import { types as cliTypes } from '@/cli'
 import { EndpointId, Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
+import { pickNetworkConfigs } from '@/simulation'
 
 const RPC_URL_KEY = 'url'
 
@@ -61,17 +62,14 @@ const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     // Let's grab the networks that will be validated
     const networks = taskArgs.networks
         ? // Here we need to check whether the networks have been defined in hardhat config
-          assertDefinedNetworks(taskArgs.networks)
+          pickNetworkConfigs(assertDefinedNetworks(taskArgs.networks))(hre.config.networks)
         : taskArgs.stage //  But here we are taking them from hardhat config so no assertion is necessary
-          ? Object.entries(getEidsByNetworkName()).flatMap(([networkName, eid]) =>
-                eid != null && isOnStage(eid) ? [networkName] : []
-            )
-          : hre.userConfig.networks
-
-    if (!networks) {
-        logger.error(`No networks found in hardhat.config.ts`)
-        return
-    }
+          ? pickNetworkConfigs(
+                Object.entries(getEidsByNetworkName()).flatMap(([networkName, eid]) =>
+                    eid != null && isOnStage(eid) ? [networkName] : []
+                )
+            )(hre.config.networks)
+          : hre.config.networks
 
     const eidByNetworkName = getEidsByNetworkName(hre)
 
