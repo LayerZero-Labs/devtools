@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.1
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
 ## 0.5.0
 
 ### Minor Changes

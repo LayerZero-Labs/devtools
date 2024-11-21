@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.1
+
+### Patch Changes
+
+- 30e01b8: Updating devtools dependency
+
 ## 2.0.0
 
 ### Minor Changes
