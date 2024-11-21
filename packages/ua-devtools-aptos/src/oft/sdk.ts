@@ -13,14 +13,18 @@ import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
 // import { Endpoint as EndpointV2 } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { Ed25519Account } from '@aptos-labs/ts-sdk'
 import { SDK as AptosSDK } from '@layerzerolabs/lz-aptos-sdk-v2'
+import { OmniSDK } from '../../../devtools-aptos/src/omnigraph/sdk'
 
 // SDK for Initia FA based OFT
-export class OFT implements IOApp {
+// This sdk never knows the signer.
+// It gets the transaction payload from the monorepo sdk and then passes that to the user to sign with the signer.
+export class OFT extends OmniSDK implements IOApp {
     public readonly sdk: AptosSDK
     public readonly point: OmniPoint
     public readonly oft: Oft<Ed25519Account>
 
     constructor(sdk: AptosSDK, point: OmniPoint) {
+        super(sdk, point)
         this.point = point
         this.sdk = sdk
         this.oft = new Oft(this.sdk, false)
@@ -74,20 +78,15 @@ export class OFT implements IOApp {
     async setPeer(eid: number, peer: string | null | undefined): Promise<OmniTransaction> {
         const encodedPeer = peer ? new TextEncoder().encode(peer) : new Uint8Array(0)
         console.log('encodedPeer:', encodedPeer)
-        // try {
-        //     await this.oft.setPeer(this.privateKey, eid, encodedPeer)
-        // } catch (e) {
-        //     console.log('error:', e)
-        // }
-        // const res = await this.oft.setPeerPayload(eid, encodedPeer)
-        // // const response = await this.oft.setPeer(this.privateKey, eid, encodedPeer)
 
-        // const omniTransaction: OmniTransaction = {
-        //     point: this.point,
-        //     data: res,
-        // }
-        // return omniTransaction
-        throw new Error('Not implemented')
+        const result = await this.oft.setPeerPayload(eid, encodedPeer)
+
+        const omniTransaction: OmniTransaction = {
+            point: this.point,
+            data: result,
+        }
+
+        return omniTransaction
     }
 
     async getDelegate(): Promise<string | undefined> {

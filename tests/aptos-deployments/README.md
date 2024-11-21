@@ -1,7 +1,9 @@
+How to deploy aptos oft on local aptos node
+
 download aptos cli
 
 generate a private key
-aptos key generate --output-file my_private_key --vanity-prefix 0xb33f
+aptos key generate --output-file my_key --vanity-prefix 0xb33f
 
 initialize aptos cli
 aptos init
