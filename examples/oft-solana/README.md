@@ -56,7 +56,6 @@ endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
 
-
 Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
 
 ```
