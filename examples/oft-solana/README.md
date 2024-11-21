@@ -13,7 +13,7 @@
 ## Setup
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
-Additionally, we highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
+Docker is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
 ### Get the code
@@ -49,7 +49,6 @@ anchor keys sync
 
 :warning: `--force` flag overwrites the existing keys with the ones you generate.
 
-
 Run `anchor keys list` to view the generated programIds (public keys). The output should look something like this:
 
 ```
@@ -70,6 +69,8 @@ declare_id!(Pubkey::new_from_array(program_id_from_env!(
 Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
 
 ### Building and Deploying the OFT Program
+
+Ensure you have Docker running before running the build command.
 
 ```bash
 anchor build -v # verification flag enabled
