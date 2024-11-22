@@ -12,13 +12,11 @@
 
 ## Setup
 
+Ensure that you have Rust, Solana and Anchor installed. If not, follow the instructions in the [official Solana guide](https://solana.com/docs/intro/installation#install-dependencies). On the page as well are instructions on creating a wallet and getting devnet SOL.
+
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
 Docker is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
-
-Ensure that you have Rust, Solana and Anchor installed. If not, follow the instructions in the [official Solana guide](https://solana.com/docs/intro/installation#install-dependencies). On the page as well are instructions on creating a wallet and getting devnet SOL.
-
-For the `solana airdrop` command, we recommend that you run `solana airdrop 5 -u devnet` to request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you are hitting rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
 
 ### Get the code
 
@@ -37,6 +35,41 @@ pnpm install
 ```bash
 pnpm test
 ```
+
+### Get Devnet SOL
+
+```bash
+solana airdrop 5 -u devnet
+```
+
+We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you are hitting rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
+
+### Prepare `.env`
+
+```bash
+cp .env.example .env
+```
+
+In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first. You can create a temporary script called `getBase58Pk.js` in your project root with the following contents:
+
+```js
+import fs from "fs";
+import { Keypair } from "@solana/web3.js";
+import bs58 from "bs58";
+
+const keypairFilePath = `<KEYPAIR_FILE_PATH_HERE>`; // you can view this by running `solana config get`
+
+const data = fs.readFileSync(keypairFilePath, "utf8");
+const keypairJson = JSON.parse(data);
+const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson));
+const base58EncodedPrivateKey = bs58.encode(keypair.secretKey);
+
+console.log(base58EncodedPrivateKey);
+```
+
+Then, run `node getBase58Pk.js`
+
+Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the Solana Devnet. We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
 ## Deploy
 
