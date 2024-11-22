@@ -42,7 +42,7 @@ pnpm test
 solana airdrop 5 -u devnet
 ```
 
-We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you are hitting rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
+We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you hit RPC rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
 
 ### Prepare `.env`
 
