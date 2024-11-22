@@ -16,6 +16,8 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 Docker is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
+Ensure that you have Rust, Solana and Anchor installed. If not, follow the instructions in the [official Solana guide](https://solana.com/docs/intro/installation#install-dependencies). On the page as well are instructions on creating a wallet and getting devnet SOL. For the `solana airdrop` command, we recommend that you run `solana airdrop 5 -ud` (`-ud` is a flag shorthand for using the Devnet RPC URL) to request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you are hitting rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
+
 ### Get the code
 
 ```bash
