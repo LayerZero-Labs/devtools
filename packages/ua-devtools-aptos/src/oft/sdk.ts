@@ -1,31 +1,30 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
 import {
-    // type OmniAddress,
     type OmniTransaction,
     type OmniPoint,
-    // AsyncRetriable,
+    formatEid,
+    mapError,
+    OmniAddress,
+    denormalizePeer,
+    normalizePeer,
+    areBytes32Equal,
 } from '@layerzerolabs/devtools'
 import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-// import { InputEntryFunctionData } from '@layerzerolabs/move-definitions'
-// import { TransactionResponse } from '@layerzerlabs/move-suite'
 import type { IEndpointV2 } from '@layerzerolabs/protocol-devtools'
-// import { Endpoint as EndpointV2 } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { Ed25519Account } from '@aptos-labs/ts-sdk'
 import { SDK as AptosSDK } from '@layerzerolabs/lz-aptos-sdk-v2'
-import { OmniSDK } from '../../../devtools-aptos/src/omnigraph/sdk'
+import { OmniSDK } from '@layerzerolabs/devtools-aptos'
 
 // SDK for Initia FA based OFT
 // This sdk never knows the signer.
 // It gets the transaction payload from the monorepo sdk and then passes that to the user to sign with the signer.
 export class OFT extends OmniSDK implements IOApp {
     public readonly sdk: AptosSDK
-    public readonly point: OmniPoint
     public readonly oft: Oft<Ed25519Account>
 
     constructor(sdk: AptosSDK, point: OmniPoint) {
-        super(sdk, point)
-        this.point = point
+        super(sdk.getAptosClient(), point)
         this.sdk = sdk
         this.oft = new Oft(this.sdk, false)
     }
@@ -54,56 +53,74 @@ export class OFT extends OmniSDK implements IOApp {
         throw new Error('Not implemented')
     }
 
-    async getPeer(eid: EndpointId): Promise<string | undefined> {
-        return this.oft.getPeer(eid)
+    async getPeer(eid: EndpointId): Promise<OmniAddress | undefined> {
+        const eidLabel = `eid ${eid} (${formatEid(eid)})`
+
+        this.logger.debug(`Getting peer for ${eidLabel}`)
+        const peer = await mapError(
+            () => this.oft.getPeer(eid),
+            (error) => new Error(`Failed to get peer for ${eidLabel}: ${error}`)
+        )
+
+        // We run the hex string we got through a normalization/denormalization process
+        // that will ensure that zero addresses will get stripped
+        // and any network-specific logic will be applied
+        return denormalizePeer(normalizePeer(peer, this.point.eid), eid)
     }
 
-    async hasPeer(eid: EndpointId): Promise<boolean> {
-        return this.oft.hasPeer(eid)
+    async hasPeer(eid: EndpointId, address: OmniAddress | null | undefined): Promise<boolean> {
+        const peer = await this.getPeer(eid)
+
+        return areBytes32Equal(normalizePeer(peer, eid), normalizePeer(address, eid))
     }
 
-    // interface OmniTransaction {
-    //     point: OmniPoint;
-    //     data: string;
-    //     description?: string;
-    //     gasLimit?: string | bigint | number;
-    //     value?: string | bigint | number;
-    // }
-    // interface TransactionResponse {
-    //     hash: string;
-    //     sender: string;
-    //     raw: unknown;
-    // }
+    private encodeAddress(address: string | null | undefined): Uint8Array {
+        const bytes = address ? Buffer.from(address.replace('0x', ''), 'hex') : new Uint8Array(0)
+        const bytes32 = new Uint8Array(32)
+        bytes32.set(bytes, 32 - bytes.length)
+        return bytes32
+    }
 
     async setPeer(eid: number, peer: string | null | undefined): Promise<OmniTransaction> {
-        const encodedPeer = peer ? new TextEncoder().encode(peer) : new Uint8Array(0)
-        console.log('encodedPeer:', encodedPeer)
-
-        const result = await this.oft.setPeerPayload(eid, encodedPeer)
+        const encodedPeer = this.encodeAddress(peer)
+        const payload = await this.oft.setPeerPayload(eid, encodedPeer)
+        const sender = this.sdk.accounts.oft ?? ''
 
         const omniTransaction: OmniTransaction = {
             point: this.point,
-            data: result,
+            data: await this.serializeTransactionData(sender, payload),
         }
 
         return omniTransaction
     }
 
     async getDelegate(): Promise<string | undefined> {
-        const delegate = await this.oft.getDelegate()
-        return delegate
+        this.logger.debug(`Getting delegate`)
+
+        const delegate = await mapError(
+            () => this.oft.getDelegate(),
+            (error) => new Error(`Failed to get delegate: ${error}`)
+        )
+        return this.logger.debug(delegate ? `Got delegate ${delegate}` : `OApp has no delegate`), delegate
     }
 
-    async isDelegate(address: string): Promise<boolean> {
-        return address !== undefined
+    async isDelegate(delegate: OmniAddress): Promise<boolean> {
+        return delegate.toLowerCase() === (await this.getDelegate())?.toLowerCase()
     }
 
-    async setDelegate(address: string): Promise<OmniTransaction> {
-        // Replace with actual implementation
-        if (address === undefined) {
-            throw new Error('Address is undefined')
+    async setDelegate(delegate: OmniAddress): Promise<OmniTransaction> {
+        const description = `Setting delegate to ${delegate}`
+        this.logger.debug(description)
+
+        const payload = this.oft.setDelegatePayload(delegate)
+        const sender = this.sdk.accounts.oft ?? ''
+        const omniTransaction: OmniTransaction = {
+            point: this.point,
+            data: await this.serializeTransactionData(sender, payload),
+            description: description,
         }
-        return address as unknown as OmniTransaction
+
+        return omniTransaction
     }
 
     async getEnforcedOptions(eid: EndpointId, msgType: number): Promise<string> {

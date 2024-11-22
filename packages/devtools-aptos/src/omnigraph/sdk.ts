@@ -1,6 +1,6 @@
 import { Logger, createModuleLogger } from '@layerzerolabs/io-devtools'
-import type { IOmniSDK , OmniPoint } from '@layerzerolabs/devtools'
-import { Aptos, InputEntryFunctionData, generateTransactionPayload, InputEntryFunctionDataWithRemoteABI, Serializer } from '@aptos-labs/ts-sdk'
+import type { IOmniSDK, OmniPoint } from '@layerzerolabs/devtools'
+import { Aptos, InputEntryFunctionData } from '@aptos-labs/ts-sdk'
 import { formatOmniPoint } from '@layerzerolabs/devtools'
 import { serializeTransactionPayload } from '../signer/serde'
 
@@ -24,13 +24,11 @@ export abstract class OmniSDK implements IOmniSDK {
         return formatOmniPoint(this.point)
     }
 
-    protected async serializeTransactionData(data: InputEntryFunctionData): Promise<string> {
-        // TOOD: remove network call (this.aptos.config)
-        const payload = await generateTransactionPayload({
-            ...data,
-            aptosConfig: this.aptos.config,
+    protected async serializeTransactionData(sender: string, data: InputEntryFunctionData): Promise<string> {
+        const simpleTransaction = await this.aptos.transaction.build.simple({
+            sender,
+            data,
         })
-
-        return serializeTransactionPayload(payload)
+        return serializeTransactionPayload(simpleTransaction)
     }
 }

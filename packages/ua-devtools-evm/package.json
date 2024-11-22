@@ -73,5 +73,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "resolutions": {
+    "@layerzerolabs/devtools": "0.3.29",
+    "@layerzerolabs/lz-definitions": "3.0.16"
   }
 }

@@ -8,8 +8,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 async function main() {
-    // your oft contract address.
-    const address = '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e'
+    // the address of the wallet that will deploy the oft module
+    const address = '0xb33f67711893a9497b038e68ee87c2e645dae22187ea8b2967f7dc90f7fbe695'
     // url is the aptos chain full node url
     const url = 'http://127.0.0.1:8080/v1'
 

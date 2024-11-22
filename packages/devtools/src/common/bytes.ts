@@ -121,7 +121,7 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
     }
 
     const chainType = endpointIdToChainType(eid)
-
+    console.log('chainType:', chainType)
     switch (chainType) {
         case ChainType.SOLANA:
             return bs58.encode(toBytes32(bytes))
