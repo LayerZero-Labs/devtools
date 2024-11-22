@@ -19,13 +19,6 @@ export const getExamples = (): Example[] => {
 
     return [
         {
-            id: 'oft',
-            label: 'OFT',
-            repository,
-            directory: 'examples/oft',
-            ref,
-        },
-        {
             id: 'oapp',
             label: 'OApp',
             repository,
@@ -33,10 +26,10 @@ export const getExamples = (): Example[] => {
             ref,
         },
         {
-            id: 'onft721',
-            label: 'ONFT721',
+            id: 'oft',
+            label: 'OFT',
             repository,
-            directory: 'examples/onft721',
+            directory: 'examples/oft',
             ref,
         },
         {
@@ -47,19 +40,40 @@ export const getExamples = (): Example[] => {
             ref,
         },
         {
-            id: 'native-oft-adapter',
-            label: 'NativeOFTAdapter',
+            id: 'onft721',
+            label: 'ONFT721',
             repository,
-            directory: 'examples/native-oft-adapter',
+            directory: 'examples/onft721',
             ref,
         },
-        {
-            id: 'oft-upgradeable',
-            label: 'Upgradeable OFT',
-            repository,
-            directory: 'examples/oft-upgradeable',
-            ref,
-        },
+        // ZK-Solc examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
+            ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
+            : []),
+        // Upgradeable contract examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_UPGRADEABLE_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-upgradeable',
+                      label: 'UpgradeableOFT',
+                      repository,
+                      directory: 'examples/oft-upgradeable',
+                      ref,
+                  },
+              ]
+            : []),
+        // Native OFT Adapter example is feature flagged for the time being
+        ...(process.env.LZ_ENABLE_NATIVE_EXAMPLE
+            ? [
+                  {
+                      id: 'native-oft-adapter',
+                      label: 'NativeOFTAdapter',
+                      repository,
+                      directory: 'examples/native-oft-adapter',
+                      ref,
+                  },
+              ]
+            : []),
         // OApp Read examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_READ_EXAMPLE
             ? [
