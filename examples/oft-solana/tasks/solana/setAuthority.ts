@@ -11,7 +11,7 @@ import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
-import { deriveConnection, getExplorerTxLink } from './index'
+import { addPerformanceInstructions, deriveConnection, getExplorerTxLink } from './index'
 
 interface SetAuthorityTaskArgs {
     /**
@@ -50,6 +50,9 @@ interface SetAuthorityTaskArgs {
      * using this flag, as it is not reversible.
      */
     onlyOftStore: boolean
+
+    computeUnitPriceScaleFactor: number
+    computeUnitLimitScaleFactor: number
 }
 
 /**
@@ -104,6 +107,8 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
         TOKEN_PROGRAM_ID.toBase58(),
         devtoolsTypes.string
     )
+    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
+    .addParam('computeUnitLimitScaleFactor', 'The compute unit limit scale factor', 1.1, devtoolsTypes.float, true)
     .setAction(
         async ({
             eid,
@@ -113,6 +118,8 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             tokenProgram: tokenProgramStr,
             additionalMinters: additionalMintersAsStrings,
             onlyOftStore,
+            computeUnitPriceScaleFactor,
+            computeUnitLimitScaleFactor,
         }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
@@ -176,13 +183,21 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
                     })) as unknown as AccountMeta[],
                     data: ix.data,
                 }
-                const { signature } = await transactionBuilder()
-                    .add({
-                        instruction: umiInstruction,
-                        signers: [umiWalletSigner], // Include all required signers here
-                        bytesCreatedOnChain: 0,
-                    })
-                    .sendAndConfirm(umi)
+                let txBuilder = transactionBuilder().add({
+                    instruction: umiInstruction,
+                    signers: [umiWalletSigner], // Include all required signers here
+                    bytesCreatedOnChain: 0,
+                })
+                txBuilder = await addPerformanceInstructions(
+                    connection,
+                    umi,
+                    eid,
+                    txBuilder,
+                    umiWalletSigner,
+                    computeUnitPriceScaleFactor,
+                    computeUnitLimitScaleFactor
+                )
+                const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(
                     `SetAuthorityTx(${getAuthorityTypeString(authorityType)}): ${getExplorerTxLink(bs58.encode(signature), eid == EndpointId.SOLANA_V2_TESTNET)}`
                 )
