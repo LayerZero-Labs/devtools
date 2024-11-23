@@ -25,7 +25,7 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
 
-:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts
+:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts. We are currently blocked by these issues from upgrading: [1](https://github.com/coral-xyz/anchor/issues/3089), [2](https://github.com/coral-xyz/anchor/issues/2835).
 
 ### Install Rust
 
@@ -84,7 +84,7 @@ pnpm test
 solana airdrop 5 -u devnet
 ```
 
-We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you hit RPC rate limits after, you can also use the [official Solana faucet](https://faucet.solana.com/).
+We recommend that you request 5 devnet SOL, which should be sufficient for this walkthrough. For the example here, we will be using Solana Devnet. If you hit rate limits, you can also use the [official Solana faucet](https://faucet.solana.com/).
 
 ### Prepare `.env`
 
@@ -146,7 +146,7 @@ declare_id!(Pubkey::new_from_array(program_id_from_env!(
 
 Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
 
-### Building and Deploying the OFT Program
+### Building and Deploying the Solana OFT Program
 
 Ensure you have Docker running before running the build command.
 
@@ -157,7 +157,39 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 :information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
 
-### Create the OFT
+:warning: If the deployment is slow, it could be that the network is congested. If so, you can either wait it out or opt to include a `priorityFee`.
+
+### (optional) Deploying with a priority fee
+
+This section only applies if you are unable to land your deployment transaction due to network congestion.
+
+:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command.
+
+<details>
+  <summary>View instructions</summary>
+  Because building requires Solana CLI version `1.17.31`, but priority fees are only supported in version `1.18`, we will need to switch Solana CLI versions temporarily.
+
+```bash
+solana-install init 1.18.26
+```
+
+Note that you will only have `solana-install` if you installed v1.X.X or using the commands listed here, but you will not have if you had previously installed v2.
+
+Now let's rerun the deploy command, but with the compute unit price flag.
+
+```bash
+solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_LAMPORTS>
+```
+
+:warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
+
+```bash
+solana-install init 1.17.31
+```
+
+</details>
+
+### Create the Solana OFT
 
 For OFT:
 
