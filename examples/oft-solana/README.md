@@ -10,13 +10,55 @@
 
 <h1 align="center">Omnichain Fungible Token (OFT) Solana Example</h1>
 
+## Requirements
+
+- Rust
+- Anchor v0.29
+- Solana CLI v.1.17.31
+- Docker
+- Node.js
+
 ## Setup
 
-Ensure that you have Rust, Solana, and Anchor installed. If not, follow the instructions in the [official Solana guide](https://solana.com/docs/intro/installation#install-dependencies). On the page as well are instructions on creating a wallet and getting devnet SOL.
-
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice).
+
 [Docker](https://docs.docker.com/get-started/get-docker/) is required to build using anchor. We highly recommend that you use the most up-to-date Docker version to avoid any issues with anchor
 builds.
+
+:warning: You need anchor version `0.29` and solana version `1.17.31` specifically to compile the build artifacts
+
+### Install Rust
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+```
+
+### Install Solana
+
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
+```
+
+### Install Anchor
+
+The preferred way of installing Anchor is by using AVM (Anchor Version Manager), which will allow easy version switching. So first, install AVM.
+
+```bash
+cargo install --git https://github.com/coral-xyz/anchor avm --force
+```
+
+Verify AVM is accessible
+
+```bash
+avm --version
+```
+
+Install and use the correct version
+
+```bash
+avm install 0.29.0
+avm use 0.29.0
+```
 
 ### Get the code
 
