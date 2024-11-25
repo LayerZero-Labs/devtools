@@ -259,13 +259,15 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 
 With a squads multisig, you can simply append the `--multisigKey` flag to the end of the above command.
 
-### Send SOL -> Sepolia
+### Send
+
+#### Send SOL -> Sepolia
 
 ```bash
 npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
 
-### Send Sepolia -> SOL
+#### Send Sepolia -> SOL
 
 ```bash
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
