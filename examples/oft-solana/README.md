@@ -249,6 +249,8 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
+:information_source: `<SECRET_KEY>` should also be in base58 format.
+
 ### Wire
 
 ```bash
@@ -266,7 +268,7 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 ### Send Sepolia -> SOL
 
 ```bash
-npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
+npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
 ```
 
 ### Set a new Mint Authority Multisig
