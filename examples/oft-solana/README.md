@@ -222,7 +222,16 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 multisig. If you do not want to, you must specify `--only-oft-store store`. If you choose the latter approach, you can never
 substitute in a different mint authority.
 
+### Update [layerzero.config.ts](./layerzero.config.ts)
+
 Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
+
+```typescript
+const solanaContract: OmniPointHardhat = {
+  eid: EndpointId.SOLANA_V2_TESTNET,
+  address: "", // <---TODO update this with the OFTStore address.
+};
+```
 
 ### Deploy a sepolia OFT peer
 
