@@ -12,13 +12,16 @@ interface TaskArguments {
     dstEid: number
     amount: string
     to: string
+    contractName: string
 }
 
-const action: ActionType<TaskArguments> = async ({ dstEid, amount, to }, hre: HardhatRuntimeEnvironment) => {
+const action: ActionType<TaskArguments> = async (
+    { dstEid, amount, to, contractName },
+    hre: HardhatRuntimeEnvironment
+) => {
     const signer = await hre.ethers.getNamedSigner('deployer')
-    const tokenName = 'MyOFT'
     // @ts-ignore
-    const token = (await hre.ethers.getContract(tokenName)).connect(signer)
+    const token = (await hre.ethers.getContract(contractName)).connect(signer)
 
     // if (isSepolia(hre.network.name)) {
     //     // @ts-ignore
@@ -54,3 +57,4 @@ task('send', 'Sends a transaction', action)
     .addParam('dstEid', 'Destination endpoint ID', undefined, types.int, false)
     .addParam('amount', 'Amount to send in wei', undefined, types.string, false)
     .addParam('to', 'Recipient address', undefined, types.string, false)
+    .addOptionalParam('contractName', 'Name of the contract in deployments folder', 'MyOFT', types.string)
