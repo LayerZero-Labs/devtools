@@ -259,6 +259,13 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 
 With a squads multisig, you can simply append the `--multisigKey` flag to the end of the above command.
 
+### Set Message Execution Options
+
+Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
+
+For Sepolia -> Solana, you should pass in the options value into the script at `tasks/evm/send.ts` as the value for `sendParam.extraOptions`.
+For Solana -> Sepolia, you should pass in the options value into the script at `examples/oft-solana/tasks/solana/sendOFT.ts` as the value for `options` for both in `quote` and `send`.
+
 ### Send
 
 #### Send SOL -> Sepolia
