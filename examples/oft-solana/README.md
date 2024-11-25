@@ -94,6 +94,9 @@ cp .env.example .env
 
 In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first. You can create a temporary script called `getBase58Pk.js` in your project root with the following contents:
 
+<details>
+  <summary> View `getBase58Pk.js` script </summary>
+
 ```js
 import fs from "fs";
 import { Keypair } from "@solana/web3.js";
@@ -110,6 +113,8 @@ console.log(base58EncodedPrivateKey);
 ```
 
 Then, run `node getBase58Pk.js`
+
+</details>
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
@@ -173,7 +178,7 @@ This section only applies if you are unable to land your deployment transaction 
 solana-install init 1.18.26
 ```
 
-Note that you will only have `solana-install` if you installed v1.X.X or using the commands listed here, but you will not have if you had previously installed v2.
+Note that you will only have `solana-install` if you installed v1.X.X or used the commands listed here, but you will not have if you had previously installed v2.
 
 Now let's rerun the deploy command, but with the compute unit price flag.
 
@@ -227,7 +232,7 @@ pnpm hardhat lz:deploy # follow the prompts
 
 Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting.
 
-### Initialize the OFT
+### Initialize the Solana OFT
 
 :warning: Only do this the first time you are initializing the OFT.
 
