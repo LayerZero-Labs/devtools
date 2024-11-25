@@ -72,7 +72,10 @@ module oft::oapp_core {
 
     // ================================================ Delegated Calls ===============================================
 
-    /// Asserts that the delegated call is authorized, either as the OApp address or the assigned delegate
+    /// Asserts that the delegated call is "authorized," either as the OApp address or the assigned delegate
+    /// "authorized" indicates a wallet has permission to act on behalf of the OApp in respect to endpoint calls,
+    /// for example, "set_send_library()" or "skip()," but this does not extend to calls that are internal to (stored
+    /// on) the OApp like "set_peer()," which is are "admin only" permissions
     fun assert_authorized(account: address) {
         assert!(account == OAPP_ADDRESS() || account == oapp_store::get_delegate(), EUNAUTHORIZED);
     }
@@ -206,7 +209,7 @@ module oft::oapp_core {
 
     #[view]
     public fun combine_options(eid: u32, msg_type: u16, extra_options: vector<u8>): vector<u8> {
-        let enforced_options = get_enforced_options(eid, msg_type);
+        let enforced_options = oapp_store::get_enforced_options(eid, msg_type);
         if (vector::is_empty(&enforced_options)) { return extra_options };
         if (vector::is_empty(&extra_options)) { return enforced_options };
         assert_options_type_3(extra_options);
@@ -217,10 +220,12 @@ module oft::oapp_core {
     // ===================================================== Admin ====================================================
 
     #[view]
+    /// Gets the admin address
     public fun get_admin(): address {
         oapp_store::get_admin()
     }
 
+    /// Transfers the admin from one address (initially the OApp contract address) to another
     public entry fun transfer_admin(account: &signer, new_admin: address) {
         let admin = address_of(move account);
         assert_admin(admin);
@@ -229,6 +234,7 @@ module oft::oapp_core {
         emit(AdminTransferred { admin: new_admin });
     }
 
+    /// Permanently renounce OApp admin rights. Once this is called the admin cannot be reinstated
     public entry fun renounce_admin(account: &signer) {
         let admin = address_of(move account);
         assert_admin(admin);
@@ -236,6 +242,9 @@ module oft::oapp_core {
         emit(AdminTransferred { admin: @0x0 });
     }
 
+    /// Asserts that a user address is the OApp admin. This admin can make any configuration change that directly lives
+    /// on the OApp (like setting the peer), but it does not include permission to make configuration changes or act on
+    /// behalf of the OApp on the Endpoint, which requires "authorized" permission
     public(friend) fun assert_admin(admin: address) {
         assert!(admin == oapp_store::get_admin(), EUNAUTHORIZED);
     }

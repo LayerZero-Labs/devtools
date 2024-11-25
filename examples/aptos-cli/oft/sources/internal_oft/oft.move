@@ -20,6 +20,9 @@ module oft::oft {
     use oft_common::oft_fee_detail::OftFeeDetail;
     use oft_common::oft_limit::OftLimit;
 
+    // ************************************************* CONFIGURATION *************************************************
+
+    // **Important** Replace `oft_fa` with implementation module used
     use oft::oft_fa::{
         balance as balance_internal,
         build_options,
@@ -30,11 +33,13 @@ module oft::oft {
         deposit_coin,
         inspect_message,
         metadata as metadata_internal,
-        PlaceholderCoin,
         oft_limit_and_fees,
+        PlaceholderCoin,
         send_standards_supported as send_standards_supported_internal,
         withdraw_coin,
     };
+
+    // *********************************************** END CONFIGURATION ***********************************************
 
     friend oft::oapp_receive;
     friend oft::oapp_compose;
@@ -319,7 +324,8 @@ module oft::oft {
 
     // =============================================== Ordered Execution ==============================================
 
-    // Provides the next nonce if executor options request ordered execution; returning 0 for disabled ordered execution
+    /// Provides the next nonce if executor options request ordered execution; returns 0 to indicate ordered execution
+    /// is disabled
     public(friend) fun next_nonce_impl(_src_eid: u32, _sender: Bytes32): u64 {
         0
     }
@@ -383,6 +389,9 @@ module oft::oft {
 
     #[view]
     public fun remove_dust(amount_ld: u64): u64 { oft_core::remove_dust(amount_ld) }
+
+    #[view]
+    public fun shared_decimals(): u8 { oft_core::shared_decimals() }
 
     #[view]
     public fun decimal_conversion_rate(): u64 { oft_core::decimal_conversion_rate() }

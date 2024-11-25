@@ -20,9 +20,15 @@ module oft::oft_core {
     #[test_only]
     friend oft::oft_core_tests;
 
+    // **Important** Please delete any friend declarations to unused / deleted modules
     friend oft::oft_fa;
+    friend oft::oft_adapter_fa;
+    friend oft::oft_coin;
+    friend oft::oft_adapter_coin;
     #[test_only]
     friend oft::oft_fa_tests;
+    #[test_only]
+    friend oft::oft_adapter_fa_tests;
     #[test_only]
     friend oft::oapp_receive_using_oft_fa_tests;
 
@@ -189,6 +195,8 @@ module oft::oft_core {
         let decimal_conversion_rate = oft_store::decimal_conversion_rate();
         (amount_ld / decimal_conversion_rate) * decimal_conversion_rate
     }
+
+    public(friend) fun shared_decimals(): u8 { oft_store::shared_decimals() }
 
     public(friend) fun decimal_conversion_rate(): u64 { oft_store::decimal_conversion_rate() }
 

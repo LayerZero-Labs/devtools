@@ -1,4 +1,4 @@
-/// This is an implementation of a FungibleAsset-standard, Native OFT.
+/// This is an implementation of a FungibleAsset-standard OFT.
 ///
 /// This creates a FungibleAsset upon initialization and mints and burns tokens on receive and send respectively.
 /// This can be modified to accept mint, burn, and metadata references of an existing FungibleAsset upon initialization
@@ -33,7 +33,7 @@ module oft::oft_fa {
 
     // ================================================= OFT Handlers =================================================
 
-    /// The default *credit* behavior for a Native OFT is to mint the amount and transfer to the recipient
+    /// The default *credit* behavior for a standard OFT is to mint the amount and transfer to the recipient
     public(friend) fun credit(
         to: address,
         amount_ld: u64,
@@ -50,7 +50,7 @@ module oft::oft_fa {
         amount_ld
     }
 
-    /// The default *debit* behavior for a Native OFT is to deduct the amount from the sender and burn the deducted
+    /// The default *debit* behavior for a standard OFT is to deduct the amount from the sender and burn the deducted
     /// amount
     /// @return (amount_sent_ld, amount_received_ld)
     public(friend) fun debit_fungible_asset(
@@ -75,11 +75,15 @@ module oft::oft_fa {
     }
 
     // Unused in this implementation
-    public(friend) fun debit_coin<CoinType>(_coin: &mut Coin<CoinType>, _min_amount_ld: u64, _dst_eid: u32): (u64, u64) {
+    public(friend) fun debit_coin<CoinType>(
+        _coin: &mut Coin<CoinType>,
+        _min_amount_ld: u64,
+        _dst_eid: u32,
+    ): (u64, u64) {
         abort ENOT_IMPLEMENTED
     }
 
-    /// The default *debit_view* behavior for an OFT is to remove dust and use remainder as both the sent and
+    /// The default *debit_view* behavior for a standard OFT is to remove dust and use remainder as both the sent and
     /// received amounts, reflecting that no additional fees are removed
     public(friend) fun debit_view(amount_ld: u64, min_amount_ld: u64, _dst_eid: u32): (u64, u64) {
         oft_core::no_fee_debit_view(amount_ld, min_amount_ld)
