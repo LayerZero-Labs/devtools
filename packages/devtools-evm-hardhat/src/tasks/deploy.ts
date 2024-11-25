@@ -80,7 +80,7 @@ const action: ActionType<TaskArgs> = async (
 
     // The first thing to do is to ensure that the project is compiled
     try {
-        logger.info(`Compiling you hardhat project`)
+        logger.info(`Compiling your hardhat project`)
 
         await hre.run(TASK_COMPILE)
     } catch (error) {
