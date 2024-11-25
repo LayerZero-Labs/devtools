@@ -271,6 +271,8 @@ npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to
 npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
 ```
 
+:information_source: If you encounter an error such as `No Contract deployed with name`, ensure that the `tokenName` in the task defined in `tasks/evm/send.ts` matches the deployed contract name.
+
 ### Set a new Mint Authority Multisig
 
 If you are not happy with the deployer being a mint authority, you can create and set a new mint authority by running:
