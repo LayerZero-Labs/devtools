@@ -1,5 +1,12 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.2
+
+### Patch Changes
+
+- 5b563f0: Added optional stage and networks arguments to lz:healthcheck:validate:rpcs task
+- 31b0610: Fix typo in CLI
+
 ## 2.0.1
 
 ### Patch Changes

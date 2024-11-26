@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.3
+
+### Patch Changes
+
+- 31b0610: Fix typo in CLI
+- Updated dependencies [5b563f0]
+- Updated dependencies [31b0610]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.2
+
 ## 6.0.2
 
 ### Patch Changes

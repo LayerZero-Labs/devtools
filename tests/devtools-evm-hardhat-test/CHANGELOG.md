@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.1
+
+### Patch Changes
+
+- 5b563f0: Added optional stage and networks arguments to lz:healthcheck:validate:rpcs task
+
 ## 0.3.0
 
 ### Minor Changes
