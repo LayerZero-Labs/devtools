@@ -11,8 +11,6 @@
     },
     "dependencies": {
       "@aptos-labs/ts-sdk": "^1.26.0",
-      "@layerzerolabs/lz-aptos": "^1.0.11",
-      "@layerzerolabs/lz-aptos-sdk-v2": "^3.0.15",
       "@layerzerolabs/lz-config-types": "^3.0.15",
       "@layerzerolabs/lz-movevm-sdk-v2": "^3.0.15",
       "@layerzerolabs/move-definitions": "^3.0.15",

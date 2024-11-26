@@ -1,4 +1,3 @@
-import { SDK as AptosSDK } from '@layerzerolabs/lz-aptos-sdk-v2'
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { Stage } from '@layerzerolabs/lz-definitions'

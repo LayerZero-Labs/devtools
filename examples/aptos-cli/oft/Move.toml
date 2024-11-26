@@ -12,8 +12,8 @@ simple_msglib = "0xc726431adfe8c4a28ccd0f2b3810487a7b4438092244f0d894d3600087c5e
 blocked_msglib = "0x6b4c17dda186261c403d3e81bcc87e1a2fbb0a8a2bfb07f8cdf4b17ccddc45ad"
 uln_302 = "0xb785f6093141e4729eb46dd7398dd7259cd5ce74e312b29ed12380bba1606808"
 router_node_1 = "0x93a32b750b7be7371e5bd60954085186d84b4d42362f281d7d1c64f900cebb67"
-endpoint_v2_common = "0x84937e3698c2ba30eb1a7dcdc4fbe912c9f2f2675cd0d5bc7a83e5d732d665b7"
 endpoint_v2 = "0xd9fbd5191a9864742464950e4e850786b60d26b1349dcc2227de294c7b2b32c5"
+endpoint_v2_common = "0x84937e3698c2ba30eb1a7dcdc4fbe912c9f2f2675cd0d5bc7a83e5d732d665b7"
 layerzero_admin = "0x75de231a1ea32a14ed5be6a52475b16d7d8eeac35d378afd4c361979c0ae1531"
 layerzero_treasury_admin = "0xd9fbd5191a9864742464950e4e850786b60d26b1349dcc2227de294c7b2b32c5"
 msglib_types = "0xdf2ce67a6a2f7eab2c1c7baea4e21305d847c0505c6951d183014ed3712d7ea8"
@@ -31,7 +31,6 @@ executor_fee_lib_0 = "0x99ffef2284f725683de26bbce8fc0010770426f7387c7bbec4bced83
 dvn_fee_lib_0 = "0x8340a176d3caf05ab492e943363055fba1d2ef6d49c5775dd59757645a556687"
 dvn = "0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22"
 native_token_metadata_address = "0xa"
-native_token = "0xa"
 # For Initia: "0x8e4733bdabcf7d4afc3d14f0dd46c9bf52fb0fce9e4b996c939e195b8bc891d9"
 
 [dev-addresses]
