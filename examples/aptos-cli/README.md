@@ -21,7 +21,7 @@ MAKE SURE YOU set the account that will be used for administrative functions suc
 
 TODO: create descriptions of each account
 oft is the owner of the deployer object which gives the account that owns the object the abilitiy to upgrade the object and also burn and mint the fungible asset.
-oft_admin is the account that is respoinsible for administrative functions such as setting the peers, set uln config... etc.
+oft_admin is the account that is responsible for administrative functions such as setting the peers, set uln config... etc.
 
 now the address of the deployed oft is printed out in the terminal:
 ```
