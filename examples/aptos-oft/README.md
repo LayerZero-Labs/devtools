@@ -33,3 +33,47 @@ Code was successfully deployed to object address 0xaebb730cc67b4b0987ec99cd20b9e
 ```
 INIT THE OFT FIRST (?)
 SET THE DELEGATE BEFORE YOU DO ANYTHING ELSE
+
+Now that we have deployed the aptos oft, we can wire it to the other chains.
+
+### Wiring your aptos oft:
+
+### layerzero.config.ts:
+ensure that all of the contracts you wish to wire your aptos oft to are included under the contracts array. For example, if you want to wire your aptos oft to both sepolia and fuji, you would include both contracts under the contracts array, and specify them like this:
+```typescript
+const aptosContract: OmniPointHardhat = {
+    eid: EndpointId.APTOS_TESTNET,
+    contractName: 'oft',
+}
+
+const fujiContract: OmniPointHardhat = {
+    eid: EndpointId.AVALANCHE_V2_TESTNET,
+    contractName: 'MyOFT',
+}
+
+const config: OAppOmniGraphHardhat = {
+    contracts: [
+        {
+            contract: fujiContract,
+        },
+        {
+            contract: aptosContract,
+        },
+    ],
+    connections: [
+        {
+            from: aptosContract,
+            to: fujiContract,
+        },
+        {
+            from: aptosContract,
+            to: sepoliaContract,
+        },
+    ],
+}
+```
+
+```
+npx hardhat run tasks/wireAptosOFT.ts
+```
+
