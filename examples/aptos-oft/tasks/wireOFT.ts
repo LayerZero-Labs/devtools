@@ -4,8 +4,10 @@ import { OFT } from '../aptos-sdk/oft'
 import * as yaml from 'yaml'
 import * as fs from 'fs'
 import * as path from 'path'
-import config from '../layerzero.config'
+import lzConfig from '../layerzero.config'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { EndpointId, endpointIdToEndpointSpec, endpointSpecToNetwork, Environment } from '@layerzerolabs/lz-definitions'
+import hardhatConfig from '../hardhat.config'
 
 dotenv.config()
 
@@ -24,11 +26,11 @@ async function main() {
 
     oft.setDelegate(account_address)
 
-    setPeers(oft, config)
+    setPeers(oft, lzConfig)
 }
 
-function setPeers(oft: OFT, config: OAppOmniGraphHardhat) {
-    const contracts = config.contracts
+function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
+    const contracts = lzConfig.contracts
 
     for (const entry of contracts) {
         const contractAddress = getContractAddress(entry.contract.eid, entry.contract.contractName)
@@ -36,9 +38,26 @@ function setPeers(oft: OFT, config: OAppOmniGraphHardhat) {
     }
 }
 
+function createEidNetworkNameMapping() {
+
+}
+
+// networks: {
+//     'sepolia-testnet': {
+//         eid: EndpointId.SEPOLIA_V2_TESTNET,
+//         url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
+//         accounts,
+//     },
 function getContractAddress(eid: EndpointId, contractName: string) {
-    
-    return contractAddress
+    const network = 
+    const deploymentPath = path.join(__dirname, `../deployments/${network}/abi.json`)
+
+    try {
+        const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
+        return deployment.address
+    } catch (error) {
+        throw new Error(`Failed to read deployment file for network ${network}: ${error}`)
+    }
 }
 
 function parseYaml() {
