@@ -3114,7 +3114,7 @@ importers:
         specifier: ~1.0.0
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.0
+        specifier: ~2.0.2
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.13
@@ -3502,7 +3502,7 @@ importers:
         specifier: ~1.0.0
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.0
+        specifier: ~2.0.2
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
         specifier: ~0.1.12
