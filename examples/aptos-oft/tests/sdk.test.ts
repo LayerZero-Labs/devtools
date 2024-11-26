@@ -6,13 +6,6 @@ const BSC_OFT_ADAPTER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
 const public_key = '0x8cea84a194ce8032cdd6e12dd87735b4f03a5ba428f3c4265813c7a39ec984d8'
 const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
 
-function encodeAddress(address: string | null | undefined): Uint8Array {
-    const bytes = address ? Buffer.from(address.replace('0x', ''), 'hex') : new Uint8Array(0)
-    const bytes32 = new Uint8Array(32)
-    bytes32.set(bytes, 32 - bytes.length)
-    return bytes32
-}
-
 describe('aptos-cli-test', () => {
     let aptos: Aptos
 
@@ -24,8 +17,6 @@ describe('aptos-cli-test', () => {
             faucet: 'http://127.0.0.1:8081',
         })
         aptos = new Aptos(config)
-
-        // await delay(2000)
     })
 
     describe('delegates', () => {
@@ -132,10 +123,4 @@ describe('aptos-cli-test', () => {
             console.dir(executedTransaction, { depth: null })
         })
     })
-
-    // it('Should get deployed objects', async () => {
-    //     const objects = await aptos.getAccountOwnedObjects({ accountAddress: account_address })
-    //     console.log('objects:')
-    //     console.dir(objects, { depth: null })
-    // })
 })

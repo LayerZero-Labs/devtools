@@ -12,6 +12,11 @@ const fujiContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
+const aptosContract: OmniPointHardhat = {
+    eid: 50008,
+    contractName: 'MyOFT',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -20,10 +25,21 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: sepoliaContract,
         },
+        {
+            contract: aptosContract,
+        },
     ],
     connections: [
         {
             from: fujiContract,
+            to: sepoliaContract,
+        },
+        {
+            from: sepoliaContract,
+            to: aptosContract,
+        },
+        {
+            from: aptosContract,
             to: sepoliaContract,
         },
         {
