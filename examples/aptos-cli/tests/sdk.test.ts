@@ -53,11 +53,6 @@ describe('ua-devtools-initia', () => {
             },
         })
 
-        const [userTransactionResponse] = await aptos.transaction.simulate.simple({
-            signerPublicKey: signer_account.publicKey,
-            transaction,
-        })
-
         const signed = await aptos.transaction.sign({
             signer: signer_account,
             transaction: transaction,
@@ -98,17 +93,6 @@ describe('ua-devtools-initia', () => {
             signer: signer_account,
             transaction: transaction,
         })
-
-        // const signed = await aptos.transaction.sign({
-        //     signer: signer_account,
-        //     transaction: transaction,
-        // })
-        // console.log('signed:')
-        // console.dir(signed, { depth: null })
-        // const committedTransaction = await aptos.transaction.submit.simple({
-        //     transaction: transaction,
-        //     senderAuthenticator: signed,
-        // })
 
         const executedTransaction = await aptos.waitForTransaction({ transactionHash: signedTransaction.hash })
         console.log('executedTransaction:')

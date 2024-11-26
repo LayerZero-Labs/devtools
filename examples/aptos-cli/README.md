@@ -1,4 +1,7 @@
 # aptos-cli
+
+Configuration:
+In order to configure your aptos oft with your contracts that have been deployed on other chains, you must copy all past oft deployment files into ./deployments/ so that the addresses can be fetched from the abi.
 ```
 aptos key generate --output-file my_key.pub
 ```

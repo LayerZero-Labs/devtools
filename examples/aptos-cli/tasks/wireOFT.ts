@@ -1,31 +1,54 @@
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
-import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
-import { Stage } from '@layerzerolabs/lz-definitions'
-import { PrivateKey } from '@layerzerolabs/move-definitions'
-
 import dotenv from 'dotenv'
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { OFT } from '../aptos-sdk/oft'
+import * as yaml from 'yaml'
+import * as fs from 'fs'
+import * as path from 'path'
+import config from '../layerzero.config'
+import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+
 dotenv.config()
 
 async function main() {
-    // the address of the wallet that will deploy the oft module
-    const address = '0x8CEA84A194CE8032CDD6E12DD87735B4F03A5BA428F3C4265813C7A39EC984D8'
-    // url is the aptos chain full node url
-    const url = 'http://127.0.0.1:8080/v1'
-    const indexer = 'http://127.0.0.1:8090/v1'
-
-    const config = new AptosConfig({
+    const aptosConfig = new AptosConfig({
         network: Network.CUSTOM,
-        fullnode: url,
-        indexer: indexer,
+        fullnode: 'http://127.0.0.1:8080/v1',
+        indexer: 'http://127.0.0.1:8090/v1',
+        faucet: 'http://127.0.0.1:8081',
     })
-    const aptos = new Aptos(config)
+    const aptos = new Aptos(aptosConfig)
 
+    const { account_address, private_key } = parseYaml()
 
+    const oft = new OFT(aptos, account_address, private_key)
 
+    oft.setDelegate(account_address)
+
+    setPeers(oft, config)
 }
 
-function getKey() {
-    return '0xC4A953452FB957EDDC47E309B5679C020E09C4D3C872BDA43569CBFF6671DCA6'
+function setPeers(oft: OFT, config: OAppOmniGraphHardhat) {
+    const contracts = config.contracts
+
+    for (const entry of contracts) {
+        const contractAddress = getContractAddress(entry.contract.eid, entry.contract.contractName)
+        oft.setPeer(entry.contract.eid, contractAddress)
+    }
+}
+
+function getContractAddress(eid: EndpointId, contractName: string) {
+    const contractAddress = config.contracts.find((c) => c.contract.eid === eid && c.contract.contractName === contractName)?.contract.contractAddress
+    return contractAddress
+}
+
+function parseYaml() {
+    const configPath = path.join(__dirname, '../.aptos/config.yaml')
+    const configFile = fs.readFileSync(configPath, 'utf8')
+    const config = yaml.parse(configFile)
+    const account_address = '0x' + config.profiles.default.account
+    const private_key = config.profiles.default.private_key
+
+    return { account_address, private_key }
 }
 
 // Execute the main function and handle any errors
