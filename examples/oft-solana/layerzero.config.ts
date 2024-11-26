@@ -85,7 +85,7 @@ const config: OAppOmniGraphHardhat = {
             //         },
             //         ulnConfig: {
             //             // // The number of block confirmations to wait before emitting the message from the source chain.
-            //             confirmations: BigInt(2),
+            //             confirmations: BigInt(10),
             //             // The address of the DVNs you will pay to verify a sent message on the source chain ).
             //             // The destination tx will wait until ALL `requiredDVNs` verify the message.
             //             requiredDVNs: [
