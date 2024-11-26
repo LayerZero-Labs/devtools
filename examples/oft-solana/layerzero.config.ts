@@ -84,8 +84,8 @@ const config: OAppOmniGraphHardhat = {
             //             executor: 'AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK',
             //         },
             //         ulnConfig: {
-            //             // // The number of block confirmations to wait on BSC before emitting the message from the source chain.
-            //             confirmations: BigInt(10),
+            //             // // The number of block confirmations to wait before emitting the message from the source chain.
+            //             confirmations: BigInt(2),
             //             // The address of the DVNs you will pay to verify a sent message on the source chain ).
             //             // The destination tx will wait until ALL `requiredDVNs` verify the message.
             //             requiredDVNs: [
