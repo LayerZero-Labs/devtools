@@ -14,6 +14,7 @@
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-movevm-sdk-v2": "^3.0.15",
     "@layerzerolabs/move-definitions": "^3.0.15",
+    "argparse": "^2.0.1",
     "dotenv": "^16.4.5",
     "yaml": "^2.6.1"
   },
