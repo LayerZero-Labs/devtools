@@ -251,6 +251,10 @@ module oft::oapp_core {
         assert!(admin == oapp_store::get_admin(), EUNAUTHORIZED);
     }
 
+    public fun we_asfeafeaseffukcthis(): u64 {
+        return 69
+    }
+
     // ===================================================== Peers ====================================================
 
     #[view]

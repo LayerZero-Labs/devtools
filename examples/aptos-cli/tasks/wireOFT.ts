@@ -1,4 +1,4 @@
-import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { Oft } from '@layerzerolabs/lz-movevm-sdk-v2'
 import { Stage } from '@layerzerolabs/lz-definitions'
 import { PrivateKey } from '@layerzerolabs/move-definitions'
@@ -8,21 +8,24 @@ dotenv.config()
 
 async function main() {
     // the address of the wallet that will deploy the oft module
-    const address = '0xb33f67711893a9497b038e68ee87c2e645dae22187ea8b2967f7dc90f7fbe695'
+    const address = '0x8CEA84A194CE8032CDD6E12DD87735B4F03A5BA428F3C4265813C7A39EC984D8'
     // url is the aptos chain full node url
     const url = 'http://127.0.0.1:8080/v1'
+    const indexer = 'http://127.0.0.1:8090/v1'
 
-    const sdk = new AptosSDK({
-        stage: Stage.SANDBOX,
-        provider: new Aptos(new AptosConfig({ fullnode: url })),
-        accounts: {
-            oft: address,
-        },
+    const config = new AptosConfig({
+        network: Network.CUSTOM,
+        fullnode: url,
+        indexer: indexer,
     })
-    // false means native type, true is adapter type.
-    const oft = new Oft(sdk, false)
-    const rawPrivateKey = process.env.LOCAL_DEPLOYER as string
+    const aptos = new Aptos(config)
 
+
+
+}
+
+function getKey() {
+    return '0xC4A953452FB957EDDC47E309B5679C020E09C4D3C872BDA43569CBFF6671DCA6'
 }
 
 // Execute the main function and handle any errors
