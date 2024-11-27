@@ -68,11 +68,11 @@ const config: HardhatUserConfig = {
             accounts,
         },
     },
-    // namedAccounts: {
-    //     deployer: {
-    //         default: 0, // wallet address of index[0], of the mnemonic in .env
-    //     },
-    // },
+    namedAccounts: {
+        deployer: {
+            default: 0, // wallet address of index[0], of the mnemonic in .env
+        },
+    },
 }
 
 export default config
