@@ -5,8 +5,10 @@ import * as path from 'path'
 import lzConfig from '../aptos.layerzero.config'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { createEidToNetworkMapping } from './utils/utils'
+import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
 import { loadAptosYamlConfig } from './utils/config'
+import { ExecutorLzReceiveOption, ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+import { ethers } from 'ethers'
 
 const APTOS_ENDPOINTS = [50008]
 
@@ -34,16 +36,63 @@ async function main() {
     console.log(`Setting delegate to ${account_address}`)
     await oft.setDelegate(account_address)
 
+    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0])
+
+    console.log(connections)
+
     console.log('Setting peers')
-    await setPeers(oft, lzConfig)
+    await setPeers(oft, connections)
 
     console.log('Setting enforced options')
-    await setEnforcedOptions(oft, lzConfig)
+    await setEnforcedOptions(oft, connections)
+
+    console.log('Setting send library')
+    await setSendLibrary(oft, connections)
+
+    console.log('Setting receive library')
+    await setReceiveLibrary(oft, connections)
 }
 
-async function setEnforcedOptions(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
-    const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toBytes()
-    await oft.setEnforcedOptions(EndpointId.BSC_TESTNET, 1, options)
+async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        await oft.setSendLibrary(entry.to.eid, entry.config.sendLibrary)
+    }
+}
+
+async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        await oft.setReceiveLibrary(
+            entry.to.eid,
+            entry.config.receiveLibraryConfig.receiveLibrary,
+            Number(entry.config.receiveLibraryConfig.gracePeriod)
+        )
+    }
+}
+
+async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        if (!entry.config?.enforcedOptions) {
+            console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}`)
+            continue
+        }
+        console.log(`Setting enforced options for contract ${entry.to.contractName} on eid ${entry.to.eid}`)
+        for (const enforcedOption of entry.config.enforcedOptions) {
+            const options = createOptions(enforcedOption)
+
+            console.log('Enforced option:', enforcedOption)
+            await oft.setEnforcedOptions(entry.to.eid, enforcedOption.msgType, options)
+        }
+    }
+
+    function createOptions(enforcedOption) {
+        const options = Options.newOptions()
+        if (enforcedOption.optionType === ExecutorOptionType.LZ_RECEIVE) {
+            options.addExecutorLzReceiveOption(enforcedOption.gas, enforcedOption.value)
+        } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
+            options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
+        }
+        return options.toBytes()
+    }
 }
 
 function getAptosOftAddress(network: Network) {
@@ -52,24 +101,16 @@ function getAptosOftAddress(network: Network) {
     return deployment.address
 }
 
-async function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
-    const contracts = lzConfig.contracts
-
+async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     const eidToNetworkMapping = createEidToNetworkMapping()
 
-    for (const entry of contracts) {
-        // skip aptos contracts (we are not wiring aptos to aptos)
-        if (APTOS_ENDPOINTS.includes(entry.contract.eid)) {
-            console.log(`Skipping Aptos endpoint ${entry.contract.eid}`)
-            continue
-        }
+    for (const entry of connections) {
+        const networkName = eidToNetworkMapping[entry.to.eid]
+        const contractAddress = getContractAddress(networkName, entry.to.contractName)
 
-        const networkName = eidToNetworkMapping[entry.contract.eid]
-        const contractAddress = getContractAddress(networkName, entry.contract.contractName)
-
-        console.log(`calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.contract.eid}`)
-        await oft.setPeer(entry.contract.eid, contractAddress)
-        console.log(`peer set for ${networkName} (${entry.contract.eid}) -> ${contractAddress} ✓`)
+        console.log(`calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.to.eid}`)
+        await oft.setPeer(entry.to.eid, contractAddress)
+        console.log(`peer set for ${networkName} (${entry.to.eid}) -> ${contractAddress} ✓`)
     }
 }
 

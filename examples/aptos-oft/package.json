@@ -31,12 +31,7 @@
     "hardhat-contract-sizer": "^2.10.0",
     "hardhat-deploy": "^0.12.1",
     "jest": "^29.7.0",
-<<<<<<< HEAD
     "ts-jest": "^29.2.5",
-=======
-    "solidity-bytes-utils": "^0.8.2",
-    "ts-jest": "^29.0.0",
->>>>>>> 7b7d605806e00694e19f7ae74cf6573140344432
     "tsup": "^8.0.1",
     "typescript": "~5.2.2",
     "yaml": "^2.6.1"

@@ -41,8 +41,7 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: aptosContract,
-<<<<<<< HEAD
-            to: sepoliaContract,
+            to: fujiContract,
             config: {
                 enforcedOptions: [
                     {
@@ -57,11 +56,26 @@ const config: OAppOmniGraphHardhat = {
                         gas: 100000, // gas limit in wei for EndpointV2.lzCompose
                         value: 0, // msg.value in wei for EndpointV2.lzCompose
                     },
+                    {
+                        msgType: 1,
+                        optionType: ExecutorOptionType.NATIVE_DROP,
+                        amount: 0, // amount of native gas token in wei to drop to receiver address
+                        receiver: '0x0000000000000000000000000000000000000000',
+                    },
                 ],
+                sendLibrary: '0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170',
+                receiveLibraryConfig: {
+                    // Required Receive Library Address on BSC
+                    receiveLibrary: '0x0000000000000000000000000000000000000000',
+                    // Optional Grace Period for Switching Receive Library Address on BSC
+                    gracePeriod: BigInt(0),
+                },
+                // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on BSC
+                receiveLibraryTimeoutConfig: {
+                    lib: '0x0000000000000000000000000000000000000000',
+                    expiry: BigInt(0),
+                },
             },
-=======
-            to: fujiContract,
->>>>>>> 7b7d605806e00694e19f7ae74cf6573140344432
         },
         {
             from: sepoliaContract,

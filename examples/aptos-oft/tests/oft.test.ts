@@ -9,7 +9,8 @@ const OFT_ADDRESS = '0x7f60ccab14fa9ee93e7ff447b1bbcaed78af89e7c680c075a8bd29c5d
 const BSC_OFT_ADAPTER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
 const public_key = '0x8cea84a194ce8032cdd6e12dd87735b4f03a5ba428f3c4265813c7a39ec984d8'
 const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
-
+const SEND_LIBRARY_ADDRESS_FUJI = 'TODO'
+const RECEIVE_LIBRARY_ADDRESS_FUJI = 'TODO'
 describe('oft-tests', () => {
     let aptos: Aptos
     let oft: OFT
@@ -32,6 +33,13 @@ describe('oft-tests', () => {
             const delegate = await oft.getDelegate()
 
             expect(delegate).toEqual(['0x0'])
+
+            // reseting to account address so that other tests can run
+            await oft.setDelegate(account_address)
+
+            const delegate2 = await oft.getDelegate()
+
+            expect(delegate2).toEqual([account_address])
         })
     })
 
@@ -56,6 +64,25 @@ describe('oft-tests', () => {
             const enforcedOptions = await oft.getEnforcedOptions(EndpointId.BSC_TESTNET, 1)
             const expectedOptionsHex = '0x' + Buffer.from(options).toString('hex')
             expect(enforcedOptions).toEqual([expectedOptionsHex])
+        })
+    })
+
+    describe('send library', () => {
+        it('Should set send library', async () => {
+            const hexStringAddress = '0x' + Buffer.from(encodeAddress(SEND_LIBRARY_ADDRESS_FUJI)).toString('hex')
+            await expect(oft.setSendLibrary(EndpointId.AVALANCHE_V2_TESTNET, hexStringAddress)).resolves.not.toThrow()
+        })
+    })
+
+    describe('receive library', () => {
+        it('Should set receive library', async () => {
+            const hexStringAddress = '0x' + Buffer.from(encodeAddress(SEND_LIBRARY_ADDRESS_FUJI)).toString('hex')
+
+            await oft.setReceiveLibrary(EndpointId.AVALANCHE_V2_TESTNET, hexStringAddress, 0)
+        })
+
+        it('should set receive lib timeout', async () => {
+            await oft.setReceiveLibraryTimeout(EndpointId.AVALANCHE_V2_TESTNET, RECEIVE_LIBRARY_ADDRESS_FUJI, 1000000)
         })
     })
 })

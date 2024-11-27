@@ -87,8 +87,7 @@ export class OFT {
             },
         })
 
-        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
-        console.log(`set enforced options result: ${result}`)
+        await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
     }
 
     async getEnforcedOptions(eid: number, msgType: number) {
@@ -113,7 +112,43 @@ export class OFT {
 
         const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
         console.log(`set send library result: ${result}`)
+        return result
     }
+
+    async setReceiveLibrary(remoteEid: number, msglibAddress: string, gracePeriod: number) {
+        const transaction = await this.aptos.transaction.build.simple({
+            sender: this.account_address,
+            data: {
+                function: `${this.oft_address}::oapp_core::set_receive_library`,
+                functionArguments: [remoteEid, msglibAddress, gracePeriod],
+            },
+        })
+
+        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        console.log(`set receive library result: ${result}`)
+        return result
+    }
+
+    async setReceiveLibraryTimeout(remoteEid: number, msglibAddress: string, expiry: number) {
+        const transaction = await this.aptos.transaction.build.simple({
+            sender: this.account_address,
+            data: {
+                function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
+                functionArguments: [remoteEid, msglibAddress, expiry],
+            },
+        })
+
+        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        console.log(`set receive library timeout result: ${result}`)
+        return result
+    }
+
+    // async setConfig(configType: number, config: Uint8Array) {
+    //     const transaction = await this.aptos.transaction.build.simple({
+    //         sender: this.account_address,
+    //         data: {},
+    //     })
+    // }
 
     async signSubmitAndWaitForTransaction(transaction: SimpleTransaction, signer_account: Account) {
         const signedTransaction = await this.aptos.signAndSubmitTransaction({
