@@ -1,6 +1,6 @@
 import { Account, Aptos, AptosConfig, InputViewFunctionData, Network } from '@aptos-labs/ts-sdk'
 
-import { loadAptosYamlConfig, createAccountFromPrivateKey } from '@/utils/config'
+import { loadAptosYamlConfig, createAccountFromPrivateKey } from './utils/config'
 
 async function main() {
     const aptosYamlConfig = await loadAptosYamlConfig()

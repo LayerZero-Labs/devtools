@@ -1,18 +1,8 @@
 import fs from 'fs'
 import YAML from 'yaml'
-import {
-    Account,
-    AccountAddress,
-    Aptos,
-    AptosConfig,
-    Ed25519Account,
-    Ed25519PrivateKey,
-    InputViewFunctionData,
-    Network,
-    NetworkToNetworkName,
-} from '@aptos-labs/ts-sdk'
+import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 
-type AptosConfig = {
+type AptosYamlConfig = {
     profiles: {
         default: {
             network: string
@@ -25,9 +15,9 @@ type AptosConfig = {
     }
 }
 
-export async function loadAptosYamlConfig(): Promise<AptosConfig> {
+export async function loadAptosYamlConfig(): Promise<AptosYamlConfig> {
     const file = fs.readFileSync('./.aptos/config.yaml', 'utf8')
-    const config = YAML.parse(file) as AptosConfig
+    const config = YAML.parse(file) as AptosYamlConfig
     return config
 }
 

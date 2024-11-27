@@ -1,12 +1,12 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import * as yaml from 'yaml'
 import * as fs from 'fs'
 import * as path from 'path'
-import lzConfig from '../layerzero.config'
+import lzConfig from '../aptos.layerzero.config'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import hardhatConfig from '../hardhat.config'
+import { createEidToNetworkMapping } from './utils/utils'
+import { loadAptosYamlConfig } from './utils/config'
 
 async function main() {
     const aptosConfig = new AptosConfig({
@@ -18,7 +18,7 @@ async function main() {
     // aptos v2 sandbox 50008
     const aptos = new Aptos(aptosConfig)
 
-    const { account_address, private_key } = parseYaml()
+    const { account_address, private_key } = await parseYaml()
 
     const oft = new OFT(aptos, account_address, private_key)
 
@@ -41,18 +41,6 @@ function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
     }
 }
 
-function createEidToNetworkMapping() {
-    const networks = hardhatConfig.networks
-
-    const eidNetworkNameMapping: Record<number, string> = {}
-    for (const [networkName, networkConfig] of Object.entries(networks)) {
-        eidNetworkNameMapping[networkConfig.eid] = networkName
-    }
-
-    console.log(eidNetworkNameMapping)
-    return eidNetworkNameMapping
-}
-
 function getContractAddress(eid: EndpointId, networkName: string) {
     const deploymentPath = path.join(__dirname, `../deployments/${networkName}/abi.json`)
 
@@ -64,14 +52,13 @@ function getContractAddress(eid: EndpointId, networkName: string) {
     }
 }
 
-function parseYaml() {
-    const configPath = path.join(__dirname, '../.aptos/config.yaml')
-    const configFile = fs.readFileSync(configPath, 'utf8')
-    const config = yaml.parse(configFile)
-    const account_address = '0x' + config.profiles.default.account
-    const private_key = config.profiles.default.private_key
+async function parseYaml(): Promise<{ account_address: string; private_key: string }> {
+    const aptosYamlConfig = await loadAptosYamlConfig()
 
-    return { account_address, private_key }
+    return {
+        account_address: aptosYamlConfig.profiles.default.account,
+        private_key: aptosYamlConfig.profiles.default.private_key,
+    }
 }
 
 // Execute the main function and handle any errors

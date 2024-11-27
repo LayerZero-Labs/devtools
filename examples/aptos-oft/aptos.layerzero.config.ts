@@ -13,7 +13,7 @@ const fujiContract: OmniPointHardhat = {
 }
 
 const aptosContract: OmniPointHardhat = {
-    eid: 50008,
+    eid: 50008 as EndpointId,
     contractName: 'MyOFT',
 }
 

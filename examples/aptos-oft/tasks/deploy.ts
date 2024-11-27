@@ -1,7 +1,7 @@
 import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
 import { assert } from 'console'
-import { deploymentFile } from './types'
+import { deploymentFile } from './utils/types'
 
 import fs from 'fs'
 
