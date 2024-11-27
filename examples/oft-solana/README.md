@@ -163,7 +163,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 This section only applies if you are unable to land your deployment transaction due to network congestion.
 
-:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command.
+:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
 
 <details>
   <summary>View instructions</summary>
@@ -175,10 +175,12 @@ solana-install init 1.18.26
 
 Note that you will only have `solana-install` if you installed v1.X.X or using the commands listed here, but you will not have if you had previously installed v2.
 
+:information_source: You can make use of [getFee.ts](./tasks/utils/getFee.ts) to get an estimate for the value you need to pass into `--with-compute-unit-price`.
+
 Now let's rerun the deploy command, but with the compute unit price flag.
 
 ```bash
-solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_LAMPORTS>
+solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
 ```
 
 :warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
