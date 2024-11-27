@@ -309,6 +309,39 @@ Error: Failed to build program
 
 Note: The error occurs after attempting to update crates.io index.
 
+### `token_mint` not initialized error when running `pnpm hardhat lz:oft:solana:create`
+
+Verify that the log indicates that the transactions for creating the SPL Multisig and creating the token were successful. They should look something like:
+
+```
+created SPL multisig @ <MULTISIG_ADDRESS>
+createTokenTx: https://explorer.solana.com/tx/<TXN_SIG>?cluster=devnet
+```
+
+The console will log the program trace that would look like:
+
+```
+[
+  "Program 2RsCNfbaHqyPG4fTgXtpyPAJTCToQ1ZbfBiyvXnY9NHt invoke [1]",
+  "Program log: Instruction: InitOft",
+  "Program log: AnchorError caused by account: token_mint. Error Code: AccountNotInitialized. Error Number: 3012. Error Message: The program expected this account to be already initialized.",
+  "Program 2RsCNfbaHqyPG4fTgXtpyPAJTCToQ1ZbfBiyvXnY9NHt consumed 6198 of 200000 compute units",
+  "Program 2RsCNfbaHqyPG4fTgXtpyPAJTCToQ1ZbfBiyvXnY9NHt failed: custom program error: 0xbc4"
+].
+```
+
+If the above are what you experience, then it's very likely an RPC cache issue. You can introduce an artificial delay by inserting this block before the `const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)` line, like so:
+
+```
+  const mintInfo = await connection.getAccountInfo(toWeb3JsPublicKey(mint.publicKey))
+  if (!mintInfo) {
+      throw new Error('Mint account is uninitialized.')
+  }
+
+  const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)
+  ...
+```
+
 ### When sending tokens from Solana `The value of "offset" is out of range. It must be >= 0 and <= 32. Received 41`
 
 If you receive this error, it may be caused by an improperly configured executor address in your `layerzero.config.ts`
