@@ -34,15 +34,15 @@ function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
 
     for (const entry of contracts) {
         const networkName = eidToNetworkMapping[entry.contract.eid]
-        const contractAddress = getContractAddress(entry.contract.eid, networkName)
+        const contractAddress = getContractAddress(entry.contract.eid, networkName, entry.contract.contractName)
 
         console.log(`calling set peer on ${networkName} with address ${contractAddress}`)
         // oft.setPeer(entry.contract.eid, contractAddress)
     }
 }
 
-function getContractAddress(eid: EndpointId, networkName: string) {
-    const deploymentPath = path.join(__dirname, `../deployments/${networkName}/abi.json`)
+function getContractAddress(eid: EndpointId, networkName: string, contractName: string) {
+    const deploymentPath = path.join(__dirname, `../deployments/${networkName}/${contractName}.json`)
 
     try {
         const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))

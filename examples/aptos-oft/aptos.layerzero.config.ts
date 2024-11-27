@@ -9,7 +9,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const fujiContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'SYRUP_OFTAdapter',
 }
 
 const aptosContract: OmniPointHardhat = {
