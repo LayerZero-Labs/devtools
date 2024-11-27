@@ -1,21 +1,17 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Account, Aptos, Ed25519PrivateKey, SimpleTransaction } from '@aptos-labs/ts-sdk'
-
-function encodeAddress(address: string | null | undefined): Uint8Array {
-    const bytes = address ? Buffer.from(address.replace('0x', ''), 'hex') : new Uint8Array(0)
-    const bytes32 = new Uint8Array(32)
-    bytes32.set(bytes, 32 - bytes.length)
-    return bytes32
-}
+import { encodeAddress } from './utils'
 
 export class OFT {
     private aptos: Aptos
     private account_address: string
     private private_key: string
     private signer_account: Account
+    private oft_address: string
 
-    constructor(aptos: Aptos, account_address: string, private_key: string) {
+    constructor(aptos: Aptos, oft_address: string, account_address: string, private_key: string) {
         this.aptos = aptos
+        this.oft_address = oft_address
         this.account_address = account_address
         this.private_key = private_key
         this.signer_account = Account.fromPrivateKey({
@@ -29,7 +25,7 @@ export class OFT {
         const transaction = await this.aptos.transaction.build.simple({
             sender: this.account_address,
             data: {
-                function: `${this.account_address}::oapp_core::set_peer`,
+                function: `${this.oft_address}::oapp_core::set_peer`,
                 functionArguments: [eid, peerAddressAsBytes],
             },
         })
@@ -38,36 +34,85 @@ export class OFT {
     }
 
     async setDelegate(delegateAddress: string) {
+        console.log(`setting delegate to ${delegateAddress}`)
         const transaction = await this.aptos.transaction.build.simple({
             sender: this.account_address,
             data: {
-                function: `${this.account_address}::oapp_core::set_delegate`,
+                function: `${this.oft_address}::oapp_core::set_delegate`,
                 functionArguments: [delegateAddress],
             },
         })
 
-        return await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        console.log(`set delegate result: ${result}`)
     }
 
     async getDelegate() {
-        const transaction = await this.aptos.view({
+        const result = await this.aptos.view({
             payload: {
-                // The Move entry-function
-                function: `${this.account_address}::oapp_core::get_delegate`,
+                function: `${this.oft_address}::oapp_core::get_delegate`,
                 functionArguments: [],
             },
         })
 
-        return transaction
+        return result
     }
 
     async getAdmin() {
-        return await this.aptos.view({
+        const result = await this.aptos.view({
             payload: {
-                function: `${this.account_address}::oapp_core::get_admin`,
+                function: `${this.oft_address}::oapp_core::get_admin`,
                 functionArguments: [],
             },
         })
+
+        return result
+    }
+
+    async getPeer(eid: EndpointId) {
+        return await this.aptos.view({
+            payload: {
+                function: `${this.oft_address}::oapp_core::get_peer`,
+                functionArguments: [eid],
+            },
+        })
+    }
+
+    async setEnforcedOptions(eid: number, msgType: number, enforcedOptions: Uint8Array) {
+        const transaction = await this.aptos.transaction.build.simple({
+            sender: this.account_address,
+            data: {
+                function: `${this.oft_address}::oapp_core::set_enforced_options`,
+                functionArguments: [eid, msgType, enforcedOptions],
+            },
+        })
+
+        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        console.log(`set enforced options result: ${result}`)
+    }
+
+    async getEnforcedOptions(eid: number, msgType: number) {
+        const result = await this.aptos.view({
+            payload: {
+                function: `${this.oft_address}::oapp_core::get_enforced_options`,
+                functionArguments: [eid, msgType],
+            },
+        })
+
+        return result
+    }
+
+    async setSendLibrary(remoteEid: number, msglibAddress: string) {
+        const transaction = await this.aptos.transaction.build.simple({
+            sender: this.account_address,
+            data: {
+                function: `${this.oft_address}::oapp_core::set_send_library`,
+                functionArguments: [remoteEid, msglibAddress],
+            },
+        })
+
+        const result = await this.signSubmitAndWaitForTransaction(transaction, this.signer_account)
+        console.log(`set send library result: ${result}`)
     }
 
     async signSubmitAndWaitForTransaction(transaction: SimpleTransaction, signer_account: Account) {
@@ -77,8 +122,7 @@ export class OFT {
         })
 
         const executedTransaction = await this.aptos.waitForTransaction({ transactionHash: signedTransaction.hash })
-        console.log('executedTransaction:')
-        console.dir(executedTransaction, { depth: null })
+        console.log('Transaction executed.')
 
         return executedTransaction
     }
