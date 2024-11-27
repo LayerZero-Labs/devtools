@@ -9,12 +9,12 @@ const sepoliaContract: OmniPointHardhat = {
 
 const fujiContract: OmniPointHardhat = {
     eid: EndpointId.AVALANCHE_V2_TESTNET,
-    contractName: 'SYRUP_OFTAdapter',
+    contractName: 'MyOFT',
 }
 
 const aptosContract: OmniPointHardhat = {
     eid: 50008 as EndpointId,
-    contractName: 'MyOFT',
+    contractName: 'oft',
 }
 
 const config: OAppOmniGraphHardhat = {
@@ -31,16 +31,16 @@ const config: OAppOmniGraphHardhat = {
     ],
     connections: [
         {
-            from: fujiContract,
+            from: aptosContract,
             to: sepoliaContract,
         },
         {
-            from: sepoliaContract,
+            from: fujiContract,
             to: aptosContract,
         },
         {
             from: aptosContract,
-            to: sepoliaContract,
+            to: fujiContract,
         },
         {
             from: sepoliaContract,
