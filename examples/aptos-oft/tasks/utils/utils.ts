@@ -2,28 +2,21 @@ import hardhatConfig from '../../hardhat.config'
 import lzConfig from '../../aptos.layerzero.config'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-export function createEidToNetworkMapping() {
+export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
 
     const eidNetworkNameMapping: Record<number, string> = {}
     for (const [networkName, networkConfig] of Object.entries(networks)) {
-        eidNetworkNameMapping[networkConfig.eid] = networkName
+        if (_value == '') {
+            eidNetworkNameMapping[networkConfig.eid] = networkName
+        } else {
+            eidNetworkNameMapping[networkConfig.eid] = networkConfig[_value]
+        }
     }
 
-    eidNetworkNameMapping[50008] = 'aptos-mainnet'
+    // eidNetworkNameMapping[50008] = 'aptos-mainnet'
 
     return eidNetworkNameMapping
-}
-
-export function createEidToNetworkUrlMapping() {
-    const networks = hardhatConfig.networks
-
-    const eidNetworkURLMapping: Record<number, string> = {}
-    for (const [, networkConfig] of Object.entries(networks)) {
-        eidNetworkURLMapping[networkConfig.eid] = networkConfig['url']
-    }
-
-    return eidNetworkURLMapping
 }
 
 export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphHardhat['connections'] {
