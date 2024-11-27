@@ -1,14 +1,12 @@
-import { createEidToNetworkMapping, createEidToNetworkUrlMapping, getConfigConnections } from './utils/utils'
-import fs from 'fs'
 import { ContractFactory, ethers } from 'ethers'
+import fs from 'fs'
+import { createEidToNetworkMapping, createEidToNetworkUrlMapping, getConfigConnections } from './utils/utils'
 
-// Ensure environment variable is loaded
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
     process.exit(1)
 }
 
-// Initialize signer with provider
 let provider = null
 let signer = null
 
@@ -40,21 +38,10 @@ const urls = createEidToNetworkUrlMapping()
         const factory = new ContractFactory(abi, bytecode, signer)
         const contract = factory.attach(address)
 
-        console.log(`Owner of contract at ${address}:`, await callContractFunction(contract))
+        console.log(`Owner of contract at ${address}:`, await contract.peers(eid_aptos))
 
         await contract.setPeer(conn.to.eid, '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8')
 
-        console.log(`Owner of contract at ${address}:`, await callContractFunction(contract))
+        console.log(`Owner of contract at ${address}:`, await contract.peers(eid_aptos))
     }
 })()
-
-// Helper function to call contract function
-async function callContractFunction(contract) {
-    try {
-        const result = await contract.peers(eid_aptos)
-        return result
-    } catch (error) {
-        console.error('Error calling function:', error.message)
-        throw error // Re-throw the error for debugging if needed
-    }
-}
