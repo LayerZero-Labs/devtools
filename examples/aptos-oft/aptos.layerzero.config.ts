@@ -41,7 +41,6 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: aptosContract,
-<<<<<<< HEAD
             to: sepoliaContract,
             config: {
                 enforcedOptions: [
@@ -59,9 +58,6 @@ const config: OAppOmniGraphHardhat = {
                     },
                 ],
             },
-=======
-            to: fujiContract,
->>>>>>> 7b7d605806e00694e19f7ae74cf6573140344432
         },
         {
             from: sepoliaContract,
