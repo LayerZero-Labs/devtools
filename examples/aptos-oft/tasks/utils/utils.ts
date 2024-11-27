@@ -38,3 +38,5 @@ export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphH
 
     return connections
 }
+
+// create a mapping for Network.XXXXX to aptos eid - takes in AptosConfig and returns a mapping
