@@ -1,4 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
@@ -40,7 +41,27 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: aptosContract,
+<<<<<<< HEAD
+            to: sepoliaContract,
+            config: {
+                enforcedOptions: [
+                    {
+                        msgType: 1,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 100000, // gas limit in wei for EndpointV2.lzReceive
+                        value: 0, // msg.value in wei for EndpointV2.lzReceive
+                    },
+                    {
+                        msgType: 2,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 100000, // gas limit in wei for EndpointV2.lzCompose
+                        value: 0, // msg.value in wei for EndpointV2.lzCompose
+                    },
+                ],
+            },
+=======
             to: fujiContract,
+>>>>>>> 7b7d605806e00694e19f7ae74cf6573140344432
         },
         {
             from: sepoliaContract,

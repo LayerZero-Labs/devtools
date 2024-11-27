@@ -73,7 +73,7 @@ const config: OAppOmniGraphHardhat = {
 }
 ```
 
+IMPORTANT: Before running the wire script ensure that you have run aptos init and configuered your desired network such as custom, testnet, mainnet, etc. and have also deployed the oft to that network.
 ```
 npx hardhat run tasks/wireAptosOFT.ts
 ```
-

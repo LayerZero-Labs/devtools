@@ -67,6 +67,11 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
             accounts,
         },
+        // 'aptos-sandbox': {
+        //     eid: 50008 as EndpointId,
+        //     url: process.env.RPC_URL_APTOS || 'http://127.0.0.1:8080/v1',
+        //     accounts,
+        // },
     },
     namedAccounts: {
         deployer: {

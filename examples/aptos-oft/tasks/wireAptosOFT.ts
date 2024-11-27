@@ -8,40 +8,72 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createEidToNetworkMapping } from './utils/utils'
 import { loadAptosYamlConfig } from './utils/config'
 
-async function main() {
-    const aptosConfig = new AptosConfig({
-        network: Network.CUSTOM,
-        fullnode: 'http://127.0.0.1:8080/v1',
-        indexer: 'http://127.0.0.1:8090/v1',
-        faucet: 'http://127.0.0.1:8081',
-    })
-    // aptos v2 sandbox 50008
-    const aptos = new Aptos(aptosConfig)
+const APTOS_ENDPOINTS = [50008]
 
-    const { account_address, private_key } = await parseYaml()
-
-    const oft = new OFT(aptos, account_address, private_key)
-
-    // oft.setDelegate(account_address)
-
-    setPeers(oft, lzConfig)
+const networkToIndexerMapping = {
+    [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
 }
 
-function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
+async function main() {
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    console.log(`using aptos network ${network}`)
+    const aptosConfig = new AptosConfig({
+        network: network,
+        fullnode: fullnode,
+        indexer: networkToIndexerMapping[network],
+        faucet: faucet,
+    })
+
+    const aptos = new Aptos(aptosConfig)
+
+    const aptosOftAddress = getAptosOftAddress(network)
+    console.log(`using aptos oft address ${aptosOftAddress}`)
+
+    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
+
+    console.log(`Setting delegate to ${account_address}`)
+    await oft.setDelegate(account_address)
+
+    console.log('Setting peers')
+    await setPeers(oft, lzConfig)
+
+    console.log('Setting enforced options')
+    await setEnforcedOptions(oft, lzConfig)
+}
+
+async function setEnforcedOptions(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
+    const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toBytes()
+    await oft.setEnforcedOptions(EndpointId.BSC_TESTNET, 1, options)
+}
+
+function getAptosOftAddress(network: Network) {
+    const deploymentPath = path.join(__dirname, `../deployments/aptos-${network}/oft.json`)
+    const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
+    return deployment.address
+}
+
+async function setPeers(oft: OFT, lzConfig: OAppOmniGraphHardhat) {
     const contracts = lzConfig.contracts
 
     const eidToNetworkMapping = createEidToNetworkMapping()
 
     for (const entry of contracts) {
-        const networkName = eidToNetworkMapping[entry.contract.eid]
-        const contractAddress = getContractAddress(entry.contract.eid, networkName, entry.contract.contractName)
+        // skip aptos contracts (we are not wiring aptos to aptos)
+        if (APTOS_ENDPOINTS.includes(entry.contract.eid)) {
+            console.log(`Skipping Aptos endpoint ${entry.contract.eid}`)
+            continue
+        }
 
-        console.log(`calling set peer on ${networkName} with address ${contractAddress}`)
-        // oft.setPeer(entry.contract.eid, contractAddress)
+        const networkName = eidToNetworkMapping[entry.contract.eid]
+        const contractAddress = getContractAddress(networkName, entry.contract.contractName)
+
+        console.log(`calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.contract.eid}`)
+        await oft.setPeer(entry.contract.eid, contractAddress)
+        console.log(`peer set for ${networkName} (${entry.contract.eid}) -> ${contractAddress} ✓`)
     }
 }
 
-function getContractAddress(eid: EndpointId, networkName: string, contractName: string) {
+function getContractAddress(networkName: string, contractName: string) {
     const deploymentPath = path.join(__dirname, `../deployments/${networkName}/${contractName}.json`)
 
     try {
@@ -52,16 +84,24 @@ function getContractAddress(eid: EndpointId, networkName: string, contractName: 
     }
 }
 
-async function parseYaml(): Promise<{ account_address: string; private_key: string }> {
+async function parseYaml(): Promise<{
+    account_address: string
+    private_key: string
+    network: Network
+    fullnode: string
+    faucet: string
+}> {
     const aptosYamlConfig = await loadAptosYamlConfig()
 
-    return {
-        account_address: aptosYamlConfig.profiles.default.account,
-        private_key: aptosYamlConfig.profiles.default.private_key,
-    }
+    const account_address = aptosYamlConfig.profiles.default.account
+    const private_key = aptosYamlConfig.profiles.default.private_key
+    const network = aptosYamlConfig.profiles.default.network.toLowerCase() as Network
+    const fullnode = aptosYamlConfig.profiles.default.rest_url
+    const faucet = aptosYamlConfig.profiles.default.faucet_url
+
+    return { account_address, private_key, network, fullnode, faucet }
 }
 
-// Execute the main function and handle any errors
 main().catch((error) => {
     console.error('Error:', error)
     process.exit(1)
