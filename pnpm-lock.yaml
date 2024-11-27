@@ -171,11 +171,8 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
-      solidity-bytes-utils:
-        specifier: ^0.8.2
-        version: 0.8.2
       ts-jest:
-        specifier: ^29.0.0
+        specifier: ^29.2.5
         version: 29.2.5(@babel/core@7.23.9)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.2.2)
       tsup:
         specifier: ^8.0.1
