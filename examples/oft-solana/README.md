@@ -330,7 +330,7 @@ The console will log the program trace that would look like:
 ].
 ```
 
-If the above are what you experience, then it's very likely an RPC cache issue. You can introduce an artificial delay by inserting this block before the `const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)` line, like so:
+If the above are what you experience, then it's very likely an RPC cache issue. You can introduce an artificial delay in [tasks/solana/createOFT.ts](./tasks/solana/createOFT.ts) by inserting this block before the `const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)` line, like so:
 
 ```
   const mintInfo = await connection.getAccountInfo(toWeb3JsPublicKey(mint.publicKey))
