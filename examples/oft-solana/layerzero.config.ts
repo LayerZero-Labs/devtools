@@ -11,7 +11,7 @@ const sepoliaContract: OmniPointHardhat = {
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: '', // TODO update this with the OFTStore address.
+    address: '', // NOTE: update this with the OFTStore address.
 }
 
 const config: OAppOmniGraphHardhat = {
@@ -27,8 +27,10 @@ const config: OAppOmniGraphHardhat = {
         {
             from: sepoliaContract,
             to: solanaContract,
-            // TODO:  Here are some default settings that have been found to work well sending to Sepolia.  We suggest
-            //  performing additional profiling to ensure they are correct for your use case.
+            // NOTE: Here are some default settings that have been found to work well sending to Solana.
+            // You need to either enable these enforcedOptions or pass in extraOptions when calling send().
+            // Having neither will cause a revert when calling send().
+            // We suggest performing additional profiling to ensure they are correct for your use case.
             // config: {
             //     enforcedOptions: [
             //         {
@@ -57,8 +59,10 @@ const config: OAppOmniGraphHardhat = {
         {
             from: solanaContract,
             to: sepoliaContract,
-            // TODO Here are some default settings that have been found to work well sending to Sepolia. We suggest
-            //  performing additional profiling to ensure they are correct for your use case.
+            // TODO Here are some default settings that have been found to work well sending to Sepolia.
+            // You need to either enable these enforcedOptions or pass in extraOptions when calling send().
+            // Having neither will cause a revert when calling send().
+            // We suggest performing additional profiling to ensure they are correct for your use case.
             // config: {
             //     sendLibrary: '7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH',
             //     receiveLibraryConfig: {
@@ -80,7 +84,7 @@ const config: OAppOmniGraphHardhat = {
             //             executor: 'AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK',
             //         },
             //         ulnConfig: {
-            //             // // The number of block confirmations to wait on BSC before emitting the message from the source chain.
+            //             // // The number of block confirmations to wait before emitting the message from the source chain.
             //             confirmations: BigInt(10),
             //             // The address of the DVNs you will pay to verify a sent message on the source chain ).
             //             // The destination tx will wait until ALL `requiredDVNs` verify the message.

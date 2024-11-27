@@ -94,6 +94,9 @@ cp .env.example .env
 
 In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first. You can create a temporary script called `getBase58Pk.js` in your project root with the following contents:
 
+<details>
+  <summary> View `getBase58Pk.js` script </summary>
+
 ```js
 import fs from "fs";
 import { Keypair } from "@solana/web3.js";
@@ -110,6 +113,8 @@ console.log(base58EncodedPrivateKey);
 ```
 
 Then, run `node getBase58Pk.js`
+
+</details>
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
@@ -173,7 +178,7 @@ This section only applies if you are unable to land your deployment transaction 
 solana-install init 1.18.26
 ```
 
-Note that you will only have `solana-install` if you installed v1.X.X or using the commands listed here, but you will not have if you had previously installed v2.
+Note that you will only have `solana-install` if you installed v1.X.X or used the commands listed here, but you will not have if you had previously installed v2.
 
 Now let's rerun the deploy command, but with the compute unit price flag.
 
@@ -217,7 +222,16 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 multisig. If you do not want to, you must specify `--only-oft-store store`. If you choose the latter approach, you can never
 substitute in a different mint authority.
 
+### Update [layerzero.config.ts](./layerzero.config.ts)
+
 Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solanaContract.address` with the `oftStore` address.
+
+```typescript
+const solanaContract: OmniPointHardhat = {
+  eid: EndpointId.SOLANA_V2_TESTNET,
+  address: "", // <---TODO update this with the OFTStore address.
+};
+```
 
 ### Deploy a sepolia OFT peer
 
@@ -225,15 +239,17 @@ Make sure to update [layerzero.config.ts](./layerzero.config.ts) and set `solana
 pnpm hardhat lz:deploy # follow the prompts
 ```
 
-Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting.
+Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting. If you do use `MyOFTMock`, make sure to update the `sepoliaContract.contractName` in [layerzero.config.ts](./layerzero.config.ts) to `MyOFTMock`.
 
-### Initialize the OFT
+### Initialize the Solana OFT
 
 :warning: Only do this the first time you are initializing the OFT.
 
 ```bash
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
 ```
+
+:information_source: `<SECRET_KEY>` should also be in base58 format.
 
 ### Wire
 
@@ -262,17 +278,32 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 :information_source: `~/.config/solana/id.json` assumes that you will use the keypair in the default location. To verify if this path applies to you, run `solana config get` and not the keypair path value.
 :information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
 
-### Send SOL -> Sepolia
+### Set Message Execution Options
+
+Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
+
+Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send().
+
+#### Specifing the `_options` value when calling `send()`
+
+For Sepolia -> Solana, you should pass in the options value into the script at [tasks/evm/send.ts](./tasks/evm/send.ts) as the value for `sendParam.extraOptions`.
+For Solana -> Sepolia, you should pass in the options value into the script at [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts) as the value for `options` for both in `quote` and `send`.
+
+### Send
+
+#### Send SOL -> Sepolia
 
 ```bash
 npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
 
-### Send Sepolia -> SOL
+#### Send Sepolia -> SOL
 
 ```bash
-npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount 10000000000000000000000000 --to <TO>
+npx hardhat --network sepolia-testnet send --dst-eid 40168 --amount <AMOUNT> --to <TO>
 ```
+
+:information_source: If you encounter an error such as `No Contract deployed with name`, ensure that the `tokenName` in the task defined in `tasks/evm/send.ts` matches the deployed contract name.
 
 ### Set a new Mint Authority Multisig
 
