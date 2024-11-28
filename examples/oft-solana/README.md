@@ -259,6 +259,25 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 
 With a squads multisig, you can simply append the `--multisigKey` flag to the end of the above command.
 
+### Mint OFT on Solana
+
+:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
+
+First, you need to create the Associated Token Account for your address.
+
+```bash
+spl-token create-account <TOKEN_MINT>
+```
+
+Then, you can mint.
+
+```bash
+spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json --owner <MINT_AUTHORITY>
+```
+
+:information_source: `~/.config/solana/id.json` assumes that you will use the keypair in the default location. To verify if this path applies to you, run `solana config get` and not the keypair path value.
+:information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
+
 ### Set Message Execution Options
 
 Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
