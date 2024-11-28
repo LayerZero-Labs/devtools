@@ -13,7 +13,7 @@ const parser = new ArgumentParser({
 })
 async function createDeployment(deployedAddress: string, file_name: string = 'oft.json') {
     fs.mkdirSync('deployments', { recursive: true })
-    fs.mkdirSync('deployments/aptos-mainnet', { recursive: true })
+    fs.mkdirSync('deployments/aptos-sandbox', { recursive: true })
 
     const deployment: deploymentFile = {
         address: deployedAddress,
