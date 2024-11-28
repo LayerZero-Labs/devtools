@@ -11,9 +11,11 @@ let stdErr = ''
 const parser = new ArgumentParser({
     description: 'A simple CLI tool built with argparse in TypeScript',
 })
+
 async function createDeployment(deployedAddress: string, file_name: string = 'oft.json') {
     fs.mkdirSync('deployments', { recursive: true })
-    fs.mkdirSync('deployments/aptos-sandbox', { recursive: true })
+    const aptosDir = 'deployments/aptos-sandbox'
+    fs.mkdirSync(aptosDir, { recursive: true })
 
     const deployment: deploymentFile = {
         address: deployedAddress,
@@ -30,8 +32,8 @@ async function createDeployment(deployedAddress: string, file_name: string = 'of
         storageLayout: {},
     }
 
-    fs.writeFileSync(`deployments/aptos-mainnet/${file_name}.json`, JSON.stringify(deployment, null, 2))
-    console.log(`Deployment file created at deployments/aptos-mainnet/${file_name}.json`)
+    fs.writeFileSync(`${aptosDir}/${file_name}.json`, JSON.stringify(deployment, null, 2))
+    console.log(`Deployment file created at ${aptosDir}/${file_name}.json`)
 }
 
 async function main() {
