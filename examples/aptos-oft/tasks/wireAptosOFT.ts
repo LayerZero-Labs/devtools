@@ -15,6 +15,7 @@ const networkToIndexerMapping = {
     [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
 }
 
+// assign nonces, then for each transaction send, spam sending until its successful
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`using aptos network ${network}`)
