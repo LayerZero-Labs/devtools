@@ -4,13 +4,14 @@ import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
 import { WireEvm, AptosOFTMetadata } from './utils/types'
 import { preCheckBalances } from './utils/wire-evm/checkBalance'
 import { setPeerX } from './utils/wire-evm/setPeer'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
     process.exit(1)
 }
 
-const EID_APTOS = 50008
+const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
 
 /**
  * Main function to initialize the wiring process.
@@ -47,10 +48,7 @@ async function main() {
         rpc: rpcUrls[EID_APTOS],
     }
 
-    console.log('Pre-checking balances...')
     await preCheckBalances(wireEvmObjects, aptosOft)
-
-    console.log('Setting peers...')
     await setPeerX(wireEvmObjects, aptosOft)
 }
 

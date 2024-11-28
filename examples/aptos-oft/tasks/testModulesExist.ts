@@ -1,5 +1,5 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
-// import { Network } from '@layerzerolabs/lz-definitions'
+// import { Network } from '@layerzerolabs/lz-definitions-v3'
 
 const addresses = [
     { ENDPOINT_V2_ADDRESS: '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c' },

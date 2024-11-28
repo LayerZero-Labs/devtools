@@ -1,5 +1,5 @@
 import { Aptos } from '@aptos-labs/ts-sdk'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 export class Endpoint {
     private aptos: Aptos
     private endpoint_address: string
