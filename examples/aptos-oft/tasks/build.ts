@@ -7,11 +7,10 @@ const parser = new ArgumentParser({
     description: 'A simple CLI tool built with argparse in TypeScript',
 })
 
-// ts-node tasks/deploy.ts --package-dir oft --named-addresses oft=$APTOS_ACCOUNT
 async function main() {
     // read in the first arg passed via the command line
     parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
-    parser.add_argument('--named-addresses', { type: 'str', help: 'Module name of the OFT (oft)' })
+    parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
     const parserArgs = parser.parse_args()
 
