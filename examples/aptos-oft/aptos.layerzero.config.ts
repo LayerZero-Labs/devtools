@@ -1,4 +1,4 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'

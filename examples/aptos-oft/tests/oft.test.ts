@@ -1,4 +1,4 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import { encodeAddress } from '../sdk/utils'

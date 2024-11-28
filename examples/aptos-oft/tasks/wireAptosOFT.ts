@@ -7,7 +7,7 @@ import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
 import { loadAptosYamlConfig, convertUlnConfigToBytes } from './utils/config'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 import { UlnConfig } from './utils'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
 const APTOS_ENDPOINTS = [50008]
 

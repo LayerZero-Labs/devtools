@@ -1,4 +1,4 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Deserializer, Serializer } from '@layerzerolabs/lz-serdes'
 import { addressToBytes32, trim0x } from '@layerzerolabs/lz-v2-utilities'
 

@@ -11,7 +11,7 @@ import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
 // Set your preferred authentication method
 //
@@ -54,14 +54,18 @@ const config: HardhatUserConfig = {
     networks: {
         'bsc-sandbox': {
             eid: EndpointId.BSC_V2_SANDBOX,
-            url: process.env.RPC_URL_BSC || 'https://bsc-dataseed1.binance.org',
+            url: process.env.RPC_URL_BSC_SANDBOX || 'http://127.0.0.1:8502',
             accounts,
         },
-        // 'aptos-sandbox': {
-        //     eid: 50008 as EndpointId,
-        //     url: process.env.RPC_URL_APTOS || 'http://127.0.0.1:8080/v1',
-        //     accounts,
-        // },
+        'aptos-sandbox': {
+            eid: EndpointId.APTOS_V2_SANDBOX,
+            url: process.env.RPC_URL_APTOS_SANDBOX || 'http://127.0.0.1:8080',
+            accounts,
+        },
+        hardhat: {
+            // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
+            allowUnlimitedContractSize: true,
+        },
     },
     namedAccounts: {
         deployer: {
