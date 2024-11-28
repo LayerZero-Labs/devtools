@@ -5,7 +5,7 @@ import * as path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
 import { loadAptosYamlConfig, convertUlnConfigToBytes } from './utils/config'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { UlnConfig } from './utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
@@ -35,7 +35,7 @@ async function main() {
     console.log(`Setting delegate to ${account_address}`)
     await oft.setDelegate(account_address)
 
-    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0])
+    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0], 'aptos')
 
     console.log(connections)
 

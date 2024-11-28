@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
@@ -9,7 +9,7 @@ const bscContract: OmniPointHardhat = {
 }
 
 const aptosContract: OmniPointHardhat = {
-    eid: 50008 as EndpointId,
+    eid: EndpointId.APTOS_V2_SANDBOX,
     contractName: 'oft',
 }
 
