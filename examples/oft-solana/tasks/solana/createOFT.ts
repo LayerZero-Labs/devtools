@@ -24,7 +24,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
-import { getAccountInfo } from './utils'
+import { assertAccountInitialized } from './utils'
 
 import { deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
@@ -210,7 +210,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                         )
                 }
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
-                await getAccountInfo(connection, toWeb3JsPublicKey(mint.publicKey))
+                await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
                 console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
             }
 

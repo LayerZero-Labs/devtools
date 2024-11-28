@@ -1,7 +1,7 @@
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID, createMultisig } from '@solana/spl-token'
 import { Connection, PublicKey, Signer } from '@solana/web3.js'
 
-import { getAccountInfo } from './utils'
+import { assertAccountInitialized } from './utils'
 
 /**
  * Creates a (1/N) multisig account for use as the mint authority.
@@ -44,7 +44,7 @@ export const checkMultisigSigners = async (
     multisigAddress: PublicKey,
     expectedSigners: PublicKey[]
 ) => {
-    const accountInfo = await getAccountInfo(connection, multisigAddress)
+    const accountInfo = await assertAccountInitialized(connection, multisigAddress)
 
     if (!accountInfo.owner.equals(TOKEN_PROGRAM_ID) && !accountInfo.owner.equals(TOKEN_2022_PROGRAM_ID)) {
         throw new Error('Provided address is not an SPL Token multisig account')
