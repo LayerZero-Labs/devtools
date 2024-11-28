@@ -21,7 +21,7 @@ import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { createMintAuthorityMultisig } from './multisig'
 
@@ -44,6 +44,11 @@ interface CreateOFTTaskArgs {
      * The number of decimal places to use for the token.
      */
     localDecimals: number
+
+    /**
+     * OFT shared decimals.
+     */
+    sharedDecimals: number
 
     /**
      * The optional token mint ID, for Mint-And-Burn-Adapter only.
@@ -108,6 +113,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
     .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
     .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
+    .addOptionalParam('sharedDecimals', 'OFT shared decimals (default=6)', DEFAULT_SHARED_DECIMALS, devtoolsTypes.int)
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
     .addParam('mint', 'The Token mint public key (used for MABA only)', '', devtoolsTypes.string)
     .addParam('programId', 'The OFT Program id')
@@ -133,6 +139,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             amount,
             eid,
             localDecimals: decimals,
+            sharedDecimals,
             mint: mintStr,
             name,
             programId: programIdStr,
@@ -150,6 +157,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
             if (isMABA && amount) {
                 throw new Error('Mint-And-Burn-Adapter does not support minting tokens')
+            }
+            if (decimals < sharedDecimals) {
+                throw new Error('Solana token local decimals must be greater than or equal to OFT shared decimals')
             }
             const tokenProgramId = publicKey(tokenProgramStr)
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
@@ -216,7 +226,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                             escrow: lockboxSigner,
                         },
                         types.OFTType.Native,
-                        OFT_DECIMALS,
+                        sharedDecimals,
                         {
                             oft: programId,
                             token: tokenProgramId,
