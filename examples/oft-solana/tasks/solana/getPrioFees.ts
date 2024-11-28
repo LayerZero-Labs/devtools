@@ -18,7 +18,7 @@ interface GetPrioFeesTaskArgs {
     address: string
 }
 
-task('lz:solana:get-prio-fees', 'Fetches prioritization fees from the Solana network')
+task('lz:solana:get-priority-fees', 'Fetches prioritization fees from the Solana network')
     .addParam('eid', 'The endpoint ID for the Solana network', undefined, devtoolsTypes.eid)
     .addParam(
         'address',
