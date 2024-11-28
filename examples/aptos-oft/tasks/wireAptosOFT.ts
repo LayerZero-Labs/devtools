@@ -4,12 +4,11 @@ import * as fs from 'fs'
 import * as path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
-import { loadAptosYamlConfig, convertUlnConfigToBytes } from './utils/config'
+import { loadAptosYamlConfig } from './utils/config'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { UlnConfig } from './utils'
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-
-const APTOS_ENDPOINTS = [50008]
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
+import { createSerializableUlnConfig } from './utils/ulnConfigBuilder'
 
 const networkToIndexerMapping = {
     [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
@@ -28,7 +27,8 @@ async function main() {
 
     const aptos = new Aptos(aptosConfig)
 
-    const aptosOftAddress = getAptosOftAddress(network)
+    const lzNetworkStage = getLzNetworkStage(network)
+    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
     console.log(`using aptos oft address ${aptosOftAddress}`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
@@ -36,7 +36,8 @@ async function main() {
     console.log(`Setting delegate to ${account_address}`)
     await oft.setDelegate(account_address)
 
-    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0])
+    const endpointId = getEndpointId(network, 'aptos')
+    const connections = getConfigConnections('from', endpointId)
 
     console.log(connections)
 
@@ -62,6 +63,34 @@ async function main() {
     await setReceiveConfig(oft, connections)
 }
 
+function getLzNetworkStage(network: Network): Stage {
+    if (network === Network.MAINNET) {
+        return Stage.MAINNET
+    } else if (network === Network.TESTNET) {
+        return Stage.TESTNET
+    } else if (network === Network.CUSTOM) {
+        return Stage.SANDBOX
+    } else {
+        throw new Error(`Unsupported network: ${network}`)
+    }
+}
+
+function getEndpointId(network: Network, chainName: string): number {
+    if (chainName.toLowerCase() !== 'aptos') {
+        throw new Error('Unsupported chain')
+    }
+
+    if (network === Network.MAINNET || network.toLowerCase() === 'mainnet') {
+        return EndpointId.APTOS_V2_MAINNET
+    } else if (network === Network.TESTNET || network.toLowerCase() === 'testnet') {
+        return EndpointId.APTOS_V2_TESTNET
+    } else if (network === Network.CUSTOM || network.toLowerCase() === 'sandbox') {
+        return EndpointId.APTOS_V2_SANDBOX
+    } else {
+        throw new Error(`Unsupported network: ${network}`)
+    }
+}
+
 async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.receiveConfig) {
@@ -70,15 +99,11 @@ async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['con
         }
 
         if (entry.config.receiveConfig.ulnConfig) {
-            const serializableUlnConfig: UlnConfig = {
-                confirmations: entry.config.receiveConfig.ulnConfig.confirmations,
-                optional_dvn_threshold: entry.config.receiveConfig.ulnConfig.optionalDVNThreshold,
-                required_dvns: entry.config.receiveConfig.ulnConfig.requiredDVNs,
-                optional_dvns: entry.config.receiveConfig.ulnConfig.optionalDVNs,
-                use_default_for_confirmations: false,
-                use_default_for_required_dvns: false,
-                use_default_for_optional_dvns: false,
-            }
+            const serializableUlnConfig = createSerializableUlnConfig(
+                entry.config.receiveConfig.ulnConfig,
+                entry.to,
+                entry.from
+            )
             const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
 
             await oft.setConfig(entry.config.receiveLibraryConfig.receiveLibrary, 2, serializedUlnConfig)
@@ -94,15 +119,12 @@ async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connec
         }
 
         if (entry.config.sendConfig.ulnConfig) {
-            const serializableUlnConfig: UlnConfig = {
-                confirmations: entry.config.sendConfig.ulnConfig.confirmations,
-                optional_dvn_threshold: entry.config.sendConfig.ulnConfig.optionalDVNThreshold,
-                required_dvns: entry.config.sendConfig.ulnConfig.requiredDVNs,
-                optional_dvns: entry.config.sendConfig.ulnConfig.optionalDVNs,
-                use_default_for_confirmations: false,
-                use_default_for_required_dvns: false,
-                use_default_for_optional_dvns: false,
-            }
+            const serializableUlnConfig = createSerializableUlnConfig(
+                entry.config.sendConfig.ulnConfig,
+                entry.to,
+                entry.from
+            )
+
             const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
 
             await oft.setConfig(entry.config.sendLibrary, 2, serializedUlnConfig)
@@ -181,8 +203,8 @@ async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['c
     }
 }
 
-function getAptosOftAddress(network: Network) {
-    const deploymentPath = path.join(__dirname, `../deployments/aptos-${network}/oft.json`)
+function getAptosOftAddress(stage: Stage) {
+    const deploymentPath = path.join(__dirname, `../deployments/aptos-${stage}/oft.json`)
     const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
     return deployment.address
 }
