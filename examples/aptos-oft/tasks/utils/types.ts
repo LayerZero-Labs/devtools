@@ -1,3 +1,5 @@
+import { ethers } from 'ethers'
+
 export type deploymentFile = {
     address: string
     abi: []
@@ -11,4 +13,17 @@ export type deploymentFile = {
     deployedBytecode: ''
     devdoc: object
     storageLayout: object
+}
+
+export type WireEvm = {
+    evmAddress: string
+    signer: ethers.Wallet
+    contract: ethers.Contract
+    fromEid: number
+}
+
+export type AptosOFTMetadata = {
+    eid: number
+    aptosAddress: string
+    rpc: string
 }
