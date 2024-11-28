@@ -1,14 +1,13 @@
 import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
-import { assert } from 'console'
 
-let stdOut = ''
 let stdErr = ''
 
 const parser = new ArgumentParser({
     description: 'A simple CLI tool built with argparse in TypeScript',
 })
 
+// ts-node tasks/deploy.ts --package-dir oft --named-addresses oft=$APTOS_ACCOUNT
 async function main() {
     // read in the first arg passed via the command line
     parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
@@ -30,7 +29,6 @@ async function main() {
         // Capture stdout which contains our deployed address
         childProcess.stdout?.on('data', (data) => {
             const dataStr = data.toString()
-            stdOut += dataStr
             process.stdout.write(`${dataStr}`)
         })
 
