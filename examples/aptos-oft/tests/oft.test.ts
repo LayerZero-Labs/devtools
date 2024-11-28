@@ -2,7 +2,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import { encodeAddress } from '../sdk/utils'
-import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
 
 const account_address = '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a'
 const OFT_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
