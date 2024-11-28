@@ -175,10 +175,8 @@ This section only applies if you are unable to land your deployment transaction 
   Because building requires Solana CLI version `1.17.31`, but priority fees are only supported in version `1.18`, we will need to switch Solana CLI versions temporarily.
 
 ```bash
-solana-install init 1.18.26
+sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
-
-Note that you will only have `solana-install` if you installed v1.X.X or used the commands listed here, but you will not have if you had previously installed v2.
 
 Now let's rerun the deploy command, but with the compute unit price flag.
 
@@ -189,7 +187,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 :warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
-solana-install init 1.17.31
+sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 ```
 
 </details>
