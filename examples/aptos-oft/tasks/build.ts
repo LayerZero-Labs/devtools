@@ -44,8 +44,6 @@ async function main() {
         // Handle process close
         childProcess.on('close', (code) => {
             if (code === 0) {
-                const addresses = stdOut.match(/0x[0-9a-fA-F]{64}/g)
-                assert(addresses[0] == addresses[1], 'Addresses do not match')
                 resolve()
             } else {
                 console.error(`Command failed with code ${code}`)

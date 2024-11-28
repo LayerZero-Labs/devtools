@@ -45,5 +45,9 @@
   "overrides": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
+  },
+  "dependencies": {
+    "@layerzerolabs/lz-serdes": "^3.0.19",
+    "install": "^0.13.0"
   }
 }

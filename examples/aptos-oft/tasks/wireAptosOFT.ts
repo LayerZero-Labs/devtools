@@ -2,13 +2,12 @@ import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import * as fs from 'fs'
 import * as path from 'path'
-import lzConfig from '../aptos.layerzero.config'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
-import { loadAptosYamlConfig } from './utils/config'
-import { ExecutorLzReceiveOption, ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
-import { ethers } from 'ethers'
+import { loadAptosYamlConfig, convertUlnConfigToBytes } from './utils/config'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+import { UlnConfig } from './utils'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 const APTOS_ENDPOINTS = [50008]
 
@@ -40,31 +39,123 @@ async function main() {
 
     console.log(connections)
 
-    console.log('Setting peers')
+    console.log('Setting peers\n')
     await setPeers(oft, connections)
 
-    console.log('Setting enforced options')
+    console.log('Setting enforced options\n')
     await setEnforcedOptions(oft, connections)
 
-    console.log('Setting send library')
+    console.log('Setting send library\n')
     await setSendLibrary(oft, connections)
 
-    console.log('Setting receive library')
+    console.log('Setting receive library\n')
     await setReceiveLibrary(oft, connections)
+
+    console.log('Setting receive library timeout\n')
+    await setReceiveLibraryTimeout(oft, connections)
+
+    console.log('Setting send config\n')
+    await setSendConfig(oft, connections)
+
+    console.log('Setting receive config\n')
+    await setReceiveConfig(oft, connections)
+}
+
+async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        if (!entry.config?.receiveConfig) {
+            // TODO: set defaults in this case
+            console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
+
+        if (entry.config.sendConfig.ulnConfig) {
+            // TODO: figure out where to pass in useDefaultFor...
+            const serializableUlnConfig: UlnConfig = {
+                confirmations: entry.config.receiveConfig.ulnConfig.confirmations,
+                optional_dvn_threshold: entry.config.receiveConfig.ulnConfig.optionalDVNThreshold,
+                required_dvns: entry.config.receiveConfig.ulnConfig.requiredDVNs,
+                optional_dvns: entry.config.receiveConfig.ulnConfig.optionalDVNs,
+                use_default_for_confirmations: false,
+                use_default_for_required_dvns: false,
+                use_default_for_optional_dvns: false,
+            }
+            const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
+
+            await oft.setConfig(entry.config.receiveLibraryConfig.receiveLibrary, 2, serializedUlnConfig)
+        }
+    }
+}
+
+async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        if (!entry.config?.sendConfig) {
+            // TODO: set defaults in this case
+            console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
+
+        if (entry.config.sendConfig.ulnConfig) {
+            // TODO: figure out where to pass in useDefaultFor...
+            const serializableUlnConfig: UlnConfig = {
+                confirmations: entry.config.sendConfig.ulnConfig.confirmations,
+                optional_dvn_threshold: entry.config.sendConfig.ulnConfig.optionalDVNThreshold,
+                required_dvns: entry.config.sendConfig.ulnConfig.requiredDVNs,
+                optional_dvns: entry.config.sendConfig.ulnConfig.optionalDVNs,
+                use_default_for_confirmations: false,
+                use_default_for_required_dvns: false,
+                use_default_for_optional_dvns: false,
+            }
+            const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
+
+            await oft.setConfig(entry.config.sendLibrary, 2, serializedUlnConfig)
+        }
+    }
 }
 
 async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
+        if (!entry.config?.sendLibrary) {
+            // TODO: set defaults in this case
+            console.log(`No send library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
+        console.log(
+            `Setting send library for contract ${entry.to.contractName} on eid ${entry.to.eid} to ${entry.config.sendLibrary}\n`
+        )
+
         await oft.setSendLibrary(entry.to.eid, entry.config.sendLibrary)
     }
 }
 
 async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
+        if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
+            // TODO: set defaults in this case
+            console.log(`No receive library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
         await oft.setReceiveLibrary(
             entry.to.eid,
             entry.config.receiveLibraryConfig.receiveLibrary,
-            Number(entry.config.receiveLibraryConfig.gracePeriod)
+            Number(entry.config.receiveLibraryConfig.gracePeriod || 0)
+        )
+    }
+}
+
+async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    for (const entry of connections) {
+        if (!entry.config?.receiveLibraryTimeoutConfig) {
+            // TODO: set defaults in this case
+            console.log(
+                `No receive library timeout specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`
+            )
+            continue
+        }
+        await oft.setReceiveLibraryTimeout(
+            entry.to.eid,
+            entry.config.receiveLibraryTimeoutConfig.lib,
+            Number(entry.config.receiveLibraryTimeoutConfig.expiry)
         )
     }
 }
@@ -72,10 +163,10 @@ async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['co
 async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.enforcedOptions) {
-            console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}`)
+            console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        console.log(`Setting enforced options for contract ${entry.to.contractName} on eid ${entry.to.eid}`)
+        console.log(`Setting enforced options for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
         for (const enforcedOption of entry.config.enforcedOptions) {
             const options = createOptions(enforcedOption)
 
@@ -86,6 +177,7 @@ async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['c
 
     function createOptions(enforcedOption) {
         const options = Options.newOptions()
+        //TODO: Accept all option types
         if (enforcedOption.optionType === ExecutorOptionType.LZ_RECEIVE) {
             options.addExecutorLzReceiveOption(enforcedOption.gas, enforcedOption.value)
         } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
@@ -108,9 +200,9 @@ async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['connections
         const networkName = eidToNetworkMapping[entry.to.eid]
         const contractAddress = getContractAddress(networkName, entry.to.contractName)
 
-        console.log(`calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.to.eid}`)
+        console.log(`Calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.to.eid}\n`)
         await oft.setPeer(entry.to.eid, contractAddress)
-        console.log(`peer set for ${networkName} (${entry.to.eid}) -> ${contractAddress} ✓`)
+        console.log(`Peer set for ${networkName} (${entry.to.eid}) -> ${contractAddress} ✓\n`)
     }
 }
 
@@ -121,7 +213,7 @@ function getContractAddress(networkName: string, contractName: string) {
         const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
         return deployment.address
     } catch (error) {
-        throw new Error(`Failed to read deployment file for network ${networkName}: ${error}`)
+        throw new Error(`Failed to read deployment file for network ${networkName}: ${error}\n`)
     }
 }
 

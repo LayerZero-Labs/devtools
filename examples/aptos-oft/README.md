@@ -8,12 +8,13 @@ aptos init --network=custom --rest-url=http://localhost:8080/v1 --faucet-url=htt
 ```
 cat .aptos/config.yaml 
 ```
+### Build the oft:
 ```
-account_address=0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a
 aptos move build --package-dir=oft --named-addresses oft=$account_address,oft_admin=$account_address 
 ```
+### Deploy the oft:
 ```
-aptos move publish --package-dir=oft --named-addresses oft=$account_address,oft_admin=$account_address
+ts-node tasks/deploy.ts --package-dir oft --address-name oft
 ```
 ```
 aptos move create-object-and-publish-package --package-dir=oft --address-name oft --named-addresses oft=$account_address,oft_admin=$account_address

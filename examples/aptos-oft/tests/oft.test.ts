@@ -5,12 +5,11 @@ import { encodeAddress } from '../sdk/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 const account_address = '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a'
-const OFT_ADDRESS = '0x7f60ccab14fa9ee93e7ff447b1bbcaed78af89e7c680c075a8bd29c5db2aca94'
+const OFT_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
 const BSC_OFT_ADAPTER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
 const public_key = '0x8cea84a194ce8032cdd6e12dd87735b4f03a5ba428f3c4265813c7a39ec984d8'
 const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
-const SEND_LIBRARY_ADDRESS_FUJI = 'TODO'
-const RECEIVE_LIBRARY_ADDRESS_FUJI = 'TODO'
+const SIMPLE_MSG_LIB = '0x3f2714ef2d63f1128f45e4a3d31b354c1c940ccdb38aca697c9797ef95e7a09f'
 describe('oft-tests', () => {
     let aptos: Aptos
     let oft: OFT
@@ -69,20 +68,19 @@ describe('oft-tests', () => {
 
     describe('send library', () => {
         it('Should set send library', async () => {
-            const hexStringAddress = '0x' + Buffer.from(encodeAddress(SEND_LIBRARY_ADDRESS_FUJI)).toString('hex')
-            await expect(oft.setSendLibrary(EndpointId.AVALANCHE_V2_TESTNET, hexStringAddress)).resolves.not.toThrow()
+            await expect(oft.setSendLibrary(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB)).resolves.not.toThrow()
         })
     })
 
     describe('receive library', () => {
         it('Should set receive library', async () => {
-            const hexStringAddress = '0x' + Buffer.from(encodeAddress(SEND_LIBRARY_ADDRESS_FUJI)).toString('hex')
-
-            await oft.setReceiveLibrary(EndpointId.AVALANCHE_V2_TESTNET, hexStringAddress, 0)
+            await oft.setReceiveLibrary(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 0)
         })
+    })
 
+    describe('receive library timeout', () => {
         it('should set receive lib timeout', async () => {
-            await oft.setReceiveLibraryTimeout(EndpointId.AVALANCHE_V2_TESTNET, RECEIVE_LIBRARY_ADDRESS_FUJI, 1000000)
+            await oft.setReceiveLibraryTimeout(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 1000000)
         })
     })
 })
