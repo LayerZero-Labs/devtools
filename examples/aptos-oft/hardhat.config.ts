@@ -62,10 +62,6 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_APTOS_SANDBOX || 'http://127.0.0.1:8080',
             accounts,
         },
-        hardhat: {
-            // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
-            allowUnlimitedContractSize: true,
-        },
     },
     namedAccounts: {
         deployer: {
