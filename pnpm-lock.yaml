@@ -119,6 +119,10 @@ importers:
         version: 5.2.2
 
   examples/aptos-oft:
+    dependencies:
+      '@layerzerolabs/oft-evm':
+        specifier: workspace:^0.1.0
+        version: link:../../packages/oft-evm
     devDependencies:
       '@aptos-labs/ts-sdk':
         specifier: ^1.26.0
