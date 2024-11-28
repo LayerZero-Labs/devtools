@@ -11,14 +11,15 @@ interface Config {
 }
 
 const getPrioritizationFees = async (
-    connection: Connection
+    connection: Connection,
+    programId: string
 ): Promise<{
     averageFeeIncludingZeros: number
     averageFeeExcludingZeros: number
     medianFee: number
 }> => {
     try {
-        const publicKey = new PublicKey('JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4')
+        const publicKey = new PublicKey(programId) // the account that will be written to
 
         const config: Config = {
             lockedWritableAccounts: [publicKey],
