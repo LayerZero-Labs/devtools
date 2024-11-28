@@ -35,7 +35,7 @@ async function main() {
     console.log(`Setting delegate to ${account_address}`)
     await oft.setDelegate(account_address)
 
-    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0], 'aptos')
+    const connections = getConfigConnections('from', APTOS_ENDPOINTS[0])
 
     console.log(connections)
 

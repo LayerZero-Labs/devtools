@@ -96,6 +96,10 @@ const config: OAppOmniGraphHardhat = {
                 },
             },
         },
+        {
+            from: bscContract,
+            to: aptosContract,
+        },
     ],
 }
 

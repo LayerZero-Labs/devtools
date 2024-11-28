@@ -17,7 +17,7 @@ const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
  * Main function to initialize the wiring process.
  */
 async function main() {
-    const connectionsToWire = getConfigConnections('to', EID_APTOS, 'evm')
+    const connectionsToWire = getConfigConnections('to', EID_APTOS)
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
