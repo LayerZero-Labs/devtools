@@ -4,7 +4,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
-import { loadAptosYamlConfig, convertUlnConfigToBytes } from './utils/config'
+import { loadAptosYamlConfig } from './utils/config'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 import { UlnConfig } from './utils'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -64,13 +64,11 @@ async function main() {
 async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.receiveConfig) {
-            // TODO: set defaults in this case
-            console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            console.log(`No receive config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
 
-        if (entry.config.sendConfig.ulnConfig) {
-            // TODO: figure out where to pass in useDefaultFor...
+        if (entry.config.receiveConfig.ulnConfig) {
             const serializableUlnConfig: UlnConfig = {
                 confirmations: entry.config.receiveConfig.ulnConfig.confirmations,
                 optional_dvn_threshold: entry.config.receiveConfig.ulnConfig.optionalDVNThreshold,
@@ -90,13 +88,11 @@ async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['con
 async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.sendConfig) {
-            // TODO: set defaults in this case
             console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
 
         if (entry.config.sendConfig.ulnConfig) {
-            // TODO: figure out where to pass in useDefaultFor...
             const serializableUlnConfig: UlnConfig = {
                 confirmations: entry.config.sendConfig.ulnConfig.confirmations,
                 optional_dvn_threshold: entry.config.sendConfig.ulnConfig.optionalDVNThreshold,
@@ -116,7 +112,6 @@ async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connec
 async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.sendLibrary) {
-            // TODO: set defaults in this case
             console.log(`No send library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
@@ -131,7 +126,6 @@ async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['conne
 async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
-            // TODO: set defaults in this case
             console.log(`No receive library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
@@ -146,7 +140,6 @@ async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['co
 async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryTimeoutConfig) {
-            // TODO: set defaults in this case
             console.log(
                 `No receive library timeout specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`
             )
