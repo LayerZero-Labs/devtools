@@ -114,14 +114,12 @@ export class OFT {
             console.log(`set send library result: ${result}`)
             return result
         } catch (error: any) {
-            // Check if it's the specific "already set" error
             if (error.message?.includes('EATTEMPTED_TO_SET_CURRENT_LIBRARY')) {
                 console.log(
                     `EATTEMPTED_TO_SET_CURRENT_LIBRARY: Send library for EID ${remoteEid} is already set to the requested address\n`
                 )
-                return null // or you could return a specific status object
+                return null
             }
-            // Re-throw any other errors
             throw error
         }
     }
@@ -140,14 +138,12 @@ export class OFT {
             console.log(`set receive library result: ${result}`)
             return result
         } catch (error: any) {
-            // Check if it's the specific "already set" error
             if (error.message?.includes('EATTEMPTED_TO_SET_CURRENT_LIBRARY')) {
                 console.log(
                     `EATTEMPTED_TO_SET_CURRENT_LIBRARY: Receive library for EID ${remoteEid} is already set to the requested address\n`
                 )
-                return null // or you could return a specific status object
+                return null
             }
-            // Re-throw any other errors
             throw error
         }
     }
@@ -197,7 +193,6 @@ export class OFT {
                 console.log(`ENOT_IMPLEMENTED: Msg lib at: ${msgLibAddress}) does not support configuration.\n`)
                 return null
             }
-            // Re-throw any other errors
             throw error
         }
     }
