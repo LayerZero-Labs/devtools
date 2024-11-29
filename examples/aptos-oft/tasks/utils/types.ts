@@ -18,7 +18,6 @@ export type deploymentFile = {
 
 export type WireEvm = {
     evmAddress: string
-    signer: ethers.Wallet
     contract: ethers.Contract
     fromEid: number
     configAccount: OAppNodeConfig
