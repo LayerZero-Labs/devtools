@@ -1,5 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
+import { bscConfig, ethConfig } from './evmOAppConfig'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
@@ -22,9 +23,11 @@ const config: OAppOmniGraphHardhat = {
     contracts: [
         {
             contract: ethereumContract,
+            config: ethConfig.accountConfig,
         },
         {
             contract: bscContract,
+            config: bscConfig.accountConfig,
         },
         {
             contract: aptosContract,
@@ -107,10 +110,12 @@ const config: OAppOmniGraphHardhat = {
         {
             from: bscContract,
             to: aptosContract,
+            config: bscConfig.oappConfig,
         },
         {
             from: ethereumContract,
             to: aptosContract,
+            config: ethConfig.oappConfig,
         },
     ],
 }
