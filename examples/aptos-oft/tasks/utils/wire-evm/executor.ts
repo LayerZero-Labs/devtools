@@ -51,7 +51,7 @@ export async function executeTransactions(txs: PopulatedTransaction[][], wireFac
     await Promise.all(tx_pool)
 }
 
-function isNullTx(tx) {
+function isNullTx(tx: PopulatedTransaction) {
     return tx.data === '' && tx.from === '' && tx.to === ''
 }
 

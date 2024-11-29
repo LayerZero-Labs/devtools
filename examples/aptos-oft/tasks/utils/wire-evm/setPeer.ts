@@ -1,6 +1,6 @@
 import { WireEvm, AptosOFTMetadata } from '../types'
 import { diffPrinter } from '../utils'
-import { PopulatedTransaction } from 'ethers'
+import { PopulatedTransaction, Contract } from 'ethers'
 /**
  * Sets peer information for connections to wire.
  */
@@ -36,6 +36,6 @@ export async function createSetPeerTransactions(
     return setPeerTxPool
 }
 
-export async function getPeer(contract, eid: number) {
+export async function getPeer(contract: Contract, eid: number) {
     return await contract.peers(eid)
 }
