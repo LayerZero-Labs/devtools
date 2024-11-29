@@ -49,6 +49,7 @@ export async function executeTransactions(txs: PopulatedTransaction[][], wireFac
     }
 
     await Promise.all(tx_pool)
+    console.log('All transactions have been executed on the blockchains.')
 }
 
 function isNullTx(tx: PopulatedTransaction) {

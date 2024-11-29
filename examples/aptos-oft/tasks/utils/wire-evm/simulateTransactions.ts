@@ -22,10 +22,10 @@ export async function simulateTransactions(txs: PopulatedTransaction[][], wireFa
         }
     }
 
-    console.log(`Simulating Transactions`)
+    console.log(`Transaction simulation started...`)
     console.log(`Total transactions: ${totalTransactions}`)
     console.log(`Skipping transactions (already set): ${nullTxCount}`)
-    console.log(`Sending transactions: ${totalTransactions - nullTxCount}`)
+    console.log(`Simulating transactions: ${totalTransactions - nullTxCount}`)
 
     const simulationNonce: Record<number, number> = {}
     const simulationBalance: Record<number, BigNumber> = {}
@@ -76,6 +76,7 @@ export async function simulateTransactions(txs: PopulatedTransaction[][], wireFa
             }
         }
     }
+    console.log('All transactions have been SIMULATED on the blockchains.')
 }
 
 function isNullTx(tx: PopulatedTransaction) {
