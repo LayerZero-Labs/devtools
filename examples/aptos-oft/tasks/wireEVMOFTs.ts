@@ -4,7 +4,7 @@ import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } fro
 import { WireEvm, AptosOFTMetadata } from './utils/types'
 import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { executeTransactions } from './utils/wire-evm/executeTransactions'
+// import { executeTransactions } from './utils/wire-evm/executeTransactions'
 import { simulateTransactions } from './utils/wire-evm/simulateTransactions'
 import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
 
@@ -62,12 +62,13 @@ async function main() {
             configOapp: conn.config,
         })
     }
+
     // The rows are different operations : setPeer, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout, setSendConfig, setReceiveConfig
     // The columns are the different networks to wire with
     // @todo - parallelize the operations and networks with threads - prolly not worth it.
 
     txs.push(await createSetPeerTransactions(wireEvmObjects, aptosOft))
-    // txs.push(await createSetDelegateTransactions(wireEvmObjects, aptosOft))
+    txs.push(await createSetDelegateTransactions(wireEvmObjects, aptosOft))
     await simulateTransactions(txs, wireEvmObjects)
     // await executeTransactions(txs, wireEvmObjects)
 }
