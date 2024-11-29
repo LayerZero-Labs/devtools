@@ -2,10 +2,11 @@ import { ContractFactory, ethers, PopulatedTransaction } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
 import { WireEvm, AptosOFTMetadata } from './utils/types'
-import { preCheckBalances } from './utils/wire-evm/checkBalance'
 import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { executeTransactions } from './utils/wire-evm/executor'
+import { executeTransactions } from './utils/wire-evm/executeTransactions'
+import { simulateTransactions } from './utils/wire-evm/simulateTransactions'
+import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -26,11 +27,9 @@ async function main() {
 
     const wireEvmObjects: WireEvm[] = []
 
-    // The rows are different operations : setPeer, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout, setSendConfig, setReceiveConfig
-    // The columns are the different networks to wire with
     const txs: PopulatedTransaction[][] = []
 
-    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
+    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a7'
     const aptosOft: AptosOFTMetadata = {
         eid: EID_APTOS,
         aptosAddress: APTOS_OFT,
@@ -57,15 +56,19 @@ async function main() {
 
         wireEvmObjects.push({
             evmAddress: address,
-            signer: signer,
             contract: factory.attach(address),
             fromEid: fromEid,
             configAccount: accountConfigs[fromEid],
             configOapp: conn.config,
         })
     }
+    // The rows are different operations : setPeer, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout, setSendConfig, setReceiveConfig
+    // The columns are the different networks to wire with
+    // @todo - parallelize the operations and networks with threads - prolly not worth it.
+
     txs.push(await createSetPeerTransactions(wireEvmObjects, aptosOft))
-    // await preCheckBalances(wireEvmObjects, aptosOft)
+    // txs.push(await createSetDelegateTransactions(wireEvmObjects, aptosOft))
+    await simulateTransactions(txs, wireEvmObjects)
     // await executeTransactions(txs, wireEvmObjects)
 }
 
