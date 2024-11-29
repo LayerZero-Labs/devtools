@@ -29,7 +29,7 @@ async function main() {
 
     const txs: PopulatedTransaction[][] = []
 
-    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a7'
+    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
     const aptosOft: AptosOFTMetadata = {
         eid: EID_APTOS,
         aptosAddress: APTOS_OFT,
@@ -75,7 +75,7 @@ async function main() {
 
 main()
     .then(() => {
-        console.log('Process completed successfully.')
+        console.log('Your OApps are now configured to wire with Aptos.')
         process.exit(0)
     })
     .catch((error) => {

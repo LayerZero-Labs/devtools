@@ -26,7 +26,7 @@ export async function createSetPeerTransactions(
             continue
         }
 
-        diffPrinter(`Set Peer on ${eid}`, { peer }, { peer: aptosAddress })
+        diffPrinter(`Setting Peer on ${eid}`, { peer }, { peer: aptosAddress })
 
         const tx = await contract.populateTransaction.setPeer(aptosEid, aptosAddress)
 
