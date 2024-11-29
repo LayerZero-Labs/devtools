@@ -28,18 +28,18 @@ export async function executeTransactions(txs: PopulatedTransaction[][], wireFac
     const tx_pool = []
     for (let i = 0; i < steps; i++) {
         const operation = txs[i]
-
         for (let j = 0; j < transactions; j++) {
             const chainTx = operation[j]
 
             if (!isNullTx(chainTx)) {
                 const { contract, evmAddress, fromEid: eid } = wireFactories[j]
+
                 const signer = contract.signer
                 const provider = contract.provider
 
                 chainTx['gasLimit'] = await provider.estimateGas(chainTx)
-                chainTx['gasPrice'] = chainDataMapper['eid']['gasPrice']
-                chainTx['nonce'] = chainDataMapper['eid']['nonce']++
+                chainTx['gasPrice'] = chainDataMapper[eid]['gasPrice']
+                chainTx['nonce'] = chainDataMapper[eid]['nonce']++
 
                 console.log(`Sending transaction ${i + 1}/${steps} to ${eid} @ ${evmAddress}`)
                 const signedTransaction = await signer.signTransaction(chainTx)
@@ -53,8 +53,4 @@ export async function executeTransactions(txs: PopulatedTransaction[][], wireFac
 
 function isNullTx(tx: PopulatedTransaction) {
     return tx.data === '' && tx.from === '' && tx.to === ''
-}
-
-export async function getPeer(contract, eid) {
-    return await contract.peers(eid)
 }
