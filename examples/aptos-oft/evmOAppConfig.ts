@@ -3,8 +3,8 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const bscAccountConfig: OAppNodeConfig = {
-    owner: '0x0',
-    delegate: '0x0',
+    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
 }
 const bscOAppConfig: OAppEdgeConfig = {
     enforcedOptions: [
@@ -53,8 +53,8 @@ const bscOAppConfig: OAppEdgeConfig = {
 }
 
 const ethAccountConfig: OAppNodeConfig = {
-    owner: '0x0',
-    delegate: '0x0',
+    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
 }
 const ethOAppConfig: OAppEdgeConfig = {
     enforcedOptions: [
