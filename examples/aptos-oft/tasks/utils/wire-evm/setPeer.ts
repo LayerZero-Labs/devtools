@@ -1,23 +1,41 @@
 import { WireEvm, AptosOFTMetadata } from '../types'
-
+import { diffPrinter } from '../utils'
+import { PopulatedTransaction } from 'ethers'
 /**
  * Sets peer information for connections to wire.
  */
-export async function setPeerX(wireFactories: WireEvm[], aptosOft: AptosOFTMetadata) {
+export async function createSetPeerTransactions(
+    wireFactories: WireEvm[],
+    aptosOft: AptosOFTMetadata
+): Promise<PopulatedTransaction[]> {
+    const setPeerTxPool = []
+
     for (const wireFactory of wireFactories) {
         const contract = wireFactory.contract
-
-        const peer = await contract.peers(aptosOft.eid)
-        const address = wireFactory.evmAddress
+        const evmAddress = wireFactory.evmAddress
         const eid = wireFactory.fromEid
 
-        if (peer == aptosOft.aptosAddress) {
-            const msg = `Peer already set for ${eid} @ ${address}`
-            console.log(`\x1b[43m Skipping: ${msg} \x1b[0m`)
+        const aptosEid = aptosOft.eid
+        const aptosAddress = aptosOft.aptosAddress
+
+        const peer = await getPeer(contract, aptosEid)
+
+        if (peer === aptosAddress) {
+            console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${evmAddress} \x1b[0m`)
+            setPeerTxPool.push({ data: '', from: '', to: '' })
             continue
         }
-        await contract.setPeer(aptosOft.eid, aptosOft.aptosAddress)
-        const msg = `Peer set successfully for ${eid} @ ${address}`
-        console.log(`\x1b[42m Success: ${msg} \x1b[0m`)
+
+        diffPrinter(`Set Peer on ${eid}`, { peer }, { peer: aptosAddress })
+
+        const tx = await contract.populateTransaction.setPeer(aptosEid, aptosAddress)
+
+        setPeerTxPool.push(tx)
     }
+
+    return setPeerTxPool
+}
+
+export async function getPeer(contract, eid: number) {
+    return await contract.peers(eid)
 }
