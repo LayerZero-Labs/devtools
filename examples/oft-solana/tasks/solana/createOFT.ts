@@ -23,7 +23,8 @@ import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { createMintAuthorityMultisig } from './multisig'
+import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
+import { assertAccountInitialized } from './utils'
 
 import { deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
@@ -181,6 +182,10 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 additionalMinters
             )
             console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
+            await checkMultisigSigners(connection, mintAuthorityPublicKey, [
+                toWeb3JsPublicKey(oftStorePda),
+                ...additionalMinters,
+            ])
 
             const mint = isMABA
                 ? createNoopSigner(publicKey(mintStr))
@@ -198,20 +203,24 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     authority: umiWalletSigner, // authority is transferred later
                     tokenStandard: TokenStandard.Fungible,
                 }
-                const txBuilder = transactionBuilder().add(createV1(umi, createV1Args))
+                let txBuilder = transactionBuilder().add(createV1(umi, createV1Args))
                 if (amount) {
-                    txBuilder.add(
-                        mintV1(umi, {
-                            ...createV1Args,
-                            mint: publicKey(createV1Args.mint),
-                            authority: umiWalletSigner,
-                            amount,
-                            tokenOwner: umiWalletSigner.publicKey,
-                            tokenStandard: TokenStandard.Fungible,
-                        })
-                    )
+                    // recreate txBuilder since it is immutable
+                    txBuilder = transactionBuilder()
+                        .add(txBuilder)
+                        .add(
+                            mintV1(umi, {
+                                ...createV1Args,
+                                mint: publicKey(createV1Args.mint),
+                                authority: umiWalletSigner,
+                                amount,
+                                tokenOwner: umiWalletSigner.publicKey,
+                                tokenStandard: TokenStandard.Fungible,
+                            })
+                        )
                 }
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
+                await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
                 console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
             }
 
