@@ -1,6 +1,6 @@
 import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
-import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
@@ -31,6 +31,22 @@ export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphH
     }
 
     return connections
+}
+
+export function getAccountConfig(): Record<number, OAppNodeConfig> {
+    const conns = lzConfigAptos.contracts
+
+    const configs: Record<number, OAppNodeConfig> = {}
+
+    for (const conn of conns) {
+        if (conn.config) {
+            configs[conn.contract.eid] = conn.config
+        } else {
+            configs[conn.contract.eid] = {}
+        }
+    }
+
+    return configs
 }
 
 export function diffPrinter(logObject: string, from: object, to: object) {

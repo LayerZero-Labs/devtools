@@ -1,4 +1,5 @@
 import { ethers } from 'ethers'
+import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 export type deploymentFile = {
     address: string
@@ -20,6 +21,8 @@ export type WireEvm = {
     signer: ethers.Wallet
     contract: ethers.Contract
     fromEid: number
+    configAccount: OAppNodeConfig
+    configOapp: OAppEdgeConfig
 }
 
 export type AptosOFTMetadata = {
