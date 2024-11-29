@@ -33,6 +33,22 @@ export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphH
     return connections
 }
 
+export function getConfigConnectionsFromConfigConnections(
+    conns: OAppOmniGraphHardhat['connections'],
+    _key: string,
+    _eid: number
+): OAppOmniGraphHardhat['connections'] {
+    const connections: OAppOmniGraphHardhat['connections'] = []
+
+    for (const conn of conns) {
+        if (conn[_key].eid == _eid) {
+            connections.push(conn)
+        }
+    }
+
+    return connections
+}
+
 export function getAccountConfig(): Record<number, OAppNodeConfig> {
     const conns = lzConfigAptos.contracts
 

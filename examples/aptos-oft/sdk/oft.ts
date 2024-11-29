@@ -1,6 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Account, Aptos, Ed25519PrivateKey, SimpleTransaction } from '@aptos-labs/ts-sdk'
-import { encodeAddress } from './utils'
+import { hexToAptosBytesAddress } from './utils'
 
 export class OFT {
     private aptos: Aptos
@@ -20,15 +20,15 @@ export class OFT {
         })
     }
 
-    async setPeer(eid: EndpointId, peerAddress: string) {
-        const peerAddressAsBytes = encodeAddress(peerAddress)
+    async setPeerPayload(eid: EndpointId, peerAddress: string) {
+        const peerAddressAsBytes = hexToAptosBytesAddress(peerAddress)
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
             functionArguments: [eid, peerAddressAsBytes],
         }
     }
 
-    async setDelegate(delegateAddress: string) {
+    async setDelegatePayload(delegateAddress: string) {
         return {
             function: `${this.oft_address}::oapp_core::set_delegate`,
             functionArguments: [delegateAddress],
@@ -65,17 +65,17 @@ export class OFT {
             },
         })
 
-        return result
+        return result[0]
     }
 
-    async setEnforcedOptions(eid: number, msgType: number, enforcedOptions: Uint8Array) {
+    async setEnforcedOptionsPayload(eid: number, msgType: number, enforcedOptions: Uint8Array) {
         return {
             function: `${this.oft_address}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],
         }
     }
 
-    async getEnforcedOptions(eid: number, msgType: number) {
+    async getEnforcedOptions(eid: number, msgType: number): Promise<string> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.oft_address}::oapp_core::get_enforced_options`,
@@ -83,31 +83,31 @@ export class OFT {
             },
         })
 
-        return result
+        return result[0] as string
     }
 
-    async setSendLibrary(remoteEid: number, msglibAddress: string) {
+    async setSendLibraryPayload(remoteEid: number, msglibAddress: string) {
         return {
             function: `${this.oft_address}::oapp_core::set_send_library`,
             functionArguments: [remoteEid, msglibAddress],
         }
     }
 
-    async setReceiveLibrary(remoteEid: number, msglibAddress: string, gracePeriod: number) {
+    async setReceiveLibraryPayload(remoteEid: number, msglibAddress: string, gracePeriod: number) {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library`,
             functionArguments: [remoteEid, msglibAddress, gracePeriod],
         }
     }
 
-    async setReceiveLibraryTimeout(remoteEid: number, msglibAddress: string, expiry: number) {
+    async setReceiveLibraryTimeoutPayload(remoteEid: number, msglibAddress: string, expiry: number) {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
             functionArguments: [remoteEid, msglibAddress, expiry],
         }
     }
 
-    async setConfig(msgLibAddress: string, configType: number, config: Uint8Array) {
+    async setConfigPayload(msgLibAddress: string, configType: number, config: Uint8Array) {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, configType, config],
@@ -125,7 +125,4 @@ export class OFT {
 
         return executedTransaction
     }
-
-    // TODO: use existing batch send, however seperate batches by steps,
-    // so first send all set peer txs, then all set delegate txs, etc
 }

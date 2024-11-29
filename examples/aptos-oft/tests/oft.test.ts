@@ -1,7 +1,7 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { encodeAddress } from '../sdk/utils'
+import { hexToAptosBytesAddress } from '../sdk/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { createSerializableUlnConfig } from '../tasks/utils/ulnConfigBuilder'
 import { Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
@@ -37,14 +37,14 @@ describe('ofts-tests', () => {
 
     describe('Delegate Management', () => {
         it('should set and reset delegate address correctly', async () => {
-            await oft.setDelegate('0x0')
+            await oft.setDelegatePayload('0x0')
 
             const delegate = await oft.getDelegate()
 
             expect(delegate).toEqual(['0x0'])
 
             // reseting to account address so that other tests can run
-            await oft.setDelegate(account_address)
+            await oft.setDelegatePayload(account_address)
 
             const delegate2 = await oft.getDelegate()
 
@@ -54,12 +54,12 @@ describe('ofts-tests', () => {
 
     describe('Peer Management', () => {
         it('should set peer address for BSC testnet and verify encoding', async () => {
-            await oft.setPeer(EndpointId.BSC_TESTNET, BSC_OFT_ADAPTER_ADDRESS)
+            await oft.setPeerPayload(EndpointId.BSC_TESTNET, BSC_OFT_ADAPTER_ADDRESS)
 
             const peer = await oft.getPeer(EndpointId.BSC_TESTNET)
 
             // Convert bytes array to hex string
-            const peerHexString = '0x' + Buffer.from(encodeAddress(BSC_OFT_ADAPTER_ADDRESS)).toString('hex')
+            const peerHexString = '0x' + Buffer.from(BSC_OFT_ADAPTER_ADDRESS).toString('hex')
             expect(peer).toEqual([peerHexString])
         })
     })
@@ -68,10 +68,10 @@ describe('ofts-tests', () => {
         it('should set and verify executor receive options for BSC testnet', async () => {
             const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toBytes()
 
-            await oft.setEnforcedOptions(EndpointId.BSC_TESTNET, 1, options)
+            await oft.setEnforcedOptionsPayload(EndpointId.BSC_TESTNET, 1, options)
+            const expectedOptionsHex = '0x' + Buffer.from(options).toString('hex')
 
             const enforcedOptions = await oft.getEnforcedOptions(EndpointId.BSC_TESTNET, 1)
-            const expectedOptionsHex = '0x' + Buffer.from(options).toString('hex')
             expect(enforcedOptions).toEqual([expectedOptionsHex])
         })
     })
@@ -238,15 +238,15 @@ describe('ofts-tests', () => {
 
     describe('Library Management', () => {
         it('should successfully set send library for BSC sandbox', async () => {
-            await expect(oft.setSendLibrary(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB)).resolves.not.toThrow()
+            await expect(oft.setSendLibraryPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB)).resolves.not.toThrow()
         })
 
         it('should successfully set receive library with version for BSC sandbox', async () => {
-            await oft.setReceiveLibrary(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 0)
+            await oft.setReceiveLibraryPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 0)
         })
 
         it('should set receive library timeout duration for BSC sandbox', async () => {
-            await oft.setReceiveLibraryTimeout(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 1000000)
+            await oft.setReceiveLibraryTimeoutPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 1000000)
         })
     })
 
