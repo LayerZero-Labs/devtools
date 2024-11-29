@@ -1,10 +1,11 @@
-import { ContractFactory, ethers } from 'ethers'
+import { ContractFactory, ethers, PopulatedTransaction } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
 import { WireEvm, AptosOFTMetadata } from './utils/types'
 import { preCheckBalances } from './utils/wire-evm/checkBalance'
-import { setPeerX } from './utils/wire-evm/setPeer'
+import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { executeTransactions } from './utils/wire-evm/executor'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -12,6 +13,7 @@ if (!process.env.PRIVATE_KEY) {
 }
 
 const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
+export const chainDataMapper = {}
 
 /**
  * Main function to initialize the wiring process.
@@ -22,24 +24,7 @@ async function main() {
     const rpcUrls = createEidToNetworkMapping('url')
 
     const wireEvmObjects: WireEvm[] = []
-
-    for (const conn of connectionsToWire) {
-        const fromNetwork = networks[conn.from.eid]
-        const deploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
-        const deploymentData = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
-        const provider = new ethers.providers.JsonRpcProvider(rpcUrls[conn.from.eid])
-        const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
-
-        const { address, abi, bytecode } = deploymentData
-        const factory = new ContractFactory(abi, bytecode, signer)
-
-        wireEvmObjects.push({
-            evmAddress: address,
-            signer: signer,
-            contract: factory.attach(address),
-            fromEid: conn.from.eid,
-        })
-    }
+    const txs: PopulatedTransaction[][] = []
 
     const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
     const aptosOft: AptosOFTMetadata = {
@@ -48,8 +33,35 @@ async function main() {
         rpc: rpcUrls[EID_APTOS],
     }
 
+    for (const conn of connectionsToWire) {
+        const fromEid = conn.from.eid
+        const fromNetwork = networks[fromEid]
+        const deploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
+        const deploymentData = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
+
+        const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
+        const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+
+        const { address, abi, bytecode } = deploymentData
+        const factory = new ContractFactory(abi, bytecode, signer)
+
+        if (!chainDataMapper[fromEid]) {
+            chainDataMapper[fromEid] = {} // Initialize the object if it doesn't exist
+            chainDataMapper[fromEid]['gasPrice'] = await provider.getGasPrice()
+            chainDataMapper[fromEid]['nonce'] = await provider.getTransactionCount(signer.address)
+        }
+
+        wireEvmObjects.push({
+            evmAddress: address,
+            signer: signer,
+            contract: factory.attach(address),
+            fromEid: fromEid,
+        })
+    }
+
     await preCheckBalances(wireEvmObjects, aptosOft)
-    await setPeerX(wireEvmObjects, aptosOft)
+    txs.push(await createSetPeerTransactions(wireEvmObjects, aptosOft))
+    await executeTransactions(txs, wireEvmObjects)
 }
 
 main()
