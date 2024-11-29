@@ -24,6 +24,9 @@ async function main() {
     const rpcUrls = createEidToNetworkMapping('url')
 
     const wireEvmObjects: WireEvm[] = []
+
+    // The rows are different operations : setPeer, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout, setSendConfig, setReceiveConfig
+    // The columns are the different networks to wire with
     const txs: PopulatedTransaction[][] = []
 
     const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
@@ -46,7 +49,7 @@ async function main() {
         const factory = new ContractFactory(abi, bytecode, signer)
 
         if (!chainDataMapper[fromEid]) {
-            chainDataMapper[fromEid] = {} // Initialize the object if it doesn't exist
+            chainDataMapper[fromEid] = {}
             chainDataMapper[fromEid]['gasPrice'] = await provider.getGasPrice()
             chainDataMapper[fromEid]['nonce'] = await provider.getTransactionCount(signer.address)
         }

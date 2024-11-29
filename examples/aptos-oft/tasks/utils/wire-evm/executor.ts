@@ -47,6 +47,7 @@ export async function executeTransactions(txs: PopulatedTransaction[][], wireFac
             }
         }
     }
+
     await Promise.all(tx_pool)
 }
 
