@@ -1,6 +1,6 @@
 import { ContractFactory, ethers, PopulatedTransaction } from 'ethers'
 import fs from 'fs'
-import { createEidToNetworkMapping, getConfigConnections } from './utils/utils'
+import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
 import { WireEvm, AptosOFTMetadata } from './utils/types'
 import { preCheckBalances } from './utils/wire-evm/checkBalance'
 import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
@@ -20,6 +20,7 @@ export const chainDataMapper = {}
  */
 async function main() {
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
+    const accountConfigs = getAccountConfig()
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
@@ -59,12 +60,13 @@ async function main() {
             signer: signer,
             contract: factory.attach(address),
             fromEid: fromEid,
+            configAccount: accountConfigs[fromEid],
+            configOapp: conn.config,
         })
     }
-
-    await preCheckBalances(wireEvmObjects, aptosOft)
     txs.push(await createSetPeerTransactions(wireEvmObjects, aptosOft))
-    await executeTransactions(txs, wireEvmObjects)
+    // await preCheckBalances(wireEvmObjects, aptosOft)
+    // await executeTransactions(txs, wireEvmObjects)
 }
 
 main()
