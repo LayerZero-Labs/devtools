@@ -269,6 +269,8 @@ With a squads multisig, you can simply append the `--multisigKey` flag to the en
 
 ### Mint OFT on Solana
 
+This is only relevant for **OFT** and **OFT Mint-And-Burn Adapter** deployments. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
+
 :information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
 
 First, you need to create the Associated Token Account for your address.
