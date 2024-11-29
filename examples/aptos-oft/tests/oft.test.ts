@@ -3,13 +3,23 @@ import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import { encodeAddress } from '../sdk/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
-
+import { createSerializableUlnConfig } from '../tasks/utils/ulnConfigBuilder'
+import { Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
+import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 const account_address = '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a'
 const OFT_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
 const BSC_OFT_ADAPTER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
-const public_key = '0x8cea84a194ce8032cdd6e12dd87735b4f03a5ba428f3c4265813c7a39ec984d8'
 const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
 const SIMPLE_MSG_LIB = '0x3f2714ef2d63f1128f45e4a3d31b354c1c940ccdb38aca697c9797ef95e7a09f'
+const to: OmniPointHardhat = {
+    contractName: 'oapp_core',
+    eid: EndpointId.BSC_V2_SANDBOX,
+}
+const from: OmniPointHardhat = {
+    contractName: 'oapp_core',
+    eid: EndpointId.APTOS_V2_SANDBOX,
+}
+
 describe('ofts-tests', () => {
     let aptos: Aptos
     let oft: OFT
@@ -76,7 +86,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                 optionalDVNThreshold: 1,
             }
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -101,7 +111,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                 optionalDVNThreshold: 1,
             }
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = true
@@ -126,7 +136,7 @@ describe('ofts-tests', () => {
                 optionalDVNThreshold: 1,
             }
 
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = true
@@ -151,7 +161,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: [],
             }
 
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -174,7 +184,7 @@ describe('ofts-tests', () => {
                 requiredDVNs: ['0x1'],
             }
 
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = true
             const expected_use_default_for_required_dvns = false
@@ -199,7 +209,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: [],
             }
 
-            const serializableUlnConfig = createUlnConfig(ulnConfig)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -222,13 +232,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
             }
 
-            expect(() => createUlnConfig(ulnConfig as Uln302UlnUserConfig)).toThrow()
-        })
-    })
-
-    describe('Minting', () => {
-        it('should mint tokens to the sender', async () => {
-            await oft.mint(1000000000000000000)
+            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, to, from)).toThrow()
         })
     })
 
@@ -245,4 +249,33 @@ describe('ofts-tests', () => {
             await oft.setReceiveLibraryTimeout(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 1000000)
         })
     })
+
+    // describe.only('batch payload testing', () => {
+    //     it('should send a batch payload', async () => {
+    //         const signer_account = Account.fromPrivateKey({
+    //             privateKey: new Ed25519PrivateKey('0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'),
+    //             address: '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a',
+    //         })
+    //         const transactions: InputGenerateTransactionPayloadData[] = []
+    //         for (let i = 0; i < 10; i += 1) {
+    //             const transaction: InputGenerateTransactionPayloadData = {
+    //                 function: `${'0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'}::oapp_core::set_delegate`,
+    //                 functionArguments: [`0x${i}d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a`],
+    //             }
+    //             transactions.push(transaction)
+    //         }
+
+    //         // Sign and submit all transactions as fast as possible
+
+    //         await aptos.transaction.batch.forSingleAccount({
+    //             sender: signer_account,
+    //             data: transactions,
+    //         })
+
+    //         const delegate = await oft.getDelegate()
+    //         console.log(delegate)
+
+    //         expect(delegate).toBeDefined()
+    //     })
+    // })
 })

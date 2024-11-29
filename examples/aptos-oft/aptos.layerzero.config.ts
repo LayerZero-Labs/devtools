@@ -69,10 +69,10 @@ const config: OAppOmniGraphHardhat = {
                         // The number of block confirmations to wait on from before emitting the message from the source chain (from).
                         confirmations: BigInt(5),
                         // The address of the DVNs you will pay to verify a sent message on the source chain (from).
-                        // The fromination tx will wait until ALL `requiredDVNs` verify the message.
+                        // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                         // The address of the DVNs you will pay to verify a sent message on the source chain (from).
-                        // The fromination tx will wait until the configured threshold of `optionalDVNs` verify a message.
+                        // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
                         optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                         // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
                         optionalDVNThreshold: 1,

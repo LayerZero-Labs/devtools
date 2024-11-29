@@ -1,4 +1,12 @@
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import {
+    AnyNumber,
+    Aptos,
+    AptosConfig,
+    InputEntryFunctionData,
+    InputGenerateTransactionPayloadData,
+    Network,
+    SimpleTransaction,
+} from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -41,26 +49,45 @@ async function main() {
 
     console.log(connections)
 
-    console.log('Setting peers\n')
-    await setPeers(oft, connections)
+    const setPeerTxs = await setPeers(oft, connections)
 
-    console.log('Setting enforced options\n')
-    await setEnforcedOptions(oft, connections)
+    const setEnforcedOptionsTxs = await setEnforcedOptions(oft, connections)
 
-    console.log('Setting send library\n')
-    await setSendLibrary(oft, connections)
+    const setSendLibraryTxs = await setSendLibrary(oft, connections)
 
-    console.log('Setting receive library\n')
-    await setReceiveLibrary(oft, connections)
+    const setReceiveLibraryTxs = await setReceiveLibrary(oft, connections)
 
-    console.log('Setting receive library timeout\n')
-    await setReceiveLibraryTimeout(oft, connections)
+    const setReceiveLibraryTimeoutTxs = await setReceiveLibraryTimeout(oft, connections)
 
-    console.log('Setting send config\n')
-    await setSendConfig(oft, connections)
+    const setSendConfigTxs = await setSendConfig(oft, connections)
 
-    console.log('Setting receive config\n')
-    await setReceiveConfig(oft, connections)
+    const setReceiveConfigTxs = await setReceiveConfig(oft, connections)
+
+    await sendAllTxs(aptos, oft, account_address, [
+        ...setPeerTxs,
+        ...setEnforcedOptionsTxs,
+        ...setSendLibraryTxs,
+        ...setReceiveLibraryTxs,
+        ...setReceiveLibraryTimeoutTxs,
+        ...setSendConfigTxs,
+        ...setReceiveConfigTxs,
+    ])
+}
+
+async function sendAllTxs(aptos: Aptos, oft: OFT, account_address: string, txs: InputGenerateTransactionPayloadData[]) {
+    const accountInfo = await aptos.getAccountInfo({ accountAddress: account_address })
+    let sequenceNumber = parseInt(accountInfo.sequence_number)
+
+    for (const tx of txs) {
+        const trans = await aptos.transaction.build.simple({
+            sender: account_address,
+            data: tx,
+            options: {
+                accountSequenceNumber: sequenceNumber++,
+            },
+        })
+        await oft.signSubmitAndWaitForTransaction(trans)
+    }
 }
 
 function getLzNetworkStage(network: Network): Stage {
@@ -92,6 +119,7 @@ function getEndpointId(network: Network, chainName: string): number {
 }
 
 async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveConfig) {
             console.log(`No receive config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
@@ -106,12 +134,16 @@ async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['con
             )
             const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
 
-            await oft.setConfig(entry.config.receiveLibraryConfig.receiveLibrary, 2, serializedUlnConfig)
+            const tx = await oft.setConfig(entry.config.receiveLibraryConfig.receiveLibrary, 2, serializedUlnConfig)
+            txs.push(tx)
         }
     }
+
+    return txs
 }
 
 async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendConfig) {
             console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
@@ -127,12 +159,16 @@ async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connec
 
             const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
 
-            await oft.setConfig(entry.config.sendLibrary, 2, serializedUlnConfig)
+            const tx = await oft.setConfig(entry.config.sendLibrary, 2, serializedUlnConfig)
+            txs.push(tx)
         }
     }
+
+    return txs
 }
 
 async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendLibrary) {
             console.log(`No send library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
@@ -142,25 +178,33 @@ async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['conne
             `Setting send library for contract ${entry.to.contractName} on eid ${entry.to.eid} to ${entry.config.sendLibrary}\n`
         )
 
-        await oft.setSendLibrary(entry.to.eid, entry.config.sendLibrary)
+        const tx = await oft.setSendLibrary(entry.to.eid, entry.config.sendLibrary)
+        txs.push(tx)
     }
+
+    return txs
 }
 
 async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
             console.log(`No receive library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        await oft.setReceiveLibrary(
+        const tx = await oft.setReceiveLibrary(
             entry.to.eid,
             entry.config.receiveLibraryConfig.receiveLibrary,
             Number(entry.config.receiveLibraryConfig.gracePeriod || 0)
         )
+        txs.push(tx)
     }
+
+    return txs
 }
 
 async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryTimeoutConfig) {
             console.log(
@@ -168,28 +212,40 @@ async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGraphHard
             )
             continue
         }
-        await oft.setReceiveLibraryTimeout(
+        const tx = await oft.setReceiveLibraryTimeout(
             entry.to.eid,
             entry.config.receiveLibraryTimeoutConfig.lib,
             Number(entry.config.receiveLibraryTimeoutConfig.expiry)
         )
+        txs.push(tx)
     }
+
+    return txs
 }
 
 async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+    const txs = []
     for (const entry of connections) {
         if (!entry.config?.enforcedOptions) {
             console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        console.log(`Setting enforced options for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
         for (const enforcedOption of entry.config.enforcedOptions) {
             const options = createOptions(enforcedOption)
 
-            console.log('Enforced option:', enforcedOption)
-            await oft.setEnforcedOptions(entry.to.eid, enforcedOption.msgType, options)
+            const currentOptionsBytes = await oft.getEnforcedOptions(entry.to.eid)
+            const currentOptionsHex = Buffer.from(currentOptionsBytes).toString('hex')
+            const currentOptions = Options.fromOptions(currentOptionsHex)
+            if (currentOptions.equals(options)) {
+                console.log(`Enforced options already set for ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+                continue
+            }
+            const tx = await oft.setEnforcedOptions(entry.to.eid, enforcedOption.msgType, options)
+            txs.push(tx)
         }
     }
+
+    return txs
 
     function createOptions(enforcedOption) {
         const options = Options.newOptions()
@@ -211,15 +267,24 @@ function getAptosOftAddress(stage: Stage) {
 
 async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     const eidToNetworkMapping = createEidToNetworkMapping()
+    const txs = []
 
     for (const entry of connections) {
         const networkName = eidToNetworkMapping[entry.to.eid]
         const contractAddress = getContractAddress(networkName, entry.to.contractName)
-
+        const currentPeer = await oft.getPeer(entry.to.eid)
+        if (currentPeer === contractAddress) {
+            // TODO integrate shankars diff display
+            console.log(`Peer already set for ${networkName} (${entry.to.eid}) -> ${contractAddress} ✓\n`)
+            continue
+        }
         console.log(`Calling set peer on ${networkName} with address ${contractAddress}, eid ${entry.to.eid}\n`)
-        await oft.setPeer(entry.to.eid, contractAddress)
-        console.log(`Peer set for ${networkName} (${entry.to.eid}) -> ${contractAddress} ✓\n`)
+        const tx = await oft.setPeer(entry.to.eid, contractAddress)
+
+        txs.push(tx)
     }
+
+    return txs
 }
 
 function getContractAddress(networkName: string, contractName: string) {
