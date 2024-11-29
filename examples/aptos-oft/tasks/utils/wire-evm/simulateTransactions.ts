@@ -32,7 +32,7 @@ export async function simulateTransactions(txs: PopulatedTransaction[][], wireFa
 
     for (let j = 0; j < transactions; j++) {
         const eid = wireFactories[j].fromEid
-        const signer = wireFactories[j].signer
+        const signer = wireFactories[j].contract.signer
 
         simulationNonce[eid] = await signer.getTransactionCount()
         simulationBalance[eid] = await signer.getBalance()
