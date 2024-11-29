@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { Account, Aptos, Ed25519PrivateKey, SimpleTransaction } from '@aptos-labs/ts-sdk'
+import { Account, Aptos, Ed25519PrivateKey, InputEntryFunctionData, SimpleTransaction } from '@aptos-labs/ts-sdk'
 import { encodeAddress } from './utils'
 
 export class OFT {
@@ -20,19 +20,28 @@ export class OFT {
         })
     }
 
-    async setPeer(eid: EndpointId, peerAddress: string) {
-        const peerAddressAsBytes = encodeAddress(peerAddress)
+    setPeerPayload(eid: number, peer: Uint8Array): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
-            functionArguments: [eid, peerAddressAsBytes],
-        }
+            functionArguments: [eid, peer],
+            typeArguments: ['u32', 'vector<u8>'],
+        } satisfies InputEntryFunctionData
     }
 
-    async setDelegate(delegateAddress: string) {
+    setDelegatePayload(delegate: string): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_delegate`,
-            functionArguments: [delegateAddress],
-        }
+            functionArguments: [delegate],
+            typeArguments: ['address'],
+        } satisfies InputEntryFunctionData
+    }
+
+    setEnforcedOptionsPayload(eid: number, msgType: number, enforcedOptions: Uint8Array): InputEntryFunctionData {
+        return {
+            function: `${this.oft_address}::oapp_core::set_enforced_options`,
+            functionArguments: [eid, msgType, enforcedOptions],
+            typeArguments: ['u32', 'u16', 'vector<u8>'],
+        } satisfies InputEntryFunctionData
     }
 
     async getDelegate() {
@@ -68,13 +77,6 @@ export class OFT {
         return result
     }
 
-    async setEnforcedOptions(eid: number, msgType: number, enforcedOptions: Uint8Array) {
-        return {
-            function: `${this.oft_address}::oapp_core::set_enforced_options`,
-            functionArguments: [eid, msgType, enforcedOptions],
-        }
-    }
-
     async getEnforcedOptions(eid: number, msgType: number) {
         const result = await this.aptos.view({
             payload: {
@@ -86,37 +88,41 @@ export class OFT {
         return result
     }
 
-    async setSendLibrary(remoteEid: number, msglibAddress: string) {
+    setSendLibraryPayload(remoteEid: number, msgLibAddress: string): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_send_library`,
-            functionArguments: [remoteEid, msglibAddress],
-        }
+            functionArguments: [remoteEid, msgLibAddress],
+            typeArguments: ['u32', 'address'],
+        } satisfies InputEntryFunctionData
     }
 
-    async setReceiveLibrary(remoteEid: number, msglibAddress: string, gracePeriod: number) {
+    setReceiveLibraryPayload(remoteEid: number, msgLibAddress: string, gracePeriod: bigint): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library`,
-            functionArguments: [remoteEid, msglibAddress, gracePeriod],
-        }
+            functionArguments: [remoteEid, msgLibAddress, gracePeriod],
+            typeArguments: ['u32', 'address', 'u64'],
+        } satisfies InputEntryFunctionData
     }
 
-    async setReceiveLibraryTimeout(remoteEid: number, msglibAddress: string, expiry: number) {
+    setReceiveLibraryTimeoutPayload(remoteEid: number, msgLibAddress: string, expiry: bigint): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
-            functionArguments: [remoteEid, msglibAddress, expiry],
-        }
+            functionArguments: [remoteEid, msgLibAddress, expiry],
+            typeArguments: ['u32', 'address', 'u64'],
+        } satisfies InputEntryFunctionData
     }
 
-    async setConfig(msgLibAddress: string, configType: number, config: Uint8Array) {
+    setConfigPayload(msgLibAddress: string, configType: number, config: Uint8Array): InputEntryFunctionData {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, configType, config],
-        }
+            typeArguments: ['address', 'u32', 'vector<u8>'],
+        } satisfies InputEntryFunctionData
     }
 
-    async signSubmitAndWaitForTransaction(transaction: SimpleTransaction) {
+    async signSubmitAndWaitForTransaction(transaction: SimpleTransaction, signer_account: Account) {
         const signedTransaction = await this.aptos.signAndSubmitTransaction({
-            signer: this.signer_account,
+            signer: signer_account,
             transaction: transaction,
         })
 
