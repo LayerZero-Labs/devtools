@@ -212,6 +212,8 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
+
 #### For OFTAdapter:
 
 ```bash
@@ -225,6 +227,8 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 ```
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
+
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
 ### Update [layerzero.config.ts](./layerzero.config.ts)
 
