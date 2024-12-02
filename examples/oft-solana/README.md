@@ -12,9 +12,9 @@
 
 ## Requirements
 
-- Rust
-- Anchor v0.29
-- Solana CLI v.1.17.31
+- Rust `v1.75.0`
+- Anchor `v0.29`
+- Solana CLI `v.1.17.31`
 - Docker
 - Node.js
 
