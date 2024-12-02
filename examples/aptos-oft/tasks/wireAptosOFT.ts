@@ -1,6 +1,13 @@
-import { Aptos, AptosConfig, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getConfigConnections, getEndpointId, getLzNetworkStage, parseYaml } from './utils/utils'
+import {
+    getAptosOftAddress,
+    getConfigConnections,
+    getEndpointId,
+    getLzNetworkStage,
+    parseYaml,
+    sendAllTxs,
+} from './utils/utils'
 import * as oftConfig from './utils/aptosOftConfigOps'
 import { Endpoint } from '../sdk/endpoint'
 import * as readline from 'readline'
@@ -69,28 +76,6 @@ async function main() {
         console.log('Operation cancelled.')
         process.exit(0)
     }
-}
-
-async function sendAllTxs(aptos: Aptos, oft: OFT, account_address: string, txs: InputGenerateTransactionPayloadData[]) {
-    // const accountInfo = await aptos.getAccountInfo({ accountAddress: account_address })
-    // let sequenceNumber = parseInt(accountInfo.sequence_number)
-
-    console.log(`\nSending ${txs.length} transactions:`)
-    for (const tx of txs) {
-        // console.log(`\nTransaction ${sequenceNumber}:`)
-        console.dir(tx, { depth: null })
-
-        const trans = await aptos.transaction.build.simple({
-            sender: account_address,
-            data: tx,
-            // options: {
-            //     accountSequenceNumber: sequenceNumber++,
-            // },
-        })
-        await oft.signSubmitAndWaitForTx(trans)
-        // console.log(`Transaction ${sequenceNumber - 1} completed ✓`)
-    }
-    console.log('\nAll transactions completed successfully')
 }
 
 async function promptForConfirmation(txCount: number): Promise<boolean> {

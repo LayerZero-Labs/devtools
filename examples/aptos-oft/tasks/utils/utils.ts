@@ -2,11 +2,12 @@ import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
 import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { Network } from '@aptos-labs/ts-sdk'
+import { Aptos, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
 import { Stage } from '@layerzerolabs/lz-definitions-v3'
 import { loadAptosYamlConfig } from './config'
 import path from 'path'
 import * as fs from 'fs'
+import { OFT } from '../../sdk/oft'
 
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
@@ -171,4 +172,36 @@ export async function parseYaml(): Promise<{
     const faucet = aptosYamlConfig.profiles.default.faucet_url
 
     return { account_address, private_key, network, fullnode, faucet }
+}
+
+export async function sendAllTxs(
+    aptos: Aptos,
+    oft: OFT,
+    account_address: string,
+    txs: InputGenerateTransactionPayloadData[]
+) {
+    const accountInfo = await aptos.getAccountInfo({ accountAddress: account_address })
+    let sequenceNumber = parseInt(accountInfo.sequence_number)
+
+    console.log('\n📦 Transaction Batch Summary:')
+    console.log(`   • Total transactions: ${txs.length}`)
+    console.log(`   • Starting sequence: ${sequenceNumber}\n`)
+
+    for (let i = 0; i < txs.length; i++) {
+        const progress = `[${i + 1}/${txs.length}]`
+        console.log(`🔄 ${progress} Processing transaction ${sequenceNumber}...`)
+
+        const trans = await aptos.transaction.build.simple({
+            sender: account_address,
+            data: txs[i],
+        })
+        await oft.signSubmitAndWaitForTx(trans)
+
+        console.log(`✅ ${progress} Transaction ${sequenceNumber} completed\n`)
+        sequenceNumber++
+    }
+
+    console.log('🎉 Batch Transaction Summary:')
+    console.log(`   • ${txs.length} transactions processed successfully`)
+    console.log(`   • Final sequence: ${sequenceNumber - 1}\n`)
 }

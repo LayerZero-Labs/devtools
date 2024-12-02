@@ -1,9 +1,6 @@
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getLzNetworkStage, parseYaml } from './utils/utils'
-import { Endpoint } from '../sdk/endpoint'
-
-const ENDPOINT_ADDRESS = '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c'
+import { getAptosOftAddress, getLzNetworkStage, parseYaml, sendAllTxs } from './utils/utils'
 
 const networkToIndexerMapping = {
     [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
@@ -42,19 +39,12 @@ async function main() {
         6
     )
 
-    const initializeTx = await buildTx(aptos, oft, account_address, initializePayload)
-    await oft.signSubmitAndWaitForTx(initializeTx)
+    const setDelegatePayload = await oft.setDelegatePayload(account_address)
 
-    console.log(`Setting aptos OFT delegate to ${account_address}`)
-    await oft.setDelegatePayload(account_address)
-}
-
-async function buildTx(aptos: Aptos, oft: OFT, account_address: string, payload: any) {
-    const trans = await aptos.transaction.build.simple({
-        sender: account_address,
-        data: payload,
-    })
-    return trans
+    sendAllTxs(aptos, oft, account_address, [
+        initializePayload as InputGenerateTransactionPayloadData,
+        setDelegatePayload as InputGenerateTransactionPayloadData,
+    ])
 }
 
 main().catch((error) => {
