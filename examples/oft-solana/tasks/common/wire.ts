@@ -120,7 +120,7 @@ task(TASK_LZ_OAPP_WIRE)
         // The only thing we are overriding is the sdkFactory parameter - we supply the SDK factory we created above
         subtask(
             SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
-            'Configure Swell OFT',
+            'Configure OFT',
             (args: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, hre, runSuper) =>
                 runSuper({
                     ...args,
@@ -134,7 +134,7 @@ task(TASK_LZ_OAPP_WIRE)
         //
         // In this subtask we need to override the createSigner function so that it uses the Solana
         // signer for all Solana transactions
-        subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign Swell OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
+        subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
             runSuper({
                 ...args,
                 createSigner: firstFactory(solanaSignerFactory, args.createSigner),
