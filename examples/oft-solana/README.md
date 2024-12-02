@@ -214,6 +214,10 @@ For OFTAdapter:
 pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
+:warning: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
+multisig. If you do not want to, you must specify `--only-oft-store true`. If you choose the latter approach, you can never
+substitute in a different mint authority.
+
 For OFT Mint-And-Burn Adapter (MABA):
 
 ```bash
