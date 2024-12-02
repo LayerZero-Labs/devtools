@@ -41,23 +41,10 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 
 ### Install Anchor
 
-The preferred way of installing Anchor is by using AVM (Anchor Version Manager), which will allow easy version switching. So first, install AVM.
-
-```bash
-cargo install --git https://github.com/coral-xyz/anchor avm --force
-```
-
-Verify AVM is accessible
-
-```bash
-avm --version
-```
-
 Install and use the correct version
 
 ```bash
-avm install 0.29.0
-avm use 0.29.0
+cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli --locked
 ```
 
 ### Get the code
