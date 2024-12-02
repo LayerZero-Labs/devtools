@@ -7,7 +7,7 @@ export class OFT {
     private account_address: string
     private private_key: string
     private signer_account: Account
-    private oft_address: string
+    public oft_address: string
 
     constructor(aptos: Aptos, oft_address: string, account_address: string, private_key: string) {
         this.aptos = aptos
@@ -68,7 +68,7 @@ export class OFT {
         return result[0]
     }
 
-    async setEnforcedOptionsPayload(eid: number, msgType: number, enforcedOptions: Uint8Array) {
+    setEnforcedOptionsPayload(eid: number, msgType: number, enforcedOptions: Uint8Array) {
         return {
             function: `${this.oft_address}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],

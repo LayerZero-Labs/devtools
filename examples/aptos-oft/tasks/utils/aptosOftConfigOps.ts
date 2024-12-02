@@ -1,20 +1,29 @@
 import { OFT } from '../../sdk/oft'
 import * as fs from 'fs'
 import * as path from 'path'
-import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
 import { createEidToNetworkMapping, diffPrinter } from './utils'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
-import { UlnConfig } from '.'
+import { ExecutorOptionType, Options, trim0x } from '@layerzerolabs/lz-v2-utilities-v3'
+import { ExecutorConfig, UlnConfig } from '.'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
-import { hexToAptosBytesAddress } from '../../sdk/utils'
+import { Endpoint } from '../../sdk/endpoint'
+// Configuration Types as used in this message library
+enum ConfigType {
+    EXECUTOR = 1,
+    SEND_ULN = 2,
+    RECV_ULN = 3,
+}
 
 export function toAptosAddress(address: string): string {
     if (!address) {
         return '0x' + '0'.repeat(64)
     }
+    address = address.toLowerCase()
     const hex = address.replace('0x', '')
-    return '0x' + hex.padStart(64, '0')
+    // Ensure the hex string is exactly 64 chars by padding or truncating
+    const paddedHex = hex.length > 64 ? hex.slice(-64) : hex.padStart(64, '0')
+    return '0x' + paddedHex
 }
 
 export async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
@@ -24,18 +33,11 @@ export async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['conn
     for (const entry of connections) {
         const networkName = eidToNetworkMapping[entry.to.eid]
         const newPeer = toAptosAddress(getContractAddress(networkName, entry.to.contractName))
-        const currentPeerBytes = await oft.getPeer(entry.to.eid as EndpointId)
-        const currentPeerHex = '0x' + Buffer.from(currentPeerBytes as Uint8Array).toString('hex')
+        const currentPeerHex = await oft.getPeer(entry.to.eid as EndpointId)
 
-        console.log(`currentPeer: ${currentPeerHex} currentPeerHexType: ${typeof currentPeerHex}`)
-        console.log(`contractAddress: ${newPeer} contractAddressType: ${typeof newPeer}`)
         if (currentPeerHex === newPeer) {
-            // TODO integrate shankars diff display
-            console.log(`Peer already set for ${networkName} (${entry.to.eid}) -> ${newPeer} ✓\n`)
+            console.log(`Peer already set for ${networkName} (${entry.to.eid}) address: ${newPeer} ✓\n`)
         } else {
-            console.log(`currentPeerHex: ${currentPeerHex} currentPeerHexType: ${typeof currentPeerHex}`)
-            console.log(`contractAddress: ${newPeer} contractAddressType: ${typeof newPeer}`)
-
             diffPrinter(
                 `Set peer from Aptos to ${networkName} (${entry.to.eid})`,
                 { address: currentPeerHex },
@@ -62,31 +64,18 @@ function getContractAddress(networkName: string, contractName: string) {
 
 export async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
+    console.log(`connections: ${connections}`)
     for (const entry of connections) {
         if (!entry.config?.enforcedOptions) {
             console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        for (const enforcedOption of entry.config.enforcedOptions) {
-            const newOptions = createOptions(enforcedOption)
 
-            const currentOptionsHex = await oft.getEnforcedOptions(entry.to.eid, enforcedOption.msgType)
-
-            if (newOptions.toHex() === currentOptionsHex) {
-                console.log(`Enforced options already set for ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
-                continue
-            } else {
-                const currentOptions = Options.fromOptions(currentOptionsHex)
-                diffPrinter(
-                    `Set enforced options for ${entry.to.contractName} on eid ${entry.to.eid}`,
-                    currentOptions,
-                    enforcedOption
-                )
-                const tx = await oft.setEnforcedOptionsPayload(
-                    entry.to.eid,
-                    enforcedOption.msgType,
-                    newOptions.toBytes()
-                )
+        const msgTypes = [1, 2]
+        for (const msgType of msgTypes) {
+            const options = getOptionsByMsgType(entry, msgType)
+            const tx = await createTxFromOptions(options, entry.to.eid, entry.to.contractName, oft, msgType)
+            if (tx) {
                 txs.push(tx)
             }
         }
@@ -94,19 +83,57 @@ export async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHar
 
     return txs
 
-    function createOptions(enforcedOption) {
-        const options = Options.newOptions()
-        //TODO: Accept all option types
-        if (enforcedOption.optionType === ExecutorOptionType.LZ_RECEIVE) {
-            options.addExecutorLzReceiveOption(enforcedOption.gas, enforcedOption.value)
-        } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
-            options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
+    function getOptionsByMsgType(entry, msgType) {
+        const options = []
+        for (const enforcedOption of entry.config.enforcedOptions) {
+            if (enforcedOption.msgType === msgType) {
+                options.push(enforcedOption)
+            }
         }
         return options
     }
 }
 
-export async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+function addOptions(enforcedOption: any, options: Options) {
+    //TODO: Accept all option types
+    if (enforcedOption.optionType === ExecutorOptionType.LZ_RECEIVE) {
+        options.addExecutorLzReceiveOption(enforcedOption.gas, enforcedOption.value)
+    } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
+        options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
+    }
+}
+
+async function createTxFromOptions(options: Options[], eid: number, contractName: string, oft: OFT, msgType: number) {
+    const newOptions = Options.newOptions()
+    for (const enforcedOption of options) {
+        addOptions(enforcedOption, newOptions)
+    }
+    const currentOptionsHex = ensureOptionsCompatible(await oft.getEnforcedOptions(eid, msgType))
+
+    if (newOptions.toHex() === currentOptionsHex) {
+        console.log(`Enforced options already set for ${contractName} on eid ${eid} ✓\n`)
+        return null
+    } else {
+        const currentOptions = Options.fromOptions(currentOptionsHex)
+        diffPrinter(`Set enforced options for ${contractName} on eid ${eid}`, { currentOptions }, { newOptions })
+        const tx = oft.setEnforcedOptionsPayload(eid, msgType, newOptions.toBytes())
+        return tx
+    }
+}
+
+// Default options return from aptos are 0x, however the options decoder expects 0x00
+function ensureOptionsCompatible(optionsHex: string) {
+    if (optionsHex === '0x') {
+        return '0x00'
+    }
+    return optionsHex
+}
+
+export async function setReceiveLibraryTimeout(
+    oft: OFT,
+    endpoint: Endpoint,
+    connections: OAppOmniGraphHardhat['connections']
+) {
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryTimeoutConfig) {
@@ -115,71 +142,133 @@ export async function setReceiveLibraryTimeout(oft: OFT, connections: OAppOmniGr
             )
             continue
         }
-        const tx = await oft.setReceiveLibraryTimeoutPayload(
-            entry.to.eid,
-            entry.config.receiveLibraryTimeoutConfig.lib,
-            Number(entry.config.receiveLibraryTimeoutConfig.expiry)
+        console.log('attempting to fetched the recieve lib timeout')
+        console.log(`oftAddress: ${oft.oft_address}`)
+        console.log(`entry.to.eid: ${entry.to.eid}`)
+        const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, entry.to.eid)
+        console.log(`currentTimeout: ${currentTimeout} currentTimeoutType: ${typeof currentTimeout}`)
+        console.log(
+            `entry.config.receiveLibraryTimeoutConfig.expiry: ${entry.config.receiveLibraryTimeoutConfig.expiry} expiryType: ${typeof entry.config.receiveLibraryTimeoutConfig.expiry}`
         )
-        txs.push(tx)
+        if (currentTimeout === entry.config.receiveLibraryTimeoutConfig.expiry) {
+            console.log(
+                `Receive library timeout already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`
+            )
+            continue
+        } else {
+            diffPrinter(
+                `Set receive library timeout for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                { timeout: currentTimeout },
+                { timeout: entry.config.receiveLibraryTimeoutConfig.expiry }
+            )
+            const tx = await oft.setReceiveLibraryTimeoutPayload(
+                entry.to.eid,
+                entry.config.receiveLibraryTimeoutConfig.lib,
+                Number(entry.config.receiveLibraryTimeoutConfig.expiry)
+            )
+            txs.push(tx)
+        }
     }
 
     return txs
 }
 
-export async function setReceiveLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+export async function setReceiveLibrary(
+    oft: OFT,
+    endpoint: Endpoint,
+    connections: OAppOmniGraphHardhat['connections']
+) {
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
             console.log(`No receive library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        const tx = await oft.setReceiveLibraryPayload(
-            entry.to.eid,
-            entry.config.receiveLibraryConfig.receiveLibrary,
-            Number(entry.config.receiveLibraryConfig.gracePeriod || 0)
-        )
-        txs.push(tx)
+        const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
+
+        if (currentReceiveLibrary === entry.config.receiveLibraryConfig.receiveLibrary) {
+            console.log(`Receive library already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+            continue
+        } else {
+            diffPrinter(
+                `Set receive library for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                { address: currentReceiveLibrary },
+                { address: entry.config.receiveLibraryConfig.receiveLibrary }
+            )
+            const tx = await oft.setReceiveLibraryPayload(
+                entry.to.eid,
+                entry.config.receiveLibraryConfig.receiveLibrary,
+                Number(entry.config.receiveLibraryConfig.gracePeriod || 0)
+            )
+            txs.push(tx)
+        }
     }
 
     return txs
 }
 
-export async function setSendLibrary(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
+    console.dir(connections, { depth: null })
     for (const entry of connections) {
         if (!entry.config?.sendLibrary) {
             console.log(`No send library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        console.log(
-            `Setting send library for contract ${entry.to.contractName} on eid ${entry.to.eid} to ${entry.config.sendLibrary}\n`
-        )
+        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
 
-        const tx = await oft.setSendLibraryPayload(entry.to.eid, entry.config.sendLibrary)
-        txs.push(tx)
+        if (currentSendLibrary === entry.config.sendLibrary) {
+            console.log(`Send library already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+            continue
+        } else {
+            diffPrinter(
+                `Set send library for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                { address: currentSendLibrary },
+                { address: entry.config.sendLibrary }
+            )
+            const tx = await oft.setSendLibraryPayload(entry.to.eid, entry.config.sendLibrary)
+            txs.push(tx)
+        }
     }
 
     return txs
 }
 
-export async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendConfig) {
             console.log(`No send config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
+        if (!entry.config.sendConfig.ulnConfig) {
+            console.log(`sendConfig.ulnConfig not found for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
+        const newUlnConfig = createSerializableUlnConfig(entry.config.sendConfig.ulnConfig, entry.to, entry.from)
 
-        if (entry.config.sendConfig.ulnConfig) {
-            const serializableUlnConfig = createSerializableUlnConfig(
-                entry.config.sendConfig.ulnConfig,
-                entry.to,
-                entry.from
+        const currHexSerializedUlnConfig = await endpoint.getConfig(
+            oft.oft_address,
+            entry.config.sendLibrary,
+            entry.to.eid as EndpointId,
+            ConfigType.SEND_ULN
+        )
+        const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+        // We need to re-serialize the current config to compare it with the new config to ensure same format
+        const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
+
+        const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
+
+        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
+            console.log(`Send config already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+            continue
+        } else {
+            diffPrinter(
+                `Set send config for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                currUlnConfig,
+                newUlnConfig
             )
-
-            const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
-
-            const tx = await oft.setConfigPayload(entry.config.sendLibrary, 2, serializedUlnConfig)
+            const tx = await oft.setConfigPayload(entry.config.sendLibrary, ConfigType.SEND_ULN, newSerializedUlnConfig)
             txs.push(tx)
         }
     }
@@ -187,30 +276,114 @@ export async function setSendConfig(oft: OFT, connections: OAppOmniGraphHardhat[
     return txs
 }
 
-export async function setReceiveConfig(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
+export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveConfig) {
             console.log(`No receive config specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-
-        if (entry.config.receiveConfig.ulnConfig) {
-            const serializableUlnConfig = createSerializableUlnConfig(
-                entry.config.receiveConfig.ulnConfig,
-                entry.to,
-                entry.from
+        if (!entry.config.receiveConfig.ulnConfig) {
+            console.log(
+                `receiveConfig.ulnConfig not found for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`
             )
-            const serializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, serializableUlnConfig)
+            continue
+        }
+        const newUlnConfig = createSerializableUlnConfig(entry.config.receiveConfig.ulnConfig, entry.to, entry.from)
+
+        const currHexSerializedUlnConfig = await endpoint.getConfig(
+            oft.oft_address,
+            entry.config.receiveLibraryConfig.receiveLibrary,
+            entry.to.eid as EndpointId,
+            ConfigType.RECV_ULN
+        )
+
+        const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+        // We need to re-serialize the current config to compare it with the new config to ensure same format
+        const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
+
+        const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
+
+        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
+            console.log(`Receive config already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+            continue
+        } else {
+            diffPrinter(
+                `Set receive config for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                currUlnConfig,
+                newUlnConfig
+            )
 
             const tx = await oft.setConfigPayload(
                 entry.config.receiveLibraryConfig.receiveLibrary,
-                2,
-                serializedUlnConfig
+                ConfigType.RECV_ULN,
+                newSerializedUlnConfig
             )
             txs.push(tx)
         }
     }
 
     return txs
+}
+
+export async function setExecutorConfig(
+    oft: OFT,
+    endpoint: Endpoint,
+    connections: OAppOmniGraphHardhat['connections']
+) {
+    const txs = []
+    for (const entry of connections) {
+        if (!entry.config?.sendConfig?.executorConfig) {
+            console.log(`ExecutorConfig not found for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
+            continue
+        }
+        console.log(
+            `entry.config.sendConfig.executorConfig.executor: ${entry.config.sendConfig.executorConfig.executor}`
+        )
+        const newExecutorConfig = createSerializableExecutorConfig(entry.config.sendConfig.executorConfig)
+
+        const currHexSerializedExecutorConfig = await endpoint.getConfig(
+            oft.oft_address,
+            entry.config.sendLibrary,
+            entry.to.eid as EndpointId,
+            ConfigType.EXECUTOR
+        )
+
+        console.log(`currHexSerializedExecutorConfig: ${currHexSerializedExecutorConfig}`)
+
+        const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
+        currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address
+        // We need to re-serialize the current config to compare it with the new config to ensure same format
+        const serializedCurrentConfig = ExecutorConfig.serialize(entry.to.eid as EndpointId, currExecutorConfig)
+
+        const newSerializedExecutorConfig = ExecutorConfig.serialize(entry.to.eid as EndpointId, newExecutorConfig)
+
+        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig))) {
+            console.log(`Receive config already set for contract ${entry.to.contractName} on eid ${entry.to.eid} ✓\n`)
+            continue
+        } else {
+            diffPrinter(
+                `Set receive config for contract ${entry.to.contractName} on eid ${entry.to.eid}`,
+                currExecutorConfig,
+                newExecutorConfig
+            )
+
+            const tx = await oft.setConfigPayload(
+                entry.config.sendLibrary,
+                ConfigType.EXECUTOR,
+                newSerializedExecutorConfig
+            )
+            txs.push(tx)
+        }
+    }
+
+    return txs
+}
+
+function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig): ExecutorConfig {
+    return {
+        max_message_size: executorConfig.maxMessageSize,
+
+        executor_address: executorConfig.executor,
+    }
 }

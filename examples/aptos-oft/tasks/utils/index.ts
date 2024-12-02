@@ -153,12 +153,12 @@ export const UlnConfig = {
         const requiredDVNCount = deserializer.deserializeU8()
         const required_dvns: string[] = []
         for (let i = 0; i < requiredDVNCount; i++) {
-            required_dvns.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
+            required_dvns.push('0x' + Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
         }
         const optionalDVNCount = deserializer.deserializeU8()
         const optional_dvns: string[] = []
         for (let i = 0; i < optionalDVNCount; i++) {
-            optional_dvns.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
+            optional_dvns.push('0x' + Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
         }
         const use_default_for_confirmations = deserializer.deserializeBool()
         const use_default_for_required_dvns = deserializer.deserializeBool()
@@ -174,6 +174,43 @@ export const UlnConfig = {
         }
     },
 }
+
+// /**
+//  * Deserializes the ULN configuration from a string or Uint8Array.
+//  *
+//  * @param {string | Uint8Array} data - The data to deserialize.
+//  * @returns {UlnConfig} The deserialized ULN configuration.
+//  */
+// export function deserializeUlnConfig(data: string | Uint8Array): UlnConfig {
+//     if (typeof data === 'string') {
+//         data = Uint8Array.from(Buffer.from(trim0x(data), 'hex'))
+//     }
+//     const deserializer = new Deserializer(data, false)
+//     const confirmations = deserializer.deserializeU64()
+//     const optionalDVNThreshold = deserializer.deserializeU8()
+//     const requiredDVNCount = deserializer.deserializeU8()
+//     const requiredDVNs: string[] = []
+//     for (let i = 0; i < requiredDVNCount; i++) {
+//         requiredDVNs.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
+//     }
+//     const optionalDVNCount = deserializer.deserializeU8()
+//     const optionalDVNs: string[] = []
+//     for (let i = 0; i < optionalDVNCount; i++) {
+//         optionalDVNs.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
+//     }
+//     const useDefaultForConfirmations = deserializer.deserializeU8() === 1
+//     const useDefaultForRequiredDVNs = deserializer.deserializeU8() === 1
+//     const useDefaultForOptionalDVNs = deserializer.deserializeU8() === 1
+//     return {
+//         confirmations,
+//         optional_dvn_threshold: optionalDVNThreshold,
+//         required_dvns: requiredDVNs,
+//         optional_dvns: optionalDVNs,
+//         use_default_for_confirmations: useDefaultForConfirmations,
+//         use_default_for_required_dvns: useDefaultForRequiredDVNs,
+//         use_default_for_optional_dvns: useDefaultForOptionalDVNs,
+//     }
+// }
 
 /**
  * Interface representing the executor configuration.
@@ -202,10 +239,16 @@ export const ExecutorConfig = {
 
     serialize(remoteEid: EndpointId, obj: ExecutorConfig): Uint8Array {
         const serializer = new Serializer(false)
+
         serializer.serializeU32(remoteEid)
+
         serializer.serializeU32(obj.max_message_size)
-        serializer.serializeBytes(addressToBytes32(obj.executor_address))
-        return serializer.getBytes()
+
+        const addressBytes = addressToBytes32(obj.executor_address)
+        serializer.serializeBytes(addressBytes)
+
+        const finalBytes = serializer.getBytes()
+        return finalBytes
     },
 
     deserialize(data: string | Uint8Array): ExecutorConfig {

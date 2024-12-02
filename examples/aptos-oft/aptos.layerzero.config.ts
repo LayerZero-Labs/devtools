@@ -74,7 +74,7 @@ const config: OAppOmniGraphHardhat = {
                     executorConfig: {
                         maxMessageSize: 10000,
                         // The configured Executor address on from
-                        executor: '0xbb29964fac328dc2cd1dbf03982e51fad9de67e2a525c35d6e52cde4b66e7997',
+                        executor: '0x806020afea680a0c0f32431acdfcf1a7e31ace28ce81b73da4f27c5898155590',
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on from before emitting the message from the source chain (from).
