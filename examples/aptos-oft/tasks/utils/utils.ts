@@ -1,6 +1,12 @@
 import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
 import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { Network } from '@aptos-labs/ts-sdk'
+import { Stage } from '@layerzerolabs/lz-definitions-v3'
+import { loadAptosYamlConfig } from './config'
+import path from 'path'
+import * as fs from 'fs'
 
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
@@ -13,8 +19,6 @@ export function createEidToNetworkMapping(_value: string = ''): Record<number, s
             eidNetworkNameMapping[networkConfig.eid] = networkConfig[_value]
         }
     }
-
-    // eidNetworkNameMapping[50008] = 'aptos-mainnet'
 
     return eidNetworkNameMapping
 }
@@ -115,4 +119,56 @@ export function diffPrinter(logObject: string, from: object, to: object) {
     console.log(` ${separator} `)
     rows.forEach((row) => console.log(` ${row} `))
     console.log(orangeLine)
+}
+
+export function getLzNetworkStage(network: Network): Stage {
+    if (network === Network.MAINNET) {
+        return Stage.MAINNET
+    } else if (network === Network.TESTNET) {
+        return Stage.TESTNET
+    } else if (network === Network.CUSTOM) {
+        return Stage.SANDBOX
+    } else {
+        throw new Error(`Unsupported network: ${network}`)
+    }
+}
+
+export function getEndpointId(network: Network, chainName: string): number {
+    if (chainName.toLowerCase() !== 'aptos') {
+        throw new Error('Unsupported chain')
+    }
+
+    if (network === Network.MAINNET || network.toLowerCase() === 'mainnet') {
+        return EndpointId.APTOS_V2_MAINNET
+    } else if (network === Network.TESTNET || network.toLowerCase() === 'testnet') {
+        return EndpointId.APTOS_V2_TESTNET
+    } else if (network === Network.CUSTOM || network.toLowerCase() === 'sandbox') {
+        return EndpointId.APTOS_V2_SANDBOX
+    } else {
+        throw new Error(`Unsupported network: ${network}`)
+    }
+}
+
+export function getAptosOftAddress(stage: Stage) {
+    const deploymentPath = path.join(__dirname, `../../deployments/aptos-${stage}/oft.json`)
+    const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
+    return deployment.address
+}
+
+export async function parseYaml(): Promise<{
+    account_address: string
+    private_key: string
+    network: Network
+    fullnode: string
+    faucet: string
+}> {
+    const aptosYamlConfig = await loadAptosYamlConfig()
+
+    const account_address = aptosYamlConfig.profiles.default.account
+    const private_key = aptosYamlConfig.profiles.default.private_key
+    const network = aptosYamlConfig.profiles.default.network.toLowerCase() as Network
+    const fullnode = aptosYamlConfig.profiles.default.rest_url
+    const faucet = aptosYamlConfig.profiles.default.faucet_url
+
+    return { account_address, private_key, network, fullnode, faucet }
 }

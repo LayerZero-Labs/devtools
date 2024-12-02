@@ -64,7 +64,6 @@ function getContractAddress(networkName: string, contractName: string) {
 
 export async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
-    console.log(`connections: ${connections}`)
     for (const entry of connections) {
         if (!entry.config?.enforcedOptions) {
             console.log(`No enforced options specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
@@ -209,7 +208,6 @@ export async function setReceiveLibrary(
 
 export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: OAppOmniGraphHardhat['connections']) {
     const txs = []
-    console.dir(connections, { depth: null })
     for (const entry of connections) {
         if (!entry.config?.sendLibrary) {
             console.log(`No send library specified for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
@@ -337,9 +335,6 @@ export async function setExecutorConfig(
             console.log(`ExecutorConfig not found for contract ${entry.to.contractName} on eid ${entry.to.eid}\n`)
             continue
         }
-        console.log(
-            `entry.config.sendConfig.executorConfig.executor: ${entry.config.sendConfig.executorConfig.executor}`
-        )
         const newExecutorConfig = createSerializableExecutorConfig(entry.config.sendConfig.executorConfig)
 
         const currHexSerializedExecutorConfig = await endpoint.getConfig(
@@ -348,8 +343,6 @@ export async function setExecutorConfig(
             entry.to.eid as EndpointId,
             ConfigType.EXECUTOR
         )
-
-        console.log(`currHexSerializedExecutorConfig: ${currHexSerializedExecutorConfig}`)
 
         const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
         currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address

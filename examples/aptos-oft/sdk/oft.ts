@@ -20,6 +20,28 @@ export class OFT {
         })
     }
 
+    async initializePayload(
+        token_name: string,
+        symbol: string,
+        icon_uri: string,
+        project_uri: string,
+        shared_decimals: number,
+        local_decimals: number
+    ) {
+        const encoder = new TextEncoder()
+        return {
+            function: `${this.oft_address}::oft_impl::initialize`,
+            functionArguments: [
+                encoder.encode(token_name),
+                encoder.encode(symbol),
+                encoder.encode(icon_uri),
+                encoder.encode(project_uri),
+                shared_decimals,
+                local_decimals,
+            ],
+        }
+    }
+
     async setPeerPayload(eid: EndpointId, peerAddress: string) {
         const peerAddressAsBytes = hexToAptosBytesAddress(peerAddress)
         return {
@@ -114,7 +136,7 @@ export class OFT {
         }
     }
 
-    async signSubmitAndWaitForTransaction(transaction: SimpleTransaction) {
+    async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
         const signedTransaction = await this.aptos.signAndSubmitTransaction({
             signer: this.signer_account,
             transaction: transaction,
