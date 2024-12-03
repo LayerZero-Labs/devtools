@@ -33,7 +33,7 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.12",
-    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.21",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/omnicounter-devtools": "~3.0.1",
     "@layerzerolabs/omnicounter-devtools-evm": "~5.0.1",
