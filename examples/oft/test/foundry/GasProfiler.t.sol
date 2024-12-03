@@ -1,21 +1,24 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-/// @title GasProfilerTest
-/// @notice This contract tests gas and msg.value usage of the `lzReceive` function in the LayerZero EndpointV2 contract.
+/// @title EndpointV2Test
+/// @notice This contract tests the `lzReceive` function of the LayerZero EndpointV2 contract.
+/// @dev Utilizes Foundry's `Test` framework for execution and verification.
 import "forge-std/Test.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol";
 
-contract GasProfilerTest is Test {
+/// @notice Test contract for LayerZero EndpointV2's `lzReceive` function.
+/// @dev Follows Coinbase Solidity Style Guide and includes NatSpec documentation.
+contract EndpointV2Test is Test {
     /// @notice Instance of the LayerZero EndpointV2 contract.
     ILayerZeroEndpointV2 public endpoint;
 
     /// @notice Struct to encapsulate test parameters.
     struct TestParams {
-        address receiver;   ///< @dev Address of the receiver application.
+        address receiver;   ///< @dev Address of the receiver.
         uint32 srcEid;      ///< @dev Source Endpoint ID.
-        bytes32 sender;     ///< @dev Sender application address encoded as bytes32.
+        bytes32 sender;     ///< @dev Sender address encoded as bytes32.
         uint64 nonce;       ///< @dev Nonce for the message.
         bytes payload;      ///< @dev Payload data.
         uint256 msgValue;   ///< @dev Ether value sent with the message.
@@ -36,7 +39,8 @@ contract GasProfilerTest is Test {
     /// @notice Constant representing an empty payload hash.
     bytes32 internal constant EMPTY_PAYLOAD_HASH = bytes32(0);
 
-    /// @notice Sets up the test environment by forking the mainnet and initializing the EndpointV2 contract.
+    /// @notice Sets up the test environment by forking the desired chain and initializing the EndpointV2 contract.
+    /// @dev Developers can adjust the RPC URL and EndpointV2 address by setting environment variables before running tests.
     function setUp() public {
         /*
             ================================================
@@ -48,27 +52,44 @@ contract GasProfilerTest is Test {
             1. **Identify the Target Chain's RPC URL:**
                - Obtain the RPC URL for the desired blockchain network (e.g., Binance Smart Chain, Polygon, Avalanche).
                - You can use providers like Infura, Alchemy, or public RPC endpoints.
+               - Example for Polygon Mainnet:
+                 "https://polygon-rpc.com/"
             
             2. **Identify the EndpointV2 Contract Address on the Target Chain:**
                - Ensure that the EndpointV2 contract is deployed on the target chain.
                - Obtain the deployed contract's address from official sources, deployment scripts, or block explorers.
+               - Example:
+                 `0x1234567890abcdef1234567890abcdef12345678`
             
-            3. **Update the Fork and Contract Address:**
-               - Replace the RPC URL in `createSelectFork` with the target chain's RPC endpoint.
-               - Replace the EndpointV2 contract address with the one deployed on the target chain.
+            3. **Set Environment Variables:**
+               - `RPC_URL`: The RPC URL of the target chain.
+               - `ENDPOINT_V2_ADDRESS`: The deployed address of the EndpointV2 contract on the target chain.
+               - Example:
+                 ```bash
+                 export RPC_URL="https://polygon-rpc.com/"
+                 export ENDPOINT_V2_ADDRESS="0x1234567890abcdef1234567890abcdef12345678"
+                 ```
             
-            4. **Adjust Test Parameters Accordingly:**
-               - Ensure that the `receiver` and `sender` addresses are valid on the target chain.
-               - Update `srcEid` if it represents the source Endpoint ID specific to the target chain.
-
+            4. **Update the Fork and Contract Address in the Code:**
+               - The contract will read these environment variables during test execution.
+               - Ensure that these variables are set in your shell before running `forge test`.
+        
             ================================================
         */
 
-        // Fork the Ethereum mainnet using the specified RPC URL.
-        vm.createSelectFork("https://mainnet.gateway.tenderly.co");
+        // Read the RPC URL from the environment variable.
+        string memory rpcUrl = vm.envString("GAS_RPC_URL");
+        require(bytes(rpcUrl).length > 0, "RPC_URL environment variable not set");
 
-        // Initialize the EndpointV2 contract instance at the deployed address.
-        endpoint = ILayerZeroEndpointV2(0x1a44076050125825900e736c501f859c50fE728c);
+        // Fork the desired blockchain network using the specified RPC URL.
+        vm.createSelectFork(rpcUrl);
+
+        // Read the EndpointV2 contract address from the environment variable.
+        address endpointAddress = vm.envAddress("GAS_ENDPOINT_V2_ADDRESS");
+        require(endpointAddress != address(0), "ENDPOINT_V2_ADDRESS environment variable not set or invalid");
+
+        // Initialize the EndpointV2 contract instance at the deployed address on the target chain.
+        endpoint = ILayerZeroEndpointV2(endpointAddress);
     }
 
     /// @notice Computes the storage slot for `lazyInboundNonce` based on the provided parameters.
@@ -110,65 +131,75 @@ contract GasProfilerTest is Test {
 
     /// @notice Tests the `lzReceive` function of the LayerZero EndpointV2 contract.
     /// @dev This test sets the necessary storage slots and invokes `lzReceive`, expecting it to execute successfully.
+    ///      Developers can modify the `TestParams` by setting environment variables before running tests.
     function test_lzReceive_gas() public {
-
         /*
             ================================================
             CONFIGURATION FOR TEST PARAMETERS
             ================================================
             
-            To test the `lzReceive` function on a different chain, ensure that the `TestParams` are correctly configured:
-            
-            1. **Receiver Address (`receiver`):**
-               - Set to the address intended to receive the message on the target chain.
-               - Ensure this address is valid and can interact with the EndpointV2 contract.
-            
-            2. **Source Endpoint ID (`srcEid`):**
-               - Represents the source Endpoint ID specific to the LayerZero protocol.
-               - Ensure this ID corresponds to the source chain you are simulating.
-            
-            3. **Sender Address (`sender`):**
-               - The address of the sender encoded as `bytes32`.
-               - Typically, this should be the application address interacting with the EndpointV2 contract.
-            
-            4. **Nonce (`nonce`):**
-               - Initially set to `0` and will be dynamically updated based on the current nonce in storage.
-            
-            5. **Payload (`payload`):**
-               - The data being sent with the message.
-               - Ensure this matches the expected format for `lzReceive`.
-               - Example: hex"YourPayloadDataHere"
-            
-            6. **Ether Value (`msgValue`):**
-               - The amount of Ether to send with the message.
-               - Adjust based on the requirements of the `lzReceive` function.
-               - Example: 0.05 ether
-            
-            7. **GUID (`guid`):**
-               - A unique identifier for the message.
-               - Typically generated off-chain and passed as a parameter.
-            
-            8. **Extra Data (`extraData`):**
-               - Additional data that might be required by the `lzReceive` function.
-               - Can be left empty if not needed.
+            To test the `lzReceive` function with custom parameters, follow these steps:
 
+            1. **Set Environment Variables:**
+               - `RECEIVER`: Address intended to receive the message (EOA).
+               - `SRC_EID`: Source Endpoint ID (uint32).
+               - `SENDER`: Sender address encoded as bytes32.
+               - `PAYLOAD`: Payload data in hexadecimal (e.g., "0xabcdef").
+               - `MSG_VALUE`: Ether value to send with the message (in wei).
+
+               **Example:**
+               ```bash
+               export RECEIVER=0x5182feDE730b31a9CF7f49C5781214B4a99F2370
+               export SRC_EID=30312
+               export SENDER=0xe4103e80c967f58591a1d7cA443ed7E392FeD862000000000000000000000000
+               export PAYLOAD=0x0000000000000000000000005406b73ae14ab37e2a8a9f57c8c1ab443d8baa5d000000000020aa2c
+               export MSG_VALUE=10000000000000000 # Equivalent to 0.01 ether in wei
+               ```
+            
+            2. **Ensure All Variables Are Set:**
+               - The test will fail if any required environment variable is missing.
+            
+            3. **Run the Test:**
+               - Execute `forge test` in your terminal after setting the environment variables.
+        
             ================================================
         */
+
+        // Read the TestParams from environment variables.
+        address receiver = vm.envAddress("GAS_RECEIVER");
+        require(receiver != address(0), "RECEIVER environment variable not set or invalid");
+
+        uint32 srcEid = uint32(vm.envUint("GAS_SRC_EID"));
+        require(srcEid != 0, "SRC_EID environment variable not set or invalid");
+
+        bytes32 sender = bytes32(uint256(uint160(vm.envAddress("GAS_SENDER"))));
+        // No need to check for zero address in bytes32, but can add if needed
+
+        bytes memory payload = vm.envBytes("GAS_PAYLOAD");
+        require(payload.length > 0, "PAYLOAD environment variable not set or invalid");
+
+        uint256 msgValue = vm.envUint("GAS_MSG_VALUE");
+
+        // Initialize the GUID and extraData as constants or read from environment if needed.
+        bytes32 guid = 0x77ed8435178044051ed70a214215e3acdff2d64fb0bb7b4dde514b8e45693d0b; // Example GUID
+        bytes memory extraData = ""; // Can be modified or read from environment if needed.
+
+        // Initialize test parameters.
         TestParams memory params = TestParams({
-            receiver: 0x5182feDE730b31a9CF7f49C5781214B4a99F2370, // Receiver address (EOA)
-            srcEid: 30312, // Source Endpoint ID
-            sender: bytes32(uint256(uint160(0xe4103e80c967f58591a1d7cA443ed7E392FeD862))), // Sender as bytes32
-            nonce: 0, // Will be set dynamically
-            payload: hex"0000000000000000000000005406b73ae14ab37e2a8a9f57c8c1ab443d8baa5d000000000020aa2c", // Payload data
-            msgValue: 0.01 ether, // Ether value to send with the message
-            guid: 0x77ed8435178044051ed70a214215e3acdff2d64fb0bb7b4dde514b8e45693d0b, // GUID
-            extraData: "" // Additional data
+            receiver: receiver,       // Receiver address (EOA)
+            srcEid: srcEid,           // Source Endpoint ID
+            sender: sender,           // Sender as bytes32
+            nonce: 0,                 // Will be set dynamically
+            payload: payload,         // Payload data
+            msgValue: msgValue,       // Ether value to send with the message
+            guid: guid,               // GUID
+            extraData: extraData      // Additional data
         });
 
         // Initialize storage slot computations.
         StorageSlots memory slots = StorageSlots({
-            baseSlotLazyInboundNonce: 1, // Base slot for `lazyInboundNonce`
-            baseSlotInboundPayloadHash: 2, // Base slot for `inboundPayloadHash`
+            baseSlotLazyInboundNonce: 1,       // Base slot for `lazyInboundNonce`
+            baseSlotInboundPayloadHash: 2,     // Base slot for `inboundPayloadHash`
             lazyInboundNonceSlot: bytes32(0),
             inboundPayloadHashSlot: bytes32(0),
             payloadHash: bytes32(0),
@@ -240,10 +271,10 @@ contract GasProfilerTest is Test {
         // Capture gas usage.
         uint256 gasBefore = gasleft();
 
-        // Record the Ether balance of the receiver before invoking `lzReceive`.
-        uint256 receiverBalanceBeforeCall = address(params.receiver).balance;
+        // Record the Ether balance of the Endpoint before invoking `lzReceive`.
+        uint256 receiverBalanceBeforeCall = address(receiver).balance;
 
-        // Call `lzReceive` and handle potential reverts.
+        // Call `lzReceive` with error handling.
         try endpoint.lzReceive{ value: params.msgValue }(
             origin,
             params.receiver,
@@ -290,11 +321,12 @@ contract GasProfilerTest is Test {
             revert("lzReceive failed with a revert.");
         }
 
-        // Record the Ether balance of the receiver after invoking `lzReceive`.
-        uint256 applicationBalanceAfterCall = address(params.receiver).balance;
+        // Record the Ether balance of the Endpoint after invoking `lzReceive`.
+        uint256 receiverBalanceAfterCall = address(receiver).balance;
 
         // Calculate the retained `msg.value`.
-        uint256 retainedMsgValue = applicationBalanceAfterCall - receiverBalanceBeforeCall;
+        uint256 receivedMsgValue = receiverBalanceAfterCall - receiverBalanceBeforeCall;
+        uint256 usedMsgValue = params.msgValue - receivedMsgValue;
 
         // Calculate and log the gas used.
         uint256 gasAfter = gasleft();
@@ -302,7 +334,7 @@ contract GasProfilerTest is Test {
         emit log_named_uint("Gas used", gasUsed);
 
         // Emit the retained `msg.value`.
-        emit log_named_uint("msg.value leftover", retainedMsgValue);
+        emit log_named_uint("msg.value used", usedMsgValue);
     }
 
     /// @notice Helper function to extract a slice from a bytes array.
