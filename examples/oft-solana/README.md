@@ -208,7 +208,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 ```
 
 :warning: You may specify the `--additional-minters` flag to add a CSV of additional minter keys to the mint
-multisig. If you do not want to, you must specify `--only-oft-store store`. If you choose the latter approach, you can never
+multisig. If you do not want to, you must specify `--only-oft-store true`. If you choose the latter approach, you can never
 substitute in a different mint authority.
 
 ### Update [layerzero.config.ts](./layerzero.config.ts)
@@ -250,7 +250,7 @@ With a squads multisig, you can simply append the `--multisigKey` flag to the en
 
 ### Mint OFT on Solana
 
-:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
+:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store true`, you will not be able to mint your OFT on Solana.
 
 First, you need to create the Associated Token Account for your address.
 

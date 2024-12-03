@@ -119,7 +119,9 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             const tokenProgram = publicKey(tokenProgramStr)
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
-                    throw new Error('If you want to proceed with only the OFTStore, please specify --onlyOFTStore')
+                    throw new Error(
+                        'If you want to proceed with only the OFTStore, please specify --only-oft-store true'
+                    )
                 }
                 console.log(
                     'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
