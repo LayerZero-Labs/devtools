@@ -1,5 +1,13 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.2
+
+### Patch Changes
+
+- 5458b9f: Updated lz-evm-sdk-v2 dependency
+- Updated dependencies [5458b9f]
+  - @layerzerolabs/protocol-devtools-evm@3.0.2
+
 ## 0.6.1
 
 ### Patch Changes
