@@ -198,11 +198,11 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 
 ### Create the Solana OFT
 
-:information_source: In all the OFT patterns listed below, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
+:information_source: For **OFT** and **OFT Mint-and-Burn Adapter**, the SPL token's Mint Authority is set to the **Mint Authority Multisig**, which always has the **OFT Store** as a signer. The multisig is fixed to needing 1 of N signatures.
 
 :information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
 
-:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority.
+:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority. You will also not be able to renounce the Freeze Authority. The Mint Authority and Freeze Authority will be fixed to the Mint Authority Multisig address.
 
 #### For OFT:
 
@@ -227,8 +227,6 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <
 ```
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
-
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
 
 ### Update [layerzero.config.ts](./layerzero.config.ts)
 
@@ -269,7 +267,7 @@ With a squads multisig, you can simply append the `--multisigKey` flag to the en
 
 ### Mint OFT on Solana
 
-This is only relevant for **OFT** and **OFT Mint-And-Burn Adapter** deployments. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
+This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
 
 :information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
 
