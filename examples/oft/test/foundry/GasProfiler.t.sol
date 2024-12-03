@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-/// @title EndpointV2Test
-/// @notice This contract tests the `lzReceive` function of the LayerZero EndpointV2 contract.
-/// @dev Utilizes Foundry's `Test` framework for execution and verification.
+/// @title GasProfilerTest
+/// @notice This contract tests the gas usage of the LayerZero EndpointV2 lzReceive method.
 import "forge-std/Test.sol";
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol";
 
 /// @notice Test contract for LayerZero EndpointV2's `lzReceive` function.
 /// @dev Follows Coinbase Solidity Style Guide and includes NatSpec documentation.
-contract EndpointV2Test is Test {
+contract GasProfilerTest is Test {
     /// @notice Instance of the LayerZero EndpointV2 contract.
     ILayerZeroEndpointV2 public endpoint;
 
