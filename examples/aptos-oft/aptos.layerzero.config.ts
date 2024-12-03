@@ -31,6 +31,10 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             contract: aptosContract,
+            config: {
+                delegate: '3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a',
+                owner: '3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a',
+            },
         },
     ],
     connections: [

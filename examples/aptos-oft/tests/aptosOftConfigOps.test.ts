@@ -1,7 +1,7 @@
 import { HardhatContext } from 'hardhat/internal/context'
 import { TasksDSL } from 'hardhat/internal/core/tasks/dsl'
 import { loadConfigAndTasks } from 'hardhat/internal/core/config/config-loading'
-import { ExecutorConfig, UlnConfig } from '../tasks/utils'
+import { UlnConfig } from '../tasks/utils'
 
 // Initialize global task variable that plugins expect
 ;(global as any).task = new TasksDSL()

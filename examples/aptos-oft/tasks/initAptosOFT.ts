@@ -1,26 +1,23 @@
-import { Aptos, AptosConfig, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getLzNetworkStage, parseYaml, sendAllTxs } from './utils/utils'
-
-const networkToIndexerMapping = {
-    [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
-}
+import { getAptosOftAddress, getDelegateFromLzConfig, networkToIndexerMapping, sendAllTxs } from './utils/utils'
+import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-    console.log(`using aptos network ${network}`)
+    console.log(`Using aptos network ${network}`)
+
     const aptosConfig = new AptosConfig({
         network: network,
         fullnode: fullnode,
         indexer: networkToIndexerMapping[network],
         faucet: faucet,
     })
-
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
-    console.log(`\n🔧 Initializing Aptos OFT Contract`)
+    console.log(`\n🔧 Initializing Aptos OFT`)
     console.log(`   Address: ${aptosOftAddress}`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
@@ -39,11 +36,13 @@ async function main() {
         6
     )
 
-    const setDelegatePayload = await oft.setDelegatePayload(account_address)
+    const eid = getEidFromAptosNetwork(network)
+    const delegate = getDelegateFromLzConfig(eid)
+    const setDelegatePayload = await oft.setDelegatePayload(delegate)
 
     sendAllTxs(aptos, oft, account_address, [
-        initializePayload as InputGenerateTransactionPayloadData,
         setDelegatePayload as InputGenerateTransactionPayloadData,
+        initializePayload as InputGenerateTransactionPayloadData,
     ])
 }
 

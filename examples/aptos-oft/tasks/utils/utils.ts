@@ -1,13 +1,16 @@
 import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
 import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Aptos, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
-import { Stage } from '@layerzerolabs/lz-definitions-v3'
-import { loadAptosYamlConfig } from './config'
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import path from 'path'
 import * as fs from 'fs'
 import { OFT } from '../../sdk/oft'
+import * as readline from 'readline'
+
+export const networkToIndexerMapping = {
+    [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
+}
 
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
@@ -22,6 +25,83 @@ export function createEidToNetworkMapping(_value: string = ''): Record<number, s
     }
 
     return eidNetworkNameMapping
+}
+
+export function getDelegateFromLzConfig(eid: EndpointId): string {
+    validateAptosDelegate(lzConfigAptos, eid)
+    let delegate = ''
+    for (const conn of lzConfigAptos.contracts) {
+        if (conn.contract.eid == eid) {
+            delegate = conn.config.delegate
+            delegate = delegate.startsWith('0x') ? delegate : `0x${delegate}`
+        }
+    }
+    return delegate
+}
+
+export function getOwnerFromLzConfig(eid: EndpointId): string {
+    validateAptosOwner(lzConfigAptos, eid)
+    let owner = ''
+    for (const conn of lzConfigAptos.contracts) {
+        if (conn.contract.eid == eid) {
+            owner = conn.config.owner
+            owner = owner.startsWith('0x') ? owner : `0x${owner}`
+        }
+    }
+    return owner
+}
+
+function validateAptosDelegate(config: OAppOmniGraphHardhat, eid: EndpointId) {
+    const aptosConfig = config.contracts.find((c: any) => c.contract.eid === eid)
+
+    if (!aptosConfig || !aptosConfig.config || !aptosConfig.config.delegate) {
+        console.log(`
+[LayerZero Config] Update Required
+--------------------------------
+Current Configuration:
+• delegate: ${aptosConfig?.config?.delegate || 'not found'}
+
+Please update layerzero config with your Aptos delegate address
+{
+    contract: <your-aptos-contract>,
+    config: {
+        delegate: '<your-aptos-account-address>',
+    }
+}
+`)
+        throw new Error('Please update your Aptos configuration with valid delegate address')
+    }
+}
+
+function validateAptosOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
+    const aptosConfig = config.contracts.find((c: any) => c.contract.eid === eid)
+
+    if (!aptosConfig || !aptosConfig.config || !aptosConfig.config.owner) {
+        console.log(`
+[LayerZero Config] Update Required
+--------------------------------
+Current Configuration:
+• owner: ${aptosConfig?.config?.owner || 'not found'}
+
+Please update layerzero config with your Aptos owner address
+{
+    contract: <your-aptos-contract>,
+    config: {
+        owner: '<your-aptos-account-address>',
+    }
+}
+`)
+        throw new Error('Please update your Aptos configuration with valid owner address')
+    }
+}
+
+export function getOwner(eid: EndpointId) {
+    for (const conn of lzConfigAptos.contracts) {
+        if (conn.contract.eid == eid) {
+            const owner = conn.config.owner
+            return owner.startsWith('0x') ? owner : `0x${owner}`
+        }
+    }
 }
 
 export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphHardhat['connections'] {
@@ -71,7 +151,7 @@ export function getAccountConfig(): Record<number, OAppNodeConfig> {
 }
 
 export function diffPrinter(logObject: string, from: object, to: object) {
-    const keyWidth = 20 // Fixed width for Key column
+    const keyWidth = 30 // Fixed width for Key column
     const valueWidth = 72 // Fixed width for From and To columns
     const tableWidth = keyWidth + (valueWidth + 6) * 2 // Total table width (including separators)
 
@@ -120,34 +200,7 @@ export function diffPrinter(logObject: string, from: object, to: object) {
     console.log(` ${separator} `)
     rows.forEach((row) => console.log(` ${row} `))
     console.log(orangeLine)
-}
-
-export function getLzNetworkStage(network: Network): Stage {
-    if (network === Network.MAINNET) {
-        return Stage.MAINNET
-    } else if (network === Network.TESTNET) {
-        return Stage.TESTNET
-    } else if (network === Network.CUSTOM) {
-        return Stage.SANDBOX
-    } else {
-        throw new Error(`Unsupported network: ${network}`)
-    }
-}
-
-export function getEndpointId(network: Network, chainName: string): number {
-    if (chainName.toLowerCase() !== 'aptos') {
-        throw new Error('Unsupported chain')
-    }
-
-    if (network === Network.MAINNET || network.toLowerCase() === 'mainnet') {
-        return EndpointId.APTOS_V2_MAINNET
-    } else if (network === Network.TESTNET || network.toLowerCase() === 'testnet') {
-        return EndpointId.APTOS_V2_TESTNET
-    } else if (network === Network.CUSTOM || network.toLowerCase() === 'sandbox') {
-        return EndpointId.APTOS_V2_SANDBOX
-    } else {
-        throw new Error(`Unsupported network: ${network}`)
-    }
+    console.log('\n')
 }
 
 export function getAptosOftAddress(stage: Stage) {
@@ -156,52 +209,59 @@ export function getAptosOftAddress(stage: Stage) {
     return deployment.address
 }
 
-export async function parseYaml(): Promise<{
-    account_address: string
-    private_key: string
-    network: Network
-    fullnode: string
-    faucet: string
-}> {
-    const aptosYamlConfig = await loadAptosYamlConfig()
-
-    const account_address = aptosYamlConfig.profiles.default.account
-    const private_key = aptosYamlConfig.profiles.default.private_key
-    const network = aptosYamlConfig.profiles.default.network.toLowerCase() as Network
-    const fullnode = aptosYamlConfig.profiles.default.rest_url
-    const faucet = aptosYamlConfig.profiles.default.faucet_url
-
-    return { account_address, private_key, network, fullnode, faucet }
-}
-
 export async function sendAllTxs(
     aptos: Aptos,
     oft: OFT,
     account_address: string,
-    txs: InputGenerateTransactionPayloadData[]
+    payloads: InputGenerateTransactionPayloadData[]
 ) {
-    const accountInfo = await aptos.getAccountInfo({ accountAddress: account_address })
-    let sequenceNumber = parseInt(accountInfo.sequence_number)
-
-    console.log('\n📦 Transaction Batch Summary:')
-    console.log(`   • Total transactions: ${txs.length}`)
-    console.log(`   • Starting sequence: ${sequenceNumber}\n`)
-
-    for (let i = 0; i < txs.length; i++) {
-        const progress = `[${i + 1}/${txs.length}]`
-        console.log(`🔄 ${progress} Processing transaction ${sequenceNumber}...`)
-
-        const trans = await aptos.transaction.build.simple({
-            sender: account_address,
-            data: txs[i],
-        })
-        await oft.signSubmitAndWaitForTx(trans)
-
-        console.log(`✅ ${progress} Transaction ${sequenceNumber} completed\n`)
-        sequenceNumber++
+    payloads = pruneNulls(payloads)
+    if (payloads.length == 0) {
+        console.log('No transactions to send.')
+        return
     }
+    if (await promptForConfirmation(payloads.length)) {
+        console.log('\n📦 Transaction Summary:')
+        console.log(`   • Total transactions: ${payloads.length}`)
 
-    console.log('🎉 Batch Transaction Summary:')
-    console.log(`   • ${txs.length} transactions processed successfully`)
-    console.log(`   • Final sequence: ${sequenceNumber - 1}\n`)
+        for (let i = 0; i < payloads.length; i++) {
+            const progress = `[${i + 1}/${payloads.length}]`
+            console.log(`🔄 ${progress} Processing transaction ${i}...`)
+
+            const trans = await aptos.transaction.build.simple({
+                sender: account_address,
+                data: payloads[i],
+            })
+            await oft.signSubmitAndWaitForTx(trans)
+
+            console.log(`✅ ${progress} Transaction ${i} completed\n`)
+        }
+
+        console.log('🎉 Transaction Summary:')
+        console.log(`   • ${payloads.length} transactions processed successfully`)
+    } else {
+        console.log('Operation cancelled.')
+        process.exit(0)
+    }
+}
+
+function pruneNulls(payloads: InputGenerateTransactionPayloadData[]): InputGenerateTransactionPayloadData[] {
+    return payloads.filter((payload) => payload !== null)
+}
+
+async function promptForConfirmation(txCount: number): Promise<boolean> {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    })
+
+    const answer = await new Promise<string>((resolve) => {
+        rl.question(
+            `\nReview the ${txCount} transaction(s) above carefully.\nWould you like to proceed with execution? (yes/no): `,
+            resolve
+        )
+    })
+
+    rl.close()
+    return answer.toLowerCase() === 'yes'
 }

@@ -1,33 +1,23 @@
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import {
-    getAptosOftAddress,
-    getConfigConnections,
-    getEndpointId,
-    getLzNetworkStage,
-    parseYaml,
-    sendAllTxs,
-} from './utils/utils'
+import { getAptosOftAddress, getConfigConnections, networkToIndexerMapping, sendAllTxs } from './utils/utils'
+import { getLzNetworkStage, getEidFromAptosNetwork, parseYaml } from './utils/aptosNetworkParser'
 import * as oftConfig from './utils/aptosOftConfigOps'
 import { Endpoint } from '../sdk/endpoint'
-import * as readline from 'readline'
 
 const ENDPOINT_ADDRESS = '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c'
 
-const networkToIndexerMapping = {
-    [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
-}
-
+// TODO: investigate problem with get_peer (potentially add a haspeer check)
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-    console.log(`using aptos network ${network}`)
+    console.log(`Using aptos network ${network}\n`)
+
     const aptosConfig = new AptosConfig({
         network: network,
         fullnode: fullnode,
         indexer: networkToIndexerMapping[network],
         faucet: faucet,
     })
-
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
@@ -37,59 +27,41 @@ async function main() {
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
     const endpoint = new Endpoint(aptos, ENDPOINT_ADDRESS)
+    const currDelegate = await oft.getDelegate()
+    validateDelegate(currDelegate, account_address)
 
-    console.log(`Setting aptos OFT delegate to ${account_address}`)
-    await oft.setDelegatePayload(account_address)
-
-    const endpointId = getEndpointId(network, 'aptos')
+    const endpointId = getEidFromAptosNetwork(network)
     const connections = getConfigConnections('from', endpointId)
 
-    const setPeerTxs = await oftConfig.setPeers(oft, connections)
+    const setPeerPayloads = await oftConfig.setPeers(oft, connections)
+    const setEnforcedOptionsPayloads = await oftConfig.setEnforcedOptions(oft, connections)
+    const setSendLibraryPayloads = await oftConfig.setSendLibrary(oft, endpoint, connections)
+    const setReceiveLibraryPayloads = await oftConfig.setReceiveLibrary(oft, endpoint, connections)
+    // const setReceiveLibraryTimeoutPayloads = await oftConfig.setReceiveLibraryTimeout(oft, endpoint, connections)
+    const setSendConfigPayloads = await oftConfig.setSendConfig(oft, endpoint, connections)
+    const setExecutorConfigPayloads = await oftConfig.setExecutorConfig(oft, endpoint, connections)
+    const setReceiveConfigPayloads = await oftConfig.setReceiveConfig(oft, endpoint, connections)
 
-    const setEnforcedOptionsTxs = await oftConfig.setEnforcedOptions(oft, connections)
-
-    const setSendLibraryTxs = await oftConfig.setSendLibrary(oft, endpoint, connections)
-
-    const setReceiveLibraryTxs = await oftConfig.setReceiveLibrary(oft, endpoint, connections)
-
-    // const setReceiveLibraryTimeoutTxs = await oftConfig.setReceiveLibraryTimeout(oft, endpoint, connections)
-
-    const setSendConfigTxs = await oftConfig.setSendConfig(oft, endpoint, connections)
-
-    const setExecutorConfigTxs = await oftConfig.setExecutorConfig(oft, endpoint, connections)
-
-    const setReceiveConfigTxs = await oftConfig.setReceiveConfig(oft, endpoint, connections)
-    const txs = [
-        ...setPeerTxs,
-        ...setEnforcedOptionsTxs,
-        ...setSendLibraryTxs,
-        ...setReceiveLibraryTxs,
-        // ...setReceiveLibraryTimeoutTxs,
-        ...setSendConfigTxs,
-        ...setExecutorConfigTxs,
-        ...setReceiveConfigTxs,
+    const payloads = [
+        ...setPeerPayloads,
+        ...setEnforcedOptionsPayloads,
+        ...setSendLibraryPayloads,
+        ...setReceiveLibraryPayloads,
+        // ...setReceiveLibraryTimeoutPayloads,
+        ...setSendConfigPayloads,
+        ...setExecutorConfigPayloads,
+        ...setReceiveConfigPayloads,
     ]
 
-    if (await promptForConfirmation(txs.length)) {
-        await sendAllTxs(aptos, oft, account_address, txs)
-    } else {
-        console.log('Operation cancelled.')
-        process.exit(0)
-    }
+    await sendAllTxs(aptos, oft, account_address, payloads)
 }
 
-async function promptForConfirmation(txCount: number): Promise<boolean> {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    })
-
-    const answer = await new Promise<string>((resolve) => {
-        rl.question(`\nProceed with executing the above ${txCount} transactions? (yes/no): `, resolve)
-    })
-
-    rl.close()
-    return answer.toLowerCase() === 'yes'
+function validateDelegate(currDelegate, account_address: string) {
+    if (currDelegate != account_address) {
+        throw new Error(
+            `Delegate must be set to account address of the transaction senderfor wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}`
+        )
+    }
 }
 
 main().catch((error) => {

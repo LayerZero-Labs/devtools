@@ -1,5 +1,11 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { Account, Aptos, Ed25519PrivateKey, SimpleTransaction } from '@aptos-labs/ts-sdk'
+import {
+    Account,
+    Aptos,
+    Ed25519PrivateKey,
+    InputGenerateTransactionPayloadData,
+    SimpleTransaction,
+} from '@aptos-labs/ts-sdk'
 import { hexToAptosBytesAddress } from './utils'
 
 export class OFT {
@@ -20,14 +26,14 @@ export class OFT {
         })
     }
 
-    async initializePayload(
+    initializePayload(
         token_name: string,
         symbol: string,
         icon_uri: string,
         project_uri: string,
         shared_decimals: number,
         local_decimals: number
-    ) {
+    ): InputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
         return {
             function: `${this.oft_address}::oft_impl::initialize`,
@@ -42,7 +48,7 @@ export class OFT {
         }
     }
 
-    async setPeerPayload(eid: EndpointId, peerAddress: string) {
+    setPeerPayload(eid: EndpointId, peerAddress: string): InputGenerateTransactionPayloadData {
         const peerAddressAsBytes = hexToAptosBytesAddress(peerAddress)
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
@@ -50,14 +56,14 @@ export class OFT {
         }
     }
 
-    async setDelegatePayload(delegateAddress: string) {
+    setDelegatePayload(delegateAddress: string): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_delegate`,
             functionArguments: [delegateAddress],
         }
     }
 
-    async getDelegate() {
+    async getDelegate(): Promise<string> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.oft_address}::oapp_core::get_delegate`,
@@ -65,10 +71,10 @@ export class OFT {
             },
         })
 
-        return result
+        return result[0] as string
     }
 
-    async getAdmin() {
+    async getAdmin(): Promise<string> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.oft_address}::oapp_core::get_admin`,
@@ -76,10 +82,24 @@ export class OFT {
             },
         })
 
-        return result
+        return result[0] as string
     }
 
-    async getPeer(eid: EndpointId) {
+    transferAdminPayload(adminAddress: string): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oapp_core::transfer_admin`,
+            functionArguments: [adminAddress],
+        }
+    }
+
+    renounceAdminPayload(): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oapp_core::renounce_admin`,
+            functionArguments: [],
+        }
+    }
+
+    async getPeer(eid: EndpointId): Promise<string> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.oft_address}::oapp_core::get_peer`,
@@ -87,10 +107,25 @@ export class OFT {
             },
         })
 
-        return result[0]
+        return result[0] as string
     }
 
-    setEnforcedOptionsPayload(eid: number, msgType: number, enforcedOptions: Uint8Array) {
+    async hasPeer(eid: EndpointId): Promise<boolean> {
+        const result = await this.aptos.view({
+            payload: {
+                function: `${this.oft_address}::oapp_core::has_peer`,
+                functionArguments: [eid],
+            },
+        })
+
+        return result[0] as boolean
+    }
+
+    setEnforcedOptionsPayload(
+        eid: number,
+        msgType: number,
+        enforcedOptions: Uint8Array
+    ): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],
@@ -108,28 +143,40 @@ export class OFT {
         return result[0] as string
     }
 
-    async setSendLibraryPayload(remoteEid: number, msglibAddress: string) {
+    setSendLibraryPayload(remoteEid: number, msglibAddress: string): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_send_library`,
             functionArguments: [remoteEid, msglibAddress],
         }
     }
 
-    async setReceiveLibraryPayload(remoteEid: number, msglibAddress: string, gracePeriod: number) {
+    setReceiveLibraryPayload(
+        remoteEid: number,
+        msglibAddress: string,
+        gracePeriod: number
+    ): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library`,
             functionArguments: [remoteEid, msglibAddress, gracePeriod],
         }
     }
 
-    async setReceiveLibraryTimeoutPayload(remoteEid: number, msglibAddress: string, expiry: number) {
+    setReceiveLibraryTimeoutPayload(
+        remoteEid: number,
+        msglibAddress: string,
+        expiry: number
+    ): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
             functionArguments: [remoteEid, msglibAddress, expiry],
         }
     }
 
-    async setConfigPayload(msgLibAddress: string, configType: number, config: Uint8Array) {
+    setConfigPayload(
+        msgLibAddress: string,
+        configType: number,
+        config: Uint8Array
+    ): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, configType, config],
