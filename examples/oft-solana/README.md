@@ -164,8 +164,7 @@ This section only applies if you are unable to land your deployment transaction 
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
-
-You can run `npx hardhat solana:get-priority-fees --eid <SOLANA_EID> --address <PROGRAM_ID>` and use the `averageFeeExcludingZeros` value.
+You can run `npx hardhat lz:solana:get-priority-fees --eid <SOLANA_EID> --address <PROGRAM_ID>` and use the `averageFeeExcludingZeros` value.
 
 :information_source: The average is calculated from getting the prioritization fees across recent blocks, but some blocks may have `0` as the prioritization fee. `averageFeeExcludingZeros` ignores blocks with `0` prioritization fees.
 
