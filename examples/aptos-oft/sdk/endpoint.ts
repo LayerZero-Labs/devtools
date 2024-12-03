@@ -8,7 +8,6 @@ export class Endpoint {
         this.endpoint_address = endpoint_address
     }
 
-    // TODO: what is the correct address of endpoint?
     async getDefaultSendLibrary(eid: EndpointId) {
         return await this.aptos.view({
             payload: {
@@ -64,6 +63,7 @@ export class Endpoint {
         eid: EndpointId,
         configType: number
     ): Promise<Uint8Array> {
+        console.log(`oAppAddress: ${oAppAddress} msgLibAddress: ${msgLibAddress} eid: ${eid} configType: ${configType}`)
         try {
             const result = await this.aptos.view({
                 payload: {

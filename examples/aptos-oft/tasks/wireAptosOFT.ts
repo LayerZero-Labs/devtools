@@ -7,7 +7,6 @@ import { Endpoint } from '../sdk/endpoint'
 
 const ENDPOINT_ADDRESS = '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c'
 
-// TODO: investigate problem with get_peer (potentially add a haspeer check)
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`Using aptos network ${network}\n`)

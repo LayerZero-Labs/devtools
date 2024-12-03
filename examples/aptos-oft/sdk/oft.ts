@@ -48,6 +48,34 @@ export class OFT {
         }
     }
 
+    // Calls send_withdraw from the oft fungible asset module (oft.move)
+    sendPayload(
+        dst_eid: number,
+        to: string,
+        amount_ld: number | bigint,
+        min_amount_ld: number | bigint,
+        extra_options: Uint8Array,
+        compose_message: Uint8Array,
+        oft_cmd: Uint8Array,
+        native_fee: number | bigint,
+        zro_fee: number | bigint
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft::send_withdraw`,
+            functionArguments: [
+                dst_eid,
+                to,
+                amount_ld,
+                min_amount_ld,
+                extra_options,
+                compose_message,
+                oft_cmd,
+                native_fee,
+                zro_fee,
+            ],
+        }
+    }
+
     setPeerPayload(eid: EndpointId, peerAddress: string): InputGenerateTransactionPayloadData {
         const peerAddressAsBytes = hexToAptosBytesAddress(peerAddress)
         return {

@@ -16,14 +16,12 @@ aptos move build --package-dir=oft --named-addresses oft=$account_address,oft_ad
 ```
 ts-node tasks/deploy.ts --package-dir oft --address-name oft
 ```
-```
-aptos move create-object-and-publish-package --package-dir=oft --address-name oft --named-addresses oft=$account_address,oft_admin=$account_address
-```
+
 MAKE SURE YOU set the account that will be used for administrative functions such as settting the peers should be set in the move.toml as OFT_ADMIN
 
-TODO: create descriptions of each account
-oft is the owner of the deployer object which gives the account that owns the object the abilitiy to upgrade the object and also burn and mint the fungible asset.
-oft_admin is the account that is responsible for administrative functions such as setting the peers, set uln config... etc.
+Account Descriptions:
+- oft is the owner of the deployer object which gives the account that owns the object the abilitiy to upgrade the object and also burn and mint the fungible asset.
+- oft_admin is the account that is responsible for administrative functions such as setting the peers, set uln config... etc.
 
 now the address of the deployed oft is printed out in the terminal:
 ```
@@ -40,7 +38,7 @@ Now that we have deployed the aptos oft, we can wire it to the other chains.
 ### Wiring your aptos oft:
 
 ### layerzero.config.ts:
-ensure that all of the contracts you wish to wire your aptos oft to are included under the contracts array. For example, if you want to wire your aptos oft to both sepolia and fuji, you would include both contracts under the contracts array, and specify them like this:
+ensure that all of the contracts you wish to wire your aptos oft to are included under the contracts array and connections array. For example, if you want to wire your aptos oft to fuji, you would include both contracts under the contracts array, and specify them like this:
 ```typescript
 const aptosContract: OmniPointHardhat = {
     eid: EndpointId.APTOS_TESTNET,
@@ -59,6 +57,10 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             contract: aptosContract,
+            config: {
+                delegate: '<your-aptos-account-address>',
+                owner: '<your-aptos-owner-address>',
+            },
         },
     ],
     connections: [
