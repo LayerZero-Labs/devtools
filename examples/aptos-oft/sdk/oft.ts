@@ -6,7 +6,7 @@ import {
     InputGenerateTransactionPayloadData,
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
-import { hexToAptosBytesAddress } from './utils'
+import { hexAddrToAptosBytesAddr } from './utils'
 
 export class OFT {
     private aptos: Aptos
@@ -51,7 +51,7 @@ export class OFT {
     // Calls send_withdraw from the oft fungible asset module (oft.move)
     sendPayload(
         dst_eid: number,
-        to: string,
+        to: Uint8Array,
         amount_ld: number | bigint,
         min_amount_ld: number | bigint,
         extra_options: Uint8Array,
@@ -77,7 +77,7 @@ export class OFT {
     }
 
     setPeerPayload(eid: EndpointId, peerAddress: string): InputGenerateTransactionPayloadData {
-        const peerAddressAsBytes = hexToAptosBytesAddress(peerAddress)
+        const peerAddressAsBytes = hexAddrToAptosBytesAddr(peerAddress)
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
             functionArguments: [eid, peerAddressAsBytes],

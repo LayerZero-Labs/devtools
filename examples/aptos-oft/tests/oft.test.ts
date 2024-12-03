@@ -1,7 +1,7 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { hexToAptosBytesAddress } from '../sdk/utils'
+import { hexAddrToAptosBytesAddr } from '../sdk/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { createSerializableUlnConfig } from '../tasks/utils/ulnConfigBuilder'
 import { Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'

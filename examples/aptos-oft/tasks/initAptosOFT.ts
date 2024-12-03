@@ -1,4 +1,4 @@
-import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import { getAptosOftAddress, getDelegateFromLzConfig, networkToIndexerMapping, sendAllTxs } from './utils/utils'
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
@@ -21,7 +21,7 @@ async function main() {
     console.log(`   Address: ${aptosOftAddress}`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
-    const initializePayload = await oft.initializePayload(
+    const initializePayload = oft.initializePayload(
         // token_name: Uint8Array
         'OFT',
         // symbol: Uint8Array
@@ -38,12 +38,9 @@ async function main() {
 
     const eid = getEidFromAptosNetwork(network)
     const delegate = getDelegateFromLzConfig(eid)
-    const setDelegatePayload = await oft.setDelegatePayload(delegate)
+    const setDelegatePayload = oft.setDelegatePayload(delegate)
 
-    sendAllTxs(aptos, oft, account_address, [
-        setDelegatePayload as InputGenerateTransactionPayloadData,
-        initializePayload as InputGenerateTransactionPayloadData,
-    ])
+    sendAllTxs(aptos, oft, account_address, [setDelegatePayload, initializePayload])
 }
 
 main().catch((error) => {

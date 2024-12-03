@@ -1,6 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { Account, Aptos, Ed25519PrivateKey, InputEntryFunctionData, SimpleTransaction } from '@aptos-labs/ts-sdk'
-import { hexToAptosBytesAddress } from './utils'
+import { hexAddrToAptosBytesAddr } from './utils'
 
 export class OFT {
     private aptos: Aptos
