@@ -87,6 +87,11 @@ task(TASK_LZ_OAPP_WIRE)
         // Then we grab the programId from the args
         const programId = args.solanaProgramId
 
+        if (!programId) {
+            logger.error('Missing --solana-program-id CLI argument')
+            return
+        }
+
         const configurator = args.internalConfigurator
 
         //
