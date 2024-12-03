@@ -51,13 +51,9 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const tokenProgram = publicKey(tokenProgramStr)
             const mint = publicKey(mintStr)
 
-            let mintAuthority: PublicKey | null = null
+            const mintPDA = await getMint(connection, new PublicKey(mintStr), undefined, new PublicKey(tokenProgramStr))
 
-            if (tokenProgramStr.toLowerCase() === TOKEN_PROGRAM_ID.toBase58().toLowerCase()) {
-                const mintPDA = await getMint(connection, new PublicKey(mintStr))
-
-                mintAuthority = mintPDA.mintAuthority
-            }
+            const mintAuthority = mintPDA.mintAuthority
 
             const initOftIx = oft.initOft(
                 {
