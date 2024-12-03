@@ -1,5 +1,17 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+- Updated dependencies [1bb0524]
+  - @layerzerolabs/protocol-devtools-solana@4.0.1
+  - @layerzerolabs/protocol-devtools@1.1.1
+  - @layerzerolabs/devtools-solana@1.0.2
+  - @layerzerolabs/ua-devtools@3.0.1
+  - @layerzerolabs/devtools@0.4.2
+
 ## 4.0.1
 
 ### Patch Changes

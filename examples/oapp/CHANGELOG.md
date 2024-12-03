@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
 ## 0.5.1
 
 ### Patch Changes

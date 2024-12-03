@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.4.1
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
 ## 0.4.0
 
 ### Minor Changes
