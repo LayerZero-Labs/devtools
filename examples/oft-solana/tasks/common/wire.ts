@@ -44,10 +44,6 @@ task(TASK_LZ_OAPP_WIRE)
         keyPair,
         true
     )
-    // The next (optional) parameter is the OFT program ID
-    //
-    // Only pass this if you deployed a new OFT program, if you are using the default
-    // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
@@ -86,6 +82,11 @@ task(TASK_LZ_OAPP_WIRE)
 
         // Then we grab the programId from the args
         const programId = args.solanaProgramId
+
+        if (!programId) {
+            logger.error('Missing --solana-program-id CLI argument')
+            return
+        }
 
         const configurator = args.internalConfigurator
 

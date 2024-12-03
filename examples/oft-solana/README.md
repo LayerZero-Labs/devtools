@@ -14,7 +14,7 @@
 
 - Rust `v1.75.0`
 - Anchor `v0.29`
-- Solana CLI `v.1.17.31`
+- Solana CLI `v1.17.31`
 - Docker
 - Node.js
 
@@ -165,7 +165,7 @@ This section only applies if you are unable to land your deployment transaction 
 sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
 
-You can run `npx hardhat solana:get-priority-fees --eid <SOLANA_EID> --address <PROGRAM_ID>` and use the `averageFeeExcludingZeros` value.
+You can run `npx hardhat lz:solana:get-priority-fees --eid <SOLANA_EID> --address <PROGRAM_ID>` and use the `averageFeeExcludingZeros` value.
 
 :information_source: The average is calculated from getting the prioritization fees across recent blocks, but some blocks may have `0` as the prioritization fee. `averageFeeExcludingZeros` ignores blocks with `0` prioritization fees.
 
@@ -256,7 +256,7 @@ With a squads multisig, you can simply append the `--multisigKey` flag to the en
 
 This is only relevant for **OFT**. If you opted to include the `--amount` flag in the create step, that means you already have minted some Solana OFT and you can skip this section.
 
-:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store`, you will not be able to mint your OFT on Solana.
+:information_source: This is only possible if you specified your deployer address as part of the `--additional-minters` flag when creating the Solana OFT. If you had chosen `--only-oft-store true`, you will not be able to mint your OFT on Solana.
 
 First, you need to create the Associated Token Account for your address.
 

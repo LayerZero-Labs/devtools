@@ -167,7 +167,9 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
-                    throw new Error('If you want to proceed with only the OFTStore, please specify --onlyOFTStore')
+                    throw new Error(
+                        'If you want to proceed with only the OFTStore, please specify --only-oft-store true'
+                    )
                 }
                 console.log(
                     'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
