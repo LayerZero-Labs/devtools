@@ -103,6 +103,9 @@ export const normalizePeer = (address: OmniAddress | null | undefined, eid: Endp
         case ChainType.EVM:
             return toBytes32(fromHex(address))
 
+        case ChainType.TON:
+            return fromHex(address)
+
         default:
             throw new Error(`normalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
     }
@@ -131,6 +134,9 @@ export const denormalizePeer = (bytes: Uint8Array | null | undefined, eid: Endpo
 
         case ChainType.EVM:
             return toHex(toBytes20(bytes))
+
+        case ChainType.TON:
+            return toHex(bytes)
 
         default:
             throw new Error(`denormalizePeer: Unsupported chain type ${chainType} ${formatEid(eid)}`)
