@@ -131,11 +131,16 @@ export async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHar
 }
 
 function addOptions(enforcedOption: any, options: Options) {
-    //TODO: Accept all option types
     if (enforcedOption.optionType === ExecutorOptionType.LZ_RECEIVE) {
         options.addExecutorLzReceiveOption(enforcedOption.gas, enforcedOption.value)
     } else if (enforcedOption.optionType === ExecutorOptionType.NATIVE_DROP) {
         options.addExecutorNativeDropOption(enforcedOption.amount, enforcedOption.receiver)
+    } else if (enforcedOption.optionType === ExecutorOptionType.COMPOSE) {
+        options.addExecutorComposeOption(enforcedOption.gas, enforcedOption.value)
+    } else if (enforcedOption.optionType === ExecutorOptionType.ORDERED) {
+        options.addExecutorOrderedExecutionOption()
+    } else if (enforcedOption.optionType === ExecutorOptionType.LZ_READ) {
+        options.addExecutorLzReadOption(enforcedOption.gas, enforcedOption.value)
     }
 }
 
@@ -150,7 +155,7 @@ async function createTxFromOptions(options: Options[], eid: number, contractName
         console.log(`Enforced options already set for ${contractName} on eid ${eid} ✓\n`)
         return null
     } else {
-        decodeOptionsAndPrintDiff(contractName, eid, currentOptionsHex, newOptions.toHex())
+        decodeOptionsAndPrintDiff(contractName, eid, currentOptionsHex, newOptions.toHex(), msgType)
         const tx = oft.setEnforcedOptionsPayload(eid, msgType, newOptions.toBytes())
         return tx
     }
@@ -160,61 +165,44 @@ function decodeOptionsAndPrintDiff(
     contractName: string,
     eid: number,
     currentOptionsHex: string,
-    newOptionsHex: string
+    newOptionsHex: string,
+    msgType: number
 ) {
     const currentOptionsString = Options.fromOptions(currentOptionsHex)
     const newOptionsString = Options.fromOptions(newOptionsHex)
 
-    const optionsConfig = [
-        {
-            name: 'LZ Receive',
-            current: currentOptionsString.decodeExecutorLzReceiveOption(),
-            new: newOptionsString.decodeExecutorLzReceiveOption(),
-            type: 'object',
-        },
-        {
-            name: 'Native Drop',
-            current: currentOptionsString.decodeExecutorNativeDropOption(),
-            new: newOptionsString.decodeExecutorNativeDropOption(),
-            type: 'object',
-        },
-        {
-            name: 'Compose',
-            current: currentOptionsString.decodeExecutorComposeOption(),
-            new: newOptionsString.decodeExecutorComposeOption(),
-            type: 'object',
-        },
-        {
-            name: 'Ordered Execution',
-            current: currentOptionsString.decodeExecutorOrderedExecutionOption(),
-            new: newOptionsString.decodeExecutorOrderedExecutionOption(),
-            type: 'boolean',
-        },
-        {
-            name: 'LZ Read',
-            current: currentOptionsString.decodeExecutorLzReadOption(),
-            new: newOptionsString.decodeExecutorLzReadOption(),
-            type: 'object',
-        },
-    ]
+    // Default empty values based on type definitions
+    const emptyDefaults = {
+        LzReceiveOption: { gas: undefined, value: undefined },
+        NativeDropOption: [] as { amount: bigint; receiver: string }[],
+        ComposeOption: [] as { index: number; gas: bigint; value: bigint }[],
+        LzReadOption: { gas: undefined, dataSize: undefined, value: undefined },
+        OrderedExecutionOption: undefined, // Assuming boolean based on context
+    }
 
-    optionsConfig.forEach(({ name, current, new: newValue, type }) => {
-        const shouldPrint =
-            type === 'boolean'
-                ? current !== newValue
-                : Object.keys(current ?? {}).length > 0 || Object.keys(newValue ?? {}).length > 0
+    const currentOptions = {
+        LzReceiveOption: currentOptionsString.decodeExecutorLzReceiveOption() ?? emptyDefaults.LzReceiveOption,
+        NativeDropOption: currentOptionsString.decodeExecutorNativeDropOption() ?? emptyDefaults.NativeDropOption,
+        ComposeOption: currentOptionsString.decodeExecutorComposeOption() ?? emptyDefaults.ComposeOption,
+        LzReadOption: currentOptionsString.decodeExecutorLzReadOption() ?? emptyDefaults.LzReadOption,
+        OrderedExecutionOption:
+            currentOptionsString.decodeExecutorOrderedExecutionOption() ?? emptyDefaults.OrderedExecutionOption,
+    }
 
-        if (shouldPrint) {
-            const formatValue = (value: any, type: string) => 
-                type === 'boolean' ? { orderedExecution: value } : value ?? {}
+    const newOptions = {
+        LzReceiveOption: newOptionsString.decodeExecutorLzReceiveOption() ?? emptyDefaults.LzReceiveOption,
+        NativeDropOption: newOptionsString.decodeExecutorNativeDropOption() ?? emptyDefaults.NativeDropOption,
+        ComposeOption: newOptionsString.decodeExecutorComposeOption() ?? emptyDefaults.ComposeOption,
+        LzReadOption: newOptionsString.decodeExecutorLzReadOption() ?? emptyDefaults.LzReadOption,
+        OrderedExecutionOption:
+            newOptionsString.decodeExecutorOrderedExecutionOption() ?? emptyDefaults.OrderedExecutionOption,
+    }
 
-            diffPrinter(
-                `Set ${name} options for Aptos OFT -> ${contractName} on ${getNetworkForChainId(eid).chainName}`,
-                formatValue(current, type),
-                formatValue(newValue, type)
-            )
-        }
-    })
+    diffPrinter(
+        `Enforced Options for ${contractName} on eid ${eid} with msgType ${msgType}`,
+        currentOptions,
+        newOptions
+    )
 }
 
 // Default options return from aptos are 0x, however the options decoder expects 0x00
