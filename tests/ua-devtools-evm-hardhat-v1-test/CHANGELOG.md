@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.3.2
+
+### Patch Changes
+
+- 5458b9f: Updated lz-evm-sdk-v2 dependency
+
 ## 0.3.1
 
 ### Patch Changes

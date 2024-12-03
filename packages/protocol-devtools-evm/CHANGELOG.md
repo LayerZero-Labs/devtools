@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-evm
 
+## 3.0.2
+
+### Patch Changes
+
+- 5458b9f: Updated lz-evm-sdk-v2 dependency
+
 ## 3.0.1
 
 ### Patch Changes
