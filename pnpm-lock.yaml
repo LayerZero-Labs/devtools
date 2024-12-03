@@ -888,8 +888,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
@@ -2520,8 +2520,8 @@ importers:
         specifier: ^3.0.21
         version: 3.0.21
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.1
         version: link:../protocol-devtools
@@ -2871,8 +2871,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3382,8 +3382,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3520,8 +3520,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3850,8 +3850,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3991,8 +3991,8 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.21
+        version: 3.0.22
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)
@@ -6202,6 +6202,14 @@ packages:
       - bufferutil
       - utf-8-validate
 
+  /@layerzerolabs/evm-sdks-core@3.0.22:
+    resolution: {integrity: sha512-hVh0e1J1ffVbpveR6mBnLjOO1F2hEr96P5nHLgEhjKCZsd2eOVJRcbg3bWLxhyVl6MpLgvDhIjefKxY2xXpeiQ==}
+    dependencies:
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   /@layerzerolabs/lz-core@3.0.0:
     resolution: {integrity: sha512-GEsIq4OOjWU8gzT2dMxlyN/OpHBH/EQLlX3cG66nRkebjqjscL57bYO+K+QyvCRigFjvhZBj5YOUDcJRUsI1Gw==}
     dependencies:
@@ -6665,10 +6673,10 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/lz-evm-sdk-v2@3.0.12:
-    resolution: {integrity: sha512-s2XtGAG/IUof21+cM2/RVPJw/ftcRypYfb8OREsl8eW2gu9oDsiIii+LPbLnoFtTg1dQl6HbwyRV+7uggdVv9Q==}
+  /@layerzerolabs/lz-evm-sdk-v2@3.0.22:
+    resolution: {integrity: sha512-53KGAVRy/yfjrfJsK5L9ZtJRE/zEqV613zzvSLpyaR+/KhiIKLUTnLIt0RvgU66sh0WbZPpi6vZxNO8RIGe/rg==}
     dependencies:
-      '@layerzerolabs/evm-sdks-core': 3.0.12
+      '@layerzerolabs/evm-sdks-core': 3.0.22
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil

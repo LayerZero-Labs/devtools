@@ -49,7 +49,7 @@
     "@layerzerolabs/devtools-evm": "~1.0.1",
     "@layerzerolabs/io-devtools": "~0.1.12",
     "@layerzerolabs/lz-definitions": "^3.0.21",
-    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.21",
     "@layerzerolabs/protocol-devtools": "~1.1.1",
     "@layerzerolabs/test-devtools": "~0.4.1",
     "@swc/core": "^1.4.0",
