@@ -360,7 +360,11 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
             )
             continue
         } else {
-            diffPrinter(`Set Send Config:`, currUlnConfig, newUlnConfig)
+            diffPrinter(
+                `Set Send Config for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
+                currUlnConfig,
+                newUlnConfig
+            )
             const tx = await oft.setConfigPayload(entry.config.sendLibrary, ConfigType.SEND_ULN, newSerializedUlnConfig)
             txs.push(tx)
         }

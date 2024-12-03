@@ -1,5 +1,5 @@
 import { Aptos } from '@aptos-labs/ts-sdk'
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions-v3'
 export class Endpoint {
     private aptos: Aptos
     private endpoint_address: string
@@ -64,12 +64,18 @@ export class Endpoint {
         eid: EndpointId,
         configType: number
     ): Promise<Uint8Array> {
-        const result = await this.aptos.view({
-            payload: {
-                function: `${this.endpoint_address}::endpoint::get_config`,
-                functionArguments: [oAppAddress, msgLibAddress, eid, configType],
-            },
-        })
-        return result[0] as Uint8Array
+        try {
+            const result = await this.aptos.view({
+                payload: {
+                    function: `${this.endpoint_address}::endpoint::get_config`,
+                    functionArguments: [oAppAddress, msgLibAddress, eid, configType],
+                },
+            })
+            return result[0] as Uint8Array
+        } catch (error) {
+            throw new Error(
+                `Failed to get config for Message Library: ${msgLibAddress} on ${getNetworkForChainId(eid).chainName}. Please ensure that the Message Library exists.`
+            )
+        }
     }
 }
