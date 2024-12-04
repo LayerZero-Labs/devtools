@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-solana
 
+## 0.0.4
+
+### Patch Changes
+
+- e3c04dc: Update web3js dependencies
+
 ## 0.0.3
 
 ### Patch Changes
