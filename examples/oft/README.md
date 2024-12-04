@@ -374,6 +374,95 @@ By following these steps, you can focus more on creating innovative omnichain so
 
 <br></br>
 
+## Estimating `lzReceive` and `lzCompose` Gas Usage
+
+This guide explains how to use the `pnpm` commands to estimate gas usage for LayerZero's `lzReceive` and `lzCompose` functions. These commands wrap Foundry scripts for easier invocation and allow you to pass the required arguments dynamically.
+
+### Available Commands
+
+1. **`gas:lzReceive`**
+
+   This command profiles the `lzReceive` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzReceive": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzReceive(string,address,address,uint32,address,uint32,bytes,uint256,uint256)'"
+   ```
+
+2. **`gas:lzCompose`**
+
+   This command profiles the `lzCompose` function for estimating gas usage across multiple runs.
+
+   ```json
+   "gas:lzCompose": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzCompose(string,address,address,address,uint32,address,uint32,bytes,uint256,uint256)'"
+   ```
+
+### Usage Examples
+
+#### `lzReceive`
+
+To estimate the gas for the `lzReceive` function:
+
+```bash
+pnpm gas:lzReceive "https://optimism.gateway.tenderly.co" \
+    "0x1a44076050125825900e736c501f859c50fE728c" \
+    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
+    30184 \
+    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
+    30111 \
+    "0x0000000000000000000000008039a9a134ada0639891d08b45fe3440c05dbf620000000009a7ec80" \
+    0 \
+    100
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `receiver`: The address intended to receive the message (OApp).
+- `srcEid`: The source endpoint ID (uint32).
+- `sender`: The sender's address (OApp).
+- `dstEid`: The destination endpoint ID (uint32).
+- `payload`: The message payload as a `bytes` array.
+- `msgValue`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+#### `lzCompose`
+
+To estimate the gas for the `lzCompose` function:
+
+```bash
+pnpm gas:lzCompose "https://optimism.gateway.tenderly.co" \
+    "0x1a44076050125825900e736c501f859c50fE728c" \
+    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
+    "0x1DeAfcad438c1b0Cf0a72db9cA77864A49eA1234" \
+    30184 \
+    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
+    30111 \
+    "0x0000000000000000000000008039a9a134ada0639891d08b45fe3440c05dbf620000000009a7ec80" \
+    0 \
+    100
+```
+
+Where:
+
+- `rpcUrl`: The RPC URL for the target blockchain (e.g., Optimism, Arbitrum, etc.).
+- `endpointAddress`: The deployed LayerZero EndpointV2 contract address.
+- `receiver`: The address intended to receive the message (OApp).
+- `composer`: The LayerZero Composer contract address.
+- `dstEid`: The destination endpoint ID (uint32).
+- `sender`: The originating OApp address.
+- `srcEid`: The source endpoint ID (uint32).
+- `payload`: The message payload as a `bytes` array.
+- `msgValue`: The amount of Ether sent with the message (in wei).
+- `numOfRuns`: The number of test runs to execute.
+
+### Notes
+
+- Modify `numOfRuns` based on the level of accuracy or performance you require for gas profiling.
+- Log outputs will provide metrics such as the **average**, **median**, **minimum**, and **maximum** gas usage across all successful runs.
+
+This approach simplifies repetitive tasks and ensures consistent testing across various configurations.
+
 ## Connecting Contracts
 
 ### Ethereum Configurations
