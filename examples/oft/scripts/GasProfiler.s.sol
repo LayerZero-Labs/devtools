@@ -172,16 +172,12 @@ contract GasProfilerScript is Script {
             vm.deal(address(endpoint), 100 ether);
             vm.startPrank(address(endpoint));
 
-            uint256 gasBefore = gasleft();
-
             (bool success, ) = caller.call{ value: params.msgValue }(callParams);
-
-            uint256 gasAfter = gasleft();
+            uint64 gasUsed = vm.lastCallGas().gasTotalUsed;
 
             vm.stopPrank();
 
             if (success) {
-                uint256 gasUsed = gasBefore - gasAfter;
                 gasUsedArray[successfulRuns] = gasUsed;
                 totalGasUsed += gasUsed;
                 successfulRuns++;
