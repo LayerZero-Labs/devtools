@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
 ## 0.3.1
 
 ### Patch Changes

@@ -44,10 +44,6 @@ task(TASK_LZ_OAPP_WIRE)
         keyPair,
         true
     )
-    // The next (optional) parameter is the OFT program ID
-    //
-    // Only pass this if you deployed a new OFT program, if you are using the default
-    // LayerZero OFT program you can omit this
     .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
@@ -87,6 +83,11 @@ task(TASK_LZ_OAPP_WIRE)
         // Then we grab the programId from the args
         const programId = args.solanaProgramId
 
+        if (!programId) {
+            logger.error('Missing --solana-program-id CLI argument')
+            return
+        }
+
         const configurator = args.internalConfigurator
 
         //
@@ -120,7 +121,7 @@ task(TASK_LZ_OAPP_WIRE)
         // The only thing we are overriding is the sdkFactory parameter - we supply the SDK factory we created above
         subtask(
             SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
-            'Configure Swell OFT',
+            'Configure OFT',
             (args: SubtaskConfigureTaskArgs<OAppOmniGraph, IOApp>, hre, runSuper) =>
                 runSuper({
                     ...args,
@@ -134,7 +135,7 @@ task(TASK_LZ_OAPP_WIRE)
         //
         // In this subtask we need to override the createSigner function so that it uses the Solana
         // signer for all Solana transactions
-        subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign Swell OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
+        subtask(SUBTASK_LZ_SIGN_AND_SEND, 'Sign OFT transactions', (args: SignAndSendTaskArgs, _hre, runSuper) =>
             runSuper({
                 ...args,
                 createSigner: firstFactory(solanaSignerFactory, args.createSigner),

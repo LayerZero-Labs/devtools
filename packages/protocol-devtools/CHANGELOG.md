@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.1.1
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+- Updated dependencies [1bb0524]
+  - @layerzerolabs/devtools@0.4.2
+
 ## 1.1.0
 
 ### Minor Changes

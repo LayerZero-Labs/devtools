@@ -1,5 +1,28 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.2
+
+### Patch Changes
+
+- 5458b9f: Updated lz-evm-sdk-v2 dependency
+- Updated dependencies [5458b9f]
+  - @layerzerolabs/protocol-devtools-evm@3.0.2
+
+## 0.6.1
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+- Updated dependencies [1bb0524]
+  - @layerzerolabs/ua-devtools-evm-hardhat@6.0.4
+  - @layerzerolabs/protocol-devtools-evm@3.0.1
+  - @layerzerolabs/devtools-evm-hardhat@2.0.3
+  - @layerzerolabs/protocol-devtools@1.1.1
+  - @layerzerolabs/ua-devtools-evm@5.0.1
+  - @layerzerolabs/devtools-evm@1.0.1
+  - @layerzerolabs/ua-devtools@3.0.1
+  - @layerzerolabs/devtools@0.4.2
+
 ## 0.6.0
 
 ### Minor Changes
