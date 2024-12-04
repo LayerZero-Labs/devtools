@@ -175,7 +175,7 @@ contract GasProfilerScript is Script {
             uint256 gasBefore = gasleft();
 
             (bool success, ) = caller.call{ value: params.msgValue }(callParams);
-            
+
             uint256 gasAfter = gasleft();
 
             vm.stopPrank();
