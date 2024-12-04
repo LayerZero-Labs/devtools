@@ -403,15 +403,18 @@ This guide explains how to use the `pnpm` commands to estimate gas usage for Lay
 To estimate the gas for the `lzReceive` function:
 
 ```bash
-pnpm gas:lzReceive "https://optimism.gateway.tenderly.co" \
-    "0x1a44076050125825900e736c501f859c50fE728c" \
-    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
-    30184 \
-    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
-    30111 \
-    "0x0000000000000000000000008039a9a134ada0639891d08b45fe3440c05dbf620000000009a7ec80" \
-    0 \
-    100
+pnpm gas:lzReceive
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <message> \
+  <msg.value> \
+  <numOfRuns>
+
+pnpm gas:lzCompose <RPC_URL> <DST_ENDPOINT_ADDRESS> <srcEid> <SenderOApp> <dstEid> <ReceiverOApp> <composer> <composeMsg> <msg.value> <numOfRuns>
 ```
 
 Where:
@@ -422,8 +425,8 @@ Where:
 - `sender`: The sender's address (OApp).
 - `dstEid`: The destination endpoint ID (uint32).
 - `receiver`: The address intended to receive the message (OApp).
-- `payload`: The message payload as a `bytes` array.
-- `msgValue`: The amount of Ether sent with the message (in wei).
+- `message`: The message payload as a `bytes` array.
+- `msg.value`: The amount of Ether sent with the message (in wei).
 - `numOfRuns`: The number of test runs to execute.
 
 #### `lzCompose`
@@ -431,16 +434,17 @@ Where:
 To estimate the gas for the `lzCompose` function:
 
 ```bash
-pnpm gas:lzCompose "https://optimism.gateway.tenderly.co" \
-    "0x1a44076050125825900e736c501f859c50fE728c" \
-    30184 \
-    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
-    30111 \
-    "0x6985884C4392D348587B19cb9eAAf157F13271cd" \
-    "0x1DeAfcad438c1b0Cf0a72db9cA77864A49eA1234" \
-    "0x0000000000000000000000008039a9a134ada0639891d08b45fe3440c05dbf620000000009a7ec80" \
-    0 \
-    100
+pnpm gas:lzCompose
+  <rpcUrl> \
+  <endpointAddress> \
+  <srcEid> \
+  <sender> \
+  <dstEid> \
+  <receiver> \
+  <composer> \
+  <composeMsg> \
+  <msg.value> \
+  <numOfRuns>
 ```
 
 Where:
@@ -452,7 +456,7 @@ Where:
 - `dstEid`: The destination endpoint ID (uint32).
 - `receiver`: The address intended to receive the message (OApp).
 - `composer`: The LayerZero Composer contract address.
-- `payload`: The message payload as a `bytes` array.
+- `composeMsg`: The compose message payload as a `bytes` array.
 - `msgValue`: The amount of Ether sent with the message (in wei).
 - `numOfRuns`: The number of test runs to execute.
 
