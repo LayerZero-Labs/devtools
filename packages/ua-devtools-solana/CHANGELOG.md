@@ -1,5 +1,14 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.3
+
+### Patch Changes
+
+- e3c04dc: Update web3js dependencies
+- Updated dependencies [e3c04dc]
+  - @layerzerolabs/devtools-solana@1.0.3
+  - @layerzerolabs/protocol-devtools-solana@4.0.2
+
 ## 4.0.2
 
 ### Patch Changes
