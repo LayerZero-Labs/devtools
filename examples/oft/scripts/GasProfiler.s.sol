@@ -12,14 +12,14 @@ import { GUID } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/GUID.sol"
 
 /// @dev Encapsulates test parameters for gas profiling.
 struct TestParams {
-    /// @notice Address of the receiver contract (OApp).
-    address receiver;
     /// @notice Source endpoint ID.
     uint32 srcEid;
     /// @notice Encoded sender address as `bytes32`.
     bytes32 sender;
     /// @notice Destination endpoint ID.
     uint32 dstEid;
+    /// @notice Address of the receiver contract (OApp).
+    address receiver;
     /// @notice Payload data to be sent.
     bytes payload;
     /// @notice Ether value sent with the message (in wei).
@@ -45,10 +45,10 @@ contract GasProfilerScript is Script {
     function run_lzReceive(
         string memory rpcUrl,
         address endpointAddress,
-        address receiver,
         uint32 srcEid,
         address sender,
         uint32 dstEid,
+        address receiver,
         bytes memory payload,
         uint256 msgValue,
         uint256 numOfRuns
@@ -56,7 +56,7 @@ contract GasProfilerScript is Script {
         _initializeEndpoint(endpointAddress);
         console.log("Starting gas profiling for lzReceive...");
 
-        TestParams memory params = _createTestParams(receiver, srcEid, sender, dstEid, payload, msgValue, numOfRuns);
+        TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
 
         _profileGasUsage(
             rpcUrl,
@@ -93,11 +93,11 @@ contract GasProfilerScript is Script {
     function run_lzCompose(
         string memory rpcUrl,
         address endpointAddress,
+        uint32 srcEid,
+        address sender,
+        uint32 dstEid,
         address receiver,
         address composer,
-        uint32 dstEid,
-        address sender,
-        uint32 srcEid,
         bytes memory payload,
         uint256 msgValue,
         uint256 numOfRuns
@@ -105,7 +105,7 @@ contract GasProfilerScript is Script {
         _initializeEndpoint(endpointAddress);
         console.log("Starting gas profiling for lzCompose...");
 
-        TestParams memory params = _createTestParams(receiver, srcEid, sender, dstEid, payload, msgValue, numOfRuns);
+        TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
 
         _profileGasUsage(
             rpcUrl,
@@ -136,20 +136,20 @@ contract GasProfilerScript is Script {
 
     /// @notice Creates a `TestParams` instance.
     function _createTestParams(
-        address receiver,
         uint32 srcEid,
         address sender,
         uint32 dstEid,
+        address receiver,
         bytes memory payload,
         uint256 msgValue,
         uint256 numOfRuns
     ) internal pure returns (TestParams memory) {
         return
             TestParams({
-                receiver: receiver,
                 srcEid: srcEid,
                 sender: bytes32(uint256(uint160(sender))),
                 dstEid: dstEid,
+                receiver: receiver,
                 payload: payload,
                 msgValue: msgValue,
                 numOfRuns: numOfRuns
