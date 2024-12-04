@@ -52,7 +52,7 @@
     "@layerzerolabs/test-devtools": "~0.4.0",
     "@layerzerolabs/test-devtools-solana": "~0.0.3",
     "@layerzerolabs/ua-devtools": "~3.0.0",
-    "@solana/web3.js": "~1.95.0",
+    "@solana/web3.js": "~1.95.8",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
