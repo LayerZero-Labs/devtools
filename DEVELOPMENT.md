@@ -345,3 +345,16 @@ If running into issues with missing environment variables when running any of th
 - Specified as _global_ environment variables that have an effect on build output - [globalEnv](https://turbo.build/repo/docs/reference/configuration#globalenv)
 - Specified as environment variables that don't have an effect on build output - [passThroughEnv](https://turbo.build/repo/docs/reference/configuration#passthroughenv)
 - Specified as _global_ environment variables that don't have an effect on build output - [globalPassThroughEnv](https://turbo.build/repo/docs/reference/configuration#globalpassthroughenv)
+
+### Problems with `anchor`
+
+If you are running into an error like the following:
+
+```bash
+@layerzerolabs/oft-solana-example:compile: [anchor] error: not a directory: '.local/share/solana/install/releases/1.17.31/solana-release/bin/sdk/sbf/dependencies/platform-tools/rust/lib'
+```
+
+removing Solana cache fixes it:
+```
+rm -rf $HOME/.cache/solana
+```
