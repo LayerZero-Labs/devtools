@@ -175,8 +175,10 @@ contract GasProfilerScript is Script {
             uint256 gasBefore = gasleft();
 
             (bool success, ) = caller.call{ value: params.msgValue }(callParams);
-            vm.stopPrank();
+            
             uint256 gasAfter = gasleft();
+
+            vm.stopPrank();
 
             if (success) {
                 uint256 gasUsed = gasBefore - gasAfter;
@@ -193,10 +195,14 @@ contract GasProfilerScript is Script {
     function _logGasMetrics(uint256[] memory gasUsedArray, uint256 totalGasUsed, uint256 successfulRuns) internal view {
         uint256 averageGas = totalGasUsed / successfulRuns;
         uint256 medianGas = _calculateMedian(gasUsedArray, successfulRuns);
+        uint256 maximumGas = _calculateMaximum(gasUsedArray, successfulRuns);
+        uint256 minimumGas = _calculateMinimum(gasUsedArray, successfulRuns);
 
         console.log("Gas Usage Metrics:");
         console.log("Average Gas Used:", averageGas);
         console.log("Median Gas Used:", medianGas);
+        console.log("Maximum Gas Used:", maximumGas);
+        console.log("Minimum Gas Used:", minimumGas);
         console.log("Successful Runs:", successfulRuns);
     }
 
@@ -208,6 +214,18 @@ contract GasProfilerScript is Script {
         } else {
             return (array[length / 2 - 1] + array[length / 2]) / 2;
         }
+    }
+
+    /// @notice Calculates the maximum of an array.
+    function _calculateMaximum(uint256[] memory array, uint256 length) internal pure returns (uint256) {
+        _sortArray(array, length);
+        return array[length - 1];
+    }
+
+    /// @notice Calculates the minimum of an array.
+    function _calculateMinimum(uint256[] memory array, uint256 length) internal pure returns (uint256) {
+        _sortArray(array, length);
+        return array[0];
     }
 
     /// @notice Sorts an array in ascending order.
