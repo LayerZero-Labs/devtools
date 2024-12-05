@@ -4,8 +4,7 @@ import { getAptosOftAddress, getConfigConnections, networkToIndexerMapping, send
 import { getLzNetworkStage, getEidFromAptosNetwork, parseYaml } from './utils/aptosNetworkParser'
 import * as oftConfig from './utils/aptosOftConfigOps'
 import { Endpoint } from '../sdk/endpoint'
-
-const ENDPOINT_ADDRESS = '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c'
+import { getNamedAddresses } from './utils/config'
 
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
@@ -21,11 +20,14 @@ async function main() {
 
     const lzNetworkStage = getLzNetworkStage(network)
     const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const endpointAddress = getEndpointAddressFromNamedAddresses(getNamedAddresses(lzNetworkStage))
+
     console.log(`\n🔧 Configuring Aptos OFT Contract`)
-    console.log(`   Address: ${aptosOftAddress}\n`)
+    console.log(`   OFT Address: ${aptosOftAddress}`)
+    console.log(`   Endpoint Address: ${endpointAddress}\n`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
-    const endpoint = new Endpoint(aptos, ENDPOINT_ADDRESS)
+    const endpoint = new Endpoint(aptos, endpointAddress)
     const currDelegate = await oft.getDelegate()
     validateDelegate(currDelegate, account_address)
 
@@ -61,6 +63,17 @@ function validateDelegate(currDelegate: string, account_address: string) {
             `Delegate must be set to account address of the transaction senderfor wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}`
         )
     }
+}
+function getEndpointAddressFromNamedAddresses(namedAddresses: string): string {
+    const addresses = namedAddresses.split(',')
+    const endpointEntry = addresses.find((addr) => addr.startsWith('endpoint_v2='))
+    const endpointAddress = endpointEntry?.split('=')[1]
+
+    if (!endpointAddress) {
+        throw new Error('Endpoint address not found in named addresses configuration')
+    }
+
+    return endpointAddress
 }
 
 main().catch((error) => {
