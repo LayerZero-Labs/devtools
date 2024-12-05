@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",

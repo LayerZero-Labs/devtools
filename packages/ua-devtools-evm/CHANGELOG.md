@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 5.0.2
+
+### Patch Changes
+
+- 486c69d: Fixes an breaking issue when running lz:read:resolve-command with map or reduce compute settings
+
 ## 5.0.1
 
 ### Patch Changes
