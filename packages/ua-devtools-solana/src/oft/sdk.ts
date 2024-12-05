@@ -33,7 +33,7 @@ import {
 import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { EndpointProgram, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, MessageLibPDADeriver, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
 // TODO: Use exported interfaces when they are available
 interface SetPeerAddressParam {
@@ -406,6 +406,13 @@ export class OFT extends OmniSDK implements IOApp {
         this.logger.debug(`Getting caller BPS cap`)
 
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
+    }
+
+    public async sendConfigIsInitialized(_eid: EndpointId): Promise<boolean> {
+        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+        const [sendConfig] = deriver.sendConfig(_eid, new PublicKey(this.point.address))
+        const accountInfo = await this.connection.getAccountInfo(sendConfig)
+        return accountInfo != null
     }
 
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
