@@ -17,26 +17,14 @@ async function main() {
 
     const lzNetworkStage = getLzNetworkStage(network)
     const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
-    console.log(`\n⚡ Initializing Aptos OFT`)
+    console.log(`\n🪙 Minting Aptos OFT ✨`)
     console.log(`   Address: ${aptosOftAddress}`)
 
-    const tokenName = 'OFT'
-    const tokenSymbol = 'OFT'
-    const iconUri = ''
-    const projectUri = ''
-    const sharedDecimals = 6
-    const localDecimals = 6
-
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
-    const initializePayload = oft.initializePayload(
-        tokenName,
-        tokenSymbol,
-        iconUri,
-        projectUri,
-        sharedDecimals,
-        localDecimals
-    )
-    sendAllTxs(aptos, oft, account_address, [initializePayload])
+
+    const mintPayload = oft.mintPayload(account_address, 1000000000)
+
+    sendAllTxs(aptos, oft, account_address, [mintPayload])
 }
 
 main().catch((error) => {

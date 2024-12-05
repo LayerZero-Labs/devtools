@@ -2,9 +2,9 @@ import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
 import { assert } from 'console'
 import { deploymentFile } from './utils/types'
-
 import fs from 'fs'
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { getNamedAddresses } from './utils/config'
 
 let stdOut = ''
 let stdErr = ''
@@ -14,11 +14,18 @@ const parser = new ArgumentParser({
 })
 
 async function main() {
-    // read in the first arg passed via the command line
     parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
     parser.add_argument('--address-name', { type: 'str', help: 'Module name of the OFT (oft)' })
+    parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
     const parserArgs = parser.parse_args()
+    const network = (await parseYaml()).network
+    const lzNetworkStage = getLzNetworkStage(network)
+
+    const additionalAddresses = getNamedAddresses(lzNetworkStage)
+    const namedAddresses = parserArgs.named_addresses
+        ? `${parserArgs.named_addresses},${additionalAddresses}`
+        : additionalAddresses
 
     const package_dir = parserArgs.package_dir
     const address_name = parserArgs.address_name
@@ -29,6 +36,7 @@ async function main() {
         'create-object-and-publish-package',
         `--package-dir=${package_dir}`,
         `--address-name=${address_name}`,
+        `--named-addresses=${namedAddresses}`,
     ]
 
     return new Promise<void>((resolve, reject) => {

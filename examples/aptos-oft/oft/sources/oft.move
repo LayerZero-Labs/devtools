@@ -10,6 +10,7 @@ module oft::oft {
     use std::option::Option;
     use std::primary_fungible_store;
     use std::signer::address_of;
+    use std::option;
 
     use endpoint_v2::messaging_receipt::MessagingReceipt;
     use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
@@ -77,7 +78,10 @@ module oft::oft {
     ) {
         // Withdraw the amount and fees from the account
         let send_value = primary_fungible_store::withdraw(account, metadata(), amount_ld);
+
+
         let (native_fee_fa, zro_fee_fa) = withdraw_lz_fees(account, native_fee, zro_fee);
+        
         let sender = address_of(move account);
 
         send_internal(
@@ -85,9 +89,16 @@ module oft::oft {
             &mut native_fee_fa, &mut zro_fee_fa,
         );
 
-        // Return unused amounts and fees to the account
-        refund_fees(sender, native_fee_fa, zro_fee_fa);
         primary_fungible_store::deposit(sender, send_value);
+        primary_fungible_store::deposit(sender, native_fee_fa);
+        if (option::is_some(&zro_fee_fa)) {
+            primary_fungible_store::deposit(sender, option::extract(&mut zro_fee_fa));
+        };
+        option::destroy_none(zro_fee_fa);
+
+        // // Return unused amounts and fees to the account
+        // refund_fees(sender, native_fee_fa, zro_fee_fa);
+        // primary_fungible_store::deposit(sender, send_value);
     }
 
     fun send_internal(

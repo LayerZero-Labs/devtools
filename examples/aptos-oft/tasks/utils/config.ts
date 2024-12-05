@@ -1,6 +1,7 @@
 import fs from 'fs'
 import YAML from 'yaml'
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
+import path from 'path'
 
 type AptosYamlConfig = {
     profiles: {
@@ -26,4 +27,14 @@ export function createAccountFromPrivateKey(privateKey: string, account_address:
         privateKey: new Ed25519PrivateKey(privateKey),
         address: account_address,
     })
+}
+
+export function getNamedAddresses(networkType: string): string {
+    const addressesPath = path.join(__dirname, 'deploymentAddresses.json')
+    const addresses = JSON.parse(fs.readFileSync(addressesPath, 'utf8'))
+    const networkAddresses = addresses[`${networkType}-addresses`]
+
+    return Object.entries(networkAddresses)
+        .map(([name, addr]) => `${name}=${addr}`)
+        .join(',')
 }

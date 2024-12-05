@@ -46,21 +46,21 @@ const config: OAppOmniGraphHardhat = {
                     {
                         msgType: 1,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 100000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 1000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                     {
                         msgType: 2,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 100000, // gas limit in wei for EndpointV2.lzCompose
+                        gas: 1000, // gas limit in wei for EndpointV2.lzCompose
                         value: 0, // msg.value in wei for EndpointV2.lzCompose
                     },
-                    {
-                        msgType: 1,
-                        optionType: ExecutorOptionType.NATIVE_DROP,
-                        amount: 0, // amount of native gas token in wei to drop to receiver address
-                        receiver: '0x0000000000000000000000000000000000000000',
-                    },
+                    // {
+                    //     msgType: 1,
+                    //     optionType: ExecutorOptionType.NATIVE_DROP,
+                    //     amount: 0, // amount of native gas token in wei to drop to receiver address
+                    //     receiver: '0x0000000000000000000000000000000000000000',
+                    // },
                 ],
                 sendLibrary: '0x3f2714ef2d63f1128f45e4a3d31b354c1c940ccdb38aca697c9797ef95e7a09f',
                 receiveLibraryConfig: {

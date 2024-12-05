@@ -63,7 +63,6 @@ export class Endpoint {
         eid: EndpointId,
         configType: number
     ): Promise<Uint8Array> {
-        console.log(`oAppAddress: ${oAppAddress} msgLibAddress: ${msgLibAddress} eid: ${eid} configType: ${configType}`)
         try {
             const result = await this.aptos.view({
                 payload: {

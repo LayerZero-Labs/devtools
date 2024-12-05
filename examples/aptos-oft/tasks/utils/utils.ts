@@ -51,7 +51,7 @@ export function getOwnerFromLzConfig(eid: EndpointId): string {
     return owner
 }
 
-function validateAptosDelegate(config: OAppOmniGraphHardhat, eid: EndpointId) {
+export function validateAptosDelegate(config: OAppOmniGraphHardhat, eid: EndpointId) {
     const aptosConfig = config.contracts.find((c: any) => c.contract.eid === eid)
 
     if (!aptosConfig || !aptosConfig.config || !aptosConfig.config.delegate) {

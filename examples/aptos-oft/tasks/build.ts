@@ -1,5 +1,7 @@
 import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
+import { parseYaml, getLzNetworkStage } from './utils/aptosNetworkParser'
+import { getNamedAddresses } from './utils/config'
 
 let stdErr = ''
 
@@ -13,12 +15,17 @@ async function main() {
     parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
     const parserArgs = parser.parse_args()
+    const network = (await parseYaml()).network
+    const lzNetworkStage = getLzNetworkStage(network)
 
-    const package_dir = parserArgs.package_dir
-    const named_addresses = parserArgs.named_addresses
+    // Get additional named addresses and combine with provided ones
+    const additionalAddresses = getNamedAddresses(lzNetworkStage)
+    const namedAddresses = parserArgs.named_addresses
+        ? `${parserArgs.named_addresses},${additionalAddresses}`
+        : additionalAddresses
 
     const cmd = 'aptos'
-    const args = ['move', 'build', `--package-dir=${package_dir}`, `--named-addresses=${named_addresses}`]
+    const args = ['move', 'build', `--package-dir=${parserArgs.package_dir}`, `--named-addresses=${namedAddresses}`]
 
     return new Promise<void>((resolve, reject) => {
         const childProcess = spawn(cmd, args, {

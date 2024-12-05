@@ -20,7 +20,7 @@ enum ConfigType {
 export async function transferOwner(oft: OFT, owner: string): Promise<InputGenerateTransactionPayloadData> {
     const currOwner = await oft.getAdmin()
     if (currOwner == owner) {
-        console.log(`✓ Owner already set to ${owner}\n`)
+        console.log(`✅ Owner already set to ${owner}\n`)
         return null
     } else {
         diffPrinter(`Set Owner for Aptos OFT at ${oft.oft_address}`, { address: currOwner }, { address: owner })
@@ -31,7 +31,7 @@ export async function transferOwner(oft: OFT, owner: string): Promise<InputGener
 export async function setDelegate(oft: OFT, delegate: string): Promise<InputGenerateTransactionPayloadData> {
     const currDelegate = await oft.getDelegate()
     if (currDelegate == delegate) {
-        console.log(`✓ Delegate already set to ${delegate}\n`)
+        console.log(`✅ Delegate already set to ${delegate}\n`)
         return null
     } else {
         diffPrinter(
@@ -65,7 +65,9 @@ export async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['conn
         const currentPeerHex = await getCurrentPeer(oft, entry.to.eid as EndpointId)
 
         if (currentPeerHex === newPeer) {
-            console.log(`Peer already set for ${networkName} (${entry.to.eid}) address: ${newPeer} ✓\n`)
+            console.log(
+                `✅ Peer already set for pathway Aptos -> ${entry.to.contractName} address: ${newPeer} on ${networkName} \n`
+            )
         } else {
             diffPrinter(
                 `Set peer from Aptos OFT -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
@@ -152,7 +154,9 @@ async function createTxFromOptions(options: Options[], eid: number, contractName
     const currentOptionsHex = ensureOptionsCompatible(await oft.getEnforcedOptions(eid, msgType))
 
     if (newOptions.toHex() === currentOptionsHex) {
-        console.log(`Enforced options already set for ${contractName} on eid ${eid} ✓\n`)
+        console.log(
+            `✅ Enforced options already set or pathway Aptos -> ${contractName} on ${getNetworkForChainId(eid).chainName}\n`
+        )
         return null
     } else {
         decodeOptionsAndPrintDiff(contractName, eid, currentOptionsHex, newOptions.toHex(), msgType)
@@ -206,7 +210,7 @@ function decodeOptionsAndPrintDiff(
 }
 
 // Default options return from aptos are 0x, however the options decoder expects 0x00
-function ensureOptionsCompatible(optionsHex: string) {
+function ensureOptionsCompatible(optionsHex: string): string {
     if (optionsHex === '0x') {
         return '0x00'
     }
@@ -236,7 +240,7 @@ export async function setReceiveLibraryTimeout(
         )
         if (currentTimeout === entry.config.receiveLibraryTimeoutConfig.expiry) {
             console.log(
-                `Receive library timeout already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Receive library timeout already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {
@@ -274,7 +278,7 @@ export async function setReceiveLibrary(
 
         if (currentReceiveLibrary === entry.config.receiveLibraryConfig.receiveLibrary) {
             console.log(
-                `Receive library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Receive library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {
@@ -308,7 +312,7 @@ export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: 
 
         if (currentSendLibrary === entry.config.sendLibrary) {
             console.log(
-                `Send library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Send library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {
@@ -356,7 +360,7 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
             console.log(
-                `Send config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Send config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {
@@ -405,7 +409,7 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
             console.log(
-                `Receive config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Receive config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {
@@ -458,7 +462,7 @@ export async function setExecutorConfig(
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig))) {
             console.log(
-                `Executor config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} ✓\n`
+                `✅ Executor config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
             )
             continue
         } else {

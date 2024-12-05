@@ -48,6 +48,56 @@ export class OFT {
         }
     }
 
+    mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_impl::mint`,
+            functionArguments: [recipient, amount],
+        }
+    }
+
+    async getBalance(account: string): Promise<number> {
+        const result = await this.aptos.view({
+            payload: {
+                function: `${this.oft_address}::oft::balance`,
+                functionArguments: [account],
+            },
+        })
+
+        return result[0] as number
+    }
+
+    async quoteSend(
+        userSender: string,
+        dst_eid: number,
+        to: Uint8Array,
+        amount_ld: number | bigint,
+        min_amount_ld: number | bigint,
+        extra_options: Uint8Array,
+        compose_message: Uint8Array,
+        oft_cmd: Uint8Array,
+        pay_in_zro: boolean
+    ): Promise<[number, number]> {
+        const result = await this.aptos.view({
+            payload: {
+                function: `${this.oft_address}::oft::quote_send`,
+                functionArguments: [
+                    this.account_address,
+                    dst_eid,
+                    to,
+                    amount_ld,
+                    min_amount_ld,
+                    extra_options,
+                    compose_message,
+                    oft_cmd,
+                    pay_in_zro,
+                ],
+            },
+        })
+        console.log('oft::quote_send result:')
+        console.dir(result, { depth: null })
+        return [result[0][0] as number, result[0][1] as number]
+    }
+
     // Calls send_withdraw from the oft fungible asset module (oft.move)
     sendPayload(
         dst_eid: number,

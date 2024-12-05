@@ -76,8 +76,6 @@ describe('ofts-tests', () => {
         })
     })
 
-    // TODO if number of confirmations is == 0 then use the default confirmations
-    // if lengths are zero use defaults
     describe('ULN Configuration', () => {
         it('should configure ULN with all options specified', async () => {
             const ulnConfig = {
@@ -104,7 +102,6 @@ describe('ofts-tests', () => {
         })
 
         it('should configure ULN with default required DVNs when empty array provided', async () => {
-            // TODO: Look into move code and ensure that it is ok to not have any required DVNs
             const ulnConfig = {
                 confirmations: 5 as unknown as bigint,
                 requiredDVNs: [],

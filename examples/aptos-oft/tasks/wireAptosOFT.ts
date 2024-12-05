@@ -55,7 +55,7 @@ async function main() {
     await sendAllTxs(aptos, oft, account_address, payloads)
 }
 
-function validateDelegate(currDelegate, account_address: string) {
+function validateDelegate(currDelegate: string, account_address: string) {
     if (currDelegate != account_address) {
         throw new Error(
             `Delegate must be set to account address of the transaction senderfor wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}`
