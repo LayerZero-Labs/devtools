@@ -686,7 +686,7 @@ checksum = "f7144d30dcf0fafbce74250a3963025d8d52177934239851c917d29f1df280c2"
 [[package]]
 name = "cpi-helper"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "bs58 0.5.1",
  "proc-macro2",
@@ -893,7 +893,7 @@ checksum = "3dca9240753cf90908d7e4aac30f630662b02aebaa1b58a3cadabdb23385b58b"
 [[package]]
 name = "endpoint"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "anchor-lang",
  "cpi-helper",
@@ -1259,7 +1259,7 @@ dependencies = [
 [[package]]
 name = "messagelib-interface"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "anchor-lang",
 ]
@@ -1359,7 +1359,7 @@ dependencies = [
 [[package]]
 name = "oapp"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "anchor-lang",
  "endpoint",
@@ -2476,7 +2476,7 @@ dependencies = [
 [[package]]
 name = "utils"
 version = "0.1.0"
-source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=7aebbd7c79b2dc818f7bb054aed2405ca076b9d6#7aebbd7c79b2dc818f7bb054aed2405ca076b9d6"
+source = "git+https://github.com/LayerZero-Labs/LayerZero-v2.git?rev=34321ac15e47e0dafd25d66659e2f3d1b9b6db8f#34321ac15e47e0dafd25d66659e2f3d1b9b6db8f"
 dependencies = [
  "anchor-lang",
 ]
