@@ -23,7 +23,6 @@ import {
     setPeers,
     setReceiveConfig,
     setReceiveLibrary,
-    setReceiveLibraryTimeout,
     setSendConfig,
     setSendLibrary,
 } from '../tasks/utils/aptosOftConfigOps'

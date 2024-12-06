@@ -1,10 +1,5 @@
 # Aptos OFT Deployment
 ### connecting to aptos via cli
-To connect to aptos via cli, you can run the following commands:
-For internal testing purposes we connect to the aptos sandbox in monorepo. To do this, in monorepo dev container run the following commands:
-```
-yarn; yarn build; yarn :ops localnet recovery --chain aptos -t 3.0.19-movment.1 
-```
 If you need to generate a new key, run the following command:
 ```
 aptos key generate --output-file my_key.pub
@@ -17,12 +12,12 @@ Then you can verify that you are connected to the aptos sandbox and view your ac
 ```
 cat .aptos/config.yaml 
 ```
-## Build the oft:
+## Build the OFT:
 We reccomend using the account address in printed by `cat .aptos/config.yaml` as the deployer and admin.
 ```
 ts-node tasks/deploy.ts --package-dir=oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-admin>
 ```
-## Deploy the oft:
+## Deploy the OFT:
 ```
 ts-node tasks/deploy.ts --package-dir oft --address-name oft --named-addresses oft_admin=<account-address-of-your-admin>
 ```
@@ -45,8 +40,8 @@ Run the following command to set the delegate to the oft. Ensure first that you 
 ```
 npx hardhat run tasks/setDelegate.ts
 ```
-## Initialize the oft:
-Inside the file tasks/initAptosOFT.ts, set the following variables:
+## Initialize the OFT:
+Inside the file tasks/initAptosOFT.ts, set the following parameters:
 ```typescript
 const tokenName = 'OFT'
 const tokenSymbol = 'OFT'
@@ -59,7 +54,7 @@ Then run the following command to initialize the oft:
 ```
 ts-node tasks/initAptosOFT.ts
 ```
-## Wiring your aptos oft:
+## Wiring your aptos OFT:
 
 #### layerzero.config.ts:
 ensure that all of the contracts you wish to wire your aptos oft to are included under the contracts array and connections array. For example, if you want to wire your aptos oft to fuji, you would include both contracts under the contracts array, and specify them like this:
@@ -108,7 +103,7 @@ npx hardhat run tasks/wireAptosOFT.ts
 ## Scripts For internal testing:
 These scripts will not be shipped in the final version of the aptos cli. They are only for internal testing purposes.
 ### Mint Aptos OFT:
-First you must add this function to the oft_impl.move file found in oft/sources/internal_oft/:
+First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our aptos sdk script:
 ```
 public entry fun mint(
     admin: &signer,

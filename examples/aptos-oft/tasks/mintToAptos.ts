@@ -1,18 +1,13 @@
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, networkToIndexerMapping, sendAllTxs } from './utils/utils'
+import { getAptosOftAddress, sendAllTxs } from './utils/utils'
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 
 async function main() {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
-    const aptosConfig = new AptosConfig({
-        network: network,
-        fullnode: fullnode,
-        indexer: networkToIndexerMapping[network],
-        faucet: faucet,
-    })
+    const aptosConfig = new AptosConfig({ network: network })
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)

@@ -37,6 +37,15 @@ export class Endpoint {
         return result[0]
     }
 
+    async getDefaultReceiveLibraryTimeout(eid: EndpointId) {
+        return await this.aptos.view({
+            payload: {
+                function: `${this.endpoint_address}::endpoint::get_default_receive_library_timeout`,
+                functionArguments: [eid],
+            },
+        })
+    }
+
     async getReceiveLibraryTimeout(oftAddress: string, dstEid: number) {
         console.log(`oftAddress: ${oftAddress} dstEid: ${dstEid}`)
         const result = await this.aptos.view({
