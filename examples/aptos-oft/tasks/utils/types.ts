@@ -27,15 +27,22 @@ export type AptosOFTMetadata = {
     rpc: string
 }
 
-export type EidMetadata = {
+export type ContractMetadata = {
     evmAddress: address
     contract: ethers.Contract
     provider: ethers.providers.JsonRpcProvider
     configAccount: OAppNodeConfig
     configOapp: OAppEdgeConfig
 }
+
+export type AccountData = {
+    [eid: number]: {
+        gasPrice: ethers.BigNumber
+        nonce: Record<address, number>
+    }
+}
 //[TxTypes][eid] = PopulatedTransaction
 export type TxEidMapping = Record<TxTypes, EidTxMap>
 
 //[number][address] = EidMetadata
-export type EidMetadataMapping = Record<eid, EidMetadata>
+export type ContractMetadataMapping = Record<eid, ContractMetadata>

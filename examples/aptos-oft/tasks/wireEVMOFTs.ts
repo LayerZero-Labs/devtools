@@ -1,7 +1,7 @@
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, EidMetadataMapping, TxEidMapping } from './utils/types'
+import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData } from './utils/types'
 import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
@@ -16,8 +16,15 @@ if (!process.env.PRIVATE_KEY) {
     process.exit(1)
 }
 
+// @todo Fetch this from the config instead of hardcoding.
 const EID_APTOS = EndpointId.APTOS_V2_TESTNET
-export const chainDataMapper = {}
+
+/* 
+Contains the network data of each eid-account pair.
+
+eid is a primary key and it contains gasPrice and the nonce of every address
+*/
+export const chainDataMapper: AccountData = {}
 
 /**
  * Main function to initialize the wiring process.
@@ -29,14 +36,17 @@ async function main() {
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
+    // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
     const TxTypeEidMapping: TxEidMapping = {
         setPeer: {},
         setDelegate: {},
         setEnforcedOptions: {},
     }
 
-    const eidMetaData: EidMetadataMapping = {}
+    // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
+    const contractMetaData: ContractMetadataMapping = {}
 
+    // @todo Fetch this from the config instead of hardcoding.
     const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
     const aptosOft: AptosOFTMetadata = {
         eid: EID_APTOS,
@@ -44,9 +54,11 @@ async function main() {
         rpc: rpcUrls[EID_APTOS],
     }
 
+    // Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
     for (const conn of connectionsToWire) {
         const fromEid = conn.from.eid
         const fromNetwork = networks[fromEid]
+
         const deploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
         const deploymentData = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
 
@@ -56,13 +68,19 @@ async function main() {
         const { address, abi, bytecode } = deploymentData
         const factory = new ContractFactory(abi, bytecode, signer)
 
+        // @todo Run this before simulation since gasPrice can vary?
         if (!chainDataMapper[fromEid]) {
-            chainDataMapper[fromEid] = {}
-            chainDataMapper[fromEid]['gasPrice'] = await provider.getGasPrice()
-            chainDataMapper[fromEid]['nonce'] = await provider.getTransactionCount(signer.address)
+            chainDataMapper[fromEid] = {
+                gasPrice: await provider.getGasPrice(),
+                nonce: {},
+            }
         }
 
-        eidMetaData[fromEid] = {
+        if (!chainDataMapper[fromEid].nonce[signer.address]) {
+            chainDataMapper[fromEid].nonce[signer.address] = await provider.getTransactionCount(signer.address)
+        }
+
+        contractMetaData[fromEid] = {
             evmAddress: address,
             contract: factory.attach(address),
             provider: provider,
@@ -71,10 +89,10 @@ async function main() {
         }
     }
 
-    TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(eidMetaData, aptosOft)
+    TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(contractMetaData, aptosOft)
     // eidTxMapping['steDelegate'] = await createSetDelegateTransactions(wireEvmObjects, aptosOft)
     // eidTxMapping['enforcedOptions'] = await createEnforcedOptionTransactions(wireEvmObjects, aptosOft)
-    await simulateTransactions(eidMetaData, TxTypeEidMapping)
+    await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
 
