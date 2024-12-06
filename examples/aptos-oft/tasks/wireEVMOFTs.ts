@@ -1,12 +1,15 @@
-import { ContractFactory, ethers, PopulatedTransaction } from 'ethers'
+import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { WireEvm, AptosOFTMetadata } from './utils/types'
+import { AptosOFTMetadata, EidMetadataMapping, TxEidMapping } from './utils/types'
 import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+
 // import { executeTransactions } from './utils/wire-evm/executeTransactions'
+// import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
+// import { createEnforcedOptionTransactions } from './utils/wire-evm/setEnforcedOptions'
+
 import { simulateTransactions } from './utils/wire-evm/simulateTransactions'
-import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -25,9 +28,13 @@ async function main() {
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
-    const wireEvmObjects: WireEvm[] = []
+    const TxTypeEidMapping: TxEidMapping = {
+        setPeer: {},
+        setDelegate: {},
+        setEnforcedOptions: {},
+    }
 
-    const txs: PopulatedTransaction[][] = []
+    const eidMetaData: EidMetadataMapping = {}
 
     const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
     const aptosOft: AptosOFTMetadata = {
@@ -54,28 +61,25 @@ async function main() {
             chainDataMapper[fromEid]['nonce'] = await provider.getTransactionCount(signer.address)
         }
 
-        wireEvmObjects.push({
+        eidMetaData[fromEid] = {
             evmAddress: address,
             contract: factory.attach(address),
-            fromEid: fromEid,
+            provider: provider,
             configAccount: accountConfigs[fromEid],
             configOapp: conn.config,
-        })
+        }
     }
 
-    // The rows are different operations : setPeer, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout, setSendConfig, setReceiveConfig
-    // The columns are the different networks to wire with
-    // @todo - parallelize the operations and networks with threads - prolly not worth it.
-
-    txs.push(await createSetPeerTransactions(wireEvmObjects, aptosOft))
-    txs.push(await createSetDelegateTransactions(wireEvmObjects, aptosOft))
-    await simulateTransactions(txs, wireEvmObjects)
+    TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(eidMetaData, aptosOft)
+    // eidTxMapping['steDelegate'] = await createSetDelegateTransactions(wireEvmObjects, aptosOft)
+    // eidTxMapping['enforcedOptions'] = await createEnforcedOptionTransactions(wireEvmObjects, aptosOft)
+    await simulateTransactions(eidMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
 
 main()
     .then(() => {
-        console.log('Your OApps are now configured to wire with Aptos.')
+        console.log('Your OApps have now been wired with Aptos.')
         process.exit(0)
     })
     .catch((error) => {
