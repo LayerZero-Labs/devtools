@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 /// @title GasProfilerScript
 /// @notice Profiles gas usage for LayerZero's `lzReceive` and `lzCompose` methods over multiple runs.
+
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
 
@@ -15,20 +16,23 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 
 /// @dev Encapsulates test parameters for gas profiling.
 struct TestParams {
-    /// @notice Source endpoint ID.
     uint32 srcEid;
-    /// @notice Encoded sender address as `bytes32`.
     bytes32 sender;
-    /// @notice Destination endpoint ID.
     uint32 dstEid;
-    /// @notice Address of the receiver contract (OApp).
     address receiver;
-    /// @notice Payload data to be sent.
-    bytes payload;
-    /// @notice Ether value sent with the message (in wei).
+    bytes[] payloads;
     uint256 msgValue;
-    /// @notice Number of profiling runs.
     uint256 numOfRuns;
+}
+
+/// @dev Encapsulates gas metrics for a specific payload.
+struct GasMetrics {
+    uint256 averageGas;
+    uint256 medianGas;
+    uint256 maxGas;
+    uint256 minGas;
+    uint256 totalMsgValue;
+    uint256 successfulRuns;
 }
 
 /// @notice Script contract for gas profiling LayerZero's `lzReceive` and `lzCompose` methods.
@@ -36,151 +40,125 @@ contract GasProfilerScript is Script {
     using OptionsBuilder for bytes;
     ILayerZeroEndpointV2 public endpoint;
 
-    /// @notice Profiles the gas usage of `lzReceive`.
-    /// @param rpcUrl RPC URL of the target blockchain.
-    /// @param endpointAddress Address of the LayerZero EndpointV2 contract.
-    /// @param receiver Address of the receiver contract (OApp).
-    /// @param srcEid Source endpoint ID.
-    /// @param sender Sender address (OApp).
-    /// @param dstEid Destination endpoint ID.
-    /// @param payload Message payload as a `bytes` array.
-    /// @param msgValue Ether value to send with the message (in wei).
-    /// @param numOfRuns Number of runs to execute.
+    /// @notice Profiles the gas usage of `lzReceive` over multiple payloads and runs.
     function run_lzReceive(
         string memory rpcUrl,
         address endpointAddress,
-        uint32 srcEid,
-        address sender,
-        uint32 dstEid,
-        address receiver,
-        bytes memory payload,
-        uint256 msgValue,
-        uint256 numOfRuns
+        TestParams memory params
     ) external {
         _initializeEndpoint(endpointAddress);
-        console.log("Starting gas profiling for lzReceive...");
+        console.log("Starting gas profiling for lzReceive on dstEid:", params.dstEid);
 
         vm.createSelectFork(rpcUrl);
 
-        TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
-        uint64 nextNonce = ILayerZeroReceiver(receiver).nextNonce(params.srcEid, params.sender);
+        uint64 nextNonce = ILayerZeroReceiver(params.receiver).nextNonce(params.srcEid, params.sender);
 
-        _profileGasUsage(
-            params,
-            receiver,
-            abi.encodeWithSelector(
-                ILayerZeroReceiver(receiver).lzReceive.selector,
-                Origin(params.srcEid, params.sender, nextNonce),
-                GUID.generate(
-                    nextNonce,
-                    params.srcEid,
-                    address(uint160(uint256(params.sender))),
-                    params.dstEid,
-                    bytes32(uint256(uint160(params.receiver)))
-                ),
-                params.payload,
-                address(this),
-                ""
-            )
-        );
+        // Initialize an array to hold gas metrics for each payload
+        GasMetrics[] memory metrics = new GasMetrics[](params.payloads.length);
+
+        for (uint256 i = 0; i < params.payloads.length; i++) {
+            bytes memory currentPayload = params.payloads[i];
+            metrics[i] = _profileSinglePayload(
+                params,
+                params.receiver,
+                ILayerZeroReceiver(params.receiver).lzReceive.selector,
+                abi.encodeWithSelector(
+                    ILayerZeroReceiver(params.receiver).lzReceive.selector,
+                    Origin(params.srcEid, params.sender, nextNonce),
+                    GUID.generate(
+                        nextNonce,
+                        params.srcEid,
+                        address(uint160(uint256(params.sender))),
+                        params.dstEid,
+                        bytes32(uint256(uint160(params.receiver)))
+                    ),
+                    currentPayload,
+                    address(this),
+                    ""
+                )
+            );
+        }
+
+        console.log("---------------------------------------------------------");
+        _logAggregatedMetrics(metrics);
+        console.log("---------------------------------------------------------");
+        console.log("Finished gas profling for lzReceive on dstEid:", params.dstEid);
+        console.log("---------------------------------------------------------");
     }
 
-    /// @notice Profiles the gas usage of `lzCompose`.
-    /// @param rpcUrl RPC URL of the target blockchain.
-    /// @param endpointAddress Address of the LayerZero EndpointV2 contract.
-    /// @param receiver Address of the receiver contract (OApp).
-    /// @param composer Address of the LayerZero Composer contract.
-    /// @param dstEid Destination endpoint ID.
-    /// @param sender Sender address (OApp).
-    /// @param srcEid Source endpoint ID.
-    /// @param payload Message payload as a `bytes` array.
-    /// @param msgValue Ether value to send with the message (in wei).
-    /// @param numOfRuns Number of runs to execute.
+    /// @notice Profiles the gas usage of `lzCompose` over multiple payloads and runs.
     function run_lzCompose(
         string memory rpcUrl,
         address endpointAddress,
-        uint32 srcEid,
-        address sender,
-        uint32 dstEid,
-        address receiver,
-        address composer,
-        bytes memory payload,
-        uint256 msgValue,
-        uint256 numOfRuns
+        address composerAddress,
+        TestParams memory params
     ) external {
         _initializeEndpoint(endpointAddress);
-        console.log("Starting gas profiling for lzCompose...");
+        console.log("Starting gas profiling for lzCompose on dstEid:", params.dstEid);
 
         vm.createSelectFork(rpcUrl);
 
-        TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
-        uint64 nextNonce = ILayerZeroReceiver(receiver).nextNonce(params.srcEid, params.sender);
+        uint64 nextNonce = ILayerZeroReceiver(params.receiver).nextNonce(params.srcEid, params.sender);
 
-        _profileGasUsage(
-            params,
-            composer,
-            abi.encodeWithSelector(
-                ILayerZeroComposer(composer).lzCompose.selector,
-                params.receiver,
-                GUID.generate(
-                    nextNonce,
-                    params.srcEid,
-                    address(uint160(uint256(params.sender))),
-                    params.dstEid,
-                    bytes32(uint256(uint160(params.receiver)))
-                ),
-                params.payload,
-                address(this),
-                ""
-            )
-        );
+        // Initialize an array to hold gas metrics for each payload
+        GasMetrics[] memory metrics = new GasMetrics[](params.payloads.length);
+
+        for (uint256 i = 0; i < params.payloads.length; i++) {
+            bytes memory currentPayload = params.payloads[i];
+            metrics[i] = _profileSinglePayload(
+                params,
+                composerAddress,
+                ILayerZeroComposer(composerAddress).lzCompose.selector,
+                abi.encodeWithSelector(
+                    ILayerZeroComposer(composerAddress).lzCompose.selector,
+                    params.receiver,
+                    GUID.generate(
+                        nextNonce,
+                        params.srcEid,
+                        address(uint160(uint256(params.sender))),
+                        params.dstEid,
+                        bytes32(uint256(uint160(params.receiver)))
+                    ),
+                    currentPayload,
+                    address(this),
+                    ""
+                )
+            );
+        }
+
+         console.log("---------------------------------------------------------");
+        _logAggregatedMetrics(metrics);
+        console.log("---------------------------------------------------------");
+        console.log("Finished gas profling for lzCompose on dstEid:", params.dstEid);
+        console.log("---------------------------------------------------------");
     }
 
     /// @notice Initializes the endpoint contract.
-    /// @param endpointAddress Address of the LayerZero EndpointV2 contract.
     function _initializeEndpoint(address endpointAddress) internal {
         endpoint = ILayerZeroEndpointV2(endpointAddress);
     }
 
-    /// @notice Creates a `TestParams` instance.
-    function _createTestParams(
-        uint32 srcEid,
-        address sender,
-        uint32 dstEid,
-        address receiver,
-        bytes memory payload,
-        uint256 msgValue,
-        uint256 numOfRuns
-    ) internal pure returns (TestParams memory) {
-        return
-            TestParams({
-                srcEid: srcEid,
-                sender: bytes32(uint256(uint160(sender))),
-                dstEid: dstEid,
-                receiver: receiver,
-                payload: payload,
-                msgValue: msgValue,
-                numOfRuns: numOfRuns
-            });
-    }
-
-    /// @notice Profiles gas usage of a function.
-    function _profileGasUsage(TestParams memory params, address caller, bytes memory callParams) internal {
+    /// @notice Profiles gas usage for a single payload and returns the metrics.
+    function _profileSinglePayload(
+        TestParams memory params,
+        address caller,
+        bytes4 functionSelector,
+        bytes memory callParams
+    ) internal returns (GasMetrics memory) {
         uint256[] memory gasUsedArray = new uint256[](params.numOfRuns);
         uint256 totalGasUsed = 0;
         uint256 successfulRuns = 0;
 
         vm.deal(address(endpoint), 100 ether);
 
-        uint256 snapshotId = vm.snapshot();
-        for (uint32 i = 0; i < params.numOfRuns; i++) {
-            vm.revertTo(snapshotId);
+        uint256 snapshotId = vm.snapshotState();
+        for (uint256 i = 0; i < params.numOfRuns; i++) {
+            vm.revertToState(snapshotId);
 
             vm.prank(address(endpoint));
 
             (bool success, ) = caller.call{ value: params.msgValue }(callParams);
-
-            uint64 gasUsed = vm.lastCallGas().gasTotalUsed;
+            uint256 gasUsed = vm.lastCallGas().gasTotalUsed;
 
             if (success) {
                 gasUsedArray[successfulRuns] = gasUsed;
@@ -189,44 +167,62 @@ contract GasProfilerScript is Script {
             }
         }
 
-        uint256 averageGas = totalGasUsed / successfulRuns;
+        GasMetrics memory metric;
 
-        // Extract the function selector from callParams
-        bytes4 functionSelector = _getFunctionSelector(callParams);
-
-        // Dynamically set options based on the last call
-        bytes memory _options;
-        if (functionSelector == ILayerZeroComposer.lzCompose.selector) {
-            _options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, uint128(averageGas), uint128(params.msgValue));
+        if (successfulRuns > 0) {
+            metric.averageGas = totalGasUsed / successfulRuns;
+            metric.medianGas = _calculateMedian(gasUsedArray, successfulRuns);
+            metric.maxGas = _calculateMaximum(gasUsedArray, successfulRuns);
+            metric.minGas = _calculateMinimum(gasUsedArray, successfulRuns);
+            metric.totalMsgValue = params.msgValue;
+            metric.successfulRuns = successfulRuns;
         } else {
-            _options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(uint128(averageGas), uint128(params.msgValue));
+            console.log("All runs failed for a payload.");
         }
 
-        _logGasMetrics(gasUsedArray, totalGasUsed, params.msgValue, successfulRuns, _options);
+        return metric;
     }
 
-    /// @notice Logs gas usage metrics.
-    function _logGasMetrics(
-        uint256[] memory gasUsedArray,
-        uint256 totalGasUsed,
-        uint256 msgValue,
-        uint256 successfulRuns,
-        bytes memory options
-    ) internal pure {
-        uint256 averageGas = totalGasUsed / successfulRuns;
-        uint256 medianGas = _calculateMedian(gasUsedArray, successfulRuns);
-        uint256 maximumGas = _calculateMaximum(gasUsedArray, successfulRuns);
-        uint256 minimumGas = _calculateMinimum(gasUsedArray, successfulRuns);
+    /// @notice Logs aggregated gas metrics for all payloads.
+    function _logAggregatedMetrics(GasMetrics[] memory metrics) internal pure {
+        uint256 totalAverageGas = 0;
+        uint256 overallMinGas = type(uint256).max;
+        uint256 overallMaxGas = 0;
+        uint256 totalSuccessfulRuns = 0;
 
-        console.log("Gas Usage Metrics:");
-        console.log("Average Gas Used:", averageGas);
-        console.log("Median Gas Used:", medianGas);
-        console.log("Maximum Gas Used:", maximumGas);
-        console.log("Minimum Gas Used:", minimumGas);
-        console.log("Total msg.value sent:", msgValue);
-        console.log("Successful Runs:", successfulRuns);
-        console.log("Estimated Execution Options:");
-        console.logBytes(options);
+        for (uint256 i = 0; i < metrics.length; i++) {
+            GasMetrics memory metric = metrics[i];
+            if (metric.successfulRuns == 0) {
+                continue;
+            }
+            // console.log("Gas Usage Metrics for Payload Index:", i);
+            // console.log("Average Gas Used:", metric.averageGas);
+            // // console.log("Median Gas Used:", metric.medianGas);
+            // // console.log("Maximum Gas Used:", metric.maxGas);
+            // // console.log("Minimum Gas Used:", metric.minGas);
+            // // console.log("Total msg.value sent:", metric.totalMsgValue);
+            // console.log("Successful Runs:", metric.successfulRuns);
+            // console.log("------");
+
+            totalAverageGas += metric.averageGas;
+            if (metric.minGas < overallMinGas) {
+                overallMinGas = metric.minGas;
+            }
+            if (metric.maxGas > overallMaxGas) {
+                overallMaxGas = metric.maxGas;
+            }
+            totalSuccessfulRuns += metric.successfulRuns;
+        }
+
+        if (totalSuccessfulRuns > 0) {
+            uint256 overallAverageGas = totalAverageGas / metrics.length;
+            console.log("Aggregated Gas Metrics Across All Payloads:");
+            console.log("Overall Average Gas Used:", overallAverageGas);
+            console.log("Overall Minimum Gas Used:", overallMinGas);
+            console.log("Overall Maximum Gas Used:", overallMaxGas);
+        } else {
+            console.log("No successful runs to aggregate metrics.");
+        }
     }
 
     /// @notice Calculates the median of an array.
@@ -241,38 +237,36 @@ contract GasProfilerScript is Script {
 
     /// @notice Calculates the maximum of an array.
     function _calculateMaximum(uint256[] memory array, uint256 length) internal pure returns (uint256) {
-        _sortArray(array, length);
-        return array[length - 1];
+        uint256 max = 0;
+        for (uint256 i = 0; i < length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+        return max;
     }
 
     /// @notice Calculates the minimum of an array.
     function _calculateMinimum(uint256[] memory array, uint256 length) internal pure returns (uint256) {
-        _sortArray(array, length);
-        return array[0];
+        uint256 min = type(uint256).max;
+        for (uint256 i = 0; i < length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+        return min;
     }
 
-    /// @notice Sorts an array in ascending order.
+    /// @notice Sorts an array in ascending order using Insertion Sort.
     function _sortArray(uint256[] memory array, uint256 length) internal pure {
         for (uint256 i = 1; i < length; i++) {
             uint256 key = array[i];
-            uint256 j = i - 1;
-            while (j >= 0 && array[j] > key) {
-                array[j + 1] = array[j];
+            uint256 j = i;
+            while (j > 0 && array[j - 1] > key) {
+                array[j] = array[j - 1];
                 j--;
             }
-            array[j + 1] = key;
+            array[j] = key;
         }
-    }
-
-    /// @notice Extracts the function selector from the calldata.
-    /// @param callData The calldata sent with the call.
-    /// @return The function selector (first 4 bytes).
-    function _getFunctionSelector(bytes memory callData) internal pure returns (bytes4) {
-        require(callData.length >= 4, "Invalid calldata");
-        bytes4 selector;
-        assembly {
-            selector := mload(add(callData, 32))
-        }
-        return selector;
     }
 }
