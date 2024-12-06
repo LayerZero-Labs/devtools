@@ -1,39 +1,38 @@
-import { WireEvm, AptosOFTMetadata } from '../types'
+import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../types'
 import { diffPrinter } from '../utils'
-import { PopulatedTransaction, Contract } from 'ethers'
+import { Contract } from 'ethers'
+
 /**
  * Sets peer information for connections to wire.
  */
 export async function createSetPeerTransactions(
-    wireFactories: WireEvm[],
+    eidDataMapping: ContractMetadataMapping,
     aptosOft: AptosOFTMetadata
-): Promise<PopulatedTransaction[]> {
-    const setPeerTxPool = []
+): Promise<EidTxMap> {
+    const txTypePool: EidTxMap = {}
 
-    for (const wireFactory of wireFactories) {
-        const contract = wireFactory.contract
-        const evmAddress = wireFactory.evmAddress
-        const eid = wireFactory.fromEid
+    for (const [eid, { contract, evmAddress }] of Object.entries(eidDataMapping)) {
+        const { eid: aptosEid, aptosAddress } = aptosOft
 
-        const aptosEid = aptosOft.eid
-        const aptosAddress = aptosOft.aptosAddress
+        const currentPeer = await getPeer(contract, aptosEid)
 
-        const peer = await getPeer(contract, aptosEid)
-
-        if (peer === aptosAddress) {
+        if (currentPeer === aptosAddress) {
             console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${evmAddress} \x1b[0m`)
-            setPeerTxPool.push({ data: '', from: '', to: '' })
             continue
         }
 
-        diffPrinter(`Setting Peer on ${eid}`, { peer }, { peer: aptosAddress })
+        diffPrinter(`Setting Peer on ${eid}`, { peer: currentPeer }, { peer: aptosAddress })
 
         const tx = await contract.populateTransaction.setPeer(aptosEid, aptosAddress)
 
-        setPeerTxPool.push(tx)
+        if (!txTypePool[eid]) {
+            txTypePool[eid] = []
+        }
+
+        txTypePool[eid].push(tx)
     }
 
-    return setPeerTxPool
+    return txTypePool
 }
 
 export async function getPeer(contract: Contract, eid: number) {

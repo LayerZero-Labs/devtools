@@ -52,14 +52,19 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
+        'eth-testnet': {
+            eid: EndpointId.ETHEREUM_V2_TESTNET,
+            url: process.env.RPC_URL_ETH_SANDBOX || 'http://127.0.0.1:8501',
+            accounts,
+        },
         'bsc-testnet': {
             eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BSC_TESTNET || 'http://127.0.0.1:8502',
+            url: process.env.RPC_URL_BSC_SANDBOX || 'http://127.0.0.1:8502',
             accounts,
         },
         'aptos-testnet': {
             eid: EndpointId.APTOS_V2_TESTNET,
-            url: process.env.RPC_URL_APTOS_TESTNET || 'https://fullnode.testnet.aptoslabs.com/',
+            url: process.env.RPC_URL_APTOS_SANDBOX || 'http://127.0.0.1:8080',
             accounts,
         },
     },

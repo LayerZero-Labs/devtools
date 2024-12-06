@@ -20,6 +20,12 @@ const bscOAppConfig: OAppEdgeConfig = {
             gas: 200000, // gas limit in wei for EndpointV2.lzCompose
             value: 0, // msg.value in wei for EndpointV2.lzCompose
         },
+        {
+            msgType: 1,
+            optionType: ExecutorOptionType.NATIVE_DROP,
+            amount: 0, // amount of native gas token in wei to drop to receiver address
+            receiver: '0x0000000000000000000000000000000000000000',
+        },
     ],
     sendLibrary: '0x0',
     receiveLibraryConfig: {
