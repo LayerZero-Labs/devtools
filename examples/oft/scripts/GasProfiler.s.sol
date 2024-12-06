@@ -5,10 +5,13 @@ pragma solidity ^0.8.0;
 /// @notice Profiles gas usage for LayerZero's `lzReceive` and `lzCompose` methods over multiple runs.
 import "forge-std/Script.sol";
 import "forge-std/console.sol";
+
 import { ILayerZeroEndpointV2 } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol";
 import { ILayerZeroReceiver, Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol";
 import { ILayerZeroComposer } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol";
 import { GUID } from "@layerzerolabs/lz-evm-protocol-v2/contracts/libs/GUID.sol";
+
+import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
 /// @dev Encapsulates test parameters for gas profiling.
 struct TestParams {
@@ -30,6 +33,7 @@ struct TestParams {
 
 /// @notice Script contract for gas profiling LayerZero's `lzReceive` and `lzCompose` methods.
 contract GasProfilerScript is Script {
+    using OptionsBuilder for bytes;
     ILayerZeroEndpointV2 public endpoint;
 
     /// @notice Profiles the gas usage of `lzReceive`.
@@ -56,17 +60,19 @@ contract GasProfilerScript is Script {
         _initializeEndpoint(endpointAddress);
         console.log("Starting gas profiling for lzReceive...");
 
+        vm.createSelectFork(rpcUrl);
+
         TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
+        uint64 nextNonce = ILayerZeroReceiver(receiver).nextNonce(params.srcEid, params.sender);
 
         _profileGasUsage(
-            rpcUrl,
             params,
             receiver,
             abi.encodeWithSelector(
                 ILayerZeroReceiver(receiver).lzReceive.selector,
-                Origin(params.srcEid, params.sender, 1),
+                Origin(params.srcEid, params.sender, nextNonce),
                 GUID.generate(
-                    1,
+                    nextNonce,
                     params.srcEid,
                     address(uint160(uint256(params.sender))),
                     params.dstEid,
@@ -105,17 +111,19 @@ contract GasProfilerScript is Script {
         _initializeEndpoint(endpointAddress);
         console.log("Starting gas profiling for lzCompose...");
 
+        vm.createSelectFork(rpcUrl);
+
         TestParams memory params = _createTestParams(srcEid, sender, dstEid, receiver, payload, msgValue, numOfRuns);
+        uint64 nextNonce = ILayerZeroReceiver(receiver).nextNonce(params.srcEid, params.sender);
 
         _profileGasUsage(
-            rpcUrl,
             params,
             composer,
             abi.encodeWithSelector(
                 ILayerZeroComposer(composer).lzCompose.selector,
                 params.receiver,
                 GUID.generate(
-                    1,
+                    nextNonce,
                     params.srcEid,
                     address(uint160(uint256(params.sender))),
                     params.dstEid,
@@ -157,25 +165,22 @@ contract GasProfilerScript is Script {
     }
 
     /// @notice Profiles gas usage of a function.
-    function _profileGasUsage(
-        string memory rpcUrl,
-        TestParams memory params,
-        address caller,
-        bytes memory callParams
-    ) internal {
+    function _profileGasUsage(TestParams memory params, address caller, bytes memory callParams) internal {
         uint256[] memory gasUsedArray = new uint256[](params.numOfRuns);
         uint256 totalGasUsed = 0;
         uint256 successfulRuns = 0;
 
-        for (uint256 i = 0; i < params.numOfRuns; i++) {
-            vm.createSelectFork(rpcUrl);
-            vm.deal(address(endpoint), 100 ether);
-            vm.startPrank(address(endpoint));
+        vm.deal(address(endpoint), 100 ether);
+
+        uint256 snapshotId = vm.snapshot();
+        for (uint32 i = 0; i < params.numOfRuns; i++) {
+            vm.revertTo(snapshotId);
+
+            vm.prank(address(endpoint));
 
             (bool success, ) = caller.call{ value: params.msgValue }(callParams);
-            uint64 gasUsed = vm.lastCallGas().gasTotalUsed;
 
-            vm.stopPrank();
+            uint64 gasUsed = vm.lastCallGas().gasTotalUsed;
 
             if (success) {
                 gasUsedArray[successfulRuns] = gasUsed;
@@ -184,11 +189,30 @@ contract GasProfilerScript is Script {
             }
         }
 
-        _logGasMetrics(gasUsedArray, totalGasUsed, successfulRuns);
+        uint256 averageGas = totalGasUsed / successfulRuns;
+
+        // Extract the function selector from callParams
+        bytes4 functionSelector = _getFunctionSelector(callParams);
+
+        // Dynamically set options based on the last call
+        bytes memory _options;
+        if (functionSelector == ILayerZeroComposer.lzCompose.selector) {
+            _options = OptionsBuilder.newOptions().addExecutorLzComposeOption(0, uint128(averageGas), uint128(params.msgValue));
+        } else {
+            _options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(uint128(averageGas), uint128(params.msgValue));
+        }
+
+        _logGasMetrics(gasUsedArray, totalGasUsed, params.msgValue, successfulRuns, _options);
     }
 
     /// @notice Logs gas usage metrics.
-    function _logGasMetrics(uint256[] memory gasUsedArray, uint256 totalGasUsed, uint256 successfulRuns) internal view {
+    function _logGasMetrics(
+        uint256[] memory gasUsedArray,
+        uint256 totalGasUsed,
+        uint256 msgValue,
+        uint256 successfulRuns,
+        bytes memory options
+    ) internal pure {
         uint256 averageGas = totalGasUsed / successfulRuns;
         uint256 medianGas = _calculateMedian(gasUsedArray, successfulRuns);
         uint256 maximumGas = _calculateMaximum(gasUsedArray, successfulRuns);
@@ -199,7 +223,10 @@ contract GasProfilerScript is Script {
         console.log("Median Gas Used:", medianGas);
         console.log("Maximum Gas Used:", maximumGas);
         console.log("Minimum Gas Used:", minimumGas);
+        console.log("Total msg.value sent:", msgValue);
         console.log("Successful Runs:", successfulRuns);
+        console.log("Estimated Execution Options:");
+        console.logBytes(options);
     }
 
     /// @notice Calculates the median of an array.
@@ -235,5 +262,17 @@ contract GasProfilerScript is Script {
             }
             array[j + 1] = key;
         }
+    }
+
+    /// @notice Extracts the function selector from the calldata.
+    /// @param callData The calldata sent with the call.
+    /// @return The function selector (first 4 bytes).
+    function _getFunctionSelector(bytes memory callData) internal pure returns (bytes4) {
+        require(callData.length >= 4, "Invalid calldata");
+        bytes4 selector;
+        assembly {
+            selector := mload(add(callData, 32))
+        }
+        return selector;
     }
 }
