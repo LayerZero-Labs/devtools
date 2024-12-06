@@ -6,7 +6,7 @@ aptos key generate --output-file my_key.pub
 ```
 Then initialize the aptos cli and connect to the aptos sandbox by running the following command:
 ```
-aptos init --network=custom --rest-url=http://localhost:8080/v1 --faucet-url=http://localhost:8081 --private-key=<your-private-key>
+aptos init --network=testnet --private-key=<your-private-key>
 ```
 Then you can verify that you are connected to the aptos sandbox and view your account informationby running the following command:
 ```
