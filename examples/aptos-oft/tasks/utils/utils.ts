@@ -244,13 +244,12 @@ export function diffPrinter(logObject: string, from: object, to: object) {
 
     // Print the table
     const orangeLine = '\x1b[33m' + ` ${'-'.repeat(tableWidth - 2)} ` + '\x1b[0m'
-    console.log('\n', logObject)
+    console.log(logObject)
     console.log(orangeLine)
     console.log(` ${header} `)
     console.log(` ${separator} `)
     rows.forEach((row) => console.log(` ${row} `))
-    console.log(orangeLine)
-    console.log('\n')
+    console.log(orangeLine, '\n')
 }
 
 export function oldDiffPrinter(logObject: string, from: object, to: object) {
