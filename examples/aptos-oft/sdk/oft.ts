@@ -5,6 +5,8 @@ import {
     Ed25519PrivateKey,
     InputGenerateTransactionPayloadData,
     SimpleTransaction,
+    PrivateKey,
+    PrivateKeyVariants,
 } from '@aptos-labs/ts-sdk'
 import { hexAddrToAptosBytesAddr } from './utils'
 
@@ -19,9 +21,9 @@ export class OFT {
         this.aptos = aptos
         this.oft_address = oft_address
         this.account_address = account_address
-        this.private_key = private_key
+        this.private_key = PrivateKey.formatPrivateKey(private_key, PrivateKeyVariants.Ed25519)
         this.signer_account = Account.fromPrivateKey({
-            privateKey: new Ed25519PrivateKey(private_key),
+            privateKey: new Ed25519PrivateKey(this.private_key),
             address: account_address,
         })
     }
@@ -81,7 +83,7 @@ export class OFT {
             payload: {
                 function: `${this.oft_address}::oft::quote_send`,
                 functionArguments: [
-                    this.account_address,
+                    userSender,
                     dst_eid,
                     to,
                     amount_ld,
@@ -93,9 +95,7 @@ export class OFT {
                 ],
             },
         })
-        console.log('oft::quote_send result:')
-        console.dir(result, { depth: null })
-        return [result[0][0] as number, result[0][1] as number]
+        return [result[0] as number, result[1] as number]
     }
 
     // Calls send_withdraw from the oft fungible asset module (oft.move)

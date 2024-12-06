@@ -1,20 +1,15 @@
 import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
 import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { Aptos, InputGenerateTransactionPayloadData, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import path from 'path'
 import * as fs from 'fs'
 import { OFT } from '../../sdk/oft'
 import * as readline from 'readline'
 
-export const networkToIndexerMapping = {
-    [Network.CUSTOM]: 'http://127.0.0.1:8090/v1',
-}
-
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
-
     const eidNetworkNameMapping: Record<number, string> = {}
     for (const [networkName, networkConfig] of Object.entries(networks)) {
         if (_value == '') {
@@ -23,7 +18,6 @@ export function createEidToNetworkMapping(_value: string = ''): Record<number, s
             eidNetworkNameMapping[networkConfig.eid] = networkConfig[_value]
         }
     }
-
     return eidNetworkNameMapping
 }
 
@@ -215,7 +209,7 @@ export function diffPrinter(logObject: string, from: object, to: object) {
 
     const allKeys = Array.from(new Set([...Object.keys(flatFrom), ...Object.keys(flatTo)]))
 
-    const header = `| ${pad('Key', keyWidth)} | ${pad('From', valueWidth)} | ${pad('To', valueWidth)} |`
+    const header = `| ${pad('Key', keyWidth)} | ${pad('Current', valueWidth)} | ${pad('New', valueWidth)} |`
     const separator = `|-${'-'.repeat(keyWidth)}-|-` + `${'-'.repeat(valueWidth)}-|-` + `${'-'.repeat(valueWidth)}-|`
 
     const rows = allKeys.flatMap((key) => {

@@ -65,9 +65,7 @@ export async function setPeers(oft: OFT, connections: OAppOmniGraphHardhat['conn
         const currentPeerHex = await getCurrentPeer(oft, entry.to.eid as EndpointId)
 
         if (currentPeerHex === newPeer) {
-            console.log(
-                `✅ Peer already set for pathway Aptos -> ${entry.to.contractName} address: ${newPeer} on ${networkName} \n`
-            )
+            printAlreadySet('Peer', entry.to.contractName, getNetworkForChainId(entry.to.eid))
         } else {
             diffPrinter(
                 `Set peer from Aptos OFT -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
@@ -103,9 +101,7 @@ export async function setEnforcedOptions(oft: OFT, connections: OAppOmniGraphHar
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.enforcedOptions) {
-            console.log(
-                `No enforced options specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Enforced options', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
 
@@ -154,9 +150,7 @@ async function createTxFromOptions(options: Options[], eid: number, contractName
     const currentOptionsHex = ensureOptionsCompatible(await oft.getEnforcedOptions(eid, msgType))
 
     if (newOptions.toHex() === currentOptionsHex) {
-        console.log(
-            `✅ Enforced options already set or pathway Aptos -> ${contractName} on ${getNetworkForChainId(eid).chainName}\n`
-        )
+        printAlreadySet('Enforced options', contractName, getNetworkForChainId(eid))
         return null
     } else {
         decodeOptionsAndPrintDiff(contractName, eid, currentOptionsHex, newOptions.toHex(), msgType)
@@ -225,9 +219,7 @@ export async function setReceiveLibraryTimeout(
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryTimeoutConfig) {
-            console.log(
-                `No receive library timeout specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Receive library timeout', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         console.log('attempting to fetched the recieve lib timeout')
@@ -239,9 +231,7 @@ export async function setReceiveLibraryTimeout(
             `entry.config.receiveLibraryTimeoutConfig.expiry: ${entry.config.receiveLibraryTimeoutConfig.expiry} expiryType: ${typeof entry.config.receiveLibraryTimeoutConfig.expiry}`
         )
         if (currentTimeout === entry.config.receiveLibraryTimeoutConfig.expiry) {
-            console.log(
-                `✅ Receive library timeout already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Receive library timeout', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -249,7 +239,7 @@ export async function setReceiveLibraryTimeout(
                 { timeout: currentTimeout },
                 { timeout: entry.config.receiveLibraryTimeoutConfig.expiry }
             )
-            const tx = await oft.setReceiveLibraryTimeoutPayload(
+            const tx = oft.setReceiveLibraryTimeoutPayload(
                 entry.to.eid,
                 entry.config.receiveLibraryTimeoutConfig.lib,
                 Number(entry.config.receiveLibraryTimeoutConfig.expiry)
@@ -269,17 +259,13 @@ export async function setReceiveLibrary(
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
-            console.log(
-                `No receive library specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Receive library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
 
         if (currentReceiveLibrary === entry.config.receiveLibraryConfig.receiveLibrary) {
-            console.log(
-                `✅ Receive library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Receive library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -303,17 +289,13 @@ export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: 
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendLibrary) {
-            console.log(
-                `No send library specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Send library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
 
         if (currentSendLibrary === entry.config.sendLibrary) {
-            console.log(
-                `✅ Send library already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Send library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -333,15 +315,11 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendConfig) {
-            console.log(
-                `No send config specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Send config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         if (!entry.config.sendConfig.ulnConfig) {
-            console.log(
-                `sendConfig.ulnConfig not found for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Send config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const newUlnConfig = createSerializableUlnConfig(entry.config.sendConfig.ulnConfig, entry.to, entry.from)
@@ -359,9 +337,7 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
         const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
-            console.log(
-                `✅ Send config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Send config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -381,15 +357,11 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.receiveConfig) {
-            console.log(
-                `No receive config specified for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Receive config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         if (!entry.config.receiveConfig.ulnConfig) {
-            console.log(
-                `receiveConfig.ulnConfig not found for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Receive config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const newUlnConfig = createSerializableUlnConfig(entry.config.receiveConfig.ulnConfig, entry.to, entry.from)
@@ -408,9 +380,7 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
         const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
-            console.log(
-                `✅ Receive config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Receive config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -439,9 +409,7 @@ export async function setExecutorConfig(
     const txs = []
     for (const entry of connections) {
         if (!entry.config?.sendConfig?.executorConfig) {
-            console.log(
-                `ExecutorConfig not found for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printNotSet('Executor config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const newExecutorConfig = createSerializableExecutorConfig(entry.config.sendConfig.executorConfig)
@@ -461,9 +429,7 @@ export async function setExecutorConfig(
         const newSerializedExecutorConfig = ExecutorConfig.serialize(entry.to.eid as EndpointId, newExecutorConfig)
 
         if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig))) {
-            console.log(
-                `✅ Executor config already set for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}\n`
-            )
+            printAlreadySet('Executor config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
@@ -490,4 +456,16 @@ function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig):
 
         executor_address: executorConfig.executor,
     }
+}
+
+function printAlreadySet(configObject: string, contractName: string, toNetwork: { chainName: string; env: string }) {
+    console.log(
+        `✅ ${configObject} already set or pathway Aptos -> ${contractName} on ${toNetwork.chainName}-${toNetwork.env}\n`
+    )
+}
+
+function printNotSet(configObject: string, contractName: string, toNetwork: { chainName: string; env: string }) {
+    console.log(
+        `No ${configObject} specified for pathway Aptos -> ${contractName} on ${toNetwork.chainName}-${toNetwork.env}\n`
+    )
 }

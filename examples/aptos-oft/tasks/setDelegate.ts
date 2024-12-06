@@ -1,23 +1,18 @@
 import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getDelegateFromLzConfig, networkToIndexerMapping, sendAllTxs } from './utils/utils'
+import { getAptosOftAddress, getDelegateFromLzConfig, sendAllTxs } from './utils/utils'
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate } from './utils/aptosOftConfigOps'
 
 async function main() {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-
-    const aptosConfig = new AptosConfig({
-        network: network,
-        fullnode: fullnode,
-        indexer: networkToIndexerMapping[network],
-        faucet: faucet,
-    })
+    const { account_address, private_key, network } = await parseYaml()
+    const aptosConfig = new AptosConfig({ network: network })
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
     console.log(`\n🔧 Setting Aptos OFT Delegate`)
+    console.log(`\tFor Aptos OFT: ${aptosOftAddress}\n`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 

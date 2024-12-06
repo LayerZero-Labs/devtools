@@ -13,9 +13,8 @@
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@aptos-labs/ts-sdk": "^1.26.0",
+    "@aptos-labs/ts-sdk": "^1.33.1",
     "@layerzerolabs/lz-config-types": "^3.0.15",
     "@layerzerolabs/lz-definitions-v3": "npm:@layerzerolabs/lz-definitions@^3.0.19",
     "@layerzerolabs/lz-movevm-sdk-v2": "^3.0.15",

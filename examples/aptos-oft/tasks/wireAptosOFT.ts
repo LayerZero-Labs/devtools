@@ -1,21 +1,16 @@
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getConfigConnections, networkToIndexerMapping, sendAllTxs } from './utils/utils'
+import { getAptosOftAddress, getConfigConnections, sendAllTxs } from './utils/utils'
 import { getLzNetworkStage, getEidFromAptosNetwork, parseYaml } from './utils/aptosNetworkParser'
 import * as oftConfig from './utils/aptosOftConfigOps'
 import { Endpoint } from '../sdk/endpoint'
 import { getNamedAddresses } from './utils/config'
 
 async function main() {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network } = await parseYaml()
     console.log(`Using aptos network ${network}\n`)
 
-    const aptosConfig = new AptosConfig({
-        network: network,
-        fullnode: fullnode,
-        indexer: networkToIndexerMapping[network],
-        faucet: faucet,
-    })
+    const aptosConfig = new AptosConfig({ network: network })
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
@@ -23,8 +18,7 @@ async function main() {
     const endpointAddress = getEndpointAddressFromNamedAddresses(getNamedAddresses(lzNetworkStage))
 
     console.log(`\n🔧 Configuring Aptos OFT Contract`)
-    console.log(`   OFT Address: ${aptosOftAddress}`)
-    console.log(`   Endpoint Address: ${endpointAddress}\n`)
+    console.log(`\tOFT Address: ${aptosOftAddress}\n`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
     const endpoint = new Endpoint(aptos, endpointAddress)
