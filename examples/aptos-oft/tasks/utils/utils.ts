@@ -215,8 +215,13 @@ export function diffPrinter(logObject: string, from: object, to: object) {
 
     const allKeys = Array.from(new Set([...Object.keys(flatFrom), ...Object.keys(flatTo)]))
 
-    const header = `| ${pad('Key', keyWidth)} | ${pad('From', valueWidth)} | ${pad('To', valueWidth)} |`
-    const separator = `|-${'-'.repeat(keyWidth)}-|-` + `${'-'.repeat(valueWidth)}-|-` + `${'-'.repeat(valueWidth)}-|`
+    const orangeVertical = '\x1b[33m' + `|` + '\x1b[0m'
+
+    const header = `${orangeVertical} ${pad('Key', keyWidth)} | ${pad('From', valueWidth)} | ${pad('To', valueWidth)} ${orangeVertical}`
+    const separator =
+        `${orangeVertical}-${'-'.repeat(keyWidth)}-|-` +
+        `${'-'.repeat(valueWidth)}-|-` +
+        `${'-'.repeat(valueWidth)}-${orangeVertical}`
 
     const rows = allKeys.flatMap((key) => {
         const fromValue = flatFrom[key] !== undefined ? String(flatFrom[key]) : ''
@@ -232,7 +237,7 @@ export function diffPrinter(logObject: string, from: object, to: object) {
             const keyText = i === 0 ? pad(key, keyWidth) : pad('', keyWidth) // Only display key on the first row
             const fromText = pad(fromLines[i] || '', valueWidth)
             const toText = pad(toLines[i] || '', valueWidth)
-            rowLines.push(`| ${keyText} | ${fromText} | ${toText} |`)
+            rowLines.push(`${orangeVertical} ${keyText} | ${fromText} | ${toText} ${orangeVertical}`)
         }
         return rowLines
     })
