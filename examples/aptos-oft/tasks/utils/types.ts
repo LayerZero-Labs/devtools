@@ -1,8 +1,13 @@
-import { ethers } from 'ethers'
+import { ethers, PopulatedTransaction } from 'ethers'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
+export type TxTypes = 'setPeer' | 'setDelegate' | 'setEnforcedOptions'
+export type EidTxMap = Record<eid, [PopulatedTransaction]>
+export type eid = number
+export type address = string
+
 export type deploymentFile = {
-    address: string
+    address: address
     abi: []
     transactionHash: ''
     receipt: object
@@ -16,16 +21,21 @@ export type deploymentFile = {
     storageLayout: object
 }
 
-export type WireEvm = {
-    evmAddress: string
-    contract: ethers.Contract
-    fromEid: number
-    configAccount: OAppNodeConfig
-    configOapp: OAppEdgeConfig
-}
-
 export type AptosOFTMetadata = {
-    eid: number
+    eid: eid
     aptosAddress: string
     rpc: string
 }
+
+export type EidMetadata = {
+    evmAddress: address
+    contract: ethers.Contract
+    provider: ethers.providers.JsonRpcProvider
+    configAccount: OAppNodeConfig
+    configOapp: OAppEdgeConfig
+}
+//[TxTypes][eid] = PopulatedTransaction
+export type TxEidMapping = Record<TxTypes, EidTxMap>
+
+//[number][address] = EidMetadata
+export type EidMetadataMapping = Record<eid, EidMetadata>
