@@ -16,7 +16,7 @@ if (!process.env.PRIVATE_KEY) {
     process.exit(1)
 }
 
-const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
+const EID_APTOS = EndpointId.APTOS_V2_TESTNET
 export const chainDataMapper = {}
 
 /**
@@ -24,6 +24,7 @@ export const chainDataMapper = {}
  */
 async function main() {
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
+
     const accountConfigs = getAccountConfig()
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
