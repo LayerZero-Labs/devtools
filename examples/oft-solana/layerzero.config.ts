@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
+import { ExecutorOptionType  } from '@layerzerolabs/lz-v2-utilities';
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
