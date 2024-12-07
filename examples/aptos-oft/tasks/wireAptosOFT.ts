@@ -32,7 +32,7 @@ async function main() {
     const setEnforcedOptionsPayloads = await oftConfig.setEnforcedOptions(oft, connections)
     const setSendLibraryPayloads = await oftConfig.setSendLibrary(oft, endpoint, connections)
     const setReceiveLibraryPayloads = await oftConfig.setReceiveLibrary(oft, endpoint, connections)
-    // const setReceiveLibraryTimeoutPayloads = await oftConfig.setReceiveLibraryTimeout(oft, endpoint, connections)
+    const setReceiveLibraryTimeoutPayloads = await oftConfig.setReceiveLibraryTimeout(oft, endpoint, connections)
     const setSendConfigPayloads = await oftConfig.setSendConfig(oft, endpoint, connections)
     const setExecutorConfigPayloads = await oftConfig.setExecutorConfig(oft, endpoint, connections)
     const setReceiveConfigPayloads = await oftConfig.setReceiveConfig(oft, endpoint, connections)
@@ -42,7 +42,7 @@ async function main() {
         ...setEnforcedOptionsPayloads,
         ...setSendLibraryPayloads,
         ...setReceiveLibraryPayloads,
-        // ...setReceiveLibraryTimeoutPayloads,
+        ...setReceiveLibraryTimeoutPayloads,
         ...setSendConfigPayloads,
         ...setExecutorConfigPayloads,
         ...setReceiveConfigPayloads,

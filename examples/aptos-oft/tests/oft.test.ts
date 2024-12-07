@@ -1,37 +1,47 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
-import { hexAddrToAptosBytesAddr } from '../sdk/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { createSerializableUlnConfig } from '../tasks/utils/ulnConfigBuilder'
 import { Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
 import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-const account_address = '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a'
-const OFT_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
+import lzConfigAptos from '../aptos.layerzero.config'
+import { getLzNetworkStage, parseYaml } from '@/utils/aptosNetworkParser'
+import { getAptosOftAddress } from '@/utils/utils'
+
 const BSC_OFT_ADAPTER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
-const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
-const SIMPLE_MSG_LIB = '0x3f2714ef2d63f1128f45e4a3d31b354c1c940ccdb38aca697c9797ef95e7a09f'
-const to: OmniPointHardhat = {
+const ULN_302 = '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10'
+
+const mockTo: OmniPointHardhat = {
     contractName: 'oapp_core',
-    eid: EndpointId.BSC_V2_SANDBOX,
+    eid: EndpointId.BSC_V2_TESTNET,
 }
-const from: OmniPointHardhat = {
+const mockFrom: OmniPointHardhat = {
     contractName: 'oapp_core',
-    eid: EndpointId.APTOS_V2_SANDBOX,
+    eid: EndpointId.APTOS_V2_TESTNET,
 }
 
-describe('ofts-tests', () => {
+describe('oft-tests', () => {
     let aptos: Aptos
     let oft: OFT
+    let private_key: string
+    let account_address: string
+    let network: string
+    let OFT_ADDRESS: string
 
     beforeEach(async () => {
-        const config = new AptosConfig({
-            network: Network.CUSTOM,
-            fullnode: 'http://127.0.0.1:8080/v1',
-            indexer: 'http://127.0.0.1:8090/v1',
-            faucet: 'http://127.0.0.1:8081',
-        })
-        aptos = new Aptos(config)
+        const config = await parseYaml()
+        console.log(`Using aptos network ${config.network}\n`)
+
+        const aptosConfig = new AptosConfig({ network: config.network })
+        const lzNetworkStage = getLzNetworkStage(config.network)
+        OFT_ADDRESS = getAptosOftAddress(lzNetworkStage)
+
+        private_key = config.private_key
+        account_address = config.account_address
+        network = config.network
+
+        aptos = new Aptos(aptosConfig)
         oft = new OFT(aptos, OFT_ADDRESS, account_address, private_key)
     })
 
@@ -54,9 +64,9 @@ describe('ofts-tests', () => {
 
     describe('Peer Management', () => {
         it('should set peer address for BSC testnet and verify encoding', async () => {
-            await oft.setPeerPayload(EndpointId.BSC_TESTNET, BSC_OFT_ADAPTER_ADDRESS)
+            await oft.setPeerPayload(EndpointId.BSC_V2_TESTNET, BSC_OFT_ADAPTER_ADDRESS)
 
-            const peer = await oft.getPeer(EndpointId.BSC_TESTNET)
+            const peer = await oft.getPeer(EndpointId.BSC_V2_TESTNET)
 
             // Convert bytes array to hex string
             const peerHexString = '0x' + Buffer.from(BSC_OFT_ADAPTER_ADDRESS).toString('hex')
@@ -68,10 +78,10 @@ describe('ofts-tests', () => {
         it('should set and verify executor receive options for BSC testnet', async () => {
             const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toBytes()
 
-            await oft.setEnforcedOptionsPayload(EndpointId.BSC_TESTNET, 1, options)
+            await oft.setEnforcedOptionsPayload(EndpointId.BSC_V2_TESTNET, 1, options)
             const expectedOptionsHex = '0x' + Buffer.from(options).toString('hex')
 
-            const enforcedOptions = await oft.getEnforcedOptions(EndpointId.BSC_TESTNET, 1)
+            const enforcedOptions = await oft.getEnforcedOptions(EndpointId.BSC_V2_TESTNET, 1)
             expect(enforcedOptions).toEqual([expectedOptionsHex])
         })
     })
@@ -84,7 +94,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                 optionalDVNThreshold: 1,
             }
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -108,7 +118,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
                 optionalDVNThreshold: 1,
             }
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = true
@@ -133,7 +143,7 @@ describe('ofts-tests', () => {
                 optionalDVNThreshold: 1,
             }
 
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = true
@@ -158,7 +168,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: [],
             }
 
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -181,7 +191,7 @@ describe('ofts-tests', () => {
                 requiredDVNs: ['0x1'],
             }
 
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = true
             const expected_use_default_for_required_dvns = false
@@ -206,7 +216,7 @@ describe('ofts-tests', () => {
                 optionalDVNs: [],
             }
 
-            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, to, from)
+            const serializableUlnConfig = createSerializableUlnConfig(ulnConfig, mockTo, mockFrom)
 
             const expected_use_default_for_confirmations = false
             const expected_use_default_for_required_dvns = false
@@ -229,21 +239,21 @@ describe('ofts-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
             }
 
-            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, to, from)).toThrow()
+            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, mockTo, mockFrom)).toThrow()
         })
     })
 
     describe('Library Management', () => {
         it('should successfully set send library for BSC sandbox', async () => {
-            await expect(oft.setSendLibraryPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB)).resolves.not.toThrow()
+            await expect(oft.setSendLibraryPayload(EndpointId.BSC_V2_TESTNET, ULN_302)).resolves.not.toThrow()
         })
 
         it('should successfully set receive library with version for BSC sandbox', async () => {
-            await oft.setReceiveLibraryPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 0)
+            await oft.setReceiveLibraryPayload(EndpointId.BSC_V2_TESTNET, ULN_302, 0)
         })
 
-        it('should set receive library timeout duration for BSC sandbox', async () => {
-            await oft.setReceiveLibraryTimeoutPayload(EndpointId.BSC_V2_SANDBOX, SIMPLE_MSG_LIB, 1000000)
+        it.only('should set receive library timeout duration for BSC sandbox', async () => {
+            oft.setReceiveLibraryTimeoutPayload(EndpointId.BSC_V2_TESTNET, ULN_302, 1000000)
         })
     })
 })

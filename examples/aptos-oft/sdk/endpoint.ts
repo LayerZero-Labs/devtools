@@ -17,24 +17,24 @@ export class Endpoint {
         })
     }
 
-    async getSendLibrary(oftAddress: string, dstEid: number) {
+    async getSendLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.endpoint_address}::endpoint::get_effective_send_library`,
                 functionArguments: [oftAddress, dstEid],
             },
         })
-        return result[0]
+        return [result[0], result[1]]
     }
 
-    async getReceiveLibrary(oftAddress: string, dstEid: number) {
+    async getReceiveLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
         const result = await this.aptos.view({
             payload: {
                 function: `${this.endpoint_address}::endpoint::get_effective_receive_library`,
                 functionArguments: [oftAddress, dstEid],
             },
         })
-        return result[0]
+        return [result[0], result[1]]
     }
 
     async getDefaultReceiveLibraryTimeout(eid: EndpointId) {
@@ -47,14 +47,19 @@ export class Endpoint {
     }
 
     async getReceiveLibraryTimeout(oftAddress: string, dstEid: number) {
-        console.log(`oftAddress: ${oftAddress} dstEid: ${dstEid}`)
-        const result = await this.aptos.view({
-            payload: {
-                function: `${this.endpoint_address}::endpoint::get_receive_library_timeout`,
-                functionArguments: [oftAddress, dstEid],
-            },
-        })
-        return result[0]
+        try {
+            const result = await this.aptos.view({
+                payload: {
+                    function: `${this.endpoint_address}::endpoint::get_receive_library_timeout`,
+                    functionArguments: [oftAddress, dstEid],
+                },
+            })
+            return result[0]
+        } catch (error) {
+            // if the timeout is not set, it will throw a VM error, so we should return and impossible value
+            // to always produce a diff when setting the timeout
+            return -1
+        }
     }
 
     async getDefaultReceiveLibrary(eid: EndpointId) {

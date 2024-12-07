@@ -222,21 +222,16 @@ export async function setReceiveLibraryTimeout(
             printNotSet('Receive library timeout', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
-        console.log('attempting to fetched the recieve lib timeout')
-        console.log(`oftAddress: ${oft.oft_address}`)
-        console.log(`entry.to.eid: ${entry.to.eid}`)
         const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, entry.to.eid)
-        console.log(`currentTimeout: ${currentTimeout} currentTimeoutType: ${typeof currentTimeout}`)
-        console.log(
-            `entry.config.receiveLibraryTimeoutConfig.expiry: ${entry.config.receiveLibraryTimeoutConfig.expiry} expiryType: ${typeof entry.config.receiveLibraryTimeoutConfig.expiry}`
-        )
-        if (currentTimeout === entry.config.receiveLibraryTimeoutConfig.expiry) {
+        const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry)
+
+        if (currentTimeoutAsBigInt === BigInt(entry.config.receiveLibraryTimeoutConfig.expiry)) {
             printAlreadySet('Receive library timeout', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
             diffPrinter(
                 `Set receive library timeout for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
-                { timeout: currentTimeout },
+                { timeout: currentTimeoutAsBigInt },
                 { timeout: entry.config.receiveLibraryTimeoutConfig.expiry }
             )
             const tx = oft.setReceiveLibraryTimeoutPayload(
@@ -263,14 +258,20 @@ export async function setReceiveLibrary(
             continue
         }
         const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
+        let currentReceiveLibraryAddress = currentReceiveLibrary[0]
+        const isFallbackToDefault = currentReceiveLibrary[1]
 
-        if (currentReceiveLibrary === entry.config.receiveLibraryConfig.receiveLibrary) {
+        // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
+        if (currentReceiveLibraryAddress === entry.config.receiveLibraryConfig.receiveLibrary && !isFallbackToDefault) {
             printAlreadySet('Receive library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
+            if (isFallbackToDefault) {
+                currentReceiveLibraryAddress = 'default: ' + currentReceiveLibraryAddress
+            }
             diffPrinter(
                 `Set Receive Library for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
-                { address: currentReceiveLibrary },
+                { address: currentReceiveLibraryAddress },
                 { address: entry.config.receiveLibraryConfig.receiveLibrary }
             )
             const tx = await oft.setReceiveLibraryPayload(
@@ -293,11 +294,17 @@ export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: 
             continue
         }
         const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
+        let currentSendLibraryAddress = currentSendLibrary[0]
+        const isFallbackToDefault = currentSendLibrary[1]
 
-        if (currentSendLibrary === entry.config.sendLibrary) {
+        // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
+        if (currentSendLibraryAddress === entry.config.sendLibrary && !isFallbackToDefault) {
             printAlreadySet('Send library', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         } else {
+            if (isFallbackToDefault) {
+                currentSendLibraryAddress = 'default: ' + currentSendLibraryAddress
+            }
             diffPrinter(
                 `Set Send Library for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
                 { address: currentSendLibrary },

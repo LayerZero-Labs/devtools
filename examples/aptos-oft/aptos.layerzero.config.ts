@@ -1,18 +1,19 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
-import { bscConfig, ethConfig } from './evmOAppConfig'
+import { bscConfig } from './evmOAppConfig'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-const ethereumContract: OmniPointHardhat = {
-    eid: EndpointId.ETHEREUM_V2_TESTNET,
-    contractName: 'MyOFT',
-}
+// const ethereumContract: OmniPointHardhat = {
+//     eid: EndpointId.ETHEREUM_TESTNET,
+//     contractName: 'MyOFT',
+// }
 
 const bscContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
     contractName: 'MyOFT',
 }
+
 const aptosContract: OmniPointHardhat = {
     eid: EndpointId.APTOS_V2_TESTNET,
     contractName: 'oft',
@@ -20,10 +21,10 @@ const aptosContract: OmniPointHardhat = {
 
 const config: OAppOmniGraphHardhat = {
     contracts: [
-        {
-            contract: ethereumContract,
-            config: ethConfig.accountConfig,
-        },
+        // {
+        //     contract: ethereumContract,
+        //     config: ethConfig.accountConfig,
+        // },
         {
             contract: bscContract,
             config: bscConfig.accountConfig,
@@ -71,7 +72,7 @@ const config: OAppOmniGraphHardhat = {
                 // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on from
                 receiveLibraryTimeoutConfig: {
                     lib: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
-                    expiry: BigInt(6),
+                    expiry: BigInt(696969669),
                 },
                 sendConfig: {
                     executorConfig: {
@@ -115,11 +116,11 @@ const config: OAppOmniGraphHardhat = {
             to: aptosContract,
             config: bscConfig.oappConfig,
         },
-        {
-            from: ethereumContract,
-            to: aptosContract,
-            config: ethConfig.oappConfig,
-        },
+        // {
+        //     from: ethereumContract,
+        //     to: aptosContract,
+        //     config: ethConfig.oappConfig,
+        // },
     ],
 }
 
