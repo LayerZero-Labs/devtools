@@ -56,7 +56,6 @@ struct GasMetrics {
 }
 
 /// @title GasProfilerScript
-/// @author Coinbase
 /// @notice Profiles gas usage for LayerZero's `lzReceive` and `lzCompose` methods over multiple runs,
 ///         and suggests an enforcedOption based on aggregated metrics.
 contract GasProfilerScript is Script {
