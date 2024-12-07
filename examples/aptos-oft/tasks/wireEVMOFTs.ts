@@ -2,14 +2,14 @@ import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
 import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData } from './utils/types'
-import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
+import { createSetPeerTransactions } from './wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
-// import { executeTransactions } from './utils/wire-evm/executeTransactions'
-// import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
-// import { createEnforcedOptionTransactions } from './utils/wire-evm/setEnforcedOptions'
+// import { executeTransactions } from './wire-evm/executeTransactions'
+// import { createSetDelegateTransactions } from './wire-evm/setDelegate'
+// import { createEnforcedOptionTransactions } from './wire-evm/setEnforcedOptions'
 
-import { simulateTransactions } from './utils/wire-evm/simulateTransactions'
+import { simulateTransactions } from './wire-evm/simulateTransactions'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
