@@ -1,13 +1,14 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 import { bscConfig } from './evmOAppConfig'
+import { ethConfig } from './evmOAppConfig'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-// const ethereumContract: OmniPointHardhat = {
-//     eid: EndpointId.ETHEREUM_TESTNET,
-//     contractName: 'MyOFT',
-// }
+const ethereumContract: OmniPointHardhat = {
+    eid: EndpointId.ETHEREUM_V2_TESTNET,
+    contractName: 'MyOFT',
+}
 
 const bscContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
@@ -21,10 +22,10 @@ const aptosContract: OmniPointHardhat = {
 
 const config: OAppOmniGraphHardhat = {
     contracts: [
-        // {
-        //     contract: ethereumContract,
-        //     config: ethConfig.accountConfig,
-        // },
+        {
+            contract: ethereumContract,
+            config: ethConfig.accountConfig,
+        },
         {
             contract: bscContract,
             config: bscConfig.accountConfig,
@@ -116,11 +117,11 @@ const config: OAppOmniGraphHardhat = {
             to: aptosContract,
             config: bscConfig.oappConfig,
         },
-        // {
-        //     from: ethereumContract,
-        //     to: aptosContract,
-        //     config: ethConfig.oappConfig,
-        // },
+        {
+            from: ethereumContract,
+            to: aptosContract,
+            config: ethConfig.oappConfig,
+        },
     ],
 }
 
