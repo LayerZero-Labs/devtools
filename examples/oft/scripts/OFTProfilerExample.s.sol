@@ -96,7 +96,7 @@ contract OFTProfilerExample is Script {
             })
         );
 
-        // Example Configuration for Optimism Network
+        // Example Configuration for Linea Network
         chainConfigs.push(
             ChainConfig({
                 rpcUrl: "https://rpc.linea.build",
@@ -158,22 +158,5 @@ contract OFTProfilerExample is Script {
         }
 
         return payloads;
-    }
-
-    /// @notice Generates a fuzzed amount for the OFT transfer within the range [1e12, 1e18].
-    /// @param index The index of the payload.
-    /// @return The fuzzed amount between 1e12 and 1e18.
-    function _fuzzAmount(uint256 index) internal pure returns (uint256) {
-        uint256 minAmount = 1e12; // Minimum fuzzed amount: 1,000,000,000,000 (1e12)
-        uint256 maxAmount = 1e18; // Maximum fuzzed amount: 1,000,000,000,000,000,000 (1e18)
-        uint256 range = maxAmount - minAmount + 1; // Total range of possible values
-
-        // Generate a pseudo-random number based on the index using keccak256
-        uint256 randomSeed = uint256(keccak256(abi.encodePacked(index)));
-
-        // Scale the pseudo-random number to fit within the desired range
-        uint256 fuzzedAmount = minAmount + (randomSeed % range);
-
-        return fuzzedAmount;
     }
 }
