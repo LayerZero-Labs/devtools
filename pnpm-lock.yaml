@@ -121,8 +121,8 @@ importers:
   examples/aptos-oft:
     devDependencies:
       '@aptos-labs/ts-sdk':
-        specifier: ^1.26.0
-        version: 1.33.0
+        specifier: ^1.33.1
+        version: 1.33.1
       '@layerzerolabs/lz-config-types':
         specifier: ^3.0.15
         version: 3.0.18(ethers@5.7.2)
@@ -1645,7 +1645,7 @@ importers:
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
         specifier: ~0.0.3
-        version: link:../test-devtools-solana
+        version: 0.0.4(@solana/web3.js@1.95.3)(fast-check@3.15.1)
       '@solana/web3.js':
         specifier: ~1.95.3
         version: 1.95.3
@@ -2225,7 +2225,7 @@ importers:
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
         specifier: ~0.0.3
-        version: link:../test-devtools-solana
+        version: 0.0.4(@solana/web3.js@1.95.3)(fast-check@3.15.1)
       '@layerzerolabs/ua-devtools':
         specifier: ~1.0.5
         version: link:../ua-devtools
@@ -2840,7 +2840,7 @@ importers:
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
         specifier: ~0.0.3
-        version: link:../test-devtools-solana
+        version: 0.0.4(@solana/web3.js@1.95.3)(fast-check@3.15.1)
       '@layerzerolabs/ua-devtools':
         specifier: ~1.0.5
         version: link:../ua-devtools
@@ -3739,6 +3739,26 @@ packages:
       poseidon-lite: 0.2.1
     transitivePeerDependencies:
       - debug
+    dev: false
+
+  /@aptos-labs/ts-sdk@1.33.1:
+    resolution: {integrity: sha512-d6nWtUI//fyEN8DeLjm3+ro87Ad6+IKwR9pCqfrs/Azahso1xR1Llxd/O6fj/m1DDsuDj/HAsCsy5TC/aKD6Eg==}
+    engines: {node: '>=11.0.0'}
+    dependencies:
+      '@aptos-labs/aptos-cli': 1.0.2
+      '@aptos-labs/aptos-client': 0.1.1
+      '@noble/curves': 1.7.0
+      '@noble/hashes': 1.6.1
+      '@scure/bip32': 1.6.0
+      '@scure/bip39': 1.5.0
+      eventemitter3: 5.0.1
+      form-data: 4.0.0
+      js-base64: 3.7.7
+      jwt-decode: 4.0.0
+      poseidon-lite: 0.2.1
+    transitivePeerDependencies:
+      - debug
+    dev: true
 
   /@aws-crypto/sha256-js@1.2.2:
     resolution: {integrity: sha512-Nr1QJIbW/afYYGzYvrF70LtaHrIRtd4TNAglX8BvlfxJLZ45SAmueIKYl5tWoNBPzp65ymXGFK0Bb1vZUpuc9g==}
@@ -6606,6 +6626,16 @@ packages:
       solidity-bytes-utils: 0.8.2
     dev: true
 
+  /@layerzerolabs/test-devtools-solana@0.0.4(@solana/web3.js@1.95.3)(fast-check@3.15.1):
+    resolution: {integrity: sha512-d7aWiKWBRfYOvAsT8uetHLVka4RXiPI5+0pHiEo7+FfWFF66nQnglLr1GTfPxCeTU5SLhJ0q/yyrYpfopaNlSg==}
+    peerDependencies:
+      '@solana/web3.js': ^1.95.8
+      fast-check: ^3.14.0
+    dependencies:
+      '@solana/web3.js': 1.95.3
+      fast-check: 3.15.1
+    dev: true
+
   /@layerzerolabs/toolbox-hardhat@0.6.0(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/bignumber@5.7.0)(@ethersproject/constants@5.7.0)(@ethersproject/providers@5.7.2)(@nomicfoundation/hardhat-ethers@3.0.5)(@nomiclabs/hardhat-ethers@2.2.3)(ethers@5.7.2)(hardhat-deploy@0.12.4)(hardhat@2.22.12)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-xoV4Dqw8uSW6PdoYJ+wYh40UVItDeXGJKkSusT3i3wrpVy0dkuLmkWbl4QJMVKJGLnTsd392VEjvfDzvvLbh5w==}
     peerDependencies:
@@ -8997,6 +9027,7 @@ packages:
   /abstract-leveldown@6.2.3:
     resolution: {integrity: sha512-BsLm5vFMRUrrLeCcRc+G0t2qOaTzpoJQLOubq2XM72eNpjF5UdU5o/5NvlNhx95XHcAvcl8OMXr4mlg/fRgUXQ==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       buffer: 5.7.1
       immediate: 3.3.0
@@ -9008,6 +9039,7 @@ packages:
   /abstract-leveldown@6.3.0:
     resolution: {integrity: sha512-TU5nlYgta8YrBMNpc9FwQzRbiXsj49gsALsXadbGHt9CROPzX5fB0rWDR5mtdpOOKa5XqRFpbj1QroPAoPzVjQ==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       buffer: 5.7.1
       immediate: 3.3.0
@@ -9754,7 +9786,7 @@ packages:
   /bs58check@4.0.0:
     resolution: {integrity: sha512-FsGDOnFg9aVI9erdriULkd/JjEWONV/lQE5aYziB5PoBsXRind56lh8doIZIc9X4HoxT5x4bLjMWN1/NB8Zp5g==}
     dependencies:
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.6.1
       bs58: 6.0.0
 
   /bser@2.1.1:
@@ -10621,6 +10653,7 @@ packages:
   /deferred-leveldown@5.3.0:
     resolution: {integrity: sha512-a59VOT+oDy7vtAbLRCZwWgxu2BaCfd5Hk7wxJd48ei7I+nsg8Orlb9CLG0PMZienk9BSUKgeAqkO2+Lw+1+Ukw==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       abstract-leveldown: 6.2.3
       inherits: 2.0.4
@@ -14419,6 +14452,7 @@ packages:
   /level-mem@5.0.1:
     resolution: {integrity: sha512-qd+qUJHXsGSFoHTziptAKXoLX87QjR7v2KMbqncDXPxQuCdsQlzmyX+gwrEHhlzn08vkf8TyipYyMmiC6Gobzg==}
     engines: {node: '>=6'}
+    deprecated: Superseded by memory-level (https://github.com/Level/community#faq)
     dependencies:
       level-packager: 5.1.1
       memdown: 5.1.0
@@ -14451,6 +14485,7 @@ packages:
   /levelup@4.4.0:
     resolution: {integrity: sha512-94++VFO3qN95cM/d6eBXvd894oJE0w3cInq9USsyQzzoJxmiYzPAocNcuGCPGGjoXqDVJcr3C1jzt1TSjyaiLQ==}
     engines: {node: '>=6'}
+    deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       deferred-leveldown: 5.3.0
       level-errors: 2.0.1
@@ -14757,6 +14792,7 @@ packages:
   /memdown@5.1.0:
     resolution: {integrity: sha512-B3J+UizMRAlEArDjWHTMmadet+UKwHd3UjMgGBkZcKAxAYVPS9o0Yeiha4qvz7iGiL2Sb3igUft6p7nbFWctpw==}
     engines: {node: '>=6'}
+    deprecated: Superseded by memory-level (https://github.com/Level/community#faq)
     dependencies:
       abstract-leveldown: 6.2.3
       functional-red-black-tree: 1.0.1
