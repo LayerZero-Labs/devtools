@@ -1,26 +1,22 @@
-import { WireEvm, AptosOFTMetadata } from '../types'
-import { diffPrinter } from '../utils'
-import { PopulatedTransaction, Contract, utils } from 'ethers'
+import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
+import { diffPrinter } from '../utils/utils'
+import { Contract, utils } from 'ethers'
+
 /**
  * Sets peer information for connections to wire.
  */
 export async function createSetDelegateTransactions(
-    wireFactories: WireEvm[],
+    eidDataMapping: ContractMetadataMapping,
     _aptosOft: AptosOFTMetadata
-): Promise<PopulatedTransaction[]> {
-    const setPeerTxPool = []
+): Promise<EidTxMap> {
+    const txTypePool: EidTxMap = {}
 
-    for (const wireFactory of wireFactories) {
-        const contract = wireFactory.contract
-        const evmAddress = wireFactory.evmAddress
-        const eid = wireFactory.fromEid
-
+    for (const [eid, { contract, evmAddress, configAccount }] of Object.entries(eidDataMapping)) {
         const fromDelegate = await getDelegate(contract, evmAddress)
-        const toDelegate = wireFactory.configAccount.delegate
+        const toDelegate = configAccount.delegate
 
         if (fromDelegate === toDelegate && fromDelegate !== '') {
             console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
-            setPeerTxPool.push({ data: '', from: '', to: '' })
             continue
         }
 
@@ -28,10 +24,14 @@ export async function createSetDelegateTransactions(
 
         const tx = await contract.populateTransaction.setDelegate(toDelegate)
 
-        setPeerTxPool.push(tx)
+        if (!txTypePool[eid]) {
+            txTypePool[eid] = []
+        }
+
+        txTypePool[eid].push(tx)
     }
 
-    return setPeerTxPool
+    return txTypePool
 }
 
 export async function getDelegate(contract: Contract, evmAddress: string) {
