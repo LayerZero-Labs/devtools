@@ -144,7 +144,12 @@ export function getAccountConfig(): Record<number, OAppNodeConfig> {
     return configs
 }
 
+// @todo instead of constant width, change it to dynamic width based on terminal width.
 export function diffPrinter(logObject: string, from: object, to: object) {
+    const keyWidth = 30 // Fixed width for Key column
+    const valueWidth = 72 // Fixed width for From and To columns
+    const tableWidth = keyWidth + (valueWidth + 6) * 2 // Total table width (including separators)
+
     // Flatten nested objects/arrays into dot notation
     const flatten = (obj: any, prefix = ''): Record<string, string> => {
         return Object.keys(obj).reduce((acc: Record<string, string>, key: string) => {
@@ -189,10 +194,6 @@ export function diffPrinter(logObject: string, from: object, to: object) {
             delete flatTo[key]
         }
     })
-
-    const keyWidth = 30 // Fixed width for Key column
-    const valueWidth = 72 // Fixed width for From and To columns
-    const tableWidth = keyWidth + (valueWidth + 6) * 2 // Total table width (including separators)
 
     const pad = (str: string, width: number) => str.padEnd(width, ' ')
 
