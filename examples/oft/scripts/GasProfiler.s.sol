@@ -41,11 +41,7 @@ contract GasProfilerScript is Script {
     ILayerZeroEndpointV2 public endpoint;
 
     /// @notice Profiles the gas usage of `lzReceive` over multiple payloads and runs.
-    function run_lzReceive(
-        string memory rpcUrl,
-        address endpointAddress,
-        TestParams memory params
-    ) external {
+    function run_lzReceive(string memory rpcUrl, address endpointAddress, TestParams memory params) external {
         _initializeEndpoint(endpointAddress);
         console.log("Starting gas profiling for lzReceive on dstEid:", params.dstEid);
 
@@ -126,7 +122,7 @@ contract GasProfilerScript is Script {
             );
         }
 
-         console.log("---------------------------------------------------------");
+        console.log("---------------------------------------------------------");
         _logAggregatedMetrics(metrics);
         console.log("---------------------------------------------------------");
         console.log("Finished gas profling for lzCompose on dstEid:", params.dstEid);

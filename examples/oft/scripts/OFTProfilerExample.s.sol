@@ -23,13 +23,13 @@ contract OFTProfilerExample is Script {
 
     /// @notice Struct to hold configuration details for each target chain.
     struct ChainConfig {
-        string rpcUrl;          // RPC URL of the destination blockchain.
-        address endpoint;       // Address of the destination LayerZero EndpointV2 contract.
-        uint32 srcEid;          // Source Endpoint ID.
-        uint32 dstEid;          // Destination Endpoint ID.
-        address sender;         // Sender address.
-        address receiver;       // Receiver address.
-        uint256 numOfRuns;      // Number of profiling runs per payload.
+        string rpcUrl; // RPC URL of the destination blockchain.
+        address endpoint; // Address of the destination LayerZero EndpointV2 contract.
+        uint32 srcEid; // Source Endpoint ID.
+        uint32 dstEid; // Destination Endpoint ID.
+        address sender; // Sender address.
+        address receiver; // Receiver address.
+        uint256 numOfRuns; // Number of profiling runs per payload.
     }
 
     /// @notice Array of configurations for each target chain.
@@ -58,16 +58,12 @@ contract OFTProfilerExample is Script {
                 dstEid: config.dstEid,
                 receiver: config.receiver,
                 payloads: payloads,
-                msgValue: 0,          // Ether value sent with the message.
+                msgValue: 0, // Ether value sent with the message.
                 numOfRuns: config.numOfRuns
             });
 
             // Step 4b: Execute gas profiling for the current chain's lzReceive function.
-            profiler.run_lzReceive(
-                config.rpcUrl,
-                config.endpoint,
-                testParams
-            );
+            profiler.run_lzReceive(config.rpcUrl, config.endpoint, testParams);
         }
     }
 
@@ -83,7 +79,7 @@ contract OFTProfilerExample is Script {
                 dstEid: 30110, // Destination Endpoint ID for Arbitrum
                 sender: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Sender address
                 receiver: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Receiver address
-                numOfRuns: 1  // Number of profiling runs per payload
+                numOfRuns: 1 // Number of profiling runs per payload
             })
         );
 
@@ -96,7 +92,7 @@ contract OFTProfilerExample is Script {
                 dstEid: 30111, // Destination Endpoint ID for Optimism
                 sender: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Sender address
                 receiver: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Receiver address
-                numOfRuns: 1  // Number of profiling runs per payload
+                numOfRuns: 1 // Number of profiling runs per payload
             })
         );
 
@@ -109,10 +105,10 @@ contract OFTProfilerExample is Script {
                 dstEid: 30183, // Destination Endpoint ID for Optimism
                 sender: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Sender address
                 receiver: 0x5d3a1Ff2b6BAb83b63cd9AD0787074081a52ef34, // Receiver address
-                numOfRuns: 1  // Number of profiling runs per payload
+                numOfRuns: 1 // Number of profiling runs per payload
             })
         );
-        // TODO: zkSync only works for single payloads when run alone
+        // TODO: zkSync only works for single payloads when run alone with the --zksync flag, requires foundry-zk
         // chainConfigs.push(
         //     ChainConfig({
         //         rpcUrl: "https://mainnet.era.zksync.io",
@@ -137,11 +133,12 @@ contract OFTProfilerExample is Script {
         for (uint256 i = 0; i < count; i++) {
             // Step 1: Generate fuzzed parameters.
             uint256 fuzzAmount = vm.randomUint(1e12, type(uint64).max);
+            bytes32 fuzzToAddress = bytes32(uint256(uint160(vm.randomAddress())));
 
             // Step 2: Create SendParam struct with fuzzed values.
             SendParam memory sendParam = SendParam({
                 dstEid: 30110, // Destination endpoint ID (can be varied if needed)
-                to: bytes32(uint256(uint160(vm.randomAddress()))),  // Recipient address
+                to: fuzzToAddress, // Recipient address
                 amountLD: fuzzAmount, // Amount to transfer
                 minAmountLD: fuzzAmount, // Minimum amount
                 extraOptions: OptionsBuilder.newOptions(), // Extra options for the transfer
@@ -173,7 +170,7 @@ contract OFTProfilerExample is Script {
 
         // Generate a pseudo-random number based on the index using keccak256
         uint256 randomSeed = uint256(keccak256(abi.encodePacked(index)));
-        
+
         // Scale the pseudo-random number to fit within the desired range
         uint256 fuzzedAmount = minAmount + (randomSeed % range);
 
