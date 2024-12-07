@@ -1,11 +1,11 @@
 import { BigNumber, providers, Contract } from 'ethers'
-import { EidMetadataMapping, TxEidMapping } from '../types'
-import { chainDataMapper } from '../../wireEVMOFTs'
+import { ContractMetadataMapping, TxEidMapping } from '../utils/types'
+import { chainDataMapper } from '../wireEVMOFTs'
 
 /**
  * Sets peer information for connections to wire.
  */
-export async function simulateTransactions(eidMetaData: EidMetadataMapping, TxTypeEidMapping: TxEidMapping) {
+export async function simulateTransactions(eidMetaData: ContractMetadataMapping, TxTypeEidMapping: TxEidMapping) {
     const chains = Object.entries(eidMetaData).length
     const transactionTypes = Object.entries(TxTypeEidMapping).length
     let totalTransactions = 0

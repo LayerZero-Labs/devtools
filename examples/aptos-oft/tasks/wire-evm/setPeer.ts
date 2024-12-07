@@ -1,5 +1,5 @@
-import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../types'
-import { diffPrinter } from '../utils'
+import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
+import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
 
 /**
