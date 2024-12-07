@@ -4,12 +4,12 @@ import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } fro
 import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData } from './utils/types'
 import { createSetPeerTransactions } from './wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 
-// import { executeTransactions } from './wire-evm/executeTransactions'
-// import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 // import { createEnforcedOptionTransactions } from './wire-evm/setEnforcedOptions'
 
 import { simulateTransactions } from './wire-evm/simulateTransactions'
+// import { executeTransactions } from './wire-evm/executeTransactions'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -90,7 +90,7 @@ async function main() {
     }
 
     TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(contractMetaData, aptosOft)
-    // eidTxMapping['steDelegate'] = await createSetDelegateTransactions(wireEvmObjects, aptosOft)
+    TxTypeEidMapping['steDelegate'] = await createSetDelegateTransactions(contractMetaData, aptosOft)
     // eidTxMapping['enforcedOptions'] = await createEnforcedOptionTransactions(wireEvmObjects, aptosOft)
     await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
