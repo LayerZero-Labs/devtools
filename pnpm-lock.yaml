@@ -186,7 +186,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oapp:
@@ -297,7 +297,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oapp-read:
@@ -408,7 +408,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oft:
@@ -525,7 +525,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oft-adapter:
@@ -639,7 +639,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oft-solana:
@@ -864,7 +864,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/oft-upgradeable:
@@ -996,7 +996,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/onft721:
@@ -1107,7 +1107,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/onft721-zksync:
@@ -1230,7 +1230,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   examples/uniswap-read:
@@ -1344,7 +1344,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/build-devtools:
@@ -1374,7 +1374,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/build-lz-options:
@@ -1432,7 +1432,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/create-lz-oapp:
@@ -1505,7 +1505,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       which:
         specifier: ~4.0.0
@@ -1566,7 +1566,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/devtools:
@@ -1624,7 +1624,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -1679,7 +1679,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -1770,7 +1770,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -1870,7 +1870,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/devtools-solana:
@@ -1946,7 +1946,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2000,13 +2000,13 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/export-deployments:
     dependencies:
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
     devDependencies:
       '@layerzerolabs/io-devtools':
@@ -2113,7 +2113,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2341,7 +2341,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2399,7 +2399,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2477,7 +2477,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2553,7 +2553,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2638,7 +2638,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -2669,7 +2669,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/test-devtools-evm-foundry:
@@ -2709,7 +2709,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/test-devtools-evm-hardhat:
@@ -2751,7 +2751,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/test-devtools-solana:
@@ -2775,7 +2775,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/test-devtools-ton:
@@ -2805,7 +2805,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/toolbox-foundry:
@@ -2832,7 +2832,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/toolbox-hardhat:
@@ -2947,7 +2947,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   packages/ua-devtools:
@@ -2995,7 +2995,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -3077,7 +3077,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -3089,7 +3089,7 @@ importers:
         specifier: ~4.0.4
         version: 4.0.4
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
     devDependencies:
       '@ethersproject/abi':
@@ -3274,7 +3274,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -3322,7 +3322,7 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@swc/core@1.4.0)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
       zod:
         specifier: ^3.22.4
@@ -3466,7 +3466,7 @@ importers:
         specifier: ~2.6.2
         version: 2.6.3
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/devtools-evm-hardhat-test:
@@ -3595,7 +3595,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/devtools-evm-test:
@@ -3658,7 +3658,7 @@ importers:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/export-deployments-test:
@@ -3724,7 +3724,7 @@ importers:
         specifier: ~2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/test-evm-node:
@@ -3739,7 +3739,7 @@ importers:
         specifier: ~2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/test-setup-devtools-evm-hardhat:
@@ -3796,7 +3796,7 @@ importers:
         specifier: ~8.0.1
         version: 8.0.1(ts-node@10.9.2)(typescript@5.5.3)
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/ua-devtools-evm-hardhat-test:
@@ -3934,7 +3934,7 @@ importers:
         specifier: ~2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
   tests/ua-devtools-evm-hardhat-v1-test:
@@ -4078,7 +4078,7 @@ importers:
         specifier: ~2.6.2
         version: 2.6.2
       typescript:
-        specifier: ^5.4.4
+        specifier: 5.5.3
         version: 5.5.3
 
 packages:
