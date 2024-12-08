@@ -62,6 +62,7 @@
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.12",
     "@layerzerolabs/test-devtools": "~0.4.1",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.0",
+    "@layerzerolabs/ua-devtools": "~3.0.1",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
