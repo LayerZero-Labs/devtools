@@ -1,7 +1,16 @@
 import { ethers, PopulatedTransaction } from 'ethers'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
-export type TxTypes = 'setPeer' | 'setDelegate' | 'setEnforcedOptions' | 'setSendLibrary'
+export type TxTypes =
+    | 'setPeer'
+    | 'setDelegate'
+    | 'setEnforcedOptions'
+    | 'setSendLibrary'
+    | 'setReceiveLibrary'
+    | 'setReceiveLibraryTimeout'
+    | 'sendConfig'
+    | 'receiveConfig'
+
 export type EidTxMap = Record<eid, [PopulatedTransaction]>
 export type eid = number
 export type address = string
@@ -54,7 +63,12 @@ export type TxEidMapping = Record<TxTypes, EidTxMap>
 export type ContractMetadataMapping = Record<eid, ContractMetadata>
 
 export type enforcedOptionParam = {
-    eid: number
+    eid: eid
     msgType: number
     options: string
+}
+
+export type RecvLibParam = {
+    lib: address
+    isDefault: boolean
 }
