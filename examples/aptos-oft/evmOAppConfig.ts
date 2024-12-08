@@ -27,7 +27,7 @@ const bscOAppConfig: OAppEdgeConfig = {
             receiver: '0x0000000000000000000000000000000000000000',
         },
     ],
-    sendLibrary: '0x0',
+    sendLibrary: '0x90118d110B07ABB82Ba8980D1c5cC96EeA810d2C',
     receiveLibraryConfig: {
         receiveLibrary: '0x0',
         gracePeriod: BigInt(0),
@@ -77,7 +77,7 @@ const ethOAppConfig: OAppEdgeConfig = {
             value: 0, // msg.value in wei for EndpointV2.lzCompose
         },
     ],
-    sendLibrary: '0x0',
+    sendLibrary: '0x90118d110B07ABB82Ba8980D1c5cC96EeA810d2C',
     receiveLibraryConfig: {
         receiveLibrary: '0x0',
         gracePeriod: BigInt(0),
