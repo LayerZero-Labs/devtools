@@ -14,7 +14,7 @@ export async function createSetDelegateTransactions(
     for (const [eid, { contract, evmAddress, configAccount }] of Object.entries(eidDataMapping)) {
         const fromDelegate = await getDelegate(contract, evmAddress)
 
-        if (configAccount.delegate === undefined) {
+        if (configAccount?.delegate === undefined) {
             console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
             continue
         }
