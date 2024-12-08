@@ -20,6 +20,21 @@ const aptosContract: OmniPointHardhat = {
     contractName: 'oft',
 }
 
+const ethereumSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.ETHEREUM_V2_SANDBOX,
+    contractName: 'MyOFT',
+}
+
+const bscSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.BSC_V2_SANDBOX,
+    contractName: 'MyOFT',
+}
+
+const aptosSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.APTOS_V2_SANDBOX,
+    contractName: 'oft',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -28,6 +43,14 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             contract: bscContract,
+            config: bscConfig.accountConfig,
+        },
+        {
+            contract: ethereumSandboxContract,
+            config: ethConfig.accountConfig,
+        },
+        {
+            contract: bscSandboxContract,
             config: bscConfig.accountConfig,
         },
         {
@@ -120,6 +143,16 @@ const config: OAppOmniGraphHardhat = {
         {
             from: ethereumContract,
             to: aptosContract,
+            config: ethConfig.oappConfig,
+        },
+        {
+            from: bscSandboxContract,
+            to: aptosSandboxContract,
+            config: bscConfig.oappConfig,
+        },
+        {
+            from: ethereumSandboxContract,
+            to: aptosSandboxContract,
             config: ethConfig.oappConfig,
         },
     ],
