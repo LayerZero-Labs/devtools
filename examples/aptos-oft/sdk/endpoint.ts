@@ -1,5 +1,11 @@
 import { Aptos } from '@aptos-labs/ts-sdk'
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions-v3'
+
+interface LibraryTimeoutResponse {
+    expiry: bigint
+    lib: string
+}
+
 export class Endpoint {
     private aptos: Aptos
     private endpoint_address: string
@@ -24,7 +30,7 @@ export class Endpoint {
                 functionArguments: [oftAddress, dstEid],
             },
         })
-        return [result[0], result[1]]
+        return [result[0] as string, result[1] as boolean]
     }
 
     async getReceiveLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
@@ -34,7 +40,7 @@ export class Endpoint {
                 functionArguments: [oftAddress, dstEid],
             },
         })
-        return [result[0], result[1]]
+        return [result[0] as string, result[1] as boolean]
     }
 
     async getDefaultReceiveLibraryTimeout(eid: EndpointId) {
@@ -46,7 +52,7 @@ export class Endpoint {
         })
     }
 
-    async getReceiveLibraryTimeout(oftAddress: string, dstEid: number) {
+    async getReceiveLibraryTimeout(oftAddress: string, dstEid: number): Promise<LibraryTimeoutResponse> {
         try {
             const result = await this.aptos.view({
                 payload: {
@@ -54,11 +60,15 @@ export class Endpoint {
                     functionArguments: [oftAddress, dstEid],
                 },
             })
-            return result[0]
+            const rawResponse = result[0] as { expiry: string; lib: string }
+            return {
+                expiry: BigInt(rawResponse.expiry),
+                lib: rawResponse.lib,
+            }
         } catch (error) {
             // if the timeout is not set, it will throw a VM error, so we should return and impossible value
             // to always produce a diff when setting the timeout
-            return -1
+            return { expiry: BigInt(-1), lib: '' }
         }
     }
 

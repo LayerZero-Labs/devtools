@@ -30,20 +30,20 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
 import '../hardhat.config'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 import { Endpoint } from '../sdk/endpoint'
+import { MsgLib } from '../sdk/msgLib'
 const account_address = '0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a'
 const OFT_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
 const private_key = '0xc4a953452fb957eddc47e309b5679c020e09c4d3c872bda43569cbff6671dca6'
 
-// Initialize Hardhat context
-
 const ENDPOINT_ADDRESS = '0x824f76b2794de0a0bf25384f2fde4db5936712e6c5c45cf2c3f9ef92e75709c'
+const MSG_LIB_ADDRESS = '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10'
 
 const mockContract: OmniPointHardhat = {
-    eid: EndpointId.BSC_V2_SANDBOX,
+    eid: EndpointId.BSC_V2_TESTNET,
     contractName: 'mockOFT',
 }
 const aptosContract: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_SANDBOX,
+    eid: EndpointId.APTOS_V2_TESTNET,
     contractName: 'oft',
 }
 
@@ -57,18 +57,17 @@ const mockConnections: OAppOmniGraphHardhat['connections'] = [
 describe('config-ops-tests', () => {
     let aptos: Aptos
     let oft: OFT
+    let msgLib: MsgLib
     let endpoint: Endpoint
     let connections: OAppOmniGraphHardhat['connections']
 
     beforeEach(async () => {
         const config = new AptosConfig({
-            network: Network.CUSTOM,
-            fullnode: 'http://127.0.0.1:8080/v1',
-            indexer: 'http://127.0.0.1:8090/v1',
-            faucet: 'http://127.0.0.1:8081',
+            network: Network.TESTNET,
         })
         aptos = new Aptos(config)
         oft = new OFT(aptos, OFT_ADDRESS, account_address, private_key)
+        msgLib = new MsgLib(aptos, MSG_LIB_ADDRESS)
         endpoint = new Endpoint(aptos, ENDPOINT_ADDRESS)
         connections = getConfigConnections('from', EndpointId.APTOS_V2_SANDBOX)
     })

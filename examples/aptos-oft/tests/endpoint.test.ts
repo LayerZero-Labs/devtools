@@ -27,7 +27,7 @@ describe('endpoint-tests', () => {
             expect(receiveLibrary).toBeDefined()
         })
 
-        it.only('should get default receiveLibraryTimeout', async () => {
+        it('should get default receiveLibraryTimeout', async () => {
             const defaultTimeout = await endpoint.getDefaultReceiveLibraryTimeout(EndpointId.BSC_V2_TESTNET)
             console.log(`defaultTimeout: ${defaultTimeout}`)
         })
@@ -37,7 +37,9 @@ describe('endpoint-tests', () => {
                 '0xaa9ca3588e3919c04f030ad14b55aba408eac6930a40e0b463b4299fd176bb88',
                 EndpointId.BSC_V2_TESTNET
             )
-            expect(timeout).toEqual(1000000)
+            console.log(`timeout: ${timeout}`)
+            console.dir(timeout, { depth: null })
+            expect(timeout.expiry.toString()).toEqual('696969669')
         })
     })
 })

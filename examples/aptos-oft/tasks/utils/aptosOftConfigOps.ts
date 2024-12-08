@@ -5,10 +5,11 @@ import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/
 import { createEidToNetworkMapping, diffPrinter } from './utils'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { ExecutorConfig, UlnConfig } from '.'
-import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId, endpointIdToStage, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
 import { Endpoint } from '../../sdk/endpoint'
 import { InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
+import { MsgLib } from '../../sdk/msgLib'
 
 // Configuration Types as used in Aptos Message Libraries
 enum ConfigType {
@@ -331,13 +332,18 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
         }
         const newUlnConfig = createSerializableUlnConfig(entry.config.sendConfig.ulnConfig, entry.to, entry.from)
 
+        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
+        const currentSendLibraryAddress = currentSendLibrary[0]
         const currHexSerializedUlnConfig = await endpoint.getConfig(
             oft.oft_address,
-            entry.config.sendLibrary,
+            currentSendLibraryAddress,
             entry.to.eid as EndpointId,
             ConfigType.SEND_ULN
         )
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+
+        checkConfig(new MsgLib(oft.aptos, currentSendLibraryAddress), newUlnConfig, entry, ConfigType.SEND_ULN)
+
         // We need to re-serialize the current config to compare it with the new config to ensure same format
         const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
 
@@ -352,7 +358,14 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
                 currUlnConfig,
                 newUlnConfig
             )
-            const tx = await oft.setConfigPayload(entry.config.sendLibrary, ConfigType.SEND_ULN, newSerializedUlnConfig)
+
+            // If the send library config is not set, we use the current send library address
+            let sendLibAddress = currentSendLibraryAddress
+            if (entry.config?.sendLibrary) {
+                sendLibAddress = entry.config.sendLibrary
+            }
+
+            const tx = oft.setConfigPayload(sendLibAddress, ConfigType.SEND_ULN, newSerializedUlnConfig)
             txs.push(tx)
         }
     }
@@ -368,19 +381,25 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
             continue
         }
         if (!entry.config.receiveConfig.ulnConfig) {
-            printNotSet('Receive config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
+            printNotSet('Receive ULN config', entry.to.contractName, getNetworkForChainId(entry.to.eid))
             continue
         }
         const newUlnConfig = createSerializableUlnConfig(entry.config.receiveConfig.ulnConfig, entry.to, entry.from)
 
+        const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
+        const currentReceiveLibraryAddress = currentReceiveLibrary[0]
+
         const currHexSerializedUlnConfig = await endpoint.getConfig(
             oft.oft_address,
-            entry.config.receiveLibraryConfig.receiveLibrary,
+            currentReceiveLibraryAddress,
             entry.to.eid as EndpointId,
             ConfigType.RECV_ULN
         )
 
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+
+        checkConfig(new MsgLib(oft.aptos, currentReceiveLibraryAddress), newUlnConfig, entry, ConfigType.RECV_ULN)
+
         // We need to re-serialize the current config to compare it with the new config to ensure same format
         const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
 
@@ -396,16 +415,49 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
                 newUlnConfig
             )
 
-            const tx = await oft.setConfigPayload(
-                entry.config.receiveLibraryConfig.receiveLibrary,
-                ConfigType.RECV_ULN,
-                newSerializedUlnConfig
-            )
+            // If the receive library config is not set, we use the current receive library address
+            let receiveLibAddress = currentReceiveLibraryAddress
+            if (entry.config?.receiveLibraryConfig?.receiveLibrary) {
+                receiveLibAddress = entry.config.receiveLibraryConfig.receiveLibrary
+            }
+
+            const tx = oft.setConfigPayload(receiveLibAddress, ConfigType.RECV_ULN, newSerializedUlnConfig)
             txs.push(tx)
         }
     }
 
     return txs
+}
+
+async function checkConfig(msgLib: MsgLib, newUlnConfig: UlnConfig, entry, configType: ConfigType) {
+    // Check if the new config has less DVNs than the default one and warn if it does
+    if (
+        newUlnConfig.required_dvns.length + newUlnConfig.optional_dvns.length < 2 &&
+        endpointIdToStage(entry.from.eid) === Stage.MAINNET
+    ) {
+        console.log(
+            `WARN: ${configType} config for ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} has less than 2 DVNs.\nWe strongly recommend setting at least 2 DVNs for mainnet.\n`
+        )
+    }
+
+    // Check if the new config has less confirmations than the default one and warn if it does
+    if (configType === ConfigType.RECV_ULN) {
+        const defaultReceiveConfig = await msgLib.get_default_uln_receive_config(entry.to.eid)
+        const defaultConfirmations = defaultReceiveConfig.confirmations
+        if (newUlnConfig.confirmations < defaultConfirmations) {
+            console.log(
+                `WARN: Receive config for ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} has less than ${defaultConfirmations} block confirmations. We recommend setting at least ${defaultConfirmations} block confirmations.\n`
+            )
+        }
+    } else if (configType === ConfigType.SEND_ULN) {
+        const defaultSendConfig = await msgLib.get_default_uln_send_config(entry.to.eid)
+        const defaultConfirmations = defaultSendConfig.confirmations
+        if (newUlnConfig.confirmations < defaultConfirmations) {
+            console.log(
+                `WARN: Send config for ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName} has less than ${defaultConfirmations} block confirmations. We recommend setting at least ${defaultConfirmations} block confirmations.\n`
+            )
+        }
+    }
 }
 
 export async function setExecutorConfig(
