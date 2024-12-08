@@ -3,12 +3,92 @@ import type { OAppEnforcedOption, OAppEdgeConfig } from '@layerzerolabs/ua-devto
 
 const METADATA_URL = 'https://metadata.layerzero-api.com/v1/metadata'
 
-function getEndpointIdDeployment(eid: number, metadata: any) {
+interface IMetadata {
+    [key: string]: {
+        created: string
+        updated: string
+        tableName: string
+        environment: string
+        blockExplorers?: { url: string }[]
+        deployments?: {
+            eid: string
+            chainKey: string
+            stage: string
+            version: number
+            endpoint?: { address: string }
+            relayerV2?: { address: string }
+            ultraLightNodeV2?: { address: string }
+            nonceContract?: { address: string }
+            executor?: { address: string }
+            deadDVN?: { address: string }
+            endpointV2?: { address: string }
+            sendUln302?: { address: string }
+            lzExecutor?: { address: string }
+            sendUln301?: { address: string }
+            receiveUln301?: { address: string }
+            receiveUln302?: { address: string }
+        }[]
+        chainDetails?: {
+            chainType: string
+            chainKey: string
+            nativeChainId: number
+            chainLayer: string
+            chainStack?: string
+            nativeCurrency: {
+                name?: string
+                symbol: string
+                cgId?: string
+                cmcId: number
+                decimals: number
+            }
+            cgNetworkId?: string
+            shortName?: string
+            mainnetChainName?: string
+            name?: string
+        }
+        dvns?: {
+            [address: string]: {
+                version: number
+                canonicalName: string
+                id: string
+                deprecated?: boolean
+                lzReadCompatible?: boolean
+            }
+        }
+        rpcs?: { url: string; weight?: number }[]
+        addressToOApp?: {
+            [address: string]: {
+                id: string
+                canonicalName: string
+                type?: string
+            }
+        }
+        chainName: string
+        tokens?: {
+            [address: string]: {
+                symbol: string
+                cgId?: string
+                cmcId?: number
+                type: string
+                decimals: number
+                peggedTo?: {
+                    symbol: string
+                    chainName: string
+                    address: string
+                    programaticallyPegged?: boolean
+                }
+            }
+        }
+        chainKey: string
+    }
+}
+
+function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
     for (const objectKey in metadata) {
         const entry = metadata[objectKey]
 
-        if (typeof entry.deployments !== 'undefined') {
+        if (typeof entry?.deployments !== 'undefined') {
             for (const deployment of entry.deployments) {
                 if (srcEidString === deployment.eid) {
                     return deployment
@@ -20,7 +100,7 @@ function getEndpointIdDeployment(eid: number, metadata: any) {
     throw new Error(`Can't find endpoint with eid: "${eid}",`)
 }
 
-function DVNsToAddresses(dvns: string[], chainKey: string, metadata: any) {
+function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMetadata) {
     if (dvns.length === 0) {
         return []
     }
@@ -31,11 +111,15 @@ function DVNsToAddresses(dvns: string[], chainKey: string, metadata: any) {
 
     const dvnAddresses: string[] = []
 
+    if (!metadata[chainKey]?.dvns) {
+        throw new Error(`Can't find DVNs for chainKey: "${chainKey}".`)
+    }
+
     const metadataDVNs = Object.entries(metadata[chainKey].dvns)
 
     for (const dvn of dvns) {
         for (const [dvnAddress, dvnDetails] of metadataDVNs) {
-            if ((dvnDetails as any).canonicalName === dvn && !(dvnDetails as any).lzReadCompatible) {
+            if (dvnDetails.canonicalName === dvn && !dvnDetails.lzReadCompatible) {
                 dvnAddresses.push(dvnAddress)
                 break
             }
@@ -60,7 +144,7 @@ export type TwoWayConfig = [
 
 async function translatePathwayToConfig(
     pathway: TwoWayConfig,
-    metadata: any
+    metadata: IMetadata
 ): Promise<OmniEdgeHardhat<OAppEdgeConfig | undefined>[]> {
     const configs: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
@@ -95,6 +179,22 @@ async function translatePathwayToConfig(
     if (optionalDVNs) {
         sourceOptionalDVNs = DVNsToAddresses(optionalDVNs, sourceLZDeployment.chainKey, metadata)
         destinationOptionalDVNs = DVNsToAddresses(optionalDVNs, destinationLZDeployment.chainKey, metadata)
+    }
+
+    if (!sourceLZDeployment.sendUln302 || !sourceLZDeployment.receiveUln302 || !sourceLZDeployment.executor) {
+        throw new Error(
+            `Can't find sendUln302, receiveUln302 or executor for source endpoint with eid: "${sourceContract.eid}".`
+        )
+    }
+
+    if (
+        !destinationLZDeployment.sendUln302 ||
+        !destinationLZDeployment.receiveUln302 ||
+        !destinationLZDeployment.executor
+    ) {
+        throw new Error(
+            `Can't find sendUln302, receiveUln302 or executor for destination endpoint with eid: "${destinationContract.eid}".`
+        )
     }
 
     const sourceToDestinationConfig: OmniEdgeHardhat<OAppEdgeConfig> = {
@@ -175,7 +275,7 @@ async function translatePathwayToConfig(
 }
 
 export async function generateConnectionsConfig(pathways: TwoWayConfig[]) {
-    const metadata = await fetch(METADATA_URL).then((res) => res.json())
+    const metadata = (await fetch(METADATA_URL).then((res) => res.json())) as IMetadata
     const connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[] = []
 
     for (const pathway of pathways) {
