@@ -44,5 +44,11 @@ export type AccountData = {
 //[TxTypes][eid] = PopulatedTransaction
 export type TxEidMapping = Record<TxTypes, EidTxMap>
 
-//[number][address] = EidMetadata
+//[number][address] = ContractMetadata
 export type ContractMetadataMapping = Record<eid, ContractMetadata>
+
+export type enforcedOptionParam = {
+    eid: number
+    msgType: number
+    options: string
+}
