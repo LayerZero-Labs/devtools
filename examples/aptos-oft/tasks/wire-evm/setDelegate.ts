@@ -13,9 +13,15 @@ export async function createSetDelegateTransactions(
 
     for (const [eid, { contract, evmAddress, configAccount }] of Object.entries(eidDataMapping)) {
         const fromDelegate = await getDelegate(contract, evmAddress)
-        const toDelegate = configAccount.delegate
 
-        if (fromDelegate === toDelegate && fromDelegate !== '') {
+        if (configAccount.delegate === undefined) {
+            console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
+            continue
+        }
+
+        const toDelegate = utils.getAddress(configAccount.delegate)
+
+        if (fromDelegate === toDelegate) {
             console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
             continue
         }
