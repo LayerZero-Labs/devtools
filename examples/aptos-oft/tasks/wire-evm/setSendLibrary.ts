@@ -5,7 +5,11 @@ import { Contract, utils } from 'ethers'
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Generates setSendLibrary transaction per Eid's OFT.
+ * @dev Fetches the current sendLibrary from EndpointV2
+ * @dev Sets the new sendLibrary on the EndpointV2.
+ * @returns EidTxMap
  */
 export async function createSetSendLibraryTransactions(
     eidDataMapping: ContractMetadataMapping,

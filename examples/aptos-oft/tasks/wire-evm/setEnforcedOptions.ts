@@ -5,7 +5,11 @@ import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Sets EnforcedOptions for a contract.
+ * @dev Fetches the current enforcedOptions from Oapp
+ * @dev Sets the new enforcedOptions on the Oapp
+ * @returns EidTxMap
  */
 export async function createSetEnforcedOptionsTransactions(
     eidDataMapping: ContractMetadataMapping,
@@ -100,8 +104,8 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
     return baseOptions
 }
 
-export async function getEnforcedOption(contract: Contract, eid: eid, msgTypes: number): Promise<string> {
-    const options = await contract.enforcedOptions(eid, msgTypes)
+export async function getEnforcedOption(oappContract: Contract, eid: eid, msgTypes: number): Promise<string> {
+    const options = await oappContract.enforcedOptions(eid, msgTypes)
 
     return options
 }

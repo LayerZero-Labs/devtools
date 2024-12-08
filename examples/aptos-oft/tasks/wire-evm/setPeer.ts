@@ -3,7 +3,11 @@ import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Sets peer information for connections to wire.
+ * @dev Fetches the current peer from OApp
+ * @dev Sets the new peer on the OApp
+ * @returns EidTxMap
  */
 export async function createSetPeerTransactions(
     eidDataMapping: ContractMetadataMapping,

@@ -3,7 +3,11 @@ import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Sets delegate for a contract.
+ * @dev Fetches the current delegate from EndpointV2
+ * @dev Sets the new delegate on the OApp
+ * @returns EidTxMap
  */
 export async function createSetDelegateTransactions(
     eidDataMapping: ContractMetadataMapping,

@@ -4,7 +4,12 @@ import { chainDataMapper } from '../wireEVMOFTs'
 import { exit } from 'process'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Simulates transactions on the blockchains
+ * - Fetches the nonce and balance for each chain
+ * - Estimates gas for each transaction and updates the balance
+ * - Checks if the user's balance is sufficient to submit all the transactions
+ * - Simulates transactions on-chain and catches any errors before submitting the transaction
  */
 export async function simulateTransactions(eidMetaData: ContractMetadataMapping, TxTypeEidMapping: TxEidMapping) {
     const chains = Object.entries(eidMetaData).length

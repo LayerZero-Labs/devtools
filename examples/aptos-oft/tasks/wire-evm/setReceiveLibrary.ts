@@ -5,7 +5,11 @@ import { Contract, utils } from 'ethers'
 const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
 
 /**
- * Generated setReceiveLibrary transaction per Eid's OFT. Execution happens at the Endpoint.
+ * @author Shankar
+ * @notice Generates setReceiveLibrary transaction per Eid's OFT.
+ * @dev Fetches the current receiveLibrary from EndpointV2
+ * @dev Sets the new receiveLibrary on the EndpointV2.
+ * @returns EidTxMap
  */
 export async function createSetReceiveLibraryTransactions(
     eidDataMapping: ContractMetadataMapping,
