@@ -11,19 +11,19 @@ export async function createSetPeerTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { contract, evmAddress }] of Object.entries(eidDataMapping)) {
+    for (const [eid, { address, contract }] of Object.entries(eidDataMapping)) {
         const { eid: aptosEid, aptosAddress } = aptosOft
 
-        const currentPeer = await getPeer(contract, aptosEid)
+        const currentPeer = await getPeer(contract.oapp, aptosEid)
 
         if (currentPeer === aptosAddress) {
-            console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${evmAddress} \x1b[0m`)
+            console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
         diffPrinter(`Setting Peer on ${eid}`, { peer: currentPeer }, { peer: aptosAddress })
 
-        const tx = await contract.populateTransaction.setPeer(aptosEid, aptosAddress)
+        const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, aptosAddress)
 
         if (!txTypePool[eid]) {
             txTypePool[eid] = []

@@ -13,7 +13,7 @@ export async function createSetEnforcedOptionsTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [_eid, { contract, evmAddress, configOapp }] of Object.entries(eidDataMapping)) {
+    for (const [_eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         const eid = parseInt(_eid) as eid
         const toEnforcedOptions = configOapp.enforcedOptions
         const thisEnforcedOptionBuilder: Record<number, Options> = {}
@@ -40,12 +40,12 @@ export async function createSetEnforcedOptionsTransactions(
         const diffToOptions: Record<number, string> = {}
 
         for (const msgType of msgTypes) {
-            const fromOptions = await getEnforcedOption(contract, eid, msgType)
+            const fromOptions = await getEnforcedOption(contract.oapp, eid, msgType)
             const toOptions = thisEnforcedOptionBuilder[msgType].toHex()
 
             if (fromOptions === toOptions) {
                 console.log(
-                    `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${evmAddress} \x1b[0m`
+                    `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
                 )
                 continue
             }
@@ -62,7 +62,7 @@ export async function createSetEnforcedOptionsTransactions(
 
         diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
 
-        const tx = await contract.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+        const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
 
         if (!txTypePool[_eid]) {
             txTypePool[_eid] = []

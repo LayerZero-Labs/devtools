@@ -1,5 +1,5 @@
 import { BigNumber, providers, Contract } from 'ethers'
-import { ContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
+import { ContractMetadataMapping, ContractMetadata, TxEidMapping, eid } from '../utils/types'
 import { chainDataMapper } from '../wireEVMOFTs'
 import { exit } from 'process'
 
@@ -27,7 +27,7 @@ export async function simulateTransactions(eidMetaData: ContractMetadataMapping,
     const simulationBalance: Record<eid, BigNumber> = {}
 
     for (const [eid, eidData] of Object.entries(eidMetaData)) {
-        const signer = eidData.contract.signer
+        const signer = eidData.contract.oapp.signer
 
         // @todo Fetch from wireEVMOFT.ts instead of performing another await
         simulationNonce[eid] = await signer.getTransactionCount()
@@ -47,9 +47,15 @@ export async function simulateTransactions(eidMetaData: ContractMetadataMapping,
      */
     for (const [txType, EidTxsMapping] of Object.entries(TxTypeEidMapping)) {
         for (const [eid, TxPool] of Object.entries(EidTxsMapping)) {
-            const evmAddress = eidMetaData[eid].evmAddress
-            const contract: Contract = eidMetaData[eid].contract
-            const provider: providers.JsonRpcProvider = eidMetaData[eid].provider
+            const contractMetaData: ContractMetadata = eidMetaData[eid]
+
+            const oappAddress = contractMetaData.address.oapp
+            const _epv2Address = contractMetaData.address.epv2
+
+            const oappContract: Contract = contractMetaData.contract.oapp
+            const epv2Contract: Contract = contractMetaData.contract.epv2
+
+            const provider: providers.JsonRpcProvider = contractMetaData.provider
 
             for (const tx of TxPool) {
                 // Iteratively estimate gas for each transaction and update the balance
@@ -62,15 +68,17 @@ export async function simulateTransactions(eidMetaData: ContractMetadataMapping,
                         return gasUsed
                     })
                     .catch((e) => {
-                        console.error(`Error estimating gas for ${eid} @ ${evmAddress}`)
+                        console.error(`Error estimating gas for ${eid} @ ${oappAddress}`)
                         console.error(e)
                     })
 
                 // If the balance < 0, we know the user does not have enough funds to submit the transaction and we exit
                 if (simulationBalance[eid].lt(0)) {
-                    console.error(`Insufficient balance for ${eid} @ ${evmAddress} ${simulationBalance[eid]}`)
+                    console.error(`Insufficient balance for ${eid} @ ${oappAddress} ${simulationBalance[eid]}`)
                     exit(1)
                 }
+
+                const contract = getContractForTxType(oappContract, epv2Contract, txType)
 
                 const decodedData = contract.interface.parseTransaction({ data: tx.data })
                 const methodName = decodedData.name
@@ -84,16 +92,26 @@ export async function simulateTransactions(eidMetaData: ContractMetadataMapping,
                     nonce: simulationNonce[eid]++,
                 })
                     .then((_result) => {
-                        console.log(`Successful ${txType} transaction simulation for ${eid} @ ${evmAddress}`)
+                        console.log(`Successful ${txType} transaction simulation for ${eid} @ ${oappAddress}`)
                     })
                     .catch((e) => {
                         // @todo Improve error handling
-                        console.error(`Error simulating transaction ${eid} @ ${evmAddress}`)
-                        console.error(e)
-                        return
+                        console.error(`Error simulating transaction ${eid} @ ${oappAddress}`)
+                        console.error(e.message)
+                        exit(1)
                     })
             }
         }
     }
     console.log('\nAll transactions have been SIMULATED on the blockchains.')
+}
+
+function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {
+    const oappTxTypes = ['setPeer', 'setDelegate', 'setEnforcedOptions']
+
+    if (oappTxTypes.includes(txType)) {
+        return oappContract
+    }
+
+    return epv2Contract
 }

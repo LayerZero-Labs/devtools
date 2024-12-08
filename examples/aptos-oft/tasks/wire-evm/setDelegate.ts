@@ -11,24 +11,24 @@ export async function createSetDelegateTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { contract, evmAddress, configAccount }] of Object.entries(eidDataMapping)) {
-        const fromDelegate = await getDelegate(contract, evmAddress)
+    for (const [eid, { address, contract, configAccount }] of Object.entries(eidDataMapping)) {
+        const fromDelegate = await getDelegate(contract.epv2, address.oapp)
 
         if (configAccount?.delegate === undefined) {
-            console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
+            console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
         const toDelegate = utils.getAddress(configAccount.delegate)
 
         if (fromDelegate === toDelegate) {
-            console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${evmAddress} \x1b[0m`)
+            console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
         diffPrinter(`Setting Delegate on ${eid}`, { delegate: fromDelegate }, { delegate: toDelegate })
 
-        const tx = await contract.populateTransaction.setDelegate(toDelegate)
+        const tx = await contract.oapp.populateTransaction.setDelegate(toDelegate)
 
         if (!txTypePool[eid]) {
             txTypePool[eid] = []
@@ -40,16 +40,9 @@ export async function createSetDelegateTransactions(
     return txTypePool
 }
 
-export async function getDelegate(contract: Contract, evmAddress: string) {
-    const endpoint = await contract.endpoint()
-
-    const endpointAbi = ['function delegates(address evmAddress) external view returns (address)']
-
-    const delegate = await contract.provider.call({
-        to: endpoint,
-        data: new utils.Interface(endpointAbi).encodeFunctionData('delegates', [evmAddress]),
-    })
-    const delegateAddress = utils.getAddress(`0x${delegate.slice(26)}`)
+export async function getDelegate(epv2Contract: Contract, oappAddress: string) {
+    const delegate = await epv2Contract.delegates(oappAddress)
+    const delegateAddress = utils.getAddress(delegate)
 
     return delegateAddress
 }
