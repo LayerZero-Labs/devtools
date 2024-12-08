@@ -1,15 +1,16 @@
+import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData } from './utils/types'
-import { createSetPeerTransactions } from './utils/wire-evm/setPeer'
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData, eid } from './utils/types'
 
-// import { executeTransactions } from './utils/wire-evm/executeTransactions'
-// import { createSetDelegateTransactions } from './utils/wire-evm/setDelegate'
-// import { createEnforcedOptionTransactions } from './utils/wire-evm/setEnforcedOptions'
+import { createSetPeerTransactions } from './wire-evm/setPeer'
+import { createSetDelegateTransactions } from './wire-evm/setDelegate'
+import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
+import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
 
-import { simulateTransactions } from './utils/wire-evm/simulateTransactions'
+import { simulateTransactions } from './wire-evm/simulateTransactions'
+// import { executeTransactions } from './wire-evm/executeTransactions'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -17,16 +18,15 @@ if (!process.env.PRIVATE_KEY) {
 }
 
 // @todo Fetch this from the config instead of hardcoding.
-const EID_APTOS = EndpointId.APTOS_V2_TESTNET
+const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
 
-/* 
-Contains the network data of each eid-account pair.
-
-eid is a primary key and it contains gasPrice and the nonce of every address
-*/
+/*
+ * Contains the network data of each eid-account pair.
+ * eid is a primary key and it contains gasPrice and the nonce of every address
+ */
 export const chainDataMapper: AccountData = {}
 
-/**
+/*
  * Main function to initialize the wiring process.
  */
 async function main() {
@@ -41,6 +41,7 @@ async function main() {
         setPeer: {},
         setDelegate: {},
         setEnforcedOptions: {},
+        setSendLibrary: {},
     }
 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
@@ -56,19 +57,25 @@ async function main() {
 
     // Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
     for (const conn of connectionsToWire) {
-        const fromEid = conn.from.eid
+        const fromEid = conn.from.eid as eid
         const fromNetwork = networks[fromEid]
-
-        const deploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
-        const deploymentData = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
 
         const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
         const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
 
-        const { address, abi, bytecode } = deploymentData
-        const factory = new ContractFactory(abi, bytecode, signer)
+        const OAppDeploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
+        const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
 
-        // @todo Run this before simulation since gasPrice can vary?
+        const { address: oappAddress, abi: oappAbi, bytecode: oappBytecode } = OAppDeploymentData
+        const OAppFactory = new ContractFactory(oappAbi, oappBytecode, signer)
+
+        const EndpointV2DeploymentPath = `deployments/${fromNetwork}/EndpointV2.json`
+        const EndpointV2DeploymentData = JSON.parse(fs.readFileSync(EndpointV2DeploymentPath, 'utf8'))
+
+        const { address: epv2Address, abi: epv2Abi, bytecode: epv2Bytecode } = EndpointV2DeploymentData
+        const EndpointV2Factory = new ContractFactory(epv2Abi, epv2Bytecode, signer)
+
+        // @todo Run this before simulation since gasPrice can vary should the transaction building take too long?
         if (!chainDataMapper[fromEid]) {
             chainDataMapper[fromEid] = {
                 gasPrice: await provider.getGasPrice(),
@@ -80,25 +87,38 @@ async function main() {
             chainDataMapper[fromEid].nonce[signer.address] = await provider.getTransactionCount(signer.address)
         }
 
+        const OAppContract = OAppFactory.attach(oappAddress)
+        const EPV2Contract = EndpointV2Factory.attach(epv2Address)
+
         contractMetaData[fromEid] = {
-            evmAddress: address,
-            contract: factory.attach(address),
+            address: {
+                oapp: oappAddress,
+                epv2: epv2Address,
+            },
+            contract: {
+                oapp: OAppContract,
+                epv2: EPV2Contract,
+            },
             provider: provider,
             configAccount: accountConfigs[fromEid],
             configOapp: conn.config,
         }
     }
 
-    TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(contractMetaData, aptosOft)
-    // eidTxMapping['steDelegate'] = await createSetDelegateTransactions(wireEvmObjects, aptosOft)
-    // eidTxMapping['enforcedOptions'] = await createEnforcedOptionTransactions(wireEvmObjects, aptosOft)
+    /*
+     */
+    TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
+
     await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
 
 main()
     .then(() => {
-        console.log('Your OApps have now been wired with Aptos.')
+        console.log('Your EVM OApps have now been wired with the Aptos OApp.')
         process.exit(0)
     })
     .catch((error) => {

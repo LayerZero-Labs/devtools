@@ -1,13 +1,14 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 import { bscConfig } from './evmOAppConfig'
+import { ethConfig } from './evmOAppConfig'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
-// const ethereumContract: OmniPointHardhat = {
-//     eid: EndpointId.ETHEREUM_TESTNET,
-//     contractName: 'MyOFT',
-// }
+const ethereumContract: OmniPointHardhat = {
+    eid: EndpointId.ETHEREUM_V2_TESTNET,
+    contractName: 'MyOFT',
+}
 
 const bscContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
@@ -19,14 +20,37 @@ const aptosContract: OmniPointHardhat = {
     contractName: 'oft',
 }
 
+const ethereumSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.ETHEREUM_V2_SANDBOX,
+    contractName: 'MyOFT',
+}
+
+const bscSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.BSC_V2_SANDBOX,
+    contractName: 'MyOFT',
+}
+
+const aptosSandboxContract: OmniPointHardhat = {
+    eid: EndpointId.APTOS_V2_SANDBOX,
+    contractName: 'oft',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
-        // {
-        //     contract: ethereumContract,
-        //     config: ethConfig.accountConfig,
-        // },
+        {
+            contract: ethereumContract,
+            config: ethConfig.accountConfig,
+        },
         {
             contract: bscContract,
+            config: bscConfig.accountConfig,
+        },
+        {
+            contract: ethereumSandboxContract,
+            config: ethConfig.accountConfig,
+        },
+        {
+            contract: bscSandboxContract,
             config: bscConfig.accountConfig,
         },
         {
@@ -116,11 +140,21 @@ const config: OAppOmniGraphHardhat = {
             to: aptosContract,
             config: bscConfig.oappConfig,
         },
-        // {
-        //     from: ethereumContract,
-        //     to: aptosContract,
-        //     config: ethConfig.oappConfig,
-        // },
+        {
+            from: ethereumContract,
+            to: aptosContract,
+            config: ethConfig.oappConfig,
+        },
+        {
+            from: bscSandboxContract,
+            to: aptosSandboxContract,
+            config: bscConfig.oappConfig,
+        },
+        {
+            from: ethereumSandboxContract,
+            to: aptosSandboxContract,
+            config: ethConfig.oappConfig,
+        },
     ],
 }
 
