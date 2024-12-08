@@ -1,12 +1,11 @@
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData } from './utils/types'
+import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData, eid } from './utils/types'
 import { createSetPeerTransactions } from './wire-evm/setPeer'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { createSetDelegateTransactions } from './wire-evm/setDelegate'
-
-// import { createEnforcedOptionTransactions } from './wire-evm/setEnforcedOptions'
+import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
 
 import { simulateTransactions } from './wire-evm/simulateTransactions'
 // import { executeTransactions } from './wire-evm/executeTransactions'
@@ -19,14 +18,13 @@ if (!process.env.PRIVATE_KEY) {
 // @todo Fetch this from the config instead of hardcoding.
 const EID_APTOS = EndpointId.APTOS_V2_TESTNET
 
-/* 
-Contains the network data of each eid-account pair.
-
-eid is a primary key and it contains gasPrice and the nonce of every address
-*/
+/*
+ * Contains the network data of each eid-account pair.
+ * eid is a primary key and it contains gasPrice and the nonce of every address
+ */
 export const chainDataMapper: AccountData = {}
 
-/**
+/*
  * Main function to initialize the wiring process.
  */
 async function main() {
@@ -56,7 +54,7 @@ async function main() {
 
     // Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
     for (const conn of connectionsToWire) {
-        const fromEid = conn.from.eid
+        const fromEid = conn.from.eid as eid
         const fromNetwork = networks[fromEid]
 
         const deploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
@@ -68,7 +66,7 @@ async function main() {
         const { address, abi, bytecode } = deploymentData
         const factory = new ContractFactory(abi, bytecode, signer)
 
-        // @todo Run this before simulation since gasPrice can vary?
+        // @todo Run this before simulation since gasPrice can vary should the transaction building take too long?
         if (!chainDataMapper[fromEid]) {
             chainDataMapper[fromEid] = {
                 gasPrice: await provider.getGasPrice(),
@@ -90,15 +88,15 @@ async function main() {
     }
 
     TxTypeEidMapping['setPeer'] = await createSetPeerTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping['steDelegate'] = await createSetDelegateTransactions(contractMetaData, aptosOft)
-    // eidTxMapping['enforcedOptions'] = await createEnforcedOptionTransactions(wireEvmObjects, aptosOft)
+    TxTypeEidMapping['setDelegate'] = await createSetDelegateTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping['enforcedOptions'] = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
     await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
 
 main()
     .then(() => {
-        console.log('Your OApps have now been wired with Aptos.')
+        console.log('Your EVM OApps have now been wired with the Aptos OApp.')
         process.exit(0)
     })
     .catch((error) => {
