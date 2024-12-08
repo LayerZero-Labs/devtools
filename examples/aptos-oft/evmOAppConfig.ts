@@ -6,6 +6,12 @@ const bscAccountConfig: OAppNodeConfig = {
     owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
     delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
 }
+
+const ethAccountConfig: OAppNodeConfig = {
+    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+}
+
 const bscOAppConfig: OAppEdgeConfig = {
     enforcedOptions: [
         {
@@ -27,7 +33,7 @@ const bscOAppConfig: OAppEdgeConfig = {
             receiver: '0x0000000000000000000000000000000000000000',
         },
     ],
-    sendLibrary: '0x90118d110B07ABB82Ba8980D1c5cC96EeA810d2C',
+    sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
     receiveLibraryConfig: {
         receiveLibrary: '0x0',
         gracePeriod: BigInt(0),
@@ -58,10 +64,6 @@ const bscOAppConfig: OAppEdgeConfig = {
     },
 }
 
-const ethAccountConfig: OAppNodeConfig = {
-    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
-    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
-}
 const ethOAppConfig: OAppEdgeConfig = {
     enforcedOptions: [
         {
@@ -77,7 +79,7 @@ const ethOAppConfig: OAppEdgeConfig = {
             value: 0, // msg.value in wei for EndpointV2.lzCompose
         },
     ],
-    sendLibrary: '0x90118d110B07ABB82Ba8980D1c5cC96EeA810d2C',
+    sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
     receiveLibraryConfig: {
         receiveLibrary: '0x0',
         gracePeriod: BigInt(0),
