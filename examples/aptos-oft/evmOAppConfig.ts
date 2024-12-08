@@ -35,7 +35,7 @@ const bscOAppConfig: OAppEdgeConfig = {
     ],
     sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
     receiveLibraryConfig: {
-        receiveLibrary: '0x0',
+        receiveLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
@@ -81,7 +81,7 @@ const ethOAppConfig: OAppEdgeConfig = {
     ],
     sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
     receiveLibraryConfig: {
-        receiveLibrary: '0x0',
+        receiveLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
