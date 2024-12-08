@@ -71,8 +71,6 @@ export async function createSetEnforcedOptionsTransactions(
         txTypePool[_eid].push(tx)
     }
 
-    console.log('Done')
-
     return txTypePool
 }
 
@@ -92,9 +90,9 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
         case ExecutorOptionType.ORDERED:
             baseOptions.addExecutorOrderedExecutionOption()
             break
-        // case ExecutorOptionType.LZ_READ:
-        //     baseOptions.addExecutorLzReadOption(addOption.gas, addOption.value)
-        //     break
+        case ExecutorOptionType.LZ_READ:
+            baseOptions.addExecutorLzReadOption(addOption.gas, addOption.value)
+            break
         default:
             throw new Error(`Unknown option type: ${optionType}`)
     }
