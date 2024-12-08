@@ -1,7 +1,7 @@
 import { ethers, PopulatedTransaction } from 'ethers'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
-export type TxTypes = 'setPeer' | 'setDelegate' | 'setEnforcedOptions'
+export type TxTypes = 'setPeer' | 'setDelegate' | 'setEnforcedOptions' | 'setSendLibrary'
 export type EidTxMap = Record<eid, [PopulatedTransaction]>
 export type eid = number
 export type address = string
@@ -28,8 +28,14 @@ export type AptosOFTMetadata = {
 }
 
 export type ContractMetadata = {
-    evmAddress: address
-    contract: ethers.Contract
+    address: {
+        oapp: address
+        epv2: address
+    }
+    contract: {
+        oapp: ethers.Contract
+        epv2: ethers.Contract
+    }
     provider: ethers.providers.JsonRpcProvider
     configAccount: OAppNodeConfig
     configOapp: OAppEdgeConfig
