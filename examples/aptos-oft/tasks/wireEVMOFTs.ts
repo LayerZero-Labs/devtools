@@ -8,6 +8,7 @@ import { createSetPeerTransactions } from './wire-evm/setPeer'
 import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
 import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
+import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
 
 import { simulateTransactions } from './wire-evm/simulateTransactions'
 // import { executeTransactions } from './wire-evm/executeTransactions'
@@ -42,6 +43,10 @@ async function main() {
         setDelegate: {},
         setEnforcedOptions: {},
         setSendLibrary: {},
+        setReceiveLibrary: {},
+        setReceiveLibraryTimeout: {},
+        sendConfig: {},
+        receiveConfig: {},
     }
 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
@@ -111,7 +116,7 @@ async function main() {
     TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
-
+    TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, aptosOft)
     await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
