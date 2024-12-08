@@ -153,7 +153,7 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm
+RUN cargo install --git https://github.com/coral-xyz/anchor avm --tag v0.30.1
 
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
