@@ -19,7 +19,7 @@ export async function createSetReceiveLibraryTransactions(
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (configOapp?.receiveLibraryConfig === undefined) {
-            console.log(`\x1b[43m Skipping: No sendLibrary has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            console.log(`\x1b[43m Skipping: No Receive Library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
@@ -59,7 +59,6 @@ export async function createSetReceiveLibraryTransactions(
 
 export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
     const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
-
     const recvLib = recvLibParam.lib
 
     if (recvLib === error_LZ_DefaultReceiveLibUnavailable) {
@@ -70,3 +69,5 @@ export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: stri
 
     return recvLibAddress
 }
+
+// @todo Add default receive lib getter

@@ -57,3 +57,5 @@ export async function getSendLibrary(epv2Contract: Contract, evmAddress: string,
 
     return sendLibAddress
 }
+
+// @todo Add default send lib getter
