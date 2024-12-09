@@ -4,7 +4,7 @@ pragma solidity ^0.8.20;
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
 import { OFTMock } from "./mocks/OFTMock.sol";
-import { MessagingFee, MessagingReceipt } from "../contracts/OFTCore.sol";
+import { MessagingFee, MessagingReceipt, OFTFeeDetail, OFTLimit, OFTReceipt } from "../contracts/OFTCore.sol";
 import { NativeOFTAdapterMock } from "./mocks/NativeOFTAdapterMock.sol";
 import { OFTAdapterMock } from "./mocks/OFTAdapterMock.sol";
 import { ERC20Mock } from "./mocks/ERC20Mock.sol";
@@ -28,6 +28,7 @@ import { NativeOFTAdapterMockCodec } from "./lib/NativeOFTAdapterMockCodec.sol";
 
 import "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import "../contracts/interfaces/IOFT.sol";
 
 contract OFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
@@ -663,5 +664,25 @@ contract OFTTest is TestHelperOz5 {
         // does revert because inspector is set
         vm.expectRevert(abi.encodeWithSelector(IOAppMsgInspector.InspectionFailed.selector, message, extraOptions));
         (message, ) = aOFT.asOFTMock().buildMsgAndOptions(sendParam, amountToCreditLD);
+    }
+
+    function test_quoteOFT(uint256 _amountToSendLD) public {
+        bytes32 to = addressToBytes32(userA);
+        uint256 minAmountToCreditLD = aOFT.asOFTMock().removeDust(_amountToSendLD);
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            to,
+            _amountToSendLD,
+            minAmountToCreditLD,
+            "",
+            "",
+            ""
+        );
+        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) = aOFT.quoteOFT(sendParam);
+        assertEq(0, oftLimit.minAmountLD);
+        assertEq(IERC20(aOFT.token()).totalSupply(), oftLimit.maxAmountLD);
+        assertEq(0, oftFeeDetails.length);
+        assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
+        assertEq(minAmountToCreditLD, oftReceipt.amountReceivedLD);
     }
 }
