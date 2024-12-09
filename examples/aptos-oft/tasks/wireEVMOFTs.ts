@@ -2,7 +2,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData, eid } from './utils/types'
+import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
 
 import { createSetPeerTransactions } from './wire-evm/setPeer'
 import { createSetDelegateTransactions } from './wire-evm/setDelegate'
@@ -11,8 +11,8 @@ import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
 import { createSetReceiveLibraryTimeoutTransactions } from './wire-evm/setReceiveLibraryTimeout'
 
-import { simulateTransactions } from './wire-evm/simulateTransactions'
-// import { executeTransactions } from './wire-evm/executeTransactions'
+import { executeTransactions } from './wire-evm/transactionExecutor'
+import AnvilForkNode from './utils/anvilForkNode'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -21,12 +21,6 @@ if (!process.env.PRIVATE_KEY) {
 
 // @todo Fetch this from the config instead of hardcoding.
 const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
-
-/*
- * Contains the network data of each eid-account pair.
- * eid is a primary key and it contains gasPrice and the nonce of every address
- */
-export const chainDataMapper: AccountData = {}
 
 /*
  * Main function to initialize the wiring process.
@@ -81,18 +75,6 @@ async function main() {
         const { address: epv2Address, abi: epv2Abi, bytecode: epv2Bytecode } = EndpointV2DeploymentData
         const EndpointV2Factory = new ContractFactory(epv2Abi, epv2Bytecode, signer)
 
-        // @todo Run this before simulation since gasPrice can vary should the transaction building take too long?
-        if (!chainDataMapper[fromEid]) {
-            chainDataMapper[fromEid] = {
-                gasPrice: await provider.getGasPrice(),
-                nonce: {},
-            }
-        }
-
-        if (!chainDataMapper[fromEid].nonce[signer.address]) {
-            chainDataMapper[fromEid].nonce[signer.address] = await provider.getTransactionCount(signer.address)
-        }
-
         const OAppContract = OAppFactory.attach(oappAddress)
         const EPV2Contract = EndpointV2Factory.attach(epv2Address)
 
@@ -122,8 +104,32 @@ async function main() {
         contractMetaData,
         aptosOft
     )
-    await simulateTransactions(contractMetaData, TxTypeEidMapping)
-    // await executeTransactions(txs, wireEvmObjects)
+
+    const rpcUrlSelfMap: { [eid: string]: string } = {}
+    for (const [eid, eidData] of Object.entries(contractMetaData)) {
+        rpcUrlSelfMap[eid] = eidData.provider.connection.url
+    }
+    const forkUrls = Object.values(rpcUrlSelfMap)
+    const eids = Object.keys(rpcUrlSelfMap)
+    const anvilForkNode = new AnvilForkNode(forkUrls, eids)
+    const forkRpcMap = anvilForkNode.getRpcMap()
+
+    try {
+        await anvilForkNode.startNodes()
+    } catch (error) {
+        anvilForkNode.killNodes()
+    }
+
+    try {
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap)
+        console.log('\nAll transactions have been SIMULATED on the blockchains.')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap)
+        console.log('\nAll transactions have been EXECUTED on the blockchains.')
+    } catch (error) {
+        anvilForkNode.killNodes()
+        throw error.error
+    }
+    anvilForkNode.killNodes()
 }
 
 main()
