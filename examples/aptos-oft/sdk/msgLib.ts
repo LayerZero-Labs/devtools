@@ -30,8 +30,6 @@ export class MsgLib {
                 functionArguments: [eid],
             },
         })
-        console.log('get_default_uln_send_config')
-        console.dir(result, { depth: null })
         return (result[0] as MoveVectorResponse).vec[0]
     }
 
@@ -42,8 +40,6 @@ export class MsgLib {
                 functionArguments: [eid],
             },
         })
-        console.log('get_default_uln_receive_config')
-        console.dir(result, { depth: null })
         return (result[0] as MoveVectorResponse).vec[0]
     }
 }

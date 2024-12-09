@@ -308,7 +308,7 @@ export async function setSendLibrary(oft: OFT, endpoint: Endpoint, connections: 
             }
             diffPrinter(
                 `Set Send Library for pathway Aptos -> ${entry.to.contractName} on ${getNetworkForChainId(entry.to.eid).chainName}`,
-                { address: currentSendLibrary },
+                { address: currentSendLibraryAddress },
                 { address: entry.config.sendLibrary }
             )
             const tx = await oft.setSendLibraryPayload(entry.to.eid, entry.config.sendLibrary)
@@ -342,7 +342,7 @@ export async function setSendConfig(oft: OFT, endpoint: Endpoint, connections: O
         )
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
-        checkConfig(new MsgLib(oft.aptos, currentSendLibraryAddress), newUlnConfig, entry, ConfigType.SEND_ULN)
+        await checkNewConfig(new MsgLib(oft.aptos, currentSendLibraryAddress), newUlnConfig, entry, ConfigType.SEND_ULN)
 
         // We need to re-serialize the current config to compare it with the new config to ensure same format
         const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
@@ -398,7 +398,12 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
 
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
-        checkConfig(new MsgLib(oft.aptos, currentReceiveLibraryAddress), newUlnConfig, entry, ConfigType.RECV_ULN)
+        await checkNewConfig(
+            new MsgLib(oft.aptos, currentReceiveLibraryAddress),
+            newUlnConfig,
+            entry,
+            ConfigType.RECV_ULN
+        )
 
         // We need to re-serialize the current config to compare it with the new config to ensure same format
         const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
@@ -429,7 +434,7 @@ export async function setReceiveConfig(oft: OFT, endpoint: Endpoint, connections
     return txs
 }
 
-async function checkConfig(msgLib: MsgLib, newUlnConfig: UlnConfig, entry, configType: ConfigType) {
+async function checkNewConfig(msgLib: MsgLib, newUlnConfig: UlnConfig, entry, configType: ConfigType) {
     // Check if the new config has less DVNs than the default one and warn if it does
     if (
         newUlnConfig.required_dvns.length + newUlnConfig.optional_dvns.length < 2 &&
