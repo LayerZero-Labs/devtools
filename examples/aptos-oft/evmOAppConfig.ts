@@ -39,7 +39,7 @@ const bscOAppConfig: OAppEdgeConfig = {
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
-        lib: '0x0',
+        lib: '0xec552B17995198A0e71E9198D047B5Ec42710359',
         expiry: BigInt(0),
     },
     sendConfig: {
@@ -85,7 +85,7 @@ const ethOAppConfig: OAppEdgeConfig = {
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
-        lib: '0x0',
+        lib: '0xf342D22125Eddc24c6c3D716E048388D1415C20d',
         expiry: BigInt(0),
     },
     sendConfig: {
