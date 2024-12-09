@@ -9,6 +9,9 @@ const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
  * @notice Generates setReceiveLibrary transaction per Eid's OFT.
  * @dev Fetches the current receiveLibrary from EndpointV2
  * @dev Sets the new receiveLibrary on the EndpointV2.
+ * @dev The zero address != current default receive library
+ * @dev - Zero Address is an abstraction to a variable receive library configurable by LZ.
+ * @dev - The "value" of the current default receiveLibrary is a fixed value that is invariant on LZ changing the default receive library.
  * @returns EidTxMap
  */
 export async function createSetReceiveLibraryTransactions(

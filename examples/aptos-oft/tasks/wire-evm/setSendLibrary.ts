@@ -9,6 +9,9 @@ const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
  * @notice Generates setSendLibrary transaction per Eid's OFT.
  * @dev Fetches the current sendLibrary from EndpointV2
  * @dev Sets the new sendLibrary on the EndpointV2.
+ * @dev The zero address != current default send library
+ * @dev - Zero Address is an abstraction to a variable send library configurable by LZ.
+ * @dev - The "value" of the current default send library is a fixed value that is invariant on LZ changing the default send library.
  * @returns EidTxMap
  */
 export async function createSetSendLibraryTransactions(
