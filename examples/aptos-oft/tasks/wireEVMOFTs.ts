@@ -9,6 +9,7 @@ import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
 import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
+import { createSetReceiveLibraryTimeoutTransactions } from './wire-evm/setReceiveLibraryTimeout'
 
 import { simulateTransactions } from './wire-evm/simulateTransactions'
 // import { executeTransactions } from './wire-evm/executeTransactions'
@@ -117,6 +118,10 @@ async function main() {
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
+        contractMetaData,
+        aptosOft
+    )
     await simulateTransactions(contractMetaData, TxTypeEidMapping)
     // await executeTransactions(txs, wireEvmObjects)
 }
