@@ -14,13 +14,14 @@ export class Endpoint {
         this.endpoint_address = endpoint_address
     }
 
-    async getDefaultSendLibrary(eid: EndpointId) {
-        return await this.aptos.view({
+    async getDefaultSendLibrary(eid: EndpointId): Promise<string> {
+        const result = await this.aptos.view({
             payload: {
                 function: `${this.endpoint_address}::endpoint::get_default_send_lib`,
                 functionArguments: [eid],
             },
         })
+        return result[0] as string
     }
 
     async getSendLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
@@ -43,13 +44,14 @@ export class Endpoint {
         return [result[0] as string, result[1] as boolean]
     }
 
-    async getDefaultReceiveLibraryTimeout(eid: EndpointId) {
-        return await this.aptos.view({
+    async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<LibraryTimeoutResponse> {
+        const result = await this.aptos.view({
             payload: {
                 function: `${this.endpoint_address}::endpoint::get_default_receive_library_timeout`,
                 functionArguments: [eid],
             },
         })
+        return result[0] as LibraryTimeoutResponse
     }
 
     async getReceiveLibraryTimeout(oftAddress: string, dstEid: number): Promise<LibraryTimeoutResponse> {
@@ -72,13 +74,14 @@ export class Endpoint {
         }
     }
 
-    async getDefaultReceiveLibrary(eid: EndpointId) {
-        return await this.aptos.view({
+    async getDefaultReceiveLibrary(eid: EndpointId): Promise<string> {
+        const result = await this.aptos.view({
             payload: {
                 function: `${this.endpoint_address}::endpoint::get_default_receive_lib`,
                 functionArguments: [eid],
             },
         })
+        return result[0] as string
     }
 
     async getConfig(
