@@ -1,25 +1,30 @@
 # Aptos OFT Deployment
 ### connecting to aptos via cli
+To install aptos cli, run the following command:
+```
+brew install aptos
+```
 If you need to generate a new key, run the following command:
 ```
 aptos key generate --output-file my_key.pub
 ```
-Then initialize the aptos cli and connect to the aptos sandbox by running the following command:
+Then initialize the aptos cli and connect to the aptos network:
 ```
 aptos init --network=testnet --private-key=<your-private-key>
 ```
-Then you can verify that you are connected to the aptos sandbox and view your account informationby running the following command:
+You can then verify that your initialization was successful by running the following command:
 ```
 cat .aptos/config.yaml 
 ```
+If successful the config will be populated with the RPC links and your account private key, account address, and network.
 ## Build the OFT:
-We reccomend using the account address in printed by `cat .aptos/config.yaml` as the deployer and admin.
+We reccomend using the account address in printed by `cat .aptos/config.yaml` as the deployer and admin during the build and deploy steps to ensure wiring is successful. Afterwards you can use the transfer ownership script to set your desired admin.
 ```
-ts-node tasks/build.ts --package-dir=oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-admin>
+ts-node tasks/move/build.ts --package-dir=oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-admin>
 ```
 ## Deploy the OFT:
 ```
-ts-node tasks/deploy.ts --package-dir oft --address-name oft --named-addresses oft_admin=<account-address-of-your-admin>
+ts-node tasks/move/deploy.ts --package-dir oft --address-name oft --named-addresses oft_admin=<account-address-of-your-admin>
 ```
 
 Make sure to set the account that will be used for administrative functions such as settting the peers should be set in the move.toml as OFT_ADMIN
@@ -38,21 +43,21 @@ Code was successfully deployed to object address 0xaebb730cc67b4b0987ec99cd20b9e
 ## Set the delegate:
 Run the following command to set the delegate to the oft. Ensure first that you have specified the delegate address in the layerzero.config.ts file.
 ```
-npx hardhat run tasks/setDelegate.ts
+npx hardhat run tasks/move/setDelegate.ts
 ```
 ## Initialize the OFT:
-Inside the file tasks/initAptosOFT.ts, set the following parameters:
+Inside the file tasks/move/initAptosOFT.ts, set the following parameters:
 ```typescript
-const tokenName = 'OFT'
-const tokenSymbol = 'OFT'
-const iconUri = ''
-const projectUri = ''
-const sharedDecimals = 6
-const localDecimals = 6
+const tokenName = '<your-token-name>'
+const tokenSymbol = '<your-token-symbol>'
+const iconUri = '<your-icon-uri>'
+const projectUri = '<your-project-uri>'
+const sharedDecimals = <your-shared-decimals>
+const localDecimals = <your-local-decimals>
 ```
 Then run the following command to initialize the oft:
 ```
-ts-node tasks/initAptosOFT.ts
+ts-node tasks/move/initAptosOFT.ts
 ```
 ## Wiring your aptos OFT:
 
@@ -97,7 +102,7 @@ const config: OAppOmniGraphHardhat = {
 
 IMPORTANT: Before running the wire script ensure that you have run aptos init and configuered your desired network such as custom, testnet, mainnet, etc. and have also deployed the oft to that network.
 ```
-npx hardhat run tasks/wireAptosOFT.ts
+npx hardhat run tasks/move/wireAptosOFT.ts
 ```
 
 ## Scripts For internal testing:
@@ -116,12 +121,12 @@ public entry fun mint(
 ```
 Then run the following command to mint the aptos oft:
 ```
-npx hardhat run tasks/mintAptosOFT.ts
+npx hardhat run tasks/move/mintAptosOFT.ts
 ```
 ### Send Aptos OFT:
 Currently running into bugs with this script. Particularly around quoting send.
 ```
-npx hardhat run tasks/sendAptosOFT.ts
+npx hardhat run tasks/move/sendFromAptosOFT.ts
 ```
 
 # Movement OFT Deployment:

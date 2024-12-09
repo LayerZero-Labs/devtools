@@ -1,8 +1,8 @@
 import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
-import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, getDelegateFromLzConfig, sendAllTxs } from './utils/utils'
-import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { setDelegate } from './utils/aptosOftConfigOps'
+import { OFT } from '../../sdk/oft'
+import { getAptosOftAddress, getDelegateFromLzConfig, sendAllTxs } from '../utils/utils'
+import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../utils/aptosNetworkParser'
+import { setDelegate } from '../utils/aptosOftConfigOps'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()

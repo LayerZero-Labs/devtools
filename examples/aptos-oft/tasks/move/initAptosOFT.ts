@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
-import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, sendAllTxs } from './utils/utils'
-import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { OFT } from '../../sdk/oft'
+import { getAptosOftAddress, sendAllTxs } from '../utils/utils'
+import { getLzNetworkStage, parseYaml } from '../utils/aptosNetworkParser'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()
@@ -15,8 +15,8 @@ async function main() {
     console.log(`\n⚡ Initializing Aptos OFT`)
     console.log(`   Address: ${aptosOftAddress}\n`)
 
-    const tokenName = 'OFTTest'
-    const tokenSymbol = 'OFTT'
+    const tokenName = 'OFT'
+    const tokenSymbol = 'OFT'
     const iconUri = ''
     const projectUri = ''
     const sharedDecimals = 6

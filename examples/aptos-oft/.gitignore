@@ -3,3 +3,5 @@
 */node_modules
 .aptos
 cache/hardhat
+deployments/*
+!deployments/.gitkeep

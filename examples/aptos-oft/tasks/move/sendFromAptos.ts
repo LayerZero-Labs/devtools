@@ -1,9 +1,9 @@
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
-import { OFT } from '../sdk/oft'
-import { getAptosOftAddress, sendAllTxs } from './utils/utils'
-import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { OFT } from '../../sdk/oft'
+import { getAptosOftAddress, sendAllTxs } from '../utils/utils'
+import { getLzNetworkStage, parseYaml } from '../utils/aptosNetworkParser'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { hexAddrToAptosBytesAddr } from '../sdk/utils'
+import { hexAddrToAptosBytesAddr } from '../../sdk/utils'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()

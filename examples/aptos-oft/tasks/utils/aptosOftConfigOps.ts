@@ -477,10 +477,12 @@ export async function setExecutorConfig(
             continue
         }
         const newExecutorConfig = createSerializableExecutorConfig(entry.config.sendConfig.executorConfig)
+        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
+        const currentSendLibraryAddress = currentSendLibrary[0]
 
         const currHexSerializedExecutorConfig = await endpoint.getConfig(
             oft.oft_address,
-            entry.config.sendLibrary,
+            currentSendLibraryAddress,
             entry.to.eid as EndpointId,
             ConfigType.EXECUTOR
         )
