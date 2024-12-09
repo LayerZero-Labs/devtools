@@ -46,7 +46,7 @@ abstract contract MintBurnOFTAdapter is OFTCore {
      *
      * @return The address of the adapted ERC20 token.
      *
-     * @dev In the case of OFTAdapter, address(this) and erc20 are NOT the same contract.
+     * @dev In the case of MintBurnOFTAdapter, address(this) and erc20 are NOT the same contract.
      */
     function token() public view returns (address) {
         return address(innerToken);
@@ -106,6 +106,7 @@ abstract contract MintBurnOFTAdapter is OFTCore {
         uint256 _amountLD,
         uint32 /* _srcEid */
     ) internal virtual override returns (uint256 amountReceivedLD) {
+        if (_to == address(0x0)) _to = address(0xdead); // _mint(...) does not support address(0x0)
         // Mints the tokens and transfers to the recipient.
         minterBurner.mint(_to, _amountLD);
         // In the case of NON-default OFTAdapter, the amountLD MIGHT not be equal to amountReceivedLD.
