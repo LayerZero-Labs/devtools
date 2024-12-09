@@ -3,13 +3,13 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const bscAccountConfig: OAppNodeConfig = {
-    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
-    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+    owner: '0xCD5691EA878D262516be278cb46f2fd7fF132083',
+    delegate: '0xCD5691EA878D262516be278cb46f2fd7fF132083',
 }
 
 const ethAccountConfig: OAppNodeConfig = {
-    owner: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
-    delegate: '0xb541D92fB1DD4d9736014ed521781b26c3b98b06',
+    owner: '0xCD5691EA878D262516be278cb46f2fd7fF132083',
+    delegate: '0xCD5691EA878D262516be278cb46f2fd7fF132083',
 }
 
 const bscOAppConfig: OAppEdgeConfig = {
@@ -33,14 +33,14 @@ const bscOAppConfig: OAppEdgeConfig = {
             receiver: '0x0000000000000000000000000000000000000000',
         },
     ],
-    sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
+    sendLibrary: '0xFaa067f96816bc1045986a742f914179fA5924f8',
     receiveLibraryConfig: {
-        receiveLibrary: '0x0',
+        receiveLibrary: '0xFaa067f96816bc1045986a742f914179fA5924f8',
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
-        lib: '0x0',
-        expiry: BigInt(0),
+        lib: '0xFaa067f96816bc1045986a742f914179fA5924f8',
+        expiry: BigInt(500),
     },
     sendConfig: {
         executorConfig: {
@@ -79,14 +79,14 @@ const ethOAppConfig: OAppEdgeConfig = {
             value: 0, // msg.value in wei for EndpointV2.lzCompose
         },
     ],
-    sendLibrary: '0x0f5D1ef48f12b6f691401bfe88c2037c690a6afe',
+    sendLibrary: '0xFaa067f96816bc1045986a742f914179fA5924f8',
     receiveLibraryConfig: {
-        receiveLibrary: '0x0',
+        receiveLibrary: '0xFaa067f96816bc1045986a742f914179fA5924f8',
         gracePeriod: BigInt(0),
     },
     receiveLibraryTimeoutConfig: {
-        lib: '0x0',
-        expiry: BigInt(0),
+        lib: '0xFaa067f96816bc1045986a742f914179fA5924f8',
+        expiry: BigInt(500),
     },
     sendConfig: {
         executorConfig: {

@@ -128,7 +128,7 @@ export function getConfigConnectionsFromConfigConnections(
     return connections
 }
 
-export function getAccountConfig(): Record<number, OAppNodeConfig> {
+export function getHHAccountConfig(): Record<number, OAppNodeConfig> {
     const conns = lzConfigAptos.contracts
 
     const configs: Record<number, OAppNodeConfig> = {}
@@ -362,3 +362,5 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
     rl.close()
     return answer.toLowerCase() === 'yes'
 }
+
+export const ZEROADDRESS_EVM = '0x0000000000000000000000000000000000000000'

@@ -1,15 +1,18 @@
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
-
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
+import { diffPrinter } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Sets EnforcedOptions for a contract.
+ * @dev Fetches the current enforcedOptions from Oapp
+ * @dev Sets the new enforcedOptions on the Oapp
+ * @returns EidTxMap
  */
 export async function createSetEnforcedOptionsTransactions(
     eidDataMapping: ContractMetadataMapping,
-    _aptosOft: AptosOFTMetadata
+    _nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
@@ -47,28 +50,27 @@ export async function createSetEnforcedOptionsTransactions(
                 console.log(
                     `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
                 )
-                continue
+            } else {
+                diffFromOptions[msgType] = fromOptions
+                diffToOptions[msgType] = toOptions
+
+                enforcedOptionParams.push({
+                    eid: eid,
+                    msgType: msgType,
+                    options: toOptions,
+                })
+
+                diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
+
+                const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+
+                if (!txTypePool[_eid]) {
+                    txTypePool[_eid] = []
+                }
+
+                txTypePool[_eid].push(tx)
             }
-
-            diffFromOptions[msgType] = fromOptions
-            diffToOptions[msgType] = toOptions
-
-            enforcedOptionParams.push({
-                eid: eid,
-                msgType: msgType,
-                options: toOptions,
-            })
         }
-
-        diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
-
-        const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
-
-        if (!txTypePool[_eid]) {
-            txTypePool[_eid] = []
-        }
-
-        txTypePool[_eid].push(tx)
     }
 
     return txTypePool
@@ -100,8 +102,8 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
     return baseOptions
 }
 
-export async function getEnforcedOption(contract: Contract, eid: eid, msgTypes: number): Promise<string> {
-    const options = await contract.enforcedOptions(eid, msgTypes)
+export async function getEnforcedOption(oappContract: Contract, eid: eid, msgTypes: number): Promise<string> {
+    const options = await oappContract.enforcedOptions(eid, msgTypes)
 
     return options
 }

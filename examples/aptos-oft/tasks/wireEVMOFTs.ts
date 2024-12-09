@@ -1,16 +1,18 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
-import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, AccountData, eid } from './utils/types'
+import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from './utils/utils'
+import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
 
 import { createSetPeerTransactions } from './wire-evm/setPeer'
-import { createSetDelegateTransactions } from './wire-evm/setDelegate'
+// import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
 import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
+import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
+import { createSetReceiveLibraryTimeoutTransactions } from './wire-evm/setReceiveLibraryTimeout'
 
-import { simulateTransactions } from './wire-evm/simulateTransactions'
-// import { executeTransactions } from './wire-evm/executeTransactions'
+import { executeTransactions } from './wire-evm/transactionExecutor'
+import AnvilForkNode from './utils/anvilForkNode'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -20,19 +22,16 @@ if (!process.env.PRIVATE_KEY) {
 // @todo Fetch this from the config instead of hardcoding.
 const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
 
-/*
- * Contains the network data of each eid-account pair.
- * eid is a primary key and it contains gasPrice and the nonce of every address
- */
-export const chainDataMapper: AccountData = {}
-
-/*
- * Main function to initialize the wiring process.
+/**
+ * @author Shankar
+ * @description Handles wiring of EVM contracts with the Aptos OApp
+ * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
 async function main() {
+    // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
 
-    const accountConfigs = getAccountConfig()
+    const accountConfigs = getHHAccountConfig()
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
@@ -42,20 +41,28 @@ async function main() {
         setDelegate: {},
         setEnforcedOptions: {},
         setSendLibrary: {},
+        setReceiveLibrary: {},
+        setReceiveLibraryTimeout: {},
+        sendConfig: {},
+        receiveConfig: {},
     }
 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const contractMetaData: ContractMetadataMapping = {}
 
     // @todo Fetch this from the config instead of hardcoding.
-    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
-    const aptosOft: AptosOFTMetadata = {
+    // @todo Use this as a primary key for NonEvmOAppWiring in the following code
+    const APTOS_OAPP_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
+    const nonEvmOapp: NonEvmOAppMetadata = {
+        address: APTOS_OAPP_ADDRESS,
         eid: EID_APTOS,
-        aptosAddress: APTOS_OFT,
         rpc: rpcUrls[EID_APTOS],
     }
 
-    // Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
+    /*
+     * Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
+     * contractMetaData contains ethers Contract objects for the OApp and EndpointV2 contracts.
+     */
     for (const conn of connectionsToWire) {
         const fromEid = conn.from.eid as eid
         const fromNetwork = networks[fromEid]
@@ -74,18 +81,6 @@ async function main() {
 
         const { address: epv2Address, abi: epv2Abi, bytecode: epv2Bytecode } = EndpointV2DeploymentData
         const EndpointV2Factory = new ContractFactory(epv2Abi, epv2Bytecode, signer)
-
-        // @todo Run this before simulation since gasPrice can vary should the transaction building take too long?
-        if (!chainDataMapper[fromEid]) {
-            chainDataMapper[fromEid] = {
-                gasPrice: await provider.getGasPrice(),
-                nonce: {},
-            }
-        }
-
-        if (!chainDataMapper[fromEid].nonce[signer.address]) {
-            chainDataMapper[fromEid].nonce[signer.address] = await provider.getTransactionCount(signer.address)
-        }
 
         const OAppContract = OAppFactory.attach(oappAddress)
         const EPV2Contract = EndpointV2Factory.attach(epv2Address)
@@ -107,15 +102,38 @@ async function main() {
 
     /*
      */
-    TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, nonEvmOapp)
+    // TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
+        contractMetaData,
+        nonEvmOapp
+    )
 
-    await simulateTransactions(contractMetaData, TxTypeEidMapping)
-    // await executeTransactions(txs, wireEvmObjects)
+    // @todo Clean this up or move to utils
+    const rpcUrlSelfMap: { [eid: eid]: string } = {}
+    for (const [eid, eidData] of Object.entries(contractMetaData)) {
+        rpcUrlSelfMap[eid] = eidData.provider.connection.url
+    }
+
+    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap)
+
+    try {
+        const forkRpcMap = await anvilForkNode.startNodes()
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap)
+        console.log('\nAll transactions have been SIMULATED on the blockchains.')
+        // await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap)
+        // console.log('\nAll transactions have been EXECUTED on the blockchains.')
+    } catch (error) {
+        anvilForkNode.killNodes()
+        throw error.error
+    }
+    anvilForkNode.killNodes()
 }
 
+// @todo Refactor this file.
 main()
     .then(() => {
         console.log('Your EVM OApps have now been wired with the Aptos OApp.')

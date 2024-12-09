@@ -1,7 +1,17 @@
-import { ethers, PopulatedTransaction } from 'ethers'
+import { ethers, PopulatedTransaction, providers } from 'ethers'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
+import { ChildProcess } from 'child_process'
 
-export type TxTypes = 'setPeer' | 'setDelegate' | 'setEnforcedOptions' | 'setSendLibrary'
+export type TxTypes =
+    | 'setPeer'
+    | 'setDelegate'
+    | 'setEnforcedOptions'
+    | 'setSendLibrary'
+    | 'setReceiveLibrary'
+    | 'setReceiveLibraryTimeout'
+    | 'sendConfig'
+    | 'receiveConfig'
+
 export type EidTxMap = Record<eid, [PopulatedTransaction]>
 export type eid = number
 export type address = string
@@ -21,9 +31,9 @@ export type deploymentFile = {
     storageLayout: object
 }
 
-export type AptosOFTMetadata = {
+export type NonEvmOAppMetadata = {
+    address: address
     eid: eid
-    aptosAddress: string
     rpc: string
 }
 
@@ -44,7 +54,8 @@ export type ContractMetadata = {
 export type AccountData = {
     [eid: number]: {
         gasPrice: ethers.BigNumber
-        nonce: Record<address, number>
+        nonce: number
+        signer: providers.JsonRpcSigner
     }
 }
 //[TxTypes][eid] = PopulatedTransaction
@@ -54,7 +65,19 @@ export type TxEidMapping = Record<TxTypes, EidTxMap>
 export type ContractMetadataMapping = Record<eid, ContractMetadata>
 
 export type enforcedOptionParam = {
-    eid: number
+    eid: eid
     msgType: number
     options: string
 }
+
+export type RecvLibParam = {
+    lib: address
+    isDefault: boolean
+}
+
+export type RecvLibraryTimeoutConfig = {
+    lib: address
+    expiry: bigint
+}
+
+export type AnvilNode = { process: ChildProcess; rpcUrl: string }

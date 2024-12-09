@@ -1,13 +1,17 @@
-import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Sets delegate for a contract.
+ * @dev Fetches the current delegate from EndpointV2
+ * @dev Sets the new delegate on the OApp
+ * @returns EidTxMap
  */
 export async function createSetDelegateTransactions(
     eidDataMapping: ContractMetadataMapping,
-    _aptosOft: AptosOFTMetadata
+    _nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 

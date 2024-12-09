@@ -1,15 +1,22 @@
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap } from '../utils/types'
 
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
 /**
- * Sets peer information for connections to wire.
+ * @author Shankar
+ * @notice Generates setSendLibrary transaction per Eid's OFT.
+ * @dev Fetches the current sendLibrary from EndpointV2
+ * @dev Sets the new sendLibrary on the EndpointV2.
+ * @dev The zero address != current default send library
+ * @dev - Zero Address is an abstraction to a variable send library configurable by LZ.
+ * @dev - The "value" of the current default send library is a fixed value that is invariant on LZ changing the default send library.
+ * @returns EidTxMap
  */
 export async function createSetSendLibraryTransactions(
     eidDataMapping: ContractMetadataMapping,
-    aptosOft: AptosOFTMetadata
+    nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
@@ -19,7 +26,7 @@ export async function createSetSendLibraryTransactions(
             continue
         }
 
-        const fromSendLibrary = await getSendLibrary(contract.epv2, address.oapp, aptosOft.eid)
+        const fromSendLibrary = await getSendLibrary(contract.epv2, address.oapp, nonEvmOapp.eid)
 
         const toSendLibrary = utils.getAddress(configOapp.sendLibrary)
 
@@ -30,7 +37,7 @@ export async function createSetSendLibraryTransactions(
 
         diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: fromSendLibrary }, { sendLibrary: toSendLibrary })
 
-        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, aptosOft.eid, toSendLibrary)
+        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, toSendLibrary)
 
         if (!txTypePool[eid]) {
             txTypePool[eid] = []
@@ -46,7 +53,7 @@ export async function getSendLibrary(epv2Contract: Contract, evmAddress: string,
     const sendLib = await epv2Contract.getSendLibrary(evmAddress, aptosEid)
 
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
-        return '0x0000000000000000000000000000000000000000'
+        return ZEROADDRESS_EVM
     }
 
     const sendLibAddress = utils.getAddress(sendLib)

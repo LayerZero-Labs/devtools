@@ -9,6 +9,12 @@ const parser = new ArgumentParser({
     description: 'A simple CLI tool built with argparse in TypeScript',
 })
 
+/**
+ * @author Shankar
+ * @notice Main function to build an OFT
+ * @dev Wraps the aptos move build command
+ * @returns Promise<void>
+ */
 async function main() {
     // read in the first arg passed via the command line
     parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
