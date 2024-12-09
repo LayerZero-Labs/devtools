@@ -362,3 +362,5 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
     rl.close()
     return answer.toLowerCase() === 'yes'
 }
+
+export const ZEROADDRESS_EVM = '0x0000000000000000000000000000000000000000'

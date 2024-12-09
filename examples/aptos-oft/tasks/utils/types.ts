@@ -31,9 +31,9 @@ export type deploymentFile = {
     storageLayout: object
 }
 
-export type AptosOFTMetadata = {
+export type NonEvmOAppMetadata = {
+    address: address
     eid: eid
-    aptosAddress: string
     rpc: string
 }
 
@@ -81,5 +81,3 @@ export type RecvLibraryTimeoutConfig = {
 }
 
 export type AnvilNode = { process: ChildProcess; rpcUrl: string }
-
-export const ZEROADDRESS = '0x0000000000000000000000000000000000000000'

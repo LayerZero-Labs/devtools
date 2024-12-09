@@ -1,6 +1,6 @@
-import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
+import { diffPrinter } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
  * @author Shankar
@@ -11,23 +11,23 @@ import { Contract } from 'ethers'
  */
 export async function createSetPeerTransactions(
     eidDataMapping: ContractMetadataMapping,
-    aptosOft: AptosOFTMetadata
+    nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract }] of Object.entries(eidDataMapping)) {
-        const { eid: aptosEid, aptosAddress } = aptosOft
+        const { eid: aptosEid, address: targetNonEvmAddress } = nonEvmOapp
 
         const currentPeer = await getPeer(contract.oapp, aptosEid)
 
-        if (currentPeer === aptosAddress) {
+        if (currentPeer === targetNonEvmAddress) {
             console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        diffPrinter(`Setting Peer on ${eid}`, { peer: currentPeer }, { peer: aptosAddress })
+        diffPrinter(`Setting Peer on ${eid}`, { peer: currentPeer }, { peer: targetNonEvmAddress })
 
-        const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, aptosAddress)
+        const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, targetNonEvmAddress)
 
         if (!txTypePool[eid]) {
             txTypePool[eid] = []

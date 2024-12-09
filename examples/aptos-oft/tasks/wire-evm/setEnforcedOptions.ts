@@ -1,8 +1,7 @@
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
-
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract } from 'ethers'
+import { diffPrinter } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
 
 /**
  * @author Shankar
@@ -13,7 +12,7 @@ import { Contract } from 'ethers'
  */
 export async function createSetEnforcedOptionsTransactions(
     eidDataMapping: ContractMetadataMapping,
-    _aptosOft: AptosOFTMetadata
+    _nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 

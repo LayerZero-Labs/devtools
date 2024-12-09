@@ -1,6 +1,6 @@
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, ZEROADDRESS } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap } from '../utils/types'
 
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
@@ -13,7 +13,7 @@ const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
  */
 export async function createSetSendLibraryTransactions(
     eidDataMapping: ContractMetadataMapping,
-    aptosOft: AptosOFTMetadata
+    nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
@@ -23,7 +23,7 @@ export async function createSetSendLibraryTransactions(
             continue
         }
 
-        const fromSendLibrary = await getSendLibrary(contract.epv2, address.oapp, aptosOft.eid)
+        const fromSendLibrary = await getSendLibrary(contract.epv2, address.oapp, nonEvmOapp.eid)
 
         const toSendLibrary = utils.getAddress(configOapp.sendLibrary)
 
@@ -34,7 +34,7 @@ export async function createSetSendLibraryTransactions(
 
         diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: fromSendLibrary }, { sendLibrary: toSendLibrary })
 
-        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, aptosOft.eid, toSendLibrary)
+        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, toSendLibrary)
 
         if (!txTypePool[eid]) {
             txTypePool[eid] = []
@@ -50,7 +50,7 @@ export async function getSendLibrary(epv2Contract: Contract, evmAddress: string,
     const sendLib = await epv2Contract.getSendLibrary(evmAddress, aptosEid)
 
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
-        return ZEROADDRESS
+        return ZEROADDRESS_EVM
     }
 
     const sendLibAddress = utils.getAddress(sendLib)

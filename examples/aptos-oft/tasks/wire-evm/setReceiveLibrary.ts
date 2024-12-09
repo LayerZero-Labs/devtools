@@ -1,6 +1,6 @@
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam } from '../utils/types'
 
 const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
 
@@ -13,7 +13,7 @@ const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
  */
 export async function createSetReceiveLibraryTransactions(
     eidDataMapping: ContractMetadataMapping,
-    aptosOft: AptosOFTMetadata
+    nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
@@ -23,7 +23,7 @@ export async function createSetReceiveLibraryTransactions(
             continue
         }
 
-        const fromReceiveLibrary = await getReceiveLibrary(contract.epv2, address.oapp, aptosOft.eid)
+        const fromReceiveLibrary = await getReceiveLibrary(contract.epv2, address.oapp, nonEvmOapp.eid)
 
         const toReceiveLibrary = utils.getAddress(configOapp.receiveLibraryConfig.receiveLibrary)
 
@@ -42,7 +42,7 @@ export async function createSetReceiveLibraryTransactions(
 
         const tx = await contract.epv2.populateTransaction.setReceiveLibrary(
             address.oapp,
-            aptosOft.eid,
+            nonEvmOapp.eid,
             toReceiveLibrary,
             receiveLibraryGracePeriod
         )
@@ -62,7 +62,7 @@ export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: stri
     const recvLib = recvLibParam.lib
 
     if (recvLib === error_LZ_DefaultReceiveLibUnavailable) {
-        return '0x0000000000000000000000000000000000000000'
+        return ZEROADDRESS_EVM
     }
 
     const recvLibAddress = utils.getAddress(recvLib)

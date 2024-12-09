@@ -2,7 +2,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from './utils/utils'
-import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
+import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
 
 import { createSetPeerTransactions } from './wire-evm/setPeer'
 // import { createSetDelegateTransactions } from './wire-evm/setDelegate'
@@ -51,10 +51,11 @@ async function main() {
     const contractMetaData: ContractMetadataMapping = {}
 
     // @todo Fetch this from the config instead of hardcoding.
-    const APTOS_OFT = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
-    const aptosOft: AptosOFTMetadata = {
+    // @todo Use this as a primary key for NonEvmOAppWiring in the following code
+    const APTOS_OAPP_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
+    const nonEvmOapp: NonEvmOAppMetadata = {
+        address: APTOS_OAPP_ADDRESS,
         eid: EID_APTOS,
-        aptosAddress: APTOS_OFT,
         rpc: rpcUrls[EID_APTOS],
     }
 
@@ -101,14 +102,14 @@ async function main() {
 
     /*
      */
-    TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, nonEvmOapp)
     // TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, aptosOft)
+    TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
         contractMetaData,
-        aptosOft
+        nonEvmOapp
     )
 
     // @todo Clean this up or move to utils

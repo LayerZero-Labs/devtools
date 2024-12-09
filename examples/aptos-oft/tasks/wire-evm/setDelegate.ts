@@ -1,6 +1,6 @@
-import { AptosOFTMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter } from '../utils/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
  * @author Shankar
@@ -11,7 +11,7 @@ import { Contract, utils } from 'ethers'
  */
 export async function createSetDelegateTransactions(
     eidDataMapping: ContractMetadataMapping,
-    _aptosOft: AptosOFTMetadata
+    _nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 

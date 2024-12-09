@@ -1,6 +1,5 @@
-import { providers, Contract } from 'ethers'
+import { ethers, providers, Contract } from 'ethers'
 import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '../utils/types'
-import { ethers } from 'ethers'
 
 /**
  * @author Shankar

@@ -1,6 +1,12 @@
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibraryTimeoutConfig } from '../utils/types'
-import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
+import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
+import type {
+    NonEvmOAppMetadata,
+    ContractMetadataMapping,
+    RecvLibraryTimeoutConfig,
+    EidTxMap,
+    eid,
+} from '../utils/types'
 
 /**
  * @author Shankar
@@ -11,7 +17,7 @@ import { Contract, utils } from 'ethers'
  */
 export async function createSetReceiveLibraryTimeoutTransactions(
     eidDataMapping: ContractMetadataMapping,
-    aptosOft: AptosOFTMetadata
+    nonEvmOapp: NonEvmOAppMetadata
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
@@ -23,7 +29,7 @@ export async function createSetReceiveLibraryTimeoutTransactions(
             continue
         }
 
-        const fromReceiveLibraryParam = await getReceiveLibraryTimeout(contract.epv2, address.oapp, aptosOft.eid)
+        const fromReceiveLibraryParam = await getReceiveLibraryTimeout(contract.epv2, address.oapp, nonEvmOapp.eid)
         const fromReceiveLibrary = fromReceiveLibraryParam.lib
         const fromReceiveLibraryExpiry = Number(fromReceiveLibraryParam.expiry)
 
@@ -45,7 +51,7 @@ export async function createSetReceiveLibraryTimeoutTransactions(
 
         const tx = await contract.epv2.populateTransaction.setReceiveLibraryTimeout(
             address.oapp,
-            aptosOft.eid,
+            nonEvmOapp.eid,
             toReceiveLibrary,
             toReceiveLibraryExpiry
         )
@@ -68,10 +74,10 @@ export async function getReceiveLibraryTimeout(
     const recvLibTimeoutParam: RecvLibraryTimeoutConfig = await epv2Contract.receiveLibraryTimeout(evmAddress, aptosEid)
 
     const recvLib = recvLibTimeoutParam.lib
-    const addressZero = '0x0000000000000000000000000000000000000000'
-    if (recvLib === addressZero) {
+
+    if (recvLib === ZEROADDRESS_EVM) {
         return {
-            lib: addressZero,
+            lib: ZEROADDRESS_EVM,
             expiry: BigInt(0),
         }
     }
