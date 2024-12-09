@@ -24,12 +24,11 @@ export async function createSetReceiveLibraryTimeoutTransactions(
         }
 
         const fromReceiveLibraryParam = await getReceiveLibraryTimeout(contract.epv2, address.oapp, aptosOft.eid)
-
         const fromReceiveLibrary = fromReceiveLibraryParam.lib
-        const fromReceiveLibraryExpiry = fromReceiveLibraryParam.expiry
+        const fromReceiveLibraryExpiry = Number(fromReceiveLibraryParam.expiry)
 
         const toReceiveLibrary = utils.getAddress(configOapp.receiveLibraryTimeoutConfig.lib)
-        const toReceiveLibraryExpiry = configOapp.receiveLibraryTimeoutConfig.expiry
+        const toReceiveLibraryExpiry = Number(configOapp.receiveLibraryTimeoutConfig.expiry)
 
         if (fromReceiveLibrary === toReceiveLibrary && fromReceiveLibraryExpiry === toReceiveLibraryExpiry) {
             console.log(
@@ -40,8 +39,8 @@ export async function createSetReceiveLibraryTimeoutTransactions(
 
         diffPrinter(
             `Setting Receive Library on ${eid}`,
-            fromReceiveLibraryParam,
-            configOapp.receiveLibraryTimeoutConfig
+            { lib: fromReceiveLibrary, expiry: fromReceiveLibraryExpiry },
+            { lib: toReceiveLibrary, expiry: toReceiveLibraryExpiry }
         )
 
         const tx = await contract.epv2.populateTransaction.setReceiveLibraryTimeout(
