@@ -18,7 +18,7 @@ async function main() {
     const endpointAddress = getEndpointAddressFromNamedAddresses(getNamedAddresses(lzNetworkStage))
 
     console.log(`\n🔧 Configuring Aptos OFT Contract`)
-    console.log(`\tOFT Address: ${aptosOftAddress}\n`)
+    console.log(`\tAddress: ${aptosOftAddress}\n`)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
     const endpoint = new Endpoint(aptos, endpointAddress)
