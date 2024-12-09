@@ -2,6 +2,8 @@
 
 pragma solidity ^0.8.20;
 
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import { OApp, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 import { IOAppMsgInspector } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppMsgInspector.sol";
@@ -112,7 +114,7 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
         returns (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt)
     {
         uint256 minAmountLD = 0; // Unused in the default implementation.
-        uint256 maxAmountLD = type(uint64).max; // Unused in the default implementation.
+        uint256 maxAmountLD = IERC20(this.token()).totalSupply(); // Unused in the default implementation.
         oftLimit = OFTLimit(minAmountLD, maxAmountLD);
 
         // Unused in the default implementation; reserved for future complex fee details.
