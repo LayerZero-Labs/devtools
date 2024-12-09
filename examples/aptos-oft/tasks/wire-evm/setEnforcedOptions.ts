@@ -51,28 +51,27 @@ export async function createSetEnforcedOptionsTransactions(
                 console.log(
                     `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
                 )
-                continue
+            } else {
+                diffFromOptions[msgType] = fromOptions
+                diffToOptions[msgType] = toOptions
+
+                enforcedOptionParams.push({
+                    eid: eid,
+                    msgType: msgType,
+                    options: toOptions,
+                })
+
+                diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
+
+                const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+
+                if (!txTypePool[_eid]) {
+                    txTypePool[_eid] = []
+                }
+
+                txTypePool[_eid].push(tx)
             }
-
-            diffFromOptions[msgType] = fromOptions
-            diffToOptions[msgType] = toOptions
-
-            enforcedOptionParams.push({
-                eid: eid,
-                msgType: msgType,
-                options: toOptions,
-            })
         }
-
-        diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
-
-        const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
-
-        if (!txTypePool[_eid]) {
-            txTypePool[_eid] = []
-        }
-
-        txTypePool[_eid].push(tx)
     }
 
     return txTypePool
