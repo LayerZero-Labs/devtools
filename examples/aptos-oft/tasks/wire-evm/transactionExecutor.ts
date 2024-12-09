@@ -34,18 +34,21 @@ export async function executeTransactions(
     const tx_pool: Promise<providers.TransactionResponse>[] = []
 
     for (const [eid, _eidData] of Object.entries(eidMetaData)) {
-        // Create a new provider using the URL from rpcUrlsMap
+        /*
+         * Create a new provider using the URL from rpcUrlsMap
+         * This is required because:
+         *  - forkUrl != rpcUrl => fork mode
+         *  - forkUrl = rpcUrl => mainnet mode
+         *
+         * The mapping helps keep track of the different chains and their respective providers
+         * We also create a signer object using the private key and provider
+         */
         const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-
-        // Create a new signer with the same account on the new provider
         const signer = new ethers.Wallet(process.env.PRIVATE_KEY, newProvider)
-        // Fetch the nonce for the account
-        const nonce = await signer.getTransactionCount()
-        const gasPrice = await signer.getGasPrice()
 
         accountEidMap[eid] = {
-            nonce: nonce,
-            gasPrice: gasPrice,
+            nonce: await signer.getTransactionCount(),
+            gasPrice: await signer.getGasPrice(),
             signer: signer,
         }
     }
@@ -68,13 +71,11 @@ export async function executeTransactions(
             const signer = accountEidMap[eid].signer
 
             for (const tx of TxPool) {
-                const chainTx = tx
+                tx.gasLimit = await provider.estimateGas(tx)
+                tx.gasPrice = accountEidMap[eid].gasPrice
+                tx.nonce = accountEidMap[eid].nonce++
 
-                chainTx.gasLimit = await provider.estimateGas(tx)
-                chainTx.gasPrice = accountEidMap[eid].gasPrice
-                chainTx.nonce = accountEidMap[eid].nonce++
-
-                tx_pool.push(signer.sendTransaction(chainTx))
+                tx_pool.push(signer.sendTransaction(tx))
             }
         }
     }

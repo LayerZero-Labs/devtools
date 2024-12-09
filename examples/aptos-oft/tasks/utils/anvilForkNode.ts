@@ -1,33 +1,43 @@
 import { spawn } from 'child_process'
-import type { AnvilNode } from './types'
+import type { AnvilNode, eid } from './types'
+
+/**
+ * @author Shankar
+ * @description Class to manage Anvil fork nodes
+ * @param forkUrls - Array of URLs to fork from
+ * @param eids - Array of EIDs to associate with the fork URLs
+ * @param startingPort - Starting port number for the Anvil fork nodes (default: 8545)
+ * @dev Used to create anvil forks to run simulations on before sending them on-chain
+ * @returns AnvilForkNode instance
+ */
 class AnvilForkNode {
     public nodes: AnvilNode[] = []
-    public rpcUrlsMap: Record<string, string> = {}
+    // Maps EIDs to RPC URLs
+    public forkUrlsMap: Record<eid, string> = {}
 
-    // Constructor to initialize and start Anvil fork nodes
     constructor(
-        private forkUrls: string[],
-        private eids: string[],
+        private eidRpcMap: Record<string, string>,
         private startingPort: number = 8545
     ) {}
 
-    // Method to start the Anvil fork nodes
+    // Start the Anvil fork nodes at incremental ports
     public async startNodes(): Promise<Record<string, string>> {
-        for (let i = 0; i < this.forkUrls.length; i++) {
-            const port = this.startingPort + i
-            console.log(`Starting Anvil node on port ${port} using fork URL ${this.forkUrls[i]}...`)
-            const node = await this.startAnvilForkNode(this.forkUrls[i], port.toString())
+        for (const [eid, rpcUrl] of Object.entries(this.eidRpcMap)) {
+            console.log(`Starting Anvil node on port ${this.startingPort} using fork URL ${rpcUrl}...`)
+            const node = await this.startAnvilForkNode(rpcUrl, this.startingPort.toString())
             this.nodes.push(node)
-            this.rpcUrlsMap[this.eids[i]] = node.rpcUrl
+            this.forkUrlsMap[eid] = node.rpcUrl
+            this.startingPort++
         }
-        return this.rpcUrlsMap
+
+        return this.forkUrlsMap
     }
 
     // Method to start an individual Anvil fork node
     private startAnvilForkNode(forkUrl: string, port: string): Promise<AnvilNode> {
         return new Promise((resolve) => {
             const anvilNode = spawn('anvil', ['--fork-url', forkUrl, '--port', port], {
-                stdio: 'ignore', // Silence output
+                stdio: 'ignore', // Silence output so you don't see the logs
             })
 
             // Wait for the node to start
@@ -36,7 +46,7 @@ class AnvilForkNode {
                     process: anvilNode,
                     rpcUrl: `http://127.0.0.1:${port}`,
                 })
-            }, 1000) // Adjust the delay as needed
+            }, 1000)
         })
     }
 
@@ -51,7 +61,7 @@ class AnvilForkNode {
 
     // Method to get the RPC URLs of the running Anvil fork nodes
     public getRpcMap(): Record<string, string> {
-        return this.rpcUrlsMap
+        return this.forkUrlsMap
     }
 }
 

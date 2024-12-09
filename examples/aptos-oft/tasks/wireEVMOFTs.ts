@@ -1,11 +1,11 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
-import { createEidToNetworkMapping, getConfigConnections, getAccountConfig } from './utils/utils'
+import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from './utils/utils'
 import { AptosOFTMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
 
 import { createSetPeerTransactions } from './wire-evm/setPeer'
-import { createSetDelegateTransactions } from './wire-evm/setDelegate'
+// import { createSetDelegateTransactions } from './wire-evm/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
 import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
@@ -22,13 +22,16 @@ if (!process.env.PRIVATE_KEY) {
 // @todo Fetch this from the config instead of hardcoding.
 const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
 
-/*
- * Main function to initialize the wiring process.
+/**
+ * @author Shankar
+ * @description Handles wiring of EVM contracts with the Aptos OApp
+ * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
 async function main() {
+    // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
 
-    const accountConfigs = getAccountConfig()
+    const accountConfigs = getHHAccountConfig()
     const networks = createEidToNetworkMapping()
     const rpcUrls = createEidToNetworkMapping('url')
 
@@ -55,7 +58,10 @@ async function main() {
         rpc: rpcUrls[EID_APTOS],
     }
 
-    // Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
+    /*
+     * Looping through the connections we build out the contractMetaData and TxTypeEidMapping by reading from the deployment files.
+     * contractMetaData contains ethers Contract objects for the OApp and EndpointV2 contracts.
+     */
     for (const conn of connectionsToWire) {
         const fromEid = conn.from.eid as eid
         const fromNetwork = networks[fromEid]
@@ -96,7 +102,7 @@ async function main() {
     /*
      */
     TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, aptosOft)
-    TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
+    // TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, aptosOft)
@@ -105,26 +111,20 @@ async function main() {
         aptosOft
     )
 
-    const rpcUrlSelfMap: { [eid: string]: string } = {}
+    // @todo Clean this up or move to utils
+    const rpcUrlSelfMap: { [eid: eid]: string } = {}
     for (const [eid, eidData] of Object.entries(contractMetaData)) {
         rpcUrlSelfMap[eid] = eidData.provider.connection.url
     }
-    const forkUrls = Object.values(rpcUrlSelfMap)
-    const eids = Object.keys(rpcUrlSelfMap)
-    const anvilForkNode = new AnvilForkNode(forkUrls, eids)
-    const forkRpcMap = anvilForkNode.getRpcMap()
+
+    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap)
 
     try {
-        await anvilForkNode.startNodes()
-    } catch (error) {
-        anvilForkNode.killNodes()
-    }
-
-    try {
+        const forkRpcMap = await anvilForkNode.startNodes()
         await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap)
         console.log('\nAll transactions have been SIMULATED on the blockchains.')
-        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap)
-        console.log('\nAll transactions have been EXECUTED on the blockchains.')
+        // await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap)
+        // console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
         throw error.error
@@ -132,6 +132,7 @@ async function main() {
     anvilForkNode.killNodes()
 }
 
+// @todo Refactor this file.
 main()
     .then(() => {
         console.log('Your EVM OApps have now been wired with the Aptos OApp.')

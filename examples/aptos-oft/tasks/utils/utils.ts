@@ -128,7 +128,7 @@ export function getConfigConnectionsFromConfigConnections(
     return connections
 }
 
-export function getAccountConfig(): Record<number, OAppNodeConfig> {
+export function getHHAccountConfig(): Record<number, OAppNodeConfig> {
     const conns = lzConfigAptos.contracts
 
     const configs: Record<number, OAppNodeConfig> = {}
