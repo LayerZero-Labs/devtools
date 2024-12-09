@@ -15,7 +15,7 @@ cat .aptos/config.yaml
 ## Build the OFT:
 We reccomend using the account address in printed by `cat .aptos/config.yaml` as the deployer and admin.
 ```
-ts-node tasks/deploy.ts --package-dir=oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-admin>
+ts-node tasks/build.ts --package-dir=oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-admin>
 ```
 ## Deploy the OFT:
 ```
@@ -122,4 +122,9 @@ npx hardhat run tasks/mintAptosOFT.ts
 Currently running into bugs with this script. Particularly around quoting send.
 ```
 npx hardhat run tasks/sendAptosOFT.ts
+```
+
+# Movement OFT Deployment:
+```
+aptos init --network custom --rest-url https://aptos.testnet.porto.movementlabs.xyz/v1 --faucet-url https://faucet.testnet.bardock.movementnetwork.xyz/
 ```

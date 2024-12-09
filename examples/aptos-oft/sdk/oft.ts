@@ -11,7 +11,7 @@ import {
 import { hexAddrToAptosBytesAddr } from './utils'
 
 export class OFT {
-    private aptos: Aptos
+    public aptos: Aptos
     private account_address: string
     private private_key: string
     private signer_account: Account
