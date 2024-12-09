@@ -72,3 +72,8 @@ export type RecvLibParam = {
     lib: address
     isDefault: boolean
 }
+
+export type RecvLibraryTimeoutConfig = {
+    lib: address
+    expiry: bigint
+}
