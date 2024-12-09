@@ -32,7 +32,7 @@ describe('endpoint-tests', () => {
             console.log(`defaultTimeout: ${defaultTimeout}`)
         })
 
-        it.only('should get receive library timeout duration', async () => {
+        it('should get receive library timeout duration', async () => {
             const timeout = await endpoint.getReceiveLibraryTimeout(
                 '0xaa9ca3588e3919c04f030ad14b55aba408eac6930a40e0b463b4299fd176bb88',
                 EndpointId.BSC_V2_TESTNET
