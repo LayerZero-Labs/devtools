@@ -1,4 +1,4 @@
-import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap } from '../utils/types'
+import { AptosOFTMetadata, ContractMetadataMapping, eid, EidTxMap, ZEROADDRESS } from '../utils/types'
 import { diffPrinter } from '../utils/utils'
 import { Contract, utils } from 'ethers'
 
@@ -50,12 +50,10 @@ export async function getSendLibrary(epv2Contract: Contract, evmAddress: string,
     const sendLib = await epv2Contract.getSendLibrary(evmAddress, aptosEid)
 
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
-        return '0x0000000000000000000000000000000000000000'
+        return ZEROADDRESS
     }
 
     const sendLibAddress = utils.getAddress(sendLib)
 
     return sendLibAddress
 }
-
-// @todo Add default send lib getter

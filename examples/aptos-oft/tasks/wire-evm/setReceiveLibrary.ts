@@ -69,5 +69,3 @@ export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: stri
 
     return recvLibAddress
 }
-
-// @todo Add default receive lib getter
