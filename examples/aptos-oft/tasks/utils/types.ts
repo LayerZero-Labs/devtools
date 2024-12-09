@@ -1,5 +1,6 @@
-import { ethers, PopulatedTransaction } from 'ethers'
+import { ethers, PopulatedTransaction, providers } from 'ethers'
 import type { OAppNodeConfig, OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
+import { ChildProcess } from 'child_process'
 
 export type TxTypes =
     | 'setPeer'
@@ -53,7 +54,8 @@ export type ContractMetadata = {
 export type AccountData = {
     [eid: number]: {
         gasPrice: ethers.BigNumber
-        nonce: Record<address, number>
+        nonce: number
+        signer: providers.JsonRpcSigner
     }
 }
 //[TxTypes][eid] = PopulatedTransaction
@@ -77,3 +79,7 @@ export type RecvLibraryTimeoutConfig = {
     lib: address
     expiry: bigint
 }
+
+export type AnvilNode = { process: ChildProcess; rpcUrl: string }
+
+export const ZEROADDRESS = '0x0000000000000000000000000000000000000000'
