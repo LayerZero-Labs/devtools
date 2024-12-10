@@ -165,11 +165,11 @@ There are several ways to go about it since the base code of OFTAdapter keeps co
 
 ## MintBurnOFTAdapter
 
-[`MintBurnOFTAdapter`](./contracts/MyMintBurnOFTAdapter.sol) is a template OFT Adapter used primarily for tokens that are **burnt** on chain A (source chain), as opposed to **locked**, and are minted on chain B (destination chain).
+[`MyMintBurnOFTAdapter`](./contracts/MyMintBurnOFTAdapter.sol) is a variant of OFT Adapter that can use a token's external permissions to **burn** on chain A (source chain), as opposed to **lock**, and mint on chain B (destination chain).
 
 ## Requirement
 
-The only requirement is that the base ERC20 must have a `burn` and a `mint` function
+The only requirement is that the base ERC20 must have an external or public `burn` and a `mint` function, and implement the `IMintableBurnable.sol` interface found in `./devtools/packages/oft-evm/interfaces/IMintableBurnable.sol`.
 
 ## Contracts Structure
 
