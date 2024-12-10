@@ -165,7 +165,7 @@ There are several ways to go about it since the base code of OFTAdapter keeps co
 
 ## MintBurnOFTAdapter
 
-[`MintBurnOFTAdapter`](/contracts/MyMintBurnOFTAdapter.sol) is a template OFT Adapter used primarily for tokens that are **burnt** on chain A (source chain), as opposed to **locked**, and are minted on chain B (destination chain).
+[`MintBurnOFTAdapter`](./contracts/MyMintBurnOFTAdapter.sol) is a template OFT Adapter used primarily for tokens that are **burnt** on chain A (source chain), as opposed to **locked**, and are minted on chain B (destination chain).
 
 ## Requirement
 
