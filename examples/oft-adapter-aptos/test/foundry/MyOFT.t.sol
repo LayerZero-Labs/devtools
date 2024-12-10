@@ -3,7 +3,6 @@ pragma solidity ^0.8.20;
 
 // Mock imports
 import { OFTMock } from "../mocks/OFTMock.sol";
-import { OFTAdapterMock } from "../mocks/OFTAdapterMock.sol";
 import { ERC20Mock } from "../mocks/ERC20Mock.sol";
 import { OFTComposerMock } from "../mocks/OFTComposerMock.sol";
 
@@ -26,18 +25,17 @@ import "forge-std/console.sol";
 // DevTools imports
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-contract MyOFTAdapterTest is TestHelperOz5 {
+contract MyOFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
     uint32 private aEid = 1;
     uint32 private bEid = 2;
 
-    ERC20Mock private aToken;
-    OFTAdapterMock private aOFTAdapter;
+    OFTMock private aOFT;
     OFTMock private bOFT;
 
-    address private userA = address(0x1);
-    address private userB = address(0x2);
+    address private userA = makeAddr("userA");
+    address private userB = makeAddr("userB");
     uint256 private initialBalance = 100 ether;
 
     function setUp() public virtual override {
@@ -47,45 +45,37 @@ contract MyOFTAdapterTest is TestHelperOz5 {
         super.setUp();
         setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        aToken = ERC20Mock(_deployOApp(type(ERC20Mock).creationCode, abi.encode("Token", "TOKEN")));
-
-        aOFTAdapter = OFTAdapterMock(
-            _deployOApp(
-                type(OFTAdapterMock).creationCode,
-                abi.encode(address(aToken), address(endpoints[aEid]), address(this))
-            )
+        aOFT = OFTMock(
+            _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))
         );
 
         bOFT = OFTMock(
-            _deployOApp(
-                type(OFTMock).creationCode,
-                abi.encode("Token", "TOKEN", address(endpoints[bEid]), address(this))
-            )
+            _deployOApp(type(OFTMock).creationCode, abi.encode("bOFT", "bOFT", address(endpoints[bEid]), address(this)))
         );
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
-        ofts[0] = address(aOFTAdapter);
+        ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
         this.wireOApps(ofts);
 
         // mint tokens
-        aToken.mint(userA, initialBalance);
+        aOFT.mint(userA, initialBalance);
+        bOFT.mint(userB, initialBalance);
     }
 
     function test_constructor() public {
-        assertEq(aOFTAdapter.owner(), address(this));
+        assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
 
-        assertEq(aToken.balanceOf(userA), initialBalance);
-        assertEq(aToken.balanceOf(address(aOFTAdapter)), 0);
-        assertEq(bOFT.balanceOf(userB), 0);
+        assertEq(aOFT.balanceOf(userA), initialBalance);
+        assertEq(bOFT.balanceOf(userB), initialBalance);
 
-        assertEq(aOFTAdapter.token(), address(aToken));
+        assertEq(aOFT.token(), address(aOFT));
         assertEq(bOFT.token(), address(bOFT));
     }
 
-    function test_send_oft_adapter() public {
+    function test_send_oft() public {
         uint256 tokensToSend = 1 ether;
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
         SendParam memory sendParam = SendParam(
@@ -97,25 +87,20 @@ contract MyOFTAdapterTest is TestHelperOz5 {
             "",
             ""
         );
-        MessagingFee memory fee = aOFTAdapter.quoteSend(sendParam, false);
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
 
-        assertEq(aToken.balanceOf(userA), initialBalance);
-        assertEq(aToken.balanceOf(address(aOFTAdapter)), 0);
-        assertEq(bOFT.balanceOf(userB), 0);
-
-        vm.prank(userA);
-        aToken.approve(address(aOFTAdapter), tokensToSend);
+        assertEq(aOFT.balanceOf(userA), initialBalance);
+        assertEq(bOFT.balanceOf(userB), initialBalance);
 
         vm.prank(userA);
-        aOFTAdapter.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
+        aOFT.send{ value: fee.nativeFee }(sendParam, fee, payable(address(this)));
         verifyPackets(bEid, addressToBytes32(address(bOFT)));
 
-        assertEq(aToken.balanceOf(userA), initialBalance - tokensToSend);
-        assertEq(aToken.balanceOf(address(aOFTAdapter)), tokensToSend);
-        assertEq(bOFT.balanceOf(userB), tokensToSend);
+        assertEq(aOFT.balanceOf(userA), initialBalance - tokensToSend);
+        assertEq(bOFT.balanceOf(userB), initialBalance + tokensToSend);
     }
 
-    function test_send_oft_adapter_compose_msg() public {
+    function test_send_oft_compose_msg() public {
         uint256 tokensToSend = 1 ether;
 
         OFTComposerMock composer = new OFTComposerMock();
@@ -134,17 +119,13 @@ contract MyOFTAdapterTest is TestHelperOz5 {
             composeMsg,
             ""
         );
-        MessagingFee memory fee = aOFTAdapter.quoteSend(sendParam, false);
+        MessagingFee memory fee = aOFT.quoteSend(sendParam, false);
 
-        assertEq(aToken.balanceOf(userA), initialBalance);
-        assertEq(aToken.balanceOf(address(aOFTAdapter)), 0);
-        assertEq(bOFT.balanceOf(userB), 0);
-
-        vm.prank(userA);
-        aToken.approve(address(aOFTAdapter), tokensToSend);
+        assertEq(aOFT.balanceOf(userA), initialBalance);
+        assertEq(bOFT.balanceOf(address(composer)), 0);
 
         vm.prank(userA);
-        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFTAdapter.send{ value: fee.nativeFee }(
+        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: fee.nativeFee }(
             sendParam,
             fee,
             payable(address(this))
@@ -165,8 +146,7 @@ contract MyOFTAdapterTest is TestHelperOz5 {
         );
         this.lzCompose(dstEid_, from_, options_, guid_, to_, composerMsg_);
 
-        assertEq(aToken.balanceOf(userA), initialBalance - tokensToSend);
-        assertEq(aToken.balanceOf(address(aOFTAdapter)), tokensToSend);
+        assertEq(aOFT.balanceOf(userA), initialBalance - tokensToSend);
         assertEq(bOFT.balanceOf(address(composer)), tokensToSend);
 
         assertEq(composer.from(), from_);
