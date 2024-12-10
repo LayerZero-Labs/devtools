@@ -44,21 +44,21 @@ const bscOAppConfig: OAppEdgeConfig = {
     },
     sendConfig: {
         executorConfig: {
-            maxMessageSize: 10000,
-            executor: '0x0',
+            maxMessageSize: 65536,
+            executor: '0x36B22905A1211A55E0d62eF46720172e2b0f24BD',
         },
         ulnConfig: {
-            confirmations: BigInt(5),
-            requiredDVNs: ['0x0'],
-            optionalDVNs: ['0x0'],
-            optionalDVNThreshold: 0,
+            // confirmations: BigInt(5),
+            requiredDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            // optionalDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            // optionalDVNThreshold: 0,
         },
     },
     receiveConfig: {
         ulnConfig: {
             confirmations: BigInt(5),
-            requiredDVNs: ['0x0'],
-            optionalDVNs: ['0x0'],
+            requiredDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            optionalDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
             optionalDVNThreshold: 0,
         },
     },
@@ -90,21 +90,21 @@ const ethOAppConfig: OAppEdgeConfig = {
     },
     sendConfig: {
         executorConfig: {
-            maxMessageSize: 10000,
-            executor: '0x0',
+            maxMessageSize: 65536,
+            executor: '0x36B22905A1211A55E0d62eF46720172e2b0f24BD',
         },
         ulnConfig: {
-            confirmations: BigInt(5),
-            requiredDVNs: ['0x0'],
-            optionalDVNs: ['0x0'],
-            optionalDVNThreshold: 0,
+            // confirmations: BigInt(5),
+            requiredDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            // optionalDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            // optionalDVNThreshold: 0,
         },
     },
     receiveConfig: {
         ulnConfig: {
             confirmations: BigInt(5),
-            requiredDVNs: ['0x0'],
-            optionalDVNs: ['0x0'],
+            requiredDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
+            optionalDVNs: ['0x10Aeafac83d48E2f9ac4bAAf94311c45fACe1404'],
             optionalDVNThreshold: 0,
         },
     },
