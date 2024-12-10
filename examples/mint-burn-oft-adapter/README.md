@@ -9,7 +9,7 @@
   <a href="https://docs.layerzero.network/contracts/oft" style="color: #a77dff">Quickstart</a> | <a href="https://docs.layerzero.network/contracts/oapp-configuration" style="color: #a77dff">Configuration</a> | <a href="https://docs.layerzero.network/contracts/options" style="color: #a77dff">Message Execution Options</a> | <a href="https://docs.layerzero.network/contracts/endpoint-addresses" style="color: #a77dff">Endpoint Addresses</a>
 </p>
 
-<p align="center">This repository contains an example implementation of the s, a variant of the OFTAdapter.sol standard from LayerZero. The purpose of this contract is to enable the deployment of more than one OFTAdapter within the mesh network, by utilziing an already deployed ERC20 token's external mint and burn methods on each chain.</p>
+<p align="center">This repository contains an example implementation of the MintBurnOFTAdapter, a variant of the OFTAdapter.sol standard from LayerZero. The purpose of this contract is to enable the deployment of more than one OFTAdapter within the mesh network, by utilziing an already deployed ERC20 token's external mint and burn methods on each chain.</p>
 
 <p align="center">
   <a href="https://layerzero.network" style="color: #a77dff">Homepage</a> | <a href="https://docs.layerzero.network/" style="color: #a77dff">Docs</a> | <a href="https://layerzero.network/developers" style="color: #a77dff">Developers</a>
@@ -34,6 +34,7 @@
     - [Variables](#variables-1)
     - [Functions](#functions-1)
 
+
 ## Usage
 
 ### OFTAdapter additional setup:
@@ -44,7 +45,6 @@
   oftAdapter: {
       tokenAddress: '0x0',
   }
-  ```
 
 ### Developing Contracts
 
@@ -147,6 +147,7 @@ Ideally, when you want to convert an existing ERC20 token with its current fixed
 
 There are several ways to go about it since the base code of OFTAdapter keeps contract logic implementation up to the developer. Eg., the Adapter could be implemented in such a way that the original ERC20 is locked inside the Adapter on chain A and the OFT is minted on chain B.
 
+
 ## Key Features
 
 - **Mint and Burn Access**: Enables the MintBurnOFTAdapter to interact with ERC20 tokens that have minting and burning capabilities. This is crucial for maintaining unified token supply across different blockchain networks in a decentralized manner.
@@ -160,15 +161,14 @@ There are several ways to go about it since the base code of OFTAdapter keeps co
 1. **ERC20 Token Access**: The deployer must ensure that the ERC20 token contract allows the MintBurnOFTAdapter to access its mint and burn methods. This typically requires configuring the ERC20 token's access control mechanisms to include the adapter's address in an allowlist.
 
 2. **Adapter Deployment and Configuration**:
-   Deploy the MintBurnOFTAdapter with references to the ERC20 token, the LayerZero endpoint, and any relevant delegate addresses.
-   Add the address of the newly deployed MintBurnOFTAdapter to the ERC20 token's allowlist to enable minting and burning.
+Deploy the MintBurnOFTAdapter with references to the ERC20 token, the LayerZero endpoint, and any relevant delegate addresses.
+Add the address of the newly deployed MintBurnOFTAdapter to the ERC20 token's allowlist to enable minting and burning.
+
 
 ## MintBurnOFTAdapter
-
 [`MintBurnOFTAdapter`](/contracts/MintBurnOFTAdapter.sol) is a template OFT adapter used primarily for tokens that are **burnt** on chain A (source chain), as opposed to **locked**, and are minted on chain B (destination chain).
 
 ## Requirement
-
 The only requirement is that the base ERC20 must have a `burn` and a `mint` function
 
 ## Contracts Structure
@@ -180,14 +180,11 @@ This is a periphery contract for minting or burning tokens and executing arbitra
 ### `MintBurnOFTAdapter.sol`
 
 #### Variables
-
 This is the actual OFT Adapter contract that maintains two constants: `innerToken` and `minterBurner`
-
 - `innerToken`: underlying ERC20 implementation
 - `minterBurner`: reference to the `IMintableBurnable` implementation that has the implementation of `burn` and `mint` functions
 
 #### Functions
-
 - `_debit`: Calls `burn` on `minterBurner` effectively burning tokens from sender's balance from source chain.
 - `_credit`: Calls `mint` on `minterBurner`, effectively minting tokens to sender's balance on destination chain.
 
