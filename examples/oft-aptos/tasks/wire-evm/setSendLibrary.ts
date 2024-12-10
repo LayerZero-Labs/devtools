@@ -5,7 +5,6 @@ import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap } from 
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
 /**
- * @author Shankar
  * @notice Generates setSendLibrary transaction per Eid's OFT.
  * @dev Fetches the current sendLibrary from EndpointV2
  * @dev Sets the new sendLibrary on the EndpointV2.

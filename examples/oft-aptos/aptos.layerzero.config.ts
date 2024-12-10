@@ -88,12 +88,12 @@ const config: OAppOmniGraphHardhat = {
                 ],
                 sendLibrary: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
                 receiveLibraryConfig: {
-                    // Required Receive Library Address on from
+                    // Required Receive Library Address on Aptos
                     receiveLibrary: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
-                    // Optional Grace Period for Switching Receive Library Address on from
+                    // Optional Grace Period for Switching Receive Library Address on Aptos
                     gracePeriod: BigInt(0),
                 },
-                // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on from
+                // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on Aptos
                 receiveLibraryTimeoutConfig: {
                     lib: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
                     expiry: BigInt(696969669),
@@ -101,16 +101,16 @@ const config: OAppOmniGraphHardhat = {
                 sendConfig: {
                     executorConfig: {
                         maxMessageSize: 10000,
-                        // The configured Executor address on from
+                        // The configured Executor address on Aptos
                         executor: '0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a686d',
                     },
                     ulnConfig: {
-                        // The number of block confirmations to wait on from before emitting the message from the source chain (from).
-                        confirmations: BigInt(5),
-                        // The address of the DVNs you will pay to verify a sent message on the source chain (from).
+                        // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
+                        confirmations: BigInt(300),
+                        // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
-                        // The address of the DVNs you will pay to verify a sent message on the source chain (from).
+                        // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
                         optionalDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
                         // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.
@@ -121,12 +121,12 @@ const config: OAppOmniGraphHardhat = {
                 // @dev Controls how the `from` chain receives messages from the `to` chain.
                 receiveConfig: {
                     ulnConfig: {
-                        // The number of block confirmations to expect from the `to` chain (Sepolia).
-                        confirmations: BigInt(5),
-                        // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain (BSC).
+                        // The number of block confirmations to expect from the `to` chain.
+                        confirmations: BigInt(300),
+                        // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
                         requiredDVNs: ['0x0'],
-                        // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain (BSC).
+                        // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
                         optionalDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
                         // The number of `optionalDVNs` that need to successfully verify the message for it to be considered Verified.

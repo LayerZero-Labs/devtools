@@ -9,7 +9,6 @@ import type {
 } from '../utils/types'
 
 /**
- * @author Shankar
  * @notice Generates setReceiveLibraryTimeout transaction per Eid's OFT.
  * @dev Fetches the current receiveLibraryTimeout from EndpointV2
  * @dev Sets the new receiveLibraryTimeout on the EndpointV2.

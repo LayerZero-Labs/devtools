@@ -3,7 +3,6 @@ import { diffPrinter } from '../utils/utils'
 import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
- * @author Shankar
  * @notice Sets peer information for connections to wire.
  * @dev Fetches the current peer from OApp
  * @dev Sets the new peer on the OApp

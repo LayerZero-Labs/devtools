@@ -5,7 +5,6 @@ import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLi
 const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
 
 /**
- * @author Shankar
  * @notice Generates setReceiveLibrary transaction per Eid's OFT.
  * @dev Fetches the current receiveLibrary from EndpointV2
  * @dev Sets the new receiveLibrary on the EndpointV2.

@@ -3,7 +3,6 @@ import { diffPrinter } from '../utils/utils'
 import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
- * @author Shankar
  * @notice Sets delegate for a contract.
  * @dev Fetches the current delegate from EndpointV2
  * @dev Sets the new delegate on the OApp

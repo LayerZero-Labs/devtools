@@ -23,7 +23,6 @@ if (!process.env.PRIVATE_KEY) {
 const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
 
 /**
- * @author Shankar
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */

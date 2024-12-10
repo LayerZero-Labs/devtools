@@ -12,7 +12,6 @@ import { hexAddrToAptosBytesAddr } from './utils'
 
 export class OFT {
     public aptos: Aptos
-    private account_address: string
     private private_key: string
     private signer_account: Account
     public oft_address: string
@@ -20,7 +19,6 @@ export class OFT {
     constructor(aptos: Aptos, oft_address: string, account_address: string, private_key: string) {
         this.aptos = aptos
         this.oft_address = oft_address
-        this.account_address = account_address
         this.private_key = PrivateKey.formatPrivateKey(private_key, PrivateKeyVariants.Ed25519)
         this.signer_account = Account.fromPrivateKey({
             privateKey: new Ed25519PrivateKey(this.private_key),

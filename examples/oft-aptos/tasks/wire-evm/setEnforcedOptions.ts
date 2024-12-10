@@ -4,7 +4,6 @@ import { diffPrinter } from '../utils/utils'
 import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
 
 /**
- * @author Shankar
  * @notice Sets EnforcedOptions for a contract.
  * @dev Fetches the current enforcedOptions from Oapp
  * @dev Sets the new enforcedOptions on the Oapp

@@ -175,43 +175,6 @@ export const UlnConfig = {
     },
 }
 
-// /**
-//  * Deserializes the ULN configuration from a string or Uint8Array.
-//  *
-//  * @param {string | Uint8Array} data - The data to deserialize.
-//  * @returns {UlnConfig} The deserialized ULN configuration.
-//  */
-// export function deserializeUlnConfig(data: string | Uint8Array): UlnConfig {
-//     if (typeof data === 'string') {
-//         data = Uint8Array.from(Buffer.from(trim0x(data), 'hex'))
-//     }
-//     const deserializer = new Deserializer(data, false)
-//     const confirmations = deserializer.deserializeU64()
-//     const optionalDVNThreshold = deserializer.deserializeU8()
-//     const requiredDVNCount = deserializer.deserializeU8()
-//     const requiredDVNs: string[] = []
-//     for (let i = 0; i < requiredDVNCount; i++) {
-//         requiredDVNs.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
-//     }
-//     const optionalDVNCount = deserializer.deserializeU8()
-//     const optionalDVNs: string[] = []
-//     for (let i = 0; i < optionalDVNCount; i++) {
-//         optionalDVNs.push(Buffer.from(deserializer.deserializeFixedBytes(32)).toString('hex'))
-//     }
-//     const useDefaultForConfirmations = deserializer.deserializeU8() === 1
-//     const useDefaultForRequiredDVNs = deserializer.deserializeU8() === 1
-//     const useDefaultForOptionalDVNs = deserializer.deserializeU8() === 1
-//     return {
-//         confirmations,
-//         optional_dvn_threshold: optionalDVNThreshold,
-//         required_dvns: requiredDVNs,
-//         optional_dvns: optionalDVNs,
-//         use_default_for_confirmations: useDefaultForConfirmations,
-//         use_default_for_required_dvns: useDefaultForRequiredDVNs,
-//         use_default_for_optional_dvns: useDefaultForOptionalDVNs,
-//     }
-// }
-
 /**
  * Interface representing the executor configuration.
  * Refer to packages/layerzero-v2/aptos/contracts/msglib/msglib_types/sources/configs_executor.move (in monorepo)

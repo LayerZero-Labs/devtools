@@ -2,7 +2,6 @@ import { spawn } from 'child_process'
 import type { AnvilNode, eid } from './types'
 
 /**
- * @author Shankar
  * @description Class to manage Anvil fork nodes
  * @param forkUrls - Array of URLs to fork from
  * @param eids - Array of EIDs to associate with the fork URLs

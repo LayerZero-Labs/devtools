@@ -2,7 +2,6 @@ import { ethers, providers, Contract } from 'ethers'
 import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '../utils/types'
 
 /**
- * @author Shankar
  * @notice Simulates transactions on the blockchains
  * - Fetches the nonce and balance for each chain
  * - Estimates gas for each transaction and updates the balance
