@@ -189,6 +189,42 @@ teardown() {
     pnpm test
 }
 
+@test "should work with pnpm & oft aptos example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-aptos"
+
+    LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-aptos --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with pnpm & oft adapter aptos example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter-aptos"
+
+    LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-adapter-aptos --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with pnpm & oft aptos coin example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-aptos-coin"
+
+    LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-aptos-coin --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with pnpm & oft adapter aptos coin example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter-aptos-coin"
+
+    LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-adapter-aptos-coin --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
 @test "should work with pnpm & oapp read example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
 
