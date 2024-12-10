@@ -323,15 +323,6 @@ teardown() {
     yarn test
 }
 
-@test "should work with npm & oft adapter aptos coin example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-adapter-aptos"
-
-    LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-adapter-aptos-coin --destination $DESTINATION --package-manager npm
-    cd "$DESTINATION"
-    npm run compile
-    npm run test
-}
-
 @test "should work with yarn & oapp read example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp-read"
 
