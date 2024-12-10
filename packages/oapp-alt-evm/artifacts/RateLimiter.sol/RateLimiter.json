@@ -1,0 +1,199 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "getAmountCanBeSent",
+      "inputs": [
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        {
+          "name": "currentAmountInFlight",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "amountCanBeSent",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "rateLimits",
+      "inputs": [
+        { "name": "dstEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        {
+          "name": "amountInFlight",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        { "name": "lastUpdated", "type": "uint256", "internalType": "uint256" },
+        { "name": "limit", "type": "uint256", "internalType": "uint256" },
+        { "name": "window", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "RateLimitsChanged",
+      "inputs": [
+        {
+          "name": "rateLimitConfigs",
+          "type": "tuple[]",
+          "indexed": false,
+          "internalType": "struct RateLimiter.RateLimitConfig[]",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "limit", "type": "uint256", "internalType": "uint256" },
+            { "name": "window", "type": "uint256", "internalType": "uint256" }
+          ]
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "RateLimitExceeded", "inputs": [] }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "getAmountCanBeSent(uint32)": "c272198d",
+    "rateLimits(uint32)": "ab99095d"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"RateLimitExceeded\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"window\",\"type\":\"uint256\"}],\"indexed\":false,\"internalType\":\"struct RateLimiter.RateLimitConfig[]\",\"name\":\"rateLimitConfigs\",\"type\":\"tuple[]\"}],\"name\":\"RateLimitsChanged\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"}],\"name\":\"getAmountCanBeSent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"currentAmountInFlight\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountCanBeSent\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"}],\"name\":\"rateLimits\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amountInFlight\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lastUpdated\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"window\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Abstract contract for implementing rate limiting functionality. This contract provides a basic framework for rate limiting how often a function can be executed. It is designed to be inherited by other contracts requiring rate limiting capabilities to protect resources or services from excessive use.The ordering of transactions within a given block (timestamp) affects the consumed capacity.Carefully consider the minimum window duration for the given blockchain.  For example, on Ethereum, the minimum window duration should be at least 12 seconds.  If a window less than 12 seconds is configured, then the rate limit will effectively reset with each block, rendering rate limiting ineffective.Carefully consider the proportion of the limit to the window.  If the limit is much smaller than the window, the decay function is lossy.  Consider using a limit that is greater than or equal to the window to avoid this.  This is especially important for blockchains with short average block times. Example 1: Max rate limit reached at beginning of window. As time continues the amount of in flights comes down. Rate Limit Config:   limit: 100 units   window: 60 seconds                              Amount in Flight (units) vs. Time Graph (seconds)      100 | * - (Max limit reached at beginning of window)          |   *          |     *          |       *       50 |         * (After 30 seconds only 50 units in flight)          |           *          |             *          |               *       0  +--|---|---|---|---|-->(After 60 seconds 0 units are in flight)             0  15  30  45  60 (seconds) Example 2: Max rate limit reached at beginning of window. As time continues the amount of in flights comes down allowing for more to be sent. At the 90 second mark, more in flights come in. Rate Limit Config:   limit: 100 units   window: 60 seconds                              Amount in Flight (units) vs. Time Graph (seconds)      100 | * - (Max limit reached at beginning of window)          |   *          |     *          |       *       50 |         *          * (50 inflight)          |           *          *          |             *          *          |               *          *        0  +--|--|--|--|--|--|--|--|--|--> Time              0 15 30 45 60 75 90 105 120  (seconds) Example 3: Max rate limit reached at beginning of window. At the 15 second mark, the window gets updated to 60 seconds and the limit gets updated to 50 units. This scenario shows the direct depiction of \\\"in flight\\\" from the previous window affecting the current window. Initial Rate Limit Config: For first 15 seconds   limit: 100 units   window: 30 seconds Updated Rate Limit Config: Updated at 15 second mark   limit: 50 units   window: 60 seconds                              Amount in Flight (units) vs. Time Graph (seconds)      100 - *            |*            | *            |  *            |   *            |    *            |     *       75 - |      *            |       *            |        *            |         *            |          *            |           *            |            *            |             *       50 - |              \\ud802\\udef0 <--(Slope changes at the 15 second mark because of the update.            |               \\u2727 *      Window extended to 60 seconds and limit reduced to 50 units.            |                \\u2727 \\ufe0e   *      Because amountInFlight/lastUpdated do not reset, 50 units are            |                 \\u2727       *      considered in flight from the previous window and the corresponding            |                  \\u2727 \\ufe0e          *     decay from the previous rate.)            |                   \\u2727              *       25 - |                    \\u2727                 *            |                     \\u2727                    *            |                      \\u2727                        *            |                       \\u2727                           *            |                        \\u2727                              *            |                         \\u2727                                  *            |                          \\u2727                                     *            |                           \\u2727                                        *        0 - +---|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----> Time            0   5    10   15   20   25   30   35   40   45   50   55   60   65   70   75   80   85   90 (seconds)            [  Initial 30 Second Window  ]                          [ --------------- Extended 60 Second Window --------------- ]\",\"events\":{\"RateLimitsChanged((uint32,uint256,uint256)[])\":{\"params\":{\"rateLimitConfigs\":\"An array of `RateLimitConfig` structs representing the rate limit configurations set. - `dstEid`: The destination endpoint id. - `limit`: This represents the maximum allowed amount within a given window. - `window`: Defines the duration of the rate limiting window.\"}}},\"kind\":\"dev\",\"methods\":{\"getAmountCanBeSent(uint32)\":{\"params\":{\"_dstEid\":\"The destination endpoint id.\"},\"returns\":{\"amountCanBeSent\":\"The amount that can be sent.\",\"currentAmountInFlight\":\"The current amount that was sent.\"}}},\"stateVariables\":{\"rateLimits\":{\"details\":\"Mapping from destination endpoint id to RateLimit Configurations.\"}},\"title\":\"RateLimiter\",\"version\":1},\"userdoc\":{\"errors\":{\"RateLimitExceeded()\":[{\"notice\":\"Error that is thrown when an amount exceeds the rate_limit.\"}]},\"events\":{\"RateLimitsChanged((uint32,uint256,uint256)[])\":{\"notice\":\"Emitted when _setRateLimits occurs.\"}},\"kind\":\"user\",\"methods\":{\"getAmountCanBeSent(uint32)\":{\"notice\":\"Get the current amount that can be sent to this destination endpoint id for the given rate limit window.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/oapp/utils/RateLimiter.sol\":\"RateLimiter\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/oapp/utils/RateLimiter.sol\":{\"keccak256\":\"0xb6615d6ec32aa015099680e36f4a5a1001821f699b55c68e7e333dbddf514d5e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f18549ef42d419b656ed0bfda4f1006e800a361c06b8c34ceabffd78d1d2dd86\",\"dweb:/ipfs/QmQMkkDg6nB4c1vYxJYdT4LnyMpdgsPYrMe8bX8L6XpEEn\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "RateLimitExceeded" },
+        {
+          "inputs": [
+            {
+              "internalType": "struct RateLimiter.RateLimitConfig[]",
+              "name": "rateLimitConfigs",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "limit",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "window",
+                  "type": "uint256"
+                }
+              ],
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "RateLimitsChanged",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getAmountCanBeSent",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "currentAmountInFlight",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountCanBeSent",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "dstEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "rateLimits",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "amountInFlight",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "lastUpdated",
+              "type": "uint256"
+            },
+            { "internalType": "uint256", "name": "limit", "type": "uint256" },
+            { "internalType": "uint256", "name": "window", "type": "uint256" }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "getAmountCanBeSent(uint32)": {
+            "params": { "_dstEid": "The destination endpoint id." },
+            "returns": {
+              "amountCanBeSent": "The amount that can be sent.",
+              "currentAmountInFlight": "The current amount that was sent."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "getAmountCanBeSent(uint32)": {
+            "notice": "Get the current amount that can be sent to this destination endpoint id for the given rate limit window."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/oapp/utils/RateLimiter.sol": "RateLimiter"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/oapp/utils/RateLimiter.sol": {
+        "keccak256": "0xb6615d6ec32aa015099680e36f4a5a1001821f699b55c68e7e333dbddf514d5e",
+        "urls": [
+          "bzz-raw://f18549ef42d419b656ed0bfda4f1006e800a361c06b8c34ceabffd78d1d2dd86",
+          "dweb:/ipfs/QmQMkkDg6nB4c1vYxJYdT4LnyMpdgsPYrMe8bX8L6XpEEn"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 11
+}
