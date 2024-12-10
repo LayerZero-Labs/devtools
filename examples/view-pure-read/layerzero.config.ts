@@ -4,7 +4,7 @@ import type { OAppReadOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/
 
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'ReadPublic',
+    contractName: 'ReadViewOrPure',
 }
 
 const config: OAppReadOmniGraphHardhat = {
