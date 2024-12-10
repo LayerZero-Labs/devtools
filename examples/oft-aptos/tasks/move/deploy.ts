@@ -44,7 +44,7 @@ async function main() {
         `--address-name=${address_name}`,
         `--named-addresses=${namedAddresses}`,
     ]
-
+    console.log(args)
     return new Promise<void>((resolve, reject) => {
         const childProcess = spawn(cmd, args, {
             stdio: ['inherit', 'pipe', 'pipe'], // Inherit stdin, pipe stdout and stderr

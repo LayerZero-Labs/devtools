@@ -30,7 +30,7 @@ export function createAccountFromPrivateKey(privateKey: string, account_address:
 }
 
 export function getNamedAddresses(networkType: string): string {
-    const addressesPath = path.join(__dirname, '../../config/deploymentAddresses.json')
+    const addressesPath = path.join(__dirname, '../../../config/deploymentAddresses.json')
     const addresses = JSON.parse(fs.readFileSync(addressesPath, 'utf8'))
     const networkAddresses = addresses[`${networkType}-addresses`]
 
