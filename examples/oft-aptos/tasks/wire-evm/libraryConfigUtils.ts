@@ -1,5 +1,5 @@
 import { Contract, utils, PopulatedTransaction } from 'ethers'
-import type { SetConfigParam, address, eid } from '../utils/types'
+import type { SetConfigParam, address, eid } from '../shared/types'
 import type { OAppSendConfig } from '@layerzerolabs/toolbox-hardhat'
 
 /**

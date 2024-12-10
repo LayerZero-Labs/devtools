@@ -1,18 +1,18 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
-import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from './utils/utils'
-import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
-
-import { createSetPeerTransactions } from './wire-evm/setPeer'
-// import { createSetDelegateTransactions } from './wire-evm/setDelegate'
-import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOptions'
-import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
-import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
-import { createSetReceiveLibraryTimeoutTransactions } from './wire-evm/setReceiveLibraryTimeout'
-import { createSetSendConfigTransactions } from './wire-evm/setSendConfig'
-import { executeTransactions } from './wire-evm/transactionExecutor'
+import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
+import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils//types'
 import AnvilForkNode from './utils/anvilForkNode'
+
+import { createSetPeerTransactions } from './setPeer'
+// import { createSetDelegateTransactions } from './setDelegate'
+import { createSetEnforcedOptionsTransactions } from './setEnforcedOptions'
+import { createSetSendLibraryTransactions } from './setSendLibrary'
+import { createSetReceiveLibraryTransactions } from './setReceiveLibrary'
+import { createSetReceiveLibraryTimeoutTransactions } from './setReceiveLibraryTimeout'
+// import { createSetSendConfigTransactions } from './setSendConfig'
+import { executeTransactions } from './transactionExecutor'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -100,6 +100,7 @@ async function main() {
     }
 
     /*
+     */
     TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, nonEvmOapp)
     // TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
@@ -109,8 +110,7 @@ async function main() {
         contractMetaData,
         nonEvmOapp
     )
-    */
-    TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+    // TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
 
     // @todo Clean this up or move to utils
     const rpcUrlSelfMap: { [eid: eid]: string } = {}

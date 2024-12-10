@@ -1,6 +1,6 @@
 import { Contract, utils } from 'ethers'
-import { diffPrinter } from '../utils/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
+import { diffPrinter } from '../shared/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../shared/types'
 
 /**
  * @notice Sets delegate for a contract.

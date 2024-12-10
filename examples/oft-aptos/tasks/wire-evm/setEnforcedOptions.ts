@@ -1,7 +1,7 @@
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { Contract } from 'ethers'
-import { diffPrinter } from '../utils/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../utils/types'
+import { diffPrinter } from '../shared/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, enforcedOptionParam } from '../shared/types'
 
 /**
  * @notice Sets EnforcedOptions for a contract.

@@ -1,12 +1,12 @@
 import { Contract, utils } from 'ethers'
-import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
+import { diffPrinter, ZEROADDRESS_EVM } from '../shared/utils'
 import type {
     NonEvmOAppMetadata,
     ContractMetadataMapping,
     RecvLibraryTimeoutConfig,
     EidTxMap,
     eid,
-} from '../utils/types'
+} from '../shared/types'
 
 /**
  * @notice Generates setReceiveLibraryTimeout transaction per Eid's OFT.

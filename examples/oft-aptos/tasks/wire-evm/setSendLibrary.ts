@@ -1,6 +1,6 @@
 import { Contract, utils } from 'ethers'
-import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, address } from '../utils/types'
+import { diffPrinter, ZEROADDRESS_EVM } from '../shared/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, address } from '../shared/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
