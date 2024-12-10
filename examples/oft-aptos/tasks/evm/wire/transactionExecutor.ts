@@ -1,5 +1,5 @@
 import { ethers, providers, Contract } from 'ethers'
-import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '../shared/types'
+import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '../utils/types'
 
 /**
  * @notice Simulates transactions on the blockchains

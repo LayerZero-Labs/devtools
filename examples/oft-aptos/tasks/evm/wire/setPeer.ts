@@ -1,6 +1,6 @@
 import { Contract } from 'ethers'
-import { diffPrinter } from '../shared/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../shared/types'
+import { diffPrinter } from '../../shared/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap } from '../utils/types'
 
 /**
  * @notice Sets peer information for connections to wire.

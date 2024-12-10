@@ -1,6 +1,6 @@
 import { Contract, utils } from 'ethers'
-import { diffPrinter, ZEROADDRESS_EVM } from '../shared/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam } from '../shared/types'
+import { diffPrinter, ZEROADDRESS_EVM } from '../../shared/utils'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam } from '../utils/types'
 
 const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
 
