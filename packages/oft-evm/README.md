@@ -23,7 +23,7 @@ pnpm install @layerzerolabs/oft-evm
 ```
 
 ```bash
-pnpm install @layerzerolabs/oft-evm
+yarn install @layerzerolabs/oft-evm
 ```
 
 ```bash

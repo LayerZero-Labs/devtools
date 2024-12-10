@@ -1,25 +1,26 @@
 import { task } from 'hardhat/config'
 import type { ActionType } from 'hardhat/types'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, SUBTASK_LZ_OAPP_WIRE_CONFIGURE, TASK_LZ_OAPP_WIRE } from '@/constants/tasks'
-import { createLogger, setDefaultLogLevel, printJson, pluralizeNoun } from '@layerzerolabs/io-devtools'
+import { createLogger, printJson, setDefaultLogLevel } from '@layerzerolabs/io-devtools'
 import { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import {
     types,
     SUBTASK_LZ_SIGN_AND_SEND,
     createGnosisSignerFactory,
     createSignerFactory,
-    formatOmniTransaction,
 } from '@layerzerolabs/devtools-evm-hardhat'
-import { OmniTransaction } from '@layerzerolabs/devtools'
-import { printLogo, printRecords } from '@layerzerolabs/io-devtools/swag'
+import { createWireFlow } from '@layerzerolabs/devtools'
+import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import type { SignAndSendResult } from '@layerzerolabs/devtools'
-import type { SubtaskConfigureTaskArgs } from './types'
+
+import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
-import './subtask.configure'
+import type { SubtaskConfigureTaskArgs, SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
-import { SubtaskLoadConfigTaskArgs } from '@/tasks/oapp/types'
-import type { SignerDefinition } from '@layerzerolabs/devtools-evm'
+import { writeFileSync } from 'fs'
+
+import './subtask.configure'
 
 interface TaskArgs {
     oappConfig: string
@@ -49,6 +50,10 @@ interface TaskArgs {
      * This can be useful in situations where a completely sifferent signing logic is required
      */
     signAndSendSubtask?: string
+    /**
+     * Output filename for the generated transactions.
+     */
+    outputFilename?: string
 }
 
 const action: ActionType<TaskArgs> = async (
@@ -63,6 +68,7 @@ const action: ActionType<TaskArgs> = async (
         loadConfigSubtask = SUBTASK_LZ_OAPP_CONFIG_LOAD,
         configureSubtask = SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
         signAndSendSubtask = SUBTASK_LZ_SIGN_AND_SEND,
+        outputFilename,
     },
     hre
 ): Promise<SignAndSendResult> => {
@@ -74,13 +80,10 @@ const action: ActionType<TaskArgs> = async (
     // And we'll create a logger for ourselves
     const logger = createLogger()
 
-    if (assert) {
-        logger.info(`Running in assertion mode`)
-    } else if (dryRun) {
-        logger.info(`Running in dry run mode`)
-    }
-
     // Now we can load and validate the config
+    //
+    // To maintain compatibility with the legacy hardhat-based CLI,
+    // we use a subtask to do this
     logger.debug(`Using ${loadConfigSubtask} subtask to load the config`)
     const graph: OAppOmniGraph = await hre.run(loadConfigSubtask, {
         configPath: oappConfigPath,
@@ -88,76 +91,37 @@ const action: ActionType<TaskArgs> = async (
         task: TASK_LZ_OAPP_WIRE,
     } satisfies SubtaskLoadConfigTaskArgs)
 
-    // At this point we are ready to create the list of transactions
-    logger.verbose(`Creating a list of wiring transactions`)
-
-    // We'll get the list of OmniTransactions using a subtask to allow for developers
-    // to use this as a hook and extend the configuration
-    logger.debug(`Using ${configureSubtask} subtask to get the configuration`)
-    const transactions: OmniTransaction[] = await hre.run(configureSubtask, {
-        graph,
-    } satisfies SubtaskConfigureTaskArgs)
-
-    // Flood users with debug output
-    logger.verbose(`Created a list of wiring transactions`)
-    logger.debug(`Following transactions are necessary:\n\n${printJson(transactions)}`)
-
-    // If there are no transactions that need to be executed, we'll just exit
-    if (transactions.length === 0) {
-        logger.info(`The OApp is wired, no action is necessary`)
-
-        return [[], [], []]
-    } else if (assert) {
-        // If we are in assertion mode, we'll print out the transactions and exit with code 1
-        // if there is anything left to configure
-        logger.error(`The OApp is not fully wired, following transactions are necessary:`)
-
-        // Print the outstanding transactions
-        printRecords(transactions.map(formatOmniTransaction))
-
-        // And set the exit code to failure
-        process.exitCode = process.exitCode || 1
-
-        return [[], [], transactions]
-    }
-
-    // If we are in dry run mode, we'll just print the transactions and exit
-    if (dryRun) {
-        printRecords(transactions.map(formatOmniTransaction))
-
-        return [[], [], transactions]
-    }
-
-    // Tell the user about the transactions
-    logger.info(
-        pluralizeNoun(
-            transactions.length,
-            `There is 1 transaction required to configure the OApp`,
-            `There are ${transactions.length} transactions required to configure the OApp`
-        )
-    )
-
     // Now let's create the signer
     logger.debug(
         signer == null ? `Creating a default signer` : `Creating a signer based on definition: ${printJson(signer)}`
     )
     const createSigner = safe ? createGnosisSignerFactory(signer) : createSignerFactory(signer)
 
-    // Now sign & send the transactions
-    logger.debug(`Using ${signAndSendSubtask} subtask to sign & send the transactions`)
-    const signAndSendResult: SignAndSendResult = await hre.run(signAndSendSubtask, {
-        transactions,
-        ci,
-        createSigner,
-    } satisfies SignAndSendTaskArgs)
+    // Then create the wire flow
+    const wireFlow = createWireFlow({
+        logger,
+        // We use hardhat subtasks to provide the option to override certain behaviors on a more granular level
+        executeConfig: ({ graph }) => hre.run(configureSubtask, { graph } satisfies SubtaskConfigureTaskArgs),
+        signAndSend: ({ transactions }) => {
+            if (outputFilename) {
+                logger.debug(`Writing transactions to ${outputFilename}`)
+                writeFileSync(outputFilename, JSON.stringify(transactions, null, 2))
+            }
+            return hre.run(signAndSendSubtask, {
+                ci,
+                logger,
+                createSigner,
+                transactions,
+            } satisfies SignAndSendTaskArgs)
+        },
+    })
 
-    // Mark the process as unsuccessful if there were any errors (only if it has not yet been marked as such)
-    const [, failed] = signAndSendResult
-    if (failed.length !== 0) {
-        process.exitCode = process.exitCode || 1
-    }
-
-    return signAndSendResult
+    // And run the wire flow
+    return wireFlow({
+        graph,
+        assert,
+        dryRun,
+    })
 }
 
 task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
@@ -192,3 +156,4 @@ task(TASK_LZ_OAPP_WIRE, 'Wire LayerZero OApp', action)
     )
     .addFlag('safe', 'Use gnosis safe to sign transactions')
     .addParam('signer', 'Index or address of signer', undefined, types.signer, true)
+    .addParam('outputFilename', 'Output filename for the generated transactions', undefined, types.string, true)

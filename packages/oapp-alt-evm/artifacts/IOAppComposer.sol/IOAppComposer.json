@@ -1,0 +1,108 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "lzCompose",
+      "inputs": [
+        { "name": "_from", "type": "address", "internalType": "address" },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "_executor", "type": "address", "internalType": "address" },
+        { "name": "_extraData", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_executor\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This interface defines the OApp Composer, allowing developers to inherit only the OApp package without the protocol.\",\"kind\":\"dev\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).\",\"params\":{\"_executor\":\"The address of the executor for the composed message.\",\"_extraData\":\"Additional arbitrary data in bytes passed by the entity who executes the lzCompose.\",\"_from\":\"The address initiating the composition, typically the OApp where the lzReceive was called.\",\"_guid\":\"The unique identifier for the corresponding LayerZero src/dst tx.\",\"_message\":\"The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive.\"}}},\"title\":\"IOAppComposer\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a LayerZero message from an OApp.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/oapp/interfaces/IOAppComposer.sol\":\"IOAppComposer\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_from", "type": "address" },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            {
+              "internalType": "address",
+              "name": "_executor",
+              "type": "address"
+            },
+            { "internalType": "bytes", "name": "_extraData", "type": "bytes" }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "lzCompose"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "lzCompose(address,bytes32,bytes,address,bytes)": {
+            "details": "To ensure non-reentrancy, implementers of this interface MUST assert msg.sender is the corresponding EndpointV2 contract (i.e., onlyEndpointV2).",
+            "params": {
+              "_executor": "The address of the executor for the composed message.",
+              "_extraData": "Additional arbitrary data in bytes passed by the entity who executes the lzCompose.",
+              "_from": "The address initiating the composition, typically the OApp where the lzReceive was called.",
+              "_guid": "The unique identifier for the corresponding LayerZero src/dst tx.",
+              "_message": "The composed message payload in bytes. NOT necessarily the same payload passed via lzReceive."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "lzCompose(address,bytes32,bytes,address,bytes)": {
+            "notice": "Composes a LayerZero message from an OApp."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/oapp/interfaces/IOAppComposer.sol": "IOAppComposer"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/oapp/interfaces/IOAppComposer.sol": {
+        "keccak256": "0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae",
+        "urls": [
+          "bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d",
+          "dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol": {
+        "keccak256": "0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49",
+        "urls": [
+          "bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf",
+          "dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 4
+}

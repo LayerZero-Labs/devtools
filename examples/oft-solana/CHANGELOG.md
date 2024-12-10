@@ -1,5 +1,47 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.4
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
+## 0.4.3
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
+## 0.4.2
+
+### Patch Changes
+
+- 59cd485: Fix add additional minters to createOFT
+
+## 0.4.1
+
+### Patch Changes
+
+- 63238e9: Add ability to swap out the mint authority with a new SPL multisig
+
+## 0.4.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.3.1
+
+### Patch Changes
+
+- 2540bb1: solana support for lz:oapp:config:get
+
+## 0.3.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.2.1
 
 ### Patch Changes

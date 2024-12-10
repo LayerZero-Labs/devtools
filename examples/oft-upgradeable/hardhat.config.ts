@@ -71,11 +71,21 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
             accounts,
         },
+        hardhat: {
+            // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
+            allowUnlimitedContractSize: true,
+        },
     },
     namedAccounts: {
         deployer: {
             default: 0, // wallet address of index[0], of the mnemonic in .env
         },
+    },
+    layerZero: {
+        // You can tell hardhat toolbox not to include any deployments (hover over the property name to see full docs)
+        deploymentSourcePackages: [],
+        // You can tell hardhat not to include any artifacts either
+        // artifactSourcePackages: [],
     },
 }
 

@@ -1,5 +1,23 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.1
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
+## 0.4.0
+
+### Minor Changes
+
+- 2fd45ca: Add Deploy and Wire for OApp Read
+
+## 0.3.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.2.9
 
 ### Patch Changes

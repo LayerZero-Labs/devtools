@@ -1,5 +1,39 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.3
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+- Updated dependencies [1bb0524]
+  - @layerzerolabs/devtools-evm@1.0.1
+  - @layerzerolabs/devtools@0.4.2
+
+## 2.0.2
+
+### Patch Changes
+
+- 5b563f0: Added optional stage and networks arguments to lz:healthcheck:validate:rpcs task
+- 31b0610: Fix typo in CLI
+
+## 2.0.1
+
+### Patch Changes
+
+- 30e01b8: Updating devtools dependency
+
+## 2.0.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/devtools-evm@1.0.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 1.2.3
 
 ### Patch Changes

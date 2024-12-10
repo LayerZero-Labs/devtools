@@ -15,7 +15,31 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
                 stdio: 'inherit',
             })
 
-        it('should not validate RPC URLs for network without eid', async () => {
+        it('should validate all networks when no arguments are provided', async () => {
+            const result = runExpect('validate-all-networks')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should validate RPC URLs for specific networks', async () => {
+            const result = runExpect('validate-for-specific-networks')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should validate RPC URLs for a specific stage', async () => {
+            const result = runExpect('validate-for-specific-stage')
+
+            expect(result.status).toBe(0)
+        })
+
+        it('should not allow both --networks and --stage arguments together', async () => {
+            const result = runExpect('validate-with-networks-and-stage')
+
+            expect(result.status).not.toBe(0)
+        })
+
+        it('should validate RPC URLs for a network without an EID', async () => {
             const result = runExpect('validate-rpc-for-network-without-eid')
 
             expect(result.status).toBe(0)
@@ -23,6 +47,7 @@ describe(`task ${TASK_LZ_VALIDATE_RPCS}`, () => {
 
         it('should validate incorrect https RPC URL', async () => {
             const result = runExpect('validate-incorrect-https-rpc')
+
             expect(result.status).toBe(0)
         })
 

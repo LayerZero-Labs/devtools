@@ -1,5 +1,24 @@
 # @layerzerolabs/devtools
 
+## 0.4.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
+## 0.4.1
+
+### Patch Changes
+
+- 354ff5e: Move the wiring logic into a flow
+- fce2cfb: Adding optional metadata property to OmniTransaction to improve logging
+
+## 0.4.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.3.29
 
 ### Patch Changes

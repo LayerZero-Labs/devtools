@@ -19,13 +19,13 @@
 ## Installation
 
 ```bash
-npm install --save @layerzerolabs/protocol-devtools
+pnpm install --save @layerzerolabs/protocol-devtools
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-devtools
+yarn install @layerzerolabs/protocol-devtools
 ```
 
 ```bash
-pnpm install @layerzerolabs/protocol-devtools
+npm install @layerzerolabs/protocol-devtools
 ```

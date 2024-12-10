@@ -1,5 +1,29 @@
 # @layerzerolabs/oft-adapter-example
 
+## 0.3.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
+## 0.3.1
+
+### Patch Changes
+
+- 447af65: Use concurrently for parallel compilation task
+
+## 0.3.0
+
+### Minor Changes
+
+- e2395b5: Add OApp Read Example
+
+## 0.2.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.1.1
 
 ### Patch Changes

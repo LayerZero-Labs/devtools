@@ -16,8 +16,6 @@
 
 <p align="center">Template project for getting started with LayerZero's <code>ONFT721</code> contract development.</p>
 
-:warning: ** This code is currently under audit and should not yet be used in production. **
-
 ## 1) Developing Contracts
 
 #### Installing dependencies

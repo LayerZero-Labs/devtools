@@ -23,7 +23,7 @@ pnpm install @layerzerolabs/oapp-evm-upgradeable
 ```
 
 ```bash
-pnpm install @layerzerolabs/oapp-evm-upgradeable
+yarn install @layerzerolabs/oapp-evm-upgradeable
 ```
 
 ```bash

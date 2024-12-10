@@ -1,17 +1,18 @@
 import { EncodedOption, OAppEnforcedOptions, OAppFactory, OAppOmniGraph, OAppPeers } from '@/oapp/types'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
-export type OAppReadPeers = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppPeers[]>
-export type OAppReadEnforcedOptions = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppEnforcedOptions[]>
+export type OAppCheckPeers = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppPeers[]>
+export type OAppCheckEnforcedOptions = (graph: OAppOmniGraph, createSdk: OAppFactory) => Promise<OAppEnforcedOptions[]>
 
 const EnforcedOptions: ExecutorOptionType[] = [
     ExecutorOptionType.LZ_RECEIVE,
     ExecutorOptionType.NATIVE_DROP,
     ExecutorOptionType.COMPOSE,
     ExecutorOptionType.ORDERED,
+    ExecutorOptionType.LZ_READ,
 ]
 
-export const checkOAppPeers: OAppReadPeers = async (graph, createSdk): Promise<OAppPeers[]> => {
+export const checkOAppPeers: OAppCheckPeers = async (graph, createSdk): Promise<OAppPeers[]> => {
     return await Promise.all(
         graph.connections.map(async ({ vector }): Promise<OAppPeers> => {
             const sdk = await createSdk(vector.from)
@@ -21,7 +22,7 @@ export const checkOAppPeers: OAppReadPeers = async (graph, createSdk): Promise<O
     )
 }
 
-export const checkOAppEnforcedOptions: OAppReadEnforcedOptions = async (
+export const checkOAppEnforcedOptions: OAppCheckEnforcedOptions = async (
     graph,
     createSdk
 ): Promise<OAppEnforcedOptions[]> => {

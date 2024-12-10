@@ -4,9 +4,13 @@ import { ActionType } from 'hardhat/types'
 import { task, types } from 'hardhat/config'
 import { TASK_LZ_VALIDATE_RPCS } from '@/constants'
 import { createLogger, printBoolean } from '@layerzerolabs/io-devtools'
+import { assertDefinedNetworks } from '@/internal/assertions'
 import { printLogo } from '@layerzerolabs/io-devtools/swag'
 import { getEidsByNetworkName } from '@/runtime'
 import { BaseProvider, JsonRpcProvider, WebSocketProvider } from '@ethersproject/providers'
+import { types as cliTypes } from '@/cli'
+import { EndpointId, Stage, endpointIdToStage } from '@layerzerolabs/lz-definitions'
+import { pickNetworkConfigs } from '@/simulation'
 
 const RPC_URL_KEY = 'url'
 
@@ -22,6 +26,8 @@ const logger = createLogger()
 
 interface TaskArguments {
     timeout: number
+    networks?: string[]
+    stage?: Stage
 }
 
 const getProvider = async (rpcUrl: string, networkName: string): Promise<BaseProvider> => {
@@ -40,10 +46,36 @@ const getProvider = async (rpcUrl: string, networkName: string): Promise<BasePro
 const action: ActionType<TaskArguments> = async (taskArgs, hre) => {
     printLogo()
 
-    const networks = hre.userConfig.networks || {}
+    // --stage cannot be used in conjunction with --networks
+    if (taskArgs.networks != null && taskArgs.stage != null) {
+        logger.error(
+            `--stage ${taskArgs.stage} cannot be used in conjunction with --networks ${taskArgs.networks.join(',')}`
+        )
+
+        process.exit(1)
+    }
+
+    // And we create a filtering predicate for the stage argument
+    const isOnStage =
+        taskArgs.stage == null ? () => true : (eid: EndpointId) => endpointIdToStage(eid) === taskArgs.stage
+
+    // Let's grab the networks that will be validated
+    const networks = taskArgs.networks
+        ? // Here we need to check whether the networks have been defined in hardhat config
+          pickNetworkConfigs(assertDefinedNetworks(taskArgs.networks))(hre.config.networks)
+        : taskArgs.stage //  But here we are taking them from hardhat config so no assertion is necessary
+          ? pickNetworkConfigs(
+                Object.entries(getEidsByNetworkName()).flatMap(([networkName, eid]) =>
+                    eid != null && isOnStage(eid) ? [networkName] : []
+                )
+            )(hre.config.networks)
+          : hre.config.networks
+
     const eidByNetworkName = getEidsByNetworkName(hre)
 
-    logger.info(`========== Validating RPC URLs for networks: ${Object.keys(eidByNetworkName)}`)
+    logger.info(
+        `========== Validating RPC URLs for networks: ${taskArgs.networks?.join(', ') || Object.keys(eidByNetworkName).join(', ')}`
+    )
 
     const networksWithInvalidRPCs: string[] = []
 
@@ -92,10 +124,13 @@ task(
     TASK_LZ_VALIDATE_RPCS,
     'Validate RPC URLs in hardhat.config.ts. RPCs are only considered valid if they use the https or wss protocol and respond within the specified timeout.',
     action
-).addParam(
-    'timeout',
-    `Maximum amount of time (in milliseconds) that the RPC URLs have to respond. If unspecified, default timeout of ${TIMEOUT}ms will be used.`,
-    TIMEOUT,
-    types.int,
-    true
 )
+    .addParam(
+        'timeout',
+        `Maximum amount of time (in milliseconds) that the RPC URLs have to respond. If unspecified, default timeout of ${TIMEOUT}ms will be used.`,
+        TIMEOUT,
+        types.int,
+        true
+    )
+    .addParam('networks', 'Comma-separated list of networks to simulate', undefined, cliTypes.csv, true)
+    .addParam('stage', 'Chain stage. One of: mainnet, testnet, sandbox', undefined, cliTypes.stage, true)

@@ -4,7 +4,6 @@ import { createLogger, printCrossTable } from '@layerzerolabs/io-devtools'
 import { getReceiveConfig, getSendConfig } from '@/utils/taskHelpers'
 import { SUBTASK_LZ_OAPP_CONFIG_LOAD, TASK_LZ_OAPP_CONFIG_GET } from '@/constants/tasks'
 import { setDefaultLogLevel } from '@layerzerolabs/io-devtools'
-import type { OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { createConnectedContractFactory, getNetworkNameForEid, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { OAppOmniGraphHardhatSchema } from '@/oapp'
 import type { SubtaskLoadConfigTaskArgs } from './types'
@@ -24,7 +23,7 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
     const logger = createLogger(logLevel)
 
     // We'll load and process the graph, resolving the addresses in the process
-    const graph: OAppOmniGraph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
+    const graph = await hre.run(SUBTASK_LZ_OAPP_CONFIG_LOAD, {
         configPath: oappConfig,
         schema: OAppOmniGraphHardhatSchema,
         task: TASK_LZ_OAPP_CONFIG_GET,

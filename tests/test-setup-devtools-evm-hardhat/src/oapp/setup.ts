@@ -68,7 +68,7 @@ export const setUpOmniGraphHardhat = (
     ethOAppConfig: OAppEdgeConfig,
     avaxContract,
     avaxOAppConfig: OAppEdgeConfig
-): OmniGraphHardhat<unknown, OAppEdgeConfig> => {
+): OmniGraphHardhat<undefined, OAppEdgeConfig> => {
     return {
         contracts: [
             {

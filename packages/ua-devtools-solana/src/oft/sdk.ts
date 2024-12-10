@@ -33,7 +33,7 @@ import {
 import { mplToolbox } from '@metaplex-foundation/mpl-toolbox'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { EndpointProgram, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
+import { EndpointProgram, MessageLibPDADeriver, UlnProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 
 // TODO: Use exported interfaces when they are available
 interface SetPeerAddressParam {
@@ -408,13 +408,20 @@ export class OFT extends OmniSDK implements IOApp {
         throw new TypeError(`getCallerBpsCap() not implemented on Solana OFT SDK`)
     }
 
+    public async sendConfigIsInitialized(_eid: EndpointId): Promise<boolean> {
+        const deriver = new MessageLibPDADeriver(UlnProgram.PROGRAM_ID)
+        const [sendConfig] = deriver.sendConfig(_eid, new PublicKey(this.point.address))
+        const accountInfo = await this.connection.getAccountInfo(sendConfig)
+        return accountInfo != null
+    }
+
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
         return {
             ...(await this.createTransaction(
                 this._umiToWeb3Tx([
                     oft.initConfig(
                         {
-                            admin: await this._getOwnerSigner(),
+                            admin: await this._getAdmin(),
                             oftStore: this.umiPublicKey,
                             payer: createNoopSigner(this.umiUserAccount),
                         },
@@ -476,7 +483,7 @@ export class OFT extends OmniSDK implements IOApp {
         return oft.setOFTConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: (await this.getOwner()) as unknown as Signer,
+                admin: await this._getAdmin(),
             },
             param,
             {
@@ -503,7 +510,7 @@ export class OFT extends OmniSDK implements IOApp {
         return oft.setPeerConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: await this._getOwnerSigner(),
+                admin: await this._getAdmin(),
             },
             param,
             this.umiProgramId
@@ -574,11 +581,8 @@ export class OFT extends OmniSDK implements IOApp {
         return web3Transaction
     }
 
-    protected async _getOwnerSigner(): Promise<Signer> {
+    protected async _getAdmin(): Promise<Signer> {
         const owner = await this.getOwner()
-        if (!owner) {
-            throw new Error(`No owner found for ${this.label}`)
-        }
         return createNoopSigner(publicKey(owner))
     }
 }

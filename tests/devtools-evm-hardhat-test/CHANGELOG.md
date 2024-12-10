@@ -1,5 +1,29 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.3
+
+### Patch Changes
+
+- 5458b9f: Updated lz-evm-sdk-v2 dependency
+
+## 0.3.2
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+
+## 0.3.1
+
+### Patch Changes
+
+- 5b563f0: Added optional stage and networks arguments to lz:healthcheck:validate:rpcs task
+
+## 0.3.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
 ## 0.2.0
 
 ### Minor Changes

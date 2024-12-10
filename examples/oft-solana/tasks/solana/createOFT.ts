@@ -15,14 +15,16 @@ import {
 } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { createMintAuthorityMultisig } from './multisig'
+import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
+import { assertAccountInitialized } from './utils'
 
 import { deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
@@ -43,6 +45,11 @@ interface CreateOFTTaskArgs {
      * The number of decimal places to use for the token.
      */
     localDecimals: number
+
+    /**
+     * OFT shared decimals.
+     */
+    sharedDecimals: number
 
     /**
      * The optional token mint ID, for Mint-And-Burn-Adapter only.
@@ -75,9 +82,21 @@ interface CreateOFTTaskArgs {
     tokenMetadataIsMutable: boolean
 
     /**
+     * The CSV list of additional minters.
+     */
+    additionalMinters?: string[]
+
+    /**
      * The token program ID, for Mint-And-Burn-Adapter only.
      */
     tokenProgram: string
+
+    /**
+     * If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in
+     * losing the ability to mint new tokens for everything but the OFTStore.  You should really be intentional about
+     * using this flag, as it is not reversible.
+     */
+    onlyOftStore: boolean
 
     /**
      * The URI for the token metadata.
@@ -95,12 +114,20 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
     .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
     .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
+    .addOptionalParam('sharedDecimals', 'OFT shared decimals (default=6)', DEFAULT_SHARED_DECIMALS, devtoolsTypes.int)
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
     .addParam('mint', 'The Token mint public key (used for MABA only)', '', devtoolsTypes.string)
     .addParam('programId', 'The OFT Program id')
     .addParam('sellerFeeBasisPoints', 'Seller fee basis points', 0, devtoolsTypes.int)
     .addParam('symbol', 'Token Symbol', 'MOFT', devtoolsTypes.string)
     .addParam('tokenMetadataIsMutable', 'Token metadata is mutable', true, devtoolsTypes.boolean)
+    .addParam('additionalMinters', 'Comma-separated list of additional minters', undefined, devtoolsTypes.csv, true)
+    .addOptionalParam(
+        'onlyOftStore',
+        'If you plan to have only the OFTStore and no additional minters.  This is not reversible, and will result in losing the ability to mint new tokens by everything but the OFTStore.',
+        false,
+        devtoolsTypes.boolean
+    )
     .addParam(
         'tokenProgram',
         'The Token Program public key (used for MABA only)',
@@ -113,12 +140,15 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             amount,
             eid,
             localDecimals: decimals,
+            sharedDecimals,
             mint: mintStr,
             name,
             programId: programIdStr,
             sellerFeeBasisPoints,
             symbol,
             tokenMetadataIsMutable: isMutable,
+            additionalMinters: additionalMintersAsStrings,
+            onlyOftStore,
             tokenProgram: tokenProgramStr,
             uri,
         }: CreateOFTTaskArgs) => {
@@ -129,16 +159,35 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             if (isMABA && amount) {
                 throw new Error('Mint-And-Burn-Adapter does not support minting tokens')
             }
+            if (decimals < sharedDecimals) {
+                throw new Error('Solana token local decimals must be greater than or equal to OFT shared decimals')
+            }
             const tokenProgramId = publicKey(tokenProgramStr)
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
+            if (!additionalMintersAsStrings) {
+                if (!onlyOftStore) {
+                    throw new Error(
+                        'If you want to proceed with only the OFTStore, please specify --only-oft-store true'
+                    )
+                }
+                console.log(
+                    'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
+                )
+            }
+            const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
             const mintAuthorityPublicKey = await createMintAuthorityMultisig(
                 connection,
                 toWeb3JsKeypair(umiWalletKeyPair),
                 toWeb3JsPublicKey(oftStorePda),
-                toWeb3JsPublicKey(tokenProgramId) // Only configurable for MABA
+                toWeb3JsPublicKey(tokenProgramId), // Only configurable for MABA
+                additionalMinters
             )
             console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
+            await checkMultisigSigners(connection, mintAuthorityPublicKey, [
+                toWeb3JsPublicKey(oftStorePda),
+                ...additionalMinters,
+            ])
 
             const mint = isMABA
                 ? createNoopSigner(publicKey(mintStr))
@@ -156,20 +205,24 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     authority: umiWalletSigner, // authority is transferred later
                     tokenStandard: TokenStandard.Fungible,
                 }
-                const txBuilder = transactionBuilder().add(createV1(umi, createV1Args))
+                let txBuilder = transactionBuilder().add(createV1(umi, createV1Args))
                 if (amount) {
-                    txBuilder.add(
-                        mintV1(umi, {
-                            ...createV1Args,
-                            mint: publicKey(createV1Args.mint),
-                            authority: umiWalletSigner,
-                            amount,
-                            tokenOwner: umiWalletSigner.publicKey,
-                            tokenStandard: TokenStandard.Fungible,
-                        })
-                    )
+                    // recreate txBuilder since it is immutable
+                    txBuilder = transactionBuilder()
+                        .add(txBuilder)
+                        .add(
+                            mintV1(umi, {
+                                ...createV1Args,
+                                mint: publicKey(createV1Args.mint),
+                                authority: umiWalletSigner,
+                                amount,
+                                tokenOwner: umiWalletSigner.publicKey,
+                                tokenStandard: TokenStandard.Fungible,
+                            })
+                        )
                 }
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
+                await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
                 console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
             }
 
@@ -184,7 +237,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                             escrow: lockboxSigner,
                         },
                         types.OFTType.Native,
-                        OFT_DECIMALS,
+                        sharedDecimals,
                         {
                             oft: programId,
                             token: tokenProgramId,

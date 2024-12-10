@@ -20,7 +20,7 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
 
     // endpoint v2
     address public endpoint;
-    uint32 public localEid;
+    uint32 public localEidV2;
 
     // endpoint v1
     address public receiveUln301;
@@ -34,7 +34,7 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
         address[] memory _admins
     ) Worker(_messageLibs, _priceFeed, 12000, _roleAdmin, _admins) {
         endpoint = _endpoint;
-        localEid = ILayerZeroEndpointV2(_endpoint).eid();
+        localEidV2 = ILayerZeroEndpointV2(_endpoint).eid();
         receiveUln301 = _receiveUln301;
     }
 
@@ -78,6 +78,35 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
         IUltraLightNode301(receiveUln301).commitVerification(_packet, _gasLimit);
     }
 
+    function execute302(ExecutionParams calldata _executionParams) external payable onlyRole(ADMIN_ROLE) nonReentrant {
+        ILayerZeroEndpointV2(endpoint).lzReceive{ value: msg.value, gas: _executionParams.gasLimit }(
+            _executionParams.origin,
+            _executionParams.receiver,
+            _executionParams.guid,
+            _executionParams.message,
+            _executionParams.extraData
+        );
+    }
+
+    function compose302(
+        address _from,
+        address _to,
+        bytes32 _guid,
+        uint16 _index,
+        bytes calldata _message,
+        bytes calldata _extraData,
+        uint256 _gasLimit
+    ) external payable onlyRole(ADMIN_ROLE) nonReentrant {
+        ILayerZeroEndpointV2(endpoint).lzCompose{ value: msg.value, gas: _gasLimit }(
+            _from,
+            _to,
+            _guid,
+            _index,
+            _message,
+            _extraData
+        );
+    }
+
     function nativeDropAndExecute302(
         NativeDropParams[] calldata _nativeDropParams,
         uint256 _nativeDropGasLimit,
@@ -85,7 +114,7 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
     ) external payable onlyRole(ADMIN_ROLE) nonReentrant {
         uint256 spent = _nativeDrop(
             _executionParams.origin,
-            localEid,
+            localEidV2,
             _executionParams.receiver,
             _nativeDropParams,
             _nativeDropGasLimit
@@ -119,6 +148,19 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
         fee = IExecutorFeeLib(workerFeeLib).getFeeOnSend(params, dstConfig[_dstEid], _options);
     }
 
+    // assignJob for ReadLib
+    function assignJob(
+        address _sender,
+        bytes calldata _options
+    ) external onlyRole(MESSAGE_LIB_ROLE) onlyAcl(_sender) returns (uint256 fee) {
+        IExecutorFeeLib.FeeParamsForRead memory params = IExecutorFeeLib.FeeParamsForRead(
+            priceFeed,
+            _sender,
+            defaultMultiplierBps
+        );
+        fee = IExecutorFeeLib(workerFeeLib).getFeeOnSend(params, dstConfig[localEidV2], _options);
+    }
+
     // --- Only ACL ---
     function getFee(
         uint32 _dstEid,
@@ -134,6 +176,15 @@ contract ExecutorMock is Worker, ReentrancyGuard, IExecutor {
             defaultMultiplierBps
         );
         fee = IExecutorFeeLib(workerFeeLib).getFee(params, dstConfig[_dstEid], _options);
+    }
+
+    function getFee(address _sender, bytes calldata _options) external view onlyAcl(_sender) returns (uint256 fee) {
+        IExecutorFeeLib.FeeParamsForRead memory params = IExecutorFeeLib.FeeParamsForRead(
+            priceFeed,
+            _sender,
+            defaultMultiplierBps
+        );
+        fee = IExecutorFeeLib(workerFeeLib).getFee(params, dstConfig[localEidV2], _options);
     }
 
     function _nativeDrop(

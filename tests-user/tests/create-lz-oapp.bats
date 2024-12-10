@@ -161,7 +161,7 @@ teardown() {
 @test "should work with pnpm & native-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-native-oft-adapter"
 
-    npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -173,6 +173,15 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
     LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+}
+
+@test "should work with pnpm & oapp read example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oapp-read"
+
+    LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -225,7 +234,7 @@ teardown() {
 @test "should work with yarn & native-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-native-oft-adapter"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-native-oft-adapter-evm" npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-native-oft-adapter-evm" LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -237,6 +246,15 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-solana"
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
+    cd "$DESTINATION"
+    yarn compile
+    yarn test
+}
+
+@test "should work with yarn & oapp read example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oapp-read"
+
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oapp-read" LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -289,7 +307,7 @@ teardown() {
 @test "should work with npm & native-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-native-oft-adapter"
 
-    npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager npm
+    LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example native-oft-adapter --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test
@@ -301,6 +319,15 @@ teardown() {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-solana"
 
     LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
+    cd "$DESTINATION"
+    npm run compile
+    npm run test
+}
+
+@test "should work with npm & oapp read example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-oapp-read"
+
+    LZ_ENABLE_READ_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oapp-read --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test

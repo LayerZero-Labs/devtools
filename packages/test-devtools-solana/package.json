@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-solana",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Helpers for testing LayerZero Solana packages",
   "repository": {
     "type": "git",
@@ -31,7 +31,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@solana/web3.js": "~1.95.0",
+    "@solana/web3.js": "~1.95.8",
     "bs58": "~6.0.0",
     "fast-check": "^3.15.1",
     "ts-node": "^10.9.2",
@@ -40,7 +40,7 @@
     "typescript": "^5.4.4"
   },
   "peerDependencies": {
-    "@solana/web3.js": "^1.95.0",
+    "@solana/web3.js": "^1.95.8",
     "fast-check": "^3.14.0"
   },
   "publishConfig": {

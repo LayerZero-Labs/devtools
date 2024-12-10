@@ -1,5 +1,34 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 3.0.1
+
+### Patch Changes
+
+- 1bb0524: Upgraded dependency (@layerzerolabs/lz-definitions 3.0.12->3.0.21)
+- Updated dependencies [1bb0524]
+  - @layerzerolabs/protocol-devtools@1.1.1
+  - @layerzerolabs/devtools@0.4.2
+
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies [2fd45ca]
+  - @layerzerolabs/protocol-devtools@1.1.0
+  - @layerzerolabs/devtools@0.4.0
+
+## 2.0.0
+
+### Minor Changes
+
+- aa37daf: Update layerzerolabs packages to 3.0.12
+
+### Patch Changes
+
+- Updated dependencies [aa37daf]
+  - @layerzerolabs/protocol-devtools@1.0.0
+  - @layerzerolabs/devtools@0.4.0
+
 ## 1.0.2
 
 ### Patch Changes
