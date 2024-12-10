@@ -5,7 +5,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "paths": {
-      "@/utils/*": ["./tasks/utils/*"],
+      "@/utils/*": ["./tasks/shared/*"],
       "@/tasks/*": ["./tasks/*"],
       "@/src/*": ["./src/*"]
     }

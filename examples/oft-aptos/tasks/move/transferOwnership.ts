@@ -1,5 +1,5 @@
 import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
-import { OFT } from '../sdk/oft'
+import { OFT } from '../../sdk/oft'
 import { getAptosOftAddress, getDelegateFromLzConfig, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate, transferOwner } from './utils/aptosOftConfigOps'

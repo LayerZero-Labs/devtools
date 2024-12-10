@@ -1,10 +1,10 @@
 import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
 import { assert } from 'console'
-import { deploymentFile } from '../utils/types'
+import { deploymentFile } from '../shared/types'
 import fs from 'fs'
-import { getLzNetworkStage, parseYaml } from '../utils/aptosNetworkParser'
-import { getNamedAddresses } from '../utils/config'
+import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { getNamedAddresses } from './utils/config'
 
 let stdOut = ''
 let stdErr = ''

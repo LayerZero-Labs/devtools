@@ -1,7 +1,7 @@
 import { ArgumentParser } from 'argparse'
 import { spawn } from 'child_process'
-import { parseYaml, getLzNetworkStage } from '../utils/aptosNetworkParser'
-import { getNamedAddresses } from '../utils/config'
+import { parseYaml, getLzNetworkStage } from './utils/aptosNetworkParser'
+import { getNamedAddresses } from './utils/config'
 
 let stdErr = ''
 

@@ -1,15 +1,15 @@
-import { OFT } from '../../sdk/oft'
+import { OFT } from '../../../sdk/oft'
 import * as fs from 'fs'
 import * as path from 'path'
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
-import { createEidToNetworkMapping, diffPrinter } from './utils'
+import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 import { ExecutorConfig, UlnConfig } from '.'
 import { EndpointId, endpointIdToStage, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
-import { Endpoint } from '../../sdk/endpoint'
+import { Endpoint } from '../../../sdk/endpoint'
 import { InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
-import { MsgLib } from '../../sdk/msgLib'
+import { MsgLib } from '../../../sdk/msgLib'
 
 // Configuration Types as used in Aptos Message Libraries
 enum ConfigType {

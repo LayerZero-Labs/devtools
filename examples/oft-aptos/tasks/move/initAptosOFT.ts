@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../../sdk/oft'
-import { getAptosOftAddress, sendAllTxs } from '../utils/utils'
-import { getLzNetworkStage, parseYaml } from '../utils/aptosNetworkParser'
+import { getAptosOftAddress, sendAllTxs } from './utils/utils'
+import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()

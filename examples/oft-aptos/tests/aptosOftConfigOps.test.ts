@@ -1,7 +1,7 @@
 import { HardhatContext } from 'hardhat/internal/context'
 import { TasksDSL } from 'hardhat/internal/core/tasks/dsl'
 import { loadConfigAndTasks } from 'hardhat/internal/core/config/config-loading'
-import { createSerializableUlnConfig } from '../tasks/utils/ulnConfigBuilder'
+import { createSerializableUlnConfig } from '../tasks/move/utils/ulnConfigBuilder'
 
 // Initialize global task variable that plugins expect
 ;(global as any).task = new TasksDSL()
@@ -16,7 +16,7 @@ loadConfigAndTasks()
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { OFT } from '../sdk/oft'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { getConfigConnections } from '../tasks/utils/utils'
+import { getConfigConnections } from '../tasks/shared/utils'
 import {
     setEnforcedOptions,
     setExecutorConfig,
@@ -26,7 +26,7 @@ import {
     setReceiveLibraryTimeout,
     setSendConfig,
     setSendLibrary,
-} from '../tasks/utils/aptosOftConfigOps'
+} from '../tasks/move/utils/aptosOftConfigOps'
 import type { OAppOmniGraphHardhat, OmniPointHardhat, Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
 import '../hardhat.config'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
