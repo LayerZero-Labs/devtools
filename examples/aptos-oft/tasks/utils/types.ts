@@ -80,4 +80,9 @@ export type RecvLibraryTimeoutConfig = {
     expiry: bigint
 }
 
+export type SetConfigParam = {
+    eid: eid
+    configType: number
+    config: string
+}
 export type AnvilNode = { process: ChildProcess; rpcUrl: string }

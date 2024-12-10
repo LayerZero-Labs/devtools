@@ -10,7 +10,7 @@ import { createSetEnforcedOptionsTransactions } from './wire-evm/setEnforcedOpti
 import { createSetSendLibraryTransactions } from './wire-evm/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire-evm/setReceiveLibrary'
 import { createSetReceiveLibraryTimeoutTransactions } from './wire-evm/setReceiveLibraryTimeout'
-
+import { createSetSendConfigTransactions } from './wire-evm/setSendConfig'
 import { executeTransactions } from './wire-evm/transactionExecutor'
 import AnvilForkNode from './utils/anvilForkNode'
 
@@ -101,7 +101,6 @@ async function main() {
     }
 
     /*
-     */
     TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, nonEvmOapp)
     // TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, aptosOft)
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
@@ -111,6 +110,8 @@ async function main() {
         contractMetaData,
         nonEvmOapp
     )
+    */
+    TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
 
     // @todo Clean this up or move to utils
     const rpcUrlSelfMap: { [eid: eid]: string } = {}

@@ -1,6 +1,7 @@
 import { Contract, utils } from 'ethers'
 import { diffPrinter, ZEROADDRESS_EVM } from '../utils/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap } from '../utils/types'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, address } from '../utils/types'
+import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
@@ -21,17 +22,15 @@ export async function createSetSendLibraryTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (configOapp?.sendLibrary === undefined) {
+        const { fromSendLibrary, toSendLibrary } = await parseSendLibrary(
+            configOapp.sendLibrary,
+            contract.epv2,
+            address.oapp,
+            nonEvmOapp.eid
+        )
+
+        if (toSendLibrary === '') {
             console.log(`\x1b[43m Skipping: No sendLibrary has been set for ${eid} @ ${address.oapp} \x1b[0m`)
-            continue
-        }
-
-        const fromSendLibrary = await getSendLibrary(contract.epv2, address.oapp, nonEvmOapp.eid)
-
-        const toSendLibrary = utils.getAddress(configOapp.sendLibrary)
-
-        if (fromSendLibrary === toSendLibrary) {
-            console.log(`\x1b[43m Skipping: The same send library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
@@ -49,12 +48,45 @@ export async function createSetSendLibraryTransactions(
     return txTypePool
 }
 
+export async function parseSendLibrary(
+    sendLib: OAppEdgeConfig['sendLibrary'] | undefined,
+    epv2: Contract,
+    oappAddress: address,
+    eid: eid
+): Promise<{ fromSendLibrary: string; toSendLibrary: string }> {
+    if (sendLib === undefined) {
+        const fromSendLibrary = await getDefaultSendLibrary(epv2, oappAddress, eid)
+        return {
+            fromSendLibrary,
+            toSendLibrary: '',
+        }
+    }
+
+    const fromSendLibrary = await getSendLibrary(epv2, oappAddress, eid)
+
+    const toSendLibrary = utils.getAddress(sendLib)
+
+    return { fromSendLibrary, toSendLibrary }
+}
+
 export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
     const sendLib = await epv2Contract.getSendLibrary(evmAddress, aptosEid)
 
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
         return ZEROADDRESS_EVM
     }
+
+    const sendLibAddress = utils.getAddress(sendLib)
+
+    return sendLibAddress
+}
+
+export async function getDefaultSendLibrary(
+    epv2Contract: Contract,
+    evmAddress: string,
+    aptosEid: eid
+): Promise<string> {
+    const sendLib = await epv2Contract.getDefaultSendLibrary(evmAddress, aptosEid)
 
     const sendLibAddress = utils.getAddress(sendLib)
 
