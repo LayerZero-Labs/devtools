@@ -298,6 +298,7 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 ```
 
 :information_source: `~/.config/solana/id.json` assumes that you will use the keypair in the default location. To verify if this path applies to you, run `solana config get` and not the keypair path value.
+
 :information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
 
 ### Set Message Execution Options
