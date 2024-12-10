@@ -5,7 +5,6 @@
       "name": "Executor_InvalidLzComposeOption",
       "inputs": []
     },
-    { "type": "error", "name": "Executor_InvalidLzReadOption", "inputs": [] },
     {
       "type": "error",
       "name": "Executor_InvalidLzReceiveOption",
@@ -18,17 +17,17 @@
     }
   ],
   "bytecode": {
-    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc11bf556b282e43d54b3c888325ffc71060da4609cd97e9fb6bc1ff9d4ab15764736f6c63430008160033",
-    "sourceMap": "145:4183:19:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;145:4183:19;;;;;;;;;;;;;;;;;",
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212208709f2e348cc6f33a5c25ffcd2bfaac629e8cae37810ea39adfa1038b12cefd764736f6c63430008160033",
+    "sourceMap": "133:3427:55:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;133:3427:55;;;;;;;;;;;;;;;;;",
     "linkReferences": {}
   },
   "deployedBytecode": {
-    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220bc11bf556b282e43d54b3c888325ffc71060da4609cd97e9fb6bc1ff9d4ab15764736f6c63430008160033",
-    "sourceMap": "145:4183:19:-:0;;;;;;;;",
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212208709f2e348cc6f33a5c25ffcd2bfaac629e8cae37810ea39adfa1038b12cefd764736f6c63430008160033",
+    "sourceMap": "133:3427:55:-:0;;;;;;;;",
     "linkReferences": {}
   },
   "methodIdentifiers": {},
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"Executor_InvalidLzComposeOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidLzReadOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidLzReceiveOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidNativeDropOption\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol\":\"ExecutorOptions\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol\":{\"keccak256\":\"0x441b723f2f597be2ec2bb361fcf3f11852c23534db1cfa7d2ffff7e61d228e3c\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://636817d20f90f75032e35376256cf5f4d2a047d6541b45f644d82a2e4dc8f1eb\",\"dweb:/ipfs/QmcEFRxCmmm9hKbqi7Powj6ATbw4JXXJW4rxfwMcxWsDnT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol\":{\"keccak256\":\"0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d\",\"dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"Executor_InvalidLzComposeOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidLzReceiveOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidNativeDropOption\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol\":\"ExecutorOptions\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/src/ds-test/src/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol\":{\"keccak256\":\"0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d\",\"dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol\":{\"keccak256\":\"0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2\",\"dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -38,11 +37,6 @@
           "inputs": [],
           "type": "error",
           "name": "Executor_InvalidLzComposeOption"
-        },
-        {
-          "inputs": [],
-          "type": "error",
-          "name": "Executor_InvalidLzReadOption"
         },
         {
           "inputs": [],
@@ -69,20 +63,12 @@
       "optimizer": { "enabled": true, "runs": 200 },
       "metadata": { "bytecodeHash": "ipfs" },
       "compilationTarget": {
-        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol": "ExecutorOptions"
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol": "ExecutorOptions"
       },
       "evmVersion": "paris",
       "libraries": {}
     },
     "sources": {
-      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol": {
-        "keccak256": "0x441b723f2f597be2ec2bb361fcf3f11852c23534db1cfa7d2ffff7e61d228e3c",
-        "urls": [
-          "bzz-raw://636817d20f90f75032e35376256cf5f4d2a047d6541b45f644d82a2e4dc8f1eb",
-          "dweb:/ipfs/QmcEFRxCmmm9hKbqi7Powj6ATbw4JXXJW4rxfwMcxWsDnT"
-        ],
-        "license": "LZBL-1.2"
-      },
       "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol": {
         "keccak256": "0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875",
         "urls": [
@@ -90,9 +76,17 @@
           "dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK"
         ],
         "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol": {
+        "keccak256": "0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28",
+        "urls": [
+          "bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2",
+          "dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav"
+        ],
+        "license": "LZBL-1.2"
       }
     },
     "version": 1
   },
-  "id": 19
+  "id": 55
 }
