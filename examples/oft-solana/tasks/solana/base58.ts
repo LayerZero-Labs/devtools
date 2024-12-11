@@ -1,3 +1,4 @@
+import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
 
@@ -14,7 +15,9 @@ interface Base58FeesTaskArgs {
     keypairFile: string
 }
 
-const defaultKeypairFile = path.resolve(process.env.HOME!, '.config/solana/id.json')
+assert(process.env.HOME != undefined, 'process.env.HOME needs to be defined')
+
+const defaultKeypairFile = path.resolve(process.env.HOME, '.config/solana/id.json')
 
 task('lz:solana:base-58', 'Outputs the base58 string for a keypair')
     .addParam(
