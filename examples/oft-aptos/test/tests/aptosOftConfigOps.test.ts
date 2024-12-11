@@ -18,7 +18,6 @@ import {
     createSetSendConfigTxs,
     createSetSendLibraryTxs,
 } from '../../tasks/move/utils/aptosOftConfigOps'
-// eslint-disable-next-line import/order
 import { createSerializableUlnConfig } from '../../tasks/move/utils/ulnConfigBuilder'
 
 // Initialize global task variable that plugins expect
