@@ -14,17 +14,15 @@ export async function executeTransactions(
     rpcUrlsMap: Record<eid, string>
 ) {
     const num_chains = Object.entries(eidMetaData).length
-    const num_transactionTypes = Object.entries(TxTypeEidMapping).length
     let totalTransactions = 0
 
     for (const key in TxTypeEidMapping) {
         for (const _eid in TxTypeEidMapping[key]) {
-            totalTransactions++
+            totalTransactions += TxTypeEidMapping[key][_eid].length
         }
     }
 
     console.log(`Total chains: ${num_chains}`)
-    console.log(`Total transaction types: ${num_transactionTypes}`)
     console.log(`Total transactions: ${totalTransactions}\n`)
 
     // Populate simulation account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
@@ -49,6 +47,10 @@ export async function executeTransactions(
             gasPrice: await signer.getGasPrice(),
             signer: signer,
         }
+
+        console.log(
+            `Balance for chain ${eid}: ${ethers.utils.formatEther(await newProvider.getBalance(signer.address))}`
+        )
     }
 
     /*
