@@ -28,7 +28,6 @@ import { NativeOFTAdapterMockCodec } from "./lib/NativeOFTAdapterMockCodec.sol";
 
 import "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
-import "../contracts/interfaces/IOFT.sol";
 
 contract OFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
