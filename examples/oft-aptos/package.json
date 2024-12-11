@@ -5,9 +5,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out build",
-    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
+    "compile": "$npm_execpath run compile:hardhat",
     "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
-    "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
@@ -15,7 +14,6 @@
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "test": "jest && $npm_execpath run test:aptos",
     "test:aptos": "cd oft && aptos move test --dev --skip-fetch-latest-git-deps",
-    "test:forge": "forge test",
     "test:hardhat": "hardhat test",
     "wire:evm": "npx hardhat run tasks/evm/wire-evm.ts"
   },
@@ -44,6 +42,7 @@
     "install": "^0.13.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "tsup": "^8.0.1",
     "typescript": "~5.2.2",
     "yaml": "^2.6.1"
