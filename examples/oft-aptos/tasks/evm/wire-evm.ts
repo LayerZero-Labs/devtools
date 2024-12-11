@@ -1,8 +1,6 @@
-import { ContractFactory, ethers } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import fs from 'fs'
-import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
-import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
-import AnvilForkNode from './utils/anvilForkNode'
+import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
 import { createSetPeerTransactions } from './wire/setPeer'
 import { createSetDelegateTransactions } from './wire/setDelegate'
@@ -17,6 +15,10 @@ import { executeTransactions } from './wire/transactionExecutor'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
 import { getAptosOftAddress } from '../move/utils/utils'
+
+import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
+import { NonEvmOAppMetadata, ContractMetadataMapping, TxEidMapping, eid } from './utils/types'
+import AnvilForkNode from './utils/anvilForkNode'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
@@ -76,18 +78,13 @@ async function main() {
 
         const OAppDeploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
         const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
+        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetwork, 'EndpointV2')
 
-        const { address: oappAddress, abi: oappAbi, bytecode: oappBytecode } = OAppDeploymentData
-        const OAppFactory = new ContractFactory(oappAbi, oappBytecode, signer)
+        const { address: oappAddress, abi: oappAbi } = OAppDeploymentData
+        const { address: epv2Address, abi: epv2Abi } = EndpointV2DeploymentData
 
-        const EndpointV2DeploymentPath = `deployments/${fromNetwork}/EndpointV2.json`
-        const EndpointV2DeploymentData = JSON.parse(fs.readFileSync(EndpointV2DeploymentPath, 'utf8'))
-
-        const { address: epv2Address, abi: epv2Abi, bytecode: epv2Bytecode } = EndpointV2DeploymentData
-        const EndpointV2Factory = new ContractFactory(epv2Abi, epv2Bytecode, signer)
-
-        const OAppContract = OAppFactory.attach(oappAddress)
-        const EPV2Contract = EndpointV2Factory.attach(epv2Address)
+        const OAppContract = new Contract(oappAddress, oappAbi, signer)
+        const EPV2Contract = new Contract(epv2Address, epv2Abi, signer)
 
         contractMetaData[fromEid] = {
             address: {
