@@ -27,6 +27,7 @@ task('lz:solana:base-58', 'Outputs the base58 string for a keypair')
         devtoolsTypes.string
     )
     .setAction(async ({ keypairFile }: Base58FeesTaskArgs) => {
+        assert(fs.existsSync(keypairFile), `Keypair file not found: ${keypairFile}`)
         const data = fs.readFileSync(keypairFile, 'utf8')
         const keypairJson = JSON.parse(data)
         const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson))
