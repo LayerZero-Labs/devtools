@@ -52,19 +52,9 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'eth-testnet': {
-            eid: EndpointId.ETHEREUM_V2_TESTNET,
-            url: process.env.RPC_URL_ETH_TESTNET || 'http://127.0.0.1:8501',
-            accounts,
-        },
         'bsc-testnet': {
             eid: EndpointId.BSC_V2_TESTNET,
             url: process.env.RPC_URL_BSC_TESTNET || 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-            accounts,
-        },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
         },
         'aptos-testnet': {
