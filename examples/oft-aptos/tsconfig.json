@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "types": ["node", "jest"],
+    "target": "es2020",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "paths": {
+      "@/utils/*": ["./tasks/shared/*"],
+      "@/tasks/*": ["./tasks/*"],
+      "@/src/*": ["./src/*"]
+    }
+  },
+  "include": ["./**/*.ts"]
+}

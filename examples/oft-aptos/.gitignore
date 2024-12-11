@@ -1,0 +1,6 @@
+.env
+*/build
+*/node_modules
+.aptos
+cache/hardhat
+deployments/*
