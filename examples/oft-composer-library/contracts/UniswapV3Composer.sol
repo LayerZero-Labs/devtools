@@ -13,8 +13,9 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 /**
  * @title UniswapV3Composer
- * @author
+ *
  * @notice Handles cross-chain OFT token swaps using Uniswap V3 upon receiving tokens via LayerZero.
+ *
  * @dev This contract inherits from IOAppComposer and interacts with Uniswap V3's SwapRouter to execute token swaps.
  */
 contract UniswapV3Composer is IOAppComposer {
