@@ -13,7 +13,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
 
 /**
  * @title UniswapV3Composer
- * @author 
+ * @author
  * @notice Handles cross-chain OFT token swaps using Uniswap V3 upon receiving tokens via LayerZero.
  * @dev This contract inherits from IOAppComposer and interacts with Uniswap V3's SwapRouter to execute token swaps.
  */
@@ -35,13 +35,7 @@ contract UniswapV3Composer is IOAppComposer {
     /// @param tokenOut The address of the ERC20 token being swapped to.
     /// @param amountIn The amount of `tokenIn` being swapped.
     /// @param amountOut The amount of `tokenOut` received from the swap.
-    event SwapExecuted(
-        address indexed user,
-        address tokenIn,
-        address tokenOut,
-        uint256 amountIn,
-        uint256 amountOut
-    );
+    event SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
 
     /**
      * @notice Initializes the UniswapV3Composer contract with necessary parameters.
@@ -55,11 +49,7 @@ contract UniswapV3Composer is IOAppComposer {
      * - `_endpoint` cannot be the zero address.
      * - `_oft` cannot be the zero address.
      */
-    constructor(
-        address _swapRouter,
-        address _endpoint,
-        address _oft
-    ) {
+    constructor(address _swapRouter, address _endpoint, address _oft) {
         require(_swapRouter != address(0), "Invalid SwapRouter address");
         require(_endpoint != address(0), "Invalid Endpoint address");
         require(_oft != address(0), "Invalid OFT address");
@@ -101,15 +91,10 @@ contract UniswapV3Composer is IOAppComposer {
         require(msg.sender == endpoint, "Unauthorized Endpoint");
 
         // Decode the composed message using OFTComposeMsgCodec
-        (
-            address user,
-            address tokenOut,
-            uint24 fee,
-            address recipient
-        ) = abi.decode(
-                OFTComposeMsgCodec.composeMsg(_message),
-                (address, address, uint24, address)
-            );
+        (address user, address tokenOut, uint24 fee, address recipient) = abi.decode(
+            OFTComposeMsgCodec.composeMsg(_message),
+            (address, address, uint24, address)
+        );
 
         // Decode the amountIn from the message amount received
         uint256 amountIn = OFTComposeMsgCodec.amountLD(_message);
