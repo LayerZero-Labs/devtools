@@ -5,22 +5,24 @@
 module oft::oft_core {
     use std::event::emit;
     use std::math64::pow;
-    use std::signer::address_of;
     use std::vector;
 
     use endpoint_v2::messaging_receipt::{get_guid, MessagingReceipt};
     use endpoint_v2_common::bytes32::{Self, Bytes32, from_bytes32, to_bytes32};
-    use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_store;
     use oft_common::oft_compose_msg_codec;
     use oft_common::oft_msg_codec;
+    use oft_common::oft_v1_msg_codec::{Self, PT_SEND};
 
     friend oft::oft;
+    friend oft::oft_impl_config;
     friend oft::oapp_receive;
     #[test_only]
     friend oft::oft_core_tests;
+    #[test_only]
+    friend oft::oft_impl_config_tests;
 
-    friend oft::oft_fa;
+    friend oft::oft_impl;
     #[test_only]
     friend oft::oft_fa_tests;
     #[test_only]
@@ -55,9 +57,18 @@ module oft::oft_core {
     ): (MessagingReceipt, u64, u64) {
         let (amount_sent_ld, amount_received_ld) = debit(true /*unused*/);
 
-        // Construct message and options
-        let (message, msg_type) = encode_oft_msg(user_sender, amount_received_ld, to, compose_payload);
+        let msg_type = if (vector::length(&compose_payload) > 0) { SEND_AND_CALL() } else { SEND() };
         let options = build_options(amount_received_ld, msg_type);
+
+        // Construct message and options
+        let (message, _) = if (!v1_compatibility_mode(dst_eid)) {
+            // Encode using OFT v2 codec
+            encode_oft_msg(user_sender, amount_received_ld, to, compose_payload)
+        } else {
+            // Encode using OFT v1 codec if the destination EID is set to use the v1 compatibility mode
+            assert!(vector::is_empty(&compose_payload), ECOMPOSE_SEND_TO_V1_OFT_FORBIDDEN_err());
+            encode_v1_oft_msg(user_sender, amount_received_ld, to)
+        };
 
         // Hook to inspect the message and options before sending
         inspect(&message, &options);
@@ -93,17 +104,36 @@ module oft::oft_core {
         send_compose: |address, u16, vector<u8>| (),
         credit: |address, u64| u64,
     ) {
-        let to_address = bytes32::to_address(oft_msg_codec::send_to(&message));
-        let message_amount_ld = to_ld(oft_msg_codec::amount_sd(&message));
+        let v1_mode = v1_compatibility_mode(src_eid);
+
+        // Decode the message using the OFT v2 codec unless the sender EID is set to use the v1 compatibility mode
+        let (to_address, message_amount_ld, has_compose) = if (!v1_mode) (
+            // Decode using OFT v2 codec
+            bytes32::to_address(oft_msg_codec::send_to(&message)),
+            to_ld(oft_msg_codec::amount_sd(&message)),
+            oft_msg_codec::has_compose(&message),
+        ) else (
+            // Decode using OFT v1 codec
+            bytes32::to_address(oft_v1_msg_codec::send_to(&message)),
+            to_ld(oft_v1_msg_codec::amount_sd(&message)),
+            oft_v1_msg_codec::has_compose(&message),
+        );
         let amount_received_ld = credit(to_address, message_amount_ld);
 
         // Send compose payload if present
-        if (oft_msg_codec::has_compose(&message)) {
+        if (has_compose) {
+            let compose_payload = if (!v1_mode) {
+                oft_msg_codec::compose_payload(&message)
+            } else {
+                // Convert the compose payload it to the format expected by v2 lz_compose receivers, so there is
+                // consistency on the behavior of OFT composers on this side of the ecosystem
+                oft_v1_msg_codec::v2_compatible_compose_payload(&message)
+            };
             let compose_message = oft_compose_msg_codec::encode(
                 nonce,
                 src_eid,
                 amount_received_ld,
-                oft_msg_codec::compose_payload(&message)
+                compose_payload,
             );
             // In the default implementation the compose index is always 0; send_compose accepts the index parameter
             // for extensibility
@@ -173,6 +203,30 @@ module oft::oft_core {
         (encoded_msg, msg_type)
     }
 
+    /// Encode an OFT v1 message
+    /// Do not allow the compose message to be sent to a v1 OFT from v2 message because the behavior and semantics
+    /// of composition is substantially different
+    public(friend) fun encode_v1_oft_msg(
+        sender: address,
+        amount_ld: u64,
+        to: Bytes32,
+    ): (vector<u8>, u16) {
+        let encoded_msg = oft_v1_msg_codec::encode(
+            PT_SEND(),
+            to,
+            to_sd(amount_ld),
+            bytes32::from_address(sender),
+            0,
+            b"",
+        );
+        (encoded_msg, SEND())
+    }
+
+    public(friend) fun set_v1_compatibility_mode(eid: u32, enabled: bool) {
+        emit(OftV1CompatibilityModeSet { eid, enabled });
+        oft_store::set_v1_compatibility_mode(eid, enabled);
+    }
+
     // =================================================== Viewable ===================================================
 
     /// Convert an amount from shared decimals to local decimals
@@ -185,20 +239,29 @@ module oft::oft_core {
         amount_ld / oft_store::decimal_conversion_rate()
     }
 
+    /// Calculate an amount in local decimals minus the dust
     public(friend) fun remove_dust(amount_ld: u64): u64 {
         let decimal_conversion_rate = oft_store::decimal_conversion_rate();
         (amount_ld / decimal_conversion_rate) * decimal_conversion_rate
     }
 
+    /// Get the shared decimals for the OFT
+    public(friend) fun shared_decimals(): u8 { oft_store::shared_decimals() }
+
+    /// Get the decimal conversion rate
+    /// This is the multiplier to convert a shared decimals to a local decimals representation
     public(friend) fun decimal_conversion_rate(): u64 { oft_store::decimal_conversion_rate() }
+
+    /// Check if the v1 compatibility mode is enabled for an EID
+    /// This must be public to ensure the inline function can access it
+    public fun v1_compatibility_mode(eid: u32): bool { oft_store::v1_compatibility_mode(eid) }
 
     // ===================================================== Store ====================================================
 
-    public(friend) fun initialize(account: &signer, local_decimals: u8, shared_decimals: u8) {
-        assert!(address_of(account) == OAPP_ADDRESS(), EUNAUTHORIZED);
+    public(friend) fun initialize(local_decimals: u8, shared_decimals: u8) {
         assert!(shared_decimals <= local_decimals, EINVALID_LOCAL_DECIMALS);
         let decimal_conversion_rate = pow(10, ((local_decimals - shared_decimals) as u64));
-        oft_store::initialize(account, shared_decimals, decimal_conversion_rate);
+        oft_store::initialize(shared_decimals, decimal_conversion_rate);
     }
 
     // ==================================================== Events ====================================================
@@ -223,6 +286,12 @@ module oft::oft_core {
         amount_sent_ld: u64,
         // Amount of tokens received in local decimals
         amount_received_ld: u64
+    }
+
+    #[event]
+    struct OftV1CompatibilityModeSet has store, drop {
+        eid: u32,
+        enabled: bool,
     }
 
     public(friend) fun emit_oft_received(
@@ -265,6 +334,11 @@ module oft::oft_core {
         OftSent { guid, dst_eid, from_address, amount_sent_ld, amount_received_ld }
     }
 
+    #[test_only]
+    public fun oft_v1_compatibility_mode_set(eid: u32, enabled: bool): OftV1CompatibilityModeSet {
+        OftV1CompatibilityModeSet { eid, enabled }
+    }
+
     // =============================================== Shared Constants ===============================================
 
     // Message type for a message that does not contain a compose message
@@ -275,7 +349,10 @@ module oft::oft_core {
 
     // ================================================== Error Codes =================================================
 
-    const EINVALID_LOCAL_DECIMALS: u64 = 1;
-    const EUNAUTHORIZED: u64 = 2;
-    const ESLIPPAGE_EXCEEDED: u64 = 3;
+    const ECOMPOSE_SEND_TO_V1_OFT_FORBIDDEN: u64 = 1;
+    const EINVALID_LOCAL_DECIMALS: u64 = 2;
+    const EUNAUTHORIZED: u64 = 3;
+    const ESLIPPAGE_EXCEEDED: u64 = 4;
+
+    public fun ECOMPOSE_SEND_TO_V1_OFT_FORBIDDEN_err(): u64 { ECOMPOSE_SEND_TO_V1_OFT_FORBIDDEN }
 }

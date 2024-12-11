@@ -1,10 +1,11 @@
 [package]
 name = "oft"
-version = "1.0.0"
+version = "0.0.1"
 authors = []
 
 [addresses]
 oft = "_"
+oft_admin = "_"
 oft_common = "_"
 router_node_0 = "_"
 simple_msglib = "_"
@@ -34,6 +35,7 @@ native_token_metadata_address = "0xa"
 
 [dev-addresses]
 oft = "0x302814823"
+oft_admin = "0x12321241"
 oft_common = "0x30281482332"
 router_node_0 = "0x10000f"
 simple_msglib = "0x100011"
