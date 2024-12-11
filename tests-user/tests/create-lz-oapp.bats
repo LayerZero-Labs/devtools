@@ -169,17 +169,21 @@ teardown() {
     pnpm lint:fix
 }
 
-<<<<<<< HEAD
+@test "should work with pnpm & oft-alt example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-alt"
+
+    LZ_ENABLE_ALT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+    pnpm lint
+    pnpm lint:fix
+}
+
 @test "should work with pnpm & mint-burn-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-mint-burn-oft-adapter"
 
     LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager pnpm
-=======
-@test "should work with pnpm & oft-alt example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-alt"
-
-    LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager pnpm
->>>>>>> 71ad4af6 (chore: add to create-lz-oapp and tests)
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -260,17 +264,21 @@ teardown() {
     yarn lint:fix
 }
 
-<<<<<<< HEAD
+@test "should work with yarn & oft-alt example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-alt"
+
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-alt-evm" LZ_ENABLE_ALT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager yarn
+    cd "$DESTINATION"
+    yarn compile
+    yarn test
+    yarn lint
+    yarn lint:fix
+}
+
 @test "should work with yarn & mint-burn-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-mint-burn-oft-adapter"
 
     YARN_CACHE_FOLDER="/tmp/.yarn-cache-mint-burn-oft-adapter-evm" LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager yarn
-=======
-@test "should work with yarn & oft-alt example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-alt"
-
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-native-oft-alt-evm" LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager yarn
->>>>>>> 71ad4af6 (chore: add to create-lz-oapp and tests)
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -351,17 +359,21 @@ teardown() {
     npm run lint:fix
 }
 
-<<<<<<< HEAD
+@test "should work with npm & oft-alt example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-alt"
+
+    LZ_ENABLE_ALT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager npm
+    cd "$DESTINATION"
+    npm run compile
+    npm run test
+    npm run lint
+    npm run lint:fix
+}
+
 @test "should work with npm & mint-burn-oft-adapter example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-mint-burn-oft-adapter"
 
     LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager npm
-=======
-@test "should work with npm & oft-alt example in CI mode" {
-    local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-alt"
-
-    LZ_ENABLE_NATIVE_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-alt --destination $DESTINATION --package-manager npm
->>>>>>> 71ad4af6 (chore: add to create-lz-oapp and tests)
     cd "$DESTINATION"
     npm run compile
     npm run test
