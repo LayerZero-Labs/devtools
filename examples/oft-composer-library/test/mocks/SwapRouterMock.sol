@@ -4,9 +4,12 @@ pragma solidity ^0.8.20;
 // Import the ISwapRouter interface from Uniswap V3 Periphery
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
+import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
+
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 // Import the ERC20Mock to simulate token behavior
 import { ERC20Mock } from "../mocks/ERC20Mock.sol";
-import { OFTMock } from "../mocks/OFTMock.sol";
 
 /**
  * @title SwapRouterMock
@@ -24,7 +27,7 @@ contract SwapRouterMock is ISwapRouter {
     uint256 public lastAmountOut;
 
     // ERC20 tokens used for swapping
-    OFTMock public tokenIn;
+    IERC20 public tokenIn;
     ERC20Mock public tokenOut;
 
     // Predefined amountOut to return on swaps
@@ -37,7 +40,7 @@ contract SwapRouterMock is ISwapRouter {
      * @param _predefinedAmountOut The amount of tokenOut to return on swaps.
      */
     constructor(address _tokenIn, address _tokenOut, uint256 _predefinedAmountOut) {
-        tokenIn = OFTMock(_tokenIn);
+        tokenIn = IERC20(IOFT(_tokenIn).token());
         tokenOut = ERC20Mock(_tokenOut);
         predefinedAmountOut = _predefinedAmountOut;
     }
