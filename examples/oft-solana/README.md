@@ -79,29 +79,9 @@ We recommend that you request 5 devnet SOL, which should be sufficient for this 
 cp .env.example .env
 ```
 
-In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first. You can create a temporary script called `getBase58Pk.js` in your project root with the following contents:
+In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first.
 
-<details>
-  <summary> View `getBase58Pk.js` script </summary>
-
-```js
-import fs from "fs";
-import { Keypair } from "@solana/web3.js";
-import bs58 from "bs58";
-
-const keypairFilePath = `<KEYPAIR_FILE_PATH_HERE>`; // you can view this by running `solana config get`
-
-const data = fs.readFileSync(keypairFilePath, "utf8");
-const keypairJson = JSON.parse(data);
-const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson));
-const base58EncodedPrivateKey = bs58.encode(keypair.secretKey);
-
-console.log(base58EncodedPrivateKey);
-```
-
-Then, run `node getBase58Pk.js`
-
-</details>
+You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana.id.json`
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
