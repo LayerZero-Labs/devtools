@@ -13,20 +13,23 @@ import { createSetReceiveLibraryTransactions } from './wire/setReceiveLibrary'
 import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
 // import { createSetSendConfigTransactions } from './setSendConfig'
 import { executeTransactions } from './wire/transactionExecutor'
+import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
+import { getAptosOftAddress } from '../move/utils/utils'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
     process.exit(1)
 }
 
-// @todo Fetch this from the config instead of hardcoding.
-const EID_APTOS = EndpointId.APTOS_V2_SANDBOX
-
 /**
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
 async function main() {
+    const { network } = await parseYaml()
+    const EID_APTOS = getEidFromAptosNetwork(network)
+
+    // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
 
@@ -49,9 +52,10 @@ async function main() {
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const contractMetaData: ContractMetadataMapping = {}
 
-    // @todo Fetch this from the config instead of hardcoding.
     // @todo Use this as a primary key for NonEvmOAppWiring in the following code
-    const APTOS_OAPP_ADDRESS = '0x8401fa82eea1096b32fd39207889152f947d78de1b65976109493584636622a8'
+    const lzNetworkStage = getLzNetworkStage(network)
+    const APTOS_OAPP_ADDRESS = getAptosOftAddress(lzNetworkStage)
+
     const nonEvmOapp: NonEvmOAppMetadata = {
         address: APTOS_OAPP_ADDRESS,
         eid: EID_APTOS,
