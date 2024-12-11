@@ -25,13 +25,20 @@ export class Endpoint {
     }
 
     async getSendLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
-        const result = await this.aptos.view({
-            payload: {
-                function: `${this.endpoint_address}::endpoint::get_effective_send_library`,
-                functionArguments: [oftAddress, dstEid],
-            },
-        })
-        return [result[0] as string, result[1] as boolean]
+        try {
+            const result = await this.aptos.view({
+                payload: {
+                    function: `${this.endpoint_address}::endpoint::get_effective_send_library`,
+                    functionArguments: [oftAddress, dstEid],
+                },
+            })
+            return [result[0] as string, result[1] as boolean]
+        } catch (error) {
+            const toNetwork = getNetworkForChainId(dstEid)
+            throw new Error(
+                `Failed to get send library. Network: ${toNetwork.chainName}-${toNetwork.env} might not be supported.`
+            )
+        }
     }
 
     async getReceiveLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {

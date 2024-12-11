@@ -4,6 +4,7 @@ import { getAptosOftAddress, sendAllTxs } from './utils/utils'
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { hexAddrToAptosBytesAddr } from '../../sdk/utils'
+import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()
@@ -17,23 +18,26 @@ async function main() {
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
-    const amount_ld = 1
+    const amount_ld = 200000
     const min_amount_ld = 1
+    const toAddress = '0x462c2AE39B6B0bdB950Deb2BC82082308cF8cB10'
+    const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
+    const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(200000))
 
     console.log(`Attempting to send ${amount_ld} units`)
-    console.log(`Using OFT address: ${aptosOftAddress}`)
+    console.log(`Using OFT at address: ${aptosOftAddress}`)
     console.log(`From account: ${account_address}`)
+    console.log(`To account: ${toAddress}`)
 
-    const dst_eid = EndpointId.BSC_V2_TESTNET
-    const to = hexAddrToAptosBytesAddr('0x0000000000000000000000003e96158286f348145819244000776202ae5e0283')
-    const extra_options = new Uint8Array([])
+    const extra_options = options.toBytes()
     const compose_message = new Uint8Array([])
     const oft_cmd = new Uint8Array([])
+    const dst_eid = EndpointId.BSC_V2_TESTNET
 
     const [nativeFee, zroFee] = await oft.quoteSend(
         account_address,
         dst_eid,
-        to,
+        toAddressBytes,
         amount_ld,
         min_amount_ld,
         extra_options,
@@ -48,7 +52,7 @@ async function main() {
 
     const sendPayload = oft.sendPayload(
         dst_eid,
-        to,
+        toAddressBytes,
         amount_ld,
         min_amount_ld,
         extra_options,
