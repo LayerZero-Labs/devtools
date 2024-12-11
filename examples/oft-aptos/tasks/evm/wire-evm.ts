@@ -1,4 +1,3 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ContractFactory, ethers } from 'ethers'
 import fs from 'fs'
 import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
@@ -10,9 +9,12 @@ import { createSetDelegateTransactions } from './wire/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire/setEnforcedOptions'
 import { createSetSendLibraryTransactions } from './wire/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire/setReceiveLibrary'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
-// import { createSetSendConfigTransactions } from './setSendConfig'
+// import { createSetSendConfigTransactions } from './wire/setSendConfig'
+
 import { executeTransactions } from './wire/transactionExecutor'
+
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
 import { getAptosOftAddress } from '../move/utils/utils'
 
@@ -29,7 +31,6 @@ async function main() {
     const { network } = await parseYaml()
     const EID_APTOS = getEidFromAptosNetwork(network)
 
-    // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
 
@@ -110,11 +111,12 @@ async function main() {
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, nonEvmOapp)
-    TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
-        contractMetaData,
-        nonEvmOapp
-    )
     // TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+
+    // TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
+    //     contractMetaData,
+    //     nonEvmOapp
+    // )
 
     // @todo Clean this up or move to utils
     const rpcUrlSelfMap: { [eid: eid]: string } = {}
@@ -122,7 +124,7 @@ async function main() {
         rpcUrlSelfMap[eid] = eidData.provider.connection.url
     }
 
-    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap)
+    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8546)
 
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
@@ -132,7 +134,7 @@ async function main() {
         // console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
-        throw error.error
+        throw error
     }
     anvilForkNode.killNodes()
 }
