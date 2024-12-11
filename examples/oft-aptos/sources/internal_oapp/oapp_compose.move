@@ -10,6 +10,7 @@ module oft::oapp_compose {
     use oft::oapp_store;
     use oft::oft::lz_compose_impl;
 
+    /// LZ Compose function for self-execution
     public entry fun lz_compose(
         from: address,
         guid: vector<u8>,
@@ -30,6 +31,9 @@ module oft::oapp_compose {
         )
     }
 
+    /// LZ Compose function to be called by the Executor
+    /// This is able to be provided a compose value in the form of a FungibleAsset
+    /// For self-executing with a value, this should be called with a script
     public fun lz_compose_with_value(
         from: address,
         guid_and_index: WrappedGuidAndIndex,
@@ -37,7 +41,10 @@ module oft::oapp_compose {
         extra_data: vector<u8>,
         value: Option<FungibleAsset>,
     ) {
+        // Make sure that the value provided is of the native token type
         assert!(option::is_none(&value) || is_native_token(option::borrow(&value)), EINVALID_TOKEN);
+
+        // Unwrap the guid and index from the wrapped guid and index, this wrapping
         let (guid, index) = get_guid_and_index_from_wrapped(&guid_and_index);
 
         endpoint::clear_compose(&oapp_store::call_ref(), from, guid_and_index, message);
@@ -54,6 +61,7 @@ module oft::oapp_compose {
 
     // ==================================================== Helper ====================================================
 
+    /// Checks that a token is the native token
     fun is_native_token(token: &FungibleAsset): bool {
         object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
     }
@@ -65,6 +73,7 @@ module oft::oapp_compose {
         endpoint::register_composer(account, utf8(module_name));
     }
 
+    /// Struct to dynamically derive the module name to register on the endpoint
     struct LzComposeModule {}
 
     #[test_only]

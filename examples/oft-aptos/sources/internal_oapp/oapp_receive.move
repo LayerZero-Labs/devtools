@@ -15,6 +15,7 @@ module oft::oapp_receive {
     use oft::oapp_store;
     use oft::oft::{lz_receive_impl, next_nonce_impl};
 
+    /// LZ Receive function for self-execution
     public entry fun lz_receive(
         src_eid: u32,
         sender: vector<u8>,
@@ -34,6 +35,10 @@ module oft::oapp_receive {
         )
     }
 
+    /// LZ Receive function to be called by the Executor
+    /// This is able to be provided a receive value in the form of a FungibleAsset
+    /// For self-executing with a value, this should be called with a script
+    /// The WrappedGuid is used by the caller to
     public fun lz_receive_with_value(
         src_eid: u32,
         sender: vector<u8>,
@@ -62,12 +67,14 @@ module oft::oapp_receive {
     }
 
     #[view]
+    /// Get the next nonce for the given pathway
     public fun next_nonce(src_eid: u32, sender: vector<u8>): u64 {
         next_nonce_impl(src_eid, to_bytes32(sender))
     }
 
     // ==================================================== Helper ====================================================
 
+    /// Check that a fungible asset is the native token
     fun is_native_token(token: &FungibleAsset): bool {
         object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
     }

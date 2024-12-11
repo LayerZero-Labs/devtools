@@ -2,7 +2,6 @@
 ///
 /// This module should generally not be modified by the OApp developer.
 module oft::oapp_store {
-    use std::signer::address_of;
     use std::table::{Self, Table};
 
     use endpoint_v2_common::bytes32::Bytes32;
@@ -15,6 +14,7 @@ module oft::oapp_store {
 
     // ************************************************* CONFIGURATION *************************************************
 
+    /// The address of the OApp
     public inline fun OAPP_ADDRESS(): address { @oft }
 
     // *********************************************** END CONFIGURATION ***********************************************
@@ -23,10 +23,12 @@ module oft::oapp_store {
         contract_signer: ContractSigner,
         admin: address,
         peers: Table<u32, Bytes32>,
+        sending_paused: Table<u32, bool>,
         delegate: address,
         enforced_options: Table<EnforcedOptionsKey, vector<u8>>,
     }
 
+    /// Enforced Options are stored by the OApp by EID and a OApp-specific "message type" (u16)
     struct EnforcedOptionsKey has store, copy, drop { eid: u32, msg_type: u16 }
 
     // =================================================== Call Ref ===================================================
@@ -75,6 +77,18 @@ module oft::oapp_store {
         table::remove(&mut store_mut().peers, eid);
     }
 
+    // ===================================================== Pause ====================================================
+
+    /// Check if sending to a destination EID is paused
+    public(friend) fun is_sending_paused(dst_eid: u32): bool acquires OAppStore {
+        *table::borrow_with_default(&store().sending_paused, dst_eid, &false)
+    }
+
+    /// Pause or unpause the sending to a destination EID
+    public(friend) fun set_sending_paused(dst_eid: u32, paused: bool) acquires OAppStore {
+        table::upsert(&mut store_mut().sending_paused, dst_eid, paused);
+    }
+
     // =================================================== Delegate ===================================================
 
     public(friend) fun get_delegate(): address acquires OAppStore { store().delegate }
@@ -94,8 +108,9 @@ module oft::oapp_store {
     fun init_module(account: &signer) {
         move_to<OAppStore>(account, OAppStore {
             contract_signer: create_contract_signer(account),
-            admin: address_of(account),
+            admin: @oft_admin,
             peers: table::new(),
+            sending_paused: table::new(),
             delegate: @0x0,
             enforced_options: table::new(),
         });
