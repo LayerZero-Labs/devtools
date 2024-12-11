@@ -74,6 +74,18 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        // Mint Burn OFT Adapter example is feature flagged for the time being
+        ...(process.env.LZ_ENABLE_MINTBURN_EXAMPLE
+            ? [
+                  {
+                      id: 'mint-burn-oft-adapter',
+                      label: 'MintBurnOFTAdapter',
+                      repository,
+                      directory: 'examples/mint-burn-oft-adapter',
+                      ref,
+                  },
+              ]
+            : []),
         // OApp Read examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_READ_EXAMPLE
             ? [
