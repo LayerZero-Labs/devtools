@@ -12,7 +12,6 @@ import '@layerzerolabs/toolbox-hardhat'
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import './tasks/send.ts'
 
 // Set your preferred authentication method
 //
