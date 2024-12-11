@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-evm
 
+## 3.1.0
+
+### Minor Changes
+
+- 60cc71c: changed license for MintBurnOFTAdapter and periphery contracts to MIT from UNLICENSED
+- 5c47a41: Added MintBurnOFTAdapter
+
+### Patch Changes
+
+- e90a1d3: Improve quoteOFT default implementation to use totalSupply()
+  - @layerzerolabs/oapp-evm@0.3.0
+
 ## 3.0.0
 
 ### Patch Changes
