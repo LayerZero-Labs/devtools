@@ -60,7 +60,7 @@ export const isZero = (value: PossiblyBytes | PossiblyBigInt | null | undefined)
  * @returns {string | undefined}
  */
 export const ignoreZero = <T extends PossiblyBytes | PossiblyBigInt>(value?: T | null | undefined): T | undefined =>
-    isZero(value) ? undefined : (value ?? undefined)
+    isZero(value) ? undefined : value ?? undefined
 
 /**
  * Helper function to be used when sorting of addresses is necessary.
