@@ -40,7 +40,7 @@ importers:
         version: 17.1.0(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-promise@6.1.1)(eslint@8.57.0)
       eslint-plugin-import:
         specifier: ^2.29.1
-        version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+        version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)
       eslint-plugin-jest:
         specifier: ^27.6.3
         version: 27.6.3(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)(typescript@5.5.3)
@@ -84,17 +84,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -109,7 +109,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ^5.0.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -127,25 +127,25 @@ importers:
         version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
       '@openzeppelin/contracts':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.11
+        version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
       chai:
         specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.5.0
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0
@@ -154,10 +154,10 @@ importers:
         version: 16.4.5
       eslint:
         specifier: ^8.55.0
-        version: 8.57.0
+        version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -178,7 +178,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -198,128 +198,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)
-      '@layerzerolabs/lz-v2-utilities':
-        specifier: ^3.0.12
-        version: 3.0.12
-      '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
-        version: link:../../packages/oapp-evm
-      '@layerzerolabs/prettier-config-next':
-        specifier: ^2.3.39
-        version: 2.3.44
-      '@layerzerolabs/solhint-config':
-        specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
-      '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~5.1.0
-        version: link:../../packages/test-devtools-evm-foundry
-      '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
-        version: link:../../packages/toolbox-foundry
-      '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.1
-        version: link:../../packages/toolbox-hardhat
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
-      '@nomiclabs/hardhat-ethers':
-        specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
-      '@openzeppelin/contracts':
-        specifier: ^5.0.2
-        version: 5.0.2
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
-      '@rushstack/eslint-patch':
-        specifier: ^1.7.0
-        version: 1.7.0
-      '@types/chai':
-        specifier: ^4.3.11
-        version: 4.3.11
-      '@types/mocha':
-        specifier: ^10.0.6
-        version: 10.0.6
-      '@types/node':
-        specifier: ~18.18.14
-        version: 18.18.14
-      chai:
-        specifier: ^4.4.1
-        version: 4.4.1
-      concurrently:
-        specifier: ~9.1.0
-        version: 9.1.0
-      dotenv:
-        specifier: ^16.4.1
-        version: 16.4.1
-      eslint:
-        specifier: ^8.55.0
-        version: 8.57.0
-      eslint-plugin-jest-extended:
-        specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
-      hardhat:
-        specifier: ^2.22.10
-        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
-      hardhat-contract-sizer:
-        specifier: ^2.10.0
-        version: 2.10.0(hardhat@2.22.12)
-      hardhat-deploy:
-        specifier: ^0.12.1
-        version: 0.12.1
-      mocha:
-        specifier: ^10.2.0
-        version: 10.2.0
-      prettier:
-        specifier: ^3.2.5
-        version: 3.2.5
-      solhint:
-        specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
-      solidity-bytes-utils:
-        specifier: ^0.8.2
-        version: 0.8.2
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
-      typescript:
-        specifier: ^5.4.4
-        version: 5.5.3
-
-  examples/oapp-read:
-    devDependencies:
-      '@babel/core':
-        specifier: ^7.23.9
-        version: 7.23.9
-      '@layerzerolabs/eslint-config-next':
-        specifier: ~2.3.39
-        version: 2.3.44(typescript@5.5.3)
-      '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
-      '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -331,7 +220,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -355,13 +244,13 @@ importers:
         version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
         version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
@@ -379,7 +268,7 @@ importers:
         version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -400,7 +289,118 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
+
+  examples/oapp-read:
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.39
+        version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.26
+        version: 3.0.26
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.12
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.12
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.0
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.39
+        version: 2.3.44
+      '@layerzerolabs/solhint-config':
+        specifier: ^3.0.12
+        version: 3.0.26(typescript@5.5.3)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~5.1.0
+        version: link:../../packages/test-devtools-evm-foundry
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.9
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.6.1
+        version: link:../../packages/toolbox-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.10.4
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.20
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.10
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      chai:
+        specifier: ^4.4.1
+        version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.1
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      hardhat:
+        specifier: ^2.22.10
+        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.12)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      solhint:
+        specifier: ^4.1.1
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -423,17 +423,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -448,7 +448,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -466,139 +466,25 @@ importers:
         version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
       '@openzeppelin/contracts':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.11
+        version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
       chai:
         specifier: ^4.4.1
-        version: 4.4.1
-      concurrently:
-        specifier: ~9.1.0
-        version: 9.1.0
-      dotenv:
-        specifier: ^16.4.1
-        version: 16.4.1
-      eslint:
-        specifier: ^8.55.0
-        version: 8.57.0
-      eslint-plugin-jest-extended:
-        specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
-      ethers:
-        specifier: ^5.7.2
-        version: 5.7.2
-      hardhat:
-        specifier: ^2.22.10
-        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
-      hardhat-contract-sizer:
-        specifier: ^2.10.0
-        version: 2.10.0(hardhat@2.22.12)
-      hardhat-deploy:
-        specifier: ^0.12.1
-        version: 0.12.1
-      mocha:
-        specifier: ^10.2.0
-        version: 10.2.0
-      prettier:
-        specifier: ^3.2.5
-        version: 3.2.5
-      solhint:
-        specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
-      solidity-bytes-utils:
-        specifier: ^0.8.2
-        version: 0.8.2
-      ts-node:
-        specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
-      typescript:
-        specifier: ^5.4.4
-        version: 5.5.3
-
-  examples/oft-adapter:
-    devDependencies:
-      '@babel/core':
-        specifier: ^7.23.9
-        version: 7.23.9
-      '@layerzerolabs/eslint-config-next':
-        specifier: ~2.3.39
-        version: 2.3.44(typescript@5.5.3)
-      '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
-      '@layerzerolabs/lz-evm-messagelib-v2':
-        specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2':
-        specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7':
-        specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
-      '@layerzerolabs/lz-v2-utilities':
-        specifier: ^3.0.12
-        version: 3.0.12
-      '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
-        version: link:../../packages/oapp-evm
-      '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
-        version: link:../../packages/oft-evm
-      '@layerzerolabs/prettier-config-next':
-        specifier: ^2.3.39
-        version: 2.3.44
-      '@layerzerolabs/solhint-config':
-        specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
-      '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~5.1.0
-        version: link:../../packages/test-devtools-evm-foundry
-      '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
-        version: link:../../packages/toolbox-foundry
-      '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.1
-        version: link:../../packages/toolbox-hardhat
-      '@nomicfoundation/hardhat-ethers':
-        specifier: ^3.0.5
-        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
-      '@nomiclabs/hardhat-ethers':
-        specifier: ^2.2.3
-        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
-      '@openzeppelin/contracts':
-        specifier: ^5.0.2
-        version: 5.0.2
-      '@openzeppelin/contracts-upgradeable':
-        specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
-      '@rushstack/eslint-patch':
-        specifier: ^1.7.0
-        version: 1.7.0
-      '@types/chai':
-        specifier: ^4.3.11
-        version: 4.3.11
-      '@types/mocha':
-        specifier: ^10.0.6
-        version: 10.0.6
-      '@types/node':
-        specifier: ~18.18.14
-        version: 18.18.14
-      chai:
-        specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.5.0
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0
@@ -607,10 +493,10 @@ importers:
         version: 16.4.5
       eslint:
         specifier: ^8.55.0
-        version: 8.57.0
+        version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -631,7 +517,121 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
+
+  examples/oft-adapter:
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.39
+        version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.26
+        version: 3.0.26
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.12
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.12
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.0
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^3.0.0
+        version: link:../../packages/oft-evm
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.39
+        version: 2.3.44
+      '@layerzerolabs/solhint-config':
+        specifier: ^3.0.12
+        version: 3.0.26(typescript@5.5.3)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~5.1.0
+        version: link:../../packages/test-devtools-evm-foundry
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.9
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.6.1
+        version: link:../../packages/toolbox-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.10.4
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.20
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.10
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      chai:
+        specifier: ^4.4.1
+        version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.1
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      hardhat:
+        specifier: ^2.22.10
+        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.12)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      solhint:
+        specifier: ^4.1.1
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -669,17 +669,17 @@ importers:
         specifier: ~0.1.11
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: 3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
@@ -709,7 +709,7 @@ importers:
         version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -736,7 +736,7 @@ importers:
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
-        version: 3.2.1(@metaplex-foundation/umi@0.9.2)
+        version: 3.3.0(@metaplex-foundation/umi@0.9.2)
       '@metaplex-foundation/mpl-toolbox':
         specifier: ^0.9.4
         version: 0.9.4(@metaplex-foundation/umi@0.9.2)
@@ -766,19 +766,19 @@ importers:
         version: 2.0.6(@nomiclabs/hardhat-ethers@2.2.3)(@types/sinon-chai@3.2.12)(ethereum-waffle@4.0.10)(ethers@5.7.2)(hardhat@2.22.12)
       '@openzeppelin/contracts':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@solana-developers/helpers':
         specifier: ~2.4.0
         version: 2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/spl-token':
         specifier: ^0.4.8
-        version: 0.4.8(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+        version: 0.4.9(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js':
         specifier: ~1.95.8
         version: 1.95.8
@@ -793,13 +793,13 @@ importers:
         version: 0.2.36(@swc/core@1.4.0)
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.11
+        version: 4.3.20
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
@@ -808,7 +808,7 @@ importers:
         version: 6.0.0
       chai:
         specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.5.0
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0
@@ -817,10 +817,10 @@ importers:
         version: 16.4.5
       eslint:
         specifier: ^8.55.0
-        version: 8.57.0
+        version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethereumjs-util:
         specifier: ^7.1.5
         version: 7.1.5
@@ -856,7 +856,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -879,20 +879,20 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -913,7 +913,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -931,28 +931,28 @@ importers:
         version: 2.0.6(@nomiclabs/hardhat-ethers@2.2.3)(@types/sinon-chai@3.2.12)(ethereum-waffle@4.0.10)(ethers@5.7.2)(hardhat@2.22.12)
       '@openzeppelin/contracts':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@openzeppelin/hardhat-upgrades':
         specifier: ^1.28.0
         version: 1.28.0(@nomiclabs/hardhat-ethers@2.2.3)(@nomiclabs/hardhat-etherscan@3.1.8)(ethers@5.7.2)(hardhat@2.22.12)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.11
+        version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
       chai:
         specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.5.0
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0
@@ -961,10 +961,10 @@ importers:
         version: 16.4.5
       eslint:
         specifier: ^8.55.0
-        version: 8.57.0
+        version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.0)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -988,7 +988,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -1008,17 +1008,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -1033,7 +1033,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -1051,25 +1051,25 @@ importers:
         version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
       '@openzeppelin/contracts':
         specifier: ^5.0.2
-        version: 5.0.2
+        version: 5.1.0
       '@openzeppelin/contracts-upgradeable':
         specifier: ^5.0.2
-        version: 5.0.2(@openzeppelin/contracts@5.0.2)
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.11
+        version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
       chai:
         specifier: ^4.4.1
-        version: 4.4.1
+        version: 4.5.0
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0
@@ -1078,7 +1078,7 @@ importers:
         version: 16.4.5
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1099,7 +1099,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -1119,17 +1119,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -1144,7 +1144,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -1162,13 +1162,13 @@ importers:
         version: 1.1.4(hardhat@2.22.12)
       '@matterlabs/hardhat-zksync-verify':
         specifier: ^1.7.0
-        version: 1.7.0(@nomicfoundation/hardhat-verify@2.0.11)(hardhat@2.22.12)
+        version: 1.7.1(@nomicfoundation/hardhat-verify@2.0.12)(hardhat@2.22.12)
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
         version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
       '@nomicfoundation/hardhat-verify':
         specifier: ^2.0.11
-        version: 2.0.11(hardhat@2.22.12)
+        version: 2.0.12(hardhat@2.22.12)
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
         version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
@@ -1180,13 +1180,13 @@ importers:
         version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
         version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
@@ -1201,7 +1201,7 @@ importers:
         version: 16.4.5
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1222,7 +1222,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -1242,17 +1242,17 @@ importers:
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
-        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-protocol-v2':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
-        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -1264,7 +1264,7 @@ importers:
         version: 2.3.44
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
-        version: 3.0.12(typescript@5.5.3)
+        version: 3.0.26(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
         specifier: ~5.1.0
         version: link:../../packages/test-devtools-evm-foundry
@@ -1288,13 +1288,13 @@ importers:
         version: 5.1.0(@openzeppelin/contracts@5.1.0)
       '@rushstack/eslint-patch':
         specifier: ^1.7.0
-        version: 1.7.0
+        version: 1.10.4
       '@types/chai':
         specifier: ^4.3.11
         version: 4.3.20
       '@types/mocha':
         specifier: ^10.0.6
-        version: 10.0.6
+        version: 10.0.10
       '@types/node':
         specifier: ~18.18.14
         version: 18.18.14
@@ -1315,7 +1315,7 @@ importers:
         version: 8.57.1
       eslint-plugin-jest-extended:
         specifier: ~2.0.0
-        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+        version: 2.0.3(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -1336,7 +1336,7 @@ importers:
         version: 3.2.5
       solhint:
         specifier: ^4.1.1
-        version: 4.1.1(typescript@5.5.3)
+        version: 4.5.4(typescript@5.5.3)
       solidity-bytes-utils:
         specifier: ^0.8.2
         version: 0.8.2
@@ -1591,8 +1591,8 @@ importers:
         specifier: ~0.1.13
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../test-devtools
@@ -1731,8 +1731,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../test-devtools
@@ -1819,11 +1819,11 @@ importers:
         specifier: ~0.1.13
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../test-devtools
@@ -1895,8 +1895,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../test-devtools
@@ -1961,8 +1961,8 @@ importers:
         specifier: ~0.1.13
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -2314,8 +2314,8 @@ importers:
         specifier: ~0.4.2
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.1
         version: link:../protocol-devtools
@@ -2360,8 +2360,8 @@ importers:
         specifier: ~1.0.1
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~3.0.1
         version: link:../omnicounter-devtools
@@ -2447,8 +2447,8 @@ importers:
         specifier: ~0.1.14
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../test-devtools
@@ -2517,11 +2517,11 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.1
         version: link:../protocol-devtools
@@ -2584,8 +2584,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
@@ -2651,8 +2651,8 @@ importers:
         version: 1.2.2
     devDependencies:
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       bs58:
         specifier: ^6.0.0
         version: 6.0.0
@@ -2865,14 +2865,14 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -2959,8 +2959,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3035,8 +3035,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3120,8 +3120,8 @@ importers:
         specifier: ~0.1.13
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3202,8 +3202,8 @@ importers:
         specifier: ~0.1.12
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
@@ -3370,8 +3370,8 @@ importers:
         specifier: ~0.1.12
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -3379,11 +3379,11 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3508,8 +3508,8 @@ importers:
         specifier: ~0.1.12
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3517,11 +3517,11 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3622,8 +3622,8 @@ importers:
         specifier: ~1.0.1
         version: link:../../packages/devtools-evm
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.1
         version: link:../../packages/test-devtools
@@ -3760,8 +3760,8 @@ importers:
         specifier: ~0.1.12
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.1
         version: link:../../packages/protocol-devtools
@@ -3838,8 +3838,8 @@ importers:
         specifier: ~0.1.12
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3847,11 +3847,11 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3976,8 +3976,8 @@ importers:
         specifier: ~0.1.12
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
-        specifier: ^3.0.21
-        version: 3.0.21
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3988,11 +3988,11 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
-        specifier: ^3.0.12
-        version: 3.0.12
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.21
-        version: 3.0.22
+        specifier: ^3.0.26
+        version: 3.0.26
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)
@@ -4095,7 +4095,7 @@ packages:
     resolution: {integrity: sha512-kJsoy4fAPTOhzVr7Vwq8s/AUg6BQiJDa7WOqRzev4zsuIS3+JCuIZ6vUd7UBsjnxtmguJJulMRs9qWCzVBt2XA==}
     engines: {node: '>=15.10.0'}
     dependencies:
-      axios: 1.7.4(debug@4.3.7)
+      axios: 1.7.4
       got: 11.8.6
     transitivePeerDependencies:
       - debug
@@ -4105,23 +4105,23 @@ packages:
     resolution: {integrity: sha512-Nr1QJIbW/afYYGzYvrF70LtaHrIRtd4TNAglX8BvlfxJLZ45SAmueIKYl5tWoNBPzp65ymXGFK0Bb1vZUpuc9g==}
     dependencies:
       '@aws-crypto/util': 1.2.2
-      '@aws-sdk/types': 3.664.0
+      '@aws-sdk/types': 3.709.0
       tslib: 1.14.1
     dev: true
 
   /@aws-crypto/util@1.2.2:
     resolution: {integrity: sha512-H8PjG5WJ4wz0UXAFXeJjWCW1vkvIJ3qUUD+rGRwJ2/hj+xT58Qle2MTql/2MGzkU+1JLAFuR6aJpLAjHwhmwwg==}
     dependencies:
-      '@aws-sdk/types': 3.664.0
+      '@aws-sdk/types': 3.709.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     dev: true
 
-  /@aws-sdk/types@3.664.0:
-    resolution: {integrity: sha512-+GtXktvVgpreM2b+NJL9OqZGsOzHwlCUrO8jgQUvH/yA6Kd8QO2YFhQCp0C9sSzTteZJVqGBu8E0CQurxJHPbw==}
+  /@aws-sdk/types@3.709.0:
+    resolution: {integrity: sha512-ArtLTMxgjf13Kfu3gWH3Ez9Q5TkDdcRZUofpKH3pMGB/C6KAbeSCtIIDKfoRTUABzyGlPyCrZdnFjKyH+ypIpg==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@smithy/types': 3.6.0
+      '@smithy/types': 3.7.2
       tslib: 2.6.3
     dev: true
 
@@ -4164,7 +4164,7 @@ packages:
       '@babel/traverse': 7.23.9
       '@babel/types': 7.23.9
       convert-source-map: 2.0.0
-      debug: 4.3.5
+      debug: 4.3.7
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -4481,6 +4481,10 @@ packages:
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+    dev: true
+
+  /@bytecodealliance/preview2-shim@0.17.0:
+    resolution: {integrity: sha512-JorcEwe4ud0x5BS/Ar2aQWOQoFzjq/7jcnxYXCvSMh0oRm0dQXzOA+hqLDBnOMks1LLBA7dmiLLsEBl09Yd6iQ==}
     dev: true
 
   /@chainlink/contracts-ccip@0.7.6(ethers@5.7.2):
@@ -5351,7 +5355,7 @@ packages:
       '@resolver-engine/imports-fs': 0.3.3
       '@typechain/ethers-v5': 10.2.1(@ethersproject/abi@5.7.0)(@ethersproject/providers@5.7.2)(ethers@5.7.2)(typechain@8.3.2)(typescript@5.5.3)
       '@types/mkdirp': 0.5.2
-      '@types/node-fetch': 2.6.11
+      '@types/node-fetch': 2.6.12
       ethers: 5.7.2
       mkdirp: 0.5.6
       node-fetch: 2.7.0
@@ -5785,11 +5789,6 @@ packages:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
 
-  /@fastify/busboy@2.1.1:
-    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
-    engines: {node: '>=14'}
-    dev: true
-
   /@ganache/ethereum-address@0.1.4:
     resolution: {integrity: sha512-sTkU0M9z2nZUzDeHRzzGlW724xhMLXo2LeX1hixbnjHWY1Zg1hkqORywVfl+g5uOO8ht8T0v+34IxNxAhmWlbw==}
     dependencies:
@@ -6175,35 +6174,27 @@ packages:
   /@layerzerolabs/eslint-config-next@2.3.44(typescript@5.5.3):
     resolution: {integrity: sha512-WlBSy47LGPILdrNgzPiRtQf/hAY62IN37ncUsQwcr8T7cyX1HZREx2qljuXpvduLDAKn5otsm0XIqHuCRUHEFg==}
     dependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)(typescript@5.5.3)
-      '@typescript-eslint/parser': 7.7.1(eslint@8.57.0)(typescript@5.5.3)
-      eslint: 8.57.0
-      eslint-config-prettier: 9.1.0(eslint@8.57.0)
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
-      eslint-plugin-autofix: 2.2.0(eslint@8.57.0)
-      eslint-plugin-compat: 4.2.0(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.0)(prettier@3.2.5)
-      eslint-plugin-unused-imports: 3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0)
+      '@typescript-eslint/eslint-plugin': 7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1)(typescript@5.5.3)
+      '@typescript-eslint/parser': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      eslint: 8.57.1
+      eslint-config-prettier: 9.1.0(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.29.1)(eslint@8.57.1)
+      eslint-plugin-autofix: 2.2.0(eslint@8.57.1)
+      eslint-plugin-compat: 4.2.0(eslint@8.57.1)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1)
+      eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.1)(prettier@3.2.5)
+      eslint-plugin-unused-imports: 3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1)
       prettier: 3.2.5
     transitivePeerDependencies:
       - '@types/eslint'
-      - eslint-import-resolver-node
       - eslint-import-resolver-webpack
+      - eslint-plugin-import-x
       - supports-color
       - typescript
     dev: true
 
-  /@layerzerolabs/evm-sdks-core@3.0.12:
-    resolution: {integrity: sha512-8FBiOvp1EiQ3LK/BvaqhZlIZUIMfaJU+craRHVXyshMK3mQDaih7OdOXkkX+VrCZ1OmTCtfGWpD2CHlFzH2X+w==}
-    dependencies:
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  /@layerzerolabs/evm-sdks-core@3.0.22:
-    resolution: {integrity: sha512-hVh0e1J1ffVbpveR6mBnLjOO1F2hEr96P5nHLgEhjKCZsd2eOVJRcbg3bWLxhyVl6MpLgvDhIjefKxY2xXpeiQ==}
+  /@layerzerolabs/evm-sdks-core@3.0.26:
+    resolution: {integrity: sha512-P22z0eMJYYZuKd5c3PkyCzvxDLoYZiQ8m5qXQKLM0I21G8FkfRHBQQQ8PQ4fJA/FaErHJVI3AkoGVo2/h/aXCg==}
     dependencies:
       ethers: 5.7.2
     transitivePeerDependencies:
@@ -6244,8 +6235,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-definitions@3.0.21:
-    resolution: {integrity: sha512-LirBj6+rODkk97wnZ/Z2zK8NPyopOh3taj3GG1tOVBILkoHO2j5HbXM16QOwHzmQeU/OrdnzCS5tPV225KVQmA==}
+  /@layerzerolabs/lz-definitions@3.0.26:
+    resolution: {integrity: sha512-PujsvwbM38k2EZC8IJ2eelXI4RDk0dB2QJrgCHhhZGBG6Ufm93H1qhQCuKDPv78SG71fql5dMUtJ+aMVjv2BAg==}
     dependencies:
       tiny-invariant: 1.3.3
 
@@ -6274,34 +6265,6 @@ packages:
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.12.4
-      solidity-bytes-utils: 0.8.2
-    dev: true
-
-  /@layerzerolabs/lz-evm-messagelib-v2@3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-nDSaBOwDXjNhmCROnHb7xsrU9AfAgZGhlXIMwYudo+ML4Qz8B5NcAsxxByaK7cxtsDdsUiZRDJBNUociMNkPrA==}
-    peerDependencies:
-      '@arbitrum/nitro-contracts': ^1.1.0
-      '@axelar-network/axelar-gmp-sdk-solidity': ^5.6.4
-      '@chainlink/contracts-ccip': ^0.7.6
-      '@eth-optimism/contracts': ^0.6.0
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-      solidity-bytes-utils: ^0.8.0
-    peerDependenciesMeta:
-      '@arbitrum/nitro-contracts':
-        optional: true
-    dependencies:
-      '@axelar-network/axelar-gmp-sdk-solidity': 5.10.0
-      '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
-      '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)
-      '@openzeppelin/contracts': 5.0.2
-      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
-      hardhat-deploy: 0.12.1
       solidity-bytes-utils: 0.8.2
     dev: true
 
@@ -6358,34 +6321,6 @@ packages:
       '@openzeppelin/contracts': 5.0.2
       '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.0.2)
       hardhat-deploy: 0.12.1
-      solidity-bytes-utils: 0.8.2
-    dev: true
-
-  /@layerzerolabs/lz-evm-messagelib-v2@3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-nDSaBOwDXjNhmCROnHb7xsrU9AfAgZGhlXIMwYudo+ML4Qz8B5NcAsxxByaK7cxtsDdsUiZRDJBNUociMNkPrA==}
-    peerDependencies:
-      '@arbitrum/nitro-contracts': ^1.1.0
-      '@axelar-network/axelar-gmp-sdk-solidity': ^5.6.4
-      '@chainlink/contracts-ccip': ^0.7.6
-      '@eth-optimism/contracts': ^0.6.0
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-      solidity-bytes-utils: ^0.8.0
-    peerDependenciesMeta:
-      '@arbitrum/nitro-contracts':
-        optional: true
-    dependencies:
-      '@axelar-network/axelar-gmp-sdk-solidity': 5.10.0
-      '@chainlink/contracts-ccip': 0.7.6(ethers@5.7.2)
-      '@eth-optimism/contracts': 0.6.0(ethers@5.7.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-      hardhat-deploy: 0.12.4
       solidity-bytes-utils: 0.8.2
     dev: true
 
@@ -6578,20 +6513,6 @@ packages:
       solidity-bytes-utils: 0.8.2
     dev: true
 
-  /@layerzerolabs/lz-evm-protocol-v2@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2):
-    resolution: {integrity: sha512-JW7xBmIswt3zw6huN73cTAOX/oRMGQmnyz6yoC0XqzpQbkAppg5BhrPb9xOsApkcmSZs1SMszQzLZ4tWv2/M1A==}
-    peerDependencies:
-      '@openzeppelin/contracts': ^4.8.1 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.8.1 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-      solidity-bytes-utils: ^0.8.0
-    dependencies:
-      '@openzeppelin/contracts': 5.0.2
-      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
-      hardhat-deploy: 0.12.1
-      solidity-bytes-utils: 0.8.2
-    dev: true
-
   /@layerzerolabs/lz-evm-protocol-v2@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2):
     resolution: {integrity: sha512-JW7xBmIswt3zw6huN73cTAOX/oRMGQmnyz6yoC0XqzpQbkAppg5BhrPb9xOsApkcmSZs1SMszQzLZ4tWv2/M1A==}
     peerDependencies:
@@ -6662,21 +6583,21 @@ packages:
       solidity-bytes-utils: 0.8.2
     dev: true
 
-  /@layerzerolabs/lz-evm-sdk-v1@3.0.12:
-    resolution: {integrity: sha512-amblubJVGOL5L+3xv33KXmNyVDe1dNAQrY4mIaKzEBZtrLn8996kUiHlIGhXTFU63thvkI+yxHM/cyn+qjtdGA==}
+  /@layerzerolabs/lz-evm-sdk-v1@3.0.26:
+    resolution: {integrity: sha512-Tgan5rbZZQf+OjCHCqDTlu3FFw/7UlUAxcPYqPVjYB4t6asQglPnd2f0dOZ1loKdedBjXuXSYkpC2Vy603Xx9A==}
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/providers': 5.7.2
-      '@layerzerolabs/evm-sdks-core': 3.0.12
+      '@layerzerolabs/evm-sdks-core': 3.0.26
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/lz-evm-sdk-v2@3.0.22:
-    resolution: {integrity: sha512-53KGAVRy/yfjrfJsK5L9ZtJRE/zEqV613zzvSLpyaR+/KhiIKLUTnLIt0RvgU66sh0WbZPpi6vZxNO8RIGe/rg==}
+  /@layerzerolabs/lz-evm-sdk-v2@3.0.26:
+    resolution: {integrity: sha512-AFmJ/kxYJRxXTbuL+OZGf8PzUtaAPtZF4LdM2qqn85kh9LItJ5LEDUm05Y3l/pMTysr6D56TzLOW8K3eKS1gzQ==}
     dependencies:
-      '@layerzerolabs/evm-sdks-core': 3.0.22
+      '@layerzerolabs/evm-sdks-core': 3.0.26
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
@@ -6692,18 +6613,6 @@ packages:
       '@openzeppelin/contracts': 4.9.5
       '@openzeppelin/contracts-upgradeable': 4.9.5
       hardhat-deploy: 0.12.4
-    dev: true
-
-  /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1):
-    resolution: {integrity: sha512-7q8NRDwQ8vt+jpj7Pt8H/Q83v8lwa9RLgH2SXva15RQTC5L+ARoEACek9Pk0qLJrA/tKkpiNcn6MxwTJx+he7g==}
-    peerDependencies:
-      '@openzeppelin/contracts': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-    dependencies:
-      '@openzeppelin/contracts': 5.0.2
-      '@openzeppelin/contracts-upgradeable': 5.0.2(@openzeppelin/contracts@5.0.2)
-      hardhat-deploy: 0.12.1
     dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4):
@@ -6728,18 +6637,6 @@ packages:
       '@openzeppelin/contracts': 5.0.2
       '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.0.2)
       hardhat-deploy: 0.12.1
-    dev: true
-
-  /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4):
-    resolution: {integrity: sha512-7q8NRDwQ8vt+jpj7Pt8H/Q83v8lwa9RLgH2SXva15RQTC5L+ARoEACek9Pk0qLJrA/tKkpiNcn6MxwTJx+he7g==}
-    peerDependencies:
-      '@openzeppelin/contracts': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': 3.4.2-solc-0.7 || ^3.4.2 || ^4.0.0 || ^5.0.0
-      hardhat-deploy: ^0.12.1
-    dependencies:
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-      hardhat-deploy: 0.12.4
     dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.15(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1):
@@ -6805,7 +6702,7 @@ packages:
   /@layerzerolabs/lz-foundation@3.0.0:
     resolution: {integrity: sha512-vYuuZAfIaRQUEGaKnV4dCOiFTENhfc2w+Fcnza/T7+O/JIKL2p/GqdxcC21HqrMNdLGMmSWnUqLlou+eCk3ROQ==}
     dependencies:
-      '@layerzerolabs/lz-definitions': 3.0.21
+      '@layerzerolabs/lz-definitions': 3.0.26
       '@layerzerolabs/lz-utilities': 3.0.0
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.4.0
@@ -6828,7 +6725,7 @@ packages:
       '@ethersproject/sha2': 5.7.0
       '@ethersproject/solidity': 5.7.0
       '@layerzerolabs/lz-corekit-solana': 3.0.0
-      '@layerzerolabs/lz-definitions': 3.0.21
+      '@layerzerolabs/lz-definitions': 3.0.26
       '@layerzerolabs/lz-v2-utilities': 3.0.12
       '@metaplex-foundation/beet': 0.7.2
       '@metaplex-foundation/beet-solana': 0.4.1
@@ -6853,7 +6750,7 @@ packages:
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/providers': 5.7.2
-      '@layerzerolabs/lz-definitions': 3.0.21
+      '@layerzerolabs/lz-definitions': 3.0.26
       '@noble/hashes': 1.4.0
       '@noble/secp256k1': 1.7.1
       '@solana/web3.js': 1.95.8
@@ -6917,10 +6814,10 @@ packages:
       prettier-plugin-solidity: 1.3.1(prettier@3.2.5)
     dev: true
 
-  /@layerzerolabs/solhint-config@3.0.12(typescript@5.5.3):
-    resolution: {integrity: sha512-69li0+oU+sjeYVbB8qGCfmUm8aAng2esRISpofK67DOpqGTMI0+FTX6B0p3zowVoirHlPPRgsfAMxC92r/jNKA==}
+  /@layerzerolabs/solhint-config@3.0.26(typescript@5.5.3):
+    resolution: {integrity: sha512-aO3cbmRAwM4LErFzlSHe96WS7tZG9ZfgMbAyymC1UvVFzvMQAlORGZaNdmvSuT0x3c3UBZzKglktuJ+2lo6gtQ==}
     dependencies:
-      solhint: 4.1.1(typescript@5.5.3)
+      solhint: 4.5.4(typescript@5.5.3)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -6985,7 +6882,7 @@ packages:
       semver: 7.6.2
       sinon: 17.0.1
       sinon-chai: 3.7.0(chai@4.5.0)(sinon@17.0.1)
-      undici: 5.28.4
+      undici: 5.28.2
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7007,14 +6904,14 @@ packages:
       semver: 7.6.2
       sinon: 18.0.1
       sinon-chai: 3.7.0(chai@4.5.0)(sinon@18.0.1)
-      undici: 6.20.1
+      undici: 6.21.0
     transitivePeerDependencies:
       - encoding
       - supports-color
     dev: true
 
-  /@matterlabs/hardhat-zksync-verify@1.7.0(@nomicfoundation/hardhat-verify@2.0.11)(hardhat@2.22.12):
-    resolution: {integrity: sha512-jQnrnE9uDfdP1KaG/GLs0J8+5efH97yRmNFzYuokT5qrSU0y6Ws6OFJmgDodB7hHnWOD6FSU9TebaFlAxxtFOA==}
+  /@matterlabs/hardhat-zksync-verify@1.7.1(@nomicfoundation/hardhat-verify@2.0.12)(hardhat@2.22.12):
+    resolution: {integrity: sha512-FtibELgllkyAZORDW4/s/7XSC5DaqAXG0KXMqGipQyXuIXQ9l1kpaHMpoEtHvQL7xxmkgZqCcSZgATnKl91nDg==}
     peerDependencies:
       '@nomicfoundation/hardhat-verify': ^2.0.8
       hardhat: ^2.22.5
@@ -7022,7 +6919,7 @@ packages:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/address': 5.7.0
       '@matterlabs/hardhat-zksync-solc': 1.2.5(hardhat@2.22.12)
-      '@nomicfoundation/hardhat-verify': 2.0.11(hardhat@2.22.12)
+      '@nomicfoundation/hardhat-verify': 2.0.12(hardhat@2.22.12)
       axios: 1.7.4(debug@4.3.7)
       cbor: 9.0.2
       chai: 4.5.0
@@ -7037,8 +6934,8 @@ packages:
       - supports-color
     dev: true
 
-  /@mdn/browser-compat-data@5.6.3:
-    resolution: {integrity: sha512-HOTfnXR2GmEtpriwCa689EYySqfVAwhzjQ4PzY3K3QN1g9z7/o8yYUjXxAHvTuVa2qU7EjlXmuZ0I3xYOmG0yg==}
+  /@mdn/browser-compat-data@5.6.23:
+    resolution: {integrity: sha512-6h/L/id7JiuCcLKNZSliMfl9S159/ditQ/wc4TPlHJ/gcqoo4PNGggVaY6VcvVef9VFGuhh+UW27iAnEzQn+Kw==}
     dev: true
 
   /@metamask/eth-sig-util@4.0.1:
@@ -7118,8 +7015,8 @@ packages:
     resolution: {integrity: sha512-S9RulC2fFCFOQraz61bij+5YCHhSO9llJegK8c8Y6731fSi6snUSQJdCUqYS8AIgR0TKbQvdvgSyIIdbDFZbBA==}
     dev: true
 
-  /@metaplex-foundation/mpl-token-metadata@3.2.1(@metaplex-foundation/umi@0.9.2):
-    resolution: {integrity: sha512-26W1NhQwDWmLOg/pBRYut7x/vEs/5kFS2sWVEY5/X0f2jJOLhnd4NaZQcq+5u+XZsXvm1jq2AtrRGPNK43oqWQ==}
+  /@metaplex-foundation/mpl-token-metadata@3.3.0(@metaplex-foundation/umi@0.9.2):
+    resolution: {integrity: sha512-t5vO8Wr3ZZZPGrVrGNcosX5FMkwQSgBiVMQMRNDG2De7voYFJmIibD5jdG05EoQ4Y5kZVEiwhYaO+wJB3aO5AA==}
     peerDependencies:
       '@metaplex-foundation/umi': '>= 0.8.2 < 1'
     dependencies:
@@ -7371,6 +7268,11 @@ packages:
       fastq: 1.16.0
     dev: true
 
+  /@nolyfill/is-core-module@1.0.39:
+    resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
+    engines: {node: '>=12.4.0'}
+    dev: true
+
   /@nomicfoundation/edr-darwin-arm64@0.6.2:
     resolution: {integrity: sha512-o4A9SaPlxJ1MS6u8Ozqq7Y0ri2XO0jASw+qkytQyBYowNFNReoGqVSs7SCwenYCDiN+1il8+M0VAUq7wOovnCQ==}
     engines: {node: '>= 18'}
@@ -7455,90 +7357,36 @@ packages:
       ethers: ^5.7.2
       hardhat: ^2.0.0
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.7
       ethers: 5.7.2
       hardhat: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
       lodash.isequal: 4.5.0
     transitivePeerDependencies:
       - supports-color
 
-  /@nomicfoundation/hardhat-verify@2.0.11(hardhat@2.22.12):
-    resolution: {integrity: sha512-lGIo4dNjVQFdsiEgZp3KP6ntLiF7xJEJsbNHfSyIiFCyI0Yv0518ElsFtMC5uCuHEChiBBMrib9jWQvHHT+X3Q==}
+  /@nomicfoundation/hardhat-verify@2.0.12(hardhat@2.22.12):
+    resolution: {integrity: sha512-Lg3Nu7DCXASQRVI/YysjuAX2z8jwOCbS0w5tz2HalWGSTZThqA0v9N0v0psHbKNqzPJa8bNOeapIVSziyJTnAg==}
     peerDependencies:
       hardhat: ^2.0.4
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/address': 5.7.0
       cbor: 8.1.0
-      chalk: 2.4.2
       debug: 4.3.7
       hardhat: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
       lodash.clonedeep: 4.5.0
+      picocolors: 1.1.1
       semver: 6.3.1
       table: 6.8.2
-      undici: 5.28.4
+      undici: 5.28.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@nomicfoundation/slang-darwin-arm64@0.17.0:
-    resolution: {integrity: sha512-O0q94EUtoWy9A5kOTOa9/khtxXDYnLqmuda9pQELurSiwbQEVCPQL8kb34VbOW+ifdre66JM/05Xw9JWhIZ9sA==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-darwin-x64@0.17.0:
-    resolution: {integrity: sha512-IaDbHzvT08sBK2HyGzonWhq1uu8IxdjmTqAWHr25Oh/PYnamdi8u4qchZXXYKz/DHLoYN3vIpBXoqLQIomhD/g==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-linux-arm64-gnu@0.17.0:
-    resolution: {integrity: sha512-Lj4anvOsQZxs1SycG8VyT2Rl2oqIhyLSUCgGepTt3CiJ/bM+8r8bLJIgh8vKkki4BWz49YsYIgaJB2IPv8FFTw==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-linux-arm64-musl@0.17.0:
-    resolution: {integrity: sha512-/xkTCa9d5SIWUBQE3BmLqDFfJRr4yUBwbl4ynPiGUpRXrD69cs6pWKkwjwz/FdBpXqVo36I+zY95qzoTj/YhOA==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-linux-x64-gnu@0.17.0:
-    resolution: {integrity: sha512-oe5IO5vntOqYvTd67deCHPIWuSuWm6aYtT2/0Kqz2/VLtGz4ClEulBSRwfnNzBVtw2nksWipE1w8BzhImI7Syg==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-linux-x64-musl@0.17.0:
-    resolution: {integrity: sha512-PpYCI5K/kgLAMXaPY0V4VST5gCDprEOh7z/47tbI8kJQumI5odjsj/Cs8MpTo7/uRH6flKYbVNgUzcocWVYrAQ==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-win32-arm64-msvc@0.17.0:
-    resolution: {integrity: sha512-u/Mkf7OjokdBilP7QOJj6QYJU4/mjkbKnTX21wLyCIzeVWS7yafRPYpBycKIBj2pRRZ6ceAY5EqRpb0aiCq+0Q==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-win32-ia32-msvc@0.17.0:
-    resolution: {integrity: sha512-XJBVQfNnZQUv0tP2JSJ573S+pmgrLWgqSZOGaMllnB/TL1gRci4Z7dYRJUF2s82GlRJE+FHSI2Ro6JISKmlXCg==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang-win32-x64-msvc@0.17.0:
-    resolution: {integrity: sha512-zPGsAeiTfqfPNYHD8BfrahQmYzA78ZraoHKTGraq/1xwJwzBK4bu/NtvVA4pJjBV+B4L6DCxVhSbpn40q26JQA==}
-    engines: {node: '>= 10'}
-    dev: true
-
-  /@nomicfoundation/slang@0.17.0:
-    resolution: {integrity: sha512-1GlkGRcGpVnjFw9Z1vvDKOKo2mzparFt7qrl2pDxWp+jrVtlvej98yCMX52pVyrYE7ZeOSZFnx/DtsSgoukStQ==}
-    engines: {node: '>= 10'}
+  /@nomicfoundation/slang@0.18.3:
+    resolution: {integrity: sha512-YqAWgckqbHM0/CZxi9Nlf4hjk9wUNLC9ngWCWBiqMxPIZmzsVKYuChdlrfeBPQyvQQBoOhbx+7C1005kLVQDZQ==}
     dependencies:
-      '@nomicfoundation/slang-darwin-arm64': 0.17.0
-      '@nomicfoundation/slang-darwin-x64': 0.17.0
-      '@nomicfoundation/slang-linux-arm64-gnu': 0.17.0
-      '@nomicfoundation/slang-linux-arm64-musl': 0.17.0
-      '@nomicfoundation/slang-linux-x64-gnu': 0.17.0
-      '@nomicfoundation/slang-linux-x64-musl': 0.17.0
-      '@nomicfoundation/slang-win32-arm64-msvc': 0.17.0
-      '@nomicfoundation/slang-win32-ia32-msvc': 0.17.0
-      '@nomicfoundation/slang-win32-x64-msvc': 0.17.0
+      '@bytecodealliance/preview2-shim': 0.17.0
     dev: true
 
   /@nomicfoundation/solidity-analyzer-darwin-arm64@0.1.1:
@@ -7673,7 +7521,7 @@ packages:
       lodash: 4.17.21
       semver: 6.3.1
       table: 6.8.2
-      undici: 5.28.4
+      undici: 5.28.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -7750,13 +7598,13 @@ packages:
     resolution: {integrity: sha512-p1ULhl7BXzjjbha5aqst+QMLY+4/LCWADXOCsmLHRM77AqiPjnd9vvUN9sosUfhL9JGKpZ0TjEGxgvnizmWGSA==}
     dev: true
 
-  /@openzeppelin/defender-base-client@1.54.6(debug@4.3.5):
+  /@openzeppelin/defender-base-client@1.54.6(debug@4.3.7):
     resolution: {integrity: sha512-PTef+rMxkM5VQ7sLwLKSjp2DBakYQd661ZJiSRywx+q/nIpm3B/HYGcz5wPZCA5O/QcEP6TatXXDoeMwimbcnw==}
     deprecated: This package has been deprecated and will no longer be maintained, please use @openzeppelin/defender-sdk package instead.
     dependencies:
       amazon-cognito-identity-js: 6.3.12
       async-retry: 1.3.3
-      axios: 1.7.4(debug@4.3.5)
+      axios: 1.7.4(debug@4.3.7)
       lodash: 4.17.21
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -7779,11 +7627,11 @@ packages:
     dependencies:
       '@nomiclabs/hardhat-ethers': 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
       '@nomiclabs/hardhat-etherscan': 3.1.8(hardhat@2.22.12)
-      '@openzeppelin/defender-base-client': 1.54.6(debug@4.3.5)
-      '@openzeppelin/platform-deploy-client': 0.8.0(debug@4.3.5)
-      '@openzeppelin/upgrades-core': 1.40.0
+      '@openzeppelin/defender-base-client': 1.54.6(debug@4.3.7)
+      '@openzeppelin/platform-deploy-client': 0.8.0(debug@4.3.7)
+      '@openzeppelin/upgrades-core': 1.41.0
       chalk: 4.1.2
-      debug: 4.3.5
+      debug: 4.3.7
       ethers: 5.7.2
       hardhat: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
       proper-lockfile: 4.1.2
@@ -7792,13 +7640,13 @@ packages:
       - supports-color
     dev: true
 
-  /@openzeppelin/platform-deploy-client@0.8.0(debug@4.3.5):
+  /@openzeppelin/platform-deploy-client@0.8.0(debug@4.3.7):
     resolution: {integrity: sha512-POx3AsnKwKSV/ZLOU/gheksj0Lq7Is1q2F3pKmcFjGZiibf+4kjGxr4eSMrT+2qgKYZQH1ZLQZ+SkbguD8fTvA==}
     deprecated: '@openzeppelin/platform-deploy-client is deprecated. Please use @openzeppelin/defender-sdk-deploy-client'
     dependencies:
       '@ethersproject/abi': 5.7.0
-      '@openzeppelin/defender-base-client': 1.54.6(debug@4.3.5)
-      axios: 0.21.4(debug@4.3.5)
+      '@openzeppelin/defender-base-client': 1.54.6(debug@4.3.7)
+      axios: 0.21.4(debug@4.3.7)
       lodash: 4.17.21
       node-fetch: 2.7.0
     transitivePeerDependencies:
@@ -7806,11 +7654,11 @@ packages:
       - encoding
     dev: true
 
-  /@openzeppelin/upgrades-core@1.40.0:
-    resolution: {integrity: sha512-4bPSXdEqHsNRL5T1ybPLneWGYjzGl6XWGWkv7aUoFFgz8mOdarstRBX1Wi4XJFw6IeHPUI7mMSQr2jdz8Y2ypQ==}
+  /@openzeppelin/upgrades-core@1.41.0:
+    resolution: {integrity: sha512-+oryinqZnxkiZvg7bWqWX4Ki/CNwVUZEqC6Elpi5PQoahpL3/6Sq9xjIozD5AiI2O61h8JHQ+A//5NtczyavJw==}
     hasBin: true
     dependencies:
-      '@nomicfoundation/slang': 0.17.0
+      '@nomicfoundation/slang': 0.18.3
       cbor: 9.0.2
       chalk: 4.1.2
       compare-versions: 6.1.1
@@ -7848,8 +7696,8 @@ packages:
       graceful-fs: 4.2.10
     dev: true
 
-  /@pnpm/npm-conf@2.2.2:
-    resolution: {integrity: sha512-UA91GwWPhFExt3IizW6bOeY/pQ0BkuNwKjk9iQW9KqxluGCrg4VenZ0/L+2Y0+ZOtme72EVvg6v0zo3AMQRCeA==}
+  /@pnpm/npm-conf@2.3.1:
+    resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
     dependencies:
       '@pnpm/config.env-replace': 1.1.0
@@ -8002,8 +7850,8 @@ packages:
     dev: true
     optional: true
 
-  /@rushstack/eslint-patch@1.7.0:
-    resolution: {integrity: sha512-Jh4t/593gxs0lJZ/z3NnasKlplXT2f+4y/LZYuaKZW5KAaiVFL/fThhs+17EbUd53jUVJ0QudYCBGbN/psvaqg==}
+  /@rushstack/eslint-patch@1.10.4:
+    resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
     dev: true
 
   /@safe-global/api-kit@1.3.1:
@@ -8213,8 +8061,8 @@ packages:
     resolution: {integrity: sha512-DE427ROAphMQzU4ENbliGYrBSYPXF+TtLg9S8vzeA+OF4ZKzoDdzfL8sxuMUGS/lgRhM6j1URSk9ghf7Xo1tyA==}
     dev: true
 
-  /@smithy/types@3.6.0:
-    resolution: {integrity: sha512-8VXK/KzOHefoC65yRgCn5vG1cysPJjHnOVt9d0ybFQSmJgQj152vMn4EkYhGuaOmnnZvCPav/KnYyE6/KsNZ2w==}
+  /@smithy/types@3.7.2:
+    resolution: {integrity: sha512-bNwBYYmN8Eh9RyjS1p2gW6MIhSO2rl7X9QeLM8iTdcGRP+eDiIWDt66c9IysCc22gefKszZv+ubV9qZc7hdESg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       tslib: 2.6.3
@@ -8223,7 +8071,7 @@ packages:
   /@solana-developers/helpers@2.4.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-eiqHOluJlP9cYfAkgSLaM6o5etWfbBbjNnR3AL0Ds09CJdA3A61qimCPQFmjiLynAb6U7/NSWq0Q28/hnb02Bw==}
     dependencies:
-      '@solana/spl-token': 0.4.8(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/spl-token': 0.4.9(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js': 1.95.8
       bs58: 6.0.0
       dotenv: 16.4.5
@@ -8262,12 +8110,12 @@ packages:
       '@solana/errors': 2.0.0-preview.2
     dev: true
 
-  /@solana/codecs-core@2.0.0-preview.4(typescript@5.5.3):
-    resolution: {integrity: sha512-A0VVuDDA5kNKZUinOqHxJQK32aKTucaVbvn31YenGzHX1gPqq+SOnFwgaEY6pq4XEopSmaK16w938ZQS8IvCnw==}
+  /@solana/codecs-core@2.0.0-rc.1(typescript@5.5.3):
+    resolution: {integrity: sha512-bauxqMfSs8EHD0JKESaNmNuNvkvHSuN3bbWAF5RjOfDu2PugxHrvRebmYauvSumZ3cTfQ4HJJX6PG5rN852qyQ==}
     peerDependencies:
       typescript: '>=5'
     dependencies:
-      '@solana/errors': 2.0.0-preview.4(typescript@5.5.3)
+      '@solana/errors': 2.0.0-rc.1(typescript@5.5.3)
       typescript: 5.5.3
     dev: true
 
@@ -8279,14 +8127,14 @@ packages:
       '@solana/errors': 2.0.0-preview.2
     dev: true
 
-  /@solana/codecs-data-structures@2.0.0-preview.4(typescript@5.5.3):
-    resolution: {integrity: sha512-nt2k2eTeyzlI/ccutPcG36M/J8NAYfxBPI9h/nQjgJ+M+IgOKi31JV8StDDlG/1XvY0zyqugV3I0r3KAbZRJpA==}
+  /@solana/codecs-data-structures@2.0.0-rc.1(typescript@5.5.3):
+    resolution: {integrity: sha512-rinCv0RrAVJ9rE/rmaibWJQxMwC5lSaORSZuwjopSUE6T0nb/MVg6Z1siNCXhh/HFTOg0l8bNvZHgBcN/yvXog==}
     peerDependencies:
       typescript: '>=5'
     dependencies:
-      '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/errors': 2.0.0-preview.4(typescript@5.5.3)
+      '@solana/codecs-core': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-numbers': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/errors': 2.0.0-rc.1(typescript@5.5.3)
       typescript: 5.5.3
     dev: true
 
@@ -8297,13 +8145,13 @@ packages:
       '@solana/errors': 2.0.0-preview.2
     dev: true
 
-  /@solana/codecs-numbers@2.0.0-preview.4(typescript@5.5.3):
-    resolution: {integrity: sha512-Q061rLtMadsO7uxpguT+Z7G4UHnjQ6moVIxAQxR58nLxDPCC7MB1Pk106/Z7NDhDLHTcd18uO6DZ7ajHZEn2XQ==}
+  /@solana/codecs-numbers@2.0.0-rc.1(typescript@5.5.3):
+    resolution: {integrity: sha512-J5i5mOkvukXn8E3Z7sGIPxsThRCgSdgTWJDQeZvucQ9PT6Y3HiVXJ0pcWiOWAoQ3RX8e/f4I3IC+wE6pZiJzDQ==}
     peerDependencies:
       typescript: '>=5'
     dependencies:
-      '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/errors': 2.0.0-preview.4(typescript@5.5.3)
+      '@solana/codecs-core': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/errors': 2.0.0-rc.1(typescript@5.5.3)
       typescript: 5.5.3
     dev: true
 
@@ -8318,15 +8166,15 @@ packages:
       fastestsmallesttextencoderdecoder: 1.0.22
     dev: true
 
-  /@solana/codecs-strings@2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-YDbsQePRWm+xnrfS64losSGRg8Wb76cjK1K6qfR8LPmdwIC3787x9uW5/E4icl/k+9nwgbIRXZ65lpF+ucZUnw==}
+  /@solana/codecs-strings@2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-9/wPhw8TbGRTt6mHC4Zz1RqOnuPTqq1Nb4EyuvpZ39GW6O2t2Q7Q0XxiB3+BdoEjwA2XgPw6e2iRfvYgqty44g==}
     peerDependencies:
       fastestsmallesttextencoderdecoder: ^1.0.22
       typescript: '>=5'
     dependencies:
-      '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/errors': 2.0.0-preview.4(typescript@5.5.3)
+      '@solana/codecs-core': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-numbers': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/errors': 2.0.0-rc.1(typescript@5.5.3)
       fastestsmallesttextencoderdecoder: 1.0.22
       typescript: 5.5.3
     dev: true
@@ -8343,16 +8191,16 @@ packages:
       - fastestsmallesttextencoderdecoder
     dev: true
 
-  /@solana/codecs@2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-gLMupqI4i+G4uPi2SGF/Tc1aXcviZF2ybC81x7Q/fARamNSgNOCUUoSCg9nWu1Gid6+UhA7LH80sWI8XjKaRog==}
+  /@solana/codecs@2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-qxoR7VybNJixV51L0G1RD2boZTcxmwUWnKCaJJExQ5qNKwbpSyDdWfFJfM5JhGyKe9DnPVOZB+JHWXnpbZBqrQ==}
     peerDependencies:
       typescript: '>=5'
     dependencies:
-      '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-data-structures': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-strings': 2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
-      '@solana/options': 2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/codecs-core': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-data-structures': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-numbers': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-strings': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/options': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       typescript: 5.5.3
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
@@ -8366,8 +8214,8 @@ packages:
       commander: 12.1.0
     dev: true
 
-  /@solana/errors@2.0.0-preview.4(typescript@5.5.3):
-    resolution: {integrity: sha512-kadtlbRv2LCWr8A9V22On15Us7Nn8BvqNaOB4hXsTB3O0fU40D1ru2l+cReqLcRPij4znqlRzW9Xi0m6J5DIhA==}
+  /@solana/errors@2.0.0-rc.1(typescript@5.5.3):
+    resolution: {integrity: sha512-ejNvQ2oJ7+bcFAYWj225lyRkHnixuAeb7RQCixm+5mH4n1IA4Qya/9Bmfy5RAAHQzxK43clu3kZmL5eF9VGtYQ==}
     hasBin: true
     peerDependencies:
       typescript: '>=5'
@@ -8384,29 +8232,28 @@ packages:
       '@solana/codecs-numbers': 2.0.0-preview.2
     dev: true
 
-  /@solana/options@2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-tv2O/Frxql/wSe3jbzi5nVicIWIus/BftH+5ZR+r9r3FO0/htEllZS5Q9XdbmSboHu+St87584JXeDx3xm4jaA==}
+  /@solana/options@2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-mLUcR9mZ3qfHlmMnREdIFPf9dpMc/Bl66tLSOOWxw4ml5xMT2ohFn7WGqoKcu/UHkT9CrC6+amEdqCNvUqI7AA==}
     peerDependencies:
       typescript: '>=5'
     dependencies:
-      '@solana/codecs-core': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-data-structures': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-numbers': 2.0.0-preview.4(typescript@5.5.3)
-      '@solana/codecs-strings': 2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
-      '@solana/errors': 2.0.0-preview.4(typescript@5.5.3)
+      '@solana/codecs-core': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-data-structures': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-numbers': 2.0.0-rc.1(typescript@5.5.3)
+      '@solana/codecs-strings': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/errors': 2.0.0-rc.1(typescript@5.5.3)
       typescript: 5.5.3
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
     dev: true
 
-  /@solana/spl-token-group@0.0.5(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-CLJnWEcdoUBpQJfx9WEbX3h6nTdNiUzswfFdkABUik7HVwSNA98u5AYvBVK2H93d9PGMOHAak2lHW9xr+zAJGQ==}
+  /@solana/spl-token-group@0.0.7(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-V1N/iX7Cr7H0uazWUT2uk27TMqlqedpXHRqqAbVO2gvmJyT0E0ummMEAVQeXZ05ZhQ/xF39DLSdBp90XebWEug==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.94.0
+      '@solana/web3.js': ^1.95.3
     dependencies:
-      '@solana/codecs': 2.0.0-preview.4(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
-      '@solana/spl-type-length-value': 0.1.0
+      '@solana/codecs': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js': 1.95.8
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
@@ -8424,6 +8271,19 @@ packages:
       '@solana/web3.js': 1.95.8
     transitivePeerDependencies:
       - fastestsmallesttextencoderdecoder
+    dev: true
+
+  /@solana/spl-token-metadata@0.1.6(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-7sMt1rsm/zQOQcUWllQX9mD2O6KhSAtY1hFR2hfFwgqfFWzSY9E9GDvFVNYUI1F0iQKcm6HmePU9QbKRXTEBiA==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@solana/web3.js': ^1.95.3
+    dependencies:
+      '@solana/codecs': 2.0.0-rc.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/web3.js': 1.95.8
+    transitivePeerDependencies:
+      - fastestsmallesttextencoderdecoder
+      - typescript
     dev: true
 
   /@solana/spl-token@0.3.11(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22):
@@ -8444,16 +8304,16 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@solana/spl-token@0.4.8(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
-    resolution: {integrity: sha512-RO0JD9vPRi4LsAbMUdNbDJ5/cv2z11MGhtAvFeRzT4+hAGE/FUzRi0tkkWtuCfSIU3twC6CtmAihRp/+XXjWsA==}
+  /@solana/spl-token@0.4.9(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
+    resolution: {integrity: sha512-g3wbj4F4gq82YQlwqhPB0gHFXfgsC6UmyGMxtSLf/BozT/oKd59465DbnlUK8L8EcimKMavxsVAMoLcEdeCicg==}
     engines: {node: '>=16'}
     peerDependencies:
-      '@solana/web3.js': ^1.94.0
+      '@solana/web3.js': ^1.95.3
     dependencies:
       '@solana/buffer-layout': 4.0.1
       '@solana/buffer-layout-utils': 0.2.0
-      '@solana/spl-token-group': 0.0.5(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
-      '@solana/spl-token-metadata': 0.1.4(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)
+      '@solana/spl-token-group': 0.0.7(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
+      '@solana/spl-token-metadata': 0.1.6(@solana/web3.js@1.95.8)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@solana/web3.js': 1.95.8
       buffer: 6.0.3
     transitivePeerDependencies:
@@ -8503,6 +8363,10 @@ packages:
 
   /@solidity-parser/parser@0.17.0:
     resolution: {integrity: sha512-Nko8R0/kUo391jsEHHxrGM07QFdnPGvlmox4rmH0kNiNAashItAilhy4Mv4pK5gQmW5f4sXAF58fwJbmlkGcVw==}
+    dev: true
+
+  /@solidity-parser/parser@0.18.0:
+    resolution: {integrity: sha512-yfORGUIPgLck41qyN7nbwJRAx17/jAIXCTanHOJZhB6PJ1iAk/84b/xlsVKFSyNyLXIj0dhppoE0+CRws7wlzA==}
     dev: true
 
   /@sqds/multisig@2.1.3(fastestsmallesttextencoderdecoder@1.0.22):
@@ -8714,7 +8578,7 @@ packages:
     dependencies:
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
-      axios: 1.7.4(debug@4.3.7)
+      axios: 1.7.4
       dataloader: 2.2.2
       symbol.inspect: 1.0.1
       teslabot: 1.5.0
@@ -8818,7 +8682,6 @@ packages:
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
     dependencies:
       '@types/node': 18.18.14
-    dev: true
 
   /@types/cacheable-request@6.0.3:
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -8827,10 +8690,6 @@ packages:
       '@types/keyv': 3.1.4
       '@types/node': 18.18.14
       '@types/responselike': 1.0.3
-
-  /@types/chai@4.3.11:
-    resolution: {integrity: sha512-qQR1dr2rGIHYlJulmr8Ioq3De0Le9E4MJ5AiaeAETJJpndT1uUNHsGFK3L/UIu+rbkQSdj8J/w2bCsBZc/Y5fQ==}
-    dev: true
 
   /@types/chai@4.3.20:
     resolution: {integrity: sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==}
@@ -8939,12 +8798,12 @@ packages:
       '@types/node': 18.18.14
     dev: true
 
-  /@types/mocha@10.0.6:
-    resolution: {integrity: sha512-dJvrYWxP/UcXm36Qn36fxhUKu8A/xMRXVT2cliFF1Z7UA9liG5Psj3ezNSZw+5puH2czDXRLcXQxf8JbJt0ejg==}
+  /@types/mocha@10.0.10:
+    resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
     dev: true
 
-  /@types/node-fetch@2.6.11:
-    resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
+  /@types/node-fetch@2.6.12:
+    resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
     dependencies:
       '@types/node': 18.18.14
       form-data: 4.0.1
@@ -9122,6 +8981,35 @@ packages:
       - supports-color
     dev: true
 
+  /@typescript-eslint/eslint-plugin@7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-KwfdWXJBOviaBVhxO3p5TJiLpNuh2iyXyjmWN0f1nU87pwyvfS0EmjC6ukQVYVFJd/K1+0NWGPDXiyEyQorn0Q==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      '@typescript-eslint/parser': ^7.0.0
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@eslint-community/regexpp': 4.10.0
+      '@typescript-eslint/parser': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      '@typescript-eslint/scope-manager': 7.7.1
+      '@typescript-eslint/type-utils': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      '@typescript-eslint/utils': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      '@typescript-eslint/visitor-keys': 7.7.1
+      debug: 4.3.5
+      eslint: 8.57.1
+      graphemer: 1.4.0
+      ignore: 5.3.1
+      natural-compare: 1.4.0
+      semver: 7.6.2
+      ts-api-utils: 1.3.0(typescript@5.5.3)
+      typescript: 5.5.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@typescript-eslint/parser@7.7.1(eslint@8.57.0)(typescript@5.5.3):
     resolution: {integrity: sha512-vmPzBOOtz48F6JAGVS/kZYk4EkXao6iGrD838sp1w3NQQC0W8ry/q641KU4PrG7AKNAf56NOcR8GOpH8l9FPCw==}
     engines: {node: ^18.18.0 || >=20.0.0}
@@ -9138,6 +9026,27 @@ packages:
       '@typescript-eslint/visitor-keys': 7.7.1
       debug: 4.3.5
       eslint: 8.57.0
+      typescript: 5.5.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@typescript-eslint/parser@7.7.1(eslint@8.57.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-vmPzBOOtz48F6JAGVS/kZYk4EkXao6iGrD838sp1w3NQQC0W8ry/q641KU4PrG7AKNAf56NOcR8GOpH8l9FPCw==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 7.7.1
+      '@typescript-eslint/types': 7.7.1
+      '@typescript-eslint/typescript-estree': 7.7.1(typescript@5.5.3)
+      '@typescript-eslint/visitor-keys': 7.7.1
+      debug: 4.3.5
+      eslint: 8.57.1
       typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
@@ -9173,6 +9082,26 @@ packages:
       '@typescript-eslint/utils': 7.7.1(eslint@8.57.0)(typescript@5.5.3)
       debug: 4.3.7
       eslint: 8.57.0
+      ts-api-utils: 1.3.0(typescript@5.5.3)
+      typescript: 5.5.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@typescript-eslint/type-utils@7.7.1(eslint@8.57.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-ZksJLW3WF7o75zaBPScdW1Gbkwhd/lyeXGf1kQCxJaOeITscoSl0MjynVvCzuV5boUz/3fOI06Lz8La55mu29Q==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/typescript-estree': 7.7.1(typescript@5.5.3)
+      '@typescript-eslint/utils': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      debug: 4.3.7
+      eslint: 8.57.1
       ts-api-utils: 1.3.0(typescript@5.5.3)
       typescript: 5.5.3
     transitivePeerDependencies:
@@ -9291,6 +9220,25 @@ packages:
       - typescript
     dev: true
 
+  /@typescript-eslint/utils@7.7.1(eslint@8.57.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-QUvBxPEaBXf41ZBbaidKICgVL8Hin0p6prQDu6bbetWo39BKbWJxRsErOzMNT1rXvTll+J7ChrbmMCXM9rsvOQ==}
+    engines: {node: ^18.18.0 || >=20.0.0}
+    peerDependencies:
+      eslint: ^8.56.0
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.1)
+      '@types/json-schema': 7.0.15
+      '@types/semver': 7.5.8
+      '@typescript-eslint/scope-manager': 7.7.1
+      '@typescript-eslint/types': 7.7.1
+      '@typescript-eslint/typescript-estree': 7.7.1(typescript@5.5.3)
+      eslint: 8.57.1
+      semver: 7.6.2
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
+
   /@typescript-eslint/visitor-keys@5.62.0:
     resolution: {integrity: sha512-07ny+LHRzQXepkGg6w0mFY41fVUNBrL2Roj/++7V1txKugfjm/Ci/qSND03r2RhlJhJYMcTn9AhhSSqQp0Ysyw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -9369,7 +9317,7 @@ packages:
     deprecated: Superseded by abstract-level (https://github.com/Level/community#faq)
     dependencies:
       buffer: 5.7.1
-      immediate: 3.3.0
+      immediate: 3.2.3
       level-concat-iterator: 2.0.1
       level-supports: 1.0.1
       xtend: 4.0.2
@@ -9535,8 +9483,8 @@ packages:
     resolution: {integrity: sha512-QXu7BPrP29VllRxH8GwB7x5iX5qWKAAMLqKQGWTeLWVlNHNOpVMJ91dsxQAIWXpjuW5wqvxu3Jd/nRjrJ+0pqg==}
     dev: true
 
-  /antlr4@4.13.1:
-    resolution: {integrity: sha512-kiXTspaRYvnIArgE97z5YVVf/cDVQABr3abFRR6mE7yesLMkgu4ujuyV/sgxafQ8wgve0DJQUJ38Z8tkgA2izA==}
+  /antlr4@4.13.2:
+    resolution: {integrity: sha512-QiVbZhyy4xAZ17UPEuG3YTOt8ZaoeOR1CvEAqrEsDBsOqINslaB147i9xqljZqoyf5S+EUlGStaj+t22LT9MOg==}
     engines: {node: '>=16'}
     dev: true
 
@@ -9709,7 +9657,7 @@ packages:
   /ast-metadata-inferer@0.8.0:
     resolution: {integrity: sha512-jOMKcHht9LxYIEQu+RVd22vtgrPaVCtDRQ/16IGmurdzxvYbDd5ynxjnyrzLnieG96eTcAyaoj/wN/4/1FyyeA==}
     dependencies:
-      '@mdn/browser-compat-data': 5.6.3
+      '@mdn/browser-compat-data': 5.6.23
     dev: true
 
   /ast-parents@0.0.1:
@@ -9779,7 +9727,15 @@ packages:
   /axios@0.21.4(debug@4.3.5):
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.5)
+      follow-redirects: 1.15.9(debug@4.3.5)
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
+  /axios@0.21.4(debug@4.3.7):
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
+    dependencies:
+      follow-redirects: 1.15.9(debug@4.3.7)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -9792,10 +9748,10 @@ packages:
       - debug
     dev: true
 
-  /axios@1.7.4(debug@4.3.5):
+  /axios@1.7.4:
     resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
     dependencies:
-      follow-redirects: 1.15.9(debug@4.3.5)
+      follow-redirects: 1.15.9(debug@4.3.4)
       form-data: 4.0.1
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -10345,19 +10301,6 @@ packages:
       nofilter: 3.1.0
     dev: true
 
-  /chai@4.4.1:
-    resolution: {integrity: sha512-13sOfMv2+DWduEU+/xbun3LScLoqN17nBeTLUsmDfKdoiC1fr0n9PU4guu4AhRcOVFk/sW8LyZWHuhWtQZiF+g==}
-    engines: {node: '>=4'}
-    dependencies:
-      assertion-error: 1.1.0
-      check-error: 1.0.3
-      deep-eql: 4.1.3
-      get-func-name: 2.0.2
-      loupe: 2.3.7
-      pathval: 1.1.1
-      type-detect: 4.0.8
-    dev: true
-
   /chai@4.5.0:
     resolution: {integrity: sha512-RITGBfijLkBddZvnn8jdqoTypxvqbOLYQkGGxXzeFjVHvudaPw0HNFD9x928/eUwYWd2dPCugVqspGALTZZQKw==}
     engines: {node: '>=4'}
@@ -10509,8 +10452,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /cli-table3@0.6.3:
-    resolution: {integrity: sha512-w5Jac5SykAeZJKntOxJCrm63Eg5/4dhMWIcuTbo9rpE+brgaSZo0RuNJZeOyMgsUdhDeojvgyQLmjI+K50ZGyg==}
+  /cli-table3@0.6.5:
+    resolution: {integrity: sha512-+W/5efTR7y5HRD7gACw9yQjqMVvEMLBHmboM/kPWam+H+Hmyrgjh6YncVKK122YZkXrLudzTuAukUw9FnMf7IQ==}
     engines: {node: 10.* || >= 12.*}
     dependencies:
       string-width: 4.2.3
@@ -11002,6 +10945,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: true
 
   /debug@4.3.7:
     resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
@@ -11056,13 +11000,6 @@ packages:
     peerDependenciesMeta:
       babel-plugin-macros:
         optional: true
-    dev: true
-
-  /deep-eql@4.1.3:
-    resolution: {integrity: sha512-WaEtAOpRA1MQ0eohqZjpGD8zdI0Ovsm8mmFhaDN8dvDZzyoUMcYDnf5Y6iu7HTXxf8JDS23qWa4a+hKCDyOPzw==}
-    engines: {node: '>=6'}
-    dependencies:
-      type-detect: 4.0.8
     dev: true
 
   /deep-eql@4.1.4:
@@ -11368,8 +11305,8 @@ packages:
     dependencies:
       once: 1.4.0
 
-  /enhanced-resolve@5.16.0:
-    resolution: {integrity: sha512-O+QWCviPNSSLAD9Ucn8Awv+poAkqn3T1XY5/N7kR7rQO9yfSGWkYZDwpJ+iKF7B8rxaQKWngSqACpgzeapSyoA==}
+  /enhanced-resolve@5.17.1:
+    resolution: {integrity: sha512-LMHl3dXhTcfv8gM4kEzIUeTQ+7fpdA0l2tUf34BddXPkz2A5xJ5L/Pchd5BL6rdccM9QGvu0sWZzK1Z1t4wwyg==}
     engines: {node: '>=10.13.0'}
     dependencies:
       graceful-fs: 4.2.11
@@ -11640,6 +11577,15 @@ packages:
       eslint: 8.57.0
     dev: true
 
+  /eslint-config-prettier@9.1.0(eslint@8.57.1):
+    resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
+    dependencies:
+      eslint: 8.57.1
+    dev: true
+
   /eslint-config-standard@17.1.0(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-promise@6.1.1)(eslint@8.57.0):
     resolution: {integrity: sha512-IwHwmaBNtDK4zDHQukFDW5u/aTb8+meQWZvNFWkiGmbWjD6bqyuSSBxxXKkCftCUzc1zwCH2m/baCNDLGmuO5Q==}
     engines: {node: '>=12.0.0'}
@@ -11650,7 +11596,7 @@ packages:
       eslint-plugin-promise: ^6.0.0
     dependencies:
       eslint: 8.57.0
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)
       eslint-plugin-n: 16.6.2(eslint@8.57.0)
       eslint-plugin-promise: 6.1.1(eslint@8.57.0)
     dev: true
@@ -11665,30 +11611,64 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-import-resolver-typescript@3.6.1(@typescript-eslint/parser@7.7.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
-    resolution: {integrity: sha512-xgdptdoi5W3niYeuQxKmzVDTATvLYqhpwmykwsh7f6HIOStGWEIL9iqZgQDF9u9OEzrRwR8no5q2VT+bjAujTg==}
+  /eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.29.1)(eslint@8.57.1):
+    resolution: {integrity: sha512-Vrwyi8HHxY97K5ebydMtffsWAn1SCR9eol49eCd5fJS4O1WV7PaAjbcjmbfJJSMz/t4Mal212Uz/fQZrOB8mow==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '*'
       eslint-plugin-import: '*'
+      eslint-plugin-import-x: '*'
+    peerDependenciesMeta:
+      eslint-plugin-import:
+        optional: true
+      eslint-plugin-import-x:
+        optional: true
     dependencies:
-      debug: 4.3.5
-      enhanced-resolve: 5.16.0
-      eslint: 8.57.0
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.3.7
+      enhanced-resolve: 5.17.1
+      eslint: 8.57.1
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1)
       fast-glob: 3.3.2
-      get-tsconfig: 4.7.3
-      is-core-module: 2.13.1
+      get-tsconfig: 4.8.1
+      is-bun-module: 1.3.0
       is-glob: 4.0.3
+      stable-hash: 0.0.4
     transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
       - supports-color
     dev: true
 
-  /eslint-module-utils@2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  /eslint-module-utils@2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1):
+    resolution: {integrity: sha512-aWajIYfsqCKRDgUfjEXNN/JlrzauMuSEy5sbd7WXbtW3EH6A6MpwEh42c7qD+MqQo9QMJ6fWLAeIJynx0g6OAw==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: '*'
+      eslint-import-resolver-node: '*'
+      eslint-import-resolver-typescript: '*'
+      eslint-import-resolver-webpack: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+      eslint:
+        optional: true
+      eslint-import-resolver-node:
+        optional: true
+      eslint-import-resolver-typescript:
+        optional: true
+      eslint-import-resolver-webpack:
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      debug: 3.2.7
+      eslint: 8.57.1
+      eslint-import-resolver-node: 0.3.9
+      eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import@2.29.1)(eslint@8.57.1)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /eslint-module-utils@2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
     resolution: {integrity: sha512-aWajIYfsqCKRDgUfjEXNN/JlrzauMuSEy5sbd7WXbtW3EH6A6MpwEh42c7qD+MqQo9QMJ6fWLAeIJynx0g6OAw==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -11713,64 +11693,34 @@ packages:
       debug: 3.2.7
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
-    resolution: {integrity: sha512-rXDXR3h7cs7dy9RNpUlQf80nX31XWJEyGq1tRMo+6GsO5VmTe4UTwtmonAD4ZkAsrfMVDA2wlGJ3790Ys+D49Q==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint:
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 7.7.1(eslint@8.57.0)(typescript@5.5.3)
-      debug: 3.2.7
-      eslint: 8.57.0
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /eslint-plugin-autofix@2.2.0(eslint@8.57.0):
+  /eslint-plugin-autofix@2.2.0(eslint@8.57.1):
     resolution: {integrity: sha512-lu8+0r+utyTroROqXIL+a8sUpICi6za22hIzlpb0+x0tQGRnOjhOKU7v8mC/NS/faDoVsw6xW3vUpc+Mcz5NWA==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8'
     dependencies:
-      eslint: 8.57.0
+      eslint: 8.57.1
       eslint-rule-composer: 0.3.0
       espree: 9.6.1
       esutils: 2.0.3
       string-similarity: 4.0.4
     dev: true
 
-  /eslint-plugin-compat@4.2.0(eslint@8.57.0):
+  /eslint-plugin-compat@4.2.0(eslint@8.57.1):
     resolution: {integrity: sha512-RDKSYD0maWy5r7zb5cWQS+uSPc26mgOzdORJ8hxILmWM7S/Ncwky7BcAtXVY5iRbKjBdHsWU8Yg7hfoZjtkv7w==}
     engines: {node: '>=14.x'}
     peerDependencies:
       eslint: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@mdn/browser-compat-data': 5.6.3
+      '@mdn/browser-compat-data': 5.6.23
       ast-metadata-inferer: 0.8.0
       browserslist: 4.22.2
       caniuse-lite: 1.0.30001579
-      eslint: 8.57.0
+      eslint: 8.57.1
       find-up: 5.0.0
       lodash.memoize: 4.1.2
       semver: 7.6.2
@@ -11799,7 +11749,42 @@ packages:
       regexpp: 3.2.0
     dev: true
 
-  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0):
+  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1):
+    resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      '@typescript-eslint/parser': '*'
+      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
+    peerDependenciesMeta:
+      '@typescript-eslint/parser':
+        optional: true
+    dependencies:
+      '@typescript-eslint/parser': 7.7.1(eslint@8.57.1)(typescript@5.5.3)
+      array-includes: 3.1.7
+      array.prototype.findlastindex: 1.2.3
+      array.prototype.flat: 1.3.2
+      array.prototype.flatmap: 1.3.2
+      debug: 3.2.7
+      doctrine: 2.1.0
+      eslint: 8.57.1
+      eslint-import-resolver-node: 0.3.9
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1)
+      hasown: 2.0.0
+      is-core-module: 2.13.1
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.fromentries: 2.0.7
+      object.groupby: 1.0.1
+      object.values: 1.1.7
+      semver: 6.3.1
+      tsconfig-paths: 3.15.0
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+    dev: true
+
+  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0):
     resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -11818,7 +11803,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
       hasown: 2.0.0
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -11834,21 +11819,8 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-jest-extended@2.0.0(eslint@8.57.0)(typescript@5.5.3):
-    resolution: {integrity: sha512-nMhVVsVcG/+Q6FMshql35WBxwx8xlBhxKgAG08WP3BYWfXrp28oxLpJVu9JSbMpfmfKGVrHwMYJGfPLRKlGB8w==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    peerDependencies:
-      eslint: ^7.0.0 || ^8.0.0
-    dependencies:
-      '@typescript-eslint/utils': 5.62.0(eslint@8.57.0)(typescript@5.5.3)
-      eslint: 8.57.0
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-    dev: true
-
-  /eslint-plugin-jest-extended@2.0.0(eslint@8.57.1)(typescript@5.5.3):
-    resolution: {integrity: sha512-nMhVVsVcG/+Q6FMshql35WBxwx8xlBhxKgAG08WP3BYWfXrp28oxLpJVu9JSbMpfmfKGVrHwMYJGfPLRKlGB8w==}
+  /eslint-plugin-jest-extended@2.0.3(eslint@8.57.1)(typescript@5.5.3):
+    resolution: {integrity: sha512-gPhanMUyClZHj4UqvtavRA2s7FqaMdNZQvKLz12gwkxikIKEwr4FgrnFne7/obd0bEIdpHgc0b2zwLK7BGWurw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0
@@ -11937,6 +11909,27 @@ packages:
       synckit: 0.8.8
     dev: true
 
+  /eslint-plugin-prettier@5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.1)(prettier@3.2.5):
+    resolution: {integrity: sha512-C9GCVAs4Eq7ZC/XFQHITLiHJxQngdtraXaM+LoUFoFp/lHNl2Zn8f3WQbe9HvTBBQ9YnKFB0/2Ajdqwo5D1EAw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      '@types/eslint': '>=8.0.0'
+      eslint: '>=8.0.0'
+      eslint-config-prettier: '*'
+      prettier: '>=3.0.0'
+    peerDependenciesMeta:
+      '@types/eslint':
+        optional: true
+      eslint-config-prettier:
+        optional: true
+    dependencies:
+      eslint: 8.57.1
+      eslint-config-prettier: 9.1.0(eslint@8.57.1)
+      prettier: 3.2.5
+      prettier-linter-helpers: 1.0.0
+      synckit: 0.8.8
+    dev: true
+
   /eslint-plugin-promise@6.1.1(eslint@8.57.0):
     resolution: {integrity: sha512-tjqWDwVZQo7UIPMeDReOpUgHCmCiH+ePnVT+5zVapL0uuHnegBUs2smM13CzOs2Xb5+MHMRFTs9v24yjba4Oig==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -11989,7 +11982,7 @@ packages:
       eslint: 8.57.0
     dev: true
 
-  /eslint-plugin-unused-imports@3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.0):
+  /eslint-plugin-unused-imports@3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1):
     resolution: {integrity: sha512-6uXyn6xdINEpxE1MtDjxQsyXB37lfyO2yKGVVgtD7WEWQGORSOZjgrD6hBhvGv4/SO+TOlS+UnC6JppRqbuwGQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -11999,8 +11992,8 @@ packages:
       '@typescript-eslint/eslint-plugin':
         optional: true
     dependencies:
-      '@typescript-eslint/eslint-plugin': 7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.0)(typescript@5.5.3)
-      eslint: 8.57.0
+      '@typescript-eslint/eslint-plugin': 7.7.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1)(typescript@5.5.3)
+      eslint: 8.57.1
       eslint-rule-composer: 0.3.0
     dev: true
 
@@ -12319,7 +12312,7 @@ packages:
     resolution: {integrity: sha512-SDl5kKrQAudFBUe5OJM9Ac6WmMyYmXX/6sTmLZ3ffG2eY6ZIGBes3pEDxNN6V72WyOw4CPD5RomKdsa8DAAwLg==}
     engines: {node: '>=10.0.0'}
     dependencies:
-      '@types/bn.js': 5.1.5
+      '@types/bn.js': 5.1.6
       bn.js: 5.2.1
       create-hash: 1.2.0
       ethereum-cryptography: 0.1.3
@@ -12709,7 +12702,7 @@ packages:
       debug: 4.3.4(supports-color@8.1.1)
     dev: true
 
-  /follow-redirects@1.15.6(debug@4.3.5):
+  /follow-redirects@1.15.6(debug@4.3.7):
     resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -12718,7 +12711,19 @@ packages:
       debug:
         optional: true
     dependencies:
-      debug: 4.3.5
+      debug: 4.3.7
+
+  /follow-redirects@1.15.9(debug@4.3.4):
+    resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4(supports-color@8.1.1)
+    dev: true
 
   /follow-redirects@1.15.9(debug@4.3.5):
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
@@ -13016,8 +13021,8 @@ packages:
       resolve-pkg-maps: 1.0.0
     dev: true
 
-  /get-tsconfig@4.7.3:
-    resolution: {integrity: sha512-ZvkrzoUA0PQZM6fy6+/Hce561s+faD1rsNwhnO5FelNjyy7EMGJ3Rz1AQ8GYDWjhRs/7dBLOEJvhK8MiEJOAFg==}
+  /get-tsconfig@4.8.1:
+    resolution: {integrity: sha512-k9PN+cFBmaLWtVz29SkUoqU5O0slLuHJXt/2P+tMVFT+phsSGXGkp9t3rQIqdz0e+06EHNGs3oM6ZX1s2zHxRg==}
     dependencies:
       resolve-pkg-maps: 1.0.0
     dev: true
@@ -13107,11 +13112,12 @@ packages:
   /glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 5.1.6
+      minimatch: 5.0.1
       once: 1.4.0
     dev: true
 
@@ -13274,7 +13280,7 @@ packages:
       hardhat: ^2.0.0
     dependencies:
       chalk: 4.1.2
-      cli-table3: 0.6.3
+      cli-table3: 0.6.5
       hardhat: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
       strip-ansi: 6.0.1
     dev: true
@@ -13420,7 +13426,7 @@ packages:
       '@nomicfoundation/ethereumjs-util': 9.0.4
       '@nomicfoundation/solidity-analyzer': 0.1.1
       '@sentry/node': 5.30.0
-      '@types/bn.js': 5.1.5
+      '@types/bn.js': 5.1.6
       '@types/lru-cache': 5.1.1
       adm-zip: 0.4.16
       aggregate-error: 3.1.0
@@ -13429,7 +13435,7 @@ packages:
       chalk: 2.4.2
       chokidar: 4.0.1
       ci-info: 2.0.0
-      debug: 4.3.5
+      debug: 4.3.7
       enquirer: 2.4.1
       env-paths: 2.2.1
       ethereum-cryptography: 1.2.0
@@ -13449,7 +13455,7 @@ packages:
       raw-body: 2.5.2
       resolve: 1.17.0
       semver: 6.3.1
-      solc: 0.8.26(debug@4.3.5)
+      solc: 0.8.26(debug@4.3.7)
       source-map-support: 0.5.21
       stacktrace-parser: 0.1.10
       ts-node: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
@@ -13902,6 +13908,12 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       builtin-modules: 3.3.0
+    dev: true
+
+  /is-bun-module@1.3.0:
+    resolution: {integrity: sha512-DgXeu5UWI0IsMQundYb5UAOzm6G2eVnarJ0byP6Tm55iZNKceD59LNPA2L4VvsScTtHcw0yEkVwSf7PC+QoLSA==}
+    dependencies:
+      semver: 7.6.3
     dev: true
 
   /is-callable@1.2.7:
@@ -14859,7 +14871,7 @@ packages:
     requiresBuild: true
     dependencies:
       node-addon-api: 2.0.2
-      node-gyp-build: 4.8.0
+      node-gyp-build: 4.8.2
       readable-stream: 3.6.2
 
   /keyv@4.5.4:
@@ -15432,13 +15444,6 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
 
-  /minimatch@5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
-    engines: {node: '>=10'}
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: true
-
   /minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -15714,10 +15719,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /node-gyp-build@4.8.0:
-    resolution: {integrity: sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==}
-    hasBin: true
 
   /node-gyp-build@4.8.2:
     resolution: {integrity: sha512-IRUxE4BVsHWXkV/SFOut4qTlagw2aM8T5/vnTsmrHJvVoKueJHRc/JaFND7QDDc61kLYUJ6qlZM3sqTSyx2dTw==}
@@ -16035,7 +16036,7 @@ packages:
     engines: {node: '>=14.16'}
     dependencies:
       got: 12.6.1
-      registry-auth-token: 5.0.2
+      registry-auth-token: 5.0.3
       registry-url: 6.0.1
       semver: 7.6.2
     dev: true
@@ -16179,6 +16180,10 @@ packages:
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
+    dev: true
+
+  /picocolors@1.1.1:
+    resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
     dev: true
 
   /picomatch@2.3.1:
@@ -16434,8 +16439,8 @@ packages:
       side-channel: 1.0.6
     dev: true
 
-  /qs@6.13.0:
-    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+  /qs@6.13.1:
+    resolution: {integrity: sha512-EJPeIn0CYrGu+hli1xilKAPXODtJ12T0sP63Ijx2/khC2JtuaN3JyNIpvmnkmaEtha9ocbG4A4cMcr+TvqvwQg==}
     engines: {node: '>=0.6'}
     dependencies:
       side-channel: 1.0.6
@@ -16668,11 +16673,11 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /registry-auth-token@5.0.2:
-    resolution: {integrity: sha512-o/3ikDxtXaA59BmZuZrJZDJv8NMDGSj+6j6XaeBmHw8eY1i1qd9+6H+LjVvQXx3HN6aRCGa1cUdJ9RaJZUugnQ==}
+  /registry-auth-token@5.0.3:
+    resolution: {integrity: sha512-1bpc9IyC+e+CNFRaWyn77tk4xGG4PPUyfakSmA6F6cvUDjrm58dfyJ3II+9yb10EDkHoy1LaPSmHaWLOH3m6HA==}
     engines: {node: '>=14'}
     dependencies:
-      '@pnpm/npm-conf': 2.2.2
+      '@pnpm/npm-conf': 2.3.1
     dev: true
 
   /registry-url@6.0.1:
@@ -16980,7 +16985,7 @@ packages:
     dependencies:
       elliptic: 6.5.4
       node-addon-api: 2.0.2
-      node-gyp-build: 4.8.0
+      node-gyp-build: 4.8.2
 
   /seedrandom@3.0.5:
     resolution: {integrity: sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==}
@@ -17019,6 +17024,12 @@ packages:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
     hasBin: true
+
+  /semver@7.6.3:
+    resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
@@ -17322,7 +17333,7 @@ packages:
     dependencies:
       command-exists: 1.2.9
       commander: 8.3.0
-      follow-redirects: 1.15.9(debug@4.3.7)
+      follow-redirects: 1.15.9(debug@4.3.4)
       js-sha3: 0.8.0
       memorystream: 0.3.1
       semver: 5.7.2
@@ -17331,14 +17342,14 @@ packages:
       - debug
     dev: true
 
-  /solc@0.8.26(debug@4.3.5):
+  /solc@0.8.26(debug@4.3.7):
     resolution: {integrity: sha512-yiPQNVf5rBFHwN6SIf3TUUvVAFKcQqmSUFeq+fb6pNRCo0ZCgpYOZDi3BVoezCPIAcKrVYd/qXlBLUP9wVrZ9g==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     dependencies:
       command-exists: 1.2.9
       commander: 8.3.0
-      follow-redirects: 1.15.6(debug@4.3.5)
+      follow-redirects: 1.15.6(debug@4.3.7)
       js-sha3: 0.8.0
       memorystream: 0.3.1
       semver: 5.7.2
@@ -17346,13 +17357,13 @@ packages:
     transitivePeerDependencies:
       - debug
 
-  /solhint@4.1.1(typescript@5.5.3):
-    resolution: {integrity: sha512-7G4iF8H5hKHc0tR+/uyZesSKtfppFIMvPSW+Ku6MSL25oVRuyFeqNhOsXHfkex64wYJyXs4fe+pvhB069I19Tw==}
+  /solhint@4.5.4(typescript@5.5.3):
+    resolution: {integrity: sha512-Cu1XiJXub2q1eCr9kkJ9VPv1sGcmj3V7Zb76B0CoezDOB9bu3DxKIFFH7ggCl9fWpEPD6xBmRLfZrYijkVmujQ==}
     hasBin: true
     dependencies:
-      '@solidity-parser/parser': 0.16.2
+      '@solidity-parser/parser': 0.18.0
       ajv: 6.12.6
-      antlr4: 4.13.1
+      antlr4: 4.13.2
       ast-parents: 0.0.1
       chalk: 4.1.2
       commander: 10.0.1
@@ -17503,6 +17514,10 @@ packages:
       jsbn: 0.1.1
       safer-buffer: 2.1.2
       tweetnacl: 0.14.5
+
+  /stable-hash@0.0.4:
+    resolution: {integrity: sha512-LjdcbuBeLcdETCrPn9i8AYAZ1eCtu4ECAWtP7UleOiZ9LzVxRzzUZEoZ8zB24nhkQnDWyET0I+3sWokSDS3E7g==}
+    dev: true
 
   /stack-trace@0.0.10:
     resolution: {integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==}
@@ -18576,15 +18591,8 @@ packages:
     dependencies:
       '@fastify/busboy': 2.1.0
 
-  /undici@5.28.4:
-    resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
-    engines: {node: '>=14.0'}
-    dependencies:
-      '@fastify/busboy': 2.1.1
-    dev: true
-
-  /undici@6.20.1:
-    resolution: {integrity: sha512-AjQF1QsmqfJys+LXfGTNum+qw4S88CojRInG/6t31W/1fk6G59s92bnAvGz5Cmur+kQv2SURXEvvudLmbrE8QA==}
+  /undici@6.21.0:
+    resolution: {integrity: sha512-BUgJXc752Kou3oOIuU1i+yZZypyZRqNPW0vqoMPl8VaoalSfeR0D8/t4iAS3yirs79SSMTxTag+ZC86uswv+Cw==}
     engines: {node: '>=18.17'}
     dev: true
 
@@ -18630,7 +18638,7 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       punycode: 1.4.1
-      qs: 6.13.0
+      qs: 6.13.1
     dev: true
 
   /utf-8-validate@5.0.10:
@@ -18833,7 +18841,7 @@ packages:
     resolution: {integrity: sha512-Q8PfolOJ4eV9TvnTj1TGdZ4RarpSLmHnUnzVxZ/6/NiTfe4maJz99R0ISgwZkntLhLRtw0C7LRJuklzGYCNN3A==}
     engines: {node: '>=8.0.0'}
     dependencies:
-      '@types/bn.js': 5.1.5
+      '@types/bn.js': 5.1.6
       web3-core: 1.10.4
       web3-core-helpers: 1.10.4
       web3-core-method: 1.10.4
