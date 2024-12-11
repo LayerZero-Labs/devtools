@@ -30,16 +30,20 @@ contract UniswapV3Composer is IOAppComposer {
     /// @notice The address of the OFT on the receiving chain.
     address public immutable oft;
 
-    /// @notice Emitted when a token swap is successfully executed.
-    /// @param user The address of the user initiating the swap.
-    /// @param tokenIn The address of the ERC20 token being swapped from (OFT).
-    /// @param tokenOut The address of the ERC20 token being swapped to.
-    /// @param amountIn The amount of `tokenIn` being swapped.
-    /// @param amountOut The amount of `tokenOut` received from the swap.
+    /**
+     * @notice Emitted when a token swap is successfully executed.
+     *
+     * @param user The address of the user initiating the swap.
+     * @param tokenIn The address of the ERC20 token being swapped from (OFT).
+     * @param tokenOut The address of the ERC20 token being swapped to.
+     * @param amountIn The amount of `tokenIn` being swapped.
+     * @param amountOut The amount of `tokenOut` received from the swap.
+     */
     event SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
 
     /**
      * @notice Initializes the UniswapV3Composer contract with necessary parameters.
+     *
      * @param _swapRouter The address of the Uniswap V3 SwapRouter.
      * @param _endpoint The LayerZero Endpoint address for cross-chain communication.
      * @param _oft The address of the originating OFT that sends composed messages.
@@ -65,6 +69,7 @@ contract UniswapV3Composer is IOAppComposer {
      *
      * @param _oft The address of the originating OFT.
      * @param _message The encoded message content in the format of OFTComposeMsgCodec.
+     *
      * @dev _executor The address of the executor (unused in this context).
      * @dev _guid The globally unique identifier of the message (unused in this context).
      * @dev _executorData Additional data for the executor (unused in this context).
