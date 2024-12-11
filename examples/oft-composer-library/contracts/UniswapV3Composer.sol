@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 
 // Import necessary interfaces and libraries
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
@@ -19,8 +18,6 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
  * @dev This contract inherits from IOAppComposer and interacts with Uniswap V3's SwapRouter to execute token swaps.
  */
 contract UniswapV3Composer is IOAppComposer {
-    using SafeERC20 for IERC20;
-
     /// @notice The Uniswap V3 SwapRouter used to perform token swaps.
     ISwapRouter public immutable swapRouter;
 
