@@ -1,19 +1,16 @@
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
-
+import { getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getAptosOftAddress, sendAllTxs } from './utils/utils'
+import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
-    const { account_address, private_key, network } = await parseYaml()
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
-    const aptosConfig = new AptosConfig({ network: Network.TESTNET })
-    const aptos = new Aptos(aptosConfig)
-
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
+
     console.log(`\n⚡ Initializing Aptos OFT`)
     console.log(`   Address: ${aptosOftAddress}\n`)
 
@@ -31,7 +28,9 @@ async function main() {
     console.log(`\tShared Decimals: ${sharedDecimals}`)
     console.log(`\tLocal Decimals: ${localDecimals}`)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
+    const moveVMConnection = getConnection(network, fullnode, faucet)
+    const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key)
+
     const initializePayload = oft.initializePayload(
         tokenName,
         tokenSymbol,
@@ -43,7 +42,7 @@ async function main() {
 
     const eid = getEidFromAptosNetwork(network)
     const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid }]
-    sendAllTxs(aptos, oft, account_address, payloads)
+    sendAllTxs(moveVMConnection, oft, account_address, payloads)
 }
 
 main().catch((error) => {

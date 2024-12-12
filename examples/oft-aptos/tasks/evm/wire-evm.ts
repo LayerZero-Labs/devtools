@@ -8,7 +8,7 @@ import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 // import { createSetSendConfigTransactions } from './wire/setSendConfig'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
-import { getAptosOftAddress } from '../move/utils/utils'
+import { getMoveVMOftAddress } from '../move/utils/utils'
 import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
 
 import AnvilForkNode from './utils/anvilForkNode'
@@ -57,7 +57,7 @@ async function main() {
 
     // @todo Use this as a primary key for NonEvmOAppWiring in the following code
     const lzNetworkStage = getLzNetworkStage(network)
-    const APTOS_OAPP_ADDRESS = getAptosOftAddress(lzNetworkStage)
+    const APTOS_OAPP_ADDRESS = getMoveVMOftAddress(lzNetworkStage)
 
     const nonEvmOapp: NonEvmOAppMetadata = {
         address: APTOS_OAPP_ADDRESS,

@@ -4,7 +4,7 @@ import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate, transferOwner } from './utils/aptosOftConfigOps'
-import { getAptosOftAddress, getDelegateFromLzConfig, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
+import { getDelegateFromLzConfig, getMoveVMOftAddress, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()
@@ -13,7 +13,7 @@ async function main() {
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
 
     console.log(`\n↗️ Transferring Ownership & Setting Aptos OFT Delegate...`)
 

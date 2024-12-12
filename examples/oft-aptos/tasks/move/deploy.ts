@@ -2,6 +2,7 @@ import { spawn } from 'child_process'
 import { assert } from 'console'
 import fs from 'fs'
 
+import { Network } from '@aptos-labs/ts-sdk'
 import { ArgumentParser } from 'argparse'
 
 import { deploymentFile } from '../shared/types'
@@ -28,8 +29,10 @@ async function main() {
     parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
     const parserArgs = parser.parse_args()
-    const network = (await parseYaml()).network
-    const lzNetworkStage = getLzNetworkStage(network)
+    const aptosYamlConfig = await parseYaml()
+    const networkStage = aptosYamlConfig.network
+    const lzNetworkStage = getLzNetworkStage(networkStage)
+    const network = getNetworkFromConfig(aptosYamlConfig)
 
     const additionalAddresses = getNamedAddresses(lzNetworkStage)
     const namedAddresses = parserArgs.named_addresses
@@ -70,7 +73,7 @@ async function main() {
             if (code === 0) {
                 const addresses = stdOut.match(/0x[0-9a-fA-F]{64}/g)!
                 assert(addresses[0] == addresses[1], 'Addresses do not match')
-                createDeployment(addresses[0], address_name)
+                createDeployment(addresses[0], address_name, network, lzNetworkStage)
 
                 resolve()
             } else {
@@ -88,13 +91,23 @@ async function main() {
     })
 }
 
-async function createDeployment(deployedAddress: string, file_name = 'oft.json') {
-    //read from the aptos.layerzero.config.ts'
-    const network = (await parseYaml()).network
-    const lzNetworkStage = getLzNetworkStage(network)
+function getNetworkFromConfig(yamlConfig: {
+    account_address: string
+    private_key: string
+    network: Network
+    fullnode: string
+    faucet: string
+}): string {
+    if (yamlConfig.faucet.toLowerCase().includes('movement')) {
+        return 'movement'
+    } else {
+        return 'aptos'
+    }
+}
 
+async function createDeployment(deployedAddress: string, file_name: string, network: string, lzNetworkStage: string) {
     fs.mkdirSync('deployments', { recursive: true })
-    const aptosDir = `deployments/aptos-${lzNetworkStage}`
+    const aptosDir = `deployments/${network}-${lzNetworkStage}`
     fs.mkdirSync(aptosDir, { recursive: true })
 
     const deployment: deploymentFile = {

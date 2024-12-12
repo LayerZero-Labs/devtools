@@ -24,7 +24,7 @@ ts-node tasks/move/build.ts --named-addresses oft=<account-address-of-deployer>,
 ```
 ## Deploy the OFT:
 ```
-ts-node tasks/move/deploy.ts --package-dir oft --address-name oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-your-admin>
+ts-node tasks/move/deploy.ts --address-name oft --named-addresses oft=<account-address-of-deployer>,oft_admin=<account-address-of-your-admin>
 ```
 
 Make sure to set the account that will be used for administrative functions such as settting the peers should be set in the move.toml as OFT_ADMIN
@@ -46,7 +46,7 @@ Run the following command to set the delegate to the oft. Ensure first that you 
 npx hardhat run tasks/move/setDelegate.ts
 ```
 ## Initialize the OFT:
-Inside the file tasks/move/initAptosOFT.ts, set the following parameters:
+Inside the file tasks/move/initMoveVMOFT.ts, set the following parameters:
 ```typescript
 const tokenName = '<your-token-name>'
 const tokenSymbol = '<your-token-symbol>'
@@ -102,7 +102,7 @@ const config: OAppOmniGraphHardhat = {
 
 IMPORTANT: Before running the wire script ensure that you have run aptos init and configuered your desired network such as custom, testnet, mainnet, etc. and have also deployed the oft to that network.
 ```
-npx hardhat run tasks/move/wireAptosOFT.ts
+npx hardhat run tasks/move/wireMoveVMOFT.ts
 ```
 
 ## Scripts For internal testing:
@@ -121,12 +121,12 @@ public entry fun mint(
 ```
 Then run the following command to mint the aptos oft:
 ```
-npx hardhat run tasks/move/mintAptosOFT.ts
+npx hardhat run tasks/move/mintMoveVMOFT.ts
 ```
 ### Send Aptos OFT:
 Currently running into bugs with this script. Particularly around quoting send.
 ```
-npx hardhat run tasks/move/sendFromAptosOFT.ts
+npx hardhat run tasks/move/sendFromMoveVMOFT.ts
 ```
 
 # Movement OFT Deployment:

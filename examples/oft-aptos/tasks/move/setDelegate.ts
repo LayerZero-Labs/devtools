@@ -4,7 +4,7 @@ import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate } from './utils/aptosOftConfigOps'
-import { getAptosOftAddress, getDelegateFromLzConfig, sendAllTxs } from './utils/utils'
+import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()
@@ -12,7 +12,7 @@ async function main() {
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
     console.log(`\n🔧 Setting Aptos OFT Delegate`)
     console.log(`\tFor Aptos OFT: ${aptosOftAddress}\n`)
 
