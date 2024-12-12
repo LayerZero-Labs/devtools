@@ -63,7 +63,7 @@ exports[`config-metadata translatePathwayToConfig should be able to translate a 
       },
       "sendConfig": {
         "executorConfig": {
-          "executor": "6doghB248px58JSSwG4qejQ46kFMW4AMj7vzJnWZHNZn",
+          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
           "maxMessageSize": 10000,
         },
         "ulnConfig": {
