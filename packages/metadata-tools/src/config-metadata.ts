@@ -1,87 +1,9 @@
-import type { OmniPointHardhat, OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
-import type { OAppEnforcedOption, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
+import type { OmniEdgeHardhat } from '@layerzerolabs/devtools-evm-hardhat'
+import type { OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
+import { IMetadata } from './types'
+import { TwoWayConfig } from './types'
 
 const METADATA_URL = process.env.LZ_METADATA_URL || 'https://metadata.layerzero-api.com/v1/metadata'
-
-interface IMetadata {
-    [key: string]: {
-        created: string
-        updated: string
-        tableName: string
-        environment: string
-        blockExplorers?: { url: string }[]
-        deployments?: {
-            eid: string
-            chainKey: string
-            stage: string
-            version: number
-            endpoint?: { address: string }
-            relayerV2?: { address: string }
-            ultraLightNodeV2?: { address: string }
-            nonceContract?: { address: string }
-            executor?: { address: string }
-            deadDVN?: { address: string }
-            endpointV2?: { address: string }
-            sendUln302?: { address: string }
-            lzExecutor?: { address: string }
-            sendUln301?: { address: string }
-            receiveUln301?: { address: string }
-            receiveUln302?: { address: string }
-        }[]
-        chainDetails?: {
-            chainType: string
-            chainKey: string
-            nativeChainId: number
-            chainLayer: string
-            chainStack?: string
-            nativeCurrency: {
-                name?: string
-                symbol: string
-                cgId?: string
-                cmcId: number
-                decimals: number
-            }
-            cgNetworkId?: string
-            shortName?: string
-            mainnetChainName?: string
-            name?: string
-        }
-        dvns?: {
-            [address: string]: {
-                version: number
-                canonicalName: string
-                id: string
-                deprecated?: boolean
-                lzReadCompatible?: boolean
-            }
-        }
-        rpcs?: { url: string; weight?: number }[]
-        addressToOApp?: {
-            [address: string]: {
-                id: string
-                canonicalName: string
-                type?: string
-            }
-        }
-        chainName: string
-        tokens?: {
-            [address: string]: {
-                symbol: string
-                cgId?: string
-                cmcId?: number
-                type: string
-                decimals: number
-                peggedTo?: {
-                    symbol: string
-                    chainName: string
-                    address: string
-                    programaticallyPegged?: boolean
-                }
-            }
-        }
-        chainKey: string
-    }
-}
 
 function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     const srcEidString = eid.toString()
@@ -100,16 +22,13 @@ function getEndpointIdDeployment(eid: number, metadata: IMetadata) {
     throw new Error(`Can't find endpoint with eid: "${eid}",`)
 }
 
-function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMetadata) {
+export function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMetadata) {
     if (dvns.length === 0) {
         return []
     }
 
-    if (dvns[0]?.includes('0x')) {
-        return dvns.sort()
-    }
-
     const dvnAddresses: string[] = []
+    const seenDVNs = new Set<string>()
 
     if (!metadata[chainKey]?.dvns) {
         throw new Error(`Can't find DVNs for chainKey: "${chainKey}".`)
@@ -118,31 +37,40 @@ function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMetadata) 
     const metadataDVNs = Object.entries(metadata[chainKey].dvns)
 
     for (const dvn of dvns) {
+        if (seenDVNs.has(dvn)) {
+            throw new Error(`Duplicate DVN name found: "${dvn}".`)
+        }
+        seenDVNs.add(dvn)
+
+        let i = 0
         for (const [dvnAddress, dvnDetails] of metadataDVNs) {
             if (dvnDetails.canonicalName === dvn && !dvnDetails.lzReadCompatible) {
+                if (dvnDetails.deprecated) {
+                    console.log(`Warning: DVN "${dvn}" is deprecated.`)
+                }
+
                 dvnAddresses.push(dvnAddress)
                 break
             }
+
+            if (i === metadataDVNs.length - 1) {
+                throw new Error(
+                    `Can't find DVN: "${dvn}" on chainKey: "${chainKey}". Double check you're using valid DVN canonical name (not an address).`
+                )
+            }
+
+            i++
         }
     }
 
     if (dvns.length !== dvnAddresses.length) {
-        throw new Error(`Can't find all DVNs: "${dvns.join(', ')}",`)
+        throw new Error(`Can't find all DVNs: "${dvns.join(', ')}".`)
     }
 
     return dvnAddresses.sort()
 }
 
-// [srcContract, dstContract, [requiredDVNs, [optionalDVNs, threshold]], [srcToDstConfirmations, dstToSrcConfirmations]], [enforcedOptionsSrcToDst, enforcedOptionsDstToSrc]
-export type TwoWayConfig = [
-    OmniPointHardhat,
-    OmniPointHardhat,
-    [string[], [string[], number] | []],
-    [number, number | undefined],
-    [OAppEnforcedOption[] | undefined, OAppEnforcedOption[] | undefined],
-]
-
-async function translatePathwayToConfig(
+export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
     metadata: IMetadata
 ): Promise<OmniEdgeHardhat<OAppEdgeConfig | undefined>[]> {
@@ -163,12 +91,6 @@ async function translatePathwayToConfig(
 
     const sourceLZDeployment = getEndpointIdDeployment(sourceContract.eid, metadata)
     const destinationLZDeployment = getEndpointIdDeployment(destinationContract.eid, metadata)
-
-    if (sourceLZDeployment.chainKey.startsWith('solana') || destinationLZDeployment.chainKey.startsWith('solana')) {
-        throw new Error(
-            'Solana is not supported in this version of the config generator. Use the "simple-config-generator.solana.ts" file instead.'
-        )
-    }
 
     const sourceRequiredDVNs = DVNsToAddresses(requiredDVNs, sourceLZDeployment.chainKey, metadata)
     const destinationRequiredDVNs = DVNsToAddresses(requiredDVNs, destinationLZDeployment.chainKey, metadata)
