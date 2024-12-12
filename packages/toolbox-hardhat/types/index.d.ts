@@ -19,6 +19,7 @@ export type {
 // We also re-export all the relevant types from ua-devtools
 export type {
     OwnableNodeConfig,
+    OAppEnforcedOption,
     OAppReceiveConfig,
     OAppReceiveLibraryConfig,
     OAppSendConfig,
