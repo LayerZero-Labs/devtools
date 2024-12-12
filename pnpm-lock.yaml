@@ -2091,8 +2091,8 @@ importers:
         specifier: ^3.0.27
         version: 3.0.27
       '@layerzerolabs/lz-ton-sdk-v2':
-        specifier: 3.0.24-ton.0
-        version: 3.0.24-ton.0
+        specifier: ^3.0.27
+        version: 3.0.27
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -7009,8 +7009,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-ton-sdk-v2@3.0.24-ton.0:
-    resolution: {integrity: sha512-Tyv7h44ClC4q5jidXN1v9NKSZ1YAZ4ULvkXbTcvVQOgtC3dcFzt7UUfqvd63izbS9FUsBBv60ywrF5LouNcUTg==}
+  /@layerzerolabs/lz-ton-sdk-v2@3.0.27:
+    resolution: {integrity: sha512-AU1uOzmLjWvyHdJGTo689bXLsCS/QAmfQSjvZ4544muLfpGVLl3l6lOl8DwmN1UQuwKKK94C5rEvoElVUYf0zQ==}
     dependencies:
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
