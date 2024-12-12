@@ -7,10 +7,11 @@ import {
     AsyncRetriable,
 } from '@layerzerolabs/devtools'
 import type { EndpointId } from '@layerzerolabs/lz-definitions'
-import type { Cell, OpenedContract, Contract, ContractProvider, MessageRelaxed } from '@ton/core'
+import { Cell } from '@ton/core'
+import type { OpenedContract, Contract, ContractProvider, MessageRelaxed } from '@ton/core'
 import { TonClient } from '@ton/ton'
 import type { KeyPair } from '@ton/crypto'
-import { deserializeMessageRelaxed } from './serde'
+import { deserializeMessagesRelaxed } from './serde'
 import assert from 'assert'
 import { createIsCellInTransaction, hasTransactionBounced, isTransactionSuccessful } from './state'
 import { createModuleLogger, Logger } from '@layerzerolabs/io-devtools'
@@ -49,9 +50,8 @@ export class OmniSignerTON<TWalletContract extends IWalletContract> extends Omni
     constructor(
         eid: EndpointId,
         public readonly keyPair: KeyPair,
-        public readonly endpoint: string,
         public readonly wallet: TWalletContract,
-        public readonly client: TonClient = new TonClient({ endpoint }),
+        public readonly client: TonClient,
         protected readonly logger: Logger = createModuleLogger('OmniSignerTON')
     ) {
         super(eid)
@@ -60,20 +60,24 @@ export class OmniSignerTON<TWalletContract extends IWalletContract> extends Omni
     }
 
     override getPoint(): OmniPoint | Promise<OmniPoint> {
-        return { eid: this.eid, address: this.keyPair.publicKey.toString('base64') }
+        return { eid: this.eid, address: `0:${this.openWallet.address.hash.toString('hex')}` }
     }
 
-    override sign(_transaction: OmniTransaction): Promise<string> {
-        throw new Error('Method not implemented.')
+    override async sign(_transaction: OmniTransaction): Promise<string> {
+        const seqno = await this.openWallet.getSeqno()
+        return (
+            await this.wallet.createTransfer({
+                seqno,
+                secretKey: this.keyPair.secretKey,
+                messages: deserializeMessagesRelaxed(_transaction.data),
+            })
+        )
+            .toBoc()
+            .toString('base64')
     }
 
     override async signAndSend(omniTransaction: OmniTransaction): Promise<OmniTransactionResponse> {
-        const seqno = await this.openWallet.getSeqno()
-        const cell = await this.wallet.createTransfer({
-            seqno,
-            secretKey: this.keyPair.secretKey,
-            messages: [deserializeMessageRelaxed(omniTransaction.data)],
-        })
+        const cell = Cell.fromBase64(await this.sign(omniTransaction))
 
         await this.openWallet.send(cell)
 
@@ -98,7 +102,6 @@ export class OmniSignerTON<TWalletContract extends IWalletContract> extends Omni
                 assert(transactionState != null, `Transaction '${transactionHash}' missing from the API`)
                 assert(!hasTransactionBounced(transactionState), `Transaction '${transactionHash}' has bounced`)
                 assert(isTransactionSuccessful(transactionState), `Transaction '${transactionHash}' has not succeeded`)
-
                 return { transactionHash }
             },
         }
@@ -109,6 +112,7 @@ export class OmniSignerTON<TWalletContract extends IWalletContract> extends Omni
         enabled: true,
         numAttempts: Number.POSITIVE_INFINITY,
         maxDelay: 1_000,
+        onRetry: () => {}, //need this to prevent trying to log error that is too large
     })
     protected async waitForCellSubmitted(cell: Cell, limit: number = 100) {
         const transactions = await this.client.getTransactions(this.wallet.address, {
@@ -117,7 +121,6 @@ export class OmniSignerTON<TWalletContract extends IWalletContract> extends Omni
 
         const transaction = transactions.find(createIsCellInTransaction(cell))
         assert(transaction != null, `Failed to locate cell ${cell.toString()} among the last ${limit} transactions`)
-
         return transaction
     }
 }
