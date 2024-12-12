@@ -90,7 +90,7 @@ export function getOwner(eid: EndpointId) {
     }
 }
 
-export function getAptosOftAddress(stage: Stage) {
+export function getMoveVMOftAddress(stage: Stage) {
     const deploymentPath = path.join(__dirname, `../../../deployments/aptos-${stage}/oft.json`)
     const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
     return deployment.address

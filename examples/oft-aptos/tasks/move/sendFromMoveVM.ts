@@ -7,7 +7,7 @@ import { OFT } from '../../sdk/oft'
 import { hexAddrToAptosBytesAddr } from '../../sdk/utils'
 
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getAptosOftAddress, sendAllTxs } from './utils/utils'
+import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
     const { account_address, private_key, network } = await parseYaml()
@@ -17,7 +17,7 @@ async function main() {
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
