@@ -11,7 +11,7 @@ import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 // Set your preferred authentication method
 //
@@ -52,15 +52,34 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BSC_TESTNET || 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        'sepolia-testnet': {
+            eid: EndpointId.SEPOLIA_V2_TESTNET,
+            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
         },
-        'aptos-testnet': {
-            eid: EndpointId.APTOS_V2_TESTNET,
-            url: process.env.RPC_URL_APTOS_TESTNET || 'http://127.0.0.1:8080',
+        'avalanche-testnet': {
+            eid: EndpointId.AVALANCHE_V2_TESTNET,
+            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
+        },
+        'amoy-testnet': {
+            eid: EndpointId.AMOY_V2_TESTNET,
+            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
+            accounts,
+        },
+        'bsc-testnet': {
+            eid: EndpointId.BSC_V2_TESTNET,
+            url: process.env.RPC_URL_BSC || 'https://rpc.ankr.com/bsc_testnet',
+            accounts,
+        },
+        'ethereum-testnet': {
+            eid: EndpointId.ETHEREUM_V2_TESTNET,
+            url: process.env.RPC_URL_ETHEREUM || 'https://rpc.ankr.com/eth_sepolia',
+            accounts,
+        },
+        hardhat: {
+            // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
+            allowUnlimitedContractSize: true,
         },
     },
     namedAccounts: {

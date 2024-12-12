@@ -13,7 +13,9 @@ module oft::oapp_receive_using_oft_fa_tests {
     use oft::oapp_receive;
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
-    use oft::oft_fa;
+    use oft::oft_impl;
+    use oft::oft_impl_config;
+    use oft::oft_store;
     use oft_common::oft_compose_msg_codec;
     use oft_common::oft_msg_codec;
 
@@ -23,11 +25,15 @@ module oft::oapp_receive_using_oft_fa_tests {
     fun setup(local_eid: u32, remote_eid: u32) {
         // Test the send function
         setup_layerzero_for_test(@simple_msglib, local_eid, remote_eid);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         initialize_native_token_for_test();
         oft::oapp_test_helper::init_oapp();
-        oft_fa::initialize(
-            oft_account,
+
+        oft_store::init_module_for_test();
+        oft_impl_config::init_module_for_test();
+        oft_impl::init_module_for_test();
+        oft_impl::initialize(
+            &create_signer_for_test(@oft_admin),
             b"My Test Token",
             b"MYT",
             b"",
@@ -35,8 +41,8 @@ module oft::oapp_receive_using_oft_fa_tests {
             6,
             8,
         );
-        oapp_core::set_peer(oft_account, SRC_EID, from_bytes32(from_address(@1234)));
-        oapp_core::set_peer(oft_account, DST_EID, from_bytes32(from_address(@4321)));
+        oapp_core::set_peer(oft_admin, SRC_EID, from_bytes32(from_address(@1234)));
+        oapp_core::set_peer(oft_admin, DST_EID, from_bytes32(from_address(@4321)));
     }
 
     #[test]
