@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-ton",
-  "version": "0.0.3",
-  "private": true,
+  "version": "0.0.2",
   "description": "Developer utilities for working with LayerZero TON contracts",
   "repository": {
     "type": "git",
@@ -63,6 +62,6 @@
     "@ton/ton": "^15.1.0"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   }
 }

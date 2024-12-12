@@ -51,7 +51,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.4.2",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/test-devtools": "~0.4.1",
     "@safe-global/safe-core-sdk-types": "^2.3.0",
@@ -78,7 +78,7 @@
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.2",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "fp-ts": "^2.16.2",
     "zod": "^3.22.4"

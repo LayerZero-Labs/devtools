@@ -10,7 +10,7 @@ const config: Config = {
     transform: {
         '^.+\\.(t|j)sx?$': '@swc/jest',
     },
-    testTimeout: 250000,
+    testTimeout: 60_000,
 }
 
 export default config

@@ -47,7 +47,7 @@
     "@ethersproject/providers": "^5.7.2",
     "@layerzerolabs/devtools": "~0.4.2",
     "@layerzerolabs/devtools-evm": "~1.0.1",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.21",
     "@layerzerolabs/protocol-devtools": "~1.1.1",
@@ -72,7 +72,7 @@
     "@ethersproject/providers": "^5.7.0",
     "@layerzerolabs/devtools": "~0.4.2",
     "@layerzerolabs/devtools-evm": "~1.0.1",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/protocol-devtools": "~1.1.1",
     "zod": "^3.22.4"

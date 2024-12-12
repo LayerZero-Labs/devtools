@@ -29,7 +29,7 @@
     "@layerzerolabs/devtools-evm-hardhat": "^2.0.3",
     "@layerzerolabs/devtools-solana": "~1.0.2",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
-    "@layerzerolabs/io-devtools": "~0.1.11",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",

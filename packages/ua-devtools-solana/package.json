@@ -44,7 +44,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools": "~0.4.2",
     "@layerzerolabs/devtools-solana": "~1.0.3",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/lz-solana-sdk-v2": "^3.0.0",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
@@ -75,7 +75,7 @@
   "peerDependencies": {
     "@layerzerolabs/devtools": "~0.4.2",
     "@layerzerolabs/devtools-solana": "~1.0.3",
-    "@layerzerolabs/io-devtools": "~0.1.12",
+    "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.27",
     "@layerzerolabs/lz-solana-sdk-v2": "^3.0.0",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
