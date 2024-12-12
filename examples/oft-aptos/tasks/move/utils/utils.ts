@@ -102,14 +102,8 @@ export async function sendAllTxs(
     account_address: string,
     payloads: (TransactionPayload | null)[]
 ) {
-    console.log('Payloads Before clean:')
-    console.dir(payloads, { depth: null })
-
     let cleanedPayloads = pruneNulls(payloads)
     cleanedPayloads = sortByEid(cleanedPayloads)
-
-    console.log('cleanedPayloads After clean:')
-    console.dir(cleanedPayloads, { depth: null })
 
     if (cleanedPayloads.length == 0) {
         console.log('No transactions to send.')

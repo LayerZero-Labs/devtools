@@ -4,13 +4,14 @@ import hardhatConfig from '../../hardhat.config'
 import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 export function createEidToNetworkMapping(_value = ''): Record<number, string> {
-    const networks = hardhatConfig.networks
+    const networks = hardhatConfig.networks ?? {}
     const eidNetworkNameMapping: Record<number, string> = {}
     for (const [networkName, networkConfig] of Object.entries(networks)) {
-        if (_value == '') {
-            eidNetworkNameMapping[networkConfig.eid] = networkName
+        if (_value === '') {
+            eidNetworkNameMapping[networkConfig?.eid ?? 0] = networkName
         } else {
-            eidNetworkNameMapping[networkConfig.eid] = networkConfig[_value]
+            // Cast networkConfig to any to avoid index signature error
+            eidNetworkNameMapping[networkConfig?.eid ?? 0] = (networkConfig as any)?.[_value] ?? ''
         }
     }
     return eidNetworkNameMapping
@@ -18,15 +19,13 @@ export function createEidToNetworkMapping(_value = ''): Record<number, string> {
 
 export function getConfigConnections(_key: string, _eid: number): OAppOmniGraphHardhat['connections'] {
     const conns = lzConfigAptos.connections
-
     const connections: OAppOmniGraphHardhat['connections'] = []
-
     for (const conn of conns) {
-        if (conn[_key].eid == _eid) {
+        const endpoint = conn[_key as keyof typeof conn]
+        if (endpoint && 'eid' in endpoint && endpoint.eid === _eid) {
             connections.push(conn)
         }
     }
-
     return connections
 }
 
@@ -38,7 +37,8 @@ export function getConfigConnectionsFromConfigConnections(
     const connections: OAppOmniGraphHardhat['connections'] = []
 
     for (const conn of conns) {
-        if (conn[_key].eid == _eid) {
+        const endpoint = conn[_key as keyof typeof conn]
+        if (endpoint && 'eid' in endpoint && endpoint.eid === _eid) {
             connections.push(conn)
         }
     }
