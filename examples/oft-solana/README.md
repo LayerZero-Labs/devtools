@@ -50,7 +50,7 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 ### Get the code
 
 ```bash
-LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
+LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
 ```
 
 ### Installing Dependencies
