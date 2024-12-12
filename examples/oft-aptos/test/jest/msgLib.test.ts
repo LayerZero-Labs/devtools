@@ -1,4 +1,5 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { expect } from 'chai'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
@@ -19,12 +20,12 @@ describe('msgLib-tests', () => {
     describe('get default uln configs', () => {
         it('Should get default send uln config', async () => {
             const sendConfig = await msgLib.get_default_uln_send_config(EndpointId.BSC_V2_TESTNET)
-            expect(sendConfig).toBeDefined()
+            expect(sendConfig).to.not.be.undefined
         })
 
         it('Should get default receive uln config', async () => {
             const receiveConfig = await msgLib.get_default_uln_receive_config(EndpointId.BSC_V2_TESTNET)
-            expect(receiveConfig).toBeDefined()
+            expect(receiveConfig).to.not.be.undefined
         })
     })
 })

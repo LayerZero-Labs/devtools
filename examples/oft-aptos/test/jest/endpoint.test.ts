@@ -1,4 +1,5 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
+import { expect } from 'chai'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
@@ -19,13 +20,13 @@ describe('endpoint-tests', () => {
         it('Should get default send library', async () => {
             const sendLibrary = await endpoint.getDefaultSendLibrary(EndpointId.BSC_V2_TESTNET)
             console.log(sendLibrary)
-            expect(sendLibrary).toBeDefined()
+            expect(sendLibrary).to.not.be.undefined
         })
 
         it('Should get default receive library', async () => {
             const receiveLibrary = await endpoint.getDefaultReceiveLibrary(EndpointId.BSC_V2_TESTNET)
             console.log(receiveLibrary)
-            expect(receiveLibrary).toBeDefined()
+            expect(receiveLibrary).to.not.be.undefined
         })
 
         it('should get receive library timeout duration', async () => {
@@ -35,7 +36,7 @@ describe('endpoint-tests', () => {
             )
             console.log(`timeout: ${timeout}`)
             console.dir(timeout, { depth: null })
-            expect(timeout.expiry.toString()).toEqual('696969669')
+            expect(timeout.expiry.toString()).to.equal('696969669')
         })
     })
 })
