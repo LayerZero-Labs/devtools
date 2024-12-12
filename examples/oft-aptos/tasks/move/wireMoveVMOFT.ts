@@ -1,30 +1,28 @@
-import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
-
 import { Endpoint } from '../../sdk/endpoint'
+import { getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 import { getConfigConnections } from '../shared/utils'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import * as oftConfig from './utils/aptosOftConfigOps'
 import { getNamedAddresses } from './utils/config'
-import { getAptosOftAddress, sendAllTxs } from './utils/utils'
+import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
-    const { account_address, private_key, network } = await parseYaml()
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`Using aptos network ${network}\n`)
 
-    const aptosConfig = new AptosConfig({ network: network })
-    const aptos = new Aptos(aptosConfig)
+    const moveVMConnection = getConnection(network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getAptosOftAddress(lzNetworkStage)
+    const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(getNamedAddresses(lzNetworkStage))
 
     console.log(`\n🔧 Configuring Aptos OFT Contract`)
-    console.log(`\tAddress: ${aptosOftAddress}\n`)
+    console.log(`\tAddress: ${moveVMOftAddress}\n`)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
-    const endpoint = new Endpoint(aptos, endpointAddress)
+    const oft = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
+    const endpoint = new Endpoint(moveVMConnection, endpointAddress)
     const currDelegate = await oft.getDelegate()
     validateDelegate(currDelegate, account_address)
 
@@ -55,7 +53,7 @@ async function main() {
         ...setReceiveConfigPayloads,
     ]
 
-    await sendAllTxs(aptos, oft, account_address, payloads)
+    await sendAllTxs(moveVMConnection, oft, account_address, payloads)
 }
 
 function validateDelegate(currDelegate: string, account_address: string) {
