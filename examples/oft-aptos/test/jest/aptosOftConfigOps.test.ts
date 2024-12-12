@@ -18,16 +18,6 @@ import {
 } from '../../tasks/move/utils/aptosOftConfigOps'
 import { createSerializableUlnConfig } from '../../tasks/move/utils/ulnConfigBuilder'
 
-// Initialize global task variable that plugins expect
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-// ;(global as any).task = new TasksDSL()
-
-// Create Hardhat context
-// HardhatContext.createHardhatContext()
-
-// // Load config and tasks
-// loadConfigAndTasks()
-
 import type {
     OAppEdgeConfig,
     OmniEdgeHardhat,
