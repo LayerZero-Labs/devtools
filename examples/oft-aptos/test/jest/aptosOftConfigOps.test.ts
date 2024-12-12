@@ -112,7 +112,7 @@ describe('config-ops-tests', () => {
                 mockConnections[0].config.enforcedOptions[0] = {
                     msgType: 1,
                     optionType: ExecutorOptionType.LZ_RECEIVE,
-                    gas: 100420,
+                    gas: 123456,
                     value: 0,
                 }
             }
@@ -221,7 +221,7 @@ describe('config-ops-tests', () => {
             }
 
             if (mockConnections[0]?.config?.sendConfig?.executorConfig) {
-                mockConnections[0].config.sendConfig.executorConfig.maxMessageSize = 42069
+                mockConnections[0].config.sendConfig.executorConfig.maxMessageSize = 123456
                 const txs = await createSetExecutorConfigTxs(oft, endpoint, mockConnections)
 
                 // Restore original console.log
