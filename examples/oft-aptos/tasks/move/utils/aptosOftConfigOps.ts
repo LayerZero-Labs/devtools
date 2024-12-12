@@ -81,15 +81,16 @@ export async function createSetPeerTxs(
     connections: OAppOmniGraphHardhat['connections']
 ): Promise<TransactionPayload[]> {
     const eidToNetworkMapping = createEidToNetworkMapping()
-    const txs = []
 
+    const txs = []
     for (const entry of connections) {
         if (!entry.to.contractName) {
             printNotSet('peer', entry)
             continue
         }
         const networkName = eidToNetworkMapping[entry.to.eid]
-        const newPeer = toAptosAddress(getContractAddress(networkName, entry.to.contractName))
+        const contractAddress = getContractAddress(networkName, entry.to.contractName)
+        const newPeer = toAptosAddress(contractAddress)
         const currentPeerHex = await getCurrentPeer(oft, entry.to.eid as EndpointId)
 
         if (currentPeerHex === newPeer) {
@@ -442,6 +443,8 @@ async function getCurrentPeer(oft: OFT, eid: EndpointId): Promise<string> {
 }
 
 function getContractAddress(networkName: string, contractName: string | null | undefined) {
+    console.log('networkName', networkName)
+    console.log('contractName', contractName)
     const deploymentPath = path.join(process.cwd(), `/deployments/${networkName}/${contractName}.json`)
 
     try {

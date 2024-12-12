@@ -16,7 +16,7 @@ module oft::oapp_core_tests {
         mint_native_token_for_test
     };
     use endpoint_v2_common::packet_v1_codec;
-    use oft::oapp_core;
+    use oft::oapp_core::{Self, pause_sending_set, set_pause_sending};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core::{SEND, SEND_AND_CALL};
 
@@ -26,11 +26,11 @@ module oft::oapp_core_tests {
     fun setup(local_eid: u32, remote_eid: u32) {
         // Test the send function
         setup_layerzero_for_test(@simple_msglib, local_eid, remote_eid);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         initialize_native_token_for_test();
         oft::oapp_test_helper::init_oapp();
-        oapp_core::set_peer(oft_account, SRC_EID, from_bytes32(from_address(@1234)));
-        oapp_core::set_peer(oft_account, DST_EID, from_bytes32(from_address(@4321)));
+        oapp_core::set_peer(oft_admin, SRC_EID, from_bytes32(from_address(@1234)));
+        oapp_core::set_peer(oft_admin, DST_EID, from_bytes32(from_address(@4321)));
     }
 
     #[test]
@@ -43,6 +43,13 @@ module oft::oapp_core_tests {
 
         let native_fee = mint_native_token_for_test(100000);
         let zro_fee = option::none<FungibleAsset>();
+
+        // pause then unpause (to test to make sure unpause works)
+        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, true);
+        assert!(was_event_emitted(&pause_sending_set(DST_EID, true)), 0);
+
+        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, false);
+        assert!(was_event_emitted(&pause_sending_set(DST_EID, false)), 0);
 
         let messaging_receipt = oapp_core::lz_send(
             DST_EID,
@@ -90,6 +97,33 @@ module oft::oapp_core_tests {
     }
 
     #[test]
+    #[expected_failure(abort_code = oft::oapp_core::ESEND_PAUSED)]
+    fun test_send_pause() {
+        setup(SRC_EID, DST_EID);
+        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, true);
+
+        let called_send = false;
+        let called_inspect = false;
+        assert!(!called_inspect && !called_send, 0);
+
+        let native_fee = mint_native_token_for_test(100000);
+        let zro_fee = option::none<FungibleAsset>();
+
+        assert!(was_event_emitted(&pause_sending_set(DST_EID, true)), 0);
+
+        oapp_core::lz_send(
+            DST_EID,
+            b"oapp-message",
+            b"options",
+            &mut native_fee,
+            &mut zro_fee,
+        );
+
+        burn_token_for_test(native_fee);
+        option::destroy_none(zro_fee);
+    }
+
+    #[test]
     fun test_quote_internal() {
         setup(SRC_EID, DST_EID);
 
@@ -108,9 +142,9 @@ module oft::oapp_core_tests {
         setup(SRC_EID, DST_EID);
 
         // setup admin
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         let admin = &create_account_for_test(@1111);
-        oapp_core::transfer_admin(oft_account, address_of(admin));
+        oapp_core::transfer_admin(oft_admin, address_of(admin));
 
         oapp_core::set_enforced_options(admin, SRC_EID, SEND(), x"0003aaaa");
         oapp_core::set_enforced_options(admin, DST_EID, SEND(), x"0003bbbc");
@@ -126,9 +160,9 @@ module oft::oapp_core_tests {
         setup(SRC_EID, DST_EID);
 
         // setup admin
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         let admin = &create_account_for_test(@1111);
-        oapp_core::transfer_admin(oft_account, address_of(admin));
+        oapp_core::transfer_admin(oft_admin, address_of(admin));
 
         let enforced_options = x"0003aaaa";
         let options = x"0003bbbb";
@@ -145,9 +179,9 @@ module oft::oapp_core_tests {
         setup(SRC_EID, DST_EID);
 
         // setup admin
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         let admin = &create_account_for_test(@1111);
-        oapp_core::transfer_admin(oft_account, address_of(admin));
+        oapp_core::transfer_admin(oft_admin, address_of(admin));
 
         assert!(!oapp_core::has_peer(1111), 0);
         oapp_core::set_peer(admin, 1111, from_bytes32(from_address(@1234)));
@@ -163,9 +197,9 @@ module oft::oapp_core_tests {
         setup(SRC_EID, DST_EID);
 
         // setup admin
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         let admin = &create_account_for_test(@1111);
-        oapp_core::transfer_admin(oft_account, address_of(admin));
+        oapp_core::transfer_admin(oft_admin, address_of(admin));
 
         let delegate = &create_signer_for_test(@2222);
         oapp_core::set_delegate(admin, address_of(delegate));
