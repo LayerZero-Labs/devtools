@@ -106,7 +106,6 @@ export async function createSetSendConfigTransactions(
             config: fromSendConfig.ulnConfigBytes,
         })
 
-        // decodeConfig(fromSendConfigParam)
         decodeConfig(setConfigParam)
 
         const tx = await setConfig(contract.epv2, address.oapp, fromSendLibrary.fromSendLibrary, setConfigParam)

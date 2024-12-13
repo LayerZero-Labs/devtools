@@ -33,6 +33,11 @@ export async function createSetSendLibraryTransactions(
             continue
         }
 
+        if (fromSendLibrary === toSendLibrary) {
+            console.log(`\x1b[43m Skipping: sendLibrary is already set for ${eid} @ ${address.oapp} \x1b[0m`)
+            continue
+        }
+
         diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: fromSendLibrary }, { sendLibrary: toSendLibrary })
 
         const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, toSendLibrary)
