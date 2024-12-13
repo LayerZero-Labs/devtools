@@ -16,7 +16,8 @@
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
-    "test:hardhat": "hardhat test"
+    "test:hardhat": "hardhat test",
+    "wire:evm": "npx hardhat run tasks/evm/wire-evm.ts"
   },
   "resolutions": {
     "ethers": "^5.7.2",
