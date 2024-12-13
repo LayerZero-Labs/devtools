@@ -17,14 +17,14 @@ export async function createSetPeerTransactions(
     for (const [eid, { address, contract }] of Object.entries(eidDataMapping)) {
         const { eid: aptosEid, address: targetNonEvmAddress } = nonEvmOapp
 
-        const currentPeer = await getPeer(contract.oapp, aptosEid)
+        const currPeer = await getPeer(contract.oapp, aptosEid)
 
-        if (currentPeer === targetNonEvmAddress) {
+        if (currPeer === targetNonEvmAddress) {
             console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        diffPrinter(`Setting Peer on ${eid}`, { peer: currentPeer }, { peer: targetNonEvmAddress })
+        diffPrinter(`Setting Peer on ${eid}`, { peer: currPeer }, { peer: targetNonEvmAddress })
 
         const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, targetNonEvmAddress)
 

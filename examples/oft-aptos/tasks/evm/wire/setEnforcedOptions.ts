@@ -38,28 +38,28 @@ export async function createSetEnforcedOptionsTransactions(
         // Populate the arguments for the transaction function call
         const enforcedOptionParams: enforcedOptionParam[] = []
 
-        const diffFromOptions: Record<number, string> = {}
-        const diffToOptions: Record<number, string> = {}
+        const diffcurrOptions: Record<number, string> = {}
+        const diffnewOptions: Record<number, string> = {}
 
         for (const msgType of msgTypes) {
-            const fromOptions = await getEnforcedOption(contract.oapp, eid, msgType)
-            const toOptions = thisEnforcedOptionBuilder[msgType].toHex()
+            const currOptions = await getEnforcedOption(contract.oapp, eid, msgType)
+            const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
 
-            if (fromOptions === toOptions) {
+            if (currOptions === newOptions) {
                 console.log(
                     `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
                 )
             } else {
-                diffFromOptions[msgType] = fromOptions
-                diffToOptions[msgType] = toOptions
+                diffcurrOptions[msgType] = currOptions
+                diffnewOptions[msgType] = newOptions
 
                 enforcedOptionParams.push({
                     eid: eid,
                     msgType: msgType,
-                    options: toOptions,
+                    options: newOptions,
                 })
 
-                diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
+                diffPrinter(`Setting Enforced Options on ${eid}`, diffcurrOptions, diffnewOptions)
 
                 const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
 

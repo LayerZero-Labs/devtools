@@ -21,19 +21,19 @@ export async function createSetReceiveLibraryTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        const { fromReceiveLibrary, toReceiveLibrary } = await parseReceiveLibrary(
+        const { currReceiveLibrary, newReceiveLibrary } = await parseReceiveLibrary(
             configOapp.receiveLibraryConfig,
             contract.epv2,
             address.oapp,
             nonEvmOapp.eid
         )
 
-        if (toReceiveLibrary === '') {
+        if (newReceiveLibrary === '') {
             console.log(`\x1b[43m Skipping: No receive library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        if (fromReceiveLibrary === toReceiveLibrary) {
+        if (currReceiveLibrary === newReceiveLibrary) {
             console.log(`\x1b[43m Skipping: receive library is already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
@@ -41,14 +41,14 @@ export async function createSetReceiveLibraryTransactions(
 
         diffPrinter(
             `Setting Receive Library on ${eid}`,
-            { receiveLibrary: fromReceiveLibrary },
-            { receiveLibrary: toReceiveLibrary }
+            { receiveLibrary: currReceiveLibrary },
+            { receiveLibrary: newReceiveLibrary }
         )
 
         const tx = await contract.epv2.populateTransaction.setReceiveLibrary(
             address.oapp,
             nonEvmOapp.eid,
-            toReceiveLibrary,
+            newReceiveLibrary,
             receiveLibraryGracePeriod
         )
 
@@ -67,21 +67,21 @@ export async function parseReceiveLibrary(
     epv2: Contract,
     oappAddress: address,
     eid: eid
-): Promise<{ fromReceiveLibrary: string; toReceiveLibrary: string }> {
+): Promise<{ currReceiveLibrary: string; newReceiveLibrary: string }> {
     if (receiveLib === undefined || receiveLib.receiveLibrary === undefined) {
-        const fromReceiveLibrary = await getDefaultReceiveLibrary(epv2, oappAddress, eid)
+        const currReceiveLibrary = await getDefaultReceiveLibrary(epv2, oappAddress, eid)
 
         return {
-            fromReceiveLibrary,
-            toReceiveLibrary: '',
+            currReceiveLibrary,
+            newReceiveLibrary: '',
         }
     }
 
-    const fromReceiveLibrary = await getReceiveLibrary(epv2, oappAddress, eid)
+    const currReceiveLibrary = await getReceiveLibrary(epv2, oappAddress, eid)
 
-    const toReceiveLibrary = utils.getAddress(receiveLib.receiveLibrary)
+    const newReceiveLibrary = utils.getAddress(receiveLib.receiveLibrary)
 
-    return { fromReceiveLibrary, toReceiveLibrary }
+    return { currReceiveLibrary, newReceiveLibrary }
 }
 
 export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
