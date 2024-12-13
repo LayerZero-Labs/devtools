@@ -40,14 +40,14 @@ describe('config', () => {
             examples.forEach((example) => expect(example).toMatchObject({ ref: 'ohhello' }))
         })
 
-        it('should not include Solana OFT example if LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE is empty', () => {
-            process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE = ''
+        it('should not include Solana OFT example if LZ_ENABLE_SOLANA_OFT_EXAMPLE is empty', () => {
+            process.env.LZ_ENABLE_SOLANA_OFT_EXAMPLE = ''
 
             expect(getExamples()).not.toContainEqual(expect.objectContaining({ id: 'oft-solana' }))
         })
 
-        it('should include Solana OFT example if LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE is defined', () => {
-            process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE = 'yes'
+        it('should include Solana OFT example if LZ_ENABLE_SOLANA_OFT_EXAMPLE is defined', () => {
+            process.env.LZ_ENABLE_SOLANA_OFT_EXAMPLE = 'yes'
 
             expect(getExamples()).toContainEqual(expect.objectContaining({ id: 'oft-solana' }))
         })

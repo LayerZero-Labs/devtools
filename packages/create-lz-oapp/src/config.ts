@@ -112,7 +112,7 @@ export const getExamples = (): Example[] => {
               ]
             : []),
         // The Solana OFT example is feature flagged for the time being
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE
+        ...(process.env.LZ_ENABLE_SOLANA_OFT_EXAMPLE
             ? [
                   {
                       id: 'oft-solana',
