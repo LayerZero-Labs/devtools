@@ -4,7 +4,7 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
 
 import { diffPrinter } from '../../shared/utils'
 
-import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, eid, enforcedOptionParam } from '../utils/types'
+import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, enforcedOptionParam } from '../utils/types'
 
 /**
  * @notice Sets EnforcedOptions for a contract.
@@ -18,8 +18,11 @@ export async function createSetEnforcedOptionsTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [_eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        const eid = parseInt(_eid) as eid
+    for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        if (!configOapp?.enforcedOptions) {
+            console.log(`\x1b[43m Skipping: No enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            continue
+        }
         const toEnforcedOptions = configOapp.enforcedOptions
         const thisEnforcedOptionBuilder: Record<number, Options> = {}
 
@@ -41,36 +44,33 @@ export async function createSetEnforcedOptionsTransactions(
         // Populate the arguments for the transaction function call
         const enforcedOptionParams: enforcedOptionParam[] = []
 
-        const diffFromOptions: Record<number, string> = {}
-        const diffToOptions: Record<number, string> = {}
+        const diffcurrOptions: Record<number, string> = {}
+        const diffnewOptions: Record<number, string> = {}
 
         for (const msgType of msgTypes) {
-            const fromOptions = await getEnforcedOption(contract.oapp, eid, msgType)
-            const toOptions = thisEnforcedOptionBuilder[msgType].toHex()
+            const currOptions = await getEnforcedOption(contract.oapp, eid, msgType)
+            const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
 
-            if (fromOptions === toOptions) {
+            if (currOptions === newOptions) {
                 console.log(
                     `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
                 )
             } else {
-                diffFromOptions[msgType] = fromOptions
-                diffToOptions[msgType] = toOptions
+                diffcurrOptions[msgType] = currOptions
+                diffnewOptions[msgType] = newOptions
 
                 enforcedOptionParams.push({
                     eid: eid,
                     msgType: msgType,
-                    options: toOptions,
+                    options: newOptions,
                 })
 
-                diffPrinter(`Setting Enforced Options on ${eid}`, diffFromOptions, diffToOptions)
+                diffPrinter(`Setting Enforced Options on ${eid}`, diffcurrOptions, diffnewOptions)
 
                 const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
 
-                if (!txTypePool[_eid]) {
-                    txTypePool[_eid] = []
-                }
-
-                txTypePool[_eid].push(tx)
+                txTypePool[eid] = txTypePool[eid] ?? []
+                txTypePool[eid].push(tx)
             }
         }
     }
@@ -104,7 +104,7 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
     return baseOptions
 }
 
-export async function getEnforcedOption(oappContract: Contract, eid: eid, msgTypes: number): Promise<string> {
+export async function getEnforcedOption(oappContract: Contract, eid: string, msgTypes: number): Promise<string> {
     const options = await oappContract.enforcedOptions(eid, msgTypes)
 
     return options

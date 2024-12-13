@@ -1,6 +1,7 @@
 import { Contract, utils } from 'ethers'
 
-import { ZEROADDRESS_EVM, diffPrinter } from '../../shared/utils'
+import { diffPrinter } from '../../shared/utils'
+import { ZEROADDRESS_EVM } from '../utils/types'
 
 import type {
     ContractMetadataMapping,
@@ -30,14 +31,14 @@ export async function createSetReceiveLibraryTimeoutTransactions(
             continue
         }
 
-        const fromReceiveLibraryParam = await getReceiveLibraryTimeout(contract.epv2, address.oapp, nonEvmOapp.eid)
-        const fromReceiveLibrary = fromReceiveLibraryParam.lib
-        const fromReceiveLibraryExpiry = Number(fromReceiveLibraryParam.expiry)
+        const currReceiveLibraryParam = await getReceiveLibraryTimeout(contract.epv2, address.oapp, nonEvmOapp.eid)
+        const currReceiveLibrary = currReceiveLibraryParam.lib
+        const currReceiveLibraryExpiry = Number(currReceiveLibraryParam.expiry)
 
-        const toReceiveLibrary = utils.getAddress(configOapp.receiveLibraryTimeoutConfig.lib)
-        const toReceiveLibraryExpiry = Number(configOapp.receiveLibraryTimeoutConfig.expiry)
+        const newReceiveLibrary = utils.getAddress(configOapp.receiveLibraryTimeoutConfig.lib)
+        const newReceiveLibraryExpiry = Number(configOapp.receiveLibraryTimeoutConfig.expiry)
 
-        if (fromReceiveLibrary === toReceiveLibrary && fromReceiveLibraryExpiry === toReceiveLibraryExpiry) {
+        if (currReceiveLibrary === newReceiveLibrary && currReceiveLibraryExpiry === newReceiveLibraryExpiry) {
             console.log(
                 `\x1b[43m Skipping: The same Receive Library and Timeout has been set for ${eid} @ ${address.oapp} \x1b[0m`
             )
@@ -46,21 +47,18 @@ export async function createSetReceiveLibraryTimeoutTransactions(
 
         diffPrinter(
             `Setting Receive Library on ${eid}`,
-            { lib: fromReceiveLibrary, expiry: fromReceiveLibraryExpiry },
-            { lib: toReceiveLibrary, expiry: toReceiveLibraryExpiry }
+            { lib: currReceiveLibrary, expiry: currReceiveLibraryExpiry },
+            { lib: newReceiveLibrary, expiry: newReceiveLibraryExpiry }
         )
 
         const tx = await contract.epv2.populateTransaction.setReceiveLibraryTimeout(
             address.oapp,
             nonEvmOapp.eid,
-            toReceiveLibrary,
-            toReceiveLibraryExpiry
+            newReceiveLibrary,
+            newReceiveLibraryExpiry
         )
 
-        if (!txTypePool[eid]) {
-            txTypePool[eid] = []
-        }
-
+        txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
     }
 

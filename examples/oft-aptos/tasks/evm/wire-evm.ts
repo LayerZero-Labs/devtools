@@ -4,26 +4,27 @@ import { Contract, ethers } from 'ethers'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import { createSetSendConfigTransactions } from './wire/setSendConfig'
-
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress } from '../move/utils/utils'
 import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
 
 import AnvilForkNode from './utils/anvilForkNode'
-import { ContractMetadataMapping, NonEvmOAppMetadata, TxEidMapping, eid } from './utils/types'
 import { createSetDelegateTransactions } from './wire/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire/setEnforcedOptions'
 import { createSetPeerTransactions } from './wire/setPeer'
+import { createSetReceiveConfigTransactions } from './wire/setReceiveConfig'
 import { createSetReceiveLibraryTransactions } from './wire/setReceiveLibrary'
+import { createSetSendConfigTransactions } from './wire/setSendConfig'
 import { createSetSendLibraryTransactions } from './wire/setSendLibrary'
 import { executeTransactions } from './wire/transactionExecutor'
+
+import type { ContractMetadataMapping, NonEvmOAppMetadata, TxEidMapping } from './utils/types'
 
 if (!process.env.PRIVATE_KEY) {
     console.error('PRIVATE_KEY environment variable is not set.')
     process.exit(1)
 }
+const privateKey = process.env.PRIVATE_KEY
 
 /**
  * @description Handles wiring of EVM contracts with the Aptos OApp
@@ -37,7 +38,7 @@ async function main() {
     const connectionsToWire = getConfigConnections('to', EID_APTOS)
 
     const accountConfigs = getHHAccountConfig()
-    const networks = createEidToNetworkMapping()
+    const networks = createEidToNetworkMapping('networkName')
     const rpcUrls = createEidToNetworkMapping('url')
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
@@ -61,7 +62,7 @@ async function main() {
 
     const nonEvmOapp: NonEvmOAppMetadata = {
         address: APTOS_OAPP_ADDRESS,
-        eid: EID_APTOS,
+        eid: EID_APTOS.toString(),
         rpc: rpcUrls[EID_APTOS],
     }
 
@@ -70,11 +71,12 @@ async function main() {
      * contractMetaData contains ethers Contract objects for the OApp and EndpointV2 contracts.
      */
     for (const conn of connectionsToWire) {
-        const fromEid = conn.from.eid as eid
+        const fromEid = conn.from.eid
         const fromNetwork = networks[fromEid]
+        const configOapp = conn?.config
 
         const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
-        const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string, provider)
+        const signer = new ethers.Wallet(privateKey, provider)
 
         const OAppDeploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
         const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
@@ -97,7 +99,7 @@ async function main() {
             },
             provider: provider,
             configAccount: accountConfigs[fromEid],
-            configOapp: conn.config ?? {},
+            configOapp: configOapp,
         }
     }
 
@@ -108,7 +110,8 @@ async function main() {
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, nonEvmOapp)
-    // TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.receiveConfig = await createSetReceiveConfigTransactions(contractMetaData, nonEvmOapp)
 
     // TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
     //     contractMetaData,
@@ -116,21 +119,19 @@ async function main() {
     // )
 
     // @todo Clean this up or move to utils
-    const rpcUrlSelfMap: { [eid: eid]: string } = {}
-    for (const [eid, eidData] of Object.entries(contractMetaData) as Array<
-        [string, (typeof contractMetaData)[keyof typeof contractMetaData]]
-    >) {
-        rpcUrlSelfMap[Number(eid)] = eidData.provider.connection.url
+    const rpcUrlSelfMap: { [eid: string]: string } = {}
+    for (const [eid, eidData] of Object.entries(contractMetaData)) {
+        rpcUrlSelfMap[eid] = eidData.provider.connection.url
     }
 
     const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8546)
 
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
-        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap)
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run')
         console.log('\nAll transactions have been SIMULATED on the blockchains.')
-        // await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap)
-        // console.log('\nAll transactions have been EXECUTED on the blockchains.')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast')
+        console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
         throw error
