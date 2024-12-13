@@ -1,6 +1,7 @@
 import { Contract, utils } from 'ethers'
 
-import { ZEROADDRESS_EVM, diffPrinter } from '../../shared/utils'
+import { diffPrinter } from '../../shared/utils'
+import { ZEROADDRESS_EVM } from '../utils/types'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
@@ -23,26 +24,28 @@ export async function createSetSendLibraryTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        const { fromSendLibrary, toSendLibrary } = await parseSendLibrary(
+        if (!configOapp?.sendLibrary) {
+            console.log(`\x1b[43m Skipping: No sendLibrary has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            continue
+        }
+
+        const { currSendLibrary, newSendLibrary } = await parseSendLibrary(
             configOapp.sendLibrary,
             contract.epv2,
             address.oapp,
             nonEvmOapp.eid
         )
 
-        if (toSendLibrary === '') {
-            console.log(`\x1b[43m Skipping: No sendLibrary has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+        if (currSendLibrary === newSendLibrary) {
+            console.log(`\x1b[43m Skipping: sendLibrary is already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: fromSendLibrary }, { sendLibrary: toSendLibrary })
+        diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: currSendLibrary }, { sendLibrary: newSendLibrary })
 
-        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, toSendLibrary)
+        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, newSendLibrary)
 
-        if (!txTypePool[eid]) {
-            txTypePool[eid] = []
-        }
-
+        txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
     }
 
@@ -54,24 +57,24 @@ export async function parseSendLibrary(
     epv2: Contract,
     oappAddress: address,
     eid: eid
-): Promise<{ fromSendLibrary: string; toSendLibrary: string }> {
+): Promise<{ currSendLibrary: string; newSendLibrary: string }> {
     if (sendLib === undefined) {
-        const fromSendLibrary = await getDefaultSendLibrary(epv2, oappAddress, eid)
+        const currSendLibrary = await getDefaultSendLibrary(epv2, oappAddress, eid)
         return {
-            fromSendLibrary,
-            toSendLibrary: '',
+            currSendLibrary,
+            newSendLibrary: '',
         }
     }
 
-    const fromSendLibrary = await getSendLibrary(epv2, oappAddress, eid)
+    const currSendLibrary = await getSendLibrary(epv2, oappAddress, eid)
 
-    const toSendLibrary = utils.getAddress(sendLib)
+    const newSendLibrary = utils.getAddress(sendLib)
 
-    return { fromSendLibrary, toSendLibrary }
+    return { currSendLibrary, newSendLibrary }
 }
 
-export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
-    const sendLib = await epv2Contract.getSendLibrary(evmAddress, aptosEid)
+export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, apnewSEid: eid): Promise<string> {
+    const sendLib = await epv2Contract.getSendLibrary(evmAddress, apnewSEid)
 
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
         return ZEROADDRESS_EVM
@@ -85,9 +88,9 @@ export async function getSendLibrary(epv2Contract: Contract, evmAddress: string,
 export async function getDefaultSendLibrary(
     epv2Contract: Contract,
     evmAddress: string,
-    aptosEid: eid
+    apnewSEid: eid
 ): Promise<string> {
-    const sendLib = await epv2Contract.getDefaultSendLibrary(evmAddress, aptosEid)
+    const sendLib = await epv2Contract.getDefaultSendLibrary(evmAddress, apnewSEid)
 
     const sendLibAddress = utils.getAddress(sendLib)
 

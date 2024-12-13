@@ -17,28 +17,25 @@ export async function createSetDelegateTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configAccount }] of Object.entries(eidDataMapping)) {
-        const fromDelegate = await getDelegate(contract.epv2, address.oapp)
+        const currDelegate = await getDelegate(contract.epv2, address.oapp)
 
-        if (configAccount?.delegate === undefined) {
+        if (!configAccount?.delegate) {
             console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        const toDelegate = utils.getAddress(configAccount.delegate)
+        const newD = utils.getAddress(configAccount.delegate)
 
-        if (fromDelegate === toDelegate) {
+        if (currDelegate === newD) {
             console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
 
-        diffPrinter(`Setting Delegate on ${eid}`, { delegate: fromDelegate }, { delegate: toDelegate })
+        diffPrinter(`Setting Delegate on ${eid}`, { delegate: currDelegate }, { delegate: newD })
 
-        const tx = await contract.oapp.populateTransaction.setDelegate(toDelegate)
+        const tx = await contract.oapp.populateTransaction.setDelegate(newD)
 
-        if (!txTypePool[eid]) {
-            txTypePool[eid] = []
-        }
-
+        txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
     }
 

@@ -1,6 +1,6 @@
 import { diffPrinter } from '../../shared/utils'
+import { buildConfig, decodeConfig, getConfig, setConfig } from '../utils/libraryConfigUtils'
 
-import { buildConfig, decodeConfig, getConfig, setConfig } from './libraryConfigUtils'
 import { parseSendLibrary } from './setSendLibrary'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, SetConfigParam } from '../utils/types'
@@ -16,7 +16,7 @@ export async function createSetSendConfigTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (configOapp?.sendConfig === undefined) {
+        if (configOapp?.sendConfig?.ulnConfig === undefined) {
             console.log(
                 `\x1b[43m Skipping: Connections does not have a send config for ${eid} @ ${address.oapp} \x1b[0m`
             )
@@ -25,67 +25,67 @@ export async function createSetSendConfigTransactions(
         const ulnConfig = configOapp.sendConfig.ulnConfig
         const executorConfig = configOapp.sendConfig.executorConfig
 
-        const fromSendLibrary = await parseSendLibrary(
+        const currSendLibrary = await parseSendLibrary(
             configOapp?.sendLibrary,
             contract.epv2,
             address.oapp,
             nonEvmOapp.eid
         )
 
-        const fromSendConfig = {
+        const currSendConfig = {
             executorConfigBytes: '',
             ulnConfigBytes: '',
         }
 
-        fromSendConfig.executorConfigBytes = await getConfig(
+        currSendConfig.executorConfigBytes = await getConfig(
             contract.epv2,
             address.oapp,
-            fromSendLibrary.fromSendLibrary,
+            currSendLibrary.currSendLibrary,
             nonEvmOapp.eid,
             1
         )
 
-        fromSendConfig.ulnConfigBytes = await getConfig(
+        currSendConfig.ulnConfigBytes = await getConfig(
             contract.epv2,
             address.oapp,
-            fromSendLibrary.fromSendLibrary,
+            currSendLibrary.currSendLibrary,
             nonEvmOapp.eid,
             2
         )
 
-        const toSendConfig = buildConfig(ulnConfig, executorConfig)
+        const newSendConfig = buildConfig(ulnConfig, executorConfig)
 
         const diffFromOptions: Record<number, string> = {}
         const diffToOptions: Record<number, string> = {}
         const setConfigParam: SetConfigParam[] = []
 
-        if (fromSendConfig.executorConfigBytes === toSendConfig.executorConfigBytes) {
+        if (currSendConfig.executorConfigBytes === newSendConfig.executorConfigBytes) {
             console.log(
                 `\x1b[43m Skipping: The same executor send library config has been set for ${eid} @ ${address.oapp} \x1b[0m`
             )
         } else {
-            diffFromOptions[1] = fromSendConfig.executorConfigBytes
-            diffToOptions[1] = toSendConfig.executorConfigBytes
+            diffFromOptions[1] = currSendConfig.executorConfigBytes
+            diffToOptions[1] = newSendConfig.executorConfigBytes
 
             setConfigParam.push({
                 eid: nonEvmOapp.eid,
                 configType: 1,
-                config: toSendConfig.executorConfigBytes,
+                config: newSendConfig.executorConfigBytes,
             })
         }
 
-        if (fromSendConfig.ulnConfigBytes === toSendConfig.ulnConfigBytes) {
+        if (currSendConfig.ulnConfigBytes === newSendConfig.ulnConfigBytes) {
             console.log(
                 `\x1b[43m Skipping: The same uln send library config has been set for ${eid} @ ${address.oapp} \x1b[0m`
             )
         } else {
-            diffFromOptions[2] = fromSendConfig.ulnConfigBytes
-            diffToOptions[2] = toSendConfig.ulnConfigBytes
+            diffFromOptions[2] = currSendConfig.ulnConfigBytes
+            diffToOptions[2] = newSendConfig.ulnConfigBytes
 
             setConfigParam.push({
                 eid: nonEvmOapp.eid,
                 configType: 2,
-                config: toSendConfig.ulnConfigBytes,
+                config: newSendConfig.ulnConfigBytes,
             })
         }
 
@@ -95,27 +95,23 @@ export async function createSetSendConfigTransactions(
 
         diffPrinter(`Setting Send Config on ${eid}`, diffFromOptions, diffToOptions)
 
-        const fromSendConfigParam: SetConfigParam[] = []
-        fromSendConfigParam.push({
+        const currSendConfigParam: SetConfigParam[] = []
+        currSendConfigParam.push({
             eid: nonEvmOapp.eid,
             configType: 1,
-            config: fromSendConfig.executorConfigBytes,
+            config: currSendConfig.executorConfigBytes,
         })
-        fromSendConfigParam.push({
+        currSendConfigParam.push({
             eid: nonEvmOapp.eid,
             configType: 2,
-            config: fromSendConfig.ulnConfigBytes,
+            config: currSendConfig.ulnConfigBytes,
         })
 
-        // decodeConfig(fromSendConfigParam)
         decodeConfig(setConfigParam)
 
-        const tx = await setConfig(contract.epv2, address.oapp, fromSendLibrary.fromSendLibrary, setConfigParam)
+        const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.currSendLibrary, setConfigParam)
 
-        if (!txTypePool[eid]) {
-            txTypePool[eid] = []
-        }
-
+        txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
     }
 
