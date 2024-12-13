@@ -1,6 +1,7 @@
+import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import * as readline from 'readline'
 import hardhatConfig from '../../hardhat.config'
 import lzConfigAptos from '../../aptos.layerzero.config'
-import type { OAppNodeConfig, OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 export function createEidToNetworkMapping(_value: string = ''): Record<number, string> {
     const networks = hardhatConfig.networks
@@ -164,4 +165,19 @@ export function diffPrinter(logObject: string, from: object, to: object) {
     console.log(orangeLine, '\n')
 }
 
-export const ZEROADDRESS_EVM = '0x0000000000000000000000000000000000000000'
+export async function promptForConfirmation(txCount: number): Promise<boolean> {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    })
+
+    const answer = await new Promise<string>((resolve) => {
+        rl.question(
+            `\nReview the ${txCount} transaction(s) above carefully.\nWould you like to proceed with execution? (yes/no): `,
+            resolve
+        )
+    })
+
+    rl.close()
+    return answer.toLowerCase() === 'yes'
+}

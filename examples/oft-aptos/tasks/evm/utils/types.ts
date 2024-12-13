@@ -70,6 +70,9 @@ export type SetConfigParam = {
     configType: number
     config: string
 }
+
+export const ZEROADDRESS_EVM = '0x0000000000000000000000000000000000000000'
+
 export type AnvilNode = { process: ChildProcess; rpcUrl: string }
 
 export function returnChecksums(addresses: string[]): string[] {

@@ -1,11 +1,11 @@
 import lzConfigAptos from '../../../aptos.layerzero.config'
+import { promptForConfirmation } from '../../shared/utils'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { Aptos, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import path from 'path'
 import * as fs from 'fs'
 import { OFT } from '../../../sdk/oft'
-import * as readline from 'readline'
 
 export function getDelegateFromLzConfig(eid: EndpointId): string {
     validateAptosDelegate(lzConfigAptos, eid)
@@ -128,21 +128,4 @@ export async function sendAllTxs(
 
 function pruneNulls(payloads: InputGenerateTransactionPayloadData[]): InputGenerateTransactionPayloadData[] {
     return payloads.filter((payload) => payload !== null)
-}
-
-async function promptForConfirmation(txCount: number): Promise<boolean> {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    })
-
-    const answer = await new Promise<string>((resolve) => {
-        rl.question(
-            `\nReview the ${txCount} transaction(s) above carefully.\nWould you like to proceed with execution? (yes/no): `,
-            resolve
-        )
-    })
-
-    rl.close()
-    return answer.toLowerCase() === 'yes'
 }
