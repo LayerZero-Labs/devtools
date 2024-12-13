@@ -1,6 +1,7 @@
 import { Contract, utils } from 'ethers'
 import { diffPrinter, ZEROADDRESS_EVM } from '../../shared/utils'
-import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam } from '../utils/types'
+import type { NonEvmOAppMetadata, ContractMetadataMapping, eid, EidTxMap, RecvLibParam, address } from '../utils/types'
+import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
 
@@ -20,21 +21,23 @@ export async function createSetReceiveLibraryTransactions(
     const txTypePool: EidTxMap = {}
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (configOapp?.receiveLibraryConfig === undefined) {
-            console.log(`\x1b[43m Skipping: No Receive Library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+        const { fromReceiveLibrary, toReceiveLibrary } = await parseReceiveLibrary(
+            configOapp.receiveLibraryConfig,
+            contract.epv2,
+            address.oapp,
+            nonEvmOapp.eid
+        )
+
+        if (toReceiveLibrary === '') {
+            console.log(`\x1b[43m Skipping: No receive library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
-
-        const fromReceiveLibrary = await getReceiveLibrary(contract.epv2, address.oapp, nonEvmOapp.eid)
-
-        const toReceiveLibrary = utils.getAddress(configOapp.receiveLibraryConfig.receiveLibrary)
-
-        const receiveLibraryGracePeriod = configOapp.receiveLibraryConfig.gracePeriod
 
         if (fromReceiveLibrary === toReceiveLibrary) {
-            console.log(`\x1b[43m Skipping: The same Receive library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            console.log(`\x1b[43m Skipping: receive library is already set for ${eid} @ ${address.oapp} \x1b[0m`)
             continue
         }
+        const receiveLibraryGracePeriod = configOapp.receiveLibraryConfig.gracePeriod
 
         diffPrinter(
             `Setting Receive Library on ${eid}`,
@@ -59,6 +62,28 @@ export async function createSetReceiveLibraryTransactions(
     return txTypePool
 }
 
+export async function parseReceiveLibrary(
+    receiveLib: OAppEdgeConfig['receiveLibraryConfig'] | undefined,
+    epv2: Contract,
+    oappAddress: address,
+    eid: eid
+): Promise<{ fromReceiveLibrary: string; toReceiveLibrary: string }> {
+    if (receiveLib === undefined || receiveLib.receiveLibrary === undefined) {
+        const fromReceiveLibrary = await getDefaultReceiveLibrary(epv2, oappAddress, eid)
+
+        return {
+            fromReceiveLibrary,
+            toReceiveLibrary: '',
+        }
+    }
+
+    const fromReceiveLibrary = await getReceiveLibrary(epv2, oappAddress, eid)
+
+    const toReceiveLibrary = utils.getAddress(receiveLib.receiveLibrary)
+
+    return { fromReceiveLibrary, toReceiveLibrary }
+}
+
 export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
     const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
     const recvLib = recvLibParam.lib
@@ -70,4 +95,16 @@ export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: stri
     const recvLibAddress = utils.getAddress(recvLib)
 
     return recvLibAddress
+}
+
+export async function getDefaultReceiveLibrary(
+    epv2Contract: Contract,
+    evmAddress: string,
+    aptosEid: eid
+): Promise<string> {
+    const recvLib = await epv2Contract.getDefaultReceiveLibrary(evmAddress, aptosEid)
+
+    const sendLibAddress = utils.getAddress(recvLib)
+
+    return sendLibAddress
 }

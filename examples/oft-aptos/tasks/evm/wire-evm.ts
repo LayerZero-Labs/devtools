@@ -9,8 +9,8 @@ import { createSetSendLibraryTransactions } from './wire/setSendLibrary'
 import { createSetReceiveLibraryTransactions } from './wire/setReceiveLibrary'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
-// import { createSetSendConfigTransactions } from './wire/setSendConfig'
-
+import { createSetSendConfigTransactions } from './wire/setSendConfig'
+import { createSetReceiveConfigTransactions } from './wire/setReceiveConfig'
 import { executeTransactions } from './wire/transactionExecutor'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
@@ -108,7 +108,8 @@ async function main() {
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setSendLibrary = await createSetSendLibraryTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setReceiveLibrary = await createSetReceiveLibraryTransactions(contractMetaData, nonEvmOapp)
-    // TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.sendConfig = await createSetSendConfigTransactions(contractMetaData, nonEvmOapp)
+    TxTypeEidMapping.receiveConfig = await createSetReceiveConfigTransactions(contractMetaData, nonEvmOapp)
 
     // TxTypeEidMapping.setReceiveLibraryTimeout = await createSetReceiveLibraryTimeoutTransactions(
     //     contractMetaData,
