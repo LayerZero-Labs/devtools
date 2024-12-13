@@ -1,11 +1,7 @@
 import { Contract, utils, PopulatedTransaction } from 'ethers'
-import type { SetConfigParam, address, eid } from '../shared/types'
-import type { OAppSendConfig } from '@layerzerolabs/toolbox-hardhat'
-
-/**
- * @author Shankar
- * @returns EidTxMap
- */
+import { Uln302UlnUserConfig, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
+import { returnChecksums, returnChecksum } from '../utils/types'
+import type { SetConfigParam, address, eid } from '../utils/types'
 
 export async function getConfig(
     epv2Contract: Contract,
@@ -14,9 +10,14 @@ export async function getConfig(
     aptosEid: eid,
     configType: number
 ): Promise<string> {
-    const sendLib = await epv2Contract.getConfig(evmAddress, libraryAddress, aptosEid, configType)
-
-    return sendLib
+    const config = await epv2Contract.getConfig(evmAddress, libraryAddress, aptosEid, configType)
+    // const toDecode: SetConfigParam = {
+    //     eid: aptosEid,
+    //     configType: configType,
+    //     config: config,
+    // }
+    // decodeConfig([toDecode])
+    return config
 }
 
 export function setConfig(
@@ -29,52 +30,67 @@ export function setConfig(
 }
 
 export function buildConfig(
-    ulnConfig: OAppSendConfig['ulnConfig'],
-    executorConfig: OAppSendConfig['executorConfig'] = null
+    ulnConfig: Uln302UlnUserConfig,
+    executorConfig: Uln302ExecutorConfig = null
 ): { executorConfigBytes: string; ulnConfigBytes: string } {
+    const _optionalDVNs = returnChecksums(ulnConfig.optionalDVNs)
+    const _requiredDVNs = returnChecksums(ulnConfig.requiredDVNs)
+
     const ulnConfigBytes = utils.defaultAbiCoder.encode(
-        ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
         [
-            Number(ulnConfig.confirmations),
-            ulnConfig.requiredDVNs.length,
-            ulnConfig.optionalDVNs.length,
-            ulnConfig.optionalDVNThreshold,
-            ulnConfig.requiredDVNs.sort(),
-            ulnConfig.optionalDVNs.sort(),
+            'tuple(uint64 confirmations, uint8 requiredDVNCount, uint8 optionalDVNCount, uint8 optionalDVNThreshold, address[] requiredDVNs, address[] optionalDVNs)',
+        ],
+        [
+            {
+                confirmations: ulnConfig.confirmations,
+                requiredDVNCount: _requiredDVNs.length,
+                optionalDVNCount: _optionalDVNs.length,
+                optionalDVNThreshold: ulnConfig.optionalDVNThreshold,
+                requiredDVNs: _requiredDVNs.sort(),
+                optionalDVNs: _optionalDVNs.sort(),
+            },
         ]
     )
+
     if (executorConfig !== null) {
+        const _executor = returnChecksum(executorConfig.executor)
         const executorConfigBytes = utils.defaultAbiCoder.encode(
             ['uint32', 'address'],
-            [executorConfig.maxMessageSize, executorConfig.executor]
+            [executorConfig.maxMessageSize, _executor]
         )
 
         return { executorConfigBytes, ulnConfigBytes }
     }
-
     return { executorConfigBytes: '0x', ulnConfigBytes }
 }
 
 export function decodeConfig(configParam: SetConfigParam[]) {
-    const decodedConfig = {}
+    const decodedConfig = {
+        executorConfig: null,
+        ulnConfig: null,
+    }
     try {
         for (const { configType, config } of configParam) {
             if (configType === 1) {
                 const decoded = utils.defaultAbiCoder.decode(['uint32', 'address'], config)
-                decodedConfig['executorConfig'] = {
+                decodedConfig.executorConfig = {
                     maxMessageSize: decoded[0],
                     executor: decoded[1],
                 }
             } else if (configType === 2) {
                 const decoded = utils.defaultAbiCoder.decode(
-                    ['uint64', 'uint8', 'uint8', 'uint8', 'address[]', 'address[]'],
+                    [
+                        'tuple(uint64 confirmations, uint8 requiredDVNCount, uint8 optionalDVNCount, uint8 optionalDVNThreshold, address[] requiredDVNs, address[] optionalDVNs)',
+                    ],
                     config
                 )
                 decodedConfig['ulnConfig'] = {
-                    confirmations: decoded[0],
-                    requiredDVNs: decoded[4],
-                    optionalDVNs: decoded[5],
-                    optionalDVNThreshold: decoded[3],
+                    confirmations: decoded[0]['confirmations'],
+                    requiredDVNCount: decoded[0]['requiredDVNCount'],
+                    optionalDVNCount: decoded[0]['optionalDVNCount'],
+                    requiredDVNs: decoded[0]['requiredDVNs'],
+                    optionalDVNs: decoded[0]['optionalDVNs'],
+                    optionalDVNThreshold: decoded[0]['optionalDVNThreshold'],
                 }
             }
         }
@@ -83,5 +99,5 @@ export function decodeConfig(configParam: SetConfigParam[]) {
         return
     }
 
-    console.log(decodedConfig)
+    return decodedConfig
 }
