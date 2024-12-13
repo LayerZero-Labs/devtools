@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.7.3
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
 ## 0.7.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.2
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
 ## 0.4.1
 
 ### Patch Changes
