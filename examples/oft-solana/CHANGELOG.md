@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.5
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
 ## 0.4.4
 
 ### Patch Changes
