@@ -128,8 +128,8 @@ async function main() {
         const forkRpcMap = await anvilForkNode.startNodes()
         await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run')
         console.log('\nAll transactions have been SIMULATED on the blockchains.')
-        // await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast')
-        // console.log('\nAll transactions have been EXECUTED on the blockchains.')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast')
+        console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
         throw error

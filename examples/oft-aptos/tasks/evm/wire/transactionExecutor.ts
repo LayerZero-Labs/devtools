@@ -31,6 +31,11 @@ export async function executeTransactions(
         console.log('IN EXECUTION (broadcast) MODE')
     }
 
+    if (totalTransactions == 0) {
+        console.log('No transactions to submit')
+        return
+    }
+
     console.log(`Total chains: ${num_chains}`)
     console.log(`Total transactions: ${totalTransactions}`)
     const flag = await promptForConfirmation(totalTransactions)
