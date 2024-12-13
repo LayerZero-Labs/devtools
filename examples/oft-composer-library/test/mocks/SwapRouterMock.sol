@@ -35,12 +35,12 @@ contract SwapRouterMock is ISwapRouter {
 
     /**
      * @notice Initializes the SwapRouterMock with predefined tokens and amountOut.
-     * @param _tokenIn The ERC20 token address being swapped from.
+     * @param _oftIn The OFT address being swapped from.
      * @param _tokenOut The ERC20 token address being swapped to.
      * @param _predefinedAmountOut The amount of tokenOut to return on swaps.
      */
-    constructor(address _tokenIn, address _tokenOut, uint256 _predefinedAmountOut) {
-        tokenIn = IERC20(IOFT(_tokenIn).token());
+    constructor(address _oftIn, address _tokenOut, uint256 _predefinedAmountOut) {
+        tokenIn = IERC20(IOFT(_oftIn).token());
         tokenOut = ERC20Mock(_tokenOut);
         predefinedAmountOut = _predefinedAmountOut;
     }
