@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process'
 
-import { PopulatedTransaction, ethers, providers } from 'ethers'
+import { PopulatedTransaction, ethers } from 'ethers'
 
 import type { OAppEdgeConfig, OAppNodeConfig } from '@layerzerolabs/toolbox-hardhat'
 
@@ -14,8 +14,8 @@ export type TxTypes =
     | 'sendConfig'
     | 'receiveConfig'
 
+export type eid = string
 export type EidTxMap = Record<eid, [PopulatedTransaction]>
-export type eid = number
 export type address = string
 
 export type NonEvmOAppMetadata = {
@@ -35,14 +35,14 @@ export type ContractMetadata = {
     }
     provider: ethers.providers.JsonRpcProvider
     configAccount: OAppNodeConfig
-    configOapp: OAppEdgeConfig
+    configOapp: OAppEdgeConfig | undefined
 }
 
 export type AccountData = {
-    [eid: number]: {
+    [eid: string]: {
         gasPrice: ethers.BigNumber
         nonce: number
-        signer: providers.JsonRpcSigner
+        signer: ethers.Wallet
     }
 }
 //[TxTypes][eid] = PopulatedTransaction
@@ -72,4 +72,27 @@ export type SetConfigParam = {
     configType: number
     config: string
 }
+
+export const ZEROADDRESS_EVM = '0x0000000000000000000000000000000000000000'
+
 export type AnvilNode = { process: ChildProcess; rpcUrl: string }
+
+export function returnChecksums(addresses: string[]): string[] {
+    const checksumAddresses: string[] = []
+    for (const address of addresses) {
+        try {
+            checksumAddresses.push(returnChecksum(address))
+        } catch (error) {
+            console.error(`Invalid address: ${address}. Error: ${error}`)
+        }
+    }
+    return checksumAddresses
+}
+
+export function returnChecksum(address: string): string {
+    try {
+        return ethers.utils.getAddress(address)
+    } catch (error) {
+        throw new Error(`Invalid address: ${address}. Error: ${error}`)
+    }
+}
