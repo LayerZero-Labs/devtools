@@ -1,5 +1,6 @@
 import { Contract, utils } from 'ethers'
-import { diffPrinter, ZEROADDRESS_EVM } from '../../shared/utils'
+import { diffPrinter } from '../../shared/utils'
+import { ZEROADDRESS_EVM } from '../utils/types'
 import type {
     NonEvmOAppMetadata,
     ContractMetadataMapping,
