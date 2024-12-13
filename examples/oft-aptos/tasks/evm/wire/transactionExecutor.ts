@@ -1,6 +1,16 @@
+import { exit } from 'process'
+
 import { Contract, ethers, providers } from 'ethers'
 
+import { promptForConfirmation } from '../../shared/utils'
+
 import type { AccountData, ContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
+
+if (!process.env.PRIVATE_KEY) {
+    console.error('PRIVATE_KEY environment variable is not set.')
+    process.exit(1)
+}
+const privateKey = process.env.PRIVATE_KEY
 
 /**
  * @notice Simulates transactions on the blockchains
@@ -12,19 +22,37 @@ import type { AccountData, ContractMetadataMapping, TxEidMapping, eid } from '..
 export async function executeTransactions(
     eidMetaData: ContractMetadataMapping,
     TxTypeEidMapping: TxEidMapping,
-    rpcUrlsMap: Record<eid, string>
+    rpcUrlsMap: Record<eid, string>,
+    simulation = 'dry-run'
 ) {
     const num_chains = Object.entries(eidMetaData).length
     let totalTransactions = 0
 
-    for (const key in TxTypeEidMapping) {
-        for (const _eid in TxTypeEidMapping[key]) {
-            totalTransactions += TxTypeEidMapping[key][_eid].length
-        }
+    Object.entries(TxTypeEidMapping).forEach(([_key, eidMapping]) => {
+        Object.entries(eidMapping).forEach(([_eid, txArray]) => {
+            totalTransactions += txArray.length
+        })
+    })
+
+    if (simulation == 'dry-run') {
+        console.log('IN SIMULATION (dry-run) MODE')
+    } else {
+        console.log('IN EXECUTION (broadcast) MODE')
+    }
+
+    if (totalTransactions == 0) {
+        console.log('No transactions to submit')
+        return
     }
 
     console.log(`Total chains: ${num_chains}`)
-    console.log(`Total transactions: ${totalTransactions}\n`)
+    console.log(`Total transactions: ${totalTransactions}`)
+    const flag = await promptForConfirmation(totalTransactions)
+
+    if (!flag) {
+        console.log('Not submitting transactions.. exiting')
+        exit(0)
+    }
 
     // Populate simulation account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
     const accountEidMap: AccountData = {}
@@ -41,7 +69,7 @@ export async function executeTransactions(
          * We also create a signer object using the private key and provider
          */
         const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-        const signer = new ethers.Wallet(process.env.PRIVATE_KEY, newProvider)
+        const signer = new ethers.Wallet(privateKey, newProvider)
 
         accountEidMap[eid] = {
             nonce: await signer.getTransactionCount(),
