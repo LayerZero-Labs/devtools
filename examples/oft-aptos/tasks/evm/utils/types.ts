@@ -71,3 +71,23 @@ export type SetConfigParam = {
     config: string
 }
 export type AnvilNode = { process: ChildProcess; rpcUrl: string }
+
+export function returnChecksums(addresses: string[]): string[] {
+    const checksumAddresses: string[] = []
+    for (const address of addresses) {
+        try {
+            checksumAddresses.push(returnChecksum(address))
+        } catch (error) {
+            console.error(`Invalid address: ${address}. Error: ${error.message}`)
+        }
+    }
+    return checksumAddresses
+}
+
+export function returnChecksum(address: string): string {
+    try {
+        return ethers.utils.getAddress(address)
+    } catch (error) {
+        console.error(`Invalid address: ${address}. Error: ${error.message}`)
+    }
+}
