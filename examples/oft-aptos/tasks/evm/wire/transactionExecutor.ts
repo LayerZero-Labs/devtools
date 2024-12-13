@@ -1,5 +1,7 @@
 import { ethers, providers, Contract } from 'ethers'
+import { promptForConfirmation } from '../../shared/utils'
 import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '../utils/types'
+import { exit } from 'process'
 
 /**
  * @notice Simulates transactions on the blockchains
@@ -11,7 +13,8 @@ import type { ContractMetadataMapping, TxEidMapping, AccountData, eid } from '..
 export async function executeTransactions(
     eidMetaData: ContractMetadataMapping,
     TxTypeEidMapping: TxEidMapping,
-    rpcUrlsMap: Record<eid, string>
+    rpcUrlsMap: Record<eid, string>,
+    simulation: string = 'dry-run'
 ) {
     const num_chains = Object.entries(eidMetaData).length
     let totalTransactions = 0
@@ -22,8 +25,20 @@ export async function executeTransactions(
         }
     }
 
+    if (simulation == 'dry-run') {
+        console.log('IN SIMULATION (dry-run) MODE')
+    } else {
+        console.log('IN EXECUTION (broadcast) MODE')
+    }
+
     console.log(`Total chains: ${num_chains}`)
-    console.log(`Total transactions: ${totalTransactions}\n`)
+    console.log(`Total transactions: ${totalTransactions}`)
+    const flag = await promptForConfirmation(totalTransactions)
+
+    if (!flag) {
+        console.log('Not submitting transactions.. exiting')
+        exit(0)
+    }
 
     // Populate simulation account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
     const accountEidMap: AccountData = {}
