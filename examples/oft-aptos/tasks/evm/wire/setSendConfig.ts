@@ -1,6 +1,6 @@
 import { diffPrinter } from '../../shared/utils'
 import { parseSendLibrary } from './setSendLibrary'
-import { getConfig, setConfig, buildConfig, decodeConfig } from './libraryConfigUtils'
+import { getConfig, setConfig, buildConfig, decodeConfig } from '../utils/libraryConfigUtils'
 
 import type { NonEvmOAppMetadata, ContractMetadataMapping, EidTxMap, SetConfigParam } from '../utils/types'
 
