@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.4.1
+
+### Patch Changes
+
+- 1d1272b: Add mint-burn-oft-adapter
+
 ## 0.4.0
 
 ### Minor Changes
