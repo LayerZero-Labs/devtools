@@ -18,7 +18,6 @@ const parser = new ArgumentParser({
  */
 async function main() {
     // read in the first arg passed via the command line
-    parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
     parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
     const parserArgs = parser.parse_args()
@@ -32,7 +31,7 @@ async function main() {
         : additionalAddresses
 
     const cmd = 'aptos'
-    const args = ['move', 'build', `--package-dir=${parserArgs.package_dir}`, `--named-addresses=${namedAddresses}`]
+    const args = ['move', 'build', `--named-addresses=${namedAddresses}`]
 
     return new Promise<void>((resolve, reject) => {
         const childProcess = spawn(cmd, args, {
