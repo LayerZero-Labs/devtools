@@ -294,7 +294,12 @@ export async function createSetSendConfigTxs(
         )
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
-        await checkNewConfig(new MsgLib(oft.aptos, currentSendLibraryAddress), newUlnConfig, entry, ConfigType.SEND_ULN)
+        await checkNewConfig(
+            new MsgLib(oft.moveVMConnection, currentSendLibraryAddress),
+            newUlnConfig,
+            entry,
+            ConfigType.SEND_ULN
+        )
 
         // We need to re-serialize the current config to compare it with the new config to ensure same format
         const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
@@ -353,7 +358,7 @@ export async function createSetReceiveConfigTxs(
         const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
         await checkNewConfig(
-            new MsgLib(oft.aptos, currentReceiveLibraryAddress),
+            new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress),
             newUlnConfig,
             entry,
             ConfigType.RECV_ULN
