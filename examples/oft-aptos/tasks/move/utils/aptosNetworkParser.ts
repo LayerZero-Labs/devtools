@@ -1,27 +1,35 @@
-import { Network } from '@aptos-labs/ts-sdk'
+import { Network as AptosNetworkStage } from '@aptos-labs/ts-sdk'
 
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
 
 import { loadAptosYamlConfig } from './config'
 
-export function getEidFromAptosNetwork(network: Network): number {
-    if (network === Network.MAINNET || network.toLowerCase() === 'mainnet') {
-        return EndpointId.APTOS_V2_MAINNET
-    } else if (network === Network.TESTNET || network.toLowerCase() === 'testnet') {
-        return EndpointId.APTOS_V2_TESTNET
-    } else if (network === Network.CUSTOM || network.toLowerCase() === 'sandbox') {
-        return EndpointId.APTOS_V2_SANDBOX
+export function getEidFromAptosNetwork(chain: string, networkStage: AptosNetworkStage): number {
+    if (chain === 'aptos') {
+        if (networkStage === AptosNetworkStage.MAINNET || networkStage.toLowerCase() === 'mainnet') {
+            return EndpointId.APTOS_V2_MAINNET
+        } else if (networkStage === AptosNetworkStage.TESTNET || networkStage.toLowerCase() === 'testnet') {
+            return EndpointId.APTOS_V2_TESTNET
+        } else {
+            throw new Error(`Unsupported network stage for ${chain}: ${networkStage}`)
+        }
+    } else if (chain === 'movement') {
+        if (networkStage === AptosNetworkStage.TESTNET || networkStage.toLowerCase() === 'testnet') {
+            return EndpointId.MOVEMENT_V2_TESTNET
+        } else {
+            throw new Error(`Unsupported network stage for ${chain}: ${networkStage}`)
+        }
     } else {
-        throw new Error(`Unsupported network: ${network}`)
+        throw new Error(`Unsupported chain: ${chain}`)
     }
 }
 
-export function getLzNetworkStage(network: Network): Stage {
-    if (network === Network.MAINNET) {
+export function getLzNetworkStage(network: AptosNetworkStage): Stage {
+    if (network === AptosNetworkStage.MAINNET) {
         return Stage.MAINNET
-    } else if (network === Network.TESTNET) {
+    } else if (network === AptosNetworkStage.TESTNET) {
         return Stage.TESTNET
-    } else if (network === Network.CUSTOM) {
+    } else if (network === AptosNetworkStage.CUSTOM) {
         return Stage.SANDBOX
     } else {
         throw new Error(`Unsupported network: ${network}`)
@@ -31,7 +39,7 @@ export function getLzNetworkStage(network: Network): Stage {
 export async function parseYaml(): Promise<{
     account_address: string
     private_key: string
-    network: Network
+    network: AptosNetworkStage
     fullnode: string
     faucet: string
 }> {
@@ -39,7 +47,7 @@ export async function parseYaml(): Promise<{
 
     let account_address = aptosYamlConfig.profiles.default.account
     const private_key = aptosYamlConfig.profiles.default.private_key
-    const network = aptosYamlConfig.profiles.default.network.toLowerCase() as Network
+    const network = aptosYamlConfig.profiles.default.network.toLowerCase() as AptosNetworkStage
     const fullnode = aptosYamlConfig.profiles.default.rest_url
     const faucet = aptosYamlConfig.profiles.default.faucet_url
 
