@@ -46,7 +46,7 @@ Run the following command to set the delegate to the oft. Ensure first that you 
 npx hardhat run tasks/move/setDelegate.ts
 ```
 ## Initialize the OFT:
-Inside the file tasks/move/initMoveVMOFT.ts, set the following parameters:
+Inside the file tasks/move/initOFTFA.ts, set the following parameters:
 ```typescript
 const tokenName = '<your-token-name>'
 const tokenSymbol = '<your-token-symbol>'
@@ -57,7 +57,7 @@ const localDecimals = <your-local-decimals>
 ```
 Then run the following command to initialize the oft:
 ```
-ts-node tasks/move/initAptosOFT.ts
+ts-node tasks/move/initOFTFA.ts
 ```
 ## Wiring your aptos OFT:
 
@@ -102,7 +102,7 @@ const config: OAppOmniGraphHardhat = {
 
 IMPORTANT: Before running the wire script ensure that you have run aptos init and configuered your desired network such as custom, testnet, mainnet, etc. and have also deployed the oft to that network.
 ```
-npx hardhat run tasks/move/wireMoveVMOFT.ts
+npx hardhat run tasks/move/wire.ts
 ```
 
 ## Scripts For internal testing:

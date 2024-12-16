@@ -2,7 +2,7 @@ import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
+import { getMoveVMOftAddress, sendInitTransaction } from './utils/utils'
 
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
@@ -28,7 +28,8 @@ async function main() {
 
     const eid = getEidFromAptosNetwork(chain, network)
     const payloads = [{ payload: initializePayload, description: `Initialize ${chain} OFT`, eid }]
-    sendAllTxs(moveVMConnection, oft, account_address, payloads)
+
+    sendInitTransaction(moveVMConnection, oft, account_address, payloads)
 }
 
 main().catch((error) => {

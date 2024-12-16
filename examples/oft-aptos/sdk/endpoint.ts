@@ -76,8 +76,7 @@ export class Endpoint {
                 lib: rawResponse.lib,
             }
         } catch (error) {
-            // if the timeout is not set, it will throw a VM error, so we should return and impossible value
-            // to always produce a diff when setting the timeout
+            // if the timeout is not set, it will throw a VM error, so we should return a value that will always produce a diff
             return { expiry: BigInt(-1), lib: '' }
         }
     }
