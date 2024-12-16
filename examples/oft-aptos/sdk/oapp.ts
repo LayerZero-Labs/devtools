@@ -12,19 +12,19 @@ import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 
 import { hexAddrToAptosBytesAddr } from './utils'
 
-export class OFT {
+export class OAPP {
     public moveVMConnection: Aptos
-    private private_key: string
-    private signer_account: Account
-    public oft_address: string
+    private privateKey: string
+    private signerAccount: Account
+    public oAppAddress: string
 
-    constructor(moveVMConnection: Aptos, oft_address: string, account_address: string, private_key: string) {
+    constructor(moveVMConnection: Aptos, oAppAddress: string, accountAddress: string, privateKey: string) {
         this.moveVMConnection = moveVMConnection
-        this.oft_address = oft_address
-        this.private_key = PrivateKey.formatPrivateKey(private_key, PrivateKeyVariants.Ed25519)
-        this.signer_account = Account.fromPrivateKey({
-            privateKey: new Ed25519PrivateKey(this.private_key),
-            address: account_address,
+        this.oAppAddress = oAppAddress
+        this.privateKey = PrivateKey.formatPrivateKey(privateKey, PrivateKeyVariants.Ed25519)
+        this.signerAccount = Account.fromPrivateKey({
+            privateKey: new Ed25519PrivateKey(this.privateKey),
+            address: accountAddress,
         })
     }
 
@@ -38,7 +38,7 @@ export class OFT {
     ): InputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
         return {
-            function: `${this.oft_address}::oft_impl::initialize`,
+            function: `${this.oAppAddress}::oft_impl::initialize`,
             functionArguments: [
                 encoder.encode(token_name),
                 encoder.encode(symbol),
@@ -52,7 +52,7 @@ export class OFT {
 
     mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft_impl::mint`,
+            function: `${this.oAppAddress}::oft_impl::mint`,
             functionArguments: [recipient, amount],
         }
     }
@@ -60,7 +60,7 @@ export class OFT {
     async getBalance(account: string): Promise<number> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oft::balance`,
+                function: `${this.oAppAddress}::oft::balance`,
                 functionArguments: [account],
             },
         })
@@ -81,7 +81,7 @@ export class OFT {
     ): Promise<[number, number]> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oft::quote_send`,
+                function: `${this.oAppAddress}::oft::quote_send`,
                 functionArguments: [
                     userSender,
                     dst_eid,
@@ -111,7 +111,7 @@ export class OFT {
         zro_fee: number | bigint
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft::send_withdraw`,
+            function: `${this.oAppAddress}::oft::send_withdraw`,
             functionArguments: [
                 dst_eid,
                 to,
@@ -129,14 +129,14 @@ export class OFT {
     setPeerPayload(eid: EndpointId, peerAddress: string): InputGenerateTransactionPayloadData {
         const peerAddressAsBytes = hexAddrToAptosBytesAddr(peerAddress)
         return {
-            function: `${this.oft_address}::oapp_core::set_peer`,
+            function: `${this.oAppAddress}::oapp_core::set_peer`,
             functionArguments: [eid, peerAddressAsBytes],
         }
     }
 
     setDelegatePayload(delegateAddress: string): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_delegate`,
+            function: `${this.oAppAddress}::oapp_core::set_delegate`,
             functionArguments: [delegateAddress],
         }
     }
@@ -144,7 +144,7 @@ export class OFT {
     async getDelegate(): Promise<string> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oapp_core::get_delegate`,
+                function: `${this.oAppAddress}::oapp_core::get_delegate`,
                 functionArguments: [],
             },
         })
@@ -155,7 +155,7 @@ export class OFT {
     async getAdmin(): Promise<string> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oapp_core::get_admin`,
+                function: `${this.oAppAddress}::oapp_core::get_admin`,
                 functionArguments: [],
             },
         })
@@ -165,14 +165,14 @@ export class OFT {
 
     transferAdminPayload(adminAddress: string): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::transfer_admin`,
+            function: `${this.oAppAddress}::oapp_core::transfer_admin`,
             functionArguments: [adminAddress],
         }
     }
 
     renounceAdminPayload(): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::renounce_admin`,
+            function: `${this.oAppAddress}::oapp_core::renounce_admin`,
             functionArguments: [],
         }
     }
@@ -180,7 +180,7 @@ export class OFT {
     async getPeer(eid: EndpointId): Promise<string> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oapp_core::get_peer`,
+                function: `${this.oAppAddress}::oapp_core::get_peer`,
                 functionArguments: [eid],
             },
         })
@@ -191,7 +191,7 @@ export class OFT {
     async hasPeer(eid: EndpointId): Promise<boolean> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oapp_core::has_peer`,
+                function: `${this.oAppAddress}::oapp_core::has_peer`,
                 functionArguments: [eid],
             },
         })
@@ -205,7 +205,7 @@ export class OFT {
         enforcedOptions: Uint8Array
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_enforced_options`,
+            function: `${this.oAppAddress}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],
         }
     }
@@ -213,7 +213,7 @@ export class OFT {
     async getEnforcedOptions(eid: number, msgType: number): Promise<string> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oapp_core::get_enforced_options`,
+                function: `${this.oAppAddress}::oapp_core::get_enforced_options`,
                 functionArguments: [eid, msgType],
             },
         })
@@ -223,7 +223,7 @@ export class OFT {
 
     setSendLibraryPayload(remoteEid: number, msglibAddress: string): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_send_library`,
+            function: `${this.oAppAddress}::oapp_core::set_send_library`,
             functionArguments: [remoteEid, msglibAddress],
         }
     }
@@ -234,7 +234,7 @@ export class OFT {
         gracePeriod: number
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_receive_library`,
+            function: `${this.oAppAddress}::oapp_core::set_receive_library`,
             functionArguments: [remoteEid, msglibAddress, gracePeriod],
         }
     }
@@ -245,7 +245,7 @@ export class OFT {
         expiry: number
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
+            function: `${this.oAppAddress}::oapp_core::set_receive_library_timeout`,
             functionArguments: [remoteEid, msglibAddress, expiry],
         }
     }
@@ -256,14 +256,14 @@ export class OFT {
         config: Uint8Array
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oapp_core::set_config`,
+            function: `${this.oAppAddress}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, configType, config],
         }
     }
 
     async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
         const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
-            signer: this.signer_account,
+            signer: this.signerAccount,
             transaction: transaction,
         })
 
