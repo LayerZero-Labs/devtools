@@ -1,10 +1,11 @@
 [package]
 name = "oft"
-version = "1.0.0"
+version = "0.0.1"
 authors = []
 
 [addresses]
 oft = "_"
+oft_admin = "_"
 oft_common = "_"
 router_node_0 = "_"
 simple_msglib = "_"
@@ -34,6 +35,7 @@ native_token_metadata_address = "0xa"
 
 [dev-addresses]
 oft = "0x302814823"
+oft_admin = "0x12321241"
 oft_common = "0x30281482332"
 router_node_0 = "0x10000f"
 simple_msglib = "0x100011"
@@ -67,7 +69,7 @@ subdir = "aptos-move/framework/aptos-framework"
 [dependencies]
 endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
 endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
-oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2", subdir = "packages/layerzero-v2/aptos/contracts/oft_common" }
+oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2", subdir = "packages/layerzero-v2/aptos/contracts/oapps/oft_common" }
 
 [dev-dependencies]
 simple_msglib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2", subdir = "packages/layerzero-v2/aptos/contracts/msglib/libs/simple_msglib" }

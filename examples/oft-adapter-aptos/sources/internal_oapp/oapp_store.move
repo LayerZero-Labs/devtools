@@ -94,7 +94,7 @@ module oft::oapp_store {
     fun init_module(account: &signer) {
         move_to<OAppStore>(account, OAppStore {
             contract_signer: create_contract_signer(account),
-            admin: address_of(account),
+            admin: @oft_admin,
             peers: table::new(),
             delegate: @0x0,
             enforced_options: table::new(),
