@@ -3,9 +3,20 @@
 
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 
-export function getConnection(network: Network, fullnode: string, faucet: string): Aptos {
-    if (faucet.toLowerCase().includes('movement')) {
-        const indexer = getIndexerUrl(network)
+const CHAIN_MOVEMENT = 'movement'
+const CHAIN_APTOS = 'aptos'
+
+const MOVEMENT_INDEXER_URLS = {
+    [Network.TESTNET]: 'https://indexer.testnet.porto.movementnetwork.xyz/v1/graphql',
+    [Network.MAINNET]: 'N/A',
+    [Network.DEVNET]: 'N/A',
+    [Network.LOCAL]: 'N/A',
+    [Network.CUSTOM]: 'N/A',
+}
+
+export function getConnection(chain: string, network: Network, fullnode: string, faucet: string): Aptos {
+    if (chain === CHAIN_MOVEMENT) {
+        const indexer = getMovementIndexerUrl(network)
         return new Aptos(
             new AptosConfig({
                 network: Network.CUSTOM,
@@ -19,12 +30,18 @@ export function getConnection(network: Network, fullnode: string, faucet: string
     }
 }
 
-function getIndexerUrl(network: Network): string {
-    if (network === Network.TESTNET) {
-        return 'https://indexer.testnet.porto.movementnetwork.xyz/v1/graphql'
-    } else if (network === Network.MAINNET) {
-        return 'N/A'
+export function getChain(fullnode: string): string {
+    if (fullnode.toLowerCase().includes(CHAIN_MOVEMENT)) {
+        return CHAIN_MOVEMENT
     } else {
-        throw new Error('Invalid network')
+        return CHAIN_APTOS
     }
+}
+
+function getMovementIndexerUrl(network: Network): string {
+    const indexerUrl = MOVEMENT_INDEXER_URLS[network]
+    if (indexerUrl !== 'N/A') {
+        return indexerUrl
+    }
+    throw new Error('Invalid network')
 }

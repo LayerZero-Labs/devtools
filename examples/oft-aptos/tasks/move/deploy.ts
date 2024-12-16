@@ -24,7 +24,6 @@ const parser = new ArgumentParser({
  * @returns Promise<void>
  */
 async function main() {
-    parser.add_argument('--package-dir', { type: 'str', help: 'Directory of the OFT you want to deploy (oft)' })
     parser.add_argument('--address-name', { type: 'str', help: 'Module name of the OFT (oft)' })
     parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
 
