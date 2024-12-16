@@ -21,7 +21,7 @@ async function main() {
     const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(getNamedAddresses(lzNetworkStage))
 
-    console.log(`\n🔧 Wiring ${chain} OFT`)
+    console.log(`\n🔧 Wiring ${chain}-${lzNetworkStage} OFT`)
     console.log(`\tAddress: ${moveVMOftAddress}\n`)
 
     const oft = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)

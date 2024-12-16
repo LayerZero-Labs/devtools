@@ -133,10 +133,14 @@ export async function createSetReceiveLibraryTimeoutTxs(
             printAlreadySet('Receive library timeout', entry)
             continue
         } else {
+            let currTimeoutDisplay = '' + currentTimeoutAsBigInt
+            if (currentTimeoutAsBigInt === BigInt(-1)) {
+                currTimeoutDisplay = 'unset'
+            }
             const diffMessage = createDiffMessage(`receive library timeout`, entry)
             diffPrinter(
                 diffMessage,
-                { timeout: currentTimeoutAsBigInt },
+                { timeout: currTimeoutDisplay },
                 { timeout: entry.config.receiveLibraryTimeoutConfig.expiry }
             )
             const tx = oft.setReceiveLibraryTimeoutPayload(
