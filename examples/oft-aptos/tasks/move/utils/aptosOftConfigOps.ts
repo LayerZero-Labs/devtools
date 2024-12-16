@@ -89,6 +89,7 @@ export async function createSetPeerTxs(
             continue
         }
         const networkName = eidToNetworkMapping[entry.to.eid]
+        validateNetwork(networkName, entry)
         const contractAddress = getContractAddress(networkName, entry.to.contractName)
         const newPeer = toAptosAddress(contractAddress)
         const currentPeerHex = await getCurrentPeer(oft, entry.to.eid as EndpointId)
@@ -105,6 +106,13 @@ export async function createSetPeerTxs(
     }
 
     return txs
+}
+
+function validateNetwork(networkName: string, entry: OAppOmniGraphHardhat['connections'][number]) {
+    if (!networkName) {
+        const toNetwork = getNetworkForChainId(entry.to.eid)
+        throw new Error(`Network not found in Hardhat config for ${toNetwork.chainName}-${toNetwork.env}`)
+    }
 }
 
 export async function createSetReceiveLibraryTimeoutTxs(
@@ -448,8 +456,6 @@ async function getCurrentPeer(oft: OFT, eid: EndpointId): Promise<string> {
 }
 
 function getContractAddress(networkName: string, contractName: string | null | undefined) {
-    console.log('networkName', networkName)
-    console.log('contractName', contractName)
     const deploymentPath = path.join(process.cwd(), `/deployments/${networkName}/${contractName}.json`)
 
     try {
