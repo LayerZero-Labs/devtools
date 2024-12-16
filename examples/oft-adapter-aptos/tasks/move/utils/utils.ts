@@ -176,3 +176,20 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
     rl.close()
     return answer.toLowerCase() === 'yes'
 }
+
+export async function sendInitTransaction(
+    moveVMConnection: Aptos,
+    oft: OFT,
+    account_address: string,
+    payloads: TransactionPayload[]
+) {
+    try {
+        await sendAllTxs(moveVMConnection, oft, account_address, payloads)
+    } catch (error: any) {
+        if (error.message?.includes('EALREADY_INITIALIZED')) {
+            console.log('\n✅ OFT already initialized. No values changed.\n')
+        } else {
+            console.error('Error:', error)
+        }
+    }
+}
