@@ -50,6 +50,16 @@ export class OFT {
         }
     }
 
+    initializeAdapterPayload(
+        tokenMetadataAddress: string,
+        sharedDecimals: number
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_adapter_fa::initialize`,
+            functionArguments: [tokenMetadataAddress, sharedDecimals],
+        }
+    }
+
     mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_impl::mint`,

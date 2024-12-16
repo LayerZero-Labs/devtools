@@ -1,5 +1,4 @@
-import { Aptos, AptosConfig, InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
-
+import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
@@ -7,22 +6,27 @@ import { setDelegate } from './utils/aptosOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
-    const { account_address, private_key, network } = await parseYaml()
-    const aptosConfig = new AptosConfig({ network: network })
-    const aptos = new Aptos(aptosConfig)
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+
+    const chain = getChain(fullnode)
+    const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
-    console.log(`\n🔧 Setting Aptos OFT Delegate`)
-    console.log(`\tFor Aptos OFT: ${aptosOftAddress}\n`)
+    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
+    console.log(`\n🔧 Setting ${chain} OFT Delegate`)
+    console.log(`\tFor: ${oftAddress}\n`)
 
-    const eid = getEidFromAptosNetwork(network)
+    const oft = new OFT(aptos, oftAddress, account_address, private_key)
+
+    const currAdmin = await oft.getAdmin()
+    console.log(`\tCurrent Admin: ${currAdmin}`)
+
+    const eid = getEidFromAptosNetwork('aptos', network)
     const delegate = getDelegateFromLzConfig(eid)
-    const setDelegatePayload = await setDelegate(oft, delegate)
+    const setDelegatePayload = await setDelegate(oft, delegate, eid)
 
-    sendAllTxs(aptos, oft, account_address, [setDelegatePayload as InputGenerateTransactionPayloadData])
+    sendAllTxs(aptos, oft, account_address, [setDelegatePayload])
 }
 
 main().catch((error) => {
