@@ -14,7 +14,7 @@ import { TransactionPayload } from './aptosOftConfigOps'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 export function getDelegateFromLzConfig(eid: EndpointId): string {
-    validateAptosDelegate(lzConfigAptos, eid)
+    validateConfigHasDelegate(lzConfigAptos, eid)
     let delegate = ''
     for (const conn of lzConfigAptos.contracts) {
         if (conn.contract.eid == eid) {
@@ -26,7 +26,7 @@ export function getDelegateFromLzConfig(eid: EndpointId): string {
 }
 
 export function getOwnerFromLzConfig(eid: EndpointId): string {
-    validateAptosOwner(lzConfigAptos, eid)
+    validateConfigHasOwner(lzConfigAptos, eid)
     let owner = ''
     for (const conn of lzConfigAptos.contracts) {
         if (conn.contract.eid == eid) {
@@ -37,7 +37,7 @@ export function getOwnerFromLzConfig(eid: EndpointId): string {
     return owner
 }
 
-export function validateAptosDelegate(config: OAppOmniGraphHardhat, eid: EndpointId) {
+export function validateConfigHasDelegate(config: OAppOmniGraphHardhat, eid: EndpointId) {
     const aptosConfig = config.contracts.find((c: any) => c.contract.eid === eid)
 
     if (!aptosConfig || !aptosConfig.config || !aptosConfig.config.delegate) {
@@ -59,7 +59,7 @@ Please update layerzero config with your Aptos delegate address
     }
 }
 
-function validateAptosOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
+function validateConfigHasOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
     const aptosConfig = config.contracts.find((c: any) => c.contract.eid === eid)
 
     if (!aptosConfig || !aptosConfig.config || !aptosConfig.config.owner) {
