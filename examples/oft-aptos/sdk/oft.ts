@@ -28,7 +28,8 @@ export class OFT {
         })
     }
 
-    initializePayload(
+    // TODO: update with new implementation
+    initializeOFTFAPayload(
         token_name: string,
         symbol: string,
         icon_uri: string,
@@ -49,7 +50,9 @@ export class OFT {
             ],
         }
     }
+    // TODO: create adapter coin init function
 
+    // TODO: update with new implementation
     initializeAdapterPayload(
         tokenMetadataAddress: string,
         sharedDecimals: number
@@ -57,6 +60,20 @@ export class OFT {
         return {
             function: `${this.oft_address}::oft_adapter_fa::initialize`,
             functionArguments: [tokenMetadataAddress, sharedDecimals],
+        }
+    }
+
+    // TODO: update with new implementation
+    initializeCoinPayload(
+        token_name: string,
+        symbol: string,
+        shared_decimals: number,
+        local_decimals: number,
+        monitor_supply: boolean
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_coin::initialize`,
+            functionArguments: [token_name, symbol, shared_decimals, local_decimals, monitor_supply],
         }
     }
 

@@ -4,6 +4,7 @@ import { OFT } from '../../sdk/oft'
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendInitTransaction } from './utils/utils'
 
+// TODO: update with new implementation
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`Using aptos network ${network}`)
@@ -17,29 +18,30 @@ async function main() {
 
     const tokenName = 'OFT'
     const tokenSymbol = 'OFT'
-    const iconUri = ''
-    const projectUri = ''
     const sharedDecimals = 6
     const localDecimals = 6
+    const monitorSupply = true
 
     console.log(`Setting the following parameters:`)
     console.log(`\tToken Name: ${tokenName}`)
     console.log(`\tToken Symbol: ${tokenSymbol}`)
-    console.log(`\tIcon URI: ${iconUri}`)
-    console.log(`\tProject URI: ${projectUri}`)
     console.log(`\tShared Decimals: ${sharedDecimals}`)
     console.log(`\tLocal Decimals: ${localDecimals}`)
+    console.log(`\tMonitor Supply: ${monitorSupply}`)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
     const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key)
 
-    const initializePayload = oft.initializeOFTFAPayload(
+    const admin = await oft.getAdmin()
+    console.log(`\nCurrent Admin: ${admin}`)
+    console.log(`account_address: ${account_address}`)
+
+    const initializePayload = oft.initializeCoinPayload(
         tokenName,
         tokenSymbol,
-        iconUri,
-        projectUri,
         sharedDecimals,
-        localDecimals
+        localDecimals,
+        monitorSupply
     )
 
     const eid = getEidFromAptosNetwork(chain, network)
