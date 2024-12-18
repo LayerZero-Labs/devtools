@@ -6,9 +6,9 @@ import { OFT } from '../../sdk/oft'
 import { getConfigConnections } from '../shared/utils'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import * as oftConfig from './utils/aptosOftConfigOps'
-import { TransactionPayload } from './utils/aptosOftConfigOps'
 import { getNamedAddresses } from './utils/config'
+import * as oftConfig from './utils/moveVMOftConfigOps'
+import { TransactionPayload } from './utils/moveVMOftConfigOps'
 import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {

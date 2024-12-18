@@ -77,6 +77,48 @@ export class OFT {
         }
     }
 
+    createSetRateLimitTx(
+        eid: EndpointId,
+        limit: number | bigint,
+        window_seconds: number | bigint
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_impl::set_rate_limit`,
+            functionArguments: [eid, limit, window_seconds],
+        }
+    }
+
+    // returns (limit, window_seconds)
+    async getRateLimitConfig(eid: EndpointId): Promise<[bigint, bigint]> {
+        const result = await this.moveVMConnection.view({
+            payload: {
+                function: `${this.oft_address}::oft_impl::rate_limit_config`,
+                functionArguments: [eid],
+            },
+        })
+        const limit = typeof result[0] === 'string' ? BigInt(result[0]) : (result[0] as bigint)
+        const window = typeof result[1] === 'string' ? BigInt(result[1]) : (result[1] as bigint)
+        return [limit, window]
+    }
+
+    createSetFeeBpsTx(fee_bps: number | bigint): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_impl::set_fee_bps`,
+            functionArguments: [fee_bps],
+        }
+    }
+
+    async getFeeBps(): Promise<bigint> {
+        const result = await this.moveVMConnection.view({
+            payload: {
+                function: `${this.oft_address}::oft_impl::fee_bps`,
+                functionArguments: [],
+            },
+        })
+        const feeBps = result[0]
+        return typeof feeBps === 'string' ? BigInt(feeBps) : (feeBps as bigint)
+    }
+
     mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_impl::mint`,

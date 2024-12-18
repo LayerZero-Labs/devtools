@@ -3,7 +3,7 @@ import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { setDelegate, transferOwner } from './utils/aptosOftConfigOps'
+import { setDelegate, transferOwner } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
 
 async function main() {
