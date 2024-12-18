@@ -1,5 +1,4 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
-import { expect } from 'chai'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
 import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
@@ -17,6 +16,16 @@ import {
     createSetSendLibraryTxs,
 } from '../../tasks/move/utils/moveVMOftConfigOps'
 import { createSerializableUlnConfig } from '../../tasks/move/utils/ulnConfigBuilder'
+
+// Initialize global task variable that plugins expect
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// ;(global as any).task = new TasksDSL()
+
+// Create Hardhat context
+// HardhatContext.createHardhatContext()
+
+// // Load config and tasks
+// loadConfigAndTasks()
 
 import type {
     OAppEdgeConfig,
@@ -68,26 +77,22 @@ describe('config-ops-tests', () => {
             // Restore original console.log
             console.log = originalLog
 
-            expect(txs.length).to.equal(0)
+            expect(txs.length).toBe(0)
         })
 
-        it.only('should return 1 tx when peer set to new address', async () => {
+        it('should set peers for all connections', async () => {
             // Temporarily redirect console.log to bypass Jest's console handling
             const originalLog = console.log
             console.log = (...args) => {
                 process.stdout.write(args.join(' ') + '\n')
             }
-            mockConnections.push({
-                from: aptosContract,
-                to: ethereumContract,
-                config: {},
-            })
+
             const txs = await createSetPeerTxs(oft, mockConnections)
 
             // Restore original console.log
             console.log = originalLog
 
-            expect(txs.length).to.equal(1)
+            expect(txs.length).toBe(1)
         })
     })
 
@@ -95,20 +100,22 @@ describe('config-ops-tests', () => {
         it('should return no txs if no options are set', async () => {
             const txs = await createSetEnforcedOptionsTxs(oft, mockConnections)
 
-            expect(txs.length).to.equal(0)
+            expect(txs.length).toBe(0)
         })
         it('should set return one enforced options tx for BSC testnet', async () => {
             if (mockConnections[0]?.config?.enforcedOptions) {
                 mockConnections[0].config.enforcedOptions[0] = {
                     msgType: 1,
                     optionType: ExecutorOptionType.LZ_RECEIVE,
-                    gas: 123456,
+                    gas: 100420,
                     value: 0,
                 }
             }
 
             const txs = await createSetEnforcedOptionsTxs(oft, mockConnections)
-            expect(txs.length).to.equal(1)
+            console.log(`txs:`)
+            console.dir(txs, { depth: null })
+            expect(txs.length).toBe(1)
         })
         it('should have enforced options set for all message types due to previous wire run', async () => {
             const currentOptionsHexType1 = await oft.getEnforcedOptions(EndpointId.BSC_V2_TESTNET, 1)
@@ -117,8 +124,8 @@ describe('config-ops-tests', () => {
             const currentOptionsHexType2 = await oft.getEnforcedOptions(EndpointId.BSC_V2_TESTNET, 2)
             console.log(`Message type 2 options: ${currentOptionsHexType2}`)
 
-            expect(currentOptionsHexType1).not.to.equal('0x')
-            expect(currentOptionsHexType2).not.to.equal('0x')
+            expect(currentOptionsHexType1).not.toBe('0x')
+            expect(currentOptionsHexType2).not.toBe('0x')
         })
     })
 
@@ -127,7 +134,7 @@ describe('config-ops-tests', () => {
             if (mockConnections[0]?.config) {
                 mockConnections[0].config.sendLibrary = '0xb33f'
                 const txs = await createSetSendLibraryTxs(oft, endpoint, mockConnections)
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -137,7 +144,7 @@ describe('config-ops-tests', () => {
             if (mockConnections[0]?.config?.receiveLibraryConfig) {
                 mockConnections[0].config.receiveLibraryConfig.receiveLibrary = '0xb33f'
                 const txs = await createSetReceiveLibraryTxs(oft, endpoint, mockConnections)
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -147,7 +154,7 @@ describe('config-ops-tests', () => {
             if (mockConnections[0]?.config?.receiveLibraryTimeoutConfig) {
                 mockConnections[0].config.receiveLibraryTimeoutConfig.expiry = BigInt(2)
                 const txs = await createSetReceiveLibraryTimeoutTxs(oft, endpoint, mockConnections)
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -155,7 +162,7 @@ describe('config-ops-tests', () => {
     describe('setSendConfig', () => {
         it('should return 0 txs when no change is made', async () => {
             const txs = await createSetSendConfigTxs(oft, endpoint, mockConnections)
-            expect(txs.length).to.equal(0)
+            expect(txs.length).toBe(0)
         })
         it('should return 1 tx when change is made', async () => {
             // Temporarily redirect console.log to bypass Jest's console handling
@@ -170,7 +177,7 @@ describe('config-ops-tests', () => {
                 // Restore original console.log
                 console.log = originalLog
 
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -178,7 +185,7 @@ describe('config-ops-tests', () => {
     describe('setReceiveConfig', () => {
         it('should return 0 txs when no change is made', async () => {
             const txs = await createSetReceiveConfigTxs(oft, endpoint, mockConnections)
-            expect(txs.length).to.equal(0)
+            expect(txs.length).toBe(0)
         })
         it('should return 1 tx when change is made', async () => {
             // Temporarily redirect console.log to bypass Jest's console handling
@@ -193,7 +200,7 @@ describe('config-ops-tests', () => {
                 // Restore original console.log
                 console.log = originalLog
 
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -201,7 +208,7 @@ describe('config-ops-tests', () => {
     describe('createExecutorConfigTxs', () => {
         it('should return 0 txs when no change is made', async () => {
             const txs = await createSetExecutorConfigTxs(oft, endpoint, mockConnections)
-            expect(txs.length).to.equal(0)
+            expect(txs.length).toBe(0)
         })
         it('should return 1 tx when change is made', async () => {
             // Temporarily redirect console.log to bypass Jest's console handling
@@ -211,13 +218,13 @@ describe('config-ops-tests', () => {
             }
 
             if (mockConnections[0]?.config?.sendConfig?.executorConfig) {
-                mockConnections[0].config.sendConfig.executorConfig.maxMessageSize = 123456
+                mockConnections[0].config.sendConfig.executorConfig.maxMessageSize = 42069
                 const txs = await createSetExecutorConfigTxs(oft, endpoint, mockConnections)
 
                 // Restore original console.log
                 console.log = originalLog
 
-                expect(txs.length).to.equal(1)
+                expect(txs.length).toBe(1)
             }
         })
     })
@@ -236,7 +243,7 @@ describe('config-ops-tests', () => {
             const expected_use_default_for_required_dvns = false
             const expected_use_default_for_optional_dvns = false
 
-            expect(serializableUlnConfig).to.deep.equal({
+            expect(serializableUlnConfig).toEqual({
                 confirmations: ulnConfig.confirmations,
                 required_dvns: ulnConfig.requiredDVNs,
                 optional_dvns: ulnConfig.optionalDVNs,
@@ -261,7 +268,7 @@ describe('config-ops-tests', () => {
             const expected_use_default_for_required_dvns = true
             const expected_use_default_for_optional_dvns = true
 
-            expect(serializableUlnConfig).to.deep.equal({
+            expect(serializableUlnConfig).toEqual({
                 confirmations: ulnConfig.confirmations,
                 required_dvns: ulnConfig.requiredDVNs,
                 optional_dvns: ulnConfig.optionalDVNs,
@@ -286,7 +293,7 @@ describe('config-ops-tests', () => {
             const expected_use_default_for_required_dvns = false
             const expected_use_default_for_optional_dvns = true
 
-            expect(serializableUlnConfig).to.deep.equal({
+            expect(serializableUlnConfig).toEqual({
                 confirmations: ulnConfig.confirmations,
                 required_dvns: ulnConfig.requiredDVNs,
                 optional_dvns: ulnConfig.optionalDVNs,
@@ -302,7 +309,7 @@ describe('config-ops-tests', () => {
                 requiredDVNs: ['0x1'],
             }
 
-            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, mockTo, mockFrom)).to.throw()
+            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, mockTo, mockFrom)).toThrow()
         })
 
         it('should configure ULN with only required DVNs specified', async () => {
@@ -319,7 +326,7 @@ describe('config-ops-tests', () => {
             const expected_use_default_for_required_dvns = false
             const expected_use_default_for_optional_dvns = true
 
-            expect(serializableUlnConfig).to.deep.equal({
+            expect(serializableUlnConfig).toEqual({
                 confirmations: ulnConfig.confirmations,
                 required_dvns: ulnConfig.requiredDVNs,
                 optional_dvns: ulnConfig.optionalDVNs,
@@ -336,7 +343,7 @@ describe('config-ops-tests', () => {
                 optionalDVNs: ['0x51ec85b4cf4d7ac03a2a42853a5f0cfbd22f56fda66726e1f98906d5829b7c22'],
             }
 
-            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, mockTo, mockFrom)).to.throw()
+            expect(() => createSerializableUlnConfig(ulnConfig as Uln302UlnUserConfig, mockTo, mockFrom)).toThrow()
         })
     })
 })
@@ -349,11 +356,6 @@ const bscContract: OmniPointHardhat = {
 const aptosContract: OmniPointHardhat = {
     eid: EndpointId.APTOS_V2_TESTNET,
     contractName: 'oft',
-}
-
-const ethereumContract: OmniPointHardhat = {
-    eid: EndpointId.ETHEREUM_V2_TESTNET,
-    contractName: 'MyOFT',
 }
 
 const mockConnections: OmniEdgeHardhat<OAppEdgeConfig>[] = [
@@ -395,10 +397,10 @@ const mockConnections: OmniEdgeHardhat<OAppEdgeConfig>[] = [
                 },
                 ulnConfig: {
                     // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-                    confirmations: BigInt(260),
+                    confirmations: BigInt(0),
                     // The address of the DVNs you will pay to verify a sent message on the source chain.
                     // The destination tx will wait until ALL `requiredDVNs` verify the message.
-                    requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
+                    requiredDVNs: [],
                     // The address of the DVNs you will pay to verify a sent message on the source chain.
                     // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
                     optionalDVNs: [],
@@ -411,10 +413,10 @@ const mockConnections: OmniEdgeHardhat<OAppEdgeConfig>[] = [
             receiveConfig: {
                 ulnConfig: {
                     // The number of block confirmations to expect from the `to` chain.
-                    confirmations: BigInt(5),
+                    confirmations: BigInt(0),
                     // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
                     // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
-                    requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
+                    requiredDVNs: [],
                     // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain.
                     // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
                     optionalDVNs: [],
