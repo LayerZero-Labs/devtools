@@ -453,6 +453,61 @@ export async function createSetExecutorConfigTxs(
     return txs
 }
 
+export async function createSetRateLimitTx(
+    oft: OFT,
+    rateLimit: bigint,
+    window_seconds: bigint,
+    eid: EndpointId
+): Promise<TransactionPayload | null> {
+    const [currentLimit, currentWindow] = await oft.getRateLimitConfig(eid)
+    const toNetwork = getNetworkForChainId(eid)
+
+    if (currentLimit === rateLimit && currentWindow === window_seconds) {
+        console.log(`✅ Rate limit already set for ${toNetwork.chainName}-${toNetwork.env}`)
+        return null
+    } else {
+        diffPrinter(
+            `Set rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
+            { limit: currentLimit, window: currentWindow },
+            { limit: rateLimit, window: window_seconds }
+        )
+
+        const tx = oft.createSetRateLimitTx(eid, rateLimit, window_seconds)
+        return {
+            payload: tx,
+            description: `Set rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
+            eid: eid,
+        }
+    }
+}
+
+export async function createSetFeeBpsTx(
+    oft: OFT,
+    fee_bps: bigint,
+    eid: EndpointId
+): Promise<TransactionPayload | null> {
+    const currentFeeBps = await oft.getFeeBps()
+    const toNetwork = getNetworkForChainId(eid)
+
+    if (currentFeeBps === fee_bps) {
+        console.log(`✅ Fee BPS already set for ${toNetwork.chainName}-${toNetwork.env}`)
+        return null
+    } else {
+        diffPrinter(
+            `Set fee BPS for ${toNetwork.chainName}-${toNetwork.env}`,
+            { fee_bps: currentFeeBps },
+            { fee_bps: fee_bps }
+        )
+
+        const tx = oft.createSetFeeBpsTx(fee_bps)
+        return {
+            payload: tx,
+            description: `Set fee BPS for ${toNetwork.chainName}-${toNetwork.env}`,
+            eid: eid,
+        }
+    }
+}
+
 // getPeer errors if there is no peer set, so we need to check if there is a peer before calling getPeer
 async function getCurrentPeer(oft: OFT, eid: EndpointId): Promise<string> {
     const hasPeer = await oft.hasPeer(eid)

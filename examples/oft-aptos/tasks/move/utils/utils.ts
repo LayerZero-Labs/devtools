@@ -9,7 +9,7 @@ import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
 import lzConfigAptos from '../../../aptos.layerzero.config'
 import { OFT } from '../../../sdk/oft'
 
-import { TransactionPayload } from './aptosOftConfigOps'
+import { TransactionPayload } from './moveVMOftConfigOps'
 
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 

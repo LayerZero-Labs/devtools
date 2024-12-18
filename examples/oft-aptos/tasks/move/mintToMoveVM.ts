@@ -3,7 +3,7 @@ import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 import { OFT } from '../../sdk/oft'
 
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { TransactionPayload } from './utils/aptosOftConfigOps'
+import { TransactionPayload } from './utils/moveVMOftConfigOps'
 import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
