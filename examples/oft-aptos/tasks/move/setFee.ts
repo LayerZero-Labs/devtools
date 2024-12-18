@@ -1,9 +1,11 @@
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+
 import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 
-import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { setDelegate } from './utils/moveVMOftConfigOps'
-import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
+import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { createSetFeeBpsTx } from './utils/moveVMOftConfigOps'
+import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function main() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
@@ -14,17 +16,18 @@ async function main() {
     const lzNetworkStage = getLzNetworkStage(network)
     const oftAddress = getMoveVMOftAddress(lzNetworkStage)
 
-    console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Delegate`)
+    console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Fee BPS`)
     console.log(`\tFor: ${oftAddress}\n`)
-
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const eid = getEidFromAptosNetwork('aptos', network)
-    const delegate = getDelegateFromLzConfig(eid)
+    const feeBps = BigInt(10)
+    const toEid = EndpointId.BSC_V2_TESTNET
 
-    const setDelegatePayload = await setDelegate(oft, delegate, eid)
+    console.log(`\tFee BPS: ${feeBps}\n`)
 
-    sendAllTxs(aptos, oft, account_address, [setDelegatePayload])
+    const setFeeBpsPayload = await createSetFeeBpsTx(oft, feeBps, toEid)
+
+    sendAllTxs(aptos, oft, account_address, [setFeeBpsPayload])
 }
 
 main().catch((error) => {

@@ -21,11 +21,12 @@ export function createSerializableUlnConfig(
             `requiredDVNs must be specified in ULN configuration for ${from.contractName}(${from.eid}) -> ${to.contractName}(${to.eid})\nIf you intend to use defaults for requiredDVNs, set requiredDVNs to an empty array.`
         )
     }
-    if (ulnConfig.optionalDVNs === undefined) {
-        throw new Error(
-            `optionalDVNs must be specified in ULN configuration for ${from.contractName}(${from.eid}) -> ${to.contractName}(${to.eid})\nIf you intend to use defaults for optionalDVNs, set optionalDVNs to an empty array.`
-        )
-    }
+    // TODO: ensure behaviour is correct with krak
+    // if (ulnConfig.optionalDVNs === undefined) {
+    //     throw new Error(
+    //         `optionalDVNs must be specified in ULN configuration for ${from.contractName}(${from.eid}) -> ${to.contractName}(${to.eid})\nIf you intend to use defaults for optionalDVNs, set optionalDVNs to an empty array.`
+    //     )
+    // }
     if (ulnConfig.optionalDVNThreshold === undefined) {
         throw new Error(
             `optionalDVNThreshold must be specified in ULN configuration for ${from.contractName}(${from.eid}) -> ${to.contractName}(${to.eid})`
@@ -47,12 +48,17 @@ export function createSerializableUlnConfig(
     // Use defaults for required DVNs when array is empty
     const useDefaultForRequiredDVNs = !requiredDVNs.length
     // Use defaults for optional DVNs when array is empty
-    const useDefaultForOptionalDVNs = !optionalDVNs.length
+    let useDefaultForOptionalDVNs = false
+    if (optionalDVNs === undefined) {
+        useDefaultForOptionalDVNs = true
+    } else {
+        useDefaultForOptionalDVNs = !optionalDVNs.length
+    }
 
     return {
         confirmations,
         optional_dvn_threshold: optionalDVNThreshold,
-        optional_dvns: optionalDVNs,
+        optional_dvns: optionalDVNs ?? [],
         required_dvns: requiredDVNs,
         use_default_for_confirmations: useDefaultForConfirmations,
         use_default_for_required_dvns: useDefaultForRequiredDVNs,
