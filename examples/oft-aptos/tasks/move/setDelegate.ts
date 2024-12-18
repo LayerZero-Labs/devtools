@@ -14,16 +14,14 @@ async function main() {
     const lzNetworkStage = getLzNetworkStage(network)
     const oftAddress = getMoveVMOftAddress(lzNetworkStage)
 
-    console.log(`\n🔧 Setting ${chain} OFT Delegate`)
+    console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Delegate`)
     console.log(`\tFor: ${oftAddress}\n`)
 
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const currAdmin = await oft.getAdmin()
-    console.log(`\tCurrent Admin: ${currAdmin}`)
-
     const eid = getEidFromAptosNetwork('aptos', network)
     const delegate = getDelegateFromLzConfig(eid)
+
     const setDelegatePayload = await setDelegate(oft, delegate, eid)
 
     sendAllTxs(aptos, oft, account_address, [setDelegatePayload])
