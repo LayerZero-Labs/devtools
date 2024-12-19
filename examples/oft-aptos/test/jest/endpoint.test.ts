@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { expect } from 'chai'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { Endpoint } from '../../sdk/endpoint'
 const ENDPOINT_ADDRESS = '0xa53352d6eb261173560111b83eb898611a8e87f7dabada415159f749fbd185e4'
