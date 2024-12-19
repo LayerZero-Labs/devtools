@@ -52,7 +52,6 @@ interface SetAuthorityTaskArgs {
     onlyOftStore: boolean
 
     computeUnitPriceScaleFactor: number
-    computeUnitLimitScaleFactor: number
 }
 
 /**
@@ -108,7 +107,6 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
         devtoolsTypes.string
     )
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
-    .addParam('computeUnitLimitScaleFactor', 'The compute unit limit scale factor', 1.1, devtoolsTypes.float, true)
     .setAction(
         async ({
             eid,
@@ -119,7 +117,6 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             additionalMinters: additionalMintersAsStrings,
             onlyOftStore,
             computeUnitPriceScaleFactor,
-            computeUnitLimitScaleFactor,
         }: SetAuthorityTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const oftStorePda = getOftStore(programIdStr, escrowStr)
@@ -194,8 +191,7 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor,
-                    computeUnitLimitScaleFactor
+                    computeUnitPriceScaleFactor
                 )
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(

@@ -22,7 +22,6 @@ interface Args {
     escrow: string
     tokenProgram: string
     computeUnitPriceScaleFactor: number
-    computeUnitLimitScaleFactor: number
 }
 
 // Define a Hardhat task for sending OFT from Solana
@@ -36,7 +35,6 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
     .addParam('escrow', 'The OFT escrow public key', undefined, types.string)
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), types.string, true)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, types.float, true)
-    .addParam('computeUnitLimitScaleFactor', 'The compute unit limit scale factor', 1.1, types.float, true)
     .setAction(
         async ({
             amount,
@@ -48,7 +46,6 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             escrow: escrowStr,
             tokenProgram: tokenProgramStr,
             computeUnitPriceScaleFactor,
-            computeUnitLimitScaleFactor,
         }: Args) => {
             const { connection, umi, umiWalletSigner } = await deriveConnection(fromEid)
 
@@ -122,8 +119,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                 fromEid,
                 txBuilder,
                 umiWalletSigner,
-                computeUnitPriceScaleFactor,
-                computeUnitLimitScaleFactor
+                computeUnitPriceScaleFactor
             )
             const { signature } = await txBuilder.sendAndConfirm(umi)
             const transactionSignatureBase58 = bs58.encode(signature)

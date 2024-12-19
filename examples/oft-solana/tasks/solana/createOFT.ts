@@ -104,7 +104,6 @@ interface CreateOFTTaskArgs {
     uri: string
 
     computeUnitPriceScaleFactor: number
-    computeUnitLimitScaleFactor: number
 }
 
 // Define a Hardhat task for creating OFT on Solana
@@ -139,7 +138,6 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
     )
     .addParam('uri', 'URI for token metadata', '', devtoolsTypes.string)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
-    .addParam('computeUnitLimitScaleFactor', 'The compute unit limit scale factor', 1.1, devtoolsTypes.float, true)
     .setAction(
         async ({
             amount,
@@ -157,7 +155,6 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             tokenProgram: tokenProgramStr,
             uri,
             computeUnitPriceScaleFactor,
-            computeUnitLimitScaleFactor,
         }: CreateOFTTaskArgs) => {
             const isMABA = !!mintStr
             if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
@@ -234,8 +231,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor,
-                    computeUnitLimitScaleFactor
+                    computeUnitPriceScaleFactor
                 )
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
                 await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
@@ -265,8 +261,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 eid,
                 txBuilder,
                 umiWalletSigner,
-                computeUnitPriceScaleFactor,
-                computeUnitLimitScaleFactor
+                computeUnitPriceScaleFactor
             )
             const { signature } = await txBuilder.sendAndConfirm(umi)
             console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
@@ -295,8 +290,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor,
-                    computeUnitLimitScaleFactor
+                    computeUnitPriceScaleFactor
                 )
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)

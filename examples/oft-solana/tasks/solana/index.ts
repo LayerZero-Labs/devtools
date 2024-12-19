@@ -188,9 +188,9 @@ export const addComputeUnitInstructions = async (
     eid: EndpointId,
     txBuilder: TransactionBuilder,
     umiWalletSigner: KeypairSigner,
-    computeUnitPriceScaleFactor: number,
-    computeUnitLimitScaleFactor: number
+    computeUnitPriceScaleFactor: number
 ) => {
+    const computeUnitLimitScaleFactor = 1.1 // hardcoded to 1.1 as the estimations are not perfect and can fall slightly short of the actual CU usage on-chain
     const { addressLookupTableInput, lookupTableAccount } = await getAddressLookupTable(connection, umi, eid)
     const { computeUnitPrice, computeUnits } = await getComputeUnitPriceAndLimit(
         connection,

@@ -32,7 +32,6 @@ interface CreateOFTAdapterTaskArgs {
     tokenProgram: string
 
     computeUnitPriceScaleFactor: number
-    computeUnitLimitScaleFactor: number
 }
 
 // Define a Hardhat task for creating OFTAdapter on Solana
@@ -42,7 +41,6 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
     .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), devtoolsTypes.string, true)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
-    .addParam('computeUnitLimitScaleFactor', 'The compute unit limit scale factor', 1.1, devtoolsTypes.float, true)
     .setAction(
         async ({
             eid,
@@ -50,7 +48,6 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             programId: programIdStr,
             tokenProgram: tokenProgramStr,
             computeUnitPriceScaleFactor,
-            computeUnitLimitScaleFactor,
         }: CreateOFTAdapterTaskArgs) => {
             const { connection, umi, umiWalletKeyPair, umiWalletSigner } = await deriveConnection(eid)
             const { programId, lockBox, escrowPK, oftStorePda, eddsa } = deriveKeys(programIdStr)
@@ -84,8 +81,7 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
                 eid,
                 txBuilder,
                 umiWalletSigner,
-                computeUnitPriceScaleFactor,
-                computeUnitLimitScaleFactor
+                computeUnitPriceScaleFactor
             )
             const { signature } = await txBuilder.sendAndConfirm(umi)
             console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), eid == EndpointId.SOLANA_V2_TESTNET)}`)
