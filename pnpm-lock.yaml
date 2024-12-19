@@ -85,7 +85,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -199,7 +199,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -313,7 +313,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -424,7 +424,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -538,7 +538,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -652,7 +652,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -756,6 +756,130 @@ importers:
         specifier: ^5.4.4
         version: 5.5.3
 
+  examples/oft-composer-library:
+    dependencies:
+      '@uniswap/v3-core':
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^2.0.1
+        version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.39
+        version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.12
+        version: 3.0.28
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.12
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.12
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.0
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^3.0.0
+        version: link:../../packages/oft-evm
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.39
+        version: 2.3.44
+      '@layerzerolabs/solhint-config':
+        specifier: ^3.0.12
+        version: 3.0.12(typescript@5.5.3)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~5.1.0
+        version: 5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.12)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.9
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.6.0
+        version: link:../../packages/toolbox-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.7.0
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.20
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.6
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      '@uniswap/v3-periphery':
+        specifier: ^1.4.4
+        version: 1.4.4
+      chai:
+        specifier: ^4.4.1
+        version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
+      dotenv:
+        specifier: ^16.4.1
+        version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.1
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      hardhat:
+        specifier: ^2.22.10
+        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.12)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      solhint:
+        specifier: ^4.1.1
+        version: 4.1.1(typescript@5.5.3)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
+
   examples/oft-solana:
     devDependencies:
       '@coral-xyz/anchor':
@@ -784,7 +908,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -994,7 +1118,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -1123,7 +1247,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -1234,7 +1358,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -1357,7 +1481,7 @@ importers:
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -1706,7 +1830,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
         version: link:../test-devtools
@@ -1846,7 +1970,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
         version: link:../test-devtools
@@ -1934,7 +2058,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.12
         version: 3.0.12
@@ -2010,7 +2134,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
         version: link:../test-devtools
@@ -2089,10 +2213,10 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-ton-sdk-v2':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@swc/core':
         specifier: ^1.4.0
         version: 1.4.0
@@ -2466,7 +2590,7 @@ importers:
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.2
         version: link:../protocol-devtools
@@ -2512,7 +2636,7 @@ importers:
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/omnicounter-devtools':
         specifier: ~3.0.2
         version: link:../omnicounter-devtools
@@ -2599,7 +2723,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
         version: link:../test-devtools
@@ -2669,7 +2793,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-sdk-v2':
         specifier: ^3.0.21
         version: 3.0.22
@@ -2736,7 +2860,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
@@ -2803,7 +2927,7 @@ importers:
     devDependencies:
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       bs58:
         specifier: ^6.0.0
         version: 6.0.0
@@ -3017,7 +3141,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3111,7 +3235,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3187,7 +3311,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
@@ -3272,7 +3396,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3354,7 +3478,7 @@ importers:
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^3.0.0
         version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)
@@ -3522,7 +3646,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
@@ -3660,7 +3784,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -3774,7 +3898,7 @@ importers:
         version: link:../../packages/devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
         version: link:../../packages/test-devtools
@@ -3912,7 +4036,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.2
         version: link:../../packages/protocol-devtools
@@ -3990,7 +4114,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -4128,7 +4252,7 @@ importers:
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.27
-        version: 3.0.27
+        version: 3.0.28
       '@layerzerolabs/lz-evm-messagelib-v2':
         specifier: ^3.0.12
         version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.12)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.1)(solidity-bytes-utils@0.8.2)
@@ -6405,8 +6529,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-definitions@3.0.27:
-    resolution: {integrity: sha512-XfYKb2BHef+rLRbBAQeys6ZqFrVIjiIgHKeztvMKgHigrlKjwL/5QyH/F9KdPP6buy25l5FbOlYVujCHb/li5A==}
+  /@layerzerolabs/lz-definitions@3.0.28:
+    resolution: {integrity: sha512-cwrrCvDZlUjikoozfzn00AuGefSbnn6oaPFu4aDsXYThxYIOkTsw0Q6GvPKmCPn4HIVztQn+Q+dDepQAr2ipeg==}
     dependencies:
       tiny-invariant: 1.3.3
 
@@ -6966,7 +7090,7 @@ packages:
   /@layerzerolabs/lz-foundation@3.0.0:
     resolution: {integrity: sha512-vYuuZAfIaRQUEGaKnV4dCOiFTENhfc2w+Fcnza/T7+O/JIKL2p/GqdxcC21HqrMNdLGMmSWnUqLlou+eCk3ROQ==}
     dependencies:
-      '@layerzerolabs/lz-definitions': 3.0.27
+      '@layerzerolabs/lz-definitions': 3.0.28
       '@layerzerolabs/lz-utilities': 3.0.0
       '@noble/ed25519': 1.7.3
       '@noble/hashes': 1.4.0
@@ -6989,7 +7113,7 @@ packages:
       '@ethersproject/sha2': 5.7.0
       '@ethersproject/solidity': 5.7.0
       '@layerzerolabs/lz-corekit-solana': 3.0.0
-      '@layerzerolabs/lz-definitions': 3.0.27
+      '@layerzerolabs/lz-definitions': 3.0.28
       '@layerzerolabs/lz-v2-utilities': 3.0.12
       '@metaplex-foundation/beet': 0.7.2
       '@metaplex-foundation/beet-solana': 0.4.1
@@ -7009,8 +7133,8 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-ton-sdk-v2@3.0.27:
-    resolution: {integrity: sha512-AU1uOzmLjWvyHdJGTo689bXLsCS/QAmfQSjvZ4544muLfpGVLl3l6lOl8DwmN1UQuwKKK94C5rEvoElVUYf0zQ==}
+  /@layerzerolabs/lz-ton-sdk-v2@3.0.28:
+    resolution: {integrity: sha512-Wej9Nf6KJczn6dVHL/9GiuM69h+Ak8dHyxmzBuM6Mae5JDvvCndm/a0+vCXC3/QooARgj8oFbYf095jQ4h/leA==}
     dependencies:
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
       '@ton/crypto': 3.3.0
@@ -7028,7 +7152,7 @@ packages:
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/providers': 5.7.2
-      '@layerzerolabs/lz-definitions': 3.0.27
+      '@layerzerolabs/lz-definitions': 3.0.28
       '@noble/hashes': 1.4.0
       '@noble/secp256k1': 1.7.1
       '@solana/web3.js': 1.95.8
@@ -7098,6 +7222,26 @@ packages:
       solhint: 4.1.1(typescript@5.5.3)
     transitivePeerDependencies:
       - typescript
+    dev: true
+
+  /@layerzerolabs/test-devtools-evm-foundry@5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.12)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0):
+    resolution: {integrity: sha512-LDfBMeb5VQRMRXadpNgUe5Knib5FdCQ24S2o+kWMS/qPS6ZbPGe7fnhFPhcifautuhMS8i9Rk7cMjoAxRGFdfQ==}
+    peerDependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
+      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
+      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
+      '@layerzerolabs/oapp-evm': ^0.3.0
+      '@layerzerolabs/oft-evm': ^3.0.0
+      '@openzeppelin/contracts': ^4.9.5 || ^5.0.0
+      '@openzeppelin/contracts-upgradeable': ^4.9.5 || ^5.0.0
+    dependencies:
+      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2': 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-v1-0.7': 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/oapp-evm': link:packages/oapp-evm
+      '@layerzerolabs/oft-evm': link:packages/oft-evm
+      '@openzeppelin/contracts': 5.1.0
+      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
     dev: true
 
   /@manypkg/find-root@1.1.0:
@@ -9496,7 +9640,6 @@ packages:
   /@uniswap/v3-core@1.0.1:
     resolution: {integrity: sha512-7pVk4hEm00j9tc71Y9+ssYpO6ytkeI0y7WE9P6UcmNzhxPePwyAxImuhVsTqWK9YFvzgtvzJHi64pBl4jUzKMQ==}
     engines: {node: '>=10'}
-    dev: true
 
   /@uniswap/v3-periphery@1.4.4:
     resolution: {integrity: sha512-S4+m+wh8HbWSO3DKk4LwUCPZJTpCugIsHrWR86m/OrUyvSqGDTXKFfc2sMuGXCZrD1ZqO3rhQsKgdWg3Hbb2Kw==}
@@ -9959,7 +10102,7 @@ packages:
   /axios@0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.5)
+      follow-redirects: 1.15.6(debug@4.3.7)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -12877,6 +13020,18 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.5
+
+  /follow-redirects@1.15.6(debug@4.3.7):
+    resolution: {integrity: sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.7
+    dev: true
 
   /follow-redirects@1.15.9(debug@4.3.4):
     resolution: {integrity: sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ==}
