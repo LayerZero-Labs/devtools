@@ -1,0 +1,34 @@
+{
+  "name": "@layerzerolabs/devtools-movement",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup --clean",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@aptos-labs/ts-sdk": "^1.33.1",
+    "@layerzerolabs/lz-definitions": "^3.0.21",
+    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.27",
+    "@layerzerolabs/lz-serdes": "^3.0.19",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.1",
+    "@types/argparse": "^2.0.17",
+    "@types/node": "~18.18.14",
+    "argparse": "^2.0.1",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.10",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.4",
+    "yaml": "^2.6.1"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  }
+}
