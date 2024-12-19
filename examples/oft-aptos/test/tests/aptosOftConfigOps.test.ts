@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import { Endpoint } from '../../sdk/endpoint'
 import { OFT } from '../../sdk/oft'

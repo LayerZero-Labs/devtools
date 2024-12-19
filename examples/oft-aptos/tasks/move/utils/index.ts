@@ -1,6 +1,6 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Deserializer, Serializer } from '@layerzerolabs/lz-serdes'
-import { addressToBytes32, trim0x } from '@layerzerolabs/lz-v2-utilities-v3'
+import { addressToBytes32, trim0x } from '@layerzerolabs/lz-v2-utilities'
 
 /**
  * Interface representing the limits.

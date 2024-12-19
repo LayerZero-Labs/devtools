@@ -4,7 +4,7 @@ import * as readline from 'readline'
 
 import { Aptos } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 
 import lzConfigAptos from '../../../aptos.layerzero.config'
 import { OFT } from '../../../sdk/oft'

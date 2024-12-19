@@ -1,6 +1,6 @@
 import { Contract } from 'ethers'
 
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { diffPrinter } from '../../shared/utils'
 

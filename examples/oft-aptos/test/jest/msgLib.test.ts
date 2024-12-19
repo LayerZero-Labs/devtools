@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { expect } from 'chai'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { MsgLib } from '../../sdk/msgLib'
 

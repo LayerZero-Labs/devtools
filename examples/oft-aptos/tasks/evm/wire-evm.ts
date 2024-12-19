@@ -32,7 +32,7 @@ const privateKey = process.env.PRIVATE_KEY
  */
 async function main() {
     const { network } = await parseYaml()
-    const EID_APTOS = getEidFromAptosNetwork(network)
+    const EID_APTOS = getEidFromAptosNetwork('aptos', network)
 
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = getConfigConnections('to', EID_APTOS)

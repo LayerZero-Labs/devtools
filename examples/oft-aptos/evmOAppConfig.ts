@@ -1,4 +1,4 @@
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities-v3'
+import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 
 import type { OAppEdgeConfig, OAppNodeConfig } from '@layerzerolabs/toolbox-hardhat'
 
