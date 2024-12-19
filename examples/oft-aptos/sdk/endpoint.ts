@@ -1,6 +1,6 @@
 import { Aptos } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 interface LibraryTimeoutResponse {
     expiry: bigint

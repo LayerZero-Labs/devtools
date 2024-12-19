@@ -3,8 +3,8 @@ import * as path from 'path'
 
 import { InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, Stage, endpointIdToStage, getNetworkForChainId } from '@layerzerolabs/lz-definitions-v3'
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities-v3'
+import { EndpointId, Stage, endpointIdToStage, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { Endpoint } from '../../../sdk/endpoint'
 import { MsgLib } from '../../../sdk/msgLib'
