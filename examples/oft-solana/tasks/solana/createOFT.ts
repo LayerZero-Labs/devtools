@@ -26,7 +26,7 @@ import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerol
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 import { assertAccountInitialized } from './utils'
 
-import { addPerformanceInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
+import { addComputeUnitInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 9
 
@@ -228,7 +228,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                             })
                         )
                 }
-                txBuilder = await addPerformanceInstructions(
+                txBuilder = await addComputeUnitInstructions(
                     connection,
                     umi,
                     eid,
@@ -259,7 +259,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     }
                 )
             )
-            txBuilder = await addPerformanceInstructions(
+            txBuilder = await addComputeUnitInstructions(
                 connection,
                 umi,
                 eid,
@@ -289,7 +289,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                             authorityType: 1,
                         })
                     )
-                txBuilder = await addPerformanceInstructions(
+                txBuilder = await addComputeUnitInstructions(
                     connection,
                     umi,
                     eid,

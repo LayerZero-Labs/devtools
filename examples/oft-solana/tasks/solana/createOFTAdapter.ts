@@ -8,7 +8,7 @@ import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { addPerformanceInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
+import { addComputeUnitInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
 interface CreateOFTAdapterTaskArgs {
     /**
@@ -78,7 +78,7 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
                     }
                 )
             )
-            txBuilder = await addPerformanceInstructions(
+            txBuilder = await addComputeUnitInstructions(
                 connection,
                 umi,
                 eid,

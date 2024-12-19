@@ -11,7 +11,7 @@ import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
-import { addPerformanceInstructions, deriveConnection, getExplorerTxLink } from './index'
+import { addComputeUnitInstructions, deriveConnection, getExplorerTxLink } from './index'
 
 interface SetAuthorityTaskArgs {
     /**
@@ -188,7 +188,7 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
                     signers: [umiWalletSigner], // Include all required signers here
                     bytesCreatedOnChain: 0,
                 })
-                txBuilder = await addPerformanceInstructions(
+                txBuilder = await addComputeUnitInstructions(
                     connection,
                     umi,
                     eid,

@@ -182,7 +182,7 @@ export const getComputeUnitPriceAndLimit = async (
     }
 }
 
-export const addPerformanceInstructions = async (
+export const addComputeUnitInstructions = async (
     connection: Connection,
     umi: Umi,
     eid: EndpointId,
