@@ -1,7 +1,7 @@
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
-import { Options } from '@layerzerolabs/lz-v2-utilities-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { OFT } from '../../sdk/oft'
 import { hexAddrToAptosBytesAddr } from '../../sdk/utils'

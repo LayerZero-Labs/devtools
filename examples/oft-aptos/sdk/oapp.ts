@@ -8,7 +8,7 @@ import {
     SimpleTransaction,
 } from '@aptos-labs/ts-sdk'
 
-import { EndpointId } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { hexAddrToAptosBytesAddr } from './utils'
 
