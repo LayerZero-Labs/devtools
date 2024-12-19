@@ -1,6 +1,6 @@
 import { Network as AptosNetworkStage } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, Stage } from '@layerzerolabs/lz-definitions-v3'
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 
 import { loadAptosYamlConfig } from './config'
 
