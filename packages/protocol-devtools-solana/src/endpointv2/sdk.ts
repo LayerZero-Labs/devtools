@@ -73,6 +73,15 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         }
     }
 
+    // Intentionally not marked as AsyncRetriable as it calls getDelegate(...) which is already AsyncRetriable.
+    protected async safeGetDelegate(oapp: OmniAddress): Promise<PublicKey> {
+        const delegate = await this.getDelegate(oapp)
+        if (delegate == null) {
+            throw new Error(`No delegate set for OApp ${oapp}`)
+        }
+        return new PublicKey(delegate)
+    }
+
     async isDelegate(oapp: OmniAddress, delegate: OmniAddress): Promise<boolean> {
         this.logger.debug(`Checking whether ${delegate} is a delegate for OApp ${oapp}`)
 
@@ -225,7 +234,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.debug(`Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
 
         const instruction = await mapError(
-            () => this.program.setSendLibrary(this.userAccount, new PublicKey(oapp), new PublicKey(uln), eid),
+            async () =>
+                this.program.setSendLibrary(
+                    await this.safeGetDelegate(oapp),
+                    new PublicKey(oapp),
+                    new PublicKey(uln),
+                    eid
+                ),
             (error) =>
                 new Error(`Failed to set the send library for ${this.label} and OApp ${oapp} for ${eidLabel}: ${error}`)
         )
@@ -257,9 +272,9 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.debug(`Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
 
         const instruction = await mapError(
-            () =>
+            async () =>
                 this.program.setReceiveLibrary(
-                    this.userAccount,
+                    await this.safeGetDelegate(oapp),
                     new PublicKey(oapp),
                     new PublicKey(uln),
                     eid,
@@ -334,7 +349,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
                 const instruction = await this.program.setOappConfig(
                     this.connection,
-                    this.userAccount,
+                    await this.safeGetDelegate(oapp),
                     new PublicKey(oapp),
                     new PublicKey(uln),
                     setConfigParam.eid,
@@ -569,7 +584,13 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp nonce for OApp ${oapp} and peer ${peer} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => this.program.initOAppNonce(this.userAccount, eid, new PublicKey(oapp), normalizePeer(peer, eid)),
+            async () =>
+                this.program.initOAppNonce(
+                    await this.safeGetDelegate(oapp),
+                    eid,
+                    new PublicKey(oapp),
+                    normalizePeer(peer, eid)
+                ),
             (error) =>
                 new Error(
                     `Failed to init nonce for ${this.label} for OApp ${oapp} and peer ${peer} on ${eidLabel}: ${error}`
@@ -615,7 +636,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp send library for OApp ${oapp} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => this.program.initSendLibrary(this.userAccount, new PublicKey(oapp), eid),
+            async () => this.program.initSendLibrary(await this.safeGetDelegate(oapp), new PublicKey(oapp), eid),
             (error) =>
                 new Error(`Failed to init send library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
         )
@@ -654,7 +675,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp receive library for OApp ${oapp} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => this.program.initReceiveLibrary(this.userAccount, new PublicKey(oapp), eid),
+            async () => this.program.initReceiveLibrary(await this.safeGetDelegate(oapp), new PublicKey(oapp), eid),
             (error) =>
                 new Error(`Failed to init receive library for ${this.label} for OApp ${oapp} on ${eidLabel}: ${error}`)
         )
@@ -698,7 +719,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
         this.logger.verbose(`Initializing OApp config library for OApp ${oapp} on ${eidLabel}`)
 
         const instruction = await mapError(
-            () => {
+            async () => {
                 const libPublicKey = new PublicKey(lib)
                 const msgLibInterface = libPublicKey.equals(SimpleMessageLibProgram.PROGRAM_ID)
                     ? (this.logger.debug(`Using SimpleMessageLib at ${libPublicKey} to initialize OApp config`),
@@ -707,7 +728,7 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
                       new UlnProgram.Uln(libPublicKey))
 
                 return this.program.initOAppConfig(
-                    this.userAccount,
+                    await this.safeGetDelegate(oapp),
                     msgLibInterface,
                     this.userAccount,
                     new PublicKey(oapp),
