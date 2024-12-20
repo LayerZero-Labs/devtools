@@ -69,12 +69,6 @@ const config: OAppOmniGraphHardhat = {
             //         receiveLibrary: '7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH',
             //         gracePeriod: BigInt(0),
             //     },
-            //     // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid
-            //     // Note:  This configuring `receiveLibraryTimeoutConfig` using devtools is not currently available for Solana.
-            //     // receiveLibraryTimeoutConfig: {
-            //     //     lib: '0x0000000000000000000000000000000000000000',
-            //     //     expiry: BigInt(0),
-            //     // },
             //     // Optional Send Configuration
             //     // @dev Controls how the `from` chain sends messages to the `to` chain.
             //     sendConfig: {

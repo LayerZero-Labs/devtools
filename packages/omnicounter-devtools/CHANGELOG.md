@@ -1,5 +1,14 @@
 # @layerzerolabs/omnicounter-devtools
 
+## 3.0.2
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/protocol-devtools@1.1.2
+  - @layerzerolabs/devtools@0.4.3
+
 ## 3.0.1
 
 ### Patch Changes

@@ -29,6 +29,15 @@ export const serializeMessageRelaxed = (message: MessageRelaxed): string =>
     messageRelaxedToCell(message).toBoc().toString('base64')
 
 /**
+ * Serializes a MessageRelaxed array into a string that can be passed to OmniTransaction data
+ *
+ * @param {MessageRelaxed[]} messages
+ * @returns {string} Base64 serialized message string
+ */
+export const serializeMessagesRelaxed = (messages: MessageRelaxed[]): string =>
+    messages.map((msg) => messageRelaxedToCell(msg).toBoc().toString('base64')).join(',') //comma is a safe separator for base64
+
+/**
  * Deserializes a Message object from Base64 serialized representation
  *
  * @param {string} data
@@ -44,6 +53,15 @@ export const deserializeMessage = (data: string): Message => loadMessage(Cell.fr
  */
 export const deserializeMessageRelaxed = (data: string): MessageRelaxed =>
     loadMessageRelaxed(Cell.fromBase64(data).beginParse())
+
+/**
+ * Deserializes a MessageRelaxed array from Base64 serialized representation
+ *
+ * @param {string} data
+ * @returns {MessageRelaxed[]}
+ */
+export const deserializeMessagesRelaxed = (data: string): MessageRelaxed[] =>
+    data.split(',').map((datum) => loadMessageRelaxed(Cell.fromBase64(datum).beginParse()))
 
 /**
  * Tries to deserialize Base64 serialized data into a Message or MessageRelaxed object

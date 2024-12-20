@@ -169,10 +169,21 @@ teardown() {
     pnpm lint:fix
 }
 
+@test "should work with pnpm & mint-burn-oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/pnpm-mint-burn-oft-adapter"
+
+    LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager pnpm
+    cd "$DESTINATION"
+    pnpm compile
+    pnpm test
+    pnpm lint
+    pnpm lint:fix
+}
+
 @test "should work with pnpm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-solana"
 
-    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -242,10 +253,21 @@ teardown() {
     yarn lint:fix
 }
 
+@test "should work with yarn & mint-burn-oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/yarn-mint-burn-oft-adapter"
+
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-mint-burn-oft-adapter-evm" LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager yarn
+    cd "$DESTINATION"
+    yarn compile
+    yarn test
+    yarn lint
+    yarn lint:fix
+}
+
 @test "should work with yarn & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/yarn-oft-solana"
 
-    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
+    YARN_CACHE_FOLDER="/tmp/.yarn-cache-oft-solana" LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager yarn
     cd "$DESTINATION"
     yarn compile
     yarn test
@@ -315,10 +337,21 @@ teardown() {
     npm run lint:fix
 }
 
+@test "should work with npm & mint-burn-oft-adapter example in CI mode" {
+    local DESTINATION="$PROJECTS_DIRECTORY/npm-mint-burn-oft-adapter"
+
+    LZ_ENABLE_MINTBURN_EXAMPLE=1 npx --yes create-lz-oapp --ci --example mint-burn-oft-adapter --destination $DESTINATION --package-manager npm
+    cd "$DESTINATION"
+    npm run compile
+    npm run test
+    npm run lint
+    npm run lint:fix
+}
+
 @test "should work with npm & oft solana example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/npm-oft-solana"
 
-    LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
+    LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx --yes create-lz-oapp --ci --example oft-solana --destination $DESTINATION --package-manager npm
     cd "$DESTINATION"
     npm run compile
     npm run test

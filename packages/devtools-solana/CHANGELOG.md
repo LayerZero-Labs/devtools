@@ -1,5 +1,19 @@
 # @layerzerolabs/devtools-solana
 
+## 1.0.4
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/devtools@0.4.3
+
+## 1.0.3
+
+### Patch Changes
+
+- e3c04dc: Update web3js dependencies
+
 ## 1.0.2
 
 ### Patch Changes

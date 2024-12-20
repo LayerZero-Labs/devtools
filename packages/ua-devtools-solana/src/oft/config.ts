@@ -7,12 +7,13 @@ import {
     OmniSDKFactory,
     OmniPoint,
 } from '@layerzerolabs/devtools'
-import { createModuleLogger } from '@layerzerolabs/io-devtools'
+import { createModuleLogger, createWithAsyncLogger } from '@layerzerolabs/io-devtools'
 import { isOmniPointOnSolana } from '@layerzerolabs/devtools-solana'
 import type { IOApp, OAppConfigurator, OAppOmniGraph } from '@layerzerolabs/ua-devtools'
 import { OFT } from './sdk'
 
 const createOFTLogger = () => createModuleLogger('OFT')
+const withOFTLogger = createWithAsyncLogger(createOFTLogger)
 
 /**
  * Helper function that checks whether a vector originates from a Solana network
@@ -44,12 +45,26 @@ const onlyEdgesFromSolana = (
 }
 
 export const initConfig: OAppConfigurator = createConfigureEdges(
-    onlyEdgesFromSolana(async ({ vector: { to } }, sdk) => {
-        if (typeof sdk.initConfig !== 'function') {
-            return createOFTLogger().warn(`Could not find initConfig() method on OFT SDK, skipping`), undefined
-        }
-        return sdk.initConfig(to.eid)
-    })
+    onlyEdgesFromSolana(
+        withOFTLogger(async ({ vector: { to } }, sdk) => {
+            const logger = createOFTLogger()
+            if (typeof sdk.sendConfigIsInitialized !== 'function') {
+                return logger.warn(`Could not find sendConfigIsInitialized() method on OFT SDK, skipping`), undefined
+            }
+            if (typeof sdk.initConfig !== 'function') {
+                return logger.warn(`Could not find initConfig() method on OFT SDK, skipping`), undefined
+            }
+
+            logger.verbose(`Checking if the sendConfig for ${to.eid} ${to.address} is initialized`)
+
+            const isInitialized = await sdk.sendConfigIsInitialized(to.eid)
+            if (isInitialized) {
+                return logger.verbose(`sendConfig for ${to.eid} ${to.address} is already initialized`), undefined
+            }
+            logger.verbose(`Initializing sendConfig for ${to.eid} ${to.address}`)
+            return sdk.initConfig(to.eid)
+        })
+    )
 )
 
 export const initOFTAccounts = createConfigureMultiple(initConfig)

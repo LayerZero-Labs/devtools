@@ -50,7 +50,7 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 anchor-cli
 ### Get the code
 
 ```bash
-LZ_ENABLE_EXPERIMENTAL_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
+LZ_ENABLE_SOLANA_OFT_EXAMPLE=1 npx create-lz-oapp@latest
 ```
 
 ### Installing Dependencies
@@ -79,29 +79,9 @@ We recommend that you request 5 devnet SOL, which should be sufficient for this 
 cp .env.example .env
 ```
 
-In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first. You can create a temporary script called `getBase58Pk.js` in your project root with the following contents:
+In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first.
 
-<details>
-  <summary> View `getBase58Pk.js` script </summary>
-
-```js
-import fs from "fs";
-import { Keypair } from "@solana/web3.js";
-import bs58 from "bs58";
-
-const keypairFilePath = `<KEYPAIR_FILE_PATH_HERE>`; // you can view this by running `solana config get`
-
-const data = fs.readFileSync(keypairFilePath, "utf8");
-const keypairJson = JSON.parse(data);
-const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson));
-const base58EncodedPrivateKey = bs58.encode(keypair.secretKey);
-
-console.log(base58EncodedPrivateKey);
-```
-
-Then, run `node getBase58Pk.js`
-
-</details>
+You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana.id.json`
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
@@ -142,8 +122,35 @@ Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that y
 
 Ensure you have Docker running before running the build command.
 
+#### Build the Solana OFT program
+
 ```bash
 anchor build -v # verification flag enabled
+```
+
+#### Preview Rent Costs for the Solana OFT
+
+:information_source: The majority of the SOL required to deploy your program will be for [**rent**](https://solana.com/docs/core/fees#rent) (specifically, for the minimum balance of SOL required for [rent-exemption](https://solana.com/docs/core/fees#rent-exempt)), which is calculated based on the amount of bytes the program or account uses. Programs typically require more rent than PDAs as more bytes are required to store the program's executable code.
+
+In our case, the OFT Program's rent accounts for roughly 99% of the SOL needed during deployment, while the other accounts' rent, OFT Store, Mint, Mint Authority Multisig and Escrow make up for only a fraction of the SOL needed.
+
+You can preview how much SOL would be needed for the program account. Note that the total SOL required would to be slightly higher than just this, to account for the other accounts that need to be created.
+
+```bash
+solana rent $(wc -c < target/verifiable/oft.so)
+```
+
+You should see an output such as
+
+```bash
+Rent-exempt minimum: 3.87415872 SOL
+```
+
+:information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more no why this is important.
+
+#### Deploy the Solana OFT
+
+```bash
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet
 ```
 
@@ -151,7 +158,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 :warning: If the deployment is slow, it could be that the network is congested. If so, you can either wait it out or opt to include a `priorityFee`.
 
-### (optional) Deploying with a priority fee
+#### (optional) Deploying with a priority fee
 
 This section only applies if you are unable to land your deployment transaction due to network congestion.
 
@@ -165,7 +172,7 @@ This section only applies if you are unable to land your deployment transaction 
 sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
 
-You can run `npx hardhat lz:solana:get-priority-fees --eid <SOLANA_EID> --address <PROGRAM_ID>` and use the `averageFeeExcludingZeros` value.
+You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--with-compute-unit-price` flag.
 
 :information_source: The average is calculated from getting the prioritization fees across recent blocks, but some blocks may have `0` as the prioritization fee. `averageFeeExcludingZeros` ignores blocks with `0` prioritization fees.
 
@@ -271,6 +278,7 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 ```
 
 :information_source: `~/.config/solana/id.json` assumes that you will use the keypair in the default location. To verify if this path applies to you, run `solana config get` and not the keypair path value.
+
 :information_source: You can get the `<MINT_AUTHORITY>` address from [deployments/solana-testnet/OFT.json](deployments/solana-testnet/OFT.json).
 
 ### Set Message Execution Options

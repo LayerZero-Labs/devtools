@@ -28,14 +28,16 @@ export class ComputerEVM extends EVMViewFunctionBase implements IComputerEVM {
         this.validateComputeSetting(computeSetting)
 
         try {
-            const mapper = ComputeSetting.OnlyReduce
-                ? (this.logger.info('OnlyReduce setting is used. Skipping map step.'),
-                  (r: RequestResponsePair) => r.response)
-                : (r: RequestResponsePair) => this.lzMap(compute, r, timeMarker)
-            const reducer = ComputeSetting.OnlyMap
-                ? (this.logger.info('OnlyMap setting is used. Skipping reduce step.'),
-                  (mappedResponses: string[]) => mappedResponses.join(''))
-                : (mappedResponses: string[]) => this.lzReduce(compute, cmd, mappedResponses, timeMarker)
+            const mapper =
+                computeSetting === ComputeSetting.OnlyReduce
+                    ? (this.logger.info('OnlyReduce setting is used. Skipping map step.'),
+                      (r: RequestResponsePair) => r.response)
+                    : (r: RequestResponsePair) => this.lzMap(compute, r, timeMarker)
+            const reducer =
+                computeSetting === ComputeSetting.OnlyMap
+                    ? (this.logger.info('OnlyMap setting is used. Skipping reduce step.'),
+                      (mappedResponses: string[]) => mappedResponses.join(''))
+                    : (mappedResponses: string[]) => this.lzReduce(compute, cmd, mappedResponses, timeMarker)
 
             const applicative = createDefaultApplicative(this.logger)
             const mapped = await applicative(responses.map((r) => () => mapper(r)))
