@@ -5,7 +5,7 @@ import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/ap
 import { setDelegate } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
-async function main() {
+async function executeSetDelegate() {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
 
     const chain = getChain(fullnode)
@@ -27,7 +27,4 @@ async function main() {
     sendAllTxs(aptos, oft, account_address, [setDelegatePayload])
 }
 
-main().catch((error) => {
-    console.error('Error:', error)
-    process.exit(1)
-})
+export { executeSetDelegate }

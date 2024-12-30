@@ -1,34 +1,24 @@
 import { spawn } from 'child_process'
 
-import { ArgumentParser } from 'argparse'
-
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { getNamedAddresses } from './utils/config'
+import fs from 'fs'
+import path from 'path'
 
 let stdErr = ''
-
-const parser = new ArgumentParser({
-    description: 'A simple CLI tool built with argparse in TypeScript',
-})
 
 /**
  * @notice Main function to build an OFT
  * @dev Wraps the aptos move build command
  * @returns Promise<void>
  */
-async function main() {
-    // read in the first arg passed via the command line
-    parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
-
-    const parserArgs = parser.parse_args()
+async function buildMovementContracts(named_addresses: string) {
     const network = (await parseYaml()).network
     const lzNetworkStage = getLzNetworkStage(network)
 
     // Get additional named addresses and combine with provided ones
     const additionalAddresses = getNamedAddresses(lzNetworkStage)
-    const namedAddresses = parserArgs.named_addresses
-        ? `${parserArgs.named_addresses},${additionalAddresses}`
-        : additionalAddresses
+    const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
 
     const cmd = 'aptos'
     const args = ['move', 'build', `--named-addresses=${namedAddresses}`]
@@ -70,7 +60,25 @@ async function main() {
     })
 }
 
-main().catch((error) => {
-    console.error('Error:', error)
-    process.exit(1)
-})
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function build(args: any, contractName: string) {
+    const buildPath = path.join(__dirname, '../build', contractName)
+
+    const aptosYamlConfig = await parseYaml()
+    const accountAddress = aptosYamlConfig.account_address
+
+    if (!fs.existsSync(buildPath) || args.force_build === 'true') {
+        if (!args.named_addresses) {
+            console.error(
+                `Missing --named-addresses flag! - usage based on your aptos config:\n --named-addresses oft=${accountAddress},oft_admin=${accountAddress}`
+            )
+            return
+        }
+        console.log('Building contracts - this may take a while')
+        await buildMovementContracts(args.named_addresses)
+    } else {
+        console.log('Skipping build - contracts already built')
+    }
+}
+
+export { build }
