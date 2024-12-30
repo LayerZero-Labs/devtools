@@ -3,7 +3,6 @@ import { assert } from 'console'
 import fs from 'fs'
 
 import { Network } from '@aptos-labs/ts-sdk'
-import { ArgumentParser } from 'argparse'
 
 import { deploymentFile } from '../shared/types'
 
@@ -13,32 +12,20 @@ import { getNamedAddresses } from './utils/config'
 let stdOut = ''
 let stdErr = ''
 
-const parser = new ArgumentParser({
-    description: 'A simple CLI tool built with argparse in TypeScript',
-})
-
 /**
  * @notice Main function to deploy an OFT
  * @dev This function deploys an OFT and creates a deployment file in the deployments directory
  * @dev Wraps the aptos move create-object-and-publish-package command
  * @returns Promise<void>
  */
-async function main() {
-    parser.add_argument('--address-name', { type: 'str', help: 'Module name of the OFT (oft)' })
-    parser.add_argument('--named-addresses', { type: 'str', help: 'deployer account address' })
-
-    const parserArgs = parser.parse_args()
+async function deployMovementContracts(address_name: string, named_addresses: string) {
     const aptosYamlConfig = await parseYaml()
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
 
     const additionalAddresses = getNamedAddresses(lzNetworkStage)
-    const namedAddresses = parserArgs.named_addresses
-        ? `${parserArgs.named_addresses},${additionalAddresses}`
-        : additionalAddresses
-
-    const address_name = parserArgs.address_name
+    const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
 
     const cmd = 'aptos'
     const args = [
@@ -128,7 +115,23 @@ async function createDeployment(deployedAddress: string, file_name: string, netw
     console.log(`Deployment file created at ${aptosDir}/${file_name}.json`)
 }
 
-main().catch((error) => {
-    console.error('Error:', error)
-    process.exit(1)
-})
+function checkIfDeploymentExists(file_name: string, network: string, lzNetworkStage: string) {
+    const aptosDir = `deployments/${network}-${lzNetworkStage}`
+    return fs.existsSync(`${aptosDir}/${file_name}.json`)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function deploy(args: any, contractName: string) {
+    const aptosYamlConfig = await parseYaml()
+    const networkStage = aptosYamlConfig.network
+    const lzNetworkStage = getLzNetworkStage(networkStage)
+    const network = getNetworkFromConfig(aptosYamlConfig)
+
+    if (checkIfDeploymentExists(args.address_name, lzNetworkStage, network) && args.force_deploy === 'true') {
+        console.log('Skipping deploy - deployment already exists')
+    } else {
+        console.log(`Follow the prompts to complete the deployment `)
+        await deployMovementContracts(contractName, args.named_addresses)
+    }
+}
+export { deploy }
