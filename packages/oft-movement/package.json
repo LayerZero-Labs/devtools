@@ -1,0 +1,32 @@
+{
+  "name": "@layerzerolabs/oft-movement",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup --clean",
+    "clean": "rm -rf artifacts cache out build",
+    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
+    "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
+    "compile:forge": "forge build",
+    "compile:hardhat": "hardhat compile",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@layerzerolabs/devtools-movement": "^0.0.1",
+    "@layerzerolabs/prettier-config-next": "^2.3.39",
+    "depcheck": "^1.4.7",
+    "eslint": "^8.55.0",
+    "hardhat": "^2.22.10",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  }
+}
