@@ -17,7 +17,7 @@ module oft::oft_coin_tests {
     use endpoint_v2_common::native_token_test_helpers::mint_native_token_for_test;
     use oft::oapp_core;
     use oft::oft::remove_dust;
-    use oft::oft_impl::{
+    use oft::oft_coin::{
         Self,
         burn_token_for_test,
         fee_bps,
@@ -46,7 +46,7 @@ module oft::oft_coin_tests {
         oft::oapp_test_helper::init_oapp();
 
         oft_store::init_module_for_test();
-        oft_impl::init_module_for_test();
+        oft_coin::init_module_for_test();
         oft_impl_config::init_module_for_test();
     }
 
@@ -63,7 +63,7 @@ module oft::oft_coin_tests {
         let coin = mint_tokens_for_test<PlaceholderCoin>(amount_ld);
 
         let dust_removed = remove_dust(amount_ld);
-        let (sent, received) = oft_impl::debit_coin(
+        let (sent, received) = oft_coin::debit_coin(
             @444,
             &mut coin,
             min_amount_ld,
@@ -96,7 +96,7 @@ module oft::oft_coin_tests {
         let balance = coin::balance<PlaceholderCoin>(to);
         assert!(balance == 0, 0);
 
-        let credited = oft_impl::credit(
+        let credited = oft_coin::credit(
             to,
             amount_ld,
             src_eid,
@@ -126,7 +126,7 @@ module oft::oft_coin_tests {
         let balance = coin::balance<PlaceholderCoin>(to);
         assert!(balance == 0, 0);
 
-        oft_impl::credit(
+        oft_coin::credit(
             to,
             amount_ld,
             src_eid,
@@ -141,7 +141,7 @@ module oft::oft_coin_tests {
         setup();
 
         // shouldn't take a fee
-        let (sent, received) = oft_impl::debit_view(123456700, 100, 2);
+        let (sent, received) = oft_coin::debit_view(123456700, 100, 2);
         let dust_removed = remove_dust(123456700);
         assert!(sent == dust_removed, 0);
         assert!(received == dust_removed, 0);
@@ -152,7 +152,7 @@ module oft::oft_coin_tests {
     fun test_debit_view_fails_if_less_than_min() {
         setup();
 
-        oft_impl::debit_view(32, 100, 2);
+        oft_coin::debit_view(32, 100, 2);
     }
 
     #[test]
@@ -162,7 +162,7 @@ module oft::oft_coin_tests {
 
         let message_type = 2;
 
-        let options = oft_impl::build_options(
+        let options = oft_coin::build_options(
             message_type,
             dst_eid,
             // OKAY that it's not type 3 if no enforced options are set
@@ -184,7 +184,7 @@ module oft::oft_coin_tests {
             x"00037777"
         );
 
-        let options = oft_impl::build_options(
+        let options = oft_coin::build_options(
             message_type,
             dst_eid,
             x"00031234",
@@ -202,7 +202,7 @@ module oft::oft_coin_tests {
     #[test]
     fun test_inspect_message() {
         // doesn't do anything, just tests that it doesn't fail
-        oft_impl::inspect_message(
+        oft_coin::inspect_message(
             &x"1234",
             &x"1234",
             true,
@@ -214,7 +214,7 @@ module oft::oft_coin_tests {
         setup();
 
         timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
-        let (limit, fees) = oft_impl::oft_limit_and_fees(
+        let (limit, fees) = oft_coin::oft_limit_and_fees(
             123,
             x"1234",
             123,
@@ -244,7 +244,7 @@ module oft::oft_coin_tests {
         let fee_bps_result = fee_bps();
         assert!(fee_bps_result == fee_bps, 0);
 
-        let (oft_limit, oft_fee_details) = oft_impl::oft_limit_and_fees(
+        let (oft_limit, oft_fee_details) = oft_coin::oft_limit_and_fees(
             123,
             x"1234",
             100_000_000,
@@ -281,7 +281,7 @@ module oft::oft_coin_tests {
 
         let coin_value = mint_tokens_for_test(amount_ld);
 
-        let (sent, received) = oft_impl::debit_coin(
+        let (sent, received) = oft_coin::debit_coin(
             @444,
             &mut coin_value,
             min_amount_ld,
@@ -315,7 +315,7 @@ module oft::oft_coin_tests {
 
         let admin = &create_signer_for_test(@oft_admin);
         create_account_for_test(blocklisted_address);
-        oft_impl::set_blocklist(
+        oft_coin::set_blocklist(
             admin,
             blocklisted_address,
             true,
@@ -326,7 +326,7 @@ module oft::oft_coin_tests {
         // Admin must exist as an account to redirect the blocked amount
         create_account_for_test(@oft_admin);
 
-        oft_impl::credit(
+        oft_coin::credit(
             blocklisted_address,
             1234,
             12345,
@@ -341,7 +341,7 @@ module oft::oft_coin_tests {
         let admin_balance = coin::balance<PlaceholderCoin>(@oft_admin);
         assert!(admin_balance == 1234, 3);
 
-        oft_impl::set_blocklist(
+        oft_coin::set_blocklist(
             admin,
             blocklisted_address,
             false,
@@ -349,7 +349,7 @@ module oft::oft_coin_tests {
         assert!(was_event_emitted(&oft_impl_config::blocklist_set_event(blocklisted_address, false)), 4);
         assert!(is_blocklisted(blocklisted_address) == false, 5);
 
-        oft_impl::credit(
+        oft_coin::credit(
             blocklisted_address,
             1234,
             12345,
@@ -371,19 +371,19 @@ module oft::oft_coin_tests {
 
         let blocklisted_address = @0x1234;
         std::account::create_account_for_test(blocklisted_address);
-        std::aptos_account::deposit_coins<PlaceholderCoin>(blocklisted_address, oft_impl::mint_tokens_for_test(10_000));
+        std::aptos_account::deposit_coins<PlaceholderCoin>(blocklisted_address, oft_coin::mint_tokens_for_test(10_000));
 
         assert!(is_blocklisted(blocklisted_address) == false, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_blocklist(
+        oft_coin::set_blocklist(
             admin,
             blocklisted_address,
             true,
         );
 
         let debit_tokens = mint_tokens_for_test<PlaceholderCoin>(1234);
-        oft_impl::debit_coin(
+        oft_coin::debit_coin(
             blocklisted_address,
             &mut debit_tokens,
             0,
@@ -398,11 +398,11 @@ module oft::oft_coin_tests {
         setup();
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::irrevocably_disable_blocklist(admin);
+        oft_coin::irrevocably_disable_blocklist(admin);
         assert!(was_event_emitted(&oft_impl_config::blocklisting_disabled_event()), 1);
 
         let blocklisted_address = @0x1234;
-        oft_impl::set_blocklist(
+        oft_coin::set_blocklist(
             admin,
             blocklisted_address,
             true,
@@ -413,17 +413,17 @@ module oft::oft_coin_tests {
     fun test_rate_limit() {
         setup();
 
-        let (limit, window) = oft_impl::rate_limit_config(30100);
+        let (limit, window) = oft_coin::rate_limit_config(30100);
         assert!(limit == 0 && window == 0, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_rate_limit(admin, 30100, 2500, 100);
+        oft_coin::set_rate_limit(admin, 30100, 2500, 100);
         assert!(was_event_emitted(&oft_impl_config::rate_limit_set_event(30100, 2500, 100)), 1);
 
-        let (limit, window) = oft_impl::rate_limit_config(30100);
+        let (limit, window) = oft_coin::rate_limit_config(30100);
         assert!(limit == 2500 && window == 100, 1);
 
-        let (oft_limit, fee_detail) = oft_impl::oft_limit_and_fees(
+        let (oft_limit, fee_detail) = oft_coin::oft_limit_and_fees(
             30100,
             x"1234",
             123,

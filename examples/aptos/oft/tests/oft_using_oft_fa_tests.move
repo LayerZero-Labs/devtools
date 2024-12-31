@@ -24,7 +24,7 @@ module oft::oft_using_oft_fa_tests {
     use oft::oft::{
         debit_view, quote_oft, quote_send, remove_dust, send, send_withdraw, to_ld, to_sd, token, unpack_oft_receipt,
     };
-    use oft::oft_impl::{mint_tokens_for_test, set_fee_bps, set_rate_limit};
+    use oft::oft_fa::{mint_tokens_for_test, set_fee_bps, set_rate_limit};
     use oft::oft_store;
     use oft_common::oft_limit::{max_amount_ld, min_amount_ld};
     use oft_common::oft_msg_codec;
@@ -40,8 +40,8 @@ module oft::oft_using_oft_fa_tests {
 
         oft::oft_impl_config::init_module_for_test();
         oft_store::init_module_for_test();
-        oft::oft_impl::init_module_for_test();
-        oft::oft_impl::initialize(
+        oft::oft_fa::init_module_for_test();
+        oft::oft_fa::initialize(
             oft_admin,
             b"My Test Token",
             b"MYT",
@@ -272,6 +272,7 @@ module oft::oft_using_oft_fa_tests {
                 packet_v1_codec::get_guid(&packet),
                 packet_v1_codec::get_message(&packet),
             ))),
+            b""
         );
         lz_receive(
             packet_v1_codec::get_src_eid(&packet),

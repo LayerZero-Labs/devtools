@@ -14,7 +14,7 @@ module oft::oft_fa_tests {
     use endpoint_v2_common::bytes32;
     use endpoint_v2_common::native_token_test_helpers::{burn_token_for_test, mint_native_token_for_test};
     use oft::oapp_core;
-    use oft::oft_impl::{
+    use oft::oft_fa::{
         Self, fee_bps, fee_deposit_address, is_blocklisted, mint_tokens_for_test, set_fee_bps, set_fee_deposit_address,
     };
     use oft::oft_impl_config;
@@ -31,9 +31,9 @@ module oft::oft_fa_tests {
         oft::oapp_test_helper::init_oapp();
 
         oft_store::init_module_for_test();
-        oft_impl::init_module_for_test();
+        oft_fa::init_module_for_test();
         oft_impl_config::init_module_for_test();
-        oft_impl::initialize(
+        oft_fa::initialize(
             &create_signer_for_test(@oft_admin),
             b"My Test Token",
             b"MYT",
@@ -61,7 +61,7 @@ module oft::oft_fa_tests {
         let min_amount_ld = 0u64;
 
         let fa = mint_tokens_for_test(amount_ld);
-        let (sent, received) = oft_impl::debit_fungible_asset(
+        let (sent, received) = oft_fa::debit_fungible_asset(
             @444,
             &mut fa,
             min_amount_ld,
@@ -90,10 +90,10 @@ module oft::oft_fa_tests {
         create_account_for_test(to);
 
         // 0 balance before crediting
-        let balance = primary_fungible_store::balance(to, oft_impl::metadata());
+        let balance = primary_fungible_store::balance(to, oft_fa::metadata());
         assert!(balance == 0, 0);
 
-        let credited = oft_impl::credit(
+        let credited = oft_fa::credit(
             to,
             amount_ld,
             src_eid,
@@ -103,7 +103,7 @@ module oft::oft_fa_tests {
         assert!(credited == 123456700, 0);
 
         // balance should appear in account
-        let balance = primary_fungible_store::balance(to, oft_impl::metadata());
+        let balance = primary_fungible_store::balance(to, oft_fa::metadata());
         assert!(balance == 123456700, 0);
     }
 
@@ -119,10 +119,10 @@ module oft::oft_fa_tests {
         create_account_for_test(to);
 
         // 0 balance before crediting
-        let balance = primary_fungible_store::balance(to, oft_impl::metadata());
+        let balance = primary_fungible_store::balance(to, oft_fa::metadata());
         assert!(balance == 0, 0);
 
-        oft_impl::credit(
+        oft_fa::credit(
             to,
             amount_ld,
             src_eid,
@@ -138,7 +138,7 @@ module oft::oft_fa_tests {
         setup();
 
         // shouldn't take a fee
-        let (sent, received) = oft_impl::debit_view(123456700, 100, 2);
+        let (sent, received) = oft_fa::debit_view(123456700, 100, 2);
         assert!(sent == 123456700, 0);
         assert!(received == 123456700, 0);
     }
@@ -148,7 +148,7 @@ module oft::oft_fa_tests {
     fun test_debit_view_fails_if_less_than_min() {
         setup();
 
-        oft_impl::debit_view(32, 100, 2);
+        oft_fa::debit_view(32, 100, 2);
     }
 
     #[test]
@@ -158,7 +158,7 @@ module oft::oft_fa_tests {
 
         let message_type = 2;
 
-        let options = oft_impl::build_options(
+        let options = oft_fa::build_options(
             message_type,
             dst_eid,
             // OKAY that it's not type 3 if no enforced options are set
@@ -180,7 +180,7 @@ module oft::oft_fa_tests {
             x"00037777"
         );
 
-        let options = oft_impl::build_options(
+        let options = oft_fa::build_options(
             message_type,
             dst_eid,
             x"00031234",
@@ -198,7 +198,7 @@ module oft::oft_fa_tests {
     #[test]
     fun test_inspect_message() {
         // doesn't do anything, just tests that it doesn't fail
-        oft_impl::inspect_message(
+        oft_fa::inspect_message(
             &x"1234",
             &x"1234",
             true,
@@ -210,7 +210,7 @@ module oft::oft_fa_tests {
         setup();
 
         timestamp::set_time_has_started_for_testing(&create_signer_for_test(@std));
-        let (limit, fees) = oft_impl::oft_limit_and_fees(
+        let (limit, fees) = oft_fa::oft_limit_and_fees(
             123,
             x"1234",
             123,
@@ -240,7 +240,7 @@ module oft::oft_fa_tests {
         let fee_bps_result = fee_bps();
         assert!(fee_bps_result == fee_bps, 0);
 
-        let (oft_limit, oft_fee_details) = oft_impl::oft_limit_and_fees(
+        let (oft_limit, oft_fee_details) = oft_fa::oft_limit_and_fees(
             123,
             x"1234",
             100_000_000,
@@ -276,7 +276,7 @@ module oft::oft_fa_tests {
         let min_amount_ld = 0u64;
 
         let fa = mint_tokens_for_test(amount_ld);
-        let (sent, received) = oft_impl::debit_fungible_asset(
+        let (sent, received) = oft_fa::debit_fungible_asset(
             @444,
             &mut fa,
             min_amount_ld,
@@ -294,7 +294,7 @@ module oft::oft_fa_tests {
         burn_token_for_test(fa);
 
         // check that the fee was deposited
-        let fee_deposited = primary_fungible_store::balance(deposit_address, oft_impl::metadata());
+        let fee_deposited = primary_fungible_store::balance(deposit_address, oft_fa::metadata());
         assert!(fee_deposited == 6172900, 0); // 123456700 - 117283800 = 6172900
 
         // check the invariant that the total amount is conserved
@@ -309,7 +309,7 @@ module oft::oft_fa_tests {
         assert!(is_blocklisted(blocklisted_address) == false, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_blocklist(
+        oft_fa::set_blocklist(
             admin,
             blocklisted_address,
             true,
@@ -317,7 +317,7 @@ module oft::oft_fa_tests {
         assert!(was_event_emitted(&oft_impl_config::blocklist_set_event(blocklisted_address, true)), 1);
         assert!(is_blocklisted(blocklisted_address), 1);
 
-        oft_impl::credit(
+        oft_fa::credit(
             blocklisted_address,
             1234,
             12345,
@@ -329,10 +329,10 @@ module oft::oft_fa_tests {
             2
         );
 
-        let admin_balance = primary_fungible_store::balance(@oft_admin, oft_impl::metadata());
+        let admin_balance = primary_fungible_store::balance(@oft_admin, oft_fa::metadata());
         assert!(admin_balance == 1234, 3);
 
-        oft_impl::set_blocklist(
+        oft_fa::set_blocklist(
             admin,
             blocklisted_address,
             false,
@@ -340,17 +340,17 @@ module oft::oft_fa_tests {
         assert!(was_event_emitted(&oft_impl_config::blocklist_set_event(blocklisted_address, false)), 4);
         assert!(is_blocklisted(blocklisted_address) == false, 5);
 
-        oft_impl::credit(
+        oft_fa::credit(
             blocklisted_address,
             1234,
             12345,
             option::none(),
         );
 
-        let to_balance = primary_fungible_store::balance(blocklisted_address, oft_impl::metadata());
+        let to_balance = primary_fungible_store::balance(blocklisted_address, oft_fa::metadata());
         assert!(to_balance == 1234, 6);
 
-        let admin_balance = primary_fungible_store::balance(@oft_admin, oft_impl::metadata());
+        let admin_balance = primary_fungible_store::balance(@oft_admin, oft_fa::metadata());
         // unchanged
         assert!(admin_balance == 1234, 7);
     }
@@ -361,19 +361,19 @@ module oft::oft_fa_tests {
         setup();
 
         let blocklisted_address = @0x1234;
-        primary_fungible_store::deposit(blocklisted_address, oft_impl::mint_tokens_for_test(10_000));
+        primary_fungible_store::deposit(blocklisted_address, oft_fa::mint_tokens_for_test(10_000));
 
         assert!(is_blocklisted(blocklisted_address) == false, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_blocklist(
+        oft_fa::set_blocklist(
             admin,
             blocklisted_address,
             true,
         );
 
         let debit_tokens = mint_tokens_for_test(1234);
-        oft_impl::debit_fungible_asset(
+        oft_fa::debit_fungible_asset(
             blocklisted_address,
             &mut debit_tokens,
             0,
@@ -388,12 +388,12 @@ module oft::oft_fa_tests {
         setup();
 
         let blocklisted_address = @0x1234;
-        primary_fungible_store::deposit(blocklisted_address, oft_impl::mint_tokens_for_test(10_000));
+        primary_fungible_store::deposit(blocklisted_address, oft_fa::mint_tokens_for_test(10_000));
 
         assert!(is_blocklisted(blocklisted_address) == false, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_blocklist(
+        oft_fa::set_blocklist(
             admin,
             blocklisted_address,
             true,
@@ -401,7 +401,7 @@ module oft::oft_fa_tests {
 
         primary_fungible_store::transfer(
             &create_signer_for_test(blocklisted_address),
-            oft_impl::metadata(),
+            oft_fa::metadata(),
             @9888,
             2000
         );
@@ -413,11 +413,11 @@ module oft::oft_fa_tests {
         setup();
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::irrevocably_disable_blocklist(admin);
+        oft_fa::irrevocably_disable_blocklist(admin);
         assert!(was_event_emitted(&oft_impl_config::blocklisting_disabled_event()), 1);
 
         let blocklisted_address = @0x1234;
-        oft_impl::set_blocklist(
+        oft_fa::set_blocklist(
             admin,
             blocklisted_address,
             true,
@@ -428,17 +428,17 @@ module oft::oft_fa_tests {
     fun test_rate_limit() {
         setup();
 
-        let (limit, window) = oft_impl::rate_limit_config(30100);
+        let (limit, window) = oft_fa::rate_limit_config(30100);
         assert!(limit == 0 && window == 0, 0);
 
         let admin = &create_signer_for_test(@oft_admin);
-        oft_impl::set_rate_limit(admin, 30100, 2500, 100);
+        oft_fa::set_rate_limit(admin, 30100, 2500, 100);
         assert!(was_event_emitted(&oft_impl_config::rate_limit_set_event(30100, 2500, 100)), 1);
 
-        let (limit, window) = oft_impl::rate_limit_config(30100);
+        let (limit, window) = oft_fa::rate_limit_config(30100);
         assert!(limit == 2500 && window == 100, 1);
 
-        let (oft_limit, fee_detail) = oft_impl::oft_limit_and_fees(
+        let (oft_limit, fee_detail) = oft_fa::oft_limit_and_fees(
             30100,
             x"1234",
             123,

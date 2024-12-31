@@ -14,13 +14,13 @@ module oft::oft {
     use endpoint_v2::messaging_receipt::MessagingReceipt;
     use endpoint_v2_common::bytes32::{Bytes32, to_bytes32};
     use endpoint_v2_common::contract_identity::{DynamicCallRef, get_dynamic_call_ref_caller};
-    use oft::oapp_core::{Self, assert_admin, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
+    use oft::oapp_core::{Self, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
     use oft_common::oft_fee_detail::OftFeeDetail;
     use oft_common::oft_limit::OftLimit;
 
-    use oft::oft_impl::{
+    use oft::oft_coin::{
         balance as balance_internal,
         build_options,
         credit,
@@ -35,8 +35,6 @@ module oft::oft {
         send_standards_supported as send_standards_supported_internal,
         withdraw_coin,
     };
-    
-    // *********************************************** END CONFIGURATION ***********************************************
 
     friend oft::oapp_receive;
     friend oft::oapp_compose;
@@ -78,6 +76,10 @@ module oft::oft {
         zro_fee: u64,
     ) {
         // Withdraw the amount and fees from the account
+        assert!(
+            primary_fungible_store::balance(address_of(account), metadata()) >= amount_ld,
+            EINSUFFICIENT_BALANCE,
+        );
         let send_value = primary_fungible_store::withdraw(account, metadata(), amount_ld);
         let (native_fee_fa, zro_fee_fa) = withdraw_lz_fees(account, native_fee, zro_fee);
         let sender = address_of(move account);
@@ -342,18 +344,6 @@ module oft::oft {
         (receipt.amount_sent_ld, receipt.amount_received_ld)
     }
 
-    // ==================================================== V1 OFT ====================================================
-
-    /// Set the OFT on the specified EID as a V1 OFT
-    /// This will use the V1 Codec to communicate with the OFT
-    /// Composition is disabled on send for V1 mode
-    /// Composition is available on receive on V1 mode; however the compose message will be delivered to the compose
-    /// recipient will follow the pattern of v2 OFT compose messages (see oft_common::oft_compose_msg_codec)
-    public entry fun set_v1_compatibility_mode(admin: &signer, eid: u32, enabled: bool) {
-        assert_admin(address_of(admin));
-        oft_core::set_v1_compatibility_mode(eid, enabled)
-    }
-
     // ===================================================== View =====================================================
 
     #[view]
@@ -422,14 +412,9 @@ module oft::oft {
         oapp_core::get_peer(eid)
     }
 
-    #[view]
-    /// Returns whether the peer OFT on an EID is a V1 OFT
-    public fun v1_compatibility_mode(eid: u32): bool {
-        oft_core::v1_compatibility_mode(eid)
-    }
-
     // ================================================== Error Codes =================================================
 
     const ECOMPOSE_NOT_IMPLEMENTED: u64 = 1;
-    const EINVALID_METADATA: u64 = 2;
+    const EINSUFFICIENT_BALANCE: u64 = 2;
+    const EINVALID_METADATA: u64 = 3;
 }

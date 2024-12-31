@@ -13,7 +13,7 @@ module oft::oapp_receive_using_oft_fa_tests {
     use oft::oapp_receive;
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
-    use oft::oft_impl;
+    use oft::oft_fa;
     use oft::oft_impl_config;
     use oft::oft_store;
     use oft_common::oft_compose_msg_codec;
@@ -31,8 +31,8 @@ module oft::oapp_receive_using_oft_fa_tests {
 
         oft_store::init_module_for_test();
         oft_impl_config::init_module_for_test();
-        oft_impl::init_module_for_test();
-        oft_impl::initialize(
+        oft_fa::init_module_for_test();
+        oft_fa::initialize(
             &create_signer_for_test(@oft_admin),
             b"My Test Token",
             b"MYT",
@@ -73,6 +73,7 @@ module oft::oapp_receive_using_oft_fa_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
+            b""
         );
 
 
@@ -126,6 +127,7 @@ module oft::oapp_receive_using_oft_fa_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
+            b""
         );
 
 

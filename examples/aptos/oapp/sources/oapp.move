@@ -20,6 +20,7 @@ module oapp::oapp {
 
     const STANDARD_MESSAGE_TYPE: u16 = 1;
 
+    // todo: replicate the logic in here where sending a message must happen
     public entry fun example_message_sender(
         account: &signer,
         dst_eid: u32,
@@ -49,6 +50,7 @@ module oapp::oapp {
     #[view]
     /// Quote the network fees for a particular send
     /// @return (native_fee, zro_fee)
+    // todo: replicate the logic in here where a quote is needed
     public fun example_message_quoter(
         dst_eid: u32,
         message: vector<u8>,
@@ -89,6 +91,7 @@ module oapp::oapp {
         _extra_data: vector<u8>,
         _value: Option<FungibleAsset>,
     ) {
+        // todo: Replace this function body with any actions that need to be run if this OApp receives a compose message
         // This only needs to be implemented if the OApp needs to *receive* composed messages
         abort ECOMPOSE_NOT_IMPLEMENTED
     }
