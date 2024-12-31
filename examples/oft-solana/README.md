@@ -196,7 +196,7 @@ sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 
 :information_source: For **OFT** and **OFT Mint-And-Burn Adapter**, you have the option to specify additional signers through the `--additional-minters` flag. If you choose not to, you must pass in `--only-oft-store true`, which means only the **OFT Store** will be a signer for the \_Mint Authority Multisig\*.
 
-:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority. You will also not be able to renounce the Freeze Authority. The Mint Authority and Freeze Authority will be fixed to the Mint Authority Multisig address.
+:warning: If you choose to go with `--only-oft-store`, you will not be able to add in other signers/minters or update the Mint Authority, and the Freeze Authority will be immediately renounced. The token Mint Authority will be fixed Mint Authority Multisig address while the Freeze Authority will be set to None.
 
 #### For OFT:
 
