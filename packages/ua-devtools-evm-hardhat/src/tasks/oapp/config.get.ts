@@ -41,8 +41,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
         const endpointV2Sdk = await oAppSdk.getEndpointSDK()
 
         // OApp User Set Config
-        const receiveCustomConfig = await getReceiveConfig(endpointV2Sdk, to.eid, to.address, true)
-        const sendCustomConfig = await getSendConfig(endpointV2Sdk, to.eid, to.address, true)
+        const receiveCustomConfig = await getReceiveConfig(endpointV2Sdk, to.eid, from.address, true)
+        const sendCustomConfig = await getSendConfig(endpointV2Sdk, to.eid, from.address, true)
         const [sendCustomLibrary, sendCustomUlnConfig, sendCustomExecutorConfig] = sendCustomConfig ?? []
         const [receiveCustomLibrary, receiveCustomUlnConfig] = receiveCustomConfig ?? []
 
@@ -53,8 +53,8 @@ const action: ActionType<TaskArgs> = async ({ logLevel = 'info', oappConfig }, h
         const [receiveDefaultLibrary, receiveDefaultUlnConfig] = receiveDefaultConfig ?? []
 
         // OApp Config
-        const receiveOAppConfig = await getReceiveConfig(endpointV2Sdk, to.eid, to.address)
-        const sendOAppConfig = await getSendConfig(endpointV2Sdk, to.eid, to.address)
+        const receiveOAppConfig = await getReceiveConfig(endpointV2Sdk, to.eid, from.address)
+        const sendOAppConfig = await getSendConfig(endpointV2Sdk, to.eid, from.address)
         const [sendOAppLibrary, sendOAppUlnConfig, sendOAppExecutorConfig] = sendOAppConfig ?? []
         const [receiveOAppLibrary, receiveOAppUlnConfig] = receiveOAppConfig ?? []
 
