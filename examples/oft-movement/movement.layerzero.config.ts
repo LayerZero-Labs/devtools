@@ -4,7 +4,7 @@ import { aptosConfig } from './OAppConfigAptos'
 import { bscConfig } from './OAppConfigEVM'
 
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-import './type-extension'
+// import './type-extension'
 
 const bscContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
