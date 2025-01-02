@@ -19,6 +19,7 @@
   "devDependencies": {
     "@layerzerolabs/devtools-movement": "^0.0.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
+    "argparse": "^2.0.1",
     "depcheck": "^1.4.7",
     "eslint": "^8.55.0",
     "hardhat": "^2.22.10",
