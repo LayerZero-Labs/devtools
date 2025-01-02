@@ -13,11 +13,15 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
+    "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
+    "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
+    "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
+    "lz:sdk:move:init": "ts-node scripts/cli.ts --vm move --op initOFTFA",
+    "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
-    "test:hardhat": "hardhat test",
-    "wire:evm": "npx hardhat run tasks/evm/wire-evm.ts"
+    "test:hardhat": "hardhat test"
   },
   "resolutions": {
     "ethers": "^5.7.2",
