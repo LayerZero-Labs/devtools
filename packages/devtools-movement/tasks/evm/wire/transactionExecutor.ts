@@ -6,12 +6,6 @@ import { promptForConfirmation } from '../../shared/utils'
 
 import type { AccountData, ContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
 
-if (!process.env.PRIVATE_KEY) {
-    console.error('PRIVATE_KEY environment variable is not set.')
-    process.exit(1)
-}
-const privateKey = process.env.PRIVATE_KEY
-
 /**
  * @notice Simulates transactions on the blockchains
  * - Fetches the nonce and balance for each chain
@@ -23,7 +17,8 @@ export async function executeTransactions(
     eidMetaData: ContractMetadataMapping,
     TxTypeEidMapping: TxEidMapping,
     rpcUrlsMap: Record<eid, string>,
-    simulation = 'dry-run'
+    simulation = 'dry-run',
+    privateKey: string
 ) {
     const num_chains = Object.entries(eidMetaData).length
     let totalTransactions = 0
