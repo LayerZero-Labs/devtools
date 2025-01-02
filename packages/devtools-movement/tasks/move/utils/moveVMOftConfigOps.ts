@@ -80,7 +80,7 @@ export async function createSetPeerTxs(
     oft: OFT,
     connections: OAppOmniGraphHardhat['connections']
 ): Promise<TransactionPayload[]> {
-    const eidToNetworkMapping = createEidToNetworkMapping()
+    const eidToNetworkMapping = await createEidToNetworkMapping()
 
     const txs = []
     for (const entry of connections) {

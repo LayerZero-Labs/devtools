@@ -10,9 +10,11 @@ import { getNamedAddresses } from './utils/config'
 import * as oftConfig from './utils/moveVMOftConfigOps'
 import { TransactionPayload } from './utils/moveVMOftConfigOps'
 import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
+import path from 'path'
 
-async function main() {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+async function wireMove(configPath: string, rootDir: string = process.cwd()) {
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(rootDir)
+    const fullConfigPath = path.join(rootDir, configPath)
     const chain = getChain(fullnode)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
@@ -31,7 +33,7 @@ async function main() {
     validateDelegate(currDelegate, account_address)
 
     const endpointId = getEidFromAptosNetwork(chain, network)
-    const connections = getConfigConnections('from', endpointId)
+    const connections = await getConfigConnections('from', endpointId, fullConfigPath)
 
     const txs = await createWiringTxs(oft, endpoint, connections)
     await sendAllTxs(moveVMConnection, oft, account_address, txs)
@@ -68,7 +70,7 @@ async function createWiringTxs(
 function validateDelegate(currDelegate: string, account_address: string) {
     if (currDelegate != account_address) {
         throw new Error(
-            `Delegate must be set to account address of the transaction senderfor wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}`
+            `Delegate must be set to account address of the transaction sender for wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}`
         )
     }
 }
@@ -84,7 +86,4 @@ function getEndpointAddressFromNamedAddresses(namedAddresses: string): string {
     return endpointAddress
 }
 
-main().catch((error) => {
-    console.error('Error:', error)
-    process.exit(1)
-})
+export { wireMove }

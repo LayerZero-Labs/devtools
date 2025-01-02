@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import path from 'path'
 import * as readline from 'readline'
 
 import { Aptos } from '@aptos-labs/ts-sdk'
@@ -11,11 +10,9 @@ import { OFT } from '../../../sdk/oft'
 import { TransactionPayload } from './moveVMOftConfigOps'
 
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import path from 'path'
 
-export function getDelegateFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat | undefined = undefined): string {
-    if (!config) {
-        throw new Error('No config found')
-    }
+export function getDelegateFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat): string {
     validateConfigHasDelegate(config, eid)
     let delegate = ''
     for (const conn of config.contracts) {
@@ -27,10 +24,7 @@ export function getDelegateFromLzConfig(eid: EndpointId, config: OAppOmniGraphHa
     return delegate
 }
 
-export function getOwnerFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat | undefined = undefined): string {
-    if (!config) {
-        throw new Error('No config found')
-    }
+export function getOwnerFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat): string {
     validateConfigHasOwner(config, eid)
     let owner = ''
     for (const conn of config.contracts) {
@@ -95,8 +89,8 @@ export function getOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
     }
 }
 
-export function getMoveVMOftAddress(stage: Stage) {
-    const deploymentPath = path.join(__dirname, `../../../deployments/aptos-${stage}/oft.json`)
+export function getMoveVMOftAddress(stage: Stage, rootDir: string = process.cwd()) {
+    const deploymentPath = path.join(rootDir, `deployments/aptos-${stage}/oft.json`)
     const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
     return deployment.address
 }
