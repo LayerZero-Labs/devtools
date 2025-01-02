@@ -16,7 +16,7 @@
     "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
-    "lz:sdk:move:init": "ts-node scripts/cli.ts --vm move --op initOFTFA",
+    "lz:sdk:move:init": "ts-node scripts/cli.ts --vm move --op init",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",

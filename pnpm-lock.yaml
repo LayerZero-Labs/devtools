@@ -1430,6 +1430,12 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.1
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
