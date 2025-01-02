@@ -45,6 +45,7 @@ async function initOFTFA(token_name: string, token_symbol: string, icon_uri: str
     const eid = getEidFromAptosNetwork(chain, network)
     const payloads = [{ payload: initializePayload, description: 'Initialize Aptos OFT', eid }]
 
+    console.log('If it is already initialized, it will not be initialized again even if you say yes')
     sendInitTransaction(moveVMConnection, oft, account_address, payloads)
 }
 
