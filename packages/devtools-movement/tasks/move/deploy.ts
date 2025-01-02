@@ -8,6 +8,7 @@ import { deploymentFile } from '../shared/types'
 
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { getNamedAddresses } from './utils/config'
+import path from 'path'
 
 let stdOut = ''
 let stdErr = ''
@@ -18,8 +19,8 @@ let stdErr = ''
  * @dev Wraps the aptos move create-object-and-publish-package command
  * @returns Promise<void>
  */
-async function deployMovementContracts(address_name: string, named_addresses: string) {
-    const aptosYamlConfig = await parseYaml()
+async function deployMovementContracts(address_name: string, named_addresses: string, configPath: string) {
+    const aptosYamlConfig = await parseYaml(configPath)
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
@@ -111,27 +112,36 @@ async function createDeployment(deployedAddress: string, file_name: string, netw
         storageLayout: {},
     }
 
-    fs.writeFileSync(`${aptosDir}/${file_name}.json`, JSON.stringify(deployment, null, 2))
+    fs.writeFileSync(path.join(aptosDir, `${file_name}.json`), JSON.stringify(deployment, null, 2))
     console.log(`Deployment file created at ${aptosDir}/${file_name}.json`)
 }
 
-function checkIfDeploymentExists(file_name: string, network: string, lzNetworkStage: string) {
-    const aptosDir = `deployments/${network}-${lzNetworkStage}`
-    return fs.existsSync(`${aptosDir}/${file_name}.json`)
+async function checkIfDeploymentExists(network: string, lzNetworkStage: string, contractName: string) {
+    const aptosDir = path.join(process.cwd(), 'deployments', `${network}-${lzNetworkStage}`)
+    return fs.existsSync(path.join(aptosDir, `${contractName}.json`))
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function deploy(args: any, contractName: string) {
-    const aptosYamlConfig = await parseYaml()
+    const configPath = args.configPath
+
+    const aptosYamlConfig = await parseYaml(configPath)
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
+    const deploymentExists = await checkIfDeploymentExists(network, lzNetworkStage, contractName)
 
-    if (checkIfDeploymentExists(args.address_name, lzNetworkStage, network) && args.force_deploy === 'true') {
-        console.log('Skipping deploy - deployment already exists')
+    if (deploymentExists) {
+        if (args.force_deploy === 'true') {
+            console.log(`Follow the prompts to complete the deployment ${contractName}`)
+            await deployMovementContracts(contractName, args.named_addresses, configPath)
+        } else {
+            console.log('Skipping deploy - deployment already exists')
+        }
     } else {
-        console.log(`Follow the prompts to complete the deployment `)
-        await deployMovementContracts(contractName, args.named_addresses)
+        console.warn('You are in force deploy mode:')
+        console.log(`Follow the prompts to complete the deployment ${contractName}`)
+        await deployMovementContracts(contractName, args.named_addresses, configPath)
     }
 }
 export { deploy }

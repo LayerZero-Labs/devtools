@@ -12,8 +12,9 @@ let stdErr = ''
  * @dev Wraps the aptos move build command
  * @returns Promise<void>
  */
-async function buildMovementContracts(named_addresses: string) {
-    const network = (await parseYaml()).network
+async function buildMovementContracts(named_addresses: string, configPath: string) {
+    const aptosYamlConfig = await parseYaml(configPath)
+    const network = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(network)
 
     // Get additional named addresses and combine with provided ones
@@ -61,10 +62,10 @@ async function buildMovementContracts(named_addresses: string) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function build(args: any, contractName: string) {
-    const buildPath = path.join(__dirname, '../build', contractName)
-
-    const aptosYamlConfig = await parseYaml()
+async function build(args: any, contractName: string = 'oft') {
+    const buildPath = path.join(process.cwd(), 'build', contractName)
+    const configPath = args.configPath
+    const aptosYamlConfig = await parseYaml(configPath)
     const accountAddress = aptosYamlConfig.account_address
 
     if (!fs.existsSync(buildPath) || args.force_build === 'true') {
@@ -75,7 +76,7 @@ async function build(args: any, contractName: string) {
             return
         }
         console.log('Building contracts - this may take a while')
-        await buildMovementContracts(args.named_addresses)
+        await buildMovementContracts(args.named_addresses, configPath)
     } else {
         console.log('Skipping build - contracts already built')
     }
