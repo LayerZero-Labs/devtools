@@ -1,24 +1,21 @@
 import * as readline from 'readline'
 
-import { HardhatUserConfig } from 'hardhat/types'
-
 import type {
     OAppEdgeConfig,
     OAppNodeConfig,
     OAppOmniGraphHardhat,
     OmniEdgeHardhat,
 } from '@layerzerolabs/toolbox-hardhat'
+import path from 'path'
+import 'hardhat/register'
 
 /*
  * Parses hardhat.config.ts and returns a mapping of EID to network name or URL.
  */
-export function createEidToNetworkMapping(_value = 'networkName'): Record<number, string> {
-    let hardhatConfig: HardhatUserConfig
-    try {
-        hardhatConfig = require(`${process.cwd()}/hardhat.config.ts`)
-    } catch (error) {
-        throw new Error('No hardhat config found')
-    }
+export async function createEidToNetworkMapping(_value = 'networkName'): Promise<Record<number, string>> {
+    const hardhatConfigPath = path.resolve(`${process.cwd()}/hardhat.config.ts`)
+    const hardhatConfigFile = await import(hardhatConfigPath)
+    const hardhatConfig = hardhatConfigFile.default
 
     if (!hardhatConfig.networks) {
         throw new Error('No networks found in hardhat config')
@@ -30,30 +27,31 @@ export function createEidToNetworkMapping(_value = 'networkName'): Record<number
         if (networkName === 'hardhat') {
             continue
         }
-        if (!networkConfig?.eid) {
+        const netConfig = networkConfig as { eid: number; url: string }
+        if (!netConfig['eid']) {
             throw new Error(`EID not found for network: ${networkName}`)
         }
         if (_value == 'networkName') {
-            eidNetworkNameMapping[networkConfig.eid] = networkName
+            eidNetworkNameMapping[netConfig.eid] = networkName
         } else {
-            const configValue = networkConfig.url
+            const configValue = netConfig.url
             if (configValue !== undefined) {
-                eidNetworkNameMapping[networkConfig.eid] = configValue
+                eidNetworkNameMapping[netConfig.eid] = configValue
             }
         }
     }
     return eidNetworkNameMapping
 }
 
-export function getConfigConnections(
+export async function getConfigConnections(
     _key: keyof OmniEdgeHardhat<OAppEdgeConfig | undefined>,
-    _eid: number
-): OAppOmniGraphHardhat['connections'] {
-    let config: OAppOmniGraphHardhat
-    try {
-        config = require(`${process.cwd()}/aptos.layerzero.config.ts`)
-    } catch (error) {
-        throw new Error('No layerzero config found')
+    _eid: number,
+    _configPath: string
+): Promise<OAppOmniGraphHardhat['connections']> {
+    const configFile = await import(_configPath)
+    const config = configFile.default
+    if (!config.connections) {
+        throw new Error('No connections found in config')
     }
 
     const conns = config.connections
@@ -86,12 +84,12 @@ export function getConfigConnectionsFromConfigConnections(
     return connections
 }
 
-export function getHHAccountConfig(): Record<number, OAppNodeConfig> {
-    let config: OAppOmniGraphHardhat
-    try {
-        config = require(`${process.cwd()}/aptos.layerzero.config.ts`)
-    } catch (error) {
-        throw new Error('No config found')
+export async function getHHAccountConfig(_configPath: string): Promise<Record<number, OAppNodeConfig>> {
+    const configPath = path.resolve(_configPath)
+    const configFile = await import(configPath)
+    const config = configFile.default
+    if (!config.contracts) {
+        throw new Error('No contracts found in config')
     }
 
     const conns = config.contracts

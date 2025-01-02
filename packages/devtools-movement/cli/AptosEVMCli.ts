@@ -1,24 +1,37 @@
 import { ArgumentParser } from 'argparse'
+import { wireMove } from '../tasks/move/wire'
+import { wireEvm } from '../tasks/evm/wire-evm'
+import { build } from '../tasks/move/build'
+import { deploy } from '../tasks/move/deploy'
+import { setDelegate } from '../tasks/move/setDelegate'
 
-class AptosEVMCLI {
+import path from 'path'
+
+class AptosEVMCLI_Core {
     parser: ArgumentParser
     aptosArgs: string[]
     ethereumArgs: string[]
     args: any
-    constructor() {
+    rootDir: string
+    constructor(rootDir: string = process.cwd()) {
         this.parser = new ArgumentParser({
             description: 'A simple CLI tool built with argparse in TypeScript',
         })
 
         this.aptosArgs = ['build', 'deploy', 'wire', 'setDelegate', 'initOFTFA']
         this.ethereumArgs = ['build', 'deploy', 'wire', 'setDelegate']
+
+        this.rootDir = rootDir
+
+        this.addArgs()
+        this.sanitizeArgs()
     }
 
-    getArgs() {
+    addArgs() {
         this.parser.add_argument('--vm', {
             type: 'str',
-            help: `vm to perform operation on - aptos or ethereum`,
-            choices: ['aptos', 'ethereum'],
+            help: `vm to perform operation on - move or evm`,
+            choices: ['move', 'evm'],
             required: true,
         })
 
@@ -29,6 +42,18 @@ class AptosEVMCLI {
             required: true,
         })
 
+        this.parser.add_argument('--lz-config', {
+            type: 'str',
+            help: `path to the layerzeroconfig file`,
+            required: true,
+        })
+
+        this.parser.add_argument('--move-deploy-script', {
+            type: 'str',
+            help: `path to the move deploy script`,
+            required: false,
+        })
+
         this.parser.add_argument('--named-addresses', {
             type: 'str',
             help: `deployer account address based on your config`,
@@ -37,27 +62,29 @@ class AptosEVMCLI {
 
         this.parser.add_argument('--force-build', {
             type: 'str',
-            help: 'Force build even if contracts already built',
+            help: 'Force aptos build even if contracts already built',
             default: 'false',
             choices: ['true', 'false'],
+            required: false,
         })
 
         this.parser.add_argument('--force-deploy', {
             type: 'str',
-            help: 'Force deploy even if deployment already exists',
+            help: 'Force aptos deploy even if deployment already exists',
             default: 'false',
             choices: ['true', 'false'],
+            required: false,
         })
     }
 
     sanitizeArgs() {
         const args = this.parser.parse_args()
 
-        if (args.vm === 'aptos') {
+        if (args.vm === 'move') {
             if (!this.aptosArgs.includes(args.op)) {
                 throw new Error(`Operation ${args.op} is not valid for aptos`)
             }
-        } else if (args.vm === 'ethereum') {
+        } else if (args.vm === 'evm') {
             if (!this.ethereumArgs.includes(args.op)) {
                 throw new Error(`Operation ${args.op} is not valid for ethereum`)
             }
@@ -66,11 +93,58 @@ class AptosEVMCLI {
         this.args = args
     }
 
-    cli() {
-        this.getArgs()
-        this.sanitizeArgs()
-        console.log(this.args)
+    getArgs() {
+        return this.args
+    }
+
+    async evmOperations(_callFromInheritance: boolean = false) {
+        switch (this.args.op) {
+            case 'wire':
+                wireEvm(this.args.lz_config)
+                break
+        }
+    }
+
+    async aptosOperations(_callFromInheritance: boolean = false) {
+        switch (this.args.op) {
+            case 'wire':
+                wireMove(this.args.lz_config)
+                break
+            case 'build':
+                build(this.args)
+                break
+            case 'deploy': {
+                const aptosDeployScript = await import(path.join(this.rootDir, this.args.move_deploy_script))
+
+                const contractName = aptosDeployScript.contractName
+                await build(this.args, contractName)
+                await deploy(this.args, contractName)
+                await setDelegate(this.args)
+                break
+            }
+            case 'initOFTFA':
+                if (_callFromInheritance) {
+                    console.error('initOFTFA needs to be inherited from @layerzerolabs/oft-movement')
+                    return 1
+                }
+                break
+            default:
+                throw new Error(`Invalid operation: ${this.args.op}`)
+        }
+    }
+
+    async cli(_callFromInheritance: boolean = false) {
+        switch (this.args.vm) {
+            case 'evm':
+                await this.evmOperations(_callFromInheritance)
+                break
+            case 'move':
+                await this.aptosOperations(_callFromInheritance)
+                break
+            default:
+                throw new Error(`Invalid VM: ${this.args.vm}`) // unreachable line lol
+        }
     }
 }
 
-export { AptosEVMCLI }
+export { AptosEVMCLI_Core }
