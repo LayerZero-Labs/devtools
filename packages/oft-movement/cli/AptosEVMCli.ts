@@ -10,20 +10,27 @@ class AptosEVMCLI extends AptosEVMCLI_Core {
     async cli() {
         await super.cli()
 
-        if (this.args.op === 'initOFTFA' || this.args.op === 'deploy') {
-            await this.initOFTFA(this.args.move_deploy_script)
+        if (this.args.op === 'init' || this.args.op === 'deploy') {
+            const fullPathOFTConfig = path.resolve(path.join(this.rootDir, this.args.move_deploy_script))
+            const oftConfig = await import(fullPathOFTConfig)
+
+            const oftType = oftConfig.oftType
+            const oftMetadata = oftConfig.oftMetadata
+            if (!oftMetadata) {
+                throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
+            }
+
+            switch (oftType) {
+                case 'OFT_FA':
+                    await this.initOFTFA(oftMetadata)
+                    break
+                default:
+                    throw new Error(`Unsupported OFT type: ${oftType}`)
+            }
         }
     }
 
-    async initOFTFA(move_deploy_script: string, rootDir: string = process.cwd()) {
-        const fullPathOFTConfig = path.resolve(path.join(rootDir, move_deploy_script))
-        const oftConfig = await import(fullPathOFTConfig)
-        const oftMetadata = oftConfig.oftMetadata
-
-        if (!oftMetadata) {
-            throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
-        }
-
+    async initOFTFA(oftMetadata: any) {
         await initOFTFA(oftMetadata.token_name, oftMetadata.token_symbol, oftMetadata.icon_uri, oftMetadata.project_uri)
     }
 }
