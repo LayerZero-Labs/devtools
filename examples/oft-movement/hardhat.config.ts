@@ -52,33 +52,13 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
-            accounts,
-        },
-        'avalanche-testnet': {
-            eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
-            accounts,
-        },
-        'amoy-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
-            accounts,
-        },
         'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET,
+            eid: EndpointId.BSC_V2_TESTNET.valueOf(),
             url: process.env.RPC_URL_BSC || 'https://rpc.ankr.com/bsc_testnet',
             accounts,
         },
-        'ethereum-testnet': {
-            eid: EndpointId.ETHEREUM_V2_TESTNET,
-            url: process.env.RPC_URL_ETHEREUM || 'https://rpc.ankr.com/eth_sepolia',
-            accounts,
-        },
         'aptos-testnet': {
-            eid: EndpointId.APTOS_V2_TESTNET,
+            eid: EndpointId.APTOS_V2_TESTNET.valueOf(),
             url: process.env.RPC_URL_APTOS_TESTNET || 'http://127.0.0.1:8080',
             accounts,
         },
