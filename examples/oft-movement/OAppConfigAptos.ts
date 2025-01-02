@@ -3,8 +3,8 @@ import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 import type { OAppEdgeConfig, OAppNodeConfig } from '@layerzerolabs/toolbox-hardhat'
 
 const aptosAccountConfig: OAppNodeConfig = {
-    delegate: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
-    owner: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
+    delegate: '3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a',
+    owner: '3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a',
 }
 
 const aptosOAppConfig: OAppEdgeConfig = {
@@ -42,7 +42,7 @@ const aptosOAppConfig: OAppEdgeConfig = {
         },
         ulnConfig: {
             // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-            // confirmations: BigInt(100),
+            confirmations: BigInt(10),
             // The address of the DVNs you will pay to verify a sent message on the source chain.
             // The destination tx will wait until ALL `requiredDVNs` verify the message.
             requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
@@ -58,7 +58,7 @@ const aptosOAppConfig: OAppEdgeConfig = {
     receiveConfig: {
         ulnConfig: {
             // The number of block confirmations to expect from the `to` chain.
-            // confirmations: BigInt(5),
+            confirmations: BigInt(10),
             // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
             // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
             requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
