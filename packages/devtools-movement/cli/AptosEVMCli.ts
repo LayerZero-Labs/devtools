@@ -18,7 +18,7 @@ class AptosEVMCLI_Core {
             description: 'A simple CLI tool built with argparse in TypeScript',
         })
 
-        this.aptosArgs = ['build', 'deploy', 'wire', 'setDelegate', 'initOFTFA']
+        this.aptosArgs = ['build', 'deploy', 'init', 'wire', 'setDelegate']
         this.ethereumArgs = ['build', 'deploy', 'wire', 'setDelegate']
 
         this.rootDir = rootDir
@@ -122,9 +122,11 @@ class AptosEVMCLI_Core {
                 await setDelegate(this.args)
                 break
             }
-            case 'initOFTFA':
+            case 'init':
                 if (_callFromInheritance) {
-                    console.error('initOFTFA needs to be inherited from @layerzerolabs/oft-movement')
+                    console.error(
+                        'init needs to be called through @layerzerolabs/oft-movement as it is an extended function'
+                    )
                     return 1
                 }
                 break

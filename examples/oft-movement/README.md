@@ -1,9 +1,26 @@
-pnpm run lz:sdk:move --op deploy --lz-config movement.layerzero.config.ts --named-addresses oft=0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a,oft_admin=0x3d24005f22a2913a9e228547177a01a817fcd5bbaa5290b07fe4826f3f31be4a --move-deploy-script deploy/MyMovementOFTFA.ts
+## Build and deploy
 
-pnpm run lz:sdk:move --op initOFTFA --lz-config movement.layerzero.config.ts --move-deploy-script deploy/MyMovementOFTFA.ts
+### Builds the contracts
+```bash
+pnpm run lz:sdk:move:build --lz-config movement.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy/MyMovementOFTFA.ts
+```
 
-1. Do we need to specify the named addresses or can we just use the account address?
-2. Merge init with deploy?
+### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
 
-pnpm run lz:sdk:evm --op wire --lz-config movement.layerzero.config.ts
-pnpm run lz:sdk:move --op wire --lz-config movement.layerzero.config.ts
+```bash
+pnpm run lz:sdk:move:deploy --lz-config movement.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy/MyMovementOFTFA.ts
+```
+
+## Init - Not OFT Agnostic
+```bash
+pnpm run lz:sdk:move:init --lz-config movement.layerzero.config.ts --move-deploy-script deploy/MyMovementOFTFA.ts
+```
+
+## Wire 
+```bash
+pnpm run lz:sdk:evm:wire --lz-config movement.layerzero.config.ts
+```
+
+```bash
+pnpm run lz:sdk:move:wire --lz-config movement.layerzero.config.ts
+```
