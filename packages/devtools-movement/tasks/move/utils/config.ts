@@ -17,8 +17,8 @@ type AptosYamlConfig = {
     }
 }
 
-export async function loadAptosYamlConfig(): Promise<AptosYamlConfig> {
-    const file = fs.readFileSync('./.aptos/config.yaml', 'utf8')
+export async function loadAptosYamlConfig(_rootDir: string = process.cwd()): Promise<AptosYamlConfig> {
+    const file = fs.readFileSync(path.resolve(path.join(_rootDir, '.aptos/config.yaml')), 'utf8')
     const config = YAML.parse(file) as AptosYamlConfig
     return config
 }
