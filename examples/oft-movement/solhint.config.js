@@ -1,1 +1,1 @@
-module.exports = require('@layerzerolabs/solhint-config')
+module.exports = require('@layerzerolabs/solhint-config');

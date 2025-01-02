@@ -1570,6 +1570,174 @@ importers:
         specifier: ^5.4.4
         version: 5.5.3
 
+  examples/oft-movement:
+    devDependencies:
+      '@aptos-labs/ts-sdk':
+        specifier: ^1.33.1
+        version: 1.33.2
+      '@babel/core':
+        specifier: ^7.23.9
+        version: 7.23.9
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^2.0.3
+        version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/devtools-movement':
+        specifier: ^0.0.1
+        version: link:../../packages/devtools-movement
+      '@layerzerolabs/eslint-config-next':
+        specifier: ~2.3.39
+        version: 2.3.44(typescript@5.5.3)
+      '@layerzerolabs/lz-config-types':
+        specifier: ^3.0.15
+        version: 3.0.59(ethers@5.7.2)
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.21
+        version: 3.0.59
+      '@layerzerolabs/lz-evm-messagelib-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-protocol-v2':
+        specifier: ^3.0.12
+        version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
+      '@layerzerolabs/lz-evm-sdk-v2':
+        specifier: ^3.0.27
+        version: 3.0.59
+      '@layerzerolabs/lz-evm-v1-0.7':
+        specifier: ^3.0.12
+        version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
+      '@layerzerolabs/lz-movevm-sdk-v2':
+        specifier: ^3.0.15
+        version: 3.0.59(typescript@5.5.3)
+      '@layerzerolabs/lz-serdes':
+        specifier: ^3.0.19
+        version: 3.0.59
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.59
+      '@layerzerolabs/move-definitions':
+        specifier: ^3.0.15
+        version: 3.0.59
+      '@layerzerolabs/oapp-evm':
+        specifier: ^0.3.0
+        version: link:../../packages/oapp-evm
+      '@layerzerolabs/oft-evm':
+        specifier: ^3.0.0
+        version: link:../../packages/oft-evm
+      '@layerzerolabs/oft-movement':
+        specifier: ^0.0.1
+        version: link:../../packages/oft-movement
+      '@layerzerolabs/prettier-config-next':
+        specifier: ^2.3.39
+        version: 2.3.44
+      '@layerzerolabs/solhint-config':
+        specifier: ^3.0.12
+        version: 3.0.12(typescript@5.5.3)
+      '@layerzerolabs/test-devtools-evm-foundry':
+        specifier: ~5.1.0
+        version: 5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.12)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+      '@layerzerolabs/toolbox-foundry':
+        specifier: ~0.1.9
+        version: link:../../packages/toolbox-foundry
+      '@layerzerolabs/toolbox-hardhat':
+        specifier: ~0.6.3
+        version: link:../../packages/toolbox-hardhat
+      '@nomicfoundation/hardhat-ethers':
+        specifier: ^3.0.5
+        version: 3.0.5(ethers@5.7.2)(hardhat@2.22.12)
+      '@nomiclabs/hardhat-ethers':
+        specifier: ^2.2.3
+        version: 2.2.3(ethers@5.7.2)(hardhat@2.22.12)
+      '@openzeppelin/contracts':
+        specifier: ^5.0.2
+        version: 5.1.0
+      '@openzeppelin/contracts-upgradeable':
+        specifier: ^5.0.2
+        version: 5.1.0(@openzeppelin/contracts@5.1.0)
+      '@rushstack/eslint-patch':
+        specifier: ^1.7.0
+        version: 1.7.0
+      '@types/argparse':
+        specifier: ^2.0.17
+        version: 2.0.17
+      '@types/chai':
+        specifier: ^4.3.11
+        version: 4.3.20
+      '@types/jest':
+        specifier: ^29.5.12
+        version: 29.5.12
+      '@types/mocha':
+        specifier: ^10.0.6
+        version: 10.0.6
+      '@types/node':
+        specifier: ~18.18.14
+        version: 18.18.14
+      argparse:
+        specifier: ^2.0.1
+        version: 2.0.1
+      chai:
+        specifier: ^4.4.1
+        version: 4.5.0
+      concurrently:
+        specifier: ~9.1.0
+        version: 9.1.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      eslint:
+        specifier: ^8.55.0
+        version: 8.57.1
+      eslint-plugin-jest-extended:
+        specifier: ~2.0.0
+        version: 2.0.0(eslint@8.57.1)(typescript@5.5.3)
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
+      hardhat:
+        specifier: ^2.22.10
+        version: 2.22.12(ts-node@10.9.2)(typescript@5.5.3)
+      hardhat-contract-sizer:
+        specifier: ^2.10.0
+        version: 2.10.0(hardhat@2.22.12)
+      hardhat-deploy:
+        specifier: ^0.12.1
+        version: 0.12.4
+      install:
+        specifier: ^0.13.0
+        version: 0.13.0
+      jest:
+        specifier: ^29.7.0
+        version: 29.7.0(@types/node@18.18.14)(ts-node@10.9.2)
+      mocha:
+        specifier: ^10.2.0
+        version: 10.2.0
+      prettier:
+        specifier: ^3.2.5
+        version: 3.2.5
+      solhint:
+        specifier: ^4.1.1
+        version: 4.1.1(typescript@5.5.3)
+      solidity-bytes-utils:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ts-jest:
+        specifier: ^29.2.5
+        version: 29.2.5(@babel/core@7.23.9)(esbuild@0.19.11)(jest@29.7.0)(typescript@5.5.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@swc/core@1.4.0)(@types/node@18.18.14)(typescript@5.5.3)
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(@swc/core@1.4.0)(ts-node@10.9.2)(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
+      yaml:
+        specifier: ^2.6.1
+        version: 2.7.0
+
   examples/oft-solana:
     devDependencies:
       '@coral-xyz/anchor':
@@ -2819,7 +2987,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.59
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.1
+        specifier: ~0.6.3
         version: link:../toolbox-hardhat
       '@types/argparse':
         specifier: ^2.0.17
@@ -2830,6 +2998,12 @@ importers:
       argparse:
         specifier: ^2.0.1
         version: 2.0.1
+      depcheck:
+        specifier: ^1.4.7
+        version: 1.4.7
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -3329,6 +3503,9 @@ importers:
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
+      argparse:
+        specifier: ^2.0.1
+        version: 2.0.1
       depcheck:
         specifier: ^1.4.7
         version: 1.4.7
@@ -7406,10 +7583,6 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-core@3.0.38:
-    resolution: {integrity: sha512-4RJzCGkZqwvLiuJp3Eh0b7y23QJRB7aObWGf1aoQYMELo++8ZikFGXdXkt+rH2/uGM9qIqFtdPUKZXppPEUAWA==}
-    dev: true
-
   /@layerzerolabs/lz-core@3.0.59:
     resolution: {integrity: sha512-tnhW7bpxAV0GwIN384c9cBS+izSb0nmHVEM10z4FWBg+gFKxM+RZstTxeGWziH57cZWpzUjX1nUZrAGM4VSePg==}
     dev: true
@@ -7418,8 +7591,8 @@ packages:
     resolution: {integrity: sha512-vJtDiS7QM77BN/VuZJsM/xH6ZJmUY3vDlHOmRMHsjHf5sfXqMafNL4+FKCRIijPVPGR0DCJARiWrRtgZchv9+w==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@layerzerolabs/lz-core': 3.0.38
-      '@noble/hashes': 1.7.0
+      '@layerzerolabs/lz-core': 3.0.59
+      '@noble/hashes': 1.7.1
       '@noble/secp256k1': 1.7.1
       '@solana/web3.js': 1.95.8
       bip39: 3.1.0
