@@ -19,27 +19,36 @@ import { createSetSendLibraryTransactions } from './wire/setSendLibrary'
 import { executeTransactions } from './wire/transactionExecutor'
 
 import type { ContractMetadataMapping, NonEvmOAppMetadata, TxEidMapping } from './utils/types'
-
-if (!process.env.PRIVATE_KEY) {
-    console.error('PRIVATE_KEY environment variable is not set.')
-    process.exit(1)
-}
-const privateKey = process.env.PRIVATE_KEY
+import path from 'path'
+import dotenv from 'dotenv'
 
 /**
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
-async function main() {
+async function wireEvm(configPath: string, rootDir: string = process.cwd()) {
+    const env = dotenv.config({ path: path.resolve(path.join(rootDir, '.env')) })
+    if (!env.parsed || env.error?.message !== undefined) {
+        console.error('Failed to load .env file.')
+        process.exit(1)
+    }
+
+    const privateKey = env.parsed.PRIVATE_KEY
+
+    if (!privateKey) {
+        console.error('PRIVATE_KEY is not set in .env file')
+        process.exit(1)
+    }
+
     const { network } = await parseYaml()
     const EID_APTOS = getEidFromAptosNetwork('aptos', network)
-
+    const globalConfigPath = path.resolve(path.join(rootDir, configPath))
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
-    const connectionsToWire = getConfigConnections('to', EID_APTOS)
+    const connectionsToWire = await getConfigConnections('to', EID_APTOS, globalConfigPath)
 
-    const accountConfigs = getHHAccountConfig()
-    const networks = createEidToNetworkMapping('networkName')
-    const rpcUrls = createEidToNetworkMapping('url')
+    const accountConfigs = await getHHAccountConfig(globalConfigPath)
+    const networks = await createEidToNetworkMapping('networkName')
+    const rpcUrls = await createEidToNetworkMapping('url')
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
     const TxTypeEidMapping: TxEidMapping = {
@@ -78,7 +87,7 @@ async function main() {
         const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
         const signer = new ethers.Wallet(privateKey, provider)
 
-        const OAppDeploymentPath = `deployments/${fromNetwork}/${conn.from.contractName}.json`
+        const OAppDeploymentPath = path.resolve(`deployments/${fromNetwork}/${conn.from.contractName}.json`)
         const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
         const EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetwork, 'EndpointV2')
 
@@ -128,9 +137,9 @@ async function main() {
 
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
-        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey)
         console.log('\nAll transactions have been SIMULATED on the blockchains.')
-        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
         console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
@@ -139,13 +148,4 @@ async function main() {
     anvilForkNode.killNodes()
 }
 
-// @todo Refactor this file.
-main()
-    .then(() => {
-        console.log('Your EVM OApps have now been wired with the Aptos OApp.')
-        process.exit(0)
-    })
-    .catch((error) => {
-        console.error('Error:', error)
-        process.exit(1)
-    })
+export { wireEvm }
