@@ -1,5 +1,6 @@
 const contractName = 'oft'
 
+const oftType = 'OFT_FA'
 const oftMetadata = {
     token_name: 'MyMovementOFT',
     token_symbol: 'MMOFT',
@@ -7,4 +8,4 @@ const oftMetadata = {
     project_uri: '',
 }
 
-export { oftMetadata, contractName }
+export { oftType, contractName, oftMetadata }
