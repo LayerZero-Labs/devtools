@@ -17,6 +17,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
+    "@layerzerolabs/devtools-extensible-cli": "^0.0.1",
     "@layerzerolabs/devtools-movement": "^0.0.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "argparse": "^2.0.1",
