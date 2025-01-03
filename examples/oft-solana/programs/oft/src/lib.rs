@@ -32,7 +32,10 @@ pub mod oft {
     use super::*;
 
     pub fn oft_version(_ctx: Context<OFTVersion>) -> Result<Version> {
-        Ok(Version { interface: 2, message: 1 })
+        Ok(Version {
+            interface: 2,
+            message: 1,
+        })
     }
 
     pub fn init_oft(mut ctx: Context<InitOFT>, params: InitOFTParams) -> Result<()> {
@@ -60,6 +63,10 @@ pub mod oft {
 
     pub fn withdraw_fee(mut ctx: Context<WithdrawFee>, params: WithdrawFeeParams) -> Result<()> {
         WithdrawFee::apply(&mut ctx, &params)
+    }
+
+    pub fn renounce_freeze(ctx: Context<RenounceFreezeAuthority>) -> Result<()> {
+        RenounceFreezeAuthority::apply(ctx)
     }
 
     // ============================== Public ==============================
