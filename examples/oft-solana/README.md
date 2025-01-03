@@ -100,23 +100,12 @@ anchor keys sync
 
 :warning: `--force` flag overwrites the existing keys with the ones you generate.
 
-Run `anchor keys list` to view the generated programIds (public keys). The output should look something like this:
+Optionally, run `anchor keys list` to view the generated programIds (public keys). The output should look something like this:
 
 ```
 endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
-
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
-
-```
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
-)));
-```
-
-Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
 
 ### Building and Deploying the Solana OFT Program
 
