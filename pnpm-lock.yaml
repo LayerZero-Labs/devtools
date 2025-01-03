@@ -1584,6 +1584,9 @@ importers:
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ^2.0.3
         version: link:../../packages/devtools-evm-hardhat
+      '@layerzerolabs/devtools-extensible-cli':
+        specifier: ^0.0.1
+        version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-movement':
         specifier: ^0.0.1
         version: link:../../packages/devtools-movement
@@ -2969,11 +2972,29 @@ importers:
         specifier: ^5.4.4
         version: 5.5.3
 
+  packages/devtools-extensible-cli:
+    devDependencies:
+      '@types/argparse':
+        specifier: ^2.0.17
+        version: 2.0.17
+      argparse:
+        specifier: ^2.0.1
+        version: 2.0.1
+      tsup:
+        specifier: ^8.0.1
+        version: 8.0.1(@swc/core@1.4.0)(typescript@5.5.3)
+      typescript:
+        specifier: ^5.4.4
+        version: 5.5.3
+
   packages/devtools-movement:
     devDependencies:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
         version: 1.33.2
+      '@layerzerolabs/devtools-extensible-cli':
+        specifier: ^0.0.1
+        version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.21
         version: 3.0.59
@@ -3497,6 +3518,9 @@ importers:
 
   packages/oft-movement:
     devDependencies:
+      '@layerzerolabs/devtools-extensible-cli':
+        specifier: ^0.0.1
+        version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-movement':
         specifier: ^0.0.1
         version: link:../devtools-movement
