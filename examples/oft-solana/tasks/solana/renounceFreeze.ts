@@ -49,7 +49,7 @@ task('lz:oft:solana:renounce-freeze', 'Renounce freeze authority for an OFT toke
             const IDL = await import('../../target/idl/oft.json').then((module) => module.default)
             const anchorTypes = await import('../../target/types/oft').then((module) => module)
 
-            // @ts-ignore we can ignore the IDL type error, which is a quick or Anchor
+            // @ts-ignore we can ignore the IDL type error, which is a quirk of Anchor
             const program = new Program<typeof anchorTypes.IDL>(IDL, programIdStr, provider)
 
             const [oftStorePda, oftStoreBump] = PublicKey.findProgramAddressSync(
