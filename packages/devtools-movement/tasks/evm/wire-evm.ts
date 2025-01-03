@@ -26,8 +26,9 @@ import dotenv from 'dotenv'
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
-async function wireEvm(configPath: string, rootDir: string = process.cwd()) {
-    const env = dotenv.config({ path: path.resolve(path.join(rootDir, '.env')) })
+async function wireEvm(args: any) {
+    const envPath = path.resolve(path.join(args.rootDir, '.env'))
+    const env = dotenv.config({ path: envPath })
     if (!env.parsed || env.error?.message !== undefined) {
         console.error('Failed to load .env file.')
         process.exit(1)
@@ -42,7 +43,7 @@ async function wireEvm(configPath: string, rootDir: string = process.cwd()) {
 
     const { network } = await parseYaml()
     const EID_APTOS = getEidFromAptosNetwork('aptos', network)
-    const globalConfigPath = path.resolve(path.join(rootDir, configPath))
+    const globalConfigPath = path.resolve(path.join(args.rootDir, args.lz_config))
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = await getConfigConnections('to', EID_APTOS, globalConfigPath)
 

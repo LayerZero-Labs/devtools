@@ -12,9 +12,9 @@ import { TransactionPayload } from './utils/moveVMOftConfigOps'
 import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 import path from 'path'
 
-async function wireMove(configPath: string, rootDir: string = process.cwd()) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(rootDir)
-    const fullConfigPath = path.join(rootDir, configPath)
+async function wireMove(args: any) {
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
+    const fullConfigPath = path.join(args.rootDir, args.lz_config)
     const chain = getChain(fullnode)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
