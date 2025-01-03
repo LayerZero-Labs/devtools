@@ -4,11 +4,7 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
-import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
-import IDL from '../../target/idl/oft.json'
-import { Oft } from '../../target/types/oft'
 
 import { deriveConnection, getExplorerTxLink } from './index'
 
@@ -50,8 +46,11 @@ task('lz:oft:solana:renounce-freeze', 'Renounce freeze authority for an OFT toke
                 commitment: 'processed',
             })
 
-            // @ts-ignore Anchor IDL error can be ignored (will only show up after IDL file is created)
-            const program = new Program<Oft>(IDL, programIdStr, provider)
+            const IDL = await import('../../target/idl/oft.json').then((module) => module.default)
+            const anchorTypes = await import('../../target/types/oft').then((module) => module)
+
+            // @ts-ignore we can ignore the IDL type error, which is a quirk of Anchor
+            const program = new Program<typeof anchorTypes.IDL>(IDL, programIdStr, provider)
 
             const [oftStorePda, oftStoreBump] = PublicKey.findProgramAddressSync(
                 [Buffer.from('OFT'), new PublicKey(tokenEscrowStr).toBuffer()],
