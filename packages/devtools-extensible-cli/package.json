@@ -1,0 +1,24 @@
+{
+  "name": "@layerzerolabs/devtools-extensible-cli",
+  "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup --clean",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@types/argparse": "^2.0.17",
+    "argparse": "^2.0.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "engines": {
+    "node": ">=18.16.0"
+  }
+}
