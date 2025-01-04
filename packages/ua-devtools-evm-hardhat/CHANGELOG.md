@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.6
+
+### Patch Changes
+
+- 611511f: fix lz:oapp:config:get regression
+
 ## 6.0.5
 
 ### Patch Changes
