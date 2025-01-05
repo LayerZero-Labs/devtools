@@ -100,7 +100,11 @@ anchor keys sync
 
 :warning: `--force` flag overwrites the existing keys with the ones you generate.
 
-Run `anchor keys list` to view the generated programIds (public keys). The output should look something like this:
+Run 
+```
+anchor keys list
+```
+to view the generated programIds (public keys). The output should look something like this:
 
 ```
 endpoint: <ENDPOINT_PROGRAM_ID>
