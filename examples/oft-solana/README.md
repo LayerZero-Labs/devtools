@@ -107,7 +107,7 @@ endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
 
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
+Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs) (located inside this project under oft-solana/programs/oft/src/lib.rs). Note the following snippet:
 
 ```
 declare_id!(Pubkey::new_from_array(program_id_from_env!(
