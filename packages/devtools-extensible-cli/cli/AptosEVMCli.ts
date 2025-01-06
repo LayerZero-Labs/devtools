@@ -6,43 +6,14 @@ class AptosEVMCLI {
     parser: ArgumentParser
     args: any
     operations: Operation
+    rootDir: string
     constructor(rootDir: string = process.cwd()) {
         this.parser = new ArgumentParser({
             description: 'A simple CLI tool built with argparse in TypeScript',
         })
-        this.addArgs()
-
-        this.args = this.parser.parse_args()
-
-        if (this.args.op !== 'help') {
-            throw new Error('Operation help is not valid for any other operation')
-        } else {
-            this.args.vm = '*'
-        }
 
         this.operations = {}
-        this.args.rootDir = rootDir
-        this.args.operations = this.operations
-    }
-
-    addArgs() {
-        this.parser.add_argument('--vm', {
-            type: 'str',
-            help: `vm to perform operation on`,
-            required: false,
-        })
-
-        this.parser.add_argument('--op', {
-            type: 'str',
-            help: `any ONE operation to perform - build, deploy, setDelegate, initOFTFA`,
-            required: true,
-        })
-
-        this.parser.add_argument('--filter', {
-            type: 'str',
-            help: `filter flags`,
-            required: false,
-        })
+        this.rootDir = rootDir
     }
 
     validateArgs(args: string[]) {
@@ -61,7 +32,6 @@ class AptosEVMCLI {
     }
 
     async extendOperationFromPath(path: string) {
-        // directory name that called this function
         const operation = await import(path)
         const NewOperation = operation.NewOperation
         await this.extendOperation(NewOperation)
@@ -87,6 +57,16 @@ class AptosEVMCLI {
     }
 
     async execute(_callFromInheritance: boolean = false) {
+        this.args = this.parser.parse_args()
+        this.args.rootDir = this.rootDir
+        this.args.operations = this.operations
+
+        if (this.args.op === 'help') {
+            this.args.vm = '*'
+        } else if (!this.args.vm) {
+            throw new Error('--vm is required')
+        }
+
         const vm = this.args.vm
         const op = this.args.op
 
