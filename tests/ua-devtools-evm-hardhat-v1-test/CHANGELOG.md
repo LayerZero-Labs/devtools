@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.3.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
 ## 0.3.3
 
 ### Patch Changes

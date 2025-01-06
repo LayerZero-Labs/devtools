@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-solana",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "Utilities for LayerZero Solana protocol programs",
   "repository": {
     "type": "git",

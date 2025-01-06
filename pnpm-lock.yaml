@@ -819,7 +819,7 @@ importers:
         specifier: ~3.0.3
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ^4.0.3
+        specifier: ^4.0.4
         version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
@@ -834,7 +834,7 @@ importers:
         specifier: ~0.1.9
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.4
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.2
@@ -3560,7 +3560,7 @@ importers:
         specifier: ~6.0.2
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.4
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.2
@@ -4028,7 +4028,7 @@ importers:
         specifier: ~6.0.2
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.4
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.2
@@ -4172,7 +4172,7 @@ importers:
         specifier: ~6.0.2
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.4
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
         specifier: ~3.0.2

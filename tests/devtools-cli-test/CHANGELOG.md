@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.4.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
 ## 0.4.3
 
 ### Patch Changes
