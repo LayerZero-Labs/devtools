@@ -5,20 +5,22 @@ type NewArg = {
     arg: ArgumentOptions
 }
 
-export interface INewOperation {
-    vm: string
-    operation: string
-    reqArgs?: string[]
-    addArgs?: NewArg[]
-
-    impl: (args: any) => Promise<void>
-}
-
 export type Operation = {
     [key: string]: {
         [key: string]: {
             func: (...args: any[]) => Promise<void>
             requiredArgs: string[]
+            description: string
         }
     }
+}
+
+export interface INewOperation {
+    vm: string
+    operation: string
+    description: string
+    reqArgs?: string[]
+    addArgs?: NewArg[]
+
+    impl: (args: any) => Promise<void>
 }

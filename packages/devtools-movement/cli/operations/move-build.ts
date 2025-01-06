@@ -4,6 +4,7 @@ import { build as buildMove } from '../../tasks/move/build'
 class MoveBuildOperation implements INewOperation {
     vm = 'move'
     operation = 'build'
+    description = 'Build Aptos Move contracts'
     reqArgs = ['lz_config', 'named_addresses', 'move_deploy_script']
 
     async impl(args: any): Promise<void> {
