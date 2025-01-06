@@ -24,3 +24,8 @@ pnpm run lz:sdk:evm:wire --lz-config movement.layerzero.config.ts
 ```bash
 pnpm run lz:sdk:move:wire --lz-config movement.layerzero.config.ts
 ```
+
+## Help
+```bash
+pnpm run lz:sdk:help
+```
