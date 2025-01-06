@@ -1,5 +1,6 @@
 import { INewOperation, Operation } from './types/NewOperation'
 import { ArgumentParser } from 'argparse'
+import { initOperation } from './types/help'
 
 class AptosEVMCLI {
     parser: ArgumentParser
@@ -11,18 +12,24 @@ class AptosEVMCLI {
         })
         this.addArgs()
 
-        const args = this.parser.parse_args()
+        this.args = this.parser.parse_args()
+
+        if (this.args.op !== 'help') {
+            throw new Error('Operation help is not valid for any other operation')
+        } else {
+            this.args.vm = '*'
+        }
 
         this.operations = {}
-        this.args = args
         this.args.rootDir = rootDir
+        this.args.operations = this.operations
     }
 
     addArgs() {
         this.parser.add_argument('--vm', {
             type: 'str',
             help: `vm to perform operation on`,
-            required: true,
+            required: false,
         })
 
         this.parser.add_argument('--op', {
@@ -31,37 +38,9 @@ class AptosEVMCLI {
             required: true,
         })
 
-        this.parser.add_argument('--lz-config', {
+        this.parser.add_argument('--filter', {
             type: 'str',
-            help: `path to the layerzeroconfig file`,
-            required: true,
-        })
-
-        this.parser.add_argument('--move-deploy-script', {
-            type: 'str',
-            help: `path to the move deploy script`,
-            required: false,
-        })
-
-        this.parser.add_argument('--named-addresses', {
-            type: 'str',
-            help: `deployer account address based on your config`,
-            required: false,
-        })
-
-        this.parser.add_argument('--force-build', {
-            type: 'str',
-            help: 'Force aptos build even if contracts already built',
-            default: 'false',
-            choices: ['true', 'false'],
-            required: false,
-        })
-
-        this.parser.add_argument('--force-deploy', {
-            type: 'str',
-            help: 'Force aptos deploy even if deployment already exists',
-            default: 'false',
-            choices: ['true', 'false'],
+            help: `filter flags`,
             required: false,
         })
     }
@@ -96,6 +75,13 @@ class AptosEVMCLI {
             this.operations[NewOperation.vm][NewOperation.operation] = {
                 func: NewOperation.impl,
                 requiredArgs: NewOperation.reqArgs || [],
+                description: NewOperation.description,
+            }
+        }
+
+        if (NewOperation.addArgs) {
+            for (const arg of NewOperation.addArgs) {
+                this.parser.add_argument(arg.name, arg.arg)
             }
         }
     }
@@ -114,4 +100,5 @@ class AptosEVMCLI {
 }
 
 const sdk = new AptosEVMCLI()
+sdk.extendOperation(initOperation)
 export { AptosEVMCLI, sdk }
