@@ -1,5 +1,11 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 4.0.4
+
+### Patch Changes
+
+- 40e6338: Fix squads client to use correct delegate
+
 ## 4.0.3
 
 ### Patch Changes

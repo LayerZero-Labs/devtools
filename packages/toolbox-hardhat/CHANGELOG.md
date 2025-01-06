@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
 ## 0.6.3
 
 ### Patch Changes
