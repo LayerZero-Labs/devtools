@@ -14,6 +14,7 @@
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
+    "lz:sdk:help": "ts-node scripts/cli.ts --op help --filter all",
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
     "lz:sdk:move:init": "ts-node scripts/cli.ts --vm move --op init",
