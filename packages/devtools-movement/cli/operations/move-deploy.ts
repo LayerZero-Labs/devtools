@@ -8,6 +8,7 @@ import { setDelegate } from '../../tasks/move/setDelegate'
 class MoveDeployOperation implements INewOperation {
     vm = 'move'
     operation = 'deploy'
+    description = 'Deploy Aptos Move contracts'
     reqArgs = ['lz_config', 'named_addresses', 'move_deploy_script']
 
     async impl(args: any): Promise<void> {
