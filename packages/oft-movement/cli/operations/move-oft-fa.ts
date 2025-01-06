@@ -6,6 +6,7 @@ import { initOFTFA } from '../../tasks/initOFTFA'
 class InitOFTFA implements INewOperation {
     vm = 'move'
     operation = 'init'
+    description = 'Initialize an OFT with FA'
     reqArgs = ['move_deploy_script']
 
     async impl(args: any): Promise<void> {

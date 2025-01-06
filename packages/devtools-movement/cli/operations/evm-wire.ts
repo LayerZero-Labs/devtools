@@ -4,6 +4,7 @@ import { wireEvm } from '../../tasks/evm/wire-evm'
 class EVMWireOperation implements INewOperation {
     vm = 'evm'
     operation = 'wire'
+    description = 'Wire EVM contracts'
     reqArgs = ['lz_config']
 
     async impl(args: any): Promise<void> {
