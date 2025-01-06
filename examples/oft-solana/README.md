@@ -210,7 +210,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation. Remember this is in local decimals, so with local decimals of 9, you would need to pass in `--amount1000000000` to mint 1 OFT.
 
 #### For OFTAdapter:
 
