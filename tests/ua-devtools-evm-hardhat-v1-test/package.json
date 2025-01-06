@@ -47,7 +47,7 @@
     "@layerzerolabs/toolbox-hardhat": "~0.6.3",
     "@layerzerolabs/ua-devtools": "~3.0.2",
     "@layerzerolabs/ua-devtools-evm": "~5.0.3",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "~6.0.5",
+    "@layerzerolabs/ua-devtools-evm-hardhat": "~6.0.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",
