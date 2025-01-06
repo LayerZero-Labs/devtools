@@ -176,20 +176,21 @@ export class OFT extends OmniSDK implements IOApp {
                 new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
-        const admin = createNoopSigner(this.umiUserAccount)
+        const delegate = createNoopSigner(publicKey((await this.getDelegate())!)) // TODO Ugly as fuck
+
         const oftStore = this.umiPublicKey
 
         this.logger.debug(`Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`)
         return {
             ...(await this.createTransaction(
                 this._umiToWeb3Tx([
-                    await this._createSetPeerAddressIx(normalizedPeer, eid),
-                    oft.initSendLibrary({ admin, oftStore }, eid),
-                    oft.initReceiveLibrary({ admin, oftStore }, eid),
-                    await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid),
-                    await this._setPeerFeeBpsIx(eid),
-                    oft.initOAppNonce({ admin, oftStore }, eid, normalizedPeer),
-                    await this._createSetPeerAddressIx(normalizedPeer, eid),
+                    await this._createSetPeerAddressIx(normalizedPeer, eid), // admin
+                    oft.initSendLibrary({ admin: delegate, oftStore }, eid), // delegate
+                    oft.initReceiveLibrary({ admin: delegate, oftStore }, eid), // delegate
+                    await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid), // admin
+                    await this._setPeerFeeBpsIx(eid), // admin
+                    oft.initOAppNonce({ admin: delegate, oftStore }, eid, normalizedPeer), // delegate
+                    await this._createSetPeerAddressIx(normalizedPeer, eid), // admin but is this needed?  set twice...
                 ])
             )),
             description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`,
@@ -290,18 +291,6 @@ export class OFT extends OmniSDK implements IOApp {
             ...(await this.createTransaction(this._umiToWeb3Tx(ixs))),
             description: `Setting enforced options to ${printJson(enforcedOptions)}`,
         }
-    }
-
-    async isNonceInitialized(eid: EndpointId, peer: OmniAddress): Promise<boolean> {
-        const endpointSdk = await this.getEndpointSDK()
-        return endpointSdk.isOAppNonceInitialized(this.point.address, eid, peer)
-    }
-
-    async initializeNonce(eid: EndpointId, peer: OmniAddress): Promise<[OmniTransaction] | []> {
-        this.logger.verbose(`Initializing OApp nonce for peer ${peer} on ${formatEid(eid)}`)
-
-        const endpointSdk = await this.getEndpointSDK()
-        return endpointSdk.initializeOAppNonce(this.point.address, eid, peer)
     }
 
     async isSendLibraryInitialized(eid: EndpointId): Promise<boolean> {
@@ -416,14 +405,15 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
+        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
         return {
             ...(await this.createTransaction(
                 this._umiToWeb3Tx([
                     oft.initConfig(
                         {
-                            admin: await this._getAdmin(),
+                            admin: delegate, // TODO delegate
                             oftStore: this.umiPublicKey,
-                            payer: createNoopSigner(this.umiUserAccount),
+                            payer: delegate, // TODO what the fuck should this be?  the safe, right?
                         },
                         eid,
                         {
@@ -436,54 +426,12 @@ export class OFT extends OmniSDK implements IOApp {
         }
     }
 
-    public async addRemote(eid: EndpointId): Promise<OmniTransaction | undefined> {
-        const admin = createNoopSigner(this.umiUserAccount)
-        const oftStore = this.umiPublicKey
-        const ixs: WrappedInstruction[] = [
-            oft.initSendLibrary({ admin, oftStore }, eid),
-            oft.initReceiveLibrary({ admin, oftStore }, eid),
-            oft.setSendLibrary(
-                { admin, oftStore },
-                {
-                    sendLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                    remoteEid: eid,
-                }
-            ),
-            oft.setReceiveLibrary(
-                { admin, oftStore },
-                {
-                    receiveLibraryProgram: fromWeb3JsPublicKey(UlnProgram.PROGRAM_ID),
-                    remoteEid: eid,
-                }
-            ),
-            await this._setPeerEnforcedOptionsIx(new Uint8Array([0, 3]), new Uint8Array([0, 3]), eid),
-            await this._setPeerFeeBpsIx(eid),
-        ]
-        return {
-            ...(await this.createTransaction(this._umiToWeb3Tx(ixs))),
-            description: `oft.addRemote(${eid})`,
-        }
-    }
-
-    public async initPeer(eid: number, peer: OmniAddress): Promise<OmniTransaction | undefined> {
-        const admin = createNoopSigner(this.umiUserAccount)
-        const oftStore = this.umiPublicKey
-        const normalizedPeer = normalizePeer(peer, eid)
-        const web3Transaction = this._umiToWeb3Tx([
-            oft.initOAppNonce({ admin, oftStore }, eid, normalizedPeer),
-            await this._createSetPeerAddressIx(normalizedPeer, eid),
-        ])
-        return {
-            ...(await this.createTransaction(web3Transaction)),
-            description: `oft.initPeer(${eid}, ${peer})`,
-        }
-    }
-
     protected async _setOFTConfigIx(param: SetOFTConfigParams) {
+        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
         return oft.setOFTConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: await this._getAdmin(),
+                admin: delegate,
             },
             param,
             {
@@ -507,10 +455,11 @@ export class OFT extends OmniSDK implements IOApp {
             | (SetPeerEnforcedOptionsParam & { remote: number })
             | (SetPeerRateLimitParam & { remote: number })
     ) {
+        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
         return oft.setPeerConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: await this._getAdmin(),
+                admin: delegate,
             },
             param,
             this.umiProgramId
