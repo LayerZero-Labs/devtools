@@ -7,6 +7,27 @@ class HelpOperation implements INewOperation {
     reqArgs = ['filter']
     addArgs = [
         {
+            name: '--vm',
+            arg: {
+                help: 'vm to perform operation on',
+                required: false,
+            },
+        },
+        {
+            name: '--op',
+            arg: {
+                help: 'operation to perform',
+                required: false,
+            },
+        },
+        {
+            name: '--filter',
+            arg: {
+                help: 'filter flags',
+                required: false,
+            },
+        },
+        {
             name: '--lz-config',
             arg: {
                 help: 'path to the layerzeroconfig file',
