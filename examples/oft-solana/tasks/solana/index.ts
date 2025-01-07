@@ -134,7 +134,7 @@ export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
     isTestnet ? `https://testnet.layerzeroscan.com/tx/${hash}` : `https://layerzeroscan.com/tx/${hash}`
 
 export const getExplorerTxLink = (hash: string, isTestnet = false) =>
-    `https://explorer.solana.com/tx/${hash}?cluster=${isTestnet ? 'devnet' : 'mainnet-beta'}`
+    `https://solscan.io/tx/${hash}?cluster=${isTestnet ? 'devnet' : 'mainnet-beta'}`
 
 export const getAddressLookupTable = async (connection: Connection, umi: Umi, fromEid: EndpointId) => {
     // Lookup Table Address and Priority Fee Calculation
