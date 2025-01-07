@@ -11,11 +11,9 @@ import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/Opti
 // OZ imports
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-// Forge imports
-import "forge-std/console.sol";
-
 // DevTools imports
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
+import { console } from "forge-std/console.sol";
 
 contract MyOAppTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
@@ -35,11 +33,17 @@ contract MyOAppTest is TestHelperOz5 {
         vm.deal(userB, 1000 ether);
 
         super.setUp();
-        setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        aOApp = MyOApp(_deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[aEid]), address(this))));
+        string[] memory forkUrls = new string[](2);
+        forkUrls[0] = "https://eth-mainnet.alchemyapi.io/v2/pwc5rmJhrdoaSEfimoKEmsvOjKSmPDrP";
+        forkUrls[1] = "https://arb1.arbitrum.io/rpc";
 
-        bOApp = MyOApp(_deployOApp(type(MyOApp).creationCode, abi.encode(address(endpoints[bEid]), address(this))));
+        createEndpoints(2, LibraryType.UltraLightNode, new address[](2), forkUrls);
+
+        vm.selectFork(eidForkMap[aEid]);
+        aOApp = new MyOApp(address(endpoints[aEid]), address(this));
+        vm.selectFork(eidForkMap[bEid]);
+        bOApp = new MyOApp(address(endpoints[bEid]), address(this));
 
         address[] memory oapps = new address[](2);
         oapps[0] = address(aOApp);
@@ -47,12 +51,19 @@ contract MyOAppTest is TestHelperOz5 {
         this.wireOApps(oapps);
     }
 
-    function test_constructor() public {
-        assertEq(aOApp.owner(), address(this));
-        assertEq(bOApp.owner(), address(this));
+    function test_sendMessage() public {
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        vm.selectFork(eidForkMap[aEid]);
 
-        assertEq(address(aOApp.endpoint()), address(endpoints[aEid]));
-        assertEq(address(bOApp.endpoint()), address(endpoints[bEid]));
+        uint256 nativeFee = aOApp.quote(bEid, "hello", options, false).nativeFee;
+
+        assertEq(bOApp.data(), "Nothing received yet.");
+
+        vm.prank(userA);
+        aOApp.send{ value: nativeFee }(bEid, "hello", options);
+        verifyPackets(bEid, addressToBytes32(address(bOApp)));
+
+        assertEq(bOApp.data(), "hello");
     }
 
     function test_send_string() public {
