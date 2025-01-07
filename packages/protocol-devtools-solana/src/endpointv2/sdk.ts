@@ -1,4 +1,5 @@
 import { MessagingFee } from '@layerzerolabs/protocol-devtools'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import type {
     IEndpointV2,
     IUlnRead,
@@ -34,10 +35,12 @@ import {
     SimpleMessageLibProgram,
     UlnProgram,
 } from '@layerzerolabs/lz-solana-sdk-v2'
-import { Connection, PublicKey, Transaction } from '@solana/web3.js'
+import { Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js'
 import assert from 'assert'
 import { Uln302 } from '@/uln302'
 import { SetConfigSchema } from './schema'
+import { createNoopSigner, publicKey, TransactionBuilder, WrappedInstruction } from '@metaplex-foundation/umi'
+import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 
 /**
  * Solana-specific SDK for EndpointV2 contracts
@@ -233,24 +236,44 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
         this.logger.debug(`Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
 
-        const instruction = await mapError(
-            async () =>
-                this.program.setSendLibrary(
-                    await this.safeGetDelegate(oapp),
-                    new PublicKey(oapp),
-                    new PublicKey(uln),
-                    eid
-                ),
-            (error) =>
-                new Error(`Failed to set the send library for ${this.label} and OApp ${oapp} for ${eidLabel}: ${error}`)
-        )
-
-        const transaction = new Transaction().add(instruction)
-
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(
+                this._umiToWeb3Tx([
+                    oft.setSendLibrary(
+                        {
+                            admin: createNoopSigner(fromWeb3JsPublicKey(await this.safeGetDelegate(oapp))),
+                            oftStore: publicKey(oapp),
+                        },
+                        {
+                            sendLibraryProgram: publicKey(uln),
+                            remoteEid: eid,
+                        }
+                    ),
+                ])
+            )),
             description: `Setting send library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`,
         }
+    }
+
+    // Convert Umi instructions to Web3JS Transaction
+    protected _umiToWeb3Tx(ixs: WrappedInstruction[]): Transaction {
+        const web3Transaction = new Transaction()
+        const txBuilder = new TransactionBuilder(ixs)
+        txBuilder.getInstructions().forEach((umiInstruction) => {
+            const web3Instruction = new TransactionInstruction({
+                programId: new PublicKey(umiInstruction.programId),
+                keys: umiInstruction.keys.map((key) => ({
+                    pubkey: new PublicKey(key.pubkey),
+                    isSigner: key.isSigner,
+                    isWritable: key.isWritable,
+                })),
+                data: Buffer.from(umiInstruction.data),
+            })
+
+            // Add the instruction to the Web3.js transaction
+            web3Transaction.add(web3Instruction)
+        })
+        return web3Transaction
     }
 
     async setReceiveLibrary(
@@ -271,25 +294,22 @@ export class EndpointV2 extends OmniSDK implements IEndpointV2 {
 
         this.logger.debug(`Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`)
 
-        const instruction = await mapError(
-            async () =>
-                this.program.setReceiveLibrary(
-                    await this.safeGetDelegate(oapp),
-                    new PublicKey(oapp),
-                    new PublicKey(uln),
-                    eid,
-                    Number(gracePeriod)
-                ),
-            (error) =>
-                new Error(
-                    `Failed to set the receive library for ${this.label} and OApp ${oapp} for ${eidLabel}: ${error}`
-                )
-        )
-
-        const transaction = new Transaction().add(instruction)
-
         return {
-            ...(await this.createTransaction(transaction)),
+            ...(await this.createTransaction(
+                this._umiToWeb3Tx([
+                    oft.setReceiveLibrary(
+                        {
+                            admin: createNoopSigner(fromWeb3JsPublicKey(await this.safeGetDelegate(oapp))),
+                            oftStore: publicKey(oapp),
+                        },
+                        {
+                            receiveLibraryProgram: publicKey(uln),
+                            remoteEid: eid,
+                            gracePeriod,
+                        }
+                    ),
+                ])
+            )),
             description: `Setting receive library for eid ${eid} (${eidLabel}) and OApp ${oapp} to ${uln}`,
         }
     }
