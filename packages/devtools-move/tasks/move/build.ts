@@ -75,7 +75,7 @@ async function build(args: any, contractName: string = 'oft') {
             )
             return
         }
-        console.log('Building contracts - this may take a while')
+        console.log('Building contracts\n')
         await buildMovementContracts(args.named_addresses, configPath)
     } else {
         console.log('Skipping build - contracts already built')

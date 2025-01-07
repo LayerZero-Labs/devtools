@@ -13,35 +13,35 @@ class QuoteSendOFTFA implements INewOperation {
             name: '--dst-eid',
             arg: {
                 help: 'destination endpoint id',
-                required: true,
+                required: false,
             },
         },
         {
             name: '--gas-limit',
             arg: {
                 help: 'gas limit',
-                required: true,
+                required: false,
             },
         },
         {
             name: '--min-amount-ld',
             arg: {
                 help: 'minimum amount to receive',
-                required: true,
+                required: false,
             },
         },
         {
             name: '--to-address',
             arg: {
                 help: 'to address',
-                required: true,
+                required: false,
             },
         },
         {
             name: '--amount-ld',
             arg: {
                 help: 'amount to send',
-                required: true,
+                required: false,
             },
         },
     ]
