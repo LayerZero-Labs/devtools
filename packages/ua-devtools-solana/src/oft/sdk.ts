@@ -176,7 +176,7 @@ export class OFT extends OmniSDK implements IOApp {
                 new Error(`Failed to convert peer ${address} for ${eidLabel} for ${this.label} to bytes: ${error}`)
         )
         const peerAsBytes32 = makeBytes32(normalizedPeer)
-        const delegate = createNoopSigner(publicKey((await this.getDelegate())!)) // TODO Ugly as fuck
+        const delegate = await this.safeGetDelegate()
 
         const oftStore = this.umiPublicKey
 
@@ -193,7 +193,7 @@ export class OFT extends OmniSDK implements IOApp {
                     await this._createSetPeerAddressIx(normalizedPeer, eid), // admin but is this needed?  set twice...
                 ])
             )),
-            description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32}`,
+            description: `Setting peer for eid ${eid} (${eidLabel}) to address ${peerAsBytes32} ${delegate.publicKey} ${(await this._getAdmin()).publicKey}`,
         }
     }
 
@@ -405,15 +405,17 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     public async initConfig(eid: EndpointId): Promise<OmniTransaction | undefined> {
-        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
+        const delegateAddress = await this.getDelegate()
+        // delegate may be undefined if it has not yet been set.  In this case, use admin, which must exist.
+        const delegate = delegateAddress ? createNoopSigner(publicKey(delegateAddress)) : await this._getAdmin()
         return {
             ...(await this.createTransaction(
                 this._umiToWeb3Tx([
                     oft.initConfig(
                         {
-                            admin: delegate, // TODO delegate
+                            admin: delegate,
                             oftStore: this.umiPublicKey,
-                            payer: delegate, // TODO what the fuck should this be?  the safe, right?
+                            payer: delegate,
                         },
                         eid,
                         {
@@ -427,11 +429,10 @@ export class OFT extends OmniSDK implements IOApp {
     }
 
     protected async _setOFTConfigIx(param: SetOFTConfigParams) {
-        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
         return oft.setOFTConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: delegate,
+                admin: await this._getAdmin(),
             },
             param,
             {
@@ -455,11 +456,10 @@ export class OFT extends OmniSDK implements IOApp {
             | (SetPeerEnforcedOptionsParam & { remote: number })
             | (SetPeerRateLimitParam & { remote: number })
     ) {
-        const delegate = createNoopSigner(publicKey((await this.getDelegate())!))
         return oft.setPeerConfig(
             {
                 oftStore: this.umiPublicKey,
-                admin: delegate,
+                admin: await this._getAdmin(),
             },
             param,
             this.umiProgramId
@@ -528,6 +528,14 @@ export class OFT extends OmniSDK implements IOApp {
             web3Transaction.add(web3Instruction)
         })
         return web3Transaction
+    }
+
+    protected async safeGetDelegate() {
+        const delegateAddress = await this.getDelegate()
+        if (!delegateAddress) {
+            throw new Error('No delegate found')
+        }
+        return createNoopSigner(publicKey(delegateAddress))
     }
 
     protected async _getAdmin(): Promise<Signer> {
