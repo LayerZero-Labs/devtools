@@ -1,5 +1,13 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.5
+
+### Patch Changes
+
+- 51c4086: Fix setSendConfig and setReceiveConfig for squads multisig
+- Updated dependencies [51c4086]
+  - @layerzerolabs/protocol-devtools-solana@4.0.5
+
 ## 4.0.4
 
 ### Patch Changes

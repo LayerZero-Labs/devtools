@@ -3377,7 +3377,7 @@ importers:
         specifier: ~1.1.2
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~4.0.4
+        specifier: ~4.0.5
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
         specifier: ~0.4.2
