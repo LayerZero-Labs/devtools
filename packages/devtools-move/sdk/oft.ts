@@ -252,6 +252,14 @@ export class OFT {
         }
     }
 
+    transferObjectPayload(object_address: string, new_owner_address: string): InputGenerateTransactionPayloadData {
+        return {
+            function: '0x1::object::transfer',
+            typeArguments: [`0x1::object::ObjectCore`],
+            functionArguments: [object_address, new_owner_address],
+        }
+    }
+
     renounceAdminPayload(): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::renounce_admin`,
