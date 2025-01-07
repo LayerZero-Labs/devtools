@@ -93,6 +93,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     mapping(bytes32 => bytes) optionsLookup; // guid => options
 
     mapping(uint32 => address) endpoints; // eid => endpoint
+    mapping(uint32 => uint256) eidForkMap; // eid => fork id
 
     uint256 public constant TREASURY_GAS_CAP = 1000000000000;
     uint256 public constant TREASURY_GAS_FOR_FEE_CAP = 100000;
@@ -123,7 +124,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     }
 
     function setUpEndpoints(uint8 _endpointNum, LibraryType _libraryType) public {
-        createEndpoints(_endpointNum, _libraryType, new address[](_endpointNum));
+        createEndpoints(_endpointNum, _libraryType, new address[](_endpointNum), new string[](_endpointNum));
     }
     /**
      * @notice Sets up endpoints for testing.
@@ -135,6 +136,15 @@ contract TestHelperOz5 is Test, OptionsHelper {
         LibraryType _libraryType,
         address[] memory nativeTokenAddresses
     ) public {
+        createEndpoints(_endpointNum, _libraryType, nativeTokenAddresses, new string[](_endpointNum));
+    }
+
+    function createEndpoints(
+        uint8 _endpointNum,
+        LibraryType _libraryType,
+        address[] memory nativeTokenAddresses,
+        string[] memory forkUrls
+    ) public {
         endpointSetup.endpointList = new EndpointV2[](_endpointNum);
         endpointSetup.eidList = new uint32[](_endpointNum);
         endpointSetup.sendLibs = new address[](_endpointNum);
@@ -144,17 +154,35 @@ contract TestHelperOz5 is Test, OptionsHelper {
         endpointSetup.signers[0] = vm.addr(1);
 
         {
+            uint256 forkId = 0;
+            // create fork ids
+            for (uint8 i = 0; i < _endpointNum; i++) {
+                if (bytes(forkUrls[i]).length > 0) {
+                    forkId = vm.createFork(forkUrls[i]);
+                }
+
+                uint32 eid = i + 1;
+                eidForkMap[eid] = forkId;
+            }
+
             // deploy endpoints
             for (uint8 i = 0; i < _endpointNum; i++) {
+                if (eidForkMap[i] > 0) {
+                    vm.selectFork(eidForkMap[i]);
+                }
+
                 uint32 eid = i + 1;
-                address nativeToken = nativeTokenAddresses[i];
                 endpointSetup.eidList[i] = eid;
+
+                address nativeToken = nativeTokenAddresses[i];
+
                 if (nativeToken == address(0)) {
                     endpointSetup.endpointList[i] = new EndpointV2(eid, address(this));
                 } else {
                     endpointSetup.endpointList[i] = new EndpointV2Alt(eid, address(this), nativeToken);
                 }
                 registerEndpoint(endpointSetup.endpointList[i]);
+                eidForkMap[eid] = forkId;
             }
         }
 
@@ -162,6 +190,12 @@ contract TestHelperOz5 is Test, OptionsHelper {
         endpointSetup.priceFeed = new PriceFeed(address(this));
 
         for (uint8 i = 0; i < _endpointNum; i++) {
+            uint32 eid = i + 1;
+
+            if (eidForkMap[eid] > 0) {
+                vm.selectFork(eidForkMap[eid]);
+            }
+
             if (_libraryType == LibraryType.UltraLightNode) {
                 address endpointAddr = address(endpointSetup.endpointList[i]);
 
@@ -348,6 +382,11 @@ contract TestHelperOz5 is Test, OptionsHelper {
 
         // config up
         for (uint8 i = 0; i < _endpointNum; i++) {
+            uint32 eid = i + 1;
+            if (eidForkMap[eid] > 0) {
+                vm.selectFork(eidForkMap[eid]);
+            }
+
             EndpointV2 endpoint = endpointSetup.endpointList[i];
             if (_libraryType == LibraryType.UltraLightNode) {
                 endpoint.setDefaultSendLibrary(DEFAULT_CHANNEL_ID, endpointSetup.readLibs[i]);
@@ -375,6 +414,10 @@ contract TestHelperOz5 is Test, OptionsHelper {
     ) public returns (address[] memory oapps) {
         oapps = new address[](_oappNum);
         for (uint8 eid = _startEid; eid < _startEid + _oappNum; eid++) {
+            if (eidForkMap[eid] > 0) {
+                vm.selectFork(eidForkMap[eid]);
+            }
+
             address oapp = _deployOApp(_oappCreationCode, abi.encode(address(endpoints[eid]), address(this), true));
             oapps[eid - _startEid] = oapp;
         }
@@ -390,7 +433,11 @@ contract TestHelperOz5 is Test, OptionsHelper {
     function wireOApps(address[] memory oapps) public {
         uint256 size = oapps.length;
         for (uint256 i = 0; i < size; i++) {
+            if (eidForkMap[uint32(i)] > 0) {
+                vm.selectFork(eidForkMap[uint32(i)]);
+            }
             IOAppSetPeer localOApp = IOAppSetPeer(oapps[i]);
+            uint32 localEid = (localOApp.endpoint()).eid();
             for (uint256 j = 0; j < size; j++) {
                 if (i == j) continue;
                 IOAppSetPeer remoteOApp = IOAppSetPeer(oapps[j]);
@@ -498,6 +545,11 @@ contract TestHelperOz5 is Test, OptionsHelper {
             this.validatePacket(packetBytes, _resolvedPayload);
 
             bytes memory options = optionsLookup[guid];
+
+            if (eidForkMap[_dstEid] > 0) {
+                vm.selectFork(eidForkMap[_dstEid]);
+            }
+
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_NATIVE_DROP)) {
                 (uint256 amount, bytes32 receiver) = _parseExecutorNativeDropOption(options);
                 address to = address(uint160(uint256(receiver)));
