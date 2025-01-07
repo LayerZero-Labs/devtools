@@ -1,0 +1,123 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "assignJob",
+      "inputs": [
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        {
+          "name": "_calldataSize",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        { "name": "_options", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "price", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getFee",
+      "inputs": [
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        {
+          "name": "_calldataSize",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        { "name": "_options", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "price", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "assignJob(uint32,address,uint256,bytes)": "717e8a42",
+    "getFee(uint32,address,uint256,bytes)": "709eb664"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_calldataSize\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_options\",\"type\":\"bytes\"}],\"name\":\"assignJob\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_calldataSize\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_options\",\"type\":\"bytes\"}],\"name\":\"getFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol\":\"ILayerZeroExecutor\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol\":{\"keccak256\":\"0x3647af317ee126b1247a782abb30e59ec5ab21b4945f1d3b4370d1fa3c1bf347\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5b51cd5e7347ee869a06bd57a698f40e4a901ec7fdcb27f0ef485e4a0e1e9be4\",\"dweb:/ipfs/QmP2Nc73veRzLGdUahkjhQAiKR9ZWYiUtSGwoMB1sPXxUp\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" },
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_calldataSize",
+              "type": "uint256"
+            },
+            { "internalType": "bytes", "name": "_options", "type": "bytes" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "assignJob",
+          "outputs": [
+            { "internalType": "uint256", "name": "price", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" },
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_calldataSize",
+              "type": "uint256"
+            },
+            { "internalType": "bytes", "name": "_options", "type": "bytes" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getFee",
+          "outputs": [
+            { "internalType": "uint256", "name": "price", "type": "uint256" }
+          ]
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol": "ILayerZeroExecutor"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/interfaces/ILayerZeroExecutor.sol": {
+        "keccak256": "0x3647af317ee126b1247a782abb30e59ec5ab21b4945f1d3b4370d1fa3c1bf347",
+        "urls": [
+          "bzz-raw://5b51cd5e7347ee869a06bd57a698f40e4a901ec7fdcb27f0ef485e4a0e1e9be4",
+          "dweb:/ipfs/QmP2Nc73veRzLGdUahkjhQAiKR9ZWYiUtSGwoMB1sPXxUp"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 6
+}

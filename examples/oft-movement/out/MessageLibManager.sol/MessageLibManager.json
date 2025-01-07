@@ -1,0 +1,1180 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "blockedLibrary",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultReceiveLibrary",
+      "inputs": [
+        { "name": "srcEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "srcEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultSendLibrary",
+      "inputs": [
+        { "name": "dstEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_configType", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "config", "type": "bytes", "internalType": "bytes" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getReceiveLibrary",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "isDefault", "type": "bool", "internalType": "bool" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getRegisteredLibraries",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address[]", "internalType": "address[]" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSendLibrary",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isDefaultSendLibrary",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isRegisteredLibrary",
+      "inputs": [
+        { "name": "lib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isSupportedEid",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isValidReceiveLibrary",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        {
+          "name": "_actualReceiveLib",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "receiveLibraryTimeout",
+      "inputs": [
+        { "name": "receiver", "type": "address", "internalType": "address" },
+        { "name": "srcEid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerLibrary",
+      "inputs": [
+        { "name": "_lib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        {
+          "name": "_params",
+          "type": "tuple[]",
+          "internalType": "struct SetConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "configType",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "config", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultReceiveLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" },
+        { "name": "_gracePeriod", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultSendLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setReceiveLibrary",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" },
+        { "name": "_gracePeriod", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setSendLibrary",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        { "name": "newOwner", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DefaultReceiveLibrarySet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DefaultReceiveLibraryTimeoutSet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "oldLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "expiry",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DefaultSendLibrarySet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LibraryRegistered",
+      "inputs": [
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "name": "previousOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "newOwner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReceiveLibrarySet",
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReceiveLibraryTimeoutSet",
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "oldLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "timeout",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SendLibrarySet",
+      "inputs": [
+        {
+          "name": "sender",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "LZ_AlreadyRegistered", "inputs": [] },
+    {
+      "type": "error",
+      "name": "LZ_DefaultReceiveLibUnavailable",
+      "inputs": []
+    },
+    { "type": "error", "name": "LZ_DefaultSendLibUnavailable", "inputs": [] },
+    { "type": "error", "name": "LZ_InvalidExpiry", "inputs": [] },
+    { "type": "error", "name": "LZ_OnlyNonDefaultLib", "inputs": [] },
+    { "type": "error", "name": "LZ_OnlyReceiveLib", "inputs": [] },
+    { "type": "error", "name": "LZ_OnlyRegisteredLib", "inputs": [] },
+    { "type": "error", "name": "LZ_OnlyRegisteredOrDefaultLib", "inputs": [] },
+    { "type": "error", "name": "LZ_OnlySendLib", "inputs": [] },
+    { "type": "error", "name": "LZ_SameValue", "inputs": [] },
+    { "type": "error", "name": "LZ_UnsupportedEid", "inputs": [] },
+    { "type": "error", "name": "LZ_UnsupportedInterface", "inputs": [] },
+    {
+      "type": "error",
+      "name": "OwnableInvalidOwner",
+      "inputs": [
+        { "name": "owner", "type": "address", "internalType": "address" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "OwnableUnauthorizedAccount",
+      "inputs": [
+        { "name": "account", "type": "address", "internalType": "address" }
+      ]
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "blockedLibrary()": "73318091",
+    "defaultReceiveLibrary(uint32)": "6f50a803",
+    "defaultReceiveLibraryTimeout(uint32)": "6e83f5bb",
+    "defaultSendLibrary(uint32)": "f64be4c7",
+    "getConfig(address,address,uint32,uint32)": "2b3197b9",
+    "getReceiveLibrary(address,uint32)": "402f8468",
+    "getRegisteredLibraries()": "9132e5c3",
+    "getSendLibrary(address,uint32)": "b96a277f",
+    "isDefaultSendLibrary(address,uint32)": "dc93c8a2",
+    "isRegisteredLibrary(address)": "dc706a62",
+    "isSupportedEid(uint32)": "6750cd4c",
+    "isValidReceiveLibrary(address,uint32,address)": "9d7f9775",
+    "owner()": "8da5cb5b",
+    "receiveLibraryTimeout(address,uint32)": "ef667aa1",
+    "registerLibrary(address)": "e8964e81",
+    "renounceOwnership()": "715018a6",
+    "setConfig(address,address,(uint32,uint32,bytes)[])": "6dbd9f90",
+    "setDefaultReceiveLibrary(uint32,address,uint256)": "a718531b",
+    "setDefaultReceiveLibraryTimeout(uint32,address,uint256)": "d4b4ec8f",
+    "setDefaultSendLibrary(uint32,address)": "aafea312",
+    "setReceiveLibrary(address,uint32,address,uint256)": "6a14d715",
+    "setReceiveLibraryTimeout(address,uint32,address,uint256)": "183c834f",
+    "setSendLibrary(address,uint32,address)": "9535ff30",
+    "transferOwnership(address)": "f2fde38b"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"LZ_AlreadyRegistered\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_DefaultReceiveLibUnavailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_DefaultSendLibUnavailable\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_InvalidExpiry\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_OnlyNonDefaultLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_OnlyReceiveLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_OnlyRegisteredLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_OnlyRegisteredOrDefaultLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_OnlySendLib\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_SameValue\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_UnsupportedEid\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LZ_UnsupportedInterface\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"DefaultReceiveLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldLib\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"name\":\"DefaultReceiveLibraryTimeoutSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"DefaultSendLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"LibraryRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"ReceiveLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldLib\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timeout\",\"type\":\"uint256\"}],\"name\":\"ReceiveLibraryTimeoutSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"SendLibrarySet\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"blockedLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"}],\"name\":\"defaultReceiveLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"}],\"name\":\"defaultReceiveLibraryTimeout\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"}],\"name\":\"defaultSendLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"_configType\",\"type\":\"uint32\"}],\"name\":\"getConfig\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"}],\"name\":\"getReceiveLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isDefault\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredLibraries\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"}],\"name\":\"getSendLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"}],\"name\":\"isDefaultSendLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"}],\"name\":\"isRegisteredLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"isSupportedEid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_actualReceiveLib\",\"type\":\"address\"}],\"name\":\"isValidReceiveLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"}],\"name\":\"receiveLibraryTimeout\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"}],\"name\":\"registerLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"configType\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"internalType\":\"struct SetConfigParam[]\",\"name\":\"_params\",\"type\":\"tuple[]\"}],\"name\":\"setConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_gracePeriod\",\"type\":\"uint256\"}],\"name\":\"setDefaultReceiveLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_expiry\",\"type\":\"uint256\"}],\"name\":\"setDefaultReceiveLibraryTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"}],\"name\":\"setDefaultSendLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_gracePeriod\",\"type\":\"uint256\"}],\"name\":\"setReceiveLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_expiry\",\"type\":\"uint256\"}],\"name\":\"setReceiveLibraryTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"}],\"name\":\"setSendLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}]},\"kind\":\"dev\",\"methods\":{\"getConfig(address,address,uint32,uint32)\":{\"details\":\"a view function to query the current configuration of the OApp\"},\"getReceiveLibrary(address,uint32)\":{\"details\":\"the receiveLibrary can be lazily resolved that if not set it will point to the default configured by LayerZero\"},\"getSendLibrary(address,uint32)\":{\"details\":\"If the Oapp does not have a selected Send Library, this function will resolve to the default library configured by LayerZero\",\"params\":{\"_dstEid\":\"The destination endpoint id\",\"_sender\":\"The address of the Oapp that is sending the message\"},\"returns\":{\"lib\":\"address of the Send Library\"}},\"isSupportedEid(uint32)\":{\"details\":\"returns true only if both the default send/receive libraries are set\"},\"isValidReceiveLibrary(address,uint32,address)\":{\"details\":\"called when the endpoint checks if the msgLib attempting to verify the msg is the configured msgLib of the Oappthis check provides the ability for Oapp to lock in a trusted msgLibit will fist check if the msgLib is the currently configured one. then check if the msgLib is the one in grace period of msgLib versioning upgrade\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"registerLibrary(address)\":{\"details\":\"all libraries have to implement the erc165 interface to prevent wrong configurationsonly owner\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setConfig(address,address,(uint32,uint32,bytes)[])\":{\"details\":\"authenticated by the _oapp\"},\"setDefaultReceiveLibrary(uint32,address,uint256)\":{\"details\":\"owner setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledin version migration, it can add a grace period to the old library. if the grace period is 0, it will delete the timeout configuration.only owner\"},\"setDefaultReceiveLibraryTimeout(uint32,address,uint256)\":{\"details\":\"owner setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledcan used to (1) extend the current configuration (2) force remove the current configuration (3) change to a new configuration\",\"params\":{\"_expiry\":\"the block number when lib expires\"}},\"setDefaultSendLibrary(uint32,address)\":{\"details\":\"owner setting the defaultSendLibrarycan set to the blockedLibrary, which is a registered librarythe msgLib must enable the support before they can be registered to the endpoint as the defaultonly owner\"},\"setReceiveLibrary(address,uint32,address,uint256)\":{\"details\":\"Oapp setting the receiveLibrarymust be a registered library (including blockLibrary) with the eid support enabledin version migration, it can add a grace period to the old library. if the grace period is 0, it will delete the timeout configuration.authenticated by the Oapp\",\"params\":{\"_gracePeriod\":\"the number of blocks from now until oldLib expires\"}},\"setReceiveLibraryTimeout(address,uint32,address,uint256)\":{\"details\":\"Oapp setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledcan used to (1) extend the current configuration (2)  force remove the current configuration (3) change to a new configuration\",\"params\":{\"_expiry\":\"the block number when lib expires\"}},\"setSendLibrary(address,uint32,address)\":{\"details\":\"Oapp setting the sendLibrarymust be a registered library (including blockLibrary) with the eid support enabledauthenticated by the Oapp\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"getSendLibrary(address,uint32)\":{\"notice\":\"The Send Library is the Oapp specified library that will be used to send the message to the destination endpoint. If the Oapp does not specify a Send Library, the default Send Library will be used.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol\":\"MessageLibManager\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol\":{\"keccak256\":\"0x64330e51de72e8d38cfc0eb5527d36baada46df4bc14233d3a8ecaf98098d69a\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://49aa45e5a26fc62e7af569cf915be8344adc78dceb6871c4c14bc5d115e59241\",\"dweb:/ipfs/QmbTuW7kzPDYForDEPnaNQi6ZrmWqDxGVnHFiugnvTyq9K\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol\":{\"keccak256\":\"0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0\",\"dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol\":{\"keccak256\":\"0x35bcd6ca99c4c8d9f7d8413d1b92fb4a4d4a420ce3bf64b0fb01e68e6bcf2fa7\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://0ac14f98563f9c610c936c93e71eff657efaba1e1d892be6a215aa5cb1f63a24\",\"dweb:/ipfs/QmVZZ8owwfDGLQTAzQJJqmYY4KsrChDagh5GBK7rChT5wb\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/BlockedMessageLib.sol\":{\"keccak256\":\"0xb2b55968b26294139742adee6c155897c8334f4c6bf72f1940456cc84e6fbab9\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://e758a1fdcea4039b19f1252e4e2958f4a0e05517eb3e151784431533446c225f\",\"dweb:/ipfs/QmRBG345abgyUeTnSpuxdK1WbK5pvwhSmvBEgW1mnoYqTq\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol\":{\"keccak256\":\"0xddce8e17e3d3f9ed818b4f4c4478a8262aab8b11ed322f1bf5ed705bb4bd97fa\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8084aa71a4cc7d2980972412a88fe4f114869faea3fefa5436431644eb5c0287\",\"dweb:/ipfs/Qmbqfs5dRdPvHVKY8kTaeyc65NdqXRQwRK7h9s5UJEhD1p\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "LZ_AlreadyRegistered" },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_DefaultReceiveLibUnavailable"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_DefaultSendLibUnavailable"
+        },
+        { "inputs": [], "type": "error", "name": "LZ_InvalidExpiry" },
+        { "inputs": [], "type": "error", "name": "LZ_OnlyNonDefaultLib" },
+        { "inputs": [], "type": "error", "name": "LZ_OnlyReceiveLib" },
+        { "inputs": [], "type": "error", "name": "LZ_OnlyRegisteredLib" },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LZ_OnlyRegisteredOrDefaultLib"
+        },
+        { "inputs": [], "type": "error", "name": "LZ_OnlySendLib" },
+        { "inputs": [], "type": "error", "name": "LZ_SameValue" },
+        { "inputs": [], "type": "error", "name": "LZ_UnsupportedEid" },
+        { "inputs": [], "type": "error", "name": "LZ_UnsupportedInterface" },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "owner", "type": "address" }
+          ],
+          "type": "error",
+          "name": "OwnableInvalidOwner"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "account", "type": "address" }
+          ],
+          "type": "error",
+          "name": "OwnableUnauthorizedAccount"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultReceiveLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "oldLib",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "expiry",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultReceiveLibraryTimeoutSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultSendLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LibraryRegistered",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ReceiveLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "oldLib",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeout",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ReceiveLibraryTimeoutSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SendLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "blockedLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "srcEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultReceiveLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "srcEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultReceiveLibraryTimeout",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "uint256", "name": "expiry", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "dstEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultSendLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            {
+              "internalType": "uint32",
+              "name": "_configType",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConfig",
+          "outputs": [
+            { "internalType": "bytes", "name": "config", "type": "bytes" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getReceiveLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "bool", "name": "isDefault", "type": "bool" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRegisteredLibraries",
+          "outputs": [
+            { "internalType": "address[]", "name": "", "type": "address[]" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSendLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isDefaultSendLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "lib", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isRegisteredLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSupportedEid",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            {
+              "internalType": "address",
+              "name": "_actualReceiveLib",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isValidReceiveLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "srcEid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "receiveLibraryTimeout",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "uint256", "name": "expiry", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_lib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "registerLibrary"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            {
+              "internalType": "struct SetConfigParam[]",
+              "name": "_params",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "uint32",
+                  "name": "configType",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes", "name": "config", "type": "bytes" }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setConfig"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_gracePeriod",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultReceiveLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint256", "name": "_expiry", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultReceiveLibraryTimeout"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultSendLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_gracePeriod",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setReceiveLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint256", "name": "_expiry", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setReceiveLibraryTimeout"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setSendLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "newOwner", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "getConfig(address,address,uint32,uint32)": {
+            "details": "a view function to query the current configuration of the OApp"
+          },
+          "getReceiveLibrary(address,uint32)": {
+            "details": "the receiveLibrary can be lazily resolved that if not set it will point to the default configured by LayerZero"
+          },
+          "getSendLibrary(address,uint32)": {
+            "details": "If the Oapp does not have a selected Send Library, this function will resolve to the default library configured by LayerZero",
+            "params": {
+              "_dstEid": "The destination endpoint id",
+              "_sender": "The address of the Oapp that is sending the message"
+            },
+            "returns": { "lib": "address of the Send Library" }
+          },
+          "isSupportedEid(uint32)": {
+            "details": "returns true only if both the default send/receive libraries are set"
+          },
+          "isValidReceiveLibrary(address,uint32,address)": {
+            "details": "called when the endpoint checks if the msgLib attempting to verify the msg is the configured msgLib of the Oappthis check provides the ability for Oapp to lock in a trusted msgLibit will fist check if the msgLib is the currently configured one. then check if the msgLib is the one in grace period of msgLib versioning upgrade"
+          },
+          "owner()": { "details": "Returns the address of the current owner." },
+          "registerLibrary(address)": {
+            "details": "all libraries have to implement the erc165 interface to prevent wrong configurationsonly owner"
+          },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+          },
+          "setConfig(address,address,(uint32,uint32,bytes)[])": {
+            "details": "authenticated by the _oapp"
+          },
+          "setDefaultReceiveLibrary(uint32,address,uint256)": {
+            "details": "owner setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledin version migration, it can add a grace period to the old library. if the grace period is 0, it will delete the timeout configuration.only owner"
+          },
+          "setDefaultReceiveLibraryTimeout(uint32,address,uint256)": {
+            "details": "owner setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledcan used to (1) extend the current configuration (2) force remove the current configuration (3) change to a new configuration",
+            "params": { "_expiry": "the block number when lib expires" }
+          },
+          "setDefaultSendLibrary(uint32,address)": {
+            "details": "owner setting the defaultSendLibrarycan set to the blockedLibrary, which is a registered librarythe msgLib must enable the support before they can be registered to the endpoint as the defaultonly owner"
+          },
+          "setReceiveLibrary(address,uint32,address,uint256)": {
+            "details": "Oapp setting the receiveLibrarymust be a registered library (including blockLibrary) with the eid support enabledin version migration, it can add a grace period to the old library. if the grace period is 0, it will delete the timeout configuration.authenticated by the Oapp",
+            "params": {
+              "_gracePeriod": "the number of blocks from now until oldLib expires"
+            }
+          },
+          "setReceiveLibraryTimeout(address,uint32,address,uint256)": {
+            "details": "Oapp setting the defaultSendLibrarymust be a registered library (including blockLibrary) with the eid support enabledcan used to (1) extend the current configuration (2)  force remove the current configuration (3) change to a new configuration",
+            "params": { "_expiry": "the block number when lib expires" }
+          },
+          "setSendLibrary(address,uint32,address)": {
+            "details": "Oapp setting the sendLibrarymust be a registered library (including blockLibrary) with the eid support enabledauthenticated by the Oapp"
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "getSendLibrary(address,uint32)": {
+            "notice": "The Send Library is the Oapp specified library that will be used to send the message to the destination endpoint. If the Oapp does not specify a Send Library, the default Send Library will be used."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol": "MessageLibManager"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/MessageLibManager.sol": {
+        "keccak256": "0x64330e51de72e8d38cfc0eb5527d36baada46df4bc14233d3a8ecaf98098d69a",
+        "urls": [
+          "bzz-raw://49aa45e5a26fc62e7af569cf915be8344adc78dceb6871c4c14bc5d115e59241",
+          "dweb:/ipfs/QmbTuW7kzPDYForDEPnaNQi6ZrmWqDxGVnHFiugnvTyq9K"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": {
+        "keccak256": "0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c",
+        "urls": [
+          "bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0",
+          "dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/Errors.sol": {
+        "keccak256": "0x35bcd6ca99c4c8d9f7d8413d1b92fb4a4d4a420ce3bf64b0fb01e68e6bcf2fa7",
+        "urls": [
+          "bzz-raw://0ac14f98563f9c610c936c93e71eff657efaba1e1d892be6a215aa5cb1f63a24",
+          "dweb:/ipfs/QmVZZ8owwfDGLQTAzQJJqmYY4KsrChDagh5GBK7rChT5wb"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/BlockedMessageLib.sol": {
+        "keccak256": "0xb2b55968b26294139742adee6c155897c8334f4c6bf72f1940456cc84e6fbab9",
+        "urls": [
+          "bzz-raw://e758a1fdcea4039b19f1252e4e2958f4a0e05517eb3e151784431533446c225f",
+          "dweb:/ipfs/QmRBG345abgyUeTnSpuxdK1WbK5pvwhSmvBEgW1mnoYqTq"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+        "keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
+        "urls": [
+          "bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
+          "dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Context.sol": {
+        "keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+        "urls": [
+          "bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+          "dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+        "keccak256": "0xddce8e17e3d3f9ed818b4f4c4478a8262aab8b11ed322f1bf5ed705bb4bd97fa",
+        "urls": [
+          "bzz-raw://8084aa71a4cc7d2980972412a88fe4f114869faea3fefa5436431644eb5c0287",
+          "dweb:/ipfs/Qmbqfs5dRdPvHVKY8kTaeyc65NdqXRQwRK7h9s5UJEhD1p"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8",
+        "urls": [
+          "bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621",
+          "dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 27
+}

@@ -1,0 +1,242 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "getConfig",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_configType", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "config", "type": "bytes", "internalType": "bytes" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isSupportedEid",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "messageLibType",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "uint8", "internalType": "enum MessageLibType" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        {
+          "name": "_config",
+          "type": "tuple[]",
+          "internalType": "struct SetConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "configType",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "config", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "supportsInterface",
+      "inputs": [
+        { "name": "interfaceId", "type": "bytes4", "internalType": "bytes4" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "version",
+      "inputs": [],
+      "outputs": [
+        { "name": "major", "type": "uint64", "internalType": "uint64" },
+        { "name": "minor", "type": "uint8", "internalType": "uint8" },
+        { "name": "endpointVersion", "type": "uint8", "internalType": "uint8" }
+      ],
+      "stateMutability": "view"
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "getConfig(uint32,address,uint32)": "9c33abf7",
+    "isSupportedEid(uint32)": "6750cd4c",
+    "messageLibType()": "1881d94d",
+    "setConfig(address,(uint32,uint32,bytes)[])": "20efd722",
+    "supportsInterface(bytes4)": "01ffc9a7",
+    "version()": "54fd4d50"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_configType\",\"type\":\"uint32\"}],\"name\":\"getConfig\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"isSupportedEid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"messageLibType\",\"outputs\":[{\"internalType\":\"enum MessageLibType\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"configType\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"internalType\":\"struct SetConfigParam[]\",\"name\":\"_config\",\"type\":\"tuple[]\"}],\"name\":\"setConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"version\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"major\",\"type\":\"uint64\"},{\"internalType\":\"uint8\",\"name\":\"minor\",\"type\":\"uint8\"},{\"internalType\":\"uint8\",\"name\":\"endpointVersion\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"supportsInterface(bytes4)\":{\"details\":\"Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section] to learn more about how these ids are created. This function call must use less than 30 000 gas.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol\":\"IMessageLib\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol\":{\"keccak256\":\"0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0\",\"dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            {
+              "internalType": "uint32",
+              "name": "_configType",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConfig",
+          "outputs": [
+            { "internalType": "bytes", "name": "config", "type": "bytes" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSupportedEid",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "messageLibType",
+          "outputs": [
+            {
+              "internalType": "enum MessageLibType",
+              "name": "",
+              "type": "uint8"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            {
+              "internalType": "struct SetConfigParam[]",
+              "name": "_config",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "uint32",
+                  "name": "configType",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes", "name": "config", "type": "bytes" }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setConfig"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "supportsInterface",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "version",
+          "outputs": [
+            { "internalType": "uint64", "name": "major", "type": "uint64" },
+            { "internalType": "uint8", "name": "minor", "type": "uint8" },
+            {
+              "internalType": "uint8",
+              "name": "endpointVersion",
+              "type": "uint8"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "supportsInterface(bytes4)": {
+            "details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": "IMessageLib"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLib.sol": {
+        "keccak256": "0x5cf5f24751b4e3ea1c9c5ded07cedfdfd62566b6daaffcc0144733859c9dba0c",
+        "urls": [
+          "bzz-raw://cae7e35007a714f007ea08045ef7c0cfa6c91fd2425b5028b2d49abad357a5f0",
+          "dweb:/ipfs/QmcDBs5tsiyB35b8cwzWQWNnpkawb3uuHRaqE77Hxm2tve"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8",
+        "urls": [
+          "bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621",
+          "dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 4
+}
