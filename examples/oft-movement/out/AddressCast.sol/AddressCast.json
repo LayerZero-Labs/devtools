@@ -1,0 +1,68 @@
+{
+  "abi": [
+    { "type": "error", "name": "AddressCast_InvalidAddress", "inputs": [] },
+    {
+      "type": "error",
+      "name": "AddressCast_InvalidSizeForAddress",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220242a16a9a157a7e1852819b510bac6864224d1deaca6d594fb99ea8f36df8b8b64736f6c63430008160033",
+    "sourceMap": "64:1401:10:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;64:1401:10;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220242a16a9a157a7e1852819b510bac6864224d1deaca6d594fb99ea8f36df8b8b64736f6c63430008160033",
+    "sourceMap": "64:1401:10:-:0;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"AddressCast_InvalidAddress\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"AddressCast_InvalidSizeForAddress\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol\":\"AddressCast\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol\":{\"keccak256\":\"0x2ebbcaaab3554edcd41b581f1a72ac1806afbfb8047d0d47ff098f9af30d6deb\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://2d4b2cf5c3b16dc76c6767f285b57c0af917972327b2be3f7cba5825402f5fc1\",\"dweb:/ipfs/QmQQWiHE2jKEDbjzGutSoZwtApSXYfLqZt5CxEpFj8xyvT\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "AddressCast_InvalidAddress" },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "AddressCast_InvalidSizeForAddress"
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol": "AddressCast"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/AddressCast.sol": {
+        "keccak256": "0x2ebbcaaab3554edcd41b581f1a72ac1806afbfb8047d0d47ff098f9af30d6deb",
+        "urls": [
+          "bzz-raw://2d4b2cf5c3b16dc76c6767f285b57c0af917972327b2be3f7cba5825402f5fc1",
+          "dweb:/ipfs/QmQQWiHE2jKEDbjzGutSoZwtApSXYfLqZt5CxEpFj8xyvT"
+        ],
+        "license": "LZBL-1.2"
+      }
+    },
+    "version": 1
+  },
+  "id": 10
+}
