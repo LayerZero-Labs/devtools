@@ -1,0 +1,2688 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "burn",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_nonce", "type": "uint64", "internalType": "uint64" },
+        { "name": "_payloadHash", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "clear",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        {
+          "name": "_origin",
+          "type": "tuple",
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "composeQueue",
+      "inputs": [
+        { "name": "_from", "type": "address", "internalType": "address" },
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_index", "type": "uint16", "internalType": "uint16" }
+      ],
+      "outputs": [
+        { "name": "messageHash", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultReceiveLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "defaultSendLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "eid",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint32", "internalType": "uint32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_configType", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "config", "type": "bytes", "internalType": "bytes" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getReceiveLibrary",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "isDefault", "type": "bool", "internalType": "bool" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getRegisteredLibraries",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address[]", "internalType": "address[]" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSendContext",
+      "inputs": [],
+      "outputs": [
+        { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "sender", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getSendLibrary",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "inboundNonce",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "inboundPayloadHash",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_nonce", "type": "uint64", "internalType": "uint64" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "initializable",
+      "inputs": [
+        {
+          "name": "_origin",
+          "type": "tuple",
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        { "name": "_receiver", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isDefaultSendLibrary",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isRegisteredLibrary",
+      "inputs": [
+        { "name": "_lib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isSendingMessage",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isSupportedEid",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isValidReceiveLibrary",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_lib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lazyInboundNonce",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lzCompose",
+      "inputs": [
+        { "name": "_from", "type": "address", "internalType": "address" },
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_index", "type": "uint16", "internalType": "uint16" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "_extraData", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "lzReceive",
+      "inputs": [
+        {
+          "name": "_origin",
+          "type": "tuple",
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "_extraData", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "lzToken",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "nativeToken",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "nextGuid",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_receiver", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "nilify",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_nonce", "type": "uint64", "internalType": "uint64" },
+        { "name": "_payloadHash", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "outboundNonce",
+      "inputs": [
+        { "name": "_sender", "type": "address", "internalType": "address" },
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_receiver", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [{ "name": "", "type": "uint64", "internalType": "uint64" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "quote",
+      "inputs": [
+        {
+          "name": "_params",
+          "type": "tuple",
+          "internalType": "struct MessagingParams",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "receiver",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            { "name": "message", "type": "bytes", "internalType": "bytes" },
+            { "name": "options", "type": "bytes", "internalType": "bytes" },
+            { "name": "payInLzToken", "type": "bool", "internalType": "bool" }
+          ]
+        },
+        { "name": "_sender", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingFee",
+          "components": [
+            {
+              "name": "nativeFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lzTokenFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "receiveLibraryTimeout",
+      "inputs": [
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" }
+      ],
+      "outputs": [
+        { "name": "lib", "type": "address", "internalType": "address" },
+        { "name": "expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerLibrary",
+      "inputs": [
+        { "name": "_lib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "send",
+      "inputs": [
+        {
+          "name": "_params",
+          "type": "tuple",
+          "internalType": "struct MessagingParams",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "receiver",
+              "type": "bytes32",
+              "internalType": "bytes32"
+            },
+            { "name": "message", "type": "bytes", "internalType": "bytes" },
+            { "name": "options", "type": "bytes", "internalType": "bytes" },
+            { "name": "payInLzToken", "type": "bool", "internalType": "bool" }
+          ]
+        },
+        {
+          "name": "_refundAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingReceipt",
+          "components": [
+            { "name": "guid", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" },
+            {
+              "name": "fee",
+              "type": "tuple",
+              "internalType": "struct MessagingFee",
+              "components": [
+                {
+                  "name": "nativeFee",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "lzTokenFee",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "sendCompose",
+      "inputs": [
+        { "name": "_to", "type": "address", "internalType": "address" },
+        { "name": "_guid", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_index", "type": "uint16", "internalType": "uint16" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setConfig",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        {
+          "name": "_params",
+          "type": "tuple[]",
+          "internalType": "struct SetConfigParam[]",
+          "components": [
+            { "name": "eid", "type": "uint32", "internalType": "uint32" },
+            {
+              "name": "configType",
+              "type": "uint32",
+              "internalType": "uint32"
+            },
+            { "name": "config", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultReceiveLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" },
+        { "name": "_gracePeriod", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDefaultSendLibrary",
+      "inputs": [
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setDelegate",
+      "inputs": [
+        { "name": "_delegate", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setLzToken",
+      "inputs": [
+        { "name": "_lzToken", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setReceiveLibrary",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" },
+        { "name": "_gracePeriod", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setReceiveLibraryTimeout",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_lib", "type": "address", "internalType": "address" },
+        { "name": "_expiry", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setSendLibrary",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_eid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_newLib", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "skip",
+      "inputs": [
+        { "name": "_oapp", "type": "address", "internalType": "address" },
+        { "name": "_srcEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_sender", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_nonce", "type": "uint64", "internalType": "uint64" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "verifiable",
+      "inputs": [
+        {
+          "name": "_origin",
+          "type": "tuple",
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        { "name": "_receiver", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "verify",
+      "inputs": [
+        {
+          "name": "_origin",
+          "type": "tuple",
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        { "name": "_receiver", "type": "address", "internalType": "address" },
+        { "name": "_payloadHash", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "ComposeDelivered",
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "to",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "index",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ComposeSent",
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "to",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "index",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        },
+        {
+          "name": "message",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DefaultReceiveLibrarySet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DefaultReceiveLibraryTimeoutSet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "oldLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "expiry",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DefaultSendLibrarySet",
+      "inputs": [
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "DelegateSet",
+      "inputs": [
+        {
+          "name": "sender",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "delegate",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "InboundNonceSkipped",
+      "inputs": [
+        {
+          "name": "srcEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "sender",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "nonce",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LibraryRegistered",
+      "inputs": [
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LzComposeAlert",
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "to",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "executor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "index",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        },
+        {
+          "name": "gas",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "message",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "reason",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LzReceiveAlert",
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "executor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "origin",
+          "type": "tuple",
+          "indexed": false,
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "gas",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "message",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "extraData",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "reason",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LzTokenSet",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PacketBurnt",
+      "inputs": [
+        {
+          "name": "srcEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "sender",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "nonce",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        },
+        {
+          "name": "payloadHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PacketDelivered",
+      "inputs": [
+        {
+          "name": "origin",
+          "type": "tuple",
+          "indexed": false,
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PacketNilified",
+      "inputs": [
+        {
+          "name": "srcEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "sender",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "nonce",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        },
+        {
+          "name": "payloadHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PacketSent",
+      "inputs": [
+        {
+          "name": "encodedPayload",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "options",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "sendLibrary",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PacketVerified",
+      "inputs": [
+        {
+          "name": "origin",
+          "type": "tuple",
+          "indexed": false,
+          "internalType": "struct Origin",
+          "components": [
+            { "name": "srcEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "sender", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" }
+          ]
+        },
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "payloadHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReceiveLibrarySet",
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReceiveLibraryTimeoutSet",
+      "inputs": [
+        {
+          "name": "receiver",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "oldLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "timeout",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SendLibrarySet",
+      "inputs": [
+        {
+          "name": "sender",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "eid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "newLib",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "burn(address,uint32,bytes32,uint64,bytes32)": "40f80683",
+    "clear(address,(uint32,bytes32,uint64),bytes32,bytes)": "2a56c1b0",
+    "composeQueue(address,address,bytes32,uint16)": "35d330b0",
+    "defaultReceiveLibrary(uint32)": "6f50a803",
+    "defaultReceiveLibraryTimeout(uint32)": "6e83f5bb",
+    "defaultSendLibrary(uint32)": "f64be4c7",
+    "eid()": "416ecebf",
+    "getConfig(address,address,uint32,uint32)": "2b3197b9",
+    "getReceiveLibrary(address,uint32)": "402f8468",
+    "getRegisteredLibraries()": "9132e5c3",
+    "getSendContext()": "14f651a9",
+    "getSendLibrary(address,uint32)": "b96a277f",
+    "inboundNonce(address,uint32,bytes32)": "a0dd43fc",
+    "inboundPayloadHash(address,uint32,bytes32,uint64)": "c9fc7bcd",
+    "initializable((uint32,bytes32,uint64),address)": "861e1ca5",
+    "isDefaultSendLibrary(address,uint32)": "dc93c8a2",
+    "isRegisteredLibrary(address)": "dc706a62",
+    "isSendingMessage()": "79624ca9",
+    "isSupportedEid(uint32)": "6750cd4c",
+    "isValidReceiveLibrary(address,uint32,address)": "9d7f9775",
+    "lazyInboundNonce(address,uint32,bytes32)": "5b17bb70",
+    "lzCompose(address,address,bytes32,uint16,bytes,bytes)": "91d20fa1",
+    "lzReceive((uint32,bytes32,uint64),address,bytes32,bytes,bytes)": "0c0c389e",
+    "lzToken()": "e4fe1d94",
+    "nativeToken()": "e1758bd8",
+    "nextGuid(address,uint32,bytes32)": "aafe5e07",
+    "nilify(address,uint32,bytes32,uint64,bytes32)": "2e80fbf3",
+    "outboundNonce(address,uint32,bytes32)": "9c6d7340",
+    "quote((uint32,bytes32,bytes,bytes,bool),address)": "ddc28c58",
+    "receiveLibraryTimeout(address,uint32)": "ef667aa1",
+    "registerLibrary(address)": "e8964e81",
+    "send((uint32,bytes32,bytes,bytes,bool),address)": "2637a450",
+    "sendCompose(address,bytes32,uint16,bytes)": "7cb59012",
+    "setConfig(address,address,(uint32,uint32,bytes)[])": "6dbd9f90",
+    "setDefaultReceiveLibrary(uint32,address,uint256)": "a718531b",
+    "setDefaultReceiveLibraryTimeout(uint32,address,uint256)": "d4b4ec8f",
+    "setDefaultSendLibrary(uint32,address)": "aafea312",
+    "setDelegate(address)": "ca5eb5e1",
+    "setLzToken(address)": "c28e0eed",
+    "setReceiveLibrary(address,uint32,address,uint256)": "6a14d715",
+    "setReceiveLibraryTimeout(address,uint32,address,uint256)": "183c834f",
+    "setSendLibrary(address,uint32,address)": "9535ff30",
+    "skip(address,uint32,bytes32,uint64)": "d70b8902",
+    "verifiable((uint32,bytes32,uint64),address)": "c9a54a99",
+    "verify((uint32,bytes32,uint64),address,bytes32)": "a825d747"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"index\",\"type\":\"uint16\"}],\"name\":\"ComposeDelivered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"index\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"}],\"name\":\"ComposeSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"DefaultReceiveLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldLib\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"name\":\"DefaultReceiveLibraryTimeoutSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"DefaultSendLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"delegate\",\"type\":\"address\"}],\"name\":\"DelegateSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"name\":\"InboundNonceSkipped\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"LibraryRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"index\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gas\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"reason\",\"type\":\"bytes\"}],\"name\":\"LzComposeAlert\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"executor\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"indexed\":false,\"internalType\":\"struct Origin\",\"name\":\"origin\",\"type\":\"tuple\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gas\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"reason\",\"type\":\"bytes\"}],\"name\":\"LzReceiveAlert\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"LzTokenSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"payloadHash\",\"type\":\"bytes32\"}],\"name\":\"PacketBurnt\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"indexed\":false,\"internalType\":\"struct Origin\",\"name\":\"origin\",\"type\":\"tuple\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"}],\"name\":\"PacketDelivered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"payloadHash\",\"type\":\"bytes32\"}],\"name\":\"PacketNilified\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"encodedPayload\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"options\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sendLibrary\",\"type\":\"address\"}],\"name\":\"PacketSent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"indexed\":false,\"internalType\":\"struct Origin\",\"name\":\"origin\",\"type\":\"tuple\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"payloadHash\",\"type\":\"bytes32\"}],\"name\":\"PacketVerified\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"ReceiveLibrarySet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"receiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"oldLib\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timeout\",\"type\":\"uint256\"}],\"name\":\"ReceiveLibraryTimeoutSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newLib\",\"type\":\"address\"}],\"name\":\"SendLibrarySet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"_payloadHash\",\"type\":\"bytes32\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"internalType\":\"struct Origin\",\"name\":\"_origin\",\"type\":\"tuple\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"}],\"name\":\"clear\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"_index\",\"type\":\"uint16\"}],\"name\":\"composeQueue\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"messageHash\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"defaultReceiveLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"defaultReceiveLibraryTimeout\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"defaultSendLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"eid\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"\",\"type\":\"uint32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"_configType\",\"type\":\"uint32\"}],\"name\":\"getConfig\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"getReceiveLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isDefault\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRegisteredLibraries\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSendContext\",\"outputs\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"getSendLibrary\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"}],\"name\":\"inboundNonce\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"}],\"name\":\"inboundPayloadHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"internalType\":\"struct Origin\",\"name\":\"_origin\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"name\":\"initializable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"isDefaultSendLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"}],\"name\":\"isRegisteredLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"isSendingMessage\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"isSupportedEid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"}],\"name\":\"isValidReceiveLibrary\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"}],\"name\":\"lazyInboundNonce\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"_index\",\"type\":\"uint16\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"internalType\":\"struct Origin\",\"name\":\"_origin\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"_extraData\",\"type\":\"bytes\"}],\"name\":\"lzReceive\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lzToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"nativeToken\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_receiver\",\"type\":\"bytes32\"}],\"name\":\"nextGuid\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"},{\"internalType\":\"bytes32\",\"name\":\"_payloadHash\",\"type\":\"bytes32\"}],\"name\":\"nilify\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_receiver\",\"type\":\"bytes32\"}],\"name\":\"outboundNonce\",\"outputs\":[{\"internalType\":\"uint64\",\"name\":\"\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"receiver\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"options\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"payInLzToken\",\"type\":\"bool\"}],\"internalType\":\"struct MessagingParams\",\"name\":\"_params\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_sender\",\"type\":\"address\"}],\"name\":\"quote\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"}],\"name\":\"receiveLibraryTimeout\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"expiry\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"}],\"name\":\"registerLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"receiver\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"message\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"options\",\"type\":\"bytes\"},{\"internalType\":\"bool\",\"name\":\"payInLzToken\",\"type\":\"bool\"}],\"internalType\":\"struct MessagingParams\",\"name\":\"_params\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_refundAddress\",\"type\":\"address\"}],\"name\":\"send\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"fee\",\"type\":\"tuple\"}],\"internalType\":\"struct MessagingReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_guid\",\"type\":\"bytes32\"},{\"internalType\":\"uint16\",\"name\":\"_index\",\"type\":\"uint16\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"}],\"name\":\"sendCompose\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"components\":[{\"internalType\":\"uint32\",\"name\":\"eid\",\"type\":\"uint32\"},{\"internalType\":\"uint32\",\"name\":\"configType\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"config\",\"type\":\"bytes\"}],\"internalType\":\"struct SetConfigParam[]\",\"name\":\"_params\",\"type\":\"tuple[]\"}],\"name\":\"setConfig\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_gracePeriod\",\"type\":\"uint256\"}],\"name\":\"setDefaultReceiveLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_expiry\",\"type\":\"uint256\"}],\"name\":\"setDefaultReceiveLibraryTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"}],\"name\":\"setDefaultSendLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_delegate\",\"type\":\"address\"}],\"name\":\"setDelegate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_lzToken\",\"type\":\"address\"}],\"name\":\"setLzToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_gracePeriod\",\"type\":\"uint256\"}],\"name\":\"setReceiveLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_lib\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_expiry\",\"type\":\"uint256\"}],\"name\":\"setReceiveLibraryTimeout\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_eid\",\"type\":\"uint32\"},{\"internalType\":\"address\",\"name\":\"_newLib\",\"type\":\"address\"}],\"name\":\"setSendLibrary\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oapp\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"_srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"_sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"_nonce\",\"type\":\"uint64\"}],\"name\":\"skip\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"internalType\":\"struct Origin\",\"name\":\"_origin\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"}],\"name\":\"verifiable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"sender\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"}],\"internalType\":\"struct Origin\",\"name\":\"_origin\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_receiver\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_payloadHash\",\"type\":\"bytes32\"}],\"name\":\"verify\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"setSendLibrary(address,uint32,address)\":{\"notice\":\"------------------- OApp interfaces -------------------\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":\"ILayerZeroEndpointV2\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint16",
+              "name": "index",
+              "type": "uint16",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ComposeDelivered",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint16",
+              "name": "index",
+              "type": "uint16",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "message",
+              "type": "bytes",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ComposeSent",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultReceiveLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "oldLib",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "expiry",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultReceiveLibraryTimeoutSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultSendLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "delegate",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DelegateSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "srcEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sender",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint64",
+              "name": "nonce",
+              "type": "uint64",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "InboundNonceSkipped",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LibraryRegistered",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "executor",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint16",
+              "name": "index",
+              "type": "uint16",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "gas",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "message",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "extraData",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "reason",
+              "type": "bytes",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LzComposeAlert",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "executor",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "struct Origin",
+              "name": "origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ],
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "gas",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "message",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "extraData",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "reason",
+              "type": "bytes",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LzReceiveAlert",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "LzTokenSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "srcEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sender",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint64",
+              "name": "nonce",
+              "type": "uint64",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "payloadHash",
+              "type": "bytes32",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PacketBurnt",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ],
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PacketDelivered",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "srcEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "sender",
+              "type": "bytes32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint64",
+              "name": "nonce",
+              "type": "uint64",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "payloadHash",
+              "type": "bytes32",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PacketNilified",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "encodedPayload",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "options",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "sendLibrary",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PacketSent",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ],
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "payloadHash",
+              "type": "bytes32",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "PacketVerified",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ReceiveLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "receiver",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "oldLib",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeout",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ReceiveLibraryTimeoutSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint32",
+              "name": "eid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newLib",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SendLibrarySet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" },
+            { "internalType": "uint64", "name": "_nonce", "type": "uint64" },
+            {
+              "internalType": "bytes32",
+              "name": "_payloadHash",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "burn"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            {
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ]
+            },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "clear"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_from", "type": "address" },
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "uint16", "name": "_index", "type": "uint16" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "composeQueue",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "messageHash",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultReceiveLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultReceiveLibraryTimeout",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "uint256", "name": "expiry", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "defaultSendLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "eid",
+          "outputs": [
+            { "internalType": "uint32", "name": "", "type": "uint32" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            {
+              "internalType": "uint32",
+              "name": "_configType",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getConfig",
+          "outputs": [
+            { "internalType": "bytes", "name": "config", "type": "bytes" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getReceiveLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "bool", "name": "isDefault", "type": "bool" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRegisteredLibraries",
+          "outputs": [
+            { "internalType": "address[]", "name": "", "type": "address[]" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSendContext",
+          "outputs": [
+            { "internalType": "uint32", "name": "dstEid", "type": "uint32" },
+            { "internalType": "address", "name": "sender", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSendLibrary",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "inboundNonce",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" },
+            { "internalType": "uint64", "name": "_nonce", "type": "uint64" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "inboundPayloadHash",
+          "outputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "initializable",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isDefaultSendLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_lib", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isRegisteredLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSendingMessage",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSupportedEid",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_lib", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isValidReceiveLibrary",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lazyInboundNonce",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_from", "type": "address" },
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "uint16", "name": "_index", "type": "uint16" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            { "internalType": "bytes", "name": "_extraData", "type": "bytes" }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "lzCompose"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            { "internalType": "bytes", "name": "_extraData", "type": "bytes" }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "lzReceive"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lzToken",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "nativeToken",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" },
+            {
+              "internalType": "bytes32",
+              "name": "_receiver",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "nextGuid",
+          "outputs": [
+            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" },
+            { "internalType": "uint64", "name": "_nonce", "type": "uint64" },
+            {
+              "internalType": "bytes32",
+              "name": "_payloadHash",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "nilify"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_sender", "type": "address" },
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" },
+            {
+              "internalType": "bytes32",
+              "name": "_receiver",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "outboundNonce",
+          "outputs": [
+            { "internalType": "uint64", "name": "", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct MessagingParams",
+              "name": "_params",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "receiver",
+                  "type": "bytes32"
+                },
+                { "internalType": "bytes", "name": "message", "type": "bytes" },
+                { "internalType": "bytes", "name": "options", "type": "bytes" },
+                {
+                  "internalType": "bool",
+                  "name": "payInLzToken",
+                  "type": "bool"
+                }
+              ]
+            },
+            { "internalType": "address", "name": "_sender", "type": "address" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "quote",
+          "outputs": [
+            {
+              "internalType": "struct MessagingFee",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "nativeFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lzTokenFee",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "receiveLibraryTimeout",
+          "outputs": [
+            { "internalType": "address", "name": "lib", "type": "address" },
+            { "internalType": "uint256", "name": "expiry", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_lib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "registerLibrary"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct MessagingParams",
+              "name": "_params",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "receiver",
+                  "type": "bytes32"
+                },
+                { "internalType": "bytes", "name": "message", "type": "bytes" },
+                { "internalType": "bytes", "name": "options", "type": "bytes" },
+                {
+                  "internalType": "bool",
+                  "name": "payInLzToken",
+                  "type": "bool"
+                }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_refundAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "send",
+          "outputs": [
+            {
+              "internalType": "struct MessagingReceipt",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "guid",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" },
+                {
+                  "internalType": "struct MessagingFee",
+                  "name": "fee",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "nativeFee",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "lzTokenFee",
+                      "type": "uint256"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_to", "type": "address" },
+            { "internalType": "bytes32", "name": "_guid", "type": "bytes32" },
+            { "internalType": "uint16", "name": "_index", "type": "uint16" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "sendCompose"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            {
+              "internalType": "struct SetConfigParam[]",
+              "name": "_params",
+              "type": "tuple[]",
+              "components": [
+                { "internalType": "uint32", "name": "eid", "type": "uint32" },
+                {
+                  "internalType": "uint32",
+                  "name": "configType",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes", "name": "config", "type": "bytes" }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setConfig"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_gracePeriod",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultReceiveLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint256", "name": "_expiry", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultReceiveLibraryTimeout"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultSendLibrary"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_delegate",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDelegate"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_lzToken", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setLzToken"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" },
+            {
+              "internalType": "uint256",
+              "name": "_gracePeriod",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setReceiveLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_lib", "type": "address" },
+            { "internalType": "uint256", "name": "_expiry", "type": "uint256" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setReceiveLibraryTimeout"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_eid", "type": "uint32" },
+            { "internalType": "address", "name": "_newLib", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setSendLibrary"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oapp", "type": "address" },
+            { "internalType": "uint32", "name": "_srcEid", "type": "uint32" },
+            { "internalType": "bytes32", "name": "_sender", "type": "bytes32" },
+            { "internalType": "uint64", "name": "_nonce", "type": "uint64" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "skip"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "verifiable",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct Origin",
+              "name": "_origin",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "srcEid",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "sender",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_receiver",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_payloadHash",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "verify"
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "setSendLibrary(address,uint32,address)": {
+            "notice": "------------------- OApp interfaces -------------------"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": "ILayerZeroEndpointV2"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 2
+}
