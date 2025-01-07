@@ -1,7 +1,7 @@
 import { TonClient } from '@ton/ton'
 import pMemoize from 'p-memoize'
 
-import { formatEid, OmniPoint, type RpcUrlFactory } from '@layerzerolabs/devtools'
+import { EndpointBasedFactory, formatEid, OmniPoint, type RpcUrlFactory } from '@layerzerolabs/devtools'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 
 import { TonClientFactory } from './types'
@@ -38,5 +38,14 @@ export const createRpcUrlFactory =
     (eid) =>
         overrides[eid] ?? defaultRpcUrlFactory(eid)
 
-export const createTonClientFactory = (urlFactory: RpcUrlFactory = defaultRpcUrlFactory): TonClientFactory =>
-    pMemoize(async (eid) => new TonClient({ endpoint: await urlFactory(eid) }))
+export const createTonClientFactory = (
+    urlFactory: RpcUrlFactory = defaultRpcUrlFactory,
+    apiKeyFactory?: EndpointBasedFactory<string>
+): TonClientFactory =>
+    pMemoize(
+        async (eid) =>
+            new TonClient({
+                endpoint: await urlFactory(eid),
+                ...(apiKeyFactory ? { apiKey: await apiKeyFactory(eid) } : {}),
+            })
+    )
