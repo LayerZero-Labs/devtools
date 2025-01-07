@@ -1373,7 +1373,7 @@ importers:
       '@layerzerolabs/oft-evm':
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
-      '@layerzerolabs/oft-move': 
+      '@layerzerolabs/oft-move':
         specifier: ^0.0.1
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
@@ -3225,12 +3225,21 @@ importers:
 
   packages/oft-move:
     devDependencies:
+      '@aptos-labs/ts-sdk':
+        specifier: ^1.33.1
+        version: 1.33.1
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.1
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
         specifier: ^0.0.1
         version: link:../devtools-move
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.21
+        version: 3.0.27
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.27
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
