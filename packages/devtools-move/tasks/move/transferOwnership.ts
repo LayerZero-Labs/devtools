@@ -5,12 +5,19 @@ import { OFT } from '../../sdk/oft'
 import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate, transferOwner } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
+import path from 'path'
 
-async function main() {
+async function transferOwnership(args: any) {
     const { account_address, private_key, network } = await parseYaml()
 
     const aptosConfig = new AptosConfig({ network: network })
+    const configPath = args.lz_config
+
     const aptos = new Aptos(aptosConfig)
+
+    const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
+    const lzConfigFile = await import(lzConfigPath)
+    const lzConfig = lzConfigFile.default
 
     const lzNetworkStage = getLzNetworkStage(network)
     const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
@@ -20,8 +27,8 @@ async function main() {
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
     const eid = getEidFromAptosNetwork('aptos', network)
-    const delegate = getDelegateFromLzConfig(eid)
-    const owner = getOwnerFromLzConfig(eid)
+    const delegate = getDelegateFromLzConfig(eid, lzConfig)
+    const owner = getOwnerFromLzConfig(eid, lzConfig)
 
     const setDelegatePayload = await setDelegate(oft, delegate, eid)
     const transferOwnerPayload = await transferOwner(oft, owner, eid)
@@ -31,7 +38,4 @@ async function main() {
     sendAllTxs(aptos, oft, account_address, payloads)
 }
 
-main().catch((error) => {
-    console.error('Error:', error)
-    process.exit(1)
-})
+export { transferOwnership }

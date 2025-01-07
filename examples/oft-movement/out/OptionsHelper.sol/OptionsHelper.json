@@ -1,0 +1,290 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "decodeLzComposeOption",
+      "inputs": [
+        { "name": "_option", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "index", "type": "uint16", "internalType": "uint16" },
+        { "name": "gas", "type": "uint128", "internalType": "uint128" },
+        { "name": "value", "type": "uint128", "internalType": "uint128" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "decodeLzReadOption",
+      "inputs": [
+        { "name": "_option", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "gas", "type": "uint128", "internalType": "uint128" },
+        { "name": "size", "type": "uint32", "internalType": "uint32" },
+        { "name": "value", "type": "uint128", "internalType": "uint128" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "decodeLzReceiveOption",
+      "inputs": [
+        { "name": "_option", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "gas", "type": "uint128", "internalType": "uint128" },
+        { "name": "value", "type": "uint128", "internalType": "uint128" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "decodeNativeDropOption",
+      "inputs": [
+        { "name": "_option", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [
+        { "name": "amount", "type": "uint128", "internalType": "uint128" },
+        { "name": "receiver", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "nextExecutorOption",
+      "inputs": [
+        { "name": "_options", "type": "bytes", "internalType": "bytes" },
+        { "name": "_cursor", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [
+        { "name": "optionType", "type": "uint8", "internalType": "uint8" },
+        { "name": "option", "type": "bytes", "internalType": "bytes" },
+        { "name": "cursor", "type": "uint256", "internalType": "uint256" }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "error",
+      "name": "Executor_InvalidLzComposeOption",
+      "inputs": []
+    },
+    { "type": "error", "name": "Executor_InvalidLzReadOption", "inputs": [] },
+    {
+      "type": "error",
+      "name": "Executor_InvalidLzReceiveOption",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Executor_InvalidNativeDropOption",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60806040526040516100109061005f565b604051809103906000f08015801561002c573d6000803e3d6000fd5b50600080546001600160a01b0319166001600160a01b039290921691909117905534801561005957600080fd5b5061006c565b6107f28061072983390190565b6106ae8061007b6000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c8063518e8ab01461005c5780636e1775e31461009e5780639751ca86146100c1578063b954fdf614610103578063f93e1d6114610135575b600080fd5b61006f61006a3660046104b3565b610168565b6040805161ffff90941684526001600160801b0392831660208501529116908201526060015b60405180910390f35b6100b16100ac3660046104f5565b610184565b6040516100959493929190610541565b6100d46100cf3660046104b3565b6101a6565b604080516001600160801b03948516815263ffffffff9093166020840152921691810191909152606001610095565b6101166101113660046104b3565b6101b5565b604080516001600160801b039093168352602083019190915201610095565b6101486101433660046104b3565b6101ce565b604080516001600160801b03938416815292909116602083015201610095565b600080600061017785856101db565b9250925092509250925092565b60003660008061019587878761024f565b935093509350935093509350935093565b600080600061017785856102a5565b6000806101c28484610310565b915091505b9250929050565b6000806101c28484610357565b60008080601284148015906101f1575060228414155b1561020f57604051638b4aa70b60e01b815260040160405180910390fd5b61021b858560006103b3565b9250610229858560026103da565b91506022841461023a576000610246565b610246858560126103da565b90509250925092565b6000368160018401816102638888846103b3565b600292909201919050610277888884610401565b94506001820161ffff8216830161029081838b8d610584565b979b909a50969850505061ffff160193505050565b60008080601484148015906102bb575060248414155b156102d957604051636f5bff2160e11b815260040160405180910390fd5b6102e5858560006103da565b92506102f385856010610426565b915060248414610304576000610246565b610246858560146103da565b60008060308314610334576040516361d0c2c760e11b815260040160405180910390fd5b610340848460006103da565b915061034e8484601061044d565b90509250929050565b6000806010831480159061036c575060208314155b1561038a57604051634796aee160e01b815260040160405180910390fd5b610396848460006103da565b9150602083146103a757600061034e565b61034e848460106103da565b6000600282016103c581848688610584565b6103ce916105ae565b60f01c95945050505050565b6000601082016103ec81848688610584565b6103f5916105de565b60801c95945050505050565b600083838381811061041557610415610615565b919091013560f81c95945050505050565b60006004820161043881848688610584565b6104419161062b565b60e01c95945050505050565b60006020820161045f81848688610584565b61046891610659565b95945050505050565b60008083601f84011261048357600080fd5b50813567ffffffffffffffff81111561049b57600080fd5b6020830191508360208285010111156101c757600080fd5b600080602083850312156104c657600080fd5b823567ffffffffffffffff8111156104dd57600080fd5b6104e985828601610471565b90969095509350505050565b60008060006040848603121561050a57600080fd5b833567ffffffffffffffff81111561052157600080fd5b61052d86828701610471565b909790965060209590950135949350505050565b60ff85168152606060208201528260608201528284608083013760006080848301015260006080601f19601f860116830101905082604083015295945050505050565b6000808585111561059457600080fd5b838611156105a157600080fd5b5050820193919092039150565b6001600160f01b031981358181169160028510156105d65780818660020360031b1b83161692505b505092915050565b6fffffffffffffffffffffffffffffffff1981358181169160108510156105d65760109490940360031b84901b1690921692915050565b634e487b7160e01b600052603260045260246000fd5b6001600160e01b031981358181169160048510156105d65760049490940360031b84901b1690921692915050565b8035602083101561067257600019602084900360031b1b165b9291505056fea26469706673582212203cb9eef9871a2f9f7f7218b46fa538d2615771ad8522df40688d27aaf078107e64736f6c63430008160033608060405234801561001057600080fd5b506107d2806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063e5c5e9a314610030575b600080fd5b61004361003e366004610529565b61005a565b6040516100519291906105eb565b60405180910390f35b6060806100678484610072565b915091509250929050565b606080600283101561009f5760405163196499c760e21b8152600060048201526024015b60405180910390fd5b60006100ae6002828688610619565b6100b791610643565b60f01c90506002600219820161021f578060005b868310156101c45760006100e460018501858a8c610619565b6100ed91610673565b60f81c9050600081900361011757604051636780cfaf60e01b815260006004820152602401610096565b8160ff1660000361012a57809150610167565b8160ff168160ff16146101675736600061014686868c8e610619565b915091506101578989868585610236565b9099509750859450919250829150505b600184019360009061017e90600301868b8d610619565b61018791610643565b60f01c905060008190036101b15760405163196499c760e21b815260048101869052602401610096565b8060020161ffff168501945050506100cb565b8287146101e75760405163196499c760e21b815260048101849052602401610096565b6002871115610218573660006101ff85858b8d610619565b915091506102108888858585610236565b909850965050505b505061022d565b61022a828787610356565b93505b50509250929050565b60608060001960ff8616016102b35786511561027557868484604051602001610261939291906106a1565b6040516020818303038152906040526102ac565b83838080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152505050505b965061034b565b60011960ff86160161032d578551156102ef578584846040516020016102db939291906106a1565b604051602081830303815290604052610326565b83838080601f0160208091040260200160405190810160405280939291908181526020018383808284376000920191909152505050505b955061034b565b604051636780cfaf60e01b815260ff86166004820152602401610096565b509495939450505050565b606060001961ffff8516016103f65760228214610386576040516301b8ca5560e31b815260040160405180910390fd5b60006103a7610399602260028688610619565b6103a2916106c9565b6104e8565b604051600160f81b60208201819052601160f01b602183015260238201526001600160801b0319608083901b1660248201529091506034016040516020818303038152906040529150506104e1565b60011961ffff8516016104c2576042821115806104135750606282115b15610431576040516360493e2b60e11b815260040160405180910390fd5b6000610444610399602260028688610619565b90506000610459610399604260228789610619565b90506000604119850161046f866042818a610619565b610478916106c9565b60405160086020938403029190911c92506104a9916001916011918391889183916031916002918b918b91016106e8565b60405160208183030381529060405293505050506104e1565b604051630417051360e41b815261ffff85166004820152602401610096565b9392505050565b60006fffffffffffffffffffffffffffffffff821115610525576040516306dfcc6560e41b81526080600482015260248101839052604401610096565b5090565b6000806020838503121561053c57600080fd5b823567ffffffffffffffff8082111561055457600080fd5b818501915085601f83011261056857600080fd5b81358181111561057757600080fd5b86602082850101111561058957600080fd5b60209290920196919550909350505050565b60005b838110156105b657818101518382015260200161059e565b50506000910152565b600081518084526105d781602086016020860161059b565b601f01601f19169290920160200192915050565b6040815260006105fe60408301856105bf565b828103602084015261061081856105bf565b95945050505050565b6000808585111561062957600080fd5b8386111561063657600080fd5b5050820193919092039150565b6001600160f01b0319813581811691600285101561066b5780818660020360031b1b83161692505b505092915050565b6001600160f81b0319813581811691600185101561066b5760019490940360031b84901b1690921692915050565b600084516106b381846020890161059b565b8201838582376000930192835250909392505050565b803560208310156106e257600019602084900360031b1b165b92915050565b60f88a811b6001600160f81b0319908116835260f08b901b6001600160f01b031916600184015289821b81166003840152608089901b6001600160801b03191660048401529087901b1660148201526000610752601583018760f01b6001600160f01b0319169052565b61076b601783018660f81b6001600160f81b0319169052565b610784601883018560801b6001600160801b0319169052565b5060288101919091526048019897505050505050505056fea2646970667358221220994aaf0c18254f983fac2634c8bb3f9ecd3d5348f39af4ed525562428cb6fc4f64736f6c63430008160033",
+    "sourceMap": "521:5864:70:-:0;;;738:20;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;710:48:70;;;-1:-1:-1;;;;;;710:48:70;-1:-1:-1;;;;;710:48:70;;;;;;;;;;521:5864;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b50600436106100575760003560e01c8063518e8ab01461005c5780636e1775e31461009e5780639751ca86146100c1578063b954fdf614610103578063f93e1d6114610135575b600080fd5b61006f61006a3660046104b3565b610168565b6040805161ffff90941684526001600160801b0392831660208501529116908201526060015b60405180910390f35b6100b16100ac3660046104f5565b610184565b6040516100959493929190610541565b6100d46100cf3660046104b3565b6101a6565b604080516001600160801b03948516815263ffffffff9093166020840152921691810191909152606001610095565b6101166101113660046104b3565b6101b5565b604080516001600160801b039093168352602083019190915201610095565b6101486101433660046104b3565b6101ce565b604080516001600160801b03938416815292909116602083015201610095565b600080600061017785856101db565b9250925092509250925092565b60003660008061019587878761024f565b935093509350935093509350935093565b600080600061017785856102a5565b6000806101c28484610310565b915091505b9250929050565b6000806101c28484610357565b60008080601284148015906101f1575060228414155b1561020f57604051638b4aa70b60e01b815260040160405180910390fd5b61021b858560006103b3565b9250610229858560026103da565b91506022841461023a576000610246565b610246858560126103da565b90509250925092565b6000368160018401816102638888846103b3565b600292909201919050610277888884610401565b94506001820161ffff8216830161029081838b8d610584565b979b909a50969850505061ffff160193505050565b60008080601484148015906102bb575060248414155b156102d957604051636f5bff2160e11b815260040160405180910390fd5b6102e5858560006103da565b92506102f385856010610426565b915060248414610304576000610246565b610246858560146103da565b60008060308314610334576040516361d0c2c760e11b815260040160405180910390fd5b610340848460006103da565b915061034e8484601061044d565b90509250929050565b6000806010831480159061036c575060208314155b1561038a57604051634796aee160e01b815260040160405180910390fd5b610396848460006103da565b9150602083146103a757600061034e565b61034e848460106103da565b6000600282016103c581848688610584565b6103ce916105ae565b60f01c95945050505050565b6000601082016103ec81848688610584565b6103f5916105de565b60801c95945050505050565b600083838381811061041557610415610615565b919091013560f81c95945050505050565b60006004820161043881848688610584565b6104419161062b565b60e01c95945050505050565b60006020820161045f81848688610584565b61046891610659565b95945050505050565b60008083601f84011261048357600080fd5b50813567ffffffffffffffff81111561049b57600080fd5b6020830191508360208285010111156101c757600080fd5b600080602083850312156104c657600080fd5b823567ffffffffffffffff8111156104dd57600080fd5b6104e985828601610471565b90969095509350505050565b60008060006040848603121561050a57600080fd5b833567ffffffffffffffff81111561052157600080fd5b61052d86828701610471565b909790965060209590950135949350505050565b60ff85168152606060208201528260608201528284608083013760006080848301015260006080601f19601f860116830101905082604083015295945050505050565b6000808585111561059457600080fd5b838611156105a157600080fd5b5050820193919092039150565b6001600160f01b031981358181169160028510156105d65780818660020360031b1b83161692505b505092915050565b6fffffffffffffffffffffffffffffffff1981358181169160108510156105d65760109490940360031b84901b1690921692915050565b634e487b7160e01b600052603260045260246000fd5b6001600160e01b031981358181169160048510156105d65760049490940360031b84901b1690921692915050565b8035602083101561067257600019602084900360031b1b165b9291505056fea26469706673582212203cb9eef9871a2f9f7f7218b46fa538d2615771ad8522df40688d27aaf078107e64736f6c63430008160033",
+    "sourceMap": "521:5864:70:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5976:204;;;;;;:::i;:::-;;:::i;:::-;;;;1010:6:132;998:19;;;980:38;;-1:-1:-1;;;;;1107:15:132;;;1102:2;1087:18;;1080:43;1159:15;;1139:18;;;1132:43;968:2;953:18;5976:204:70;;;;;;;;5349:249;;;;;;:::i;:::-;;:::i;:::-;;;;;;;;;;:::i;6186:197::-;;;;;;:::i;:::-;;:::i;:::-;;;;-1:-1:-1;;;;;2484:15:132;;;2466:34;;2548:10;2536:23;;;2531:2;2516:18;;2509:51;2596:15;;2576:18;;;2569:43;;;;2401:2;2386:18;6186:197:70;2213:405:132;5786:184:70;;;;;;:::i;:::-;;:::i;:::-;;;;-1:-1:-1;;;;;2815:47:132;;;2797:66;;2894:2;2879:18;;2872:34;;;;2770:18;5786:184:70;2623:289:132;5604:176:70;;;;;;:::i;:::-;;:::i;:::-;;;;-1:-1:-1;;;;;3162:15:132;;;3144:34;;3214:15;;;;3209:2;3194:18;;3187:43;3064:18;5604:176:70;2917:319:132;5976:204:70;6068:12;6082:11;6095:13;6127:46;6165:7;;6127:37;:46::i;:::-;6120:53;;;;;;5976:204;;;;;:::o;5349:249::-;5464:16;5482:21;;5505:14;5538:53;5573:8;;5583:7;5538:34;:53::i;:::-;5531:60;;;;;;;;5349:249;;;;;;;:::o;6186:197::-;6275:11;6288;6301:13;6333:43;6368:7;;6333:34;:43::i;5786:184::-;5865:14;5881:16;5916:47;5955:7;;5916:38;:47::i;:::-;5909:54;;;;5786:184;;;;;;:::o;5604:176::-;5682:11;5695:13;5727:46;5765:7;;5727:37;:46::i;2697:371:11:-;2789:12;;;2863:2;2845:20;;;;;:44;;-1:-1:-1;2887:2:11;2869:20;;;2845:44;2841:90;;;2898:33;;-1:-1:-1;;;2898:33:11;;;;;;;;;;;2841:90;2949:16;:7;;2963:1;2949:13;:16::i;:::-;2941:24;-1:-1:-1;2981:17:11;:7;;2996:1;2981:14;:17::i;:::-;2975:23;-1:-1:-1;3034:2:11;3016:20;;:45;;3060:1;3016:45;;;3039:18;:7;;3054:2;3039:14;:18::i;:::-;3008:53;;2697:371;;;;;:::o;1357:742::-;1472:16;1490:21;1472:16;1612:1;1602:11;;1472:16;1674:22;:8;;1602:11;1674:14;:22::i;:::-;1720:1;1710:11;;;;;1660:36;-1:-1:-1;1781:21:11;:8;;1710:11;1781:13;:21::i;:::-;1768:34;-1:-1:-1;1932:1:11;1923:10;;1987:13;;;;;2023:31;1987:13;1923:10;2023:8;;:31;:::i;:::-;1357:742;;2014:40;;-1:-1:-1;2014:40:11;;-1:-1:-1;;;2068:14:11;;;;-1:-1:-1;;;1357:742:11:o;3074:380::-;3163:11;;;3244:2;3226:20;;;;;:44;;-1:-1:-1;3268:2:11;3250:20;;;3226:44;3222:87;;;3279:30;;-1:-1:-1;;;3279:30:11;;;;;;;;;;;3222:87;3325:17;:7;;3340:1;3325:14;:17::i;:::-;3319:23;-1:-1:-1;3367:17:11;:7;;3381:2;3367:13;:17::i;:::-;3352:32;-1:-1:-1;3420:2:11;3402:20;;:45;;3446:1;3402:45;;;3425:18;:7;;3440:2;3425:14;:18::i;2420:271::-;2499:14;;2565:2;2547:20;;2543:67;;2576:34;;-1:-1:-1;;;2576:34:11;;;;;;;;;;;2543:67;2629:17;:7;;2644:1;2629:14;:17::i;:::-;2620:26;-1:-1:-1;2667:17:11;:7;;2681:2;2667:13;:17::i;:::-;2656:28;;2420:271;;;;;:::o;2105:309::-;2183:11;;2243:2;2225:20;;;;;:44;;-1:-1:-1;2267:2:11;2249:20;;;2225:44;2221:90;;;2278:33;;-1:-1:-1;;;2278:33:11;;;;;;;;;;;2221:90;2327:17;:7;;2342:1;2327:14;:17::i;:::-;2321:23;-1:-1:-1;2380:2:11;2362:20;;:45;;2406:1;2362:45;;;2385:18;:7;;2400:2;2385:14;:18::i;229:215:41:-;306:6;371:1;362:10;;407:18;362:10;:6;407;;:18;:::i;:::-;400:26;;;:::i;:::-;393:34;;;229:215;-1:-1:-1;;;;;229:215:41:o;892:220::-;970:7;1036:2;1027:11;;1075:18;1027:11;:6;1075;;:18;:::i;:::-;1067:27;;;:::i;:::-;1059:36;;;892:220;-1:-1:-1;;;;;892:220:41:o;95:128::-;171:5;201:6;;208;201:14;;;;;;;:::i;:::-;;;;;;;;;95:128;-1:-1:-1;;;;;95:128:41:o;450:215::-;527:6;592:1;583:10;;628:18;583:10;:6;628;;:18;:::i;:::-;621:26;;;:::i;:::-;614:34;;;450:215;-1:-1:-1;;;;;450:215:41:o;1570:210::-;1647:7;1713:2;1704:11;;1744:18;1704:11;:6;1744;;:18;:::i;:::-;1736:27;;;:::i;:::-;1729:34;1570:210;-1:-1:-1;;;;;1570:210:41:o;14:347:132:-;65:8;75:6;129:3;122:4;114:6;110:17;106:27;96:55;;147:1;144;137:12;96:55;-1:-1:-1;170:20:132;;213:18;202:30;;199:50;;;245:1;242;235:12;199:50;282:4;274:6;270:17;258:29;;334:3;327:4;318:6;310;306:19;302:30;299:39;296:59;;;351:1;348;341:12;366:409;436:6;444;497:2;485:9;476:7;472:23;468:32;465:52;;;513:1;510;503:12;465:52;553:9;540:23;586:18;578:6;575:30;572:50;;;618:1;615;608:12;572:50;657:58;707:7;698:6;687:9;683:22;657:58;:::i;:::-;734:8;;631:84;;-1:-1:-1;366:409:132;-1:-1:-1;;;;366:409:132:o;1186:477::-;1265:6;1273;1281;1334:2;1322:9;1313:7;1309:23;1305:32;1302:52;;;1350:1;1347;1340:12;1302:52;1390:9;1377:23;1423:18;1415:6;1412:30;1409:50;;;1455:1;1452;1445:12;1409:50;1494:58;1544:7;1535:6;1524:9;1520:22;1494:58;:::i;:::-;1571:8;;1468:84;;-1:-1:-1;1653:2:132;1638:18;;;;1625:32;;1186:477;-1:-1:-1;;;;1186:477:132:o;1668:540::-;1889:4;1881:6;1877:17;1866:9;1859:36;1931:2;1926;1915:9;1911:18;1904:30;1970:6;1965:2;1954:9;1950:18;1943:34;2028:6;2020;2014:3;2003:9;1999:19;1986:49;2085:1;2079:3;2070:6;2059:9;2055:22;2051:32;2044:43;1840:4;2155:3;2148:2;2144:7;2139:2;2131:6;2127:15;2123:29;2112:9;2108:45;2104:55;2096:63;;2195:6;2190:2;2179:9;2175:18;2168:34;1668:540;;;;;;;:::o;3241:331::-;3346:9;3357;3399:8;3387:10;3384:24;3381:44;;;3421:1;3418;3411:12;3381:44;3450:6;3440:8;3437:20;3434:40;;;3470:1;3467;3460:12;3434:40;-1:-1:-1;;3496:23:132;;;3541:25;;;;;-1:-1:-1;3241:331:132:o;3577:318::-;-1:-1:-1;;;;;;3697:19:132;;3768:11;;;;3799:1;3791:10;;3788:101;;;3876:2;3870;3863:3;3860:1;3856:11;3853:1;3849:19;3845:28;3841:2;3837:37;3833:46;3824:55;;3788:101;;;3577:318;;;;:::o;3900:345::-;-1:-1:-1;;4021:19:132;;4116:11;;;;4147:2;4139:11;;4136:103;;;4209:2;4205:12;;;;4202:1;4198:20;4194:29;;;4186:38;4182:47;;;;3900:345;-1:-1:-1;;3900:345:132:o;4250:127::-;4311:10;4306:3;4302:20;4299:1;4292:31;4342:4;4339:1;4332:15;4366:4;4363:1;4356:15;4382:323;-1:-1:-1;;;;;;4502:19:132;;4578:11;;;;4609:1;4601:10;;4598:101;;;4670:1;4666:11;;;;4663:1;4659:19;4655:28;;;4647:37;4643:46;;;;4382:323;-1:-1:-1;;4382:323:132:o;4710:255::-;4830:19;;4869:2;4861:11;;4858:101;;;-1:-1:-1;;4930:2:132;4926:12;;;4923:1;4919:20;4915:33;4904:45;4858:101;4710:255;;;;:::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "decodeLzComposeOption(bytes)": "518e8ab0",
+    "decodeLzReadOption(bytes)": "9751ca86",
+    "decodeLzReceiveOption(bytes)": "f93e1d61",
+    "decodeNativeDropOption(bytes)": "b954fdf6",
+    "nextExecutorOption(bytes,uint256)": "6e1775e3"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"Executor_InvalidLzComposeOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidLzReadOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidLzReceiveOption\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Executor_InvalidNativeDropOption\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_option\",\"type\":\"bytes\"}],\"name\":\"decodeLzComposeOption\",\"outputs\":[{\"internalType\":\"uint16\",\"name\":\"index\",\"type\":\"uint16\"},{\"internalType\":\"uint128\",\"name\":\"gas\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"value\",\"type\":\"uint128\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_option\",\"type\":\"bytes\"}],\"name\":\"decodeLzReadOption\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"gas\",\"type\":\"uint128\"},{\"internalType\":\"uint32\",\"name\":\"size\",\"type\":\"uint32\"},{\"internalType\":\"uint128\",\"name\":\"value\",\"type\":\"uint128\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_option\",\"type\":\"bytes\"}],\"name\":\"decodeLzReceiveOption\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"gas\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"value\",\"type\":\"uint128\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_option\",\"type\":\"bytes\"}],\"name\":\"decodeNativeDropOption\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"amount\",\"type\":\"uint128\"},{\"internalType\":\"bytes32\",\"name\":\"receiver\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_options\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_cursor\",\"type\":\"uint256\"}],\"name\":\"nextExecutorOption\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"optionType\",\"type\":\"uint8\"},{\"internalType\":\"bytes\",\"name\":\"option\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"cursor\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"stateVariables\":{\"ulnOptions\":{\"details\":\"For backwards compatibility reasons, we'll keep this initialization hereAny new tests should use the _setUpUlnOptions function below\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol\":\"OptionsHelper\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":hardhat-deploy/=node_modules/hardhat-deploy/\",\":hardhat/=node_modules/hardhat/\",\":solidity-bytes-utils/=node_modules/solidity-bytes-utils/\"]},\"sources\":{\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol\":{\"keccak256\":\"0x441b723f2f597be2ec2bb361fcf3f11852c23534db1cfa7d2ffff7e61d228e3c\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://636817d20f90f75032e35376256cf5f4d2a047d6541b45f644d82a2e4dc8f1eb\",\"dweb:/ipfs/QmcEFRxCmmm9hKbqi7Powj6ATbw4JXXJW4rxfwMcxWsDnT\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol\":{\"keccak256\":\"0x2beee03cdf59a9bc72e94d08b69cb2e908725f4ceabb48651494938100e21e35\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://d88e121a39e74309f3575417df2318e2d2ee8bc8314e68dbf78544a9c393b141\",\"dweb:/ipfs/QmRojBRAyENK21HnjevAWeoZZxtWkYZubB9Y78vCJPYeU6\"]},\"node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol\":{\"keccak256\":\"0x5df07fef16b20767f7524c367d90f696c12e8ce0e4fde7aecc9d83fb2b6b0e27\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://0997203f57d736e56ebb3d736550f1c7ff7950c8df0574c7abe95e22f847b850\",\"dweb:/ipfs/QmZBjkH1vaPLyN3Jx9kGfVZKuTdfVWJfJVLSPok8SpjGbT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol\":{\"keccak256\":\"0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d\",\"dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol\":{\"keccak256\":\"0xaad3c72ef43480d2253fd48b394e8fb7286d009991d2bc4e61be58ce48ac5ee9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b8c02b14f954416ba2148b389c87da8378ac8dd16ba3d458cbbfba8b0fd8639f\",\"dweb:/ipfs/Qmd2EEQhYL2VmgJi1V4uiHM2WcYxF9iBtxSgcFkbS21rQD\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol\":{\"keccak256\":\"0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28\",\"license\":\"LZBL-1.2\",\"urls\":[\"bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2\",\"dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav\"]},\"node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol\":{\"keccak256\":\"0x729ce2290d16a45a16ad936263803db6a6bebcfba5c063ebe0f0fd284ba828c0\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://7494875394fc968684761b22bb5fe05789f8d84ba07b2e0ab579ce0afe7aa973\",\"dweb:/ipfs/QmZNrexRXL3ef3UnES5e8JcdyMJ5HVftwGKQjGC5CwNg9Q\"]},\"node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol\":{\"keccak256\":\"0x195533c86d0ef72bcc06456a4f66a9b941f38eb403739b00f21fd7c1abd1ae54\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b1d578337048cad08c1c03041cca5978eff5428aa130c781b271ad9e5566e1f8\",\"dweb:/ipfs/QmPFKL2r9CBsMwmUqqdcFPfHZB2qcs9g1HDrPxzWSxomvy\"]},\"node_modules/solidity-bytes-utils/contracts/BytesLib.sol\":{\"keccak256\":\"0xa5b10f04797d5a10a9ba07855108b6bd695940e6a3d128927b2f74a0d359868a\",\"license\":\"Unlicense\",\"urls\":[\"bzz-raw://a38d7680aacbb18dae659876b396b73bcc8f759672213f8a0efc4129e2648535\",\"dweb:/ipfs/QmfKFnwpTEGAnbRnZxMuv3mRCG9S9WMjFhFL23bftBT2Jq\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Executor_InvalidLzComposeOption"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Executor_InvalidLzReadOption"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Executor_InvalidLzReceiveOption"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Executor_InvalidNativeDropOption"
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_option", "type": "bytes" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "decodeLzComposeOption",
+          "outputs": [
+            { "internalType": "uint16", "name": "index", "type": "uint16" },
+            { "internalType": "uint128", "name": "gas", "type": "uint128" },
+            { "internalType": "uint128", "name": "value", "type": "uint128" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_option", "type": "bytes" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "decodeLzReadOption",
+          "outputs": [
+            { "internalType": "uint128", "name": "gas", "type": "uint128" },
+            { "internalType": "uint32", "name": "size", "type": "uint32" },
+            { "internalType": "uint128", "name": "value", "type": "uint128" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_option", "type": "bytes" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "decodeLzReceiveOption",
+          "outputs": [
+            { "internalType": "uint128", "name": "gas", "type": "uint128" },
+            { "internalType": "uint128", "name": "value", "type": "uint128" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_option", "type": "bytes" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "decodeNativeDropOption",
+          "outputs": [
+            { "internalType": "uint128", "name": "amount", "type": "uint128" },
+            { "internalType": "bytes32", "name": "receiver", "type": "bytes32" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_options", "type": "bytes" },
+            { "internalType": "uint256", "name": "_cursor", "type": "uint256" }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "nextExecutorOption",
+          "outputs": [
+            { "internalType": "uint8", "name": "optionType", "type": "uint8" },
+            { "internalType": "bytes", "name": "option", "type": "bytes" },
+            { "internalType": "uint256", "name": "cursor", "type": "uint256" }
+          ]
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "hardhat-deploy/=node_modules/hardhat-deploy/",
+        "hardhat/=node_modules/hardhat/",
+        "solidity-bytes-utils/=node_modules/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol": "OptionsHelper"
+      },
+      "evmVersion": "paris",
+      "libraries": {}
+    },
+    "sources": {
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/libs/ExecutorOptions.sol": {
+        "keccak256": "0x441b723f2f597be2ec2bb361fcf3f11852c23534db1cfa7d2ffff7e61d228e3c",
+        "urls": [
+          "bzz-raw://636817d20f90f75032e35376256cf5f4d2a047d6541b45f644d82a2e4dc8f1eb",
+          "dweb:/ipfs/QmcEFRxCmmm9hKbqi7Powj6ATbw4JXXJW4rxfwMcxWsDnT"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/DVNOptions.sol": {
+        "keccak256": "0x2beee03cdf59a9bc72e94d08b69cb2e908725f4ceabb48651494938100e21e35",
+        "urls": [
+          "bzz-raw://d88e121a39e74309f3575417df2318e2d2ee8bc8314e68dbf78544a9c393b141",
+          "dweb:/ipfs/QmRojBRAyENK21HnjevAWeoZZxtWkYZubB9Y78vCJPYeU6"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-messagelib-v2/contracts/uln/libs/UlnOptions.sol": {
+        "keccak256": "0x5df07fef16b20767f7524c367d90f696c12e8ce0e4fde7aecc9d83fb2b6b0e27",
+        "urls": [
+          "bzz-raw://0997203f57d736e56ebb3d736550f1c7ff7950c8df0574c7abe95e22f847b850",
+          "dweb:/ipfs/QmZBjkH1vaPLyN3Jx9kGfVZKuTdfVWJfJVLSPok8SpjGbT"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/libs/CalldataBytesLib.sol": {
+        "keccak256": "0x5c0db161cef6603c3b256d4220f489419e7478ef775e52a80056654129c61875",
+        "urls": [
+          "bzz-raw://a33245d0fdd3992bb56b31d1840108d36bb46c8d617b659ef1af8dd7ed86302d",
+          "dweb:/ipfs/QmWyBqT7Tdrfn5zz9xYM3V1PBtfAZAVwwCrrKwwfi3wMQK"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/BitMaps.sol": {
+        "keccak256": "0xaad3c72ef43480d2253fd48b394e8fb7286d009991d2bc4e61be58ce48ac5ee9",
+        "urls": [
+          "bzz-raw://b8c02b14f954416ba2148b389c87da8378ac8dd16ba3d458cbbfba8b0fd8639f",
+          "dweb:/ipfs/Qmd2EEQhYL2VmgJi1V4uiHM2WcYxF9iBtxSgcFkbS21rQD"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/messagelib/libs/ExecutorOptions.sol": {
+        "keccak256": "0x621c6090fc432f94a99f677a95d72b75f56db89ddc5fc870669777a313587c28",
+        "urls": [
+          "bzz-raw://69086166f16d29e30c5eb9ca2f97afb27569afe619807d79736833a809a512d2",
+          "dweb:/ipfs/QmcZqXjFuVdTrfbteKBF3GuEpjVFZ2YNZTa3J87dyLsqav"
+        ],
+        "license": "LZBL-1.2"
+      },
+      "node_modules/@layerzerolabs/test-devtools-evm-foundry/contracts/OptionsHelper.sol": {
+        "keccak256": "0x729ce2290d16a45a16ad936263803db6a6bebcfba5c063ebe0f0fd284ba828c0",
+        "urls": [
+          "bzz-raw://7494875394fc968684761b22bb5fe05789f8d84ba07b2e0ab579ce0afe7aa973",
+          "dweb:/ipfs/QmZNrexRXL3ef3UnES5e8JcdyMJ5HVftwGKQjGC5CwNg9Q"
+        ],
+        "license": "UNLICENSED"
+      },
+      "node_modules/@openzeppelin/contracts/utils/math/SafeCast.sol": {
+        "keccak256": "0x195533c86d0ef72bcc06456a4f66a9b941f38eb403739b00f21fd7c1abd1ae54",
+        "urls": [
+          "bzz-raw://b1d578337048cad08c1c03041cca5978eff5428aa130c781b271ad9e5566e1f8",
+          "dweb:/ipfs/QmPFKL2r9CBsMwmUqqdcFPfHZB2qcs9g1HDrPxzWSxomvy"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/solidity-bytes-utils/contracts/BytesLib.sol": {
+        "keccak256": "0xa5b10f04797d5a10a9ba07855108b6bd695940e6a3d128927b2f74a0d359868a",
+        "urls": [
+          "bzz-raw://a38d7680aacbb18dae659876b396b73bcc8f759672213f8a0efc4129e2648535",
+          "dweb:/ipfs/QmfKFnwpTEGAnbRnZxMuv3mRCG9S9WMjFhFL23bftBT2Jq"
+        ],
+        "license": "Unlicense"
+      }
+    },
+    "version": 1
+  },
+  "id": 70
+}
