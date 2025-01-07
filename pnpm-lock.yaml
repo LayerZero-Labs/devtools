@@ -3518,12 +3518,21 @@ importers:
 
   packages/oft-move:
     devDependencies:
+      '@aptos-labs/ts-sdk':
+        specifier: ^1.33.1
+        version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.1
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
         specifier: ^0.0.1
         version: link:../devtools-move
+      '@layerzerolabs/lz-definitions':
+        specifier: ^3.0.21
+        version: 3.0.59
+      '@layerzerolabs/lz-v2-utilities':
+        specifier: ^3.0.12
+        version: 3.0.59
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44

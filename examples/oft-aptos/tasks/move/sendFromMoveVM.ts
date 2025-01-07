@@ -64,8 +64,9 @@ async function main() {
         nativeFee,
         0
     )
-
-    await sendAllTxs(aptos, oft, account_address, [sendPayload])
+    
+    const payloads = [{ payload: sendPayload, description: 'Send Aptos OFT', eid: dst_eid }]
+    await sendAllTxs(aptos, oft, account_address, payloads)
 
     // Check the balance again
     const balance = await aptos.view({
