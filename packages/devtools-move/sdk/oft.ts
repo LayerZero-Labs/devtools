@@ -39,6 +39,7 @@ export class OFT {
     ): InputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
         return {
+            // function: `${this.oft_address}::oft_fa::initialize`,
             function: `${this.oft_address}::oft_impl::initialize`,
             functionArguments: [
                 encoder.encode(token_name),
@@ -83,8 +84,16 @@ export class OFT {
         window_seconds: number | bigint
     ): InputGenerateTransactionPayloadData {
         return {
+            // function: `${this.oft_address}::oft_fa::set_rate_limit`,
             function: `${this.oft_address}::oft_impl::set_rate_limit`,
             functionArguments: [eid, limit, window_seconds],
+        }
+    }
+
+    createUnsetRateLimitTx(eid: EndpointId): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_fa::unset_rate_limit`,
+            functionArguments: [eid],
         }
     }
 
@@ -92,6 +101,7 @@ export class OFT {
     async getRateLimitConfig(eid: EndpointId): Promise<[bigint, bigint]> {
         const result = await this.moveVMConnection.view({
             payload: {
+                // function: `${this.oft_address}::oft_fa::rate_limit_config`,
                 function: `${this.oft_address}::oft_impl::rate_limit_config`,
                 functionArguments: [eid],
             },
@@ -103,6 +113,7 @@ export class OFT {
 
     createSetFeeBpsTx(fee_bps: number | bigint): InputGenerateTransactionPayloadData {
         return {
+            // function: `${this.oft_address}::oft_fa::set_fee_bps`,
             function: `${this.oft_address}::oft_impl::set_fee_bps`,
             functionArguments: [fee_bps],
         }
@@ -111,6 +122,7 @@ export class OFT {
     async getFeeBps(): Promise<bigint> {
         const result = await this.moveVMConnection.view({
             payload: {
+                // function: `${this.oft_address}::oft_fa::fee_bps`,
                 function: `${this.oft_address}::oft_impl::fee_bps`,
                 functionArguments: [],
             },
@@ -121,6 +133,7 @@ export class OFT {
 
     mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
         return {
+            // function: `${this.oft_address}::oft_fa::mint`,
             function: `${this.oft_address}::oft_impl::mint`,
             functionArguments: [recipient, amount],
         }
@@ -167,7 +180,7 @@ export class OFT {
         return [result[0] as number, result[1] as number]
     }
 
-    // Calls send_withdraw from the oft fungible asset module (oft.move)
+    // Calls send withdraw on the oft
     sendPayload(
         dst_eid: number,
         to: Uint8Array,

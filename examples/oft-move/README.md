@@ -36,21 +36,24 @@ Create a `.env` file with the following variables:
 ACCOUNT_ADDRESS=<your-aptos-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 ```
+Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
 Note: aptos account address can be found in .aptos/config.yaml
 
 ## Build and deploy
 
+Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
+
 ### Builds the contracts
 
 ```bash
-pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/MyMoveOFTFA.ts
+pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
 
 ```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy/MyMoveOFTFA.ts
+pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/MyMoveOFTFA.ts
 ```
 
 ## Init - Not OFT Agnostic
