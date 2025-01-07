@@ -6,6 +6,7 @@
 module oft::oft_coin {
     use std::aptos_account;
     use std::coin::{Self, BurnCapability, Coin, FreezeCapability, MintCapability};
+    use std::event::emit;
     use std::fungible_asset::{FungibleAsset, Metadata};
     use std::object::Object;
     use std::option::{Self, Option};
@@ -34,6 +35,7 @@ module oft::oft_coin {
         mint_cap: MintCapability<CoinType>,
         burn_cap: BurnCapability<CoinType>,
         freeze_cap: FreezeCapability<CoinType>,
+        freeze_coin_store_enabled: bool,
     }
 
     // ************************************************* CONFIGURATION *************************************************
@@ -59,7 +61,7 @@ module oft::oft_coin {
         lz_receive_value: Option<FungibleAsset>,
     ): u64 acquires OftImpl {
         // Default implementation does not make special use of LZ Receive Value sent; just deposit to the OFT address
-        option::for_each(lz_receive_value, |fa| primary_fungible_store::deposit(OAPP_ADDRESS(), fa));
+        option::for_each(lz_receive_value, |fa| primary_fungible_store::deposit(@oft_admin, fa));
 
         // Release rate limit capacity for the pathway (net inflow)
         release_rate_limit_capacity(src_eid, amount_ld);
@@ -83,11 +85,13 @@ module oft::oft_coin {
         dst_eid: u32,
     ): (u64, u64) acquires OftImpl {
         assert_not_blocklisted(sender);
-        try_consume_rate_limit_capacity(dst_eid, min_amount_ld);
 
         // Calculate the exact send amount
         let amount_ld = coin::value(coin);
         let (amount_sent_ld, amount_received_ld) = debit_view(amount_ld, min_amount_ld, dst_eid);
+
+        // Consume rate limit capacity for the pathway (net outflow), based on the amount received on the other side
+        try_consume_rate_limit_capacity(dst_eid, amount_received_ld);
 
         // Extract the exact send amount from the provided Coin
         let extracted_coin = coin::extract(coin, amount_sent_ld);
@@ -160,7 +164,7 @@ module oft::oft_coin {
 
     /// Deposit coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun deposit_coin<CoinType>(account: address, coin: Coin<CoinType>) {
-        aptos_account::deposit_coins(account, coin)
+        aptos_account::deposit_coins<CoinType>(account, coin)
     }
 
     /// Withdraw coin function abstracted from `oft.move` for cross-chain flexibility
@@ -216,9 +220,6 @@ module oft::oft_coin {
     /// If a wallet is blocklisted
     /// - OFT sends from the wallet will be blocked
     /// - OFT receives to the wallet will be be diverted to the admin
-    ///
-    /// Note: this will not attempt to freeze the CoinStore of the blocklisted wallet; this must be done separately,
-    /// to prevent the operation from reverting if the CoinStore is not yet registered
     public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) {
         assert_admin(address_of(admin));
         oft_impl_config::set_blocklist(wallet, block);
@@ -259,9 +260,44 @@ module oft::oft_coin {
     /// Get the rate limit capacity for a given endpoint ID
     public fun rate_limit_capacity(eid: u32): u64 { oft_impl_config::rate_limit_capacity(eid) }
 
+    #[view]
     /// Create an OftLimit that reflects the rate limit for a given endpoint ID
     public fun rate_limited_oft_limit(eid: u32): OftLimit {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
+    }
+
+    /// Permanently disable the ability to freeze CoinStores through the OFT
+    /// This will permanently prevent freezing of accounts, but it will not prevent unfreezing accounts
+    public entry fun permanently_disable_coin_store_freezing(admin: &signer) acquires OftImpl {
+        assert_admin(address_of(admin));
+        store_mut<PlaceholderCoin>().freeze_coin_store_enabled = false;
+        emit(CoinStoreFreezingPermanentlyDisabled {});
+    }
+
+    /// Set the frozen status of a CoinStore
+    /// To freeze, account freezing must not have been disabled
+    public entry fun set_coin_store_frozen(admin: &signer, account: address, frozen: bool) acquires OftImpl {
+        assert_admin(address_of(admin));
+        assert!(frozen != coin::is_coin_store_frozen<PlaceholderCoin>(account), ENO_CHANGE);
+
+        if (frozen) {
+            // If account freezing is disabled, do not allow freezing accounts, but allow unfreeze
+            assert!(store<PlaceholderCoin>().freeze_coin_store_enabled, EFREEZE_ACCOUNT_DISABLED);
+            coin::freeze_coin_store(account, &store<PlaceholderCoin>().freeze_cap)
+        } else {
+            coin::unfreeze_coin_store(account, &store<PlaceholderCoin>().freeze_cap)
+        };
+
+        // Emit an event because internally, coin.move doesn't emit
+        emit(CoinStoreFreezeStatusChanged { account, frozen });
+    }
+
+    #[view]
+    /// Get the frozen status of a CoinStore
+    /// Because of the internal implementtion of coin::is_coin_store_frozen, this will return true also if the the
+    /// CoinStore is not registered for this account
+    public fun is_account_frozen(account: address): bool {
+        coin::is_coin_store_frozen<PlaceholderCoin>(account)
     }
 
     // ================================================ Initialization ================================================
@@ -281,7 +317,12 @@ module oft::oft_coin {
         );
 
         // Store the mint, burn, and freeze capabilities
-        move_to(move account, OftImpl { burn_cap, freeze_cap, mint_cap });
+        move_to(move account, OftImpl {
+            burn_cap,
+            freeze_cap,
+            mint_cap,
+            freeze_coin_store_enabled: true,
+        });
 
         // Initialize the OFT Core module
         oft_core::initialize(LOCAL_DECIMALS, SHARED_DECIMALS);
@@ -307,9 +348,36 @@ module oft::oft_coin {
 
     inline fun store<CoinType>(): &OftImpl<CoinType> { borrow_global(OAPP_ADDRESS()) }
 
+    inline fun store_mut<CoinType>(): &mut OftImpl<CoinType> {
+        borrow_global_mut<OftImpl<CoinType>>(OAPP_ADDRESS())
+    }
+
+    // ==================================================== Events ====================================================
+
+    #[event]
+    struct CoinStoreFreezingPermanentlyDisabled has store, drop {}
+
+    #[event]
+    struct CoinStoreFreezeStatusChanged has store, drop {
+        account: address,
+        frozen: bool,
+    }
+
+    #[test_only]
+    public fun coin_store_freezing_permanently_disabled_event(): CoinStoreFreezingPermanentlyDisabled {
+        CoinStoreFreezingPermanentlyDisabled {}
+    }
+
+    #[test_only]
+    public fun coin_store_freeze_status_changed_event(account: address, frozen: bool): CoinStoreFreezeStatusChanged {
+        CoinStoreFreezeStatusChanged { account, frozen }
+    }
+
     // ================================================== Error Codes =================================================
 
-    const EINSUFFICIENT_BALANCE: u64 = 1;
-    const EINVALID_ACCOUNT: u64 = 2;
-    const ENOT_IMPLEMENTED: u64 = 3;
+    const EFREEZE_ACCOUNT_DISABLED: u64 = 1;
+    const EINSUFFICIENT_BALANCE: u64 = 2;
+    const EINVALID_ACCOUNT: u64 = 3;
+    const ENO_CHANGE: u64 = 4;
+    const ENOT_IMPLEMENTED: u64 = 5;
 }

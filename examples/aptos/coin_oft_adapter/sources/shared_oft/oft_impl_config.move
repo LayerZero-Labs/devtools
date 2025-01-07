@@ -103,7 +103,8 @@ module oft::oft_impl_config {
     // ============================================ Blacklist Configuration ===========================================
 
     /// Permanently disable the ability to blocklist accounts
-    /// This will also restore any previously blocked accounts to unblocked status
+    /// This will also effectively restore any previously blocked accounts to unblocked status (is_blocklisted() will
+    /// return false for all accounts)
     /// This is a one-way operation, once this is called, the blocklist capability cannot be restored
     public(friend) fun irrevocably_disable_blocklist() acquires Config {
         assert!(store().blocklist_enabled, EBLOCKLIST_ALREADY_DISABLED);
@@ -135,7 +136,7 @@ module oft::oft_impl_config {
 
     /// Revert if an account is blocked
     public(friend) fun assert_not_blocklisted(wallet: address) acquires Config {
-        assert!(!store().blocklist_enabled || !is_blocklisted(wallet), EADDRESS_BLOCKED);
+        assert!(!is_blocklisted(wallet), EADDRESS_BLOCKED);
     }
 
     /// Provide the admin address and emit a BlockedAmountRedirected event if an account is blocked
@@ -143,7 +144,7 @@ module oft::oft_impl_config {
     /// recipient address if recipient is blocklisted. This also emits a message to alert that blocklisted funds have
     /// been received
     public(friend) fun redirect_to_admin_if_blocklisted(recipient: address, amount_ld: u64): address acquires Config {
-        if (!store().blocklist_enabled || !is_blocklisted(recipient)) {
+        if (!is_blocklisted(recipient)) {
             recipient
         } else {
             emit(BlockedAmountRedirected {
@@ -276,7 +277,11 @@ module oft::oft_impl_config {
             return MAX_U64
         };
         let rate_limit = *table::borrow(&store().rate_limit_by_eid, eid);
-        rate_limit.limit - in_flight_at_time(eid, timestamp)
+        if (rate_limit.limit > in_flight_at_time(eid, timestamp)) {
+            rate_limit.limit - in_flight_at_time(eid, timestamp)
+        } else {
+            0
+        }
     }
 
     /// Consume rate limit capacity for a given EID or abort if the capacity is exceeded

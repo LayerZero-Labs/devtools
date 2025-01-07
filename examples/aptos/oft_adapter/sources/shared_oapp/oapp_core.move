@@ -37,8 +37,6 @@ module oft::oapp_core {
         native_fee: &mut FungibleAsset,
         zro_fee: &mut Option<FungibleAsset>,
     ): MessagingReceipt {
-        assert!(!oapp_store::is_sending_paused(dst_eid), ESEND_PAUSED);
-
         endpoint::send(
             &oapp_store::call_ref(),
             dst_eid,
@@ -286,22 +284,6 @@ module oft::oapp_core {
         emit(PeerSet { eid, peer: ZEROS_32_BYTES() });
     }
 
-    // ==================================================== Pausing ===================================================
-
-    #[view]
-    /// Check if sending is paused for a destination EID
-    public fun is_sending_paused(dst_eid: u32): bool {
-        oapp_store::is_sending_paused(dst_eid)
-    }
-
-    /// Pause sending for a destination EID
-    /// This will prevent the OApp from sending messages to the EID until unpaused, but it will not affect receiving
-    public entry fun set_pause_sending(account: &signer, dst_eid: u32, paused: bool) {
-        assert_admin(address_of(move account));
-        oapp_store::set_sending_paused(dst_eid, paused);
-        emit(PauseSendingSet { dst_eid, paused });
-    }
-
     // =================================================== Delegates ==================================================
 
     #[view]
@@ -384,12 +366,6 @@ module oft::oapp_core {
     }
 
     #[event]
-    struct PauseSendingSet has drop, store {
-        dst_eid: u32,
-        paused: bool,
-    }
-
-    #[event]
     struct DelegateSet has drop, store {
         delegate: address,
     }
@@ -412,11 +388,6 @@ module oft::oapp_core {
     }
 
     #[test_only]
-    public fun pause_sending_set(dst_eid: u32, paused: bool): PauseSendingSet {
-        PauseSendingSet { dst_eid, paused }
-    }
-
-    #[test_only]
     public fun delegate_set_event(delegate: address): DelegateSet {
         DelegateSet { delegate }
     }
@@ -434,5 +405,4 @@ module oft::oapp_core {
     const EINSUFFICIENT_ZRO_BALANCE: u64 = 4;
     const EINVALID_OPTIONS: u64 = 5;
     const EINVALID_ACCOUNT: u64 = 6;
-    const ESEND_PAUSED: u64 = 7;
 }

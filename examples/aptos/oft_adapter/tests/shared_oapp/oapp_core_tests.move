@@ -5,6 +5,7 @@ module oft::oapp_core_tests {
     use std::event::was_event_emitted;
     use std::fungible_asset::{Self, FungibleAsset};
     use std::option;
+    use std::primary_fungible_store;
     use std::signer::address_of;
 
     use endpoint_v2::channels::packet_sent_event;
@@ -12,11 +13,14 @@ module oft::oapp_core_tests {
     use endpoint_v2::test_helpers::setup_layerzero_for_test;
     use endpoint_v2_common::bytes32::{Self, from_address, from_bytes32};
     use endpoint_v2_common::guid;
+    use endpoint_v2_common::native_token;
     use endpoint_v2_common::native_token_test_helpers::{burn_token_for_test, initialize_native_token_for_test,
         mint_native_token_for_test
     };
     use endpoint_v2_common::packet_v1_codec;
-    use oft::oapp_core::{Self, pause_sending_set, set_pause_sending};
+    use endpoint_v2_common::universal_config;
+    use endpoint_v2_common::zro_test_helpers::create_fa;
+    use oft::oapp_core::{Self, withdraw_lz_fees};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core::{SEND, SEND_AND_CALL};
 
@@ -43,13 +47,6 @@ module oft::oapp_core_tests {
 
         let native_fee = mint_native_token_for_test(100000);
         let zro_fee = option::none<FungibleAsset>();
-
-        // pause then unpause (to test to make sure unpause works)
-        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, true);
-        assert!(was_event_emitted(&pause_sending_set(DST_EID, true)), 0);
-
-        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, false);
-        assert!(was_event_emitted(&pause_sending_set(DST_EID, false)), 0);
 
         let messaging_receipt = oapp_core::lz_send(
             DST_EID,
@@ -91,33 +88,6 @@ module oft::oapp_core_tests {
             b"options",
             @simple_msglib,
         )), 0);
-
-        burn_token_for_test(native_fee);
-        option::destroy_none(zro_fee);
-    }
-
-    #[test]
-    #[expected_failure(abort_code = oft::oapp_core::ESEND_PAUSED)]
-    fun test_send_pause() {
-        setup(SRC_EID, DST_EID);
-        set_pause_sending(&create_signer_for_test(@oft_admin), DST_EID, true);
-
-        let called_send = false;
-        let called_inspect = false;
-        assert!(!called_inspect && !called_send, 0);
-
-        let native_fee = mint_native_token_for_test(100000);
-        let zro_fee = option::none<FungibleAsset>();
-
-        assert!(was_event_emitted(&pause_sending_set(DST_EID, true)), 0);
-
-        oapp_core::lz_send(
-            DST_EID,
-            b"oapp-message",
-            b"options",
-            &mut native_fee,
-            &mut zro_fee,
-        );
 
         burn_token_for_test(native_fee);
         option::destroy_none(zro_fee);
@@ -209,5 +179,91 @@ module oft::oapp_core_tests {
         oapp_core::set_delegate(admin, address_of(delegate2));
 
         oapp_core::skip(delegate2, SRC_EID, from_bytes32(from_address(@1234)), 1);
+    }
+
+    #[test]
+    fun test_withdraw_lz_fees() {
+        let native_token = mint_native_token_for_test(1000);
+
+        let (zro_address, zro_metadata, mint_ref) = create_fa(b"ZRO");
+        universal_config::init_module_for_test(100);
+        universal_config::set_zro_address(&create_signer_for_test(@layerzero_admin), zro_address);
+
+        let zro_token = fungible_asset::mint(&mint_ref, 1000);
+
+        primary_fungible_store::deposit(@0x1234, native_token);
+        primary_fungible_store::deposit(@0x1234, zro_token);
+
+        let account = &create_signer_for_test(@0x1234);
+
+        let (native_token, zro_token) = withdraw_lz_fees(account, 600, 550);
+        assert!(fungible_asset::amount(&native_token) == 600, 0);
+        assert!(fungible_asset::amount(option::borrow(&zro_token)) == 550, 0);
+        burn_token_for_test(native_token);
+        burn_token_for_test(option::extract(&mut zro_token));
+        option::destroy_none(zro_token);
+
+        assert!(native_token::balance(@0x1234) == 400, 0);
+        assert!(primary_fungible_store::balance(@0x1234, zro_metadata) == 450, 0);
+    }
+
+    #[test]
+    fun test_withdraw_lz_fees_no_zro() {
+        let native_token = mint_native_token_for_test(1000);
+        primary_fungible_store::deposit(@0x1234, native_token);
+
+        let account = &create_signer_for_test(@0x1234);
+
+        let (native_token, zro_token) = withdraw_lz_fees(account, 600, 0);
+        assert!(fungible_asset::amount(&native_token) == 600, 0);
+        assert!(option::is_none(&zro_token), 0);
+        burn_token_for_test(native_token);
+        option::destroy_none(zro_token);
+
+        assert!(native_token::balance(@0x1234) == 400, 0);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = oft::oapp_core::EINSUFFICIENT_NATIVE_TOKEN_BALANCE)]
+    fun test_withdraw_lz_fees_fails_with_insufficient_native_balance() {
+        let native_token = mint_native_token_for_test(100);
+
+        let (zro_address, _, mint_ref) = create_fa(b"ZRO");
+        universal_config::init_module_for_test(100);
+        universal_config::set_zro_address(&create_signer_for_test(@layerzero_admin), zro_address);
+
+        let zro_token = fungible_asset::mint(&mint_ref, 1000);
+
+        primary_fungible_store::deposit(@0x1234, native_token);
+        primary_fungible_store::deposit(@0x1234, zro_token);
+
+        let account = &create_signer_for_test(@0x1234);
+
+        let (native_token, zro_token) = withdraw_lz_fees(account, 600, 550);
+        burn_token_for_test(native_token);
+        burn_token_for_test(option::extract(&mut zro_token));
+        option::destroy_none(zro_token);
+    }
+
+    #[test]
+    #[expected_failure(abort_code = oft::oapp_core::EINSUFFICIENT_ZRO_BALANCE)]
+    fun test_withdraw_lz_fees_fails_with_insufficient_zro_balance() {
+        let native_token = mint_native_token_for_test(1000);
+
+        let (zro_address, _, mint_ref) = create_fa(b"ZRO");
+        universal_config::init_module_for_test(100);
+        universal_config::set_zro_address(&create_signer_for_test(@layerzero_admin), zro_address);
+
+        let zro_token = fungible_asset::mint(&mint_ref, 100);
+
+        primary_fungible_store::deposit(@0x1234, native_token);
+        primary_fungible_store::deposit(@0x1234, zro_token);
+
+        let account = &create_signer_for_test(@0x1234);
+
+        let (native_token, zro_token) = withdraw_lz_fees(account, 600, 550);
+        burn_token_for_test(native_token);
+        burn_token_for_test(option::extract(&mut zro_token));
+        option::destroy_none(zro_token);
     }
 }

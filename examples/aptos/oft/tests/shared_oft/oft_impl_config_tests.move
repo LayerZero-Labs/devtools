@@ -170,8 +170,6 @@ module oft::oft_impl_config_tests {
         let redirected_address = redirect_to_admin_if_blocklisted(@0x1234, 1111);
         assert!(redirected_address == @0x1234, 2);
 
-        set_blocklist(@0x1234, true);
-
         irrevocably_disable_blocklist();
         assert!(was_event_emitted(&blocklisting_disabled_event()), 1);
 
@@ -252,6 +250,12 @@ module oft::oft_impl_config_tests {
         try_consume_rate_limit_capacity_at_time(30100, 2000, 310);
         // 2000 + (2000 - 30000/1000*10) = 3800
         assert!(in_flight_at_time(30100, 310) == 3700, 1);
+
+        // Reduce rate limit to below the in flight
+        oft_impl_config::set_rate_limit_at_timestamp(30100, 500, 1000, 320);
+
+        // Rate limit capacity cannot go below 0, and should not abort
+        assert!(rate_limit_capacity_at_time(30100, 320) == 0, 2);
 
         // Unset rate limit
         unset_rate_limit(30100);

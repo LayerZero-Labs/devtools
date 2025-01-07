@@ -1,7 +1,7 @@
 /// Placeholder module that registers a PlaceholderCoin implementation with the Coin module.
 module oft::placeholder_coin {
-    use std::string::utf8;
     use std::coin;
+    use std::string::utf8;
 
     struct Store has key {
         mint_cap: coin::MintCapability<PlaceholderCoin>,
@@ -38,7 +38,7 @@ module oft::placeholder_coin {
     }
 
     #[test_only]
-    public fun mint_for_test(amount: u64): coin::Coin<PlaceholderCoin> acquires Store {
+    public fun mint_for_test(amount: u64): std::coin::Coin<PlaceholderCoin> acquires Store {
         coin::mint(amount, &borrow_global<Store>(@oft).mint_cap)
     }
 

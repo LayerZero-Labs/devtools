@@ -91,11 +91,13 @@ module oft::oft_adapter_coin {
         dst_eid: u32,
     ): (u64, u64) acquires OftImpl {
         assert_not_blocklisted(sender);
-        try_consume_rate_limit_capacity(dst_eid, min_amount_ld);
 
         // Set the send amount to the amount provided in Coin
         let amount_ld = coin::value(coin);
         let (amount_sent_ld, amount_received_ld) = debit_view(amount_ld, min_amount_ld, dst_eid);
+
+        // Consume rate limit capacity for the pathway (net outflow), based on the amount received on the other side
+        try_consume_rate_limit_capacity(dst_eid, amount_received_ld);
 
         // Extract the exact send amount from the provided Coin
         let extracted_coin = coin::extract(coin, amount_sent_ld);
@@ -109,7 +111,7 @@ module oft::oft_adapter_coin {
 
         // Lock the amount in escrow
         let escrow_address = escrow_address();
-        std::aptos_account::deposit_coins(escrow_address, extracted_coin);
+        std::aptos_account::deposit_coins<CoinType>(escrow_address, extracted_coin);
 
         (amount_sent_ld, amount_received_ld)
     }
@@ -159,7 +161,7 @@ module oft::oft_adapter_coin {
 
     /// Deposit coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun deposit_coin<CoinType>(account: address, coin: Coin<CoinType>) {
-        aptos_account::deposit_coins(account, coin)
+        aptos_account::deposit_coins<CoinType>(account, coin)
     }
 
     /// Withdraw coin function abstracted from `oft.move` for cross-chain flexibility

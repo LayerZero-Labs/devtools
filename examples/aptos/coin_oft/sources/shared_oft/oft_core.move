@@ -22,6 +22,8 @@ module oft::oft_core {
     friend oft::oft_impl_config_tests;
 
     friend oft::oft_coin;
+    #[test_only]
+    friend oft::oapp_receive_using_oft_coin_tests;
 
     // ===================================================== OFT Core =================================================
 

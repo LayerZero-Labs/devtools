@@ -137,7 +137,7 @@ module oft::oft_core_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
-            b"",
+            b""
         );
 
         oft_core::receive(
@@ -207,7 +207,7 @@ module oft::oft_core_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
-            b"",
+            b""
         );
 
         let called_compose = 0;
