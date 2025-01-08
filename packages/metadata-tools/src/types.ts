@@ -26,7 +26,7 @@ export interface IMetadata {
             relayerV2?: { address: string }
             ultraLightNodeV2?: { address: string }
             nonceContract?: { address: string }
-            executor?: { address: string }
+            executor?: { address: string; pda?: string }
             deadDVN?: { address: string }
             endpointV2?: { address: string }
             sendUln302?: { address: string }

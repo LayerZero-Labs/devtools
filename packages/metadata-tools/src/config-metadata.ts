@@ -70,6 +70,10 @@ export function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMet
     return dvnAddresses.sort()
 }
 
+function isSolanaDeployment(deployment: { chainKey: string; executor?: { pda?: string; address?: string } }) {
+    return deployment.chainKey.startsWith('solana')
+}
+
 export async function translatePathwayToConfig(
     pathway: TwoWayConfig,
     metadata: IMetadata
@@ -91,6 +95,14 @@ export async function translatePathwayToConfig(
 
     const sourceLZDeployment = getEndpointIdDeployment(sourceContract.eid, metadata)
     const destinationLZDeployment = getEndpointIdDeployment(destinationContract.eid, metadata)
+
+    const sourceExecutor = isSolanaDeployment(sourceLZDeployment)
+        ? sourceLZDeployment.executor?.pda
+        : sourceLZDeployment.executor?.address
+
+    if (!sourceExecutor) {
+        throw new Error(`Can't find executor for source endpoint with eid: "${sourceContract.eid}".`)
+    }
 
     const sourceRequiredDVNs = DVNsToAddresses(requiredDVNs, sourceLZDeployment.chainKey, metadata)
     const destinationRequiredDVNs = DVNsToAddresses(requiredDVNs, destinationLZDeployment.chainKey, metadata)
@@ -131,7 +143,7 @@ export async function translatePathwayToConfig(
             sendConfig: {
                 executorConfig: {
                     maxMessageSize: 10000,
-                    executor: sourceLZDeployment.executor.address,
+                    executor: sourceExecutor,
                 },
                 ulnConfig: {
                     confirmations: BigInt(sourceToDestinationConfirmations),
@@ -165,6 +177,14 @@ export async function translatePathwayToConfig(
     }
 
     if (destinationToSourceConfirmations) {
+        const destinationExecutor = isSolanaDeployment(destinationLZDeployment)
+            ? destinationLZDeployment.executor?.pda
+            : destinationLZDeployment.executor?.address
+
+        if (!destinationExecutor) {
+            throw new Error(`Can't find executor for destination endpoint with eid: "${destinationContract.eid}".`)
+        }
+
         sourceToDestinationConfig.config.receiveConfig = {
             ulnConfig: {
                 confirmations: BigInt(destinationToSourceConfirmations),
@@ -179,7 +199,7 @@ export async function translatePathwayToConfig(
         destinationToSourceConfig.config.sendConfig = {
             executorConfig: {
                 maxMessageSize: 10000,
-                executor: destinationLZDeployment.executor.address,
+                executor: destinationExecutor,
             },
             ulnConfig: {
                 confirmations: BigInt(destinationToSourceConfirmations),

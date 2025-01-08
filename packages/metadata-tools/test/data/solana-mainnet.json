@@ -1,6 +1,6 @@
 {
-  "created": "2024-12-12T03:31:22.000Z",
-  "updated": "2024-12-12T03:31:22.000Z",
+  "created": "2025-01-07T18:33:21.000Z",
+  "updated": "2025-01-07T18:33:21.000Z",
   "tableName": "layerzero-chain_metadata",
   "environment": "mainnet",
   "blockExplorers": [
@@ -17,7 +17,8 @@
         "address": "8ahPGPjEbpgGaZx2NV1iG5Shj7TDwvsjkEDcGWjt94TP"
       },
       "executor": {
-        "address": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK"
+        "pda": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+        "address": "6doghB248px58JSSwG4qejQ46kFMW4AMj7vzJnWZHNZn"
       },
       "endpointV2": {
         "address": "76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6"
