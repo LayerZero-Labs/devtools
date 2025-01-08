@@ -122,26 +122,30 @@ async function checkIfDeploymentExists(network: string, lzNetworkStage: string, 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function deploy(args: any, contractName: string) {
-    const configPath = args.configPath
-
+async function deploy(
+    configPath: string,
+    namedAddresses: string,
+    forceDeploy: boolean = false,
+    contractName: string = 'oft'
+) {
     const aptosYamlConfig = await parseYaml(configPath)
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
+
     const deploymentExists = await checkIfDeploymentExists(network, lzNetworkStage, contractName)
 
     if (deploymentExists) {
-        if (args.force_deploy === 'true') {
+        if (forceDeploy) {
             console.log(`Follow the prompts to complete the deployment ${contractName}`)
-            await deployMovementContracts(contractName, args.named_addresses, configPath)
+            await deployMovementContracts(contractName, namedAddresses, configPath)
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
     } else {
         console.warn('You are in force deploy mode:')
         console.log(`Follow the prompts to complete the deployment ${contractName}`)
-        await deployMovementContracts(contractName, args.named_addresses, configPath)
+        await deployMovementContracts(contractName, namedAddresses, configPath)
     }
 }
 export { deploy }

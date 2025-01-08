@@ -8,7 +8,14 @@ import {
 } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendInitTransaction } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 
-async function initOFTFA(token_name: string, token_symbol: string, icon_uri: string, project_uri: string) {
+async function initOFTFA(
+    token_name: string,
+    token_symbol: string,
+    icon_uri: string,
+    project_uri: string,
+    shared_decimals: number,
+    local_decimals: number
+) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
@@ -19,16 +26,13 @@ async function initOFTFA(token_name: string, token_symbol: string, icon_uri: str
     console.log(`\n⚡ Initializing ${chain}-${lzNetworkStage} OFT`)
     console.log(`   Address: ${aptosOftAddress}\n`)
 
-    const sharedDecimals = 6
-    const localDecimals = 6
-
     console.log(`Setting the following parameters:`)
     console.log(`\tToken Name: ${token_name}`)
     console.log(`\tToken Symbol: ${token_symbol}`)
     console.log(`\tIcon URI: ${icon_uri}`)
     console.log(`\tProject URI: ${project_uri}`)
-    console.log(`\tShared Decimals: ${sharedDecimals}`)
-    console.log(`\tLocal Decimals: ${localDecimals}`)
+    console.log(`\tShared Decimals: ${shared_decimals}`)
+    console.log(`\tLocal Decimals: ${local_decimals}`)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
     const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key)
@@ -38,8 +42,8 @@ async function initOFTFA(token_name: string, token_symbol: string, icon_uri: str
         token_symbol,
         icon_uri,
         project_uri,
-        sharedDecimals,
-        localDecimals
+        shared_decimals,
+        local_decimals
     )
 
     const eid = getEidFromAptosNetwork(chain, network)
