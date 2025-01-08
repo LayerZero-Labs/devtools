@@ -51,14 +51,7 @@ pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresse
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
-
-```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/MyMoveOFTFA.ts
-```
-
-## Init - Not OFT Agnostic
-
-First modify deploy/MyMoveOFTFA.ts and replace the oftMetadata with the following:
+First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with the following:
 
 ```ts
 const oftType = "OFT_FA";
@@ -67,8 +60,16 @@ const oftMetadata = {
   token_symbol: "MMOFT",
   icon_uri: "",
   project_uri: "",
+  sharedDecimals: 6,
+  localDecimals: 6,
 };
 ```
+
+```bash
+pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+```
+
+## Init
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
 
@@ -94,7 +95,7 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
 Then run the following command:
 
 ```bash
-pnpm run lz:sdk:move:init --lz-config move.layerzero.config.ts --move-deploy-script deploy/MyMoveOFTFA.ts
+pnpm run lz:sdk:move:init-fa --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/move-oft-fa-init-params.ts
 ```
 
 ## Wire
