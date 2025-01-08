@@ -17,7 +17,7 @@
     "lz:sdk:help": "ts-node scripts/cli.ts --op help --filter all",
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
-    "lz:sdk:move:init": "ts-node scripts/cli.ts --vm move --op init",
+    "lz:sdk:move:init-fa": "ts-node scripts/cli.ts --vm move --op init-fa",
     "lz:sdk:move:quoteSend": "ts-node scripts/cli.ts --vm move --op quoteSend",
     "lz:sdk:move:set-delegate": "ts-node scripts/cli.ts --vm move --op set-delegate",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
