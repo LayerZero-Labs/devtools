@@ -1,8 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
-import { quoteSendOFTFA } from '../../tasks/quoteSendOFTFA'
+import { quoteSendOFT } from '../../tasks/quoteSendOFT'
 
-class QuoteSendOFTFA implements INewOperation {
+class QuoteSendOFT implements INewOperation {
     vm = 'move'
     operation = 'quoteSend'
     description = 'Quote send an OFT with FA'
@@ -47,9 +47,9 @@ class QuoteSendOFTFA implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await quoteSendOFTFA(args.amount_ld, args.min_amount_ld, args.to_address, args.gas_limit, args.dst_eid)
+        await quoteSendOFT(args.amount_ld, args.min_amount_ld, args.to_address, args.gas_limit, args.dst_eid)
     }
 }
 
-const NewOperation = new QuoteSendOFTFA()
+const NewOperation = new QuoteSendOFT()
 export { NewOperation }

@@ -54,7 +54,7 @@ export class OFT {
     // TODO: create adapter coin init function
 
     // TODO: update with new implementation
-    initializeAdapterPayload(
+    initializeAdapterFAPayload(
         tokenMetadataAddress: string,
         sharedDecimals: number
     ): InputGenerateTransactionPayloadData {
