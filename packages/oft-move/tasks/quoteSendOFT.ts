@@ -9,7 +9,7 @@ import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 
-async function quoteSendOFTFA(
+async function quoteSendOFT(
     amountLd: number,
     minAmountLd: number,
     toAddress: string,
@@ -57,4 +57,4 @@ async function quoteSendOFTFA(
     console.log('If the above fees are acceptable, the wiring is confirmed to be successful.')
 }
 
-export { quoteSendOFTFA }
+export { quoteSendOFT }
