@@ -33,20 +33,6 @@ services:
         max-size: "5m"
         compress: "false"
 
-  # Aptos node for testing purposes
-  aptos-node:
-    build:
-      dockerfile: Dockerfile
-      target: node-aptos
-      args:
-        APTOS_NODE_IMAGE: ${DEVTOOLS_APTOS_NODE_IMAGE:-node-aptos-local-testnet}
-
-    logging:
-      driver: local
-      options:
-        max-size: "5m"
-        compress: "false"
-
   # EVM node for testing purposes
   evm-node:
     extends:
@@ -55,17 +41,3 @@ services:
       target: node-evm
       args:
         EVM_NODE_IMAGE: ${DEVTOOLS_EVM_NODE_IMAGE:-node-evm-hardhat}
-
-  # TON node for testing purposes
-  ton-node:
-    build:
-      dockerfile: Dockerfile
-      target: node-ton
-      args:
-        TON_NODE_IMAGE: ${DEVTOOLS_TON_NODE_IMAGE:-node-ton-my-local-ton}
-
-    logging:
-      driver: local
-      options:
-        max-size: "5m"
-        compress: "false"
