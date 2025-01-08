@@ -1,4 +1,4 @@
-## Move-VM OFT Setup and Deployment
+## Move-VM OFT Adapter Setup and Deployment
 
 ### connecting to aptos via cli
 
@@ -53,21 +53,17 @@ pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresse
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
-First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
+First modify deploy-move/OFTAdpaterInitParams.ts and replace the oftMetadata with your desired values:
 
 ```ts
 const oftMetadata = {
-  token_name: "MyMoveOFT",
-  token_symbol: "MMOFT",
-  icon_uri: "",
-  project_uri: "",
-  sharedDecimals: 6,
-  localDecimals: 6,
-};
+    move_vm_fa_address: '0x0',
+    shared_decimals: 6,
+}
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Init
@@ -96,7 +92,7 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
 Then run the following command:
 
 ```bash
-pnpm run lz:sdk:move:init-fa --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:init-fa-adapter --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Wire

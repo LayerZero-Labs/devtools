@@ -25,7 +25,7 @@ async function initOFTAdapterFA(move_vm_fa_address: string, shared_decimals: num
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
     const oft = new OFT(moveVMConnection, oftAdapterAddress, account_address, private_key)
 
-    const initializePayload = oft.initializeAdapterPayload(move_vm_fa_address, shared_decimals)
+    const initializePayload = oft.initializeAdapterFAPayload(move_vm_fa_address, shared_decimals)
 
     const eid = getEidFromAptosNetwork(chain, network)
     const payloads = [{ payload: initializePayload, description: `Initialize ${chain} OFT`, eid }]

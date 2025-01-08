@@ -7,7 +7,7 @@ class InitOFTFAAdapter implements INewOperation {
     vm = 'move'
     operation = 'init-fa-adapter'
     description = 'Initialize an OFT Adapter with FA'
-    reqArgs = ['move_vm_fa_address', 'shared_decimals']
+    reqArgs = ['move_deploy_script']
 
     async impl(args: any): Promise<void> {
         const fullPathOFTConfig = path.resolve(path.join(args.rootDir, args.move_deploy_script))
@@ -18,7 +18,7 @@ class InitOFTFAAdapter implements INewOperation {
             throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
         }
 
-        await initOFTAdapterFA(args.move_vm_fa_address, args.shared_decimals)
+        await initOFTAdapterFA(oftMetadata.move_vm_fa_address, oftMetadata.shared_decimals)
     }
 }
 
