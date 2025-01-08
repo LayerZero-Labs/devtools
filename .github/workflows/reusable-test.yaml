@@ -86,8 +86,6 @@ jobs:
           DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
           # And the prebuilt hardhat EVM node image
           DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
-          # And the prebuilt TON node image
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           #
           # FIXME The Solana tests need to be ported to either use a stable deployment

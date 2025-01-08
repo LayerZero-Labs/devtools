@@ -11,18 +11,6 @@
 services:
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
-  #                       The Aptos local node
-  #
-  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-  # TODO This node is not yet made a dependency of the tests container
-  # since we don't have any tests running against Aptos
-  network-aptos:
-    extends:
-      file: docker-compose.templates.yaml
-      service: aptos-node
-
-  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
-  #
   #       EVM Network nodes, one for every hardhat network
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
@@ -43,16 +31,6 @@ services:
 
   # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
   #
-  #                       The TON local node
-  #
-  # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-  network-ton:
-    extends:
-      file: docker-compose.templates.yaml
-      service: ton-node
-
-  # ~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~
-  #
   #                       The actual tests
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
@@ -66,8 +44,6 @@ services:
       network-britney:
         condition: service_healthy
       network-tango:
-        condition: service_healthy
-      network-ton:
         condition: service_healthy
     logging:
       driver: none
@@ -84,7 +60,6 @@ services:
       - NETWORK_URL_BRITNEY=http://network-britney:8545
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
       - NETWORK_URL_TANGO=http://network-tango:8545
-      - NETWORK_URL_TON=http://network-ton:8081/jsonRPC
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
       # Passing environment variables that control the solana tests
       - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
