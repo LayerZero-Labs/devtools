@@ -76,36 +76,36 @@ export function toAptosAddress(address: string): string {
     return '0x' + paddedHex
 }
 
-export async function createSetPeerTxs(
+export async function createSetPeerTx(
     oft: OFT,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
     const eidToNetworkMapping = await createEidToNetworkMapping()
 
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.to.contractName) {
-            printNotSet('peer', entry)
-            continue
-        }
-        const networkName = eidToNetworkMapping[entry.to.eid]
-        validateNetwork(networkName, entry)
-        const contractAddress = getContractAddress(networkName, entry.to.contractName)
-        const newPeer = toAptosAddress(contractAddress)
-        const currentPeerHex = await getCurrentPeer(oft, entry.to.eid as EndpointId)
+    if (!connection.to.contractName) {
+        printNotSet('peer', connection)
+        return null
+    }
+    const networkName = eidToNetworkMapping[connection.to.eid]
+    validateNetwork(networkName, connection)
+    const contractAddress = getContractAddress(networkName, connection.to.contractName)
+    const newPeer = toAptosAddress(contractAddress)
+    const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
-        if (currentPeerHex === newPeer) {
-            printAlreadySet('peer', entry)
-        } else {
-            const diffMessage = createDiffMessage('peer', entry)
-            diffPrinter(diffMessage, { address: currentPeerHex }, { address: newPeer })
+    if (currentPeerHex === newPeer) {
+        printAlreadySet('peer', connection)
+        return null
+    } else {
+        const diffMessage = createDiffMessage('peer', connection)
+        diffPrinter(diffMessage, { address: currentPeerHex }, { address: newPeer })
 
-            const tx = oft.setPeerPayload(entry.to.eid as EndpointId, newPeer)
-            txs.push({ payload: tx, description: buildTransactionDescription('Set Peer', entry), eid: entry.to.eid })
+        const payload = oft.setPeerPayload(connection.to.eid as EndpointId, newPeer)
+        return {
+            payload: payload,
+            description: buildTransactionDescription('Set Peer', connection),
+            eid: connection.to.eid,
         }
     }
-
-    return txs
 }
 
 function validateNetwork(networkName: string, entry: OAppOmniGraphHardhat['connections'][number]) {
@@ -115,342 +115,333 @@ function validateNetwork(networkName: string, entry: OAppOmniGraphHardhat['conne
     }
 }
 
-export async function createSetReceiveLibraryTimeoutTxs(
+export async function createSetReceiveLibraryTimeoutTx(
     oft: OFT,
     endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.receiveLibraryTimeoutConfig) {
-            printNotSet('Receive library timeout', entry)
-            continue
-        }
-        const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, entry.to.eid)
-        const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry)
-
-        if (currentTimeoutAsBigInt === BigInt(entry.config.receiveLibraryTimeoutConfig.expiry)) {
-            printAlreadySet('Receive library timeout', entry)
-            continue
-        } else {
-            let currTimeoutDisplay = '' + currentTimeoutAsBigInt
-            if (currentTimeoutAsBigInt === BigInt(-1)) {
-                currTimeoutDisplay = 'unset'
-            }
-            const diffMessage = createDiffMessage(`receive library timeout`, entry)
-            diffPrinter(
-                diffMessage,
-                { timeout: currTimeoutDisplay },
-                { timeout: entry.config.receiveLibraryTimeoutConfig.expiry }
-            )
-            const tx = oft.setReceiveLibraryTimeoutPayload(
-                entry.to.eid,
-                entry.config.receiveLibraryTimeoutConfig.lib,
-                Number(entry.config.receiveLibraryTimeoutConfig.expiry)
-            )
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('Set Receive Library Timeout', entry),
-                eid: entry.to.eid,
-            })
-        }
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    if (!connection.config?.receiveLibraryTimeoutConfig) {
+        printNotSet('Receive library timeout', connection)
+        return null
     }
+    const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, connection.to.eid)
+    const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry)
 
-    return txs
-}
-
-export async function createSetReceiveLibraryTxs(
-    oft: OFT,
-    endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.receiveLibraryConfig?.receiveLibrary) {
-            printNotSet('Receive library', entry)
-            continue
+    if (currentTimeoutAsBigInt === BigInt(connection.config.receiveLibraryTimeoutConfig.expiry)) {
+        printAlreadySet('Receive library timeout', connection)
+        return null
+    } else {
+        let currTimeoutDisplay = '' + currentTimeoutAsBigInt
+        if (currentTimeoutAsBigInt === BigInt(-1)) {
+            currTimeoutDisplay = 'unset'
         }
-        const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
-        let currentReceiveLibraryAddress = currentReceiveLibrary[0]
-        const isFallbackToDefault = currentReceiveLibrary[1]
-
-        // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
-        if (currentReceiveLibraryAddress === entry.config.receiveLibraryConfig.receiveLibrary && !isFallbackToDefault) {
-            printAlreadySet('Receive library', entry)
-            continue
-        } else {
-            if (isFallbackToDefault) {
-                currentReceiveLibraryAddress = 'default: ' + currentReceiveLibraryAddress
-            }
-            const diffMessage = createDiffMessage('receive library', entry)
-            diffPrinter(
-                diffMessage,
-                { address: currentReceiveLibraryAddress },
-                { address: entry.config.receiveLibraryConfig.receiveLibrary }
-            )
-            const tx = await oft.setReceiveLibraryPayload(
-                entry.to.eid,
-                entry.config.receiveLibraryConfig.receiveLibrary,
-                Number(entry.config.receiveLibraryConfig.gracePeriod || 0)
-            )
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('Set Receive Library', entry),
-                eid: entry.to.eid,
-            })
+        const diffMessage = createDiffMessage(`receive library timeout`, connection)
+        diffPrinter(
+            diffMessage,
+            { timeout: currTimeoutDisplay },
+            { timeout: connection.config.receiveLibraryTimeoutConfig.expiry }
+        )
+        const tx = oft.setReceiveLibraryTimeoutPayload(
+            connection.to.eid,
+            connection.config.receiveLibraryTimeoutConfig.lib,
+            Number(connection.config.receiveLibraryTimeoutConfig.expiry)
+        )
+        return {
+            payload: tx,
+            description: buildTransactionDescription('Set Receive Library Timeout', connection),
+            eid: connection.to.eid,
         }
-    }
-
-    return txs
-}
-
-export async function createSetEnforcedOptionsTxs(
-    oft: OFT,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.enforcedOptions) {
-            printNotSet('Enforced options', entry)
-            continue
-        }
-
-        const msgTypes = [1, 2]
-        for (const msgType of msgTypes) {
-            const options = getOptionsByMsgType(entry, msgType)
-            const tx = await createTxFromOptions(options, entry, oft, msgType)
-            if (tx) {
-                txs.push({
-                    payload: tx,
-                    description: buildTransactionDescription('Set Enforced Options', entry),
-                    eid: entry.to.eid,
-                })
-            }
-        }
-    }
-
-    return txs
-
-    function getOptionsByMsgType(entry: OAppOmniGraphHardhat['connections'][number], msgType: number): any[] {
-        const options = []
-        for (const enforcedOption of entry.config?.enforcedOptions ?? []) {
-            if (enforcedOption.msgType === msgType) {
-                options.push(enforcedOption)
-            }
-        }
-        return options
     }
 }
 
-export async function createSetSendLibraryTxs(
+export async function createSetReceiveLibraryTx(
     oft: OFT,
     endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    if (!connection.config?.receiveLibraryConfig?.receiveLibrary) {
+        printNotSet('Receive library', connection)
+        return null
+    }
+    const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, connection.to.eid)
+    let currentReceiveLibraryAddress = currentReceiveLibrary[0]
+    const isFallbackToDefault = currentReceiveLibrary[1]
+
+    // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
+    if (
+        currentReceiveLibraryAddress === connection.config.receiveLibraryConfig.receiveLibrary &&
+        !isFallbackToDefault
+    ) {
+        printAlreadySet('Receive library', connection)
+        return null
+    } else {
+        if (isFallbackToDefault) {
+            currentReceiveLibraryAddress = 'default: ' + currentReceiveLibraryAddress
+        }
+        const diffMessage = createDiffMessage('receive library', connection)
+        diffPrinter(
+            diffMessage,
+            { address: currentReceiveLibraryAddress },
+            { address: connection.config.receiveLibraryConfig.receiveLibrary }
+        )
+        const tx = await oft.setReceiveLibraryPayload(
+            connection.to.eid,
+            connection.config.receiveLibraryConfig.receiveLibrary,
+            Number(connection.config.receiveLibraryConfig.gracePeriod || 0)
+        )
+        return {
+            payload: tx,
+            description: buildTransactionDescription('Set Receive Library', connection),
+            eid: connection.to.eid,
+        }
+    }
+}
+
+export async function createSetSendLibraryTx(
+    oft: OFT,
+    endpoint: Endpoint,
+    connection: OAppOmniGraphHardhat['connections'][number]
 ) {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.sendLibrary) {
-            printNotSet('Send library', entry)
-            continue
-        }
-        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
-        let currentSendLibraryAddress = currentSendLibrary[0]
-        const isFallbackToDefault = currentSendLibrary[1]
+    if (!connection.config?.sendLibrary) {
+        printNotSet('Send library', connection)
+        return null
+    }
+    const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, connection.to.eid)
+    let currentSendLibraryAddress = currentSendLibrary[0]
+    const isFallbackToDefault = currentSendLibrary[1]
 
-        // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
-        if (currentSendLibraryAddress === entry.config.sendLibrary && !isFallbackToDefault) {
-            printAlreadySet('Send library', entry)
-            continue
-        } else {
-            if (isFallbackToDefault) {
-                currentSendLibraryAddress = 'default: ' + currentSendLibraryAddress
-            }
-            const diffMessage = createDiffMessage('send library', entry)
-            diffPrinter(diffMessage, { address: currentSendLibraryAddress }, { address: entry.config.sendLibrary })
-            const tx = oft.setSendLibraryPayload(entry.to.eid, entry.config.sendLibrary)
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('Set Send Library', entry),
-                eid: entry.to.eid,
-            })
+    // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
+    if (currentSendLibraryAddress === connection.config.sendLibrary && !isFallbackToDefault) {
+        printAlreadySet('Send library', connection)
+        return null
+    } else {
+        if (isFallbackToDefault) {
+            currentSendLibraryAddress = 'default: ' + currentSendLibraryAddress
+        }
+        const diffMessage = createDiffMessage('send library', connection)
+        diffPrinter(diffMessage, { address: currentSendLibraryAddress }, { address: connection.config.sendLibrary })
+        const tx = oft.setSendLibraryPayload(connection.to.eid, connection.config.sendLibrary)
+        return {
+            payload: tx,
+            description: buildTransactionDescription('Set Send Library', connection),
+            eid: connection.to.eid,
         }
     }
-
-    return txs
 }
 
-export async function createSetSendConfigTxs(
+export async function createSetSendConfigTx(
     oft: OFT,
     endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.sendConfig) {
-            printNotSet('Send config', entry)
-            continue
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    if (!connection.config?.sendConfig) {
+        printNotSet('Send config', connection)
+        return null
+    }
+    if (!connection.config.sendConfig.ulnConfig) {
+        printNotSet('Send config', connection)
+        return null
+    }
+    const newUlnConfig = createSerializableUlnConfig(
+        connection.config.sendConfig.ulnConfig,
+        connection.to,
+        connection.from
+    )
+
+    const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, connection.to.eid)
+    const currentSendLibraryAddress = currentSendLibrary[0]
+
+    const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
+    const defaultUlnConfig = await msgLib.get_default_uln_send_config(connection.to.eid)
+    const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
+
+    const currHexSerializedUlnConfig = await endpoint.getConfig(
+        oft.oft_address,
+        currentSendLibraryAddress,
+        connection.to.eid as EndpointId,
+        ConfigType.SEND_ULN
+    )
+    const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+
+    await checkNewConfig(
+        new MsgLib(oft.moveVMConnection, currentSendLibraryAddress),
+        newUlnConfig,
+        connection,
+        ConfigType.SEND_ULN
+    )
+
+    const serializedCurrentConfig = UlnConfig.serialize(connection.to.eid as EndpointId, currUlnConfig)
+    const newSerializedUlnConfig = UlnConfig.serialize(connection.to.eid as EndpointId, newUlnConfig)
+
+    if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig)) && !newSettingEqualsDefault) {
+        printAlreadySet('Send config', connection)
+        return null
+    } else {
+        if (newSettingEqualsDefault) {
+            currUlnConfig.required_dvns = ['Default:' + defaultUlnConfig.required_dvns.join(',')]
+            currUlnConfig.optional_dvns = ['Default:' + defaultUlnConfig.optional_dvns.join(',')]
+            currUlnConfig.confirmations = defaultUlnConfig.confirmations
         }
-        if (!entry.config.sendConfig.ulnConfig) {
-            printNotSet('Send config', entry)
-            continue
-        }
-        const newUlnConfig = createSerializableUlnConfig(entry.config.sendConfig.ulnConfig, entry.to, entry.from)
+        const diffMessage = createDiffMessage('send config', connection)
+        diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
 
-        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
-        const currentSendLibraryAddress = currentSendLibrary[0]
-        const currHexSerializedUlnConfig = await endpoint.getConfig(
-            oft.oft_address,
-            currentSendLibraryAddress,
-            entry.to.eid as EndpointId,
-            ConfigType.SEND_ULN
-        )
-        const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+        const sendLibAddress = connection.config?.sendLibrary ?? currentSendLibraryAddress
 
-        await checkNewConfig(
-            new MsgLib(oft.moveVMConnection, currentSendLibraryAddress),
-            newUlnConfig,
-            entry,
-            ConfigType.SEND_ULN
-        )
-
-        // We need to re-serialize the current config to compare it with the new config to ensure same format
-        const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
-
-        const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
-
-        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
-            printAlreadySet('Send config', entry)
-            continue
-        } else {
-            const diffMessage = createDiffMessage('send config', entry)
-            diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
-
-            // If the send library config is not set, we use the current send library address
-            const sendLibAddress = entry.config?.sendLibrary ?? currentSendLibraryAddress
-
-            const tx = oft.setConfigPayload(sendLibAddress, ConfigType.SEND_ULN, newSerializedUlnConfig)
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('Set Send Config', entry),
-                eid: entry.to.eid,
-            })
+        const tx = oft.setConfigPayload(sendLibAddress, ConfigType.SEND_ULN, newSerializedUlnConfig)
+        return {
+            payload: tx,
+            description: buildTransactionDescription('Set Send Config', connection),
+            eid: connection.to.eid,
         }
     }
-
-    return txs
 }
 
-export async function createSetReceiveConfigTxs(
-    oft: OFT,
-    endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.receiveConfig) {
-            printNotSet('Receive config', entry)
-            continue
-        }
-        if (!entry.config.receiveConfig.ulnConfig) {
-            printNotSet('Receive ULN config', entry)
-            continue
-        }
-        const newUlnConfig = createSerializableUlnConfig(entry.config.receiveConfig.ulnConfig, entry.to, entry.from)
-
-        const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, entry.to.eid)
-        const currentReceiveLibraryAddress = currentReceiveLibrary[0]
-
-        const currHexSerializedUlnConfig = await endpoint.getConfig(
-            oft.oft_address,
-            currentReceiveLibraryAddress,
-            entry.to.eid as EndpointId,
-            ConfigType.RECV_ULN
-        )
-
-        const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
-
-        await checkNewConfig(
-            new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress),
-            newUlnConfig,
-            entry,
-            ConfigType.RECV_ULN
-        )
-
-        // We need to re-serialize the current config to compare it with the new config to ensure same format
-        const serializedCurrentConfig = UlnConfig.serialize(entry.to.eid as EndpointId, currUlnConfig)
-
-        const newSerializedUlnConfig = UlnConfig.serialize(entry.to.eid as EndpointId, newUlnConfig)
-
-        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig))) {
-            printAlreadySet('Receive config', entry)
-            continue
-        } else {
-            const diffMessage = createDiffMessage('receive config', entry)
-            diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
-
-            // If the receive library config is not set, we use the current receive library address
-            const receiveLibAddress = entry.config?.receiveLibraryConfig?.receiveLibrary ?? currentReceiveLibraryAddress
-
-            const tx = oft.setConfigPayload(receiveLibAddress, ConfigType.RECV_ULN, newSerializedUlnConfig)
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('Set Receive Config', entry),
-                eid: entry.to.eid,
-            })
-        }
-    }
-
-    return txs
+function checkUlnConfigEqualsDefault(newUlnConfig: UlnConfig, defaultUlnConfig: UlnConfig): boolean {
+    return (
+        newUlnConfig.confirmations === defaultUlnConfig.confirmations &&
+        newUlnConfig.optional_dvn_threshold === defaultUlnConfig.optional_dvn_threshold &&
+        JSON.stringify(newUlnConfig.optional_dvns.sort()) === JSON.stringify(defaultUlnConfig.optional_dvns.sort()) &&
+        JSON.stringify(newUlnConfig.required_dvns.sort()) === JSON.stringify(defaultUlnConfig.required_dvns.sort()) &&
+        newUlnConfig.use_default_for_confirmations === defaultUlnConfig.use_default_for_confirmations &&
+        newUlnConfig.use_default_for_required_dvns === defaultUlnConfig.use_default_for_required_dvns &&
+        newUlnConfig.use_default_for_optional_dvns === defaultUlnConfig.use_default_for_optional_dvns
+    )
 }
 
-export async function createSetExecutorConfigTxs(
+export async function createSetReceiveConfigTx(
     oft: OFT,
     endpoint: Endpoint,
-    connections: OAppOmniGraphHardhat['connections']
-): Promise<TransactionPayload[]> {
-    const txs = []
-    for (const entry of connections) {
-        if (!entry.config?.sendConfig?.executorConfig) {
-            printNotSet('Executor config', entry)
-            continue
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    if (!connection.config?.receiveConfig) {
+        printNotSet('Receive config', connection)
+        return null
+    }
+    if (!connection.config.receiveConfig.ulnConfig) {
+        printNotSet('Receive ULN config', connection)
+        return null
+    }
+    const newUlnConfig = createSerializableUlnConfig(
+        connection.config.receiveConfig.ulnConfig,
+        connection.to,
+        connection.from
+    )
+
+    const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, connection.to.eid)
+    const currentReceiveLibraryAddress = currentReceiveLibrary[0]
+
+    const msgLib = new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress)
+    const defaultUlnConfig = await msgLib.get_default_uln_receive_config(connection.to.eid)
+    const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
+
+    const currHexSerializedUlnConfig = await endpoint.getConfig(
+        oft.oft_address,
+        currentReceiveLibraryAddress,
+        connection.to.eid as EndpointId,
+        ConfigType.RECV_ULN
+    )
+
+    const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
+
+    await checkNewConfig(
+        new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress),
+        newUlnConfig,
+        connection,
+        ConfigType.RECV_ULN
+    )
+
+    const serializedCurrentConfig = UlnConfig.serialize(connection.to.eid as EndpointId, currUlnConfig)
+    const newSerializedUlnConfig = UlnConfig.serialize(connection.to.eid as EndpointId, newUlnConfig)
+
+    if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig)) && !newSettingEqualsDefault) {
+        printAlreadySet('Receive config', connection)
+        return null
+    } else {
+        if (newSettingEqualsDefault) {
+            currUlnConfig.required_dvns = ['Default:' + defaultUlnConfig.required_dvns.join(',')]
+            currUlnConfig.optional_dvns = ['Default:' + defaultUlnConfig.optional_dvns.join(',')]
+            currUlnConfig.confirmations = defaultUlnConfig.confirmations
         }
-        const newExecutorConfig = createSerializableExecutorConfig(entry.config.sendConfig.executorConfig)
-        const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, entry.to.eid)
-        const currentSendLibraryAddress = currentSendLibrary[0]
+        const diffMessage = createDiffMessage('receive config', connection)
+        diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
 
-        const currHexSerializedExecutorConfig = await endpoint.getConfig(
-            oft.oft_address,
-            currentSendLibraryAddress,
-            entry.to.eid as EndpointId,
-            ConfigType.EXECUTOR
-        )
+        const receiveLibAddress =
+            connection.config?.receiveLibraryConfig?.receiveLibrary ?? currentReceiveLibraryAddress
 
-        const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
-        currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address
-        // We need to re-serialize the current config to compare it with the new config to ensure same format
-        const serializedCurrentConfig = ExecutorConfig.serialize(entry.to.eid as EndpointId, currExecutorConfig)
-
-        const newSerializedExecutorConfig = ExecutorConfig.serialize(entry.to.eid as EndpointId, newExecutorConfig)
-
-        if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig))) {
-            printAlreadySet('Executor config', entry)
-            continue
-        } else {
-            const diffMessage = createDiffMessage('executor config', entry)
-            diffPrinter(diffMessage, currExecutorConfig, newExecutorConfig)
-
-            const sendLibrary = entry.config.sendLibrary ?? currentSendLibraryAddress
-
-            const tx = oft.setConfigPayload(sendLibrary, ConfigType.EXECUTOR, newSerializedExecutorConfig)
-            txs.push({
-                payload: tx,
-                description: buildTransactionDescription('setExecutorConfig', entry),
-                eid: entry.to.eid,
-            })
+        const tx = oft.setConfigPayload(receiveLibAddress, ConfigType.RECV_ULN, newSerializedUlnConfig)
+        return {
+            payload: tx,
+            description: buildTransactionDescription('Set Receive Config', connection),
+            eid: connection.to.eid,
         }
     }
+}
 
-    return txs
+export async function checkExecutorConfigEqualsDefault(
+    msgLib: MsgLib,
+    newExecutorConfig: ExecutorConfig,
+    eid: EndpointId
+): Promise<boolean> {
+    const defaultExecutorConfig = await msgLib.get_default_executor_config(eid)
+    return (
+        newExecutorConfig.executor_address === defaultExecutorConfig.executor_address &&
+        newExecutorConfig.max_message_size === defaultExecutorConfig.max_message_size
+    )
+}
+
+export async function createSetExecutorConfigTx(
+    oft: OFT,
+    endpoint: Endpoint,
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload | null> {
+    if (!connection.config?.sendConfig?.executorConfig) {
+        printNotSet('Executor config', connection)
+        return null
+    }
+    const newExecutorConfig = createSerializableExecutorConfig(connection.config.sendConfig.executorConfig)
+    const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, connection.to.eid)
+    const currentSendLibraryAddress = currentSendLibrary[0]
+
+    const currHexSerializedExecutorConfig = await endpoint.getConfig(
+        oft.oft_address,
+        currentSendLibraryAddress,
+        connection.to.eid as EndpointId,
+        ConfigType.EXECUTOR
+    )
+
+    const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
+    const defaultExecutorConfig = await msgLib.get_default_executor_config(connection.to.eid)
+    const newSettingEqualsDefault = await checkExecutorConfigEqualsDefault(msgLib, newExecutorConfig, connection.to.eid)
+
+    const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
+    currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address
+    // We need to re-serialize the current config to compare it with the new config to ensure same format
+    const serializedCurrentConfig = ExecutorConfig.serialize(connection.to.eid as EndpointId, currExecutorConfig)
+
+    const newSerializedExecutorConfig = ExecutorConfig.serialize(connection.to.eid as EndpointId, newExecutorConfig)
+
+    if (
+        Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig)) &&
+        !newSettingEqualsDefault
+    ) {
+        printAlreadySet('Executor config', connection)
+        return null
+    } else {
+        if (newSettingEqualsDefault) {
+            currExecutorConfig.executor_address = 'Default:' + defaultExecutorConfig.executor_address
+        }
+        const diffMessage = createDiffMessage('executor config', connection)
+        diffPrinter(diffMessage, currExecutorConfig, newExecutorConfig)
+
+        const sendLibrary = connection.config.sendLibrary ?? currentSendLibraryAddress
+
+        const tx = oft.setConfigPayload(sendLibrary, ConfigType.EXECUTOR, newSerializedExecutorConfig)
+        return {
+            payload: tx,
+            description: buildTransactionDescription('setExecutorConfig', connection),
+            eid: connection.to.eid,
+        }
+    }
 }
 
 export async function createSetRateLimitTx(
@@ -537,6 +528,41 @@ function addOptions(enforcedOption: any, options: Options) {
     } else if (enforcedOption.optionType === ExecutorOptionType.LZ_READ) {
         options.addExecutorLzReadOption(enforcedOption.gas, enforcedOption.value)
     }
+}
+
+export async function createSetEnforcedOptionsTxs(
+    oft: OFT,
+    connection: OAppOmniGraphHardhat['connections'][number]
+): Promise<TransactionPayload[]> {
+    const txs: TransactionPayload[] = []
+    if (!connection.config?.enforcedOptions) {
+        printNotSet('Enforced options', connection)
+        return []
+    }
+
+    const msgTypes = [1, 2]
+    for (const msgType of msgTypes) {
+        const options = getOptionsByMsgType(connection, msgType)
+        const tx = await createTxFromOptions(options, connection, oft, msgType)
+        if (tx) {
+            txs.push({
+                payload: tx,
+                description: buildTransactionDescription('Set Enforced Options', connection),
+                eid: connection.to.eid,
+            })
+        }
+    }
+    return txs
+}
+
+function getOptionsByMsgType(entry: OAppOmniGraphHardhat['connections'][number], msgType: number): any[] {
+    const options = []
+    for (const enforcedOption of entry.config?.enforcedOptions ?? []) {
+        if (enforcedOption.msgType === msgType) {
+            options.push(enforcedOption)
+        }
+    }
+    return options
 }
 
 async function createTxFromOptions(
@@ -656,14 +682,14 @@ function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig):
 function createDiffMessage(elementDesc: string, entry: OAppOmniGraphHardhat['connections'][number]) {
     const toNetwork = getNetworkForChainId(entry.to.eid)
     const fromNetwork = getNetworkForChainId(entry.from.eid)
-    return `Set ${elementDesc} for pathway ${entry.from.contractName} on ${fromNetwork.chainName}-${fromNetwork.env} -> ${toNetwork.chainName}-${toNetwork.env}`
+    return `Set ${elementDesc} for pathway ${entry.from.contractName} on ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}`
 }
 
 function printAlreadySet(configObject: string, entry: OAppOmniGraphHardhat['connections'][number]) {
     const toNetwork = getNetworkForChainId(entry.to.eid)
     const fromNetwork = getNetworkForChainId(entry.from.eid)
     console.log(
-        `✅ ${configObject} already set or pathway ${fromNetwork.chainName}-${fromNetwork.env} -> ${toNetwork.chainName}-${toNetwork.env}\n`
+        `✅ ${configObject} already set or pathway ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}\n`
     )
 }
 
@@ -671,19 +697,19 @@ function printNotSet(configObject: string, entry: OAppOmniGraphHardhat['connecti
     const toNetwork = getNetworkForChainId(entry.to.eid)
     const fromNetwork = getNetworkForChainId(entry.from.eid)
     console.log(
-        `No ${configObject} specified for pathway ${fromNetwork.chainName}-${fromNetwork.env} -> ${toNetwork.chainName}-${toNetwork.env}\n`
+        `No ${configObject} specified for pathway ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}\n`
     )
 }
 
 function createWarningMessage(configType: ConfigType, entry: OAppOmniGraphHardhat['connections'][number]) {
     const fromNetwork = getNetworkForChainId(entry.from.eid)
     const toNetwork = getNetworkForChainId(entry.to.eid)
-    return `⚠️ WARN: ${configTypeToNameMap[configType]} config for ${fromNetwork.chainName}-${fromNetwork.env} -> ${toNetwork.chainName}-${toNetwork.env}`
+    return `⚠️ WARN: ${configTypeToNameMap[configType]} config for ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}`
 }
 
 function buildTransactionDescription(action: string, connections: OAppOmniGraphHardhat['connections'][number]): string {
     const fromNetwork = getNetworkForChainId(connections.from.eid)
     const toNetwork = getNetworkForChainId(connections.to.eid)
 
-    return `${action} from ${fromNetwork.chainName}-${fromNetwork.env} -> ${toNetwork.chainName}-${toNetwork.env}`
+    return `${action} from ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}`
 }
