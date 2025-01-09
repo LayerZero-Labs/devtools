@@ -45,41 +45,45 @@ export async function createSetReceiveConfigTransactions(
 
         const newReceiveConfig = buildConfig(ulnConfig)
 
-        const diffFromOptions: Record<number, string> = {}
-        const diffToOptions: Record<number, string> = {}
-        const setConfigParam: SetConfigParam[] = []
+        let diffFromOptions: string | undefined
+        let diffToOptions: string | undefined
+
+        const setFromConfigParam: SetConfigParam[] = []
+        const setToConfigParam: SetConfigParam[] = []
 
         if (currReceiveConfig.ulnConfigBytes === newReceiveConfig.ulnConfigBytes) {
             console.log(
                 `\x1b[43m Skipping: The same uln receive library config has been set for ${eid} @ ${address.oapp} \x1b[0m`
             )
         } else {
-            diffFromOptions[2] = currReceiveConfig.ulnConfigBytes
-            diffToOptions[2] = newReceiveConfig.ulnConfigBytes
+            diffFromOptions = currReceiveConfig.ulnConfigBytes
+            diffToOptions = newReceiveConfig.ulnConfigBytes
 
-            setConfigParam.push({
+            setFromConfigParam.push({
                 eid: nonEvmOapp.eid,
                 configType: 2,
-                config: newReceiveConfig.ulnConfigBytes,
+                config: diffFromOptions,
+            })
+
+            setToConfigParam.push({
+                eid: nonEvmOapp.eid,
+                configType: 2,
+                config: diffToOptions,
             })
         }
 
-        if (setConfigParam.length === 0) {
+        if (setFromConfigParam.length === 0) {
             continue
         }
 
-        diffPrinter(`Setting Receive Config on ${eid}`, diffFromOptions, diffToOptions)
+        const decodedSetFromConfigParam = decodeConfig(setFromConfigParam)
+        const decodedSetToConfigParam = decodeConfig(setToConfigParam)
 
-        const currReceiveConfigParam: SetConfigParam[] = []
-        currReceiveConfigParam.push({
-            eid: nonEvmOapp.eid,
-            configType: 2,
-            config: currReceiveConfig.ulnConfigBytes,
-        })
+        if (decodedSetFromConfigParam && decodedSetToConfigParam) {
+            diffPrinter(`Setting Receive Config on ${eid}`, decodedSetFromConfigParam, decodedSetToConfigParam)
+        }
 
-        decodeConfig(setConfigParam)
-
-        const tx = await setConfig(contract.epv2, address.oapp, currReceiveLibrary.currReceiveLibrary, setConfigParam)
+        const tx = await setConfig(contract.epv2, address.oapp, currReceiveLibrary.currReceiveLibrary, setToConfigParam)
 
         txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
