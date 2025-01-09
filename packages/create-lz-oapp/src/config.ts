@@ -125,34 +125,20 @@ export const getExamples = (): Example[] => {
             : []),
 
         // The Aptos examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_APTOS_EXAMPLES
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
             ? [
                   {
-                      id: 'oft-aptos',
+                      id: 'oft-move',
                       label: 'OFT (Aptos Fungible Asset)',
                       repository,
                       directory: 'examples/oft-aptos',
                       ref,
                   },
                   {
-                      id: 'oft-adapter-aptos',
+                      id: 'oft-adapter-move',
                       label: 'OFT Adapter (Aptos Fungible Asset)',
                       repository,
                       directory: 'examples/oft-adapter-aptos',
-                      ref,
-                  },
-                  {
-                      id: 'oft-adapter-aptos-coin',
-                      label: 'OFT Adapter (Aptos Coin)',
-                      repository,
-                      directory: 'examples/oft-adapter-aptos-coin',
-                      ref,
-                  },
-                  {
-                      id: 'oft-aptos-coin',
-                      label: 'OFT (Aptos Coin)',
-                      repository,
-                      directory: 'examples/oft-aptos-coin',
                       ref,
                   },
               ]
