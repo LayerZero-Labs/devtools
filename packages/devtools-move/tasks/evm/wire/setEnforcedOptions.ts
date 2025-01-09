@@ -1,10 +1,18 @@
 import { Contract } from 'ethers'
 
-import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
+import {
+    ComposeOption,
+    ExecutorLzReceiveOption,
+    ExecutorNativeDropOption,
+    ExecutorOptionType,
+    Options,
+} from '@layerzerolabs/lz-v2-utilities'
 
 import { diffPrinter } from '../../shared/utils'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, enforcedOptionParam } from '../utils/types'
+
+type optionTypes = boolean | ExecutorLzReceiveOption | ExecutorNativeDropOption | ComposeOption | undefined
 
 /**
  * @notice Sets EnforcedOptions for a contract.
@@ -65,7 +73,30 @@ export async function createSetEnforcedOptionsTransactions(
                     options: newOptions,
                 })
 
-                diffPrinter(`Setting Enforced Options on ${eid}`, diffcurrOptions, diffnewOptions)
+                const currOptionsDecoded: Record<string, optionTypes> = {}
+                const newOptionsDecoded: Record<string, optionTypes> = {}
+                const optionTypeCount = Object.keys(ExecutorOptionType).length / 2
+
+                for (let i = 1; i <= optionTypeCount; i++) {
+                    const currOption = decodeOptionsByMsgType(currOptions, i)
+                    const newOption = decodeOptionsByMsgType(newOptions, i)
+
+                    if (typeof currOption === 'object' && typeof newOption === 'object') {
+                        const newOptionKeys = Object.keys(newOption)
+
+                        if (newOptionKeys.length > 0) {
+                            const optionTypeName = ExecutorOptionType[i]
+                            currOptionsDecoded[`${optionTypeName}`] = currOption
+                            newOptionsDecoded[`${optionTypeName}`] = newOption
+                        }
+                    }
+                }
+
+                diffPrinter(
+                    `Setting Enforced Options on eid: ${eid} - msgType: ${msgType}`,
+                    currOptionsDecoded,
+                    newOptionsDecoded
+                )
 
                 const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
 
@@ -102,6 +133,25 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
     }
 
     return baseOptions
+}
+
+function decodeOptionsByMsgType(baseOption: string, msgType: number): optionTypes {
+    const options = Options.fromOptions(baseOption)
+
+    switch (msgType) {
+        case ExecutorOptionType.LZ_RECEIVE:
+            return options.decodeExecutorLzReceiveOption()
+        case ExecutorOptionType.NATIVE_DROP:
+            return options.decodeExecutorNativeDropOption()
+        case ExecutorOptionType.COMPOSE:
+            return options.decodeExecutorComposeOption()
+        case ExecutorOptionType.ORDERED:
+            return options.decodeExecutorOrderedExecutionOption()
+        case ExecutorOptionType.LZ_READ:
+            return options.decodeExecutorLzReadOption()
+        default:
+            throw new Error(`Unknown option type: ${msgType}`)
+    }
 }
 
 export async function getEnforcedOption(oappContract: Contract, eid: string, msgTypes: number): Promise<string> {
