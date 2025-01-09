@@ -101,8 +101,7 @@ export async function sendAllTxs(
     account_address: string,
     payloads: (TransactionPayload | null)[]
 ) {
-    let cleanedPayloads = pruneNulls(payloads)
-    cleanedPayloads = sortByEid(cleanedPayloads)
+    const cleanedPayloads = pruneNulls(payloads)
 
     if (cleanedPayloads.length == 0) {
         console.log('✨ No transactions to send.')
@@ -131,27 +130,6 @@ export async function sendAllTxs(
         console.log('Operation cancelled.')
         process.exit(0)
     }
-}
-
-function sortByEid(payloads: TransactionPayload[]): TransactionPayload[] {
-    // Get unique eids in order of first appearance
-    const eids = [...new Set(payloads.map((p) => p.eid))]
-
-    // Group by eid while maintaining order
-    const sortedPayloads: Dictionary<TransactionPayload[]> = {}
-    for (const payload of payloads) {
-        if (!sortedPayloads[payload.eid]) {
-            sortedPayloads[payload.eid] = []
-        }
-        sortedPayloads[payload.eid].push(payload)
-    }
-
-    // Concatenate groups in order of first eid appearance
-    return eids.flatMap((eid) => sortedPayloads[eid])
-}
-
-type Dictionary<T> = {
-    [key: string]: T
 }
 
 function pruneNulls(payloads: (TransactionPayload | null)[]): TransactionPayload[] {
