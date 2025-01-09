@@ -135,10 +135,13 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
             const mint = new PublicKey(mintStr)
             const newMintAuthority = await createMintAuthorityMultisig(
                 connection,
-                toWeb3JsKeypair(umiWalletSigner),
+                umi,
+                eid,
+                umiWalletSigner,
                 new PublicKey(oftStorePda.toString()),
                 new PublicKey(tokenProgram.toString()),
-                additionalMinters
+                additionalMinters,
+                computeUnitPriceScaleFactor
             )
             console.log(`New Mint Authority: ${newMintAuthority.toBase58()}`)
             const signers = await checkMultisigSigners(connection, newMintAuthority, [
