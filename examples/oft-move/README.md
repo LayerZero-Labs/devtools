@@ -119,6 +119,32 @@ For Move-VM:
 pnpm run lz:sdk:move:wire --lz-config move.layerzero.config.ts
 ```
 
+## Set Fee
+
+```bash
+pnpm run lz:sdk:move:set-fee --lz-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
+```
+
+## Set Rate Limit
+
+```bash
+pnpm run lz:sdk:move:set-rate-limit --lz-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
+```
+
+## Unset Rate Limit
+
+```bash
+pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-eid number
+```
+
+## Irrevocably Disable Blocklist
+
+Warning: This will irrevocably disable the blocklist for the OFT.
+It is for OFTs that want to demonstrate to their holders that they will not ever use the blocklists.
+```bash
+pnpm run lz:sdk:move:irrevocably-disable-blocklist --lz-config move.layerzero.config.ts
+```
+
 ## Help
 
 ```bash

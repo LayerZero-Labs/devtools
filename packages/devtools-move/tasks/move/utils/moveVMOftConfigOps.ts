@@ -20,7 +20,7 @@ import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/
 export type TransactionPayload = {
     payload: InputGenerateTransactionPayloadData
     description: string
-    eid: EndpointId
+    eid?: EndpointId
 }
 
 // Configuration Types as used in Aptos Message Libraries
@@ -472,6 +472,16 @@ export async function createSetRateLimitTx(
     }
 }
 
+export async function createUnsetRateLimitTx(oft: OFT, eid: EndpointId): Promise<TransactionPayload | null> {
+    const tx = oft.createUnsetRateLimitTx(eid)
+    const toNetwork = getNetworkForChainId(eid)
+    return {
+        payload: tx,
+        description: `Unset rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
+        eid: eid,
+    }
+}
+
 export async function createSetFeeBpsTx(
     oft: OFT,
     fee_bps: bigint,
@@ -668,6 +678,22 @@ async function checkNewConfig(
                 `\tConfig has less than ${defaultConfirmations} block confirmations.\n\tWe recommend setting at least ${defaultConfirmations} block confirmations.\n`
             )
         }
+    }
+}
+
+export function createIrrevocablyDisableBlocklistPayload(oft: OFT): TransactionPayload {
+    const payload = oft.irrevocablyDisableBlocklistPayload()
+    return {
+        payload: payload,
+        description: `Irrevocably Disable Blocklist`,
+    }
+}
+
+export function createPermanentlyDisableFungibleStoreFreezingPayload(oft: OFT): TransactionPayload {
+    const payload = oft.permanentlyDisableFungibleStoreFreezingPayload()
+    return {
+        payload: payload,
+        description: `Permanently Disable Freezing`,
     }
 }
 
