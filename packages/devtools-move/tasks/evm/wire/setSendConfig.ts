@@ -93,8 +93,6 @@ export async function createSetSendConfigTransactions(
             continue
         }
 
-        diffPrinter(`Setting Send Config on ${eid}`, diffFromOptions, diffToOptions)
-
         const currSendConfigParam: SetConfigParam[] = []
         currSendConfigParam.push({
             eid: nonEvmOapp.eid,
@@ -107,7 +105,12 @@ export async function createSetSendConfigTransactions(
             config: currSendConfig.ulnConfigBytes,
         })
 
-        decodeConfig(setConfigParam)
+        const decodedSetConfigParam = decodeConfig(setConfigParam)
+        const decodedCurrSendConfigParam = decodeConfig(currSendConfigParam)
+
+        if (decodedCurrSendConfigParam && decodedSetConfigParam) {
+            diffPrinter(`Setting Send Config on ${eid}`, decodedCurrSendConfigParam, decodedSetConfigParam)
+        }
 
         const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.currSendLibrary, setConfigParam)
 
