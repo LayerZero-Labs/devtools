@@ -225,5 +225,5 @@ export async function promptForConfirmation(txCount: number): Promise<boolean> {
     })
 
     rl.close()
-    return answer.toLowerCase() === 'yes'
+    return ['yes', 'y'].includes(answer.toLowerCase().trim())
 }

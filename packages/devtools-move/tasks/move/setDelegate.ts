@@ -2,7 +2,7 @@ import path from 'path'
 import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 
-import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
@@ -25,7 +25,7 @@ async function executeSetDelegate(args: any, useAccountAddress: boolean = false)
 
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const eid = getEidFromAptosNetwork('aptos', network)
+    const eid = getEidFromMoveNetwork('aptos', network)
     const delegate = useAccountAddress ? account_address : getDelegateFromLzConfig(eid, lzConfig)
 
     const setDelegatePayload = await setDelegate(oft, delegate, eid)
