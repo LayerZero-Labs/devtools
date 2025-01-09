@@ -130,6 +130,9 @@ pnpm run lz:sdk:move:set-fee --lz-config move.layerzero.config.ts --fee-bps 1000
 ```bash
 pnpm run lz:sdk:move:set-rate-limit --lz-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
 ```
+Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
+For example if the rate limit from Aptos to EVM is 100 tokens you can send 100 tokens from Aptos to EVM, however if you receive 50 tokens from EVM to Aptos you are then able to send 150 tokens from Aptos to EVM.
+Window is the number of seconds over which the capacity is restored. If the rate limit is 1000 and window is 10 seconds, then each second you get 100 (1000/10) capacity back. The units of the rate limit are the tokens in local decimals.
 
 ## Unset Rate Limit
 
@@ -148,7 +151,7 @@ pnpm run lz:sdk:move:irrevocably-disable-blocklist --lz-config move.layerzero.co
 ## Irrevocably Disable Freezing
 
 Warning: This will irrevocably disable the freezing for the OFT.
-It is for OFTs that want to demonstrate to their holders that they will never use the freezing.
+It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
 pnpm run lz:sdk:move:irrevocably-disable-freezing --lz-config move.layerzero.config.ts
