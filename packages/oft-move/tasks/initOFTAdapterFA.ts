@@ -2,7 +2,7 @@ import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVM
 import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 
 import {
-    getEidFromAptosNetwork,
+    getEidFromMoveNetwork,
     getLzNetworkStage,
     parseYaml,
 } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
@@ -27,7 +27,7 @@ async function initOFTAdapterFA(move_vm_fa_address: string, shared_decimals: num
 
     const initializePayload = oft.initializeAdapterFAPayload(move_vm_fa_address, shared_decimals)
 
-    const eid = getEidFromAptosNetwork(chain, network)
+    const eid = getEidFromMoveNetwork(chain, network)
     const payloads = [{ payload: initializePayload, description: `Initialize ${chain} OFT`, eid }]
 
     sendInitTransaction(moveVMConnection, oft, account_address, payloads)
