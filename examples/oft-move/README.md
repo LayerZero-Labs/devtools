@@ -140,9 +140,18 @@ pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-
 ## Irrevocably Disable Blocklist
 
 Warning: This will irrevocably disable the blocklist for the OFT.
-It is for OFTs that want to demonstrate to their holders that they will not ever use the blocklists.
+It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 ```bash
 pnpm run lz:sdk:move:irrevocably-disable-blocklist --lz-config move.layerzero.config.ts
+```
+
+## Irrevocably Disable Freezing
+
+Warning: This will irrevocably disable the freezing for the OFT.
+It is for OFTs that want to demonstrate to their holders that they will never use the freezing.
+
+```bash
+pnpm run lz:sdk:move:irrevocably-disable-freezing --lz-config move.layerzero.config.ts
 ```
 
 ## Help
