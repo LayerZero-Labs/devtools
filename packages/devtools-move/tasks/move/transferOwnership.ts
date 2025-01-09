@@ -2,7 +2,7 @@ import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
 
 import { OFT } from '../../sdk/oft'
 
-import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { setDelegate, transferOwner } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, getOwnerFromLzConfig, sendAllTxs } from './utils/utils'
 import path from 'path'
@@ -26,7 +26,7 @@ async function transferOwnership(args: any) {
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
-    const eid = getEidFromAptosNetwork('aptos', network)
+    const eid = getEidFromMoveNetwork('aptos', network)
     const delegate = getDelegateFromLzConfig(eid, lzConfig)
     const owner = getOwnerFromLzConfig(eid, lzConfig)
 

@@ -13,6 +13,11 @@ const aptosContract: OmniPointHardhat = {
     contractName: 'oft',
 }
 
+const ethContract: OmniPointHardhat = {
+    eid: EndpointId.ETHEREUM_V2_TESTNET,
+    contractName: 'MyOFT',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -23,14 +28,41 @@ const config: OAppOmniGraphHardhat = {
             },
         },
         {
+            contract: ethContract,
+            config: {
+                owner: '0xEa3115C2aD19261E88AAc06e66ac5AFACb724b10',
+                delegate: '0xEa3115C2aD19261E88AAc06e66ac5AFACb724b10',
+            },
+        },
+        {
             contract: aptosContract,
             config: {
-                delegate: '69b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
+                delegate: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
                 owner: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
             },
         },
     ],
     connections: [
+        {
+            from: aptosContract,
+            to: ethContract,
+            config: {
+                enforcedOptions: [
+                    {
+                        msgType: 1,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 80000, // gas limit in wei for EndpointV2.lzReceive
+                        value: 0, // msg.value in wei for EndpointV2.lzReceive
+                    },
+                    {
+                        msgType: 2,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 80000, // gas limit in wei for EndpointV2.lzCompose
+                        value: 0, // msg.value in wei for EndpointV2.lzCompose
+                    },
+                ],
+            },
+        },
         {
             from: aptosContract,
             to: bscContract,

@@ -76,7 +76,7 @@ class HelpOperation implements INewOperation {
                 const reqArgs = vm_op[op_function].requiredArgs.join(' --')
                 const reqArgsFormatted = reqArgs.replace(/_/g, '-')
                 console.log('--op', op_function, '--' + reqArgsFormatted)
-                console.log('Description:', vm_op[op_function].description, '\n')
+                console.log('\tDescription:', vm_op[op_function].description, '\n')
             }
         }
     }

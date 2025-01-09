@@ -1,5 +1,5 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
-import { wireMove } from '../../tasks/move/wire'
+import { wireMove } from '../../tasks/move/wireMove'
 
 class MoveWireOperation implements INewOperation {
     vm = 'move'

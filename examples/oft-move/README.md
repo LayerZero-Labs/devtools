@@ -67,10 +67,10 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
-## Init
+## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
 
@@ -93,10 +93,14 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
     ],
 ```
 
-Then run the following command:
+Then run the following commands:
 
 ```bash
 pnpm run lz:sdk:move:init-fa --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+```
+
+```bash
+pnpm run lz:sdk:move:set-delegate --lz-config move.layerzero.config.ts
 ```
 
 ## Wire

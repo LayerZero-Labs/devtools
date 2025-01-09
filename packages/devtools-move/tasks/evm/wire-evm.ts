@@ -4,7 +4,7 @@ import { Contract, ethers } from 'ethers'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
-import { getEidFromAptosNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
+import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from '../move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress } from '../move/utils/utils'
 import { createEidToNetworkMapping, getConfigConnections, getHHAccountConfig } from '../shared/utils'
 
@@ -42,7 +42,7 @@ async function wireEvm(args: any) {
     }
 
     const { network } = await parseYaml()
-    const EID_APTOS = getEidFromAptosNetwork('aptos', network)
+    const EID_APTOS = getEidFromMoveNetwork('aptos', network)
     const globalConfigPath = path.resolve(path.join(args.rootDir, args.lz_config))
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = await getConfigConnections('to', EID_APTOS, globalConfigPath)

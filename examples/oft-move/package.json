@@ -18,7 +18,7 @@
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
     "lz:sdk:move:init-fa": "ts-node scripts/cli.ts --vm move --op init-fa",
-    "lz:sdk:move:quoteSend": "ts-node scripts/cli.ts --vm move --op quoteSend",
+    "lz:sdk:move:quote-send-move-oft": "ts-node scripts/cli.ts --vm move --op quote-send-move-oft",
     "lz:sdk:move:set-delegate": "ts-node scripts/cli.ts --vm move --op set-delegate",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
