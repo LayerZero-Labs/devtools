@@ -4,7 +4,7 @@ import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 
 import { loadAptosYamlConfig } from './config'
 
-export function getEidFromAptosNetwork(chain: string, networkStage: AptosNetworkStage): number {
+export function getEidFromMoveNetwork(chain: string, networkStage: AptosNetworkStage): number {
     if (chain === 'aptos') {
         if (networkStage === AptosNetworkStage.MAINNET || networkStage.toLowerCase() === 'mainnet') {
             return EndpointId.APTOS_V2_MAINNET

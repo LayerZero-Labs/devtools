@@ -21,12 +21,12 @@ class AptosEVMCLI {
         const missingArgs: string[] = []
         for (const arg of args) {
             if (!this.args[arg]) {
-                missingArgs.push(`--${arg}=<value>`)
+                missingArgs.push(`--${arg.replace('_', '-')}=<value>`)
                 isValid = false
             }
         }
         if (!isValid) {
-            throw new Error(`The following args are required: ${missingArgs.join(', ')}`)
+            throw new Error(`The following args are required: ${missingArgs.join(', ')}\n\n`)
         }
         return isValid
     }
@@ -74,8 +74,9 @@ class AptosEVMCLI {
         if (!exec_op) {
             throw new Error(`Operation ${op} is not valid for ${vm}`)
         }
-        this.validateArgs(exec_op.requiredArgs)
-        await exec_op.func(this.args)
+        if (this.validateArgs(exec_op.requiredArgs)) {
+            await exec_op.func(this.args)
+        }
     }
 }
 

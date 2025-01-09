@@ -10,7 +10,15 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "test": "$npm_execpath jest"
+  },
+  "dependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/jest": "^29.5.12",
+    "chai": "^4.4.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5"
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",

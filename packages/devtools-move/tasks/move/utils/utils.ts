@@ -105,7 +105,7 @@ export async function sendAllTxs(
     cleanedPayloads = sortByEid(cleanedPayloads)
 
     if (cleanedPayloads.length == 0) {
-        console.log('No transactions to send.')
+        console.log('✨ No transactions to send.')
         return
     }
     if (await promptForConfirmation(cleanedPayloads.length)) {
@@ -134,7 +134,6 @@ export async function sendAllTxs(
 }
 
 function sortByEid(payloads: TransactionPayload[]): TransactionPayload[] {
-    // Get unique eids in order of first appearance
     // Get unique eids in order of first appearance
     const eids = [...new Set(payloads.map((p) => p.eid))]
 
@@ -173,7 +172,7 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
     })
 
     rl.close()
-    return answer.toLowerCase() === 'yes'
+    return ['yes', 'y'].includes(answer.toLowerCase().trim())
 }
 
 export async function sendInitTransaction(

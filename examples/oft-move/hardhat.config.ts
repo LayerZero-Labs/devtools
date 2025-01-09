@@ -62,6 +62,11 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_APTOS_TESTNET || 'https://rpc.ankr.com/http/aptos_testnet/v1[1]',
             accounts,
         },
+        'eth-testnet': {
+            eid: EndpointId.ETHEREUM_V2_TESTNET.valueOf(),
+            url: process.env.RPC_URL_ETHEREUM_TESTNET || 'https://sepolia.infura.io/v3/',
+            accounts,
+        },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
