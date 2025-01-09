@@ -1,7 +1,76 @@
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID, createMultisig } from '@solana/spl-token'
-import { Connection, PublicKey, Signer } from '@solana/web3.js'
+import { createAccount, initializeMultisig } from '@metaplex-foundation/mpl-toolbox'
+import {
+    KeypairSigner,
+    Umi,
+    createSignerFromKeypair,
+    transactionBuilder,
+    publicKey as umiPublicKey,
+} from '@metaplex-foundation/umi'
+import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { MULTISIG_SIZE, TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { Connection, PublicKey } from '@solana/web3.js'
+import bs58 from 'bs58'
+
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { assertAccountInitialized } from './utils'
+
+import { addComputeUnitInstructions, getExplorerTxLink } from '.'
+
+export async function createMultisig(
+    connection: Connection,
+    umi: Umi,
+    eid: EndpointId,
+    umiWalletSigner: KeypairSigner,
+    signers: PublicKey[],
+    m: number,
+    keypair = umi.eddsa.generateKeypair(),
+    programId = TOKEN_PROGRAM_ID,
+    computeUnitPriceScaleFactor?: number
+): Promise<PublicKey> {
+    let txBuilder = transactionBuilder()
+        .add(
+            createAccount(umi, {
+                newAccount: createSignerFromKeypair(umi, keypair),
+                lamports: await umi.rpc.getRent(MULTISIG_SIZE),
+                space: MULTISIG_SIZE,
+                programId: umiPublicKey(programId.toBase58()),
+            })
+        )
+        .add(
+            initializeMultisig(umi, {
+                multisig: keypair.publicKey,
+                rent: undefined,
+                m,
+            }).addRemainingAccounts(
+                signers.map((signer) => ({
+                    pubkey: umiPublicKey(signer.toBase58()),
+                    isWritable: false,
+                    isSigner: false,
+                }))
+            )
+        )
+
+    if (computeUnitPriceScaleFactor) {
+        txBuilder = await addComputeUnitInstructions(
+            connection,
+            umi,
+            eid,
+            txBuilder,
+            umiWalletSigner,
+            computeUnitPriceScaleFactor
+        )
+    }
+
+    const multisigPublicKey = toWeb3JsPublicKey(keypair.publicKey)
+
+    const tx = await txBuilder.sendAndConfirm(umi)
+    await assertAccountInitialized(connection, multisigPublicKey)
+    const isTestnet = eid == EndpointId.SOLANA_V2_TESTNET
+    console.log(`createMultisigTx: ${getExplorerTxLink(bs58.encode(tx.signature), isTestnet)}`)
+
+    return multisigPublicKey
+}
 
 /**
  * Creates a (1/N) multisig account for use as the mint authority.
@@ -13,22 +82,24 @@ import { assertAccountInitialized } from './utils'
  */
 export const createMintAuthorityMultisig = async (
     connection: Connection,
-    payer: Signer,
+    umi: Umi,
+    eid: EndpointId,
+    umiWalletSigner: KeypairSigner,
     oftStorePda: PublicKey,
     tokenProgramId: PublicKey = TOKEN_PROGRAM_ID,
-    additionalSigners: PublicKey[]
+    additionalSigners: PublicKey[],
+    computeUnitPriceScaleFactor: number
 ) => {
     return createMultisig(
         connection,
-        payer,
+        umi,
+        eid,
+        umiWalletSigner,
         [oftStorePda, ...additionalSigners],
         1, // quorum 1/N
         undefined,
-        {
-            commitment: 'confirmed',
-            preflightCommitment: 'confirmed',
-        },
-        tokenProgramId
+        tokenProgramId,
+        computeUnitPriceScaleFactor
     )
 }
 
