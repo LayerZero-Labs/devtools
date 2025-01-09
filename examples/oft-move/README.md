@@ -168,6 +168,4 @@ pnpm run lz:sdk:help
 ```bash
 npx hardhat lz:deploy
 ```
-
 Select only the evm networks (DO NOT SELECT APTOS)
-For deploy script tags use:
