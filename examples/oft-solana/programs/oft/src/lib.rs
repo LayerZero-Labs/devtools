@@ -28,10 +28,7 @@ pub mod oft {
     use super::*;
 
     pub fn oft_version(_ctx: Context<OFTVersion>) -> Result<Version> {
-        Ok(Version {
-            interface: 2,
-            message: 1,
-        })
+        Ok(Version { interface: 2, message: 1 })
     }
 
     pub fn init_oft(mut ctx: Context<InitOFT>, params: InitOFTParams) -> Result<()> {
