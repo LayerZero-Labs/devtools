@@ -1,19 +1,19 @@
-# Move CLI Reviewer Guide:
+# Move CLI Reviewer Guide
 
-I'm putting together a guide of the CLI where I trace through running one of the commands and explain what files are doing to illustrate the general high level architecture of the CLI.
+I'm putting together a guide of the CLI where I trace through running one of the commands and explain what files are doing to illustrate the general high-level architecture of the CLI. Hopefully this makes code review slightly more approachable.
 
-`examples/oft-move` is the example for deploying an OFT on aptos (and later movement).
+`examples/oft-move` is the example for deploying an OFT on Aptos (and later Movement).
 
-Inisde of `examples/oft-move/` go into package.json. Here we have a list of the commands that we can run.
+Inside of `examples/oft-move/`, go into package.json. Here we have a list of the commands that we can run.
 
 You can also run `pnpm run lz:sdk:help` inside of `examples/oft-move/` to see the list of commands.
 
-For this high level overview, we will be drilling down into the wire command.
+For this high-level overview, we will be drilling down into the wire command.
 
-The wire command code is can be found in the `packages/devtools-move/tasks/move/wire.ts` file.
+The wire command code can be found in the `packages/devtools-move/tasks/move/wire.ts` file.
 
 The wire command is defined in `packages/devtools-move/cli/operations/move-wire.ts`
-`cli/operations/` is where we define all of the CLI operations that we want a user to be able to run.
+`cli/operations/`. This is where we define all of the CLI operations that we want a user to be able to run. It specifiies the command, the arguments, and the description. The implementation is stored elsewhere.
 
 Here is the code for the wire operation. As you can see it just defines what args are required, and passes those in to wireMove, where the actual logic is defined.
 ```ts
@@ -57,17 +57,52 @@ The above two files are all that is required to register an operation.
 
 Now we can move on to the wire command internals where we interface with the OFT SDK.
 
-The wire command is defined in `packages/devtools-move/tasks/move/wire.ts`. `tasks/move/` is where we define scripts that interact with move VM.
+The wire command is defined in `packages/devtools-move/tasks/move/wireMove.ts`. `tasks/move/` is where the scripts that interact with move VM are kept.
 
-There two main things we need to look at in the wire command, creating the wiring transactions and then sending the transactions.
+```ts
+async function wireMove(args: any) {
+    // Here is where we parse the user info  .yaml file inside of examples/oft-move/.aptos/config.yaml
+    // This .yaml is created when the user runs aptos init and enters their private key
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
+    const fullConfigPath = path.join(args.rootDir, args.lz_config)
+    const chain = getChain(fullnode)
 
-The creation of transactions is defined in `packages/devtools-move/tasks/move/utils/moveVMOftConfigOps.ts`
+    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
 
-This is the crux of the move VM side of this entire project. If there is any file to code review, this is the one.
+    const lzNetworkStage = getLzNetworkStage(network)
+    const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const namedAddresses = getNamedAddresses(lzNetworkStage)
+    const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
 
-Let's drill down on the function `createSetReceiveLibraryTxs`. The other functions all follow a similar pattern.
+    console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OFT`)
+    console.log(`\tAddress: ${moveVMOftAddress}\n`)
+
+    const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
+    const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
+
+    const currDelegate = await oftSDK.getDelegate()
+    validateDelegate(currDelegate, account_address)
+
+    const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
+    // Here is where we parse the config file to get the connections
+    const connectionsFromMoveToAny = await 
+    getConfigConnections('from', moveVMEndpointID, fullConfigPath)
+    // Here is where we create and send the payloads
+    const txs = await createWiringTxs(oftSDK, moveVMEndpoint, connectionsFromMoveToAny)
+    await sendAllTxs(moveVMConnection, oftSDK, account_address, txs)
+}
+```
+
+There two main things we need to look at in the wire command: 
+1. creating the wiring transactions
+2. sending the transactions
+
+The payloads are created by methods in `packages/devtools-move/tasks/move/utils/moveVMOftConfigOps.ts`
+
+This is the crux of the move VM side of this entire project. If there is any file to review, this would be the one.
+
+Let's drill down on the function (within wireMove.ts) `createSetReceiveLibraryTxs`. The other functions all follow a similar pattern.
 The pattern consists of three steps:
-
 1. Check for no setting - verify if the configuration value exists in the config file
 2. Get the current setting - retrieve the current value from the blockchain
 3. Compare and act:
