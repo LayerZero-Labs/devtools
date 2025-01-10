@@ -64,6 +64,16 @@ export class OFT {
         }
     }
 
+    initializeAdapterCoinPayload(
+        tokenMetadataAddress: string,
+        sharedDecimals: number
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_adapter_coin::initialize`,
+            functionArguments: [tokenMetadataAddress, sharedDecimals],
+        }
+    }
+
     // TODO: update with new implementation
     initializeCoinPayload(
         token_name: string,
