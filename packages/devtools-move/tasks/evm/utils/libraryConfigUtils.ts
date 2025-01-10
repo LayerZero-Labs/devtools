@@ -2,24 +2,35 @@ import { Contract, PopulatedTransaction, utils } from 'ethers'
 
 import { Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
 
-import { returnChecksum, returnChecksums } from './types'
+import { returnChecksum, returnChecksums, ZEROADDRESS_EVM } from './types'
 
 import type { SetConfigParam, address, eid } from './types'
+
+const DEFAULT_CONFIG_MESSAGE = `${ZEROADDRESS_EVM} - DEFAULT`
 
 export async function getConfig(
     epv2Contract: Contract,
     evmAddress: address,
     libraryAddress: address,
     aptosEid: eid,
-    configType: number
+    configType: number,
+    isSendConfig: boolean
 ): Promise<string> {
+    let isDefault: boolean = false
+
+    if (isSendConfig) {
+        isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, aptosEid)
+    } else {
+        const receiveConfig = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
+        isDefault = receiveConfig.isDefault
+    }
+
+    if (isDefault) {
+        return DEFAULT_CONFIG_MESSAGE
+    }
+
     const config = await epv2Contract.getConfig(evmAddress, libraryAddress, aptosEid, configType)
-    // const toDecode: SetConfigParam = {
-    //     eid: aptosEid,
-    //     configType: configType,
-    //     config: config,
-    // }
-    // decodeConfig([toDecode])
+
     return config
 }
 
@@ -79,20 +90,39 @@ export function decodeConfig(configParam: SetConfigParam[]) {
     try {
         for (const { configType, config } of configParam) {
             if (configType === 1) {
+                if (config === DEFAULT_CONFIG_MESSAGE) {
+                    decodedConfig.executorConfig = {
+                        maxMessageSize: 0,
+                        executor: ZEROADDRESS_EVM,
+                    }
+                    continue
+                }
+
                 const decoded = utils.defaultAbiCoder.decode(['uint32', 'address'], config)
                 decodedConfig.executorConfig = {
                     maxMessageSize: decoded[0],
                     executor: decoded[1],
                 }
             } else if (configType === 2) {
+                if (config === DEFAULT_CONFIG_MESSAGE) {
+                    decodedConfig.ulnConfig = {
+                        confirmations: BigInt(0),
+                        requiredDVNs: [],
+                        optionalDVNs: [],
+                        optionalDVNThreshold: 0,
+                    }
+                    continue
+                }
+
                 const decoded = utils.defaultAbiCoder.decode(
                     [
                         'tuple(uint64 confirmations, uint8 requiredDVNCount, uint8 optionalDVNCount, uint8 optionalDVNThreshold, address[] requiredDVNs, address[] optionalDVNs)',
                     ],
                     config
                 )
+
                 decodedConfig.ulnConfig = {
-                    confirmations: decoded[0]['confirmations'],
+                    confirmations: BigInt(decoded[0]['confirmations']),
                     requiredDVNs: decoded[0]['requiredDVNs'],
                     optionalDVNs: decoded[0]['optionalDVNs'],
                     optionalDVNThreshold: decoded[0]['optionalDVNThreshold'],
@@ -100,8 +130,7 @@ export function decodeConfig(configParam: SetConfigParam[]) {
             }
         }
     } catch (e) {
-        console.log(decodeConfig)
-        return
+        throw new Error('unable to decode config')
     }
 
     return decodedConfig
