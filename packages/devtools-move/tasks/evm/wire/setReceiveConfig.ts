@@ -86,7 +86,7 @@ export async function createSetReceiveConfigTransactions(
             )
         }
 
-        const tx = await setConfig(contract.epv2, address.oapp, currReceiveLibrary.currReceiveLibrary, setToConfigParam)
+        const tx = await setConfig(contract.epv2, address.oapp, currReceiveLibrary.newReceiveLibrary, setToConfigParam)
 
         txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)

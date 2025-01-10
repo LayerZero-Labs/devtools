@@ -117,7 +117,7 @@ export async function createSetSendConfigTransactions(
             }
         }
 
-        const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.currSendLibrary, setConfigParam)
+        const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.newSendLibrary, setConfigParam)
 
         txTypePool[eid] = txTypePool[eid] ?? []
         txTypePool[eid].push(tx)
