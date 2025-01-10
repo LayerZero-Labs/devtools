@@ -21,6 +21,8 @@ import { executeTransactions } from './wire/transactionExecutor'
 import type { ContractMetadataMapping, NonEvmOAppMetadata, TxEidMapping } from './utils/types'
 import path from 'path'
 import dotenv from 'dotenv'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 /**
  * @description Handles wiring of EVM contracts with the Aptos OApp
@@ -81,6 +83,8 @@ async function wireEvm(args: any) {
      * contractMetaData contains ethers Contract objects for the OApp and EndpointV2 contracts.
      */
     for (const conn of connectionsToWire) {
+        logPathwayHeader(conn)
+
         const fromEid = conn.from.eid
         const fromNetwork = networks[fromEid]
         const configOapp = conn?.config
@@ -147,6 +151,18 @@ async function wireEvm(args: any) {
         throw error
     }
     anvilForkNode.killNodes()
+}
+
+function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
+    const fromNetwork = getNetworkForChainId(connection.from.eid)
+    const toNetwork = getNetworkForChainId(connection.to.eid)
+
+    const pathwayString = `🔄 Building wire transactions for pathway: ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env} 🔄`
+    const borderLine = '━'.repeat(pathwayString.length)
+
+    console.log(borderLine)
+    console.log(pathwayString)
+    console.log(`${borderLine}\n`)
 }
 
 export { wireEvm }
