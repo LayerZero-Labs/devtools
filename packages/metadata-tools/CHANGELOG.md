@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 0.1.0
+
+### Minor Changes
+
+- e455d72: add solana support to metadata-tools
+
 ## 0.0.2
 
 ### Patch Changes

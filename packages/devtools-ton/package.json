@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-ton",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Developer utilities for working with LayerZero TON contracts",
   "repository": {
     "type": "git",
