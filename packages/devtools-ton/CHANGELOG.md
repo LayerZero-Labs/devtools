@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-ton
 
+## 0.2.0
+
+### Minor Changes
+
+- de8f24f: Added API key factory param to TON client factory
+
 ## 0.1.0
 
 ### Minor Changes
