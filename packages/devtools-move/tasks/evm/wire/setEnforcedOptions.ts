@@ -8,6 +8,8 @@ import {
     Options,
 } from '@layerzerolabs/lz-v2-utilities'
 
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+
 import { diffPrinter } from '../../shared/utils'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, enforcedOptionParam } from '../utils/types'
@@ -26,9 +28,9 @@ export async function createSetEnforcedOptionsTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+    for (const [eid, { contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (!configOapp?.enforcedOptions) {
-            console.log(`\x1b[43m Skipping: No enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printNotSet('enforced options', Number(eid), Number(_nonEvmOapp.eid))
             continue
         }
         const toEnforcedOptions = configOapp.enforcedOptions
@@ -60,9 +62,7 @@ export async function createSetEnforcedOptionsTransactions(
             const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
 
             if (currOptions === newOptions) {
-                console.log(
-                    `\x1b[43m Skipping: The same enforced options have been set for ${eid} @ ${address.oapp} \x1b[0m`
-                )
+                printAlreadySet('enforced options', Number(eid), Number(_nonEvmOapp.eid))
             } else {
                 diffcurrOptions[msgType] = currOptions
                 diffnewOptions[msgType] = newOptions
@@ -93,11 +93,10 @@ export async function createSetEnforcedOptionsTransactions(
                 }
 
                 diffPrinter(
-                    `Setting Enforced Options on eid: ${eid} - msgType: ${msgType}`,
+                    createDiffMessage('enforced options', Number(eid), Number(_nonEvmOapp.eid)),
                     currOptionsDecoded,
                     newOptionsDecoded
                 )
-
                 const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
 
                 txTypePool[eid] = txTypePool[eid] ?? []
@@ -136,6 +135,26 @@ function reduceOptionsByMsgType(baseOptions: Options, addOption: any): Options {
 }
 
 function decodeOptionsByMsgType(baseOption: string, msgType: number): optionTypes {
+    // Handle empty/zero cases
+    if (!baseOption || baseOption === '0x' || baseOption === '0x0') {
+        switch (msgType) {
+            case ExecutorOptionType.LZ_RECEIVE:
+                return { gas: BigInt(0), value: BigInt(0) }
+            case ExecutorOptionType.NATIVE_DROP:
+                return [
+                    { amount: BigInt(0), receiver: '0x0000000000000000000000000000000000000000' },
+                ] as ExecutorNativeDropOption
+            case ExecutorOptionType.COMPOSE:
+                return [{ index: 0, gas: BigInt(0), value: BigInt(0) }] as ComposeOption
+            case ExecutorOptionType.ORDERED:
+                return false
+            case ExecutorOptionType.LZ_READ:
+                return { gas: BigInt(0), value: BigInt(0) }
+            default:
+                throw new Error(`Unknown option type: ${msgType}`)
+        }
+    }
+
     const options = Options.fromOptions(baseOption)
 
     switch (msgType) {

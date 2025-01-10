@@ -2,6 +2,7 @@ import { Contract } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 
+import { createDiffMessage, printAlreadySet } from '../../shared/messageBuilder'
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata } from '../utils/types'
 
 /**
@@ -16,17 +17,18 @@ export async function createSetPeerTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { address, contract }] of Object.entries(eidDataMapping)) {
+    for (const [eid, { contract }] of Object.entries(eidDataMapping)) {
         const { eid: aptosEid, address: targetNonEvmAddress } = nonEvmOapp
 
         const currPeer = await getPeer(contract.oapp, aptosEid)
 
         if (currPeer === targetNonEvmAddress) {
-            console.log(`\x1b[43m Skipping: Peer already set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printAlreadySet('peer', Number(eid), Number(aptosEid))
             continue
         }
 
-        diffPrinter(`Setting Peer on ${eid}`, { peer: currPeer }, { peer: targetNonEvmAddress })
+        const diffMessage = createDiffMessage('peer', Number(eid), Number(aptosEid))
+        diffPrinter(diffMessage, { peer: currPeer }, { peer: targetNonEvmAddress })
 
         const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, targetNonEvmAddress)
 

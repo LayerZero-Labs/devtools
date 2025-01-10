@@ -5,7 +5,7 @@ import { ZEROADDRESS_EVM } from '../utils/types'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
-
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
 /**
@@ -25,7 +25,7 @@ export async function createSetSendLibraryTransactions(
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (!configOapp?.sendLibrary) {
-            console.log(`\x1b[43m Skipping: No sendLibrary has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printNotSet('send library', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
@@ -37,11 +37,15 @@ export async function createSetSendLibraryTransactions(
         )
 
         if (currSendLibrary === newSendLibrary) {
-            console.log(`\x1b[43m Skipping: sendLibrary is already set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printAlreadySet('send library', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
-        diffPrinter(`Setting Send Library on ${eid}`, { sendLibrary: currSendLibrary }, { sendLibrary: newSendLibrary })
+        diffPrinter(
+            createDiffMessage('send library', Number(eid), Number(nonEvmOapp.eid)),
+            { sendLibrary: currSendLibrary },
+            { sendLibrary: newSendLibrary }
+        )
 
         const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, newSendLibrary)
 

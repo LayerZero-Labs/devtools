@@ -5,6 +5,7 @@ import { Contract, ethers, providers } from 'ethers'
 import { promptForConfirmation } from '../../shared/utils'
 
 import type { AccountData, ContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 /**
  * @notice Simulates transactions on the blockchains
@@ -29,23 +30,19 @@ export async function executeTransactions(
         })
     })
 
-    if (simulation == 'dry-run') {
-        console.log('IN SIMULATION (dry-run) MODE')
-    } else {
-        console.log('IN EXECUTION (broadcast) MODE')
-    }
-
     if (totalTransactions == 0) {
-        console.log('No transactions to submit')
+        console.log('✨ No transactions to submit')
         return
     }
 
-    console.log(`Total chains: ${num_chains}`)
-    console.log(`Total transactions: ${totalTransactions}`)
-    const flag = await promptForConfirmation(totalTransactions)
+    console.log(`\n📦 Transaction Summary:`)
+    console.log(`   • Total chains: ${num_chains}`)
+    console.log(`   • Total transactions: ${totalTransactions}`)
+    console.log(`   • Mode: ${simulation === 'dry-run' ? 'SIMULATION (dry-run)' : 'EXECUTION (broadcast)'}`)
 
+    const flag = await promptForConfirmation(totalTransactions)
     if (!flag) {
-        console.log('Not submitting transactions.. exiting')
+        console.log('Operation cancelled.')
         exit(0)
     }
 
@@ -72,29 +69,29 @@ export async function executeTransactions(
             signer: signer,
         }
 
+        const network = getNetworkForChainId(Number(eid))
         console.log(
-            `Balance for chain ${eid}: ${ethers.utils.formatEther(await newProvider.getBalance(signer.address))}`
+            `   • Chain ${network.chainName}-${network.env}: ${ethers.utils.formatEther(
+                await newProvider.getBalance(signer.address)
+            )} ETH`
         )
     }
 
-    /*
-     * Under the following mapping : f(TxType,eid) = [PopulatedTransaction_{txtype,eid}]
-     * Looping through the different transaction types such as setPeer, setDelegate, setEnforcedOptions....
-     * We loop through the different eids which corresponds to different chains and collect :
-     *      1. oappAddress, 2. ethers contract object, and 3. provider
-     * TxPool is an array of the populated transactions to be submitted on-chain.
-     *  - It is usually a single element array in the case of setPeer, setDelegate
-     *  - setEnforcedOptions can have multiple transactions in the pool for the varied msgTypes
-     *
-     * We check if the user's balance is sufficient to submit all the transactions.
-     */
-    console.log('Submitting transactions...')
-    for (const [_txType, EidTxsMapping] of Object.entries(TxTypeEidMapping)) {
+    console.log('\n🔄 Processing transactions...')
+    let processedTx = 0
+    for (const [txType, EidTxsMapping] of Object.entries(TxTypeEidMapping)) {
         for (const [eid, TxPool] of Object.entries(EidTxsMapping)) {
-            const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-            const signer = accountEidMap[eid].signer
-
             for (const tx of TxPool) {
+                processedTx++
+                const progress = `[${processedTx}/${totalTransactions}]`
+                const network = getNetworkForChainId(Number(eid))
+                console.log(
+                    `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
+                )
+
+                const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
+                const signer = accountEidMap[eid].signer
+
                 tx.gasLimit = await provider.estimateGas(tx)
                 tx.gasPrice = accountEidMap[eid].gasPrice
                 tx.nonce = accountEidMap[eid].nonce++
@@ -103,15 +100,16 @@ export async function executeTransactions(
             }
         }
     }
+
     const txReceipts = await Promise.all(tx_pool)
 
-    // @todo Improve the logging to also show the txType
-    console.log('Transactions submitted')
-    console.log('ChainId\t | TxHash')
-    for (let i = 0; i < txReceipts.length; i++) {
-        const txReceipt = txReceipts[i]
-        console.log(`${txReceipt.chainId}\t | ${txReceipt.hash}`)
+    console.log('\n🎉 Transaction Summary:')
+    console.log('   ChainId | TxHash')
+    console.log('   ---------|----------')
+    for (const txReceipt of txReceipts) {
+        console.log(`   ${txReceipt.chainId.toString().padEnd(8)} | ${txReceipt.hash}`)
     }
+    console.log(`\n✅ Successfully processed ${txReceipts.length} transactions`)
 }
 
 export function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {

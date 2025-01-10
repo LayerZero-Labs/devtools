@@ -2,7 +2,7 @@ import { Contract, utils } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 import { ZEROADDRESS_EVM } from '../utils/types'
-
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 import type {
     ContractMetadataMapping,
     EidTxMap,
@@ -25,9 +25,7 @@ export async function createSetReceiveLibraryTimeoutTransactions(
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (configOapp?.receiveLibraryTimeoutConfig === undefined) {
-            console.log(
-                `\x1b[43m Skipping: No Receive Library Timeout has been set for ${eid} @ ${address.oapp} \x1b[0m`
-            )
+            printNotSet('receive library timeout', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
@@ -39,14 +37,12 @@ export async function createSetReceiveLibraryTimeoutTransactions(
         const newReceiveLibraryExpiry = Number(configOapp.receiveLibraryTimeoutConfig.expiry)
 
         if (currReceiveLibrary === newReceiveLibrary && currReceiveLibraryExpiry === newReceiveLibraryExpiry) {
-            console.log(
-                `\x1b[43m Skipping: The same Receive Library and Timeout has been set for ${eid} @ ${address.oapp} \x1b[0m`
-            )
+            printAlreadySet('receive library timeout', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
         diffPrinter(
-            `Setting Receive Library on ${eid}`,
+            createDiffMessage('receive library timeout', Number(eid), Number(nonEvmOapp.eid)),
             { lib: currReceiveLibrary, expiry: currReceiveLibraryExpiry },
             { lib: newReceiveLibrary, expiry: newReceiveLibraryExpiry }
         )

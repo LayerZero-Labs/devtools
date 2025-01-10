@@ -2,7 +2,7 @@ import { Contract, utils } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 import { ZEROADDRESS_EVM } from '../utils/types'
-
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, RecvLibParam, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
@@ -25,7 +25,7 @@ export async function createSetReceiveLibraryTransactions(
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (configOapp?.receiveLibraryConfig === undefined) {
-            console.log(`\x1b[43m Skipping: No Receive Library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printNotSet('receive library', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
@@ -37,18 +37,18 @@ export async function createSetReceiveLibraryTransactions(
         )
 
         if (newReceiveLibrary === '') {
-            console.log(`\x1b[43m Skipping: No receive library has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printNotSet('receive library', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
         if (currReceiveLibrary === newReceiveLibrary) {
-            console.log(`\x1b[43m Skipping: receive library is already set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printAlreadySet('receive library', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
         const receiveLibraryGracePeriod = configOapp.receiveLibraryConfig.gracePeriod
 
         diffPrinter(
-            `Setting Receive Library on ${eid}`,
+            createDiffMessage('receive library', Number(eid), Number(nonEvmOapp.eid)),
             { receiveLibrary: currReceiveLibrary },
             { receiveLibrary: newReceiveLibrary }
         )
