@@ -3,6 +3,8 @@ import { buildConfig, decodeConfig, getConfig, setConfig } from '../utils/librar
 
 import { parseReceiveLibrary } from './setReceiveLibrary'
 
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, SetConfigParam } from '../utils/types'
 
 /**
@@ -16,9 +18,7 @@ export async function createSetReceiveConfigTransactions(
 
     for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         if (!configOapp?.receiveConfig?.ulnConfig) {
-            console.log(
-                `\x1b[43m Skipping: Connections do not have a valid receive config for ${eid} @ ${address.oapp} \x1b[0m`
-            )
+            printNotSet('receive config', Number(eid), Number(nonEvmOapp.eid))
             continue
         }
 
@@ -52,9 +52,7 @@ export async function createSetReceiveConfigTransactions(
         const setToConfigParam: SetConfigParam[] = []
 
         if (currReceiveConfig.ulnConfigBytes === newReceiveConfig.ulnConfigBytes) {
-            console.log(
-                `\x1b[43m Skipping: The same uln receive library config has been set for ${eid} @ ${address.oapp} \x1b[0m`
-            )
+            printAlreadySet('receive config', Number(eid), Number(nonEvmOapp.eid))
         } else {
             diffFromOptions = currReceiveConfig.ulnConfigBytes
             diffToOptions = newReceiveConfig.ulnConfigBytes
@@ -80,7 +78,11 @@ export async function createSetReceiveConfigTransactions(
         const decodedSetToConfigParam = decodeConfig(setToConfigParam)
 
         if (decodedSetFromConfigParam && decodedSetToConfigParam) {
-            diffPrinter(`Setting Receive Config on ${eid}`, decodedSetFromConfigParam, decodedSetToConfigParam)
+            diffPrinter(
+                createDiffMessage('receive config', Number(eid), Number(nonEvmOapp.eid)),
+                decodedSetFromConfigParam,
+                decodedSetToConfigParam
+            )
         }
 
         const tx = await setConfig(contract.epv2, address.oapp, currReceiveLibrary.currReceiveLibrary, setToConfigParam)

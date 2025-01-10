@@ -2,6 +2,8 @@ import { Contract, utils } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 
+import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata } from '../utils/types'
 
 /**
@@ -20,18 +22,19 @@ export async function createSetDelegateTransactions(
         const currDelegate = await getDelegate(contract.epv2, address.oapp)
 
         if (!configAccount?.delegate) {
-            console.log(`\x1b[43m Skipping: No delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printNotSet('delegate', Number(eid), Number(_nonEvmOapp.eid))
             continue
         }
 
         const newD = utils.getAddress(configAccount.delegate)
 
         if (currDelegate === newD) {
-            console.log(`\x1b[43m Skipping: The same delegate has been set for ${eid} @ ${address.oapp} \x1b[0m`)
+            printAlreadySet('delegate', Number(eid), Number(_nonEvmOapp.eid))
             continue
         }
 
-        diffPrinter(`Setting Delegate on ${eid}`, { delegate: currDelegate }, { delegate: newD })
+        const diffMessage = createDiffMessage('delegate', Number(eid), Number(_nonEvmOapp.eid))
+        diffPrinter(diffMessage, { delegate: currDelegate }, { delegate: newD })
 
         const tx = await contract.oapp.populateTransaction.setDelegate(newD)
 
