@@ -40,7 +40,8 @@ export async function createSetReceiveConfigTransactions(
             address.oapp,
             currReceiveLibrary.currReceiveLibrary,
             nonEvmOapp.eid,
-            2
+            2,
+            false
         )
 
         const newReceiveConfig = buildConfig(ulnConfig)
