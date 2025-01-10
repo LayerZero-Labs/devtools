@@ -1,4 +1,5 @@
 import { spawn } from 'child_process'
+import net from 'net'
 
 import type { AnvilNode, eid } from './types'
 
@@ -22,6 +23,9 @@ class AnvilForkNode {
 
     // Start the Anvil fork nodes at incremental ports
     public async startNodes(): Promise<Record<string, string>> {
+        const numPorts = Object.keys(this.eidRpcMap).length
+        await this.checkFreePorts(this.startingPort, numPorts)
+
         for (const [eid, rpcUrl] of Object.entries(this.eidRpcMap)) {
             console.log(`Starting Anvil node on port ${this.startingPort} using fork URL ${rpcUrl}...`)
             const node = await this.startAnvilForkNode(rpcUrl, this.startingPort.toString())
@@ -50,6 +54,25 @@ class AnvilForkNode {
         })
     }
 
+    private async checkFreePorts(startingPort: number, numPorts: number): Promise<boolean> {
+        for (let i = 0; i < numPorts; i++) {
+            const port = startingPort + i
+            const isFree = await this.checkFreePort(port)
+            if (!isFree) {
+                throw new Error(`Port ${port} is not free - please kill running process or change the starting port`)
+            }
+        }
+        return true
+    }
+
+    private async checkFreePort(port: number): Promise<boolean> {
+        return new Promise((resolve) => {
+            const server = net.createServer()
+            server.on('error', () => resolve(false))
+            server.listen(port, () => resolve(true))
+            server.close()
+        })
+    }
     // Method to stop all running Anvil fork nodes
     public killNodes(): void {
         for (const node of this.nodes) {

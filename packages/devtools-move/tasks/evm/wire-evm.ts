@@ -117,8 +117,6 @@ async function wireEvm(args: any) {
         }
     }
 
-    /*
-     */
     TxTypeEidMapping.setPeer = await createSetPeerTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setDelegate = await createSetDelegateTransactions(contractMetaData, nonEvmOapp)
     TxTypeEidMapping.setEnforcedOptions = await createSetEnforcedOptionsTransactions(contractMetaData, nonEvmOapp)
@@ -138,19 +136,29 @@ async function wireEvm(args: any) {
         rpcUrlSelfMap[eid] = eidData.provider.connection.url
     }
 
-    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8546)
+    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8545)
 
     try {
-        // const forkRpcMap = await anvilForkNode.startNodes()
-        // await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey)
-        // console.log('\nAll transactions have been SIMULATED on the blockchains.')
-        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
-        console.log('\nAll transactions have been EXECUTED on the blockchains.')
+        const forkRpcMap = await anvilForkNode.startNodes()
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey).then(() => {
+            console.log('\nAll transactions have been SIMULATED on the blockchains.')
+            anvilForkNode.killNodes()
+        })
     } catch (error) {
         anvilForkNode.killNodes()
-        throw error
+        const customError = new Error(
+            `Failed to start Anvil fork nodes: try running \npkill anvil\n If that does not resolve the error then re-check your configuration ${error}`
+        )
+        throw customError
     }
-    anvilForkNode.killNodes()
+
+    await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
+        .then(() => {
+            console.log('\nAll transactions have been EXECUTED on the blockchains.')
+        })
+        .catch((error) => {
+            throw error
+        })
 }
 
 function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
