@@ -140,25 +140,15 @@ async function wireEvm(args: any) {
 
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
-        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey).then(() => {
-            console.log('\nAll transactions have been SIMULATED on the blockchains.')
-            anvilForkNode.killNodes()
-        })
+        await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey)
+        console.log('\nAll transactions have been SIMULATED on the blockchains.')
+        await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
+        console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
-        const customError = new Error(
-            `Failed to start Anvil fork nodes: try running \npkill anvil\n If that does not resolve the error then re-check your configuration ${error}`
-        )
-        throw customError
+        throw new Error(`Failed to wire EVM contracts: ${error}`)
     }
-
-    await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
-        .then(() => {
-            console.log('\nAll transactions have been EXECUTED on the blockchains.')
-        })
-        .catch((error) => {
-            throw error
-        })
+    anvilForkNode.killNodes()
 }
 
 function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
