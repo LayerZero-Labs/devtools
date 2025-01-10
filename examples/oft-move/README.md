@@ -140,21 +140,21 @@ Window is the number of seconds over which the capacity is restored. If the rate
 pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-eid number
 ```
 
-## Irrevocably Disable Blocklist
+## Permanently Disable Blocklist
 
-Warning: This will irrevocably disable the blocklist for the OFT.
+Warning: This will permanently disable the blocklist for the OFT.
 It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 ```bash
-pnpm run lz:sdk:move:irrevocably-disable-blocklist --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:permanently-disable-blocklist
 ```
 
-## Irrevocably Disable Freezing
+## Permanently Disable Freezing
 
-Warning: This will irrevocably disable the freezing for the OFT.
+Warning: This will permanently disable the freezing for the OFT.
 It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
-pnpm run lz:sdk:move:irrevocably-disable-freezing --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:permanently-disable-freezing
 ```
 
 ## Help
