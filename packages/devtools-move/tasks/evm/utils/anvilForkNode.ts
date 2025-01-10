@@ -23,8 +23,8 @@ class AnvilForkNode {
 
     // Start the Anvil fork nodes at incremental ports
     public async startNodes(): Promise<Record<string, string>> {
-        const numPorts = Object.keys(this.eidRpcMap).length
-        await this.checkFreePorts(this.startingPort, numPorts)
+        // const numPorts = Object.keys(this.eidRpcMap).length
+        // await this.checkFreePorts(this.startingPort, numPorts)
 
         for (const [eid, rpcUrl] of Object.entries(this.eidRpcMap)) {
             console.log(`Starting Anvil node on port ${this.startingPort} using fork URL ${rpcUrl}...`)

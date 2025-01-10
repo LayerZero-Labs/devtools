@@ -160,7 +160,7 @@ const config: OAppOmniGraphHardhat = {
                 sendConfig: {
                     executorConfig: {
                         maxMessageSize: 65536,
-                        executor: '0x3ebD570ed38B1b3b4BC886999fcF507e9D584859',
+                        executor: '0x31894b190a8bAbd9A067Ce59fde0BfCFD2B18470',
                     },
                     ulnConfig: {
                         confirmations: BigInt(5),
