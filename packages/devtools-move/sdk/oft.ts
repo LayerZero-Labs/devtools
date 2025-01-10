@@ -361,6 +361,20 @@ export class OFT {
         }
     }
 
+    irrevocablyDisableBlocklistPayload(): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_fa::irrevocably_disable_blocklist`,
+            functionArguments: [],
+        }
+    }
+
+    permanentlyDisableFungibleStoreFreezingPayload(): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::oft_fa::permanently_disable_fungible_store_freezing`,
+            functionArguments: [],
+        }
+    }
+
     async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
         const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
             signer: this.signer_account,

@@ -119,6 +119,44 @@ For Move-VM:
 pnpm run lz:sdk:move:wire --lz-config move.layerzero.config.ts
 ```
 
+## Set Fee
+
+```bash
+pnpm run lz:sdk:move:set-fee --lz-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
+```
+
+## Set Rate Limit
+
+```bash
+pnpm run lz:sdk:move:set-rate-limit --lz-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
+```
+Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
+For example if the rate limit from Aptos to EVM is 100 tokens you can send 100 tokens from Aptos to EVM, however if you receive 50 tokens from EVM to Aptos you are then able to send 150 tokens from Aptos to EVM.
+Window is the number of seconds over which the capacity is restored. If the rate limit is 1000 and window is 10 seconds, then each second you get 100 (1000/10) capacity back. The units of the rate limit are the tokens in local decimals.
+
+## Unset Rate Limit
+
+```bash
+pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-eid number
+```
+
+## Permanently Disable Blocklist
+
+Warning: This will permanently disable the blocklist for the OFT.
+It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
+```bash
+pnpm run lz:sdk:move:permanently-disable-blocklist
+```
+
+## Permanently Disable Freezing
+
+Warning: This will permanently disable the freezing for the OFT.
+It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
+
+```bash
+pnpm run lz:sdk:move:permanently-disable-freezing
+```
+
 ## Help
 
 ```bash
@@ -130,6 +168,4 @@ pnpm run lz:sdk:help
 ```bash
 npx hardhat lz:deploy
 ```
-
 Select only the evm networks (DO NOT SELECT APTOS)
-For deploy script tags use:
