@@ -91,8 +91,11 @@ export async function parseReceiveLibrary(
 
 export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
     const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
-    const recvLib = recvLibParam.lib
+    if (recvLibParam.isDefault) {
+        return ZEROADDRESS_EVM
+    }
 
+    const recvLib = recvLibParam.lib
     if (recvLib === error_LZ_DefaultReceiveLibUnavailable) {
         return ZEROADDRESS_EVM
     }

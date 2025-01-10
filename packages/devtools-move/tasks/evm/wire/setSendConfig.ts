@@ -42,7 +42,8 @@ export async function createSetSendConfigTransactions(
             address.oapp,
             currSendLibrary.currSendLibrary,
             nonEvmOapp.eid,
-            1
+            1,
+            true
         )
 
         currSendConfig.ulnConfigBytes = await getConfig(
@@ -50,7 +51,8 @@ export async function createSetSendConfigTransactions(
             address.oapp,
             currSendLibrary.currSendLibrary,
             nonEvmOapp.eid,
-            2
+            2,
+            true
         )
 
         const newSendConfig = buildConfig(ulnConfig, executorConfig)
@@ -101,15 +103,18 @@ export async function createSetSendConfigTransactions(
             config: currSendConfig.ulnConfigBytes,
         })
 
-        const decodedSetConfigParam = decodeConfig(setConfigParam)
         const decodedCurrSendConfigParam = decodeConfig(currSendConfigParam)
+        const decodedSetConfigParam = decodeConfig(setConfigParam)
 
+        // they are null because of some reason fix this and it should just work
         if (decodedCurrSendConfigParam && decodedSetConfigParam) {
-            diffPrinter(
-                createDiffMessage('send config', Number(eid), Number(nonEvmOapp.eid)),
-                decodedCurrSendConfigParam,
-                decodedSetConfigParam
-            )
+            if (decodedCurrSendConfigParam !== decodedSetConfigParam) {
+                diffPrinter(
+                    createDiffMessage('send config', Number(eid), Number(nonEvmOapp.eid)),
+                    decodedCurrSendConfigParam,
+                    decodedSetConfigParam
+                )
+            }
         }
 
         const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.currSendLibrary, setConfigParam)
