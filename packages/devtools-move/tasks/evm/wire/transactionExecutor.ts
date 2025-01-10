@@ -109,7 +109,9 @@ export async function executeTransactions(
     for (const txReceipt of txReceipts) {
         console.log(`   ${txReceipt.chainId.toString().padEnd(8)} | ${txReceipt.hash}`)
     }
-    console.log(`\n✅ Successfully processed ${txReceipts.length} transactions`)
+    console.log(
+        `\n✅ Successfully ${simulation === 'dry-run' ? 'simulated' : 'executed'} ${txReceipts.length} transactions`
+    )
 }
 
 export function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {

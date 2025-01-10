@@ -141,9 +141,7 @@ async function wireEvm(args: any) {
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
         await executeTransactions(contractMetaData, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey)
-        console.log('\nAll transactions have been SIMULATED on the blockchains.')
         await executeTransactions(contractMetaData, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
-        console.log('\nAll transactions have been EXECUTED on the blockchains.')
     } catch (error) {
         anvilForkNode.killNodes()
         throw new Error(`Failed to wire EVM contracts: ${error}`)
