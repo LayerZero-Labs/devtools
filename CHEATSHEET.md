@@ -28,7 +28,7 @@
 The packages are laid out according to the [principle of least knowledge](https://en.wikipedia.org/wiki/Law_of_Demeter). Their domain of action is also reflected in their name that follows the convention `[DOMAIN-]<ELEMENT>[-MODIFIER]`, for example:
 
 - `@layerzerolabs/devtools` package is the most generic package and it itself does not know and cannot use any implementation details of any more specific packages, nor is it specific to any domain
-- `@layerzerolabs/devtools-evm` package is specific to the `EVM` implementaion but it is not specific to any domain
+- `@layerzerolabs/devtools-evm` package is specific to the `EVM` implementation but it is not specific to any domain
 - `@layerzerolabs/ua-devtools-evm` package is specific to the `EVM` implementation and specific to the `ua` (user application) domain
 - `@layerzerolabs/ua-devtools-evm-hardhat` package is specific to the `EVM` implementation using `hardhat` and specific to the `ua` (user application) domain
 
@@ -66,7 +66,7 @@ const environment = await getHreByNetworkName("avalanche-testnet");
 // By endpoint ID (as specified in hardhat config, using the eid property of a network)
 import { createGetHreByEid } from "@layerzerolabs/devtools-evm-hardhat";
 
-// In this case we need to instantiate an environemnt factory
+// In this case we need to instantiate an environment factory
 const getEnvironment = createGetHreByEid();
 
 const eid = EndpointId.AVALANCHE_TESTNET;
