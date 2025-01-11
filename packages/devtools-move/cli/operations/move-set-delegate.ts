@@ -5,7 +5,7 @@ class MoveDeployOperation implements INewOperation {
     vm = 'move'
     operation = 'set-delegate'
     description = 'Set Aptos Move delegate'
-    reqArgs = ['lz_config']
+    reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
         await setDelegate(args)

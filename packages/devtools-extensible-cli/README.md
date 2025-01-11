@@ -5,7 +5,7 @@ This is a CLI for LayerZero Devtools - which is extensible by defining new opera
 Operations are of the class Type `INewOperation` and are defined in the `types/index.d.ts` file.
 
 When you go to type your new operation, the args will have `-` instead of `_`.
-For example, `lz_config` will be `--lz-config` on the command line.
+For example, `oapp_config` will be `--oapp-config` on the command line.
 
 ```ts
 import { build as buildMove } from '../../tasks/move/build'
@@ -17,7 +17,7 @@ class MoveBuildOperation implements INewOperation {
     // the name of this operation
     operation = 'build'
     // the required arguments for the operation
-    reqArgs = ['lz_config', 'named_addresses', 'move_deploy_script']
+    reqArgs = ['oapp_config', 'named_addresses', 'move_deploy_script']
     // arguments that you want to create in addition to the pre-defined ones
     addArgs = []
 

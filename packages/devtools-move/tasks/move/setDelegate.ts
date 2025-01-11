@@ -7,7 +7,7 @@ import { setDelegate } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, getMoveVMOftAddress, sendAllTxs } from './utils/utils'
 
 async function executeSetDelegate(args: any, useAccountAddress: boolean = false) {
-    const configPath = args.lz_config
+    const configPath = args.oapp_config
     const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
     const lzConfigFile = await import(lzConfigPath)
     const lzConfig = lzConfigFile.default
