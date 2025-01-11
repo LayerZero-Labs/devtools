@@ -36,15 +36,29 @@ const configTypeToNameMap = {
     [ConfigType.EXECUTOR]: 'Executor',
 }
 
-export async function transferOwner(oft: OFT, owner: string, eid: EndpointId): Promise<TransactionPayload | null> {
+export async function createTransferOwnerOAppPayload(
+    oft: OFT,
+    newOwner: string,
+    eid: EndpointId
+): Promise<TransactionPayload | null> {
     const currOwner = await oft.getAdmin()
-    if (currOwner == owner) {
-        console.log(`✅ Owner already set to ${owner}\n`)
+    if (currOwner == newOwner) {
+        console.log(`✅ Owner already set to ${newOwner}\n`)
         return null
     } else {
-        diffPrinter(`Set Owner for Aptos OFT at ${oft.oft_address}`, { address: currOwner }, { address: owner })
-        const tx = oft.transferAdminPayload(owner)
+        diffPrinter(`Set Owner for OApp at ${oft.oft_address}`, { address: currOwner }, { address: newOwner })
+        const tx = oft.transferAdminPayload(newOwner)
         return { payload: tx, description: 'Transfer Owner', eid: eid }
+    }
+}
+
+export function createTransferObjectOwnerPayload(objectAddress: string, toAddress: string): TransactionPayload {
+    return {
+        payload: {
+            function: '0x1::object::transfer_call',
+            functionArguments: [objectAddress, toAddress],
+        },
+        description: `Transfer object ${objectAddress} to ${toAddress}`,
     }
 }
 
