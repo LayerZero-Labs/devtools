@@ -1,4 +1,3 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Deserializer, Serializer } from '@layerzerolabs/lz-serdes'
 import { addressToBytes32, trim0x } from '@layerzerolabs/lz-v2-utilities'
 
@@ -122,9 +121,8 @@ export const UlnConfig = {
         )
     },
 
-    serialize(remoteEid: EndpointId, obj: UlnConfig): Uint8Array {
+    serialize(obj: UlnConfig): Uint8Array {
         const serializer = new Serializer(false)
-        serializer.serializeU32(remoteEid)
         serializer.serializeU64(obj.confirmations)
         serializer.serializeU8(obj.optional_dvn_threshold)
         const requiredDVNCount = obj.required_dvns.length
@@ -200,15 +198,13 @@ export const ExecutorConfig = {
         )
     },
 
-    serialize(remoteEid: EndpointId, obj: ExecutorConfig): Uint8Array {
+    serialize(obj: ExecutorConfig): Uint8Array {
         const serializer = new Serializer(false)
-
-        serializer.serializeU32(remoteEid)
 
         serializer.serializeU32(obj.max_message_size)
 
         const addressBytes = addressToBytes32(obj.executor_address)
-        serializer.serializeBytes(addressBytes)
+        serializer.serializeFixedBytes(addressBytes)
 
         const finalBytes = serializer.getBytes()
         return finalBytes

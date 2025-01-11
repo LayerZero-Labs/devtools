@@ -319,12 +319,13 @@ export class OFT {
 
     setConfigPayload(
         msgLibAddress: string,
+        eid: number,
         configType: number,
         config: Uint8Array
     ): InputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
-            functionArguments: [msgLibAddress, configType, config],
+            functionArguments: [msgLibAddress, eid, configType, config],
         }
     }
 

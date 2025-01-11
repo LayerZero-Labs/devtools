@@ -59,7 +59,10 @@ export class Endpoint {
                 functionArguments: [eid],
             },
         })
-        return result[0] as LibraryTimeoutResponse
+        return {
+            expiry: BigInt(result[0]?.toString() ?? '0'),
+            lib: result[1] as string,
+        }
     }
 
     async getReceiveLibraryTimeout(oftAddress: string, dstEid: number): Promise<LibraryTimeoutResponse> {
@@ -70,10 +73,11 @@ export class Endpoint {
                     functionArguments: [oftAddress, dstEid],
                 },
             })
-            const rawResponse = result[0] as { expiry: string; lib: string }
+
+            // result is an array where [0] is expiry and [1] is lib address
             return {
-                expiry: BigInt(rawResponse.expiry),
-                lib: rawResponse.lib,
+                expiry: BigInt(result[0]?.toString() ?? '0'),
+                lib: result[1] as string,
             }
         } catch (error) {
             // if the timeout is not set, it will throw a VM error, so we should return a value that will always produce a diff
