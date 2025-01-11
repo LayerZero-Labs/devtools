@@ -13,7 +13,7 @@ module oft::oft_impl_config {
     #[test_only]
     friend oft::oft_impl_config_tests;
 
-    friend oft::oft_fa;
+    friend oft::oft_adapter_fa;
 
     struct Config has key {
         fee_bps: u64,
@@ -100,7 +100,7 @@ module oft::oft_impl_config {
         }
     }
 
-    // ============================================ Blacklist Configuration ===========================================
+    // ============================================ Blocklist Configuration ===========================================
 
     /// Permanently disable the ability to blocklist accounts
     /// This will also effectively restore any previously blocked accounts to unblocked status (is_blocklisted() will
@@ -251,7 +251,7 @@ module oft::oft_impl_config {
             if (timestamp > rate_limit.last_update) {
                 // If the timestamp is greater than the last update, calculate the decayed in-flight amount
                 let elapsed = min(timestamp - rate_limit.last_update, rate_limit.window_seconds);
-                let decay = (((elapsed as u128) * (rate_limit.limit as u128)) as u64) / rate_limit.window_seconds;
+                let decay = ((((elapsed as u128) * (rate_limit.limit as u128)) / (rate_limit.window_seconds as u128)) as u64);
 
                 // Ensure the decayed in-flight amount is not negative
                 if (decay < rate_limit.in_flight_on_last_update) {

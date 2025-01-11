@@ -1,6 +1,7 @@
+/// Compose module for an OApp
+/// This only needs to be included if the OApp needs to be a compose recipient
 module oft::oapp_compose {
-    use std::fungible_asset::{Self, FungibleAsset};
-    use std::object::object_address;
+    use std::fungible_asset::FungibleAsset;
     use std::option::{Self, Option};
     use std::string::utf8;
     use std::type_info::{module_name, type_of};
@@ -8,8 +9,10 @@ module oft::oapp_compose {
     use endpoint_v2::endpoint::{Self, get_guid_and_index_from_wrapped, wrap_guid_and_index, WrappedGuidAndIndex};
     use endpoint_v2_common::bytes32::to_bytes32;
     use oft::oapp_store;
+    use oft::oapp_store::is_native_token;
     use oft::oft::lz_compose_impl;
 
+    /// LZ Compose function for self-execution
     public entry fun lz_compose(
         from: address,
         guid: vector<u8>,
@@ -30,6 +33,9 @@ module oft::oapp_compose {
         )
     }
 
+    /// LZ Compose function to be called by the Executor
+    /// This is able to be provided a compose value in the form of a FungibleAsset
+    /// For self-executing with a value, this should be called with a script
     public fun lz_compose_with_value(
         from: address,
         guid_and_index: WrappedGuidAndIndex,
@@ -37,7 +43,10 @@ module oft::oapp_compose {
         extra_data: vector<u8>,
         value: Option<FungibleAsset>,
     ) {
+        // Make sure that the value provided is of the native token type
         assert!(option::is_none(&value) || is_native_token(option::borrow(&value)), EINVALID_TOKEN);
+
+        // Unwrap the guid and index from the wrapped guid and index, this wrapping
         let (guid, index) = get_guid_and_index_from_wrapped(&guid_and_index);
 
         endpoint::clear_compose(&oapp_store::call_ref(), from, guid_and_index, message);
@@ -52,12 +61,6 @@ module oft::oapp_compose {
         );
     }
 
-    // ==================================================== Helper ====================================================
-
-    fun is_native_token(token: &FungibleAsset): bool {
-        object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
-    }
-
     // ================================================ Initialization ================================================
 
     fun init_module(account: &signer) {
@@ -65,6 +68,7 @@ module oft::oapp_compose {
         endpoint::register_composer(account, utf8(module_name));
     }
 
+    /// Struct to dynamically derive the module name to register on the endpoint
     struct LzComposeModule {}
 
     #[test_only]

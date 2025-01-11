@@ -13,7 +13,7 @@ module oft::oft_impl_config {
     #[test_only]
     friend oft::oft_impl_config_tests;
 
-    friend oft::oft_impl;
+    friend oft::oft_fa;
 
     struct Config has key {
         fee_bps: u64,
@@ -28,23 +28,25 @@ module oft::oft_impl_config {
     // =============================================== Fee Configuration ==============================================
 
     // The maximum fee that can be set is 100%
-    const MAX_FEE_BPS: u64 = 10000;
+    const MAX_FEE_BPS: u64 = 10_000;
 
     /// Set the fee deposit address
     /// This is where OFT fees collected are deposited
     public(friend) fun set_fee_deposit_address(fee_deposit_address: address) acquires Config {
         // The fee deposit address must exist as an account to prevent revert for Coin deposits
         assert!(std::account::exists_at(fee_deposit_address), EINVALID_DEPOSIT_ADDRESS);
+        assert!(store().fee_deposit_address != fee_deposit_address, ESETTING_UNCHANGED);
         store_mut().fee_deposit_address = fee_deposit_address;
         emit(FeeDepositAddressSet { fee_deposit_address });
     }
 
     /// Get the fee deposit address
-    public(friend) fun get_fee_deposit_address(): address acquires Config { store().fee_deposit_address }
+    public(friend) fun fee_deposit_address(): address acquires Config { store().fee_deposit_address }
 
     /// Set the fee for the OFT
     public(friend) fun set_fee_bps(fee_bps: u64) acquires Config {
         assert!(fee_bps <= MAX_FEE_BPS, EINVALID_FEE);
+        assert!(fee_bps != store().fee_bps, ESETTING_UNCHANGED);
         store_mut().fee_bps = fee_bps;
         emit(FeeSet { fee_bps });
     }
@@ -72,7 +74,7 @@ module oft::oft_impl_config {
 
             // Calculate the preliminary fee based on the amount provided; this may increase when dust is added to it.
             // The actual fee is the amount sent - amount received, which is fee + dust removed
-            let preliminary_fee = (amount_ld * fee_bps) / 10_000;
+            let preliminary_fee = ((((amount_ld as u128) * (fee_bps as u128)) / 10_000) as u64);
 
             // Compute the received amount first, which is the amount after fee and dust removal
             let amount_received_ld = remove_dust(amount_ld - preliminary_fee);
@@ -98,10 +100,11 @@ module oft::oft_impl_config {
         }
     }
 
-    // ============================================ Blacklist Configuration ===========================================
+    // ============================================ Blocklist Configuration ===========================================
 
     /// Permanently disable the ability to blocklist accounts
-    /// This will also restore any previously blocked accounts to unblocked status
+    /// This will also effectively restore any previously blocked accounts to unblocked status (is_blocklisted() will
+    /// return false for all accounts)
     /// This is a one-way operation, once this is called, the blocklist capability cannot be restored
     public(friend) fun irrevocably_disable_blocklist() acquires Config {
         assert!(store().blocklist_enabled, EBLOCKLIST_ALREADY_DISABLED);
@@ -133,7 +136,7 @@ module oft::oft_impl_config {
 
     /// Revert if an account is blocked
     public(friend) fun assert_not_blocklisted(wallet: address) acquires Config {
-        assert!(!store().blocklist_enabled || !is_blocklisted(wallet), EADDRESS_BLOCKED);
+        assert!(!is_blocklisted(wallet), EADDRESS_BLOCKED);
     }
 
     /// Provide the admin address and emit a BlockedAmountRedirected event if an account is blocked
@@ -141,7 +144,7 @@ module oft::oft_impl_config {
     /// recipient address if recipient is blocklisted. This also emits a message to alert that blocklisted funds have
     /// been received
     public(friend) fun redirect_to_admin_if_blocklisted(recipient: address, amount_ld: u64): address acquires Config {
-        if (!store().blocklist_enabled || !is_blocklisted(recipient)) {
+        if (!is_blocklisted(recipient)) {
             recipient
         } else {
             emit(BlockedAmountRedirected {
@@ -179,6 +182,9 @@ module oft::oft_impl_config {
 
         // If the rate limit is already set, checkpoint the in-flight amount before updating the rate limit.
         if (has_rate_limit(dst_eid)) {
+            let (prior_limit, prior_window_seconds) = rate_limit_config(dst_eid);
+            assert!(limit != prior_limit || window_seconds != prior_window_seconds, ESETTING_UNCHANGED);
+
             // Checkpoint the in-flight amount before updating the rate settings. If this is not saved, it could change
             // the in-flight calculation amount retroactively
             checkpoint_rate_limit_in_flight(dst_eid, timestamp);
@@ -200,9 +206,20 @@ module oft::oft_impl_config {
 
     /// Unset the rate limit for a given EID
     public(friend) fun unset_rate_limit(eid: u32) acquires Config {
+        assert!(table::contains(&store().rate_limit_by_eid, eid), ESETTING_UNCHANGED);
         table::remove(&mut store_mut().rate_limit_by_eid, eid);
         emit(RateLimitUnset { eid });
     }
+
+    /// Checkpoint the in-flight amount for a given EID for the provided timestamp.
+    /// This should whenever there is a change in rate limit or before consuming rate limit capacity
+    public(friend) fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
+        let inflight = in_flight_at_time(eid, timestamp);
+        let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
+        rate_limit.in_flight_on_last_update = inflight;
+        rate_limit.last_update = timestamp;
+    }
+
 
     /// Check if a rate limit is set for a given EID
     public(friend) fun has_rate_limit(eid: u32): bool acquires Config {
@@ -219,14 +236,14 @@ module oft::oft_impl_config {
         }
     }
 
-    /// Get the in-flight amount for a given EID
+    /// Get the in-flight amount for a given EID at present
     public(friend) fun in_flight(eid: u32): u64 acquires Config {
-        in_flight_at_timestamp(eid, timestamp::now_seconds())
+        in_flight_at_time(eid, timestamp::now_seconds())
     }
 
-    /// Get the in-flight amount for a given EID. The in-flight count is a linear decay of the in-flight amount at the
-    /// last update timestamp to the current timestamp.
-    public(friend) fun in_flight_at_timestamp(eid: u32, timestamp: u64): u64 acquires Config {
+    /// Get the in-flight amount for a given EID. The in-flight count is the amount of the rate limit that has been
+    /// consumed linearly decayed to the provided timestamp
+    public(friend) fun in_flight_at_time(eid: u32, timestamp: u64): u64 acquires Config {
         if (!has_rate_limit(eid)) {
             0
         } else {
@@ -234,7 +251,7 @@ module oft::oft_impl_config {
             if (timestamp > rate_limit.last_update) {
                 // If the timestamp is greater than the last update, calculate the decayed in-flight amount
                 let elapsed = min(timestamp - rate_limit.last_update, rate_limit.window_seconds);
-                let decay = (elapsed * rate_limit.limit) / rate_limit.window_seconds;
+                let decay = ((((elapsed as u128) * (rate_limit.limit as u128)) / (rate_limit.window_seconds as u128)) as u64);
 
                 // Ensure the decayed in-flight amount is not negative
                 if (decay < rate_limit.in_flight_on_last_update) {
@@ -249,30 +266,32 @@ module oft::oft_impl_config {
         }
     }
 
-    /// Checkpoint the in-flight amount for a given EID for the provided timestamp.
-    /// This should whenever there is a change in rate limit or before consuming rate limit capacity
-    public(friend) fun checkpoint_rate_limit_in_flight(eid: u32, timestamp: u64) acquires Config {
-        let inflight = in_flight_at_timestamp(eid, timestamp);
-        let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
-        rate_limit.in_flight_on_last_update = inflight;
-        rate_limit.last_update = timestamp;
-    }
-
+    /// Calculate the spare rate limit capacity for a given EID at present
     public(friend) fun rate_limit_capacity(eid: u32): u64 acquires Config {
-        rate_limit_capacity_at_timestamp(eid, timestamp::now_seconds())
+        rate_limit_capacity_at_time(eid, timestamp::now_seconds())
     }
 
     /// Calculate the spare rate limit capacity for a given EID at the proviced timestamp
-    public(friend) fun rate_limit_capacity_at_timestamp(eid: u32, timestamp: u64): u64 acquires Config {
+    public(friend) fun rate_limit_capacity_at_time(eid: u32, timestamp: u64): u64 acquires Config {
         if (!has_rate_limit(eid)) {
             return MAX_U64
         };
         let rate_limit = *table::borrow(&store().rate_limit_by_eid, eid);
-        rate_limit.limit - in_flight_at_timestamp(eid, timestamp)
+        if (rate_limit.limit > in_flight_at_time(eid, timestamp)) {
+            rate_limit.limit - in_flight_at_time(eid, timestamp)
+        } else {
+            0
+        }
+    }
+
+    /// Consume rate limit capacity for a given EID or abort if the capacity is exceeded
+    public(friend) fun try_consume_rate_limit_capacity(eid: u32, amount: u64) acquires Config {
+        if (!has_rate_limit(eid)) return;
+        try_consume_rate_limit_capacity_at_time(eid, amount, timestamp::now_seconds());
     }
 
     /// Consume rate limit capacity for a given EID or abort if the capacity is exceeded at a provided timestamp
-    public(friend) fun try_consume_rate_limit_capacity_at_timestamp(
+    public(friend) fun try_consume_rate_limit_capacity_at_time(
         eid: u32,
         amount: u64,
         timestamp: u64
@@ -281,13 +300,6 @@ module oft::oft_impl_config {
         let rate_limit = table::borrow_mut(&mut store_mut().rate_limit_by_eid, eid);
         assert!(rate_limit.in_flight_on_last_update + amount <= rate_limit.limit, EEXCEEDED_RATE_LIMIT);
         rate_limit.in_flight_on_last_update = rate_limit.in_flight_on_last_update + amount;
-    }
-
-    /// Consume rate limit capacity for a given EID or abort if the capacity is exceeded
-    public(friend) fun try_consume_rate_limit_capacity(eid: u32, amount: u64) acquires Config {
-        if (!has_rate_limit(eid)) return;
-
-        try_consume_rate_limit_capacity_at_timestamp(eid, amount, timestamp::now_seconds());
     }
 
     /// Release rate limit capacity for a given EID
