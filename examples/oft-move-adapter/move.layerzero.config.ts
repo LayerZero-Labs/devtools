@@ -18,14 +18,14 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: bscContract,
             config: {
-                owner: '0xEa3115C2aD19261E88AAc06e66ac5AFACb724b10',
-                delegate: '0xEa3115C2aD19261E88AAc06e66ac5AFACb724b10',
+                owner: '0x462c2AE39B6B0bdB950Deb2BC82082308cF8cB10',
+                delegate: '0x462c2AE39B6B0bdB950Deb2BC82082308cF8cB10',
             },
         },
         {
             contract: aptosContract,
             config: {
-                delegate: '69b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
+                delegate: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
                 owner: '58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
             },
         },
@@ -49,30 +49,30 @@ const config: OAppOmniGraphHardhat = {
                         value: 0, // msg.value in wei for EndpointV2.lzCompose
                     },
                 ],
-                sendLibrary: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
+                sendLibrary: '0xcc1c03aed42e2841211865758b5efe93c0dde2cb7a2a5dc6cf25a4e33ad23690',
                 receiveLibraryConfig: {
                     // Required Receive Library Address on Aptos
-                    receiveLibrary: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
+                    receiveLibrary: '0xcc1c03aed42e2841211865758b5efe93c0dde2cb7a2a5dc6cf25a4e33ad23690',
                     // Optional Grace Period for Switching Receive Library Address on Aptos
                     gracePeriod: BigInt(0),
                 },
                 // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on Aptos
                 receiveLibraryTimeoutConfig: {
-                    lib: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
+                    lib: '0xcc1c03aed42e2841211865758b5efe93c0dde2cb7a2a5dc6cf25a4e33ad23690',
                     expiry: BigInt(1000000000),
                 },
                 sendConfig: {
                     executorConfig: {
                         maxMessageSize: 10000,
                         // The configured Executor address on Aptos
-                        executor: '0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a686d',
+                        executor: '0xfe0b685e4cc9e77d91d008ef4161de68f7d7646c3bf67079fd4c2f0356631be8',
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
                         confirmations: BigInt(260),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
-                        requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
+                        requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
                         optionalDVNs: [],
@@ -88,7 +88,7 @@ const config: OAppOmniGraphHardhat = {
                         confirmations: BigInt(5),
                         // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
-                        requiredDVNs: ['0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd'],
+                        requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
                         // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
                         optionalDVNs: [],
