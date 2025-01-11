@@ -45,7 +45,7 @@ async function wireEvm(args: any) {
 
     const { network } = await parseYaml()
     const EID_APTOS = getEidFromMoveNetwork('aptos', network)
-    const globalConfigPath = path.resolve(path.join(args.rootDir, args.lz_config))
+    const globalConfigPath = path.resolve(path.join(args.rootDir, args.oapp_config))
     // @todo grow connectionsToWire by taking in non-evm connections instead of only APTOS.
     const connectionsToWire = await getConfigConnections('to', EID_APTOS, globalConfigPath)
 

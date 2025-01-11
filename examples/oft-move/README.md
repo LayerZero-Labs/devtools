@@ -49,7 +49,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Builds the contracts
 
 ```bash
-pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
@@ -67,7 +67,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## Init and Set Delegate
@@ -96,11 +96,11 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
 Then run the following commands:
 
 ```bash
-pnpm run lz:sdk:move:init-fa --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ```bash
-pnpm run lz:sdk:move:set-delegate --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 ## Wire
@@ -122,25 +122,25 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 Then run the wire command:
 
 ```bash
-pnpm run lz:sdk:evm:wire --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
 
 For Move-VM:
 
 ```bash
-pnpm run lz:sdk:move:wire --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
 ```
 
 ## Set Fee
 
 ```bash
-pnpm run lz:sdk:move:set-fee --lz-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
+pnpm run lz:sdk:move:set-fee --oapp-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
 ```
 
 ## Set Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:set-rate-limit --lz-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
+pnpm run lz:sdk:move:set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
 ```
 Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
 For example if the rate limit from Aptos to EVM is 100 tokens you can send 100 tokens from Aptos to EVM, however if you receive 50 tokens from EVM to Aptos you are then able to send 150 tokens from Aptos to EVM.
@@ -149,7 +149,7 @@ Window is the number of seconds over which the capacity is restored. If the rate
 ## Unset Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-eid number
+pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
 ```
 
 ## Permanently Disable Blocklist
@@ -190,7 +190,7 @@ First ensure that the delegate is specified in the move.layerzero.config.ts file
 
 Then run the following command:
 ```bash
-pnpm run lz:sdk:move:set-delegate --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 To transfer the OApp owner, run the following command:

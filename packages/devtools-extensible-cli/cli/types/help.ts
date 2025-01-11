@@ -28,7 +28,7 @@ class HelpOperation implements INewOperation {
             },
         },
         {
-            name: '--lz-config',
+            name: '--oapp-config',
             arg: {
                 help: 'path to the layerzeroconfig file',
                 required: false,

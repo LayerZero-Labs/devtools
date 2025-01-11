@@ -14,7 +14,7 @@ import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 async function wireMove(args: any) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
-    const fullConfigPath = path.join(args.rootDir, args.lz_config)
+    const fullConfigPath = path.join(args.rootDir, args.oapp_config)
     const chain = getChain(fullnode)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)

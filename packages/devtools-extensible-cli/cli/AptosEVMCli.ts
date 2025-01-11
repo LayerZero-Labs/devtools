@@ -56,7 +56,7 @@ class AptosEVMCLI {
         }
     }
 
-    async execute(_callFromInheritance: boolean = false) {
+    async execute() {
         this.args = this.parser.parse_args()
         this.args.rootDir = this.rootDir
         this.args.operations = this.operations
