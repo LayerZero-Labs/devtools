@@ -49,7 +49,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Builds the contracts
 
 ```bash
-pnpm run lz:sdk:move:build --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
@@ -63,7 +63,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --lz-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Init
@@ -92,7 +92,7 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
 Then run the following command:
 
 ```bash
-pnpm run lz:sdk:move:init-fa-adapter --lz-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTAdapterInitParams.ts
+pnpm run lz:sdk:move:init-fa-adapter --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Wire
@@ -102,13 +102,13 @@ Then run the wire command:
 For EVM:
 
 ```bash
-pnpm run lz:sdk:evm:wire --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
 
 For Move-VM:
 
 ```bash
-pnpm run lz:sdk:move:wire --lz-config move.layerzero.config.ts
+pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
 ```
 
 ## Help

@@ -8,7 +8,7 @@ class MoveDeployOperation implements INewOperation {
     vm = 'move'
     operation = 'deploy'
     description = 'Deploy Aptos Move contracts'
-    reqArgs = ['lz_config', 'address_name', 'named_addresses', 'move_deploy_script']
+    reqArgs = ['oapp_config', 'address_name', 'named_addresses', 'move_deploy_script']
 
     addArgs = [
         {
@@ -22,7 +22,7 @@ class MoveDeployOperation implements INewOperation {
 
     async impl(args: any): Promise<void> {
         await buildMove(args)
-        await deployMove(args.lz_config, args.named_addresses, args.force_deploy, args.address_name)
+        await deployMove(args.oapp_config, args.named_addresses, args.force_deploy, args.address_name)
         await setDelegate(args, true)
     }
 }
