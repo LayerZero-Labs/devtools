@@ -8,8 +8,8 @@ class IrrevocablyDisableFreezing implements INewOperation {
     description = `
 Permanently disable the ability to freeze a primary fungible store through the OFT
 This will permanently prevent freezing of new accounts. It will not prevent unfreezing accounts, and existing
-frozen accounts will remain frozen until unfrozen
-`
+frozen accounts will remain frozen until unfrozen`
+
     reqArgs = []
 
     async impl(): Promise<void> {
