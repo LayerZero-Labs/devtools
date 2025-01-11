@@ -3,8 +3,7 @@
 ///
 /// This module should generally not be modified by the OApp developer.
 module oft::oapp_receive {
-    use std::fungible_asset::{Self, FungibleAsset};
-    use std::object::object_address;
+    use std::fungible_asset::FungibleAsset;
     use std::option::{Self, Option};
     use std::string::utf8;
     use std::type_info::{module_name, type_of};
@@ -13,8 +12,10 @@ module oft::oapp_receive {
     use endpoint_v2_common::bytes32::to_bytes32;
     use oft::oapp_core::get_peer_bytes32;
     use oft::oapp_store;
+    use oft::oapp_store::is_native_token;
     use oft::oft::{lz_receive_impl, next_nonce_impl};
 
+    /// LZ Receive function for self-execution
     public entry fun lz_receive(
         src_eid: u32,
         sender: vector<u8>,
@@ -34,6 +35,10 @@ module oft::oapp_receive {
         )
     }
 
+    /// LZ Receive function to be called by the Executor
+    /// This is able to be provided a receive value in the form of a FungibleAsset
+    /// For self-executing with a value, this should be called with a script
+    /// The WrappedGuid is used by the caller script to enforce that the LayerZero endpoint is called by the OApp
     public fun lz_receive_with_value(
         src_eid: u32,
         sender: vector<u8>,
@@ -62,14 +67,9 @@ module oft::oapp_receive {
     }
 
     #[view]
+    /// Get the next nonce for the given pathway
     public fun next_nonce(src_eid: u32, sender: vector<u8>): u64 {
         next_nonce_impl(src_eid, to_bytes32(sender))
-    }
-
-    // ==================================================== Helper ====================================================
-
-    fun is_native_token(token: &FungibleAsset): bool {
-        object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
     }
 
     // ================================================ Initialization ================================================

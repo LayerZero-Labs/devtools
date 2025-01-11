@@ -1,26 +1,29 @@
-/// This is an implementation of a Fungible-Asset-standard OFT.
+/// This is an implementation of a FungibleAsset standard, Adapter-style OFT.
 ///
-/// This creates a FungibleAsset upon initialization and mints and burns tokens on receive and send respectively.
-/// This can be modified to accept mint, burn, and metadata references of an existing FungibleAsset upon initialization
-/// rather than creating a new FungibleAsset
-module oft::oft_fa {
+/// An adapter can be used with a FungibleAsset that is already deployed, which cannot share burn and mint
+/// capabilities. This relies on locking and unlocking the FungibleAsset in an escrow account rather than minting and
+/// burning.
+///
+/// Adapter OFTs should only be deployed on one chain per token (with the other EIDs having Native/mint-and-burn OFTs),
+/// because there is not a rebalancing mechanism that can ensure pools maintain sufficient balance.
+module oft::oft_adapter_fa {
     use std::coin::Coin;
-    use std::event::emit;
-    use std::fungible_asset::{Self, BurnRef, FungibleAsset, Metadata, MintRef, MutateMetadataRef, TransferRef};
-    use std::object::{Self, Object};
-    use std::object::{address_from_constructor_ref, address_to_object};
+    use std::fungible_asset::{Self, FungibleAsset, Metadata};
+    use std::object::{Self, address_to_object, ExtendRef, Object, object_exists};
     use std::option::{Self, Option};
     use std::primary_fungible_store;
     use std::signer::address_of;
-    use std::string::utf8;
 
     use endpoint_v2_common::bytes32::Bytes32;
     use oft::oapp_core::{assert_admin, combine_options};
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core;
     use oft::oft_impl_config::{
-        Self, assert_not_blocklisted, debit_view_with_possible_fee, fee_details_with_possible_fee,
-        redirect_to_admin_if_blocklisted, release_rate_limit_capacity, try_consume_rate_limit_capacity,
+        Self,
+        assert_not_blocklisted,
+        debit_view_with_possible_fee,
+        fee_details_with_possible_fee,
+        redirect_to_admin_if_blocklisted, release_rate_limit_capacity, try_consume_rate_limit_capacity
     };
     use oft_common::oft_fee_detail::OftFeeDetail;
     use oft_common::oft_limit::{Self, OftLimit};
@@ -29,20 +32,16 @@ module oft::oft_fa {
     friend oft::oapp_receive;
 
     #[test_only]
-    friend oft::oft_fa_tests;
+    friend oft::oft_adapter_fa_tests;
 
     struct OftImpl has key {
-        metadata: Object<Metadata>,
-        mint_ref: MintRef,
-        burn_ref: BurnRef,
-        transfer_ref: TransferRef,
-        mutate_metadata_ref: MutateMetadataRef,
-        freeze_fungible_store_enabled: bool,
+        metadata: Option<Object<Metadata>>,
+        escrow_extend_ref: ExtendRef,
     }
 
     // ================================================= OFT Handlers =================================================
 
-    /// The default *credit* behavior for a standard OFT is to mint the amount and transfer to the recipient
+    /// The default *credit* behavior for a Adapter OFT is to unlock the amount from escrow and credit the recipient
     public(friend) fun credit(
         to: address,
         amount_ld: u64,
@@ -55,14 +54,22 @@ module oft::oft_fa {
         // Release rate limit capacity for the pathway (net inflow)
         release_rate_limit_capacity(src_eid, amount_ld);
 
-        // Mint the extracted amount to the recipient, or redirect to the admin if the recipient is blocklisted
-        primary_fungible_store::mint(&store().mint_ref, redirect_to_admin_if_blocklisted(to, amount_ld), amount_ld);
+        // unlock the amount from escrow
+        let escrow_signer = &object::generate_signer_for_extending(&store().escrow_extend_ref);
+
+        // Deposit the extracted amount to the recipient, or redirect to the admin if the recipient is blocklisted
+        primary_fungible_store::transfer(
+            escrow_signer,
+            metadata(),
+            redirect_to_admin_if_blocklisted(to, amount_ld),
+            amount_ld
+        );
 
         amount_ld
     }
 
-    /// The default *debit* behavior for a standard OFT is to deduct the amount from the sender and burn the deducted
-    /// amount
+    /// The default *debit* behavior for a Adapter OFT is to deduct the amount from the sender and lock the deducted
+    /// amount in escrow
     /// @return (amount_sent_ld, amount_received_ld)
     public(friend) fun debit_fungible_asset(
         sender: address,
@@ -90,13 +97,14 @@ module oft::oft_fa {
             primary_fungible_store::deposit(fee_deposit_address(), fee_fa);
         };
 
-        // Burn the extracted amount
-        fungible_asset::burn(&store().burn_ref, extracted_fa);
+        // Lock the amount in escrow
+        let escrow_address = escrow_address();
+        primary_fungible_store::deposit(escrow_address, extracted_fa);
 
         (amount_sent_ld, amount_received_ld)
     }
 
-    // Unused in this implementation
+    /// Unused in this implementation
     public(friend) fun debit_coin<CoinType>(
         _sender: address,
         _coin: &mut Coin<CoinType>,
@@ -106,13 +114,13 @@ module oft::oft_fa {
         abort ENOT_IMPLEMENTED
     }
 
-    /// The default *debit_view* behavior for a standard OFT is to remove dust and use remainder as both the sent and
+    /// The default *debit_view* behavior for an Adapter OFT is to remove dust and use remainder as both the sent and
     /// received amounts, reflecting that no additional fees are removed
     public(friend) fun debit_view(amount_ld: u64, min_amount_ld: u64, _dst_eid: u32): (u64, u64) {
         debit_view_with_possible_fee(amount_ld, min_amount_ld)
     }
 
-    /// Change this to override the Executor and DVN options of the OFT transmission
+    /// Update this to override the Executor and DVN options of the OFT transmission
     public(friend) fun build_options(
         message_type: u16,
         dst_eid: u32,
@@ -149,25 +157,24 @@ module oft::oft_fa {
 
     // =========================================== Coin Deposit / Withdrawal ==========================================
 
-    public(friend) fun send_standards_supported(): vector<vector<u8>> {
-        vector[b"fungible_asset"]
-    }
-
     /// Deposit coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun deposit_coin<CoinType>(_account: address, _coin: Coin<CoinType>) {
         abort ENOT_IMPLEMENTED
     }
 
-
-    /// Unused in this implementation
+    /// Withdraw coin function abstracted from `oft.move` for cross-chain flexibility
     public(friend) fun withdraw_coin<CoinType>(_account: &signer, _amount_ld: u64): Coin<CoinType> {
         abort ENOT_IMPLEMENTED
     }
 
     // =================================================== Metadata ===================================================
 
+    public(friend) fun send_standards_supported(): vector<vector<u8>> {
+        vector[b"fungible_asset"]
+    }
+
     public(friend) fun metadata(): Object<Metadata> acquires OftImpl {
-        store().metadata
+        *option::borrow(&store().metadata)
     }
 
     fun assert_metadata(fa: &FungibleAsset) acquires OftImpl {
@@ -176,7 +183,7 @@ module oft::oft_fa {
     }
 
     public(friend) fun balance(account: address): u64 acquires OftImpl {
-        primary_fungible_store::balance<Metadata>(account, metadata())
+        primary_fungible_store::balance(account, metadata())
     }
 
     /// Present for compatibility only
@@ -204,7 +211,7 @@ module oft::oft_fa {
     /// Get the fee deposit address for outbound OFT sends
     public fun fee_deposit_address(): address { oft_impl_config::fee_deposit_address() }
 
-    /// Permantently disable the ability to blocklist addresses
+    /// Permanently disable the ability to blocklist addresses
     public entry fun irrevocably_disable_blocklist(admin: &signer) {
         assert_admin(address_of(admin));
         oft_impl_config::irrevocably_disable_blocklist();
@@ -214,7 +221,6 @@ module oft::oft_fa {
     /// If a wallet is blocklisted
     /// - OFT sends from the wallet will be blocked
     /// - OFT receives to the wallet will be be diverted to the admin
-    /// - The wallet address's FungibleAsset store will be frozen (no sends / receives)
     public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) {
         assert_admin(address_of(admin));
         oft_impl_config::set_blocklist(wallet, block);
@@ -260,98 +266,38 @@ module oft::oft_fa {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
     }
 
-    /// Permanently disable the ability to freeze a primary fungible store through the OFT
-    /// This will permanently prevent freezing of new accounts. It will not prevent unfreezing accounts, and existing
-    /// frozen accounts will remain frozen until unfrozen
-    public entry fun permanently_disable_fungible_store_freezing(admin: &signer) acquires OftImpl {
-        assert_admin(address_of(admin));
-        store_mut().freeze_fungible_store_enabled = false;
-        emit(FungibleStoreFreezingPermanentlyDisabled {});
-    }
-
-    /// Set the frozen status of a primary fungible store
-    /// To freeze, account freezing must not have been disabled
-    public entry fun set_primary_fungible_store_frozen(
-        admin: &signer,
-        account: address,
-        frozen: bool
-    ) acquires OftImpl {
-        assert_admin(address_of(admin));
-        assert!(frozen != primary_fungible_store::is_frozen<Metadata>(account, metadata()), ENO_CHANGE);
-        // If account freezing is disabled, do not allow freezing accounts, but allow unfreeze
-        assert!(!frozen || store().freeze_fungible_store_enabled, EFREEZE_FUNGIBLE_STORE_DISABLED);
-        primary_fungible_store::set_frozen_flag(&store().transfer_ref, account, frozen);
-    }
-
-    #[view]
-    /// Get the frozen status of a primary fungible store
-    public fun is_primary_fungible_store_frozen(account: address): bool acquires OftImpl {
-        primary_fungible_store::is_frozen<Metadata>(account, metadata())
-    }
-
-    /// Set the frozen status of a fungible store
-    public entry fun set_fungible_store_frozen<T: key>(
-        admin: &signer,
-        fa_store: Object<T>,
-        frozen: bool
-    ) acquires OftImpl {
-        assert_admin(address_of(admin));
-        assert!(frozen != fungible_asset::is_frozen(fa_store), ENO_CHANGE);
-        // If account freezing is disabled, do not allow freezing accounts, but allow unfreeze
-        assert!(!frozen || store().freeze_fungible_store_enabled, EFREEZE_FUNGIBLE_STORE_DISABLED);
-        fungible_asset::set_frozen_flag<T>(&store().transfer_ref, fa_store, frozen);
-    }
-
-    #[view]
-    /// Get the frozen status of a fungible store
-    public fun is_fungible_store_frozen<T: key>(fa_store: Object<T>): bool {
-        fungible_asset::is_frozen<T>(fa_store)
-    }
-
     // ================================================ Initialization ================================================
 
     public entry fun initialize(
         account: &signer,
-        token_name: vector<u8>,
-        symbol: vector<u8>,
-        icon_uri: vector<u8>,
-        project_uri: vector<u8>,
-        shared_decimals: u8,
-        local_decimals: u8,
+        token_metadata_address: address,
+        shared_decimals: u8
     ) acquires OftImpl {
+        // Only the admin can initialize the OFT
         assert_admin(address_of(account));
-        fungible_asset::mutate_metadata(
-            &store().mutate_metadata_ref,
-            option::some(utf8(token_name)),
-            option::some(utf8(symbol)),
-            option::some(local_decimals),
-            option::some(utf8(icon_uri)),
-            option::some(utf8(project_uri)),
-        );
 
+        // Ensure the metadata address provided is valid and store it
+        assert!(object_exists<Metadata>(token_metadata_address), EINVALID_METADATA_ADDRESS);
+        let metadata = address_to_object<Metadata>(token_metadata_address);
+        store_mut().metadata = option::some(metadata);
+
+        // Initialize the OFT Core
+        let local_decimals = fungible_asset::decimals(metadata);
         oft_core::initialize(local_decimals, shared_decimals);
     }
 
     fun init_module(account: &signer) {
-        let constructor_ref = &object::create_named_object(account, b"oft_fa");
-        // Create a fungible asset with empty paramters that be set to the correct values on initialize()
-        primary_fungible_store::create_primary_store_enabled_fungible_asset(
-            constructor_ref,
-            option::none(),
-            utf8(b""),
-            utf8(b""),
-            8,
-            utf8(b""),
-            utf8(b""),
-        );
+        // Create the escrow object
+        let constructor_ref = &object::create_named_object(account, b"fa_escrow");
+        let escrow_extend_ref = object::generate_extend_ref(constructor_ref);
 
+        // Disable the transfer of the escrow object
+        object::disable_ungated_transfer(&object::generate_transfer_ref(constructor_ref));
+
+        // Initialize the storage and save the ExtendRef for future signer generation
         move_to(move account, OftImpl {
-            metadata: address_to_object<Metadata>(address_from_constructor_ref(constructor_ref)),
-            mint_ref: fungible_asset::generate_mint_ref(constructor_ref),
-            burn_ref: fungible_asset::generate_burn_ref(constructor_ref),
-            transfer_ref: fungible_asset::generate_transfer_ref(constructor_ref),
-            mutate_metadata_ref: fungible_asset::generate_mutate_metadata_ref(constructor_ref),
-            freeze_fungible_store_enabled: true,
+            metadata: option::none(),
+            escrow_extend_ref,
         });
     }
 
@@ -360,11 +306,11 @@ module oft::oft_fa {
         init_module(&std::account::create_signer_for_test(OAPP_ADDRESS()));
     }
 
-    // =================================================== Helpers ====================================================
+    // ================================================ Storage Helpers ===============================================
 
-    #[test_only]
-    public fun mint_tokens_for_test(amount_ld: u64): FungibleAsset acquires OftImpl {
-        fungible_asset::mint(&store().mint_ref, amount_ld)
+    #[view]
+    public fun escrow_address(): address acquires OftImpl {
+        object::address_from_extend_ref(&store().escrow_extend_ref)
     }
 
     inline fun store(): &OftImpl {
@@ -375,20 +321,9 @@ module oft::oft_fa {
         borrow_global_mut<OftImpl>(OAPP_ADDRESS())
     }
 
-    // ==================================================== Events ====================================================
-
-    #[event]
-    struct FungibleStoreFreezingPermanentlyDisabled has store, drop {}
-
-    #[test_only]
-    public fun fungible_store_freezing_permanently_disabled_event(): FungibleStoreFreezingPermanentlyDisabled {
-        FungibleStoreFreezingPermanentlyDisabled {}
-    }
-
     // ================================================== Error Codes =================================================
 
-    const EFREEZE_FUNGIBLE_STORE_DISABLED: u64 = 1;
-    const ENO_CHANGE: u64 = 2;
-    const ENOT_IMPLEMENTED: u64 = 3;
-    const EWRONG_FA_METADATA: u64 = 4;
+    const EINVALID_METADATA_ADDRESS: u64 = 1;
+    const ENOT_IMPLEMENTED: u64 = 2;
+    const EWRONG_FA_METADATA: u64 = 3;
 }

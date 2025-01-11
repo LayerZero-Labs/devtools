@@ -3,8 +3,9 @@
 /// This creates a FungibleAsset upon initialization and mints and burns tokens on receive and send respectively.
 /// This can be modified to accept mint, burn, and metadata references of an existing FungibleAsset upon initialization
 /// rather than creating a new FungibleAsset
-module oft::oft_impl {
+module oft::oft_fa {
     use std::coin::Coin;
+    use std::event::emit;
     use std::fungible_asset::{Self, BurnRef, FungibleAsset, Metadata, MintRef, MutateMetadataRef, TransferRef};
     use std::object::{Self, Object};
     use std::object::{address_from_constructor_ref, address_to_object};
@@ -36,6 +37,7 @@ module oft::oft_impl {
         burn_ref: BurnRef,
         transfer_ref: TransferRef,
         mutate_metadata_ref: MutateMetadataRef,
+        freeze_fungible_store_enabled: bool,
     }
 
     // ================================================= OFT Handlers =================================================
@@ -69,13 +71,14 @@ module oft::oft_impl {
         dst_eid: u32,
     ): (u64, u64) acquires OftImpl {
         assert_not_blocklisted(sender);
-        try_consume_rate_limit_capacity(dst_eid, min_amount_ld);
-
         assert_metadata(fa);
 
         // Calculate the exact send amount
         let amount_ld = fungible_asset::amount(fa);
         let (amount_sent_ld, amount_received_ld) = debit_view(amount_ld, min_amount_ld, dst_eid);
+
+        // Consume rate limit capacity for the pathway (net outflow), based on the amount received on the other side
+        try_consume_rate_limit_capacity(dst_eid, amount_received_ld);
 
         // Extract the exact send amount from the provided fungible asset
         let extracted_fa = fungible_asset::extract(fa, amount_sent_ld);
@@ -173,7 +176,7 @@ module oft::oft_impl {
     }
 
     public(friend) fun balance(account: address): u64 acquires OftImpl {
-        primary_fungible_store::balance(account, metadata())
+        primary_fungible_store::balance<Metadata>(account, metadata())
     }
 
     /// Present for compatibility only
@@ -199,9 +202,9 @@ module oft::oft_impl {
 
     #[view]
     /// Get the fee deposit address for outbound OFT sends
-    public fun fee_deposit_address(): address { oft_impl_config::get_fee_deposit_address() }
+    public fun fee_deposit_address(): address { oft_impl_config::fee_deposit_address() }
 
-    /// Permantently disable the ability to blocklist addresses
+    /// Permanently disable the ability to blocklist addresses
     public entry fun irrevocably_disable_blocklist(admin: &signer) {
         assert_admin(address_of(admin));
         oft_impl_config::irrevocably_disable_blocklist();
@@ -211,13 +214,9 @@ module oft::oft_impl {
     /// If a wallet is blocklisted
     /// - OFT sends from the wallet will be blocked
     /// - OFT receives to the wallet will be be diverted to the admin
-    /// - The wallet address's FungibleAsset store will be frozen (no sends / receives)
-    public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) acquires OftImpl {
+    public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) {
         assert_admin(address_of(admin));
         oft_impl_config::set_blocklist(wallet, block);
-
-        // Additionally freeze the FungibleAsset store if the wallet is blocked
-        primary_fungible_store::set_frozen_flag(&store().transfer_ref, wallet, block)
     }
 
     #[view]
@@ -227,9 +226,19 @@ module oft::oft_impl {
     /// Set the rate limit configuration for a given endpoint ID
     /// The rate limit is the maximum amount of OFT that can be sent to the endpoint within a given window
     /// The rate limit capacity recovers linearly at a rate of limit / window_seconds
+    /// *Important*: Setting the rate limit does not reset the current "in-flight" volume (in-flight refers to the
+    /// decayed rate limit consumption). This means that if the rate limit is set lower than the current in-flight
+    /// volume, the endpoint will not be able to receive OFT until the in-flight volume decays below the new rate limit.
+    /// In order to reset the in-flight volume, the rate limit must be unset and then set again.
     public entry fun set_rate_limit(admin: &signer, eid: u32, limit: u64, window_seconds: u64) {
         assert_admin(address_of(admin));
         oft_impl_config::set_rate_limit(eid, limit, window_seconds);
+    }
+
+    /// Unset the rate limit
+    public entry fun unset_rate_limit(admin: &signer, eid: u32) {
+        assert_admin(address_of(admin));
+        oft_impl_config::unset_rate_limit(eid);
     }
 
     #[view]
@@ -248,6 +257,54 @@ module oft::oft_impl {
     /// Create an OftLimit that reflects the rate limit for a given endpoint ID
     public fun rate_limited_oft_limit(eid: u32): OftLimit {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
+    }
+
+    /// Permanently disable the ability to freeze a primary fungible store through the OFT
+    /// This will permanently prevent freezing of new accounts. It will not prevent unfreezing accounts, and existing
+    /// frozen accounts will remain frozen until unfrozen
+    public entry fun permanently_disable_fungible_store_freezing(admin: &signer) acquires OftImpl {
+        assert_admin(address_of(admin));
+        store_mut().freeze_fungible_store_enabled = false;
+        emit(FungibleStoreFreezingPermanentlyDisabled {});
+    }
+
+    /// Set the frozen status of a primary fungible store
+    /// To freeze, account freezing must not have been disabled
+    public entry fun set_primary_fungible_store_frozen(
+        admin: &signer,
+        account: address,
+        frozen: bool
+    ) acquires OftImpl {
+        assert_admin(address_of(admin));
+        assert!(frozen != primary_fungible_store::is_frozen<Metadata>(account, metadata()), ENO_CHANGE);
+        // If account freezing is disabled, do not allow freezing accounts, but allow unfreeze
+        assert!(!frozen || store().freeze_fungible_store_enabled, EFREEZE_FUNGIBLE_STORE_DISABLED);
+        primary_fungible_store::set_frozen_flag(&store().transfer_ref, account, frozen);
+    }
+
+    #[view]
+    /// Get the frozen status of a primary fungible store
+    public fun is_primary_fungible_store_frozen(account: address): bool acquires OftImpl {
+        primary_fungible_store::is_frozen<Metadata>(account, metadata())
+    }
+
+    /// Set the frozen status of a fungible store
+    public entry fun set_fungible_store_frozen<T: key>(
+        admin: &signer,
+        fa_store: Object<T>,
+        frozen: bool
+    ) acquires OftImpl {
+        assert_admin(address_of(admin));
+        assert!(frozen != fungible_asset::is_frozen(fa_store), ENO_CHANGE);
+        // If account freezing is disabled, do not allow freezing accounts, but allow unfreeze
+        assert!(!frozen || store().freeze_fungible_store_enabled, EFREEZE_FUNGIBLE_STORE_DISABLED);
+        fungible_asset::set_frozen_flag<T>(&store().transfer_ref, fa_store, frozen);
+    }
+
+    #[view]
+    /// Get the frozen status of a fungible store
+    public fun is_fungible_store_frozen<T: key>(fa_store: Object<T>): bool {
+        fungible_asset::is_frozen<T>(fa_store)
     }
 
     // ================================================ Initialization ================================================
@@ -293,6 +350,7 @@ module oft::oft_impl {
             burn_ref: fungible_asset::generate_burn_ref(constructor_ref),
             transfer_ref: fungible_asset::generate_transfer_ref(constructor_ref),
             mutate_metadata_ref: fungible_asset::generate_mutate_metadata_ref(constructor_ref),
+            freeze_fungible_store_enabled: true,
         });
     }
 
@@ -312,9 +370,24 @@ module oft::oft_impl {
         borrow_global<OftImpl>(OAPP_ADDRESS())
     }
 
+    inline fun store_mut(): &mut OftImpl {
+        borrow_global_mut<OftImpl>(OAPP_ADDRESS())
+    }
+
+    // ==================================================== Events ====================================================
+
+    #[event]
+    struct FungibleStoreFreezingPermanentlyDisabled has store, drop {}
+
+    #[test_only]
+    public fun fungible_store_freezing_permanently_disabled_event(): FungibleStoreFreezingPermanentlyDisabled {
+        FungibleStoreFreezingPermanentlyDisabled {}
+    }
+
     // ================================================== Error Codes =================================================
 
-    const ENOT_IMPLEMENTED: u64 = 1;
-    const EUNAUTHORIZED: u64 = 2;
-    const EWRONG_FA_METADATA: u64 = 3;
+    const EFREEZE_FUNGIBLE_STORE_DISABLED: u64 = 1;
+    const ENO_CHANGE: u64 = 2;
+    const ENOT_IMPLEMENTED: u64 = 3;
+    const EWRONG_FA_METADATA: u64 = 4;
 }
