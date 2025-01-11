@@ -16,10 +16,6 @@ module oft::oft {
     use endpoint_v2_common::contract_identity::{DynamicCallRef, get_dynamic_call_ref_caller};
     use oft::oapp_core::{Self, lz_quote, lz_send, lz_send_compose, refund_fees, withdraw_lz_fees};
     use oft::oapp_store::OAPP_ADDRESS;
-    use oft::oft_core;
-    use oft_common::oft_fee_detail::OftFeeDetail;
-    use oft_common::oft_limit::OftLimit;
-
     use oft::oft_adapter_fa::{
         balance as balance_internal,
         build_options,
@@ -30,11 +26,14 @@ module oft::oft {
         deposit_coin,
         inspect_message,
         metadata as metadata_internal,
-        PlaceholderCoin,
         oft_limit_and_fees,
+        PlaceholderCoin,
         send_standards_supported as send_standards_supported_internal,
         withdraw_coin,
     };
+    use oft::oft_core;
+    use oft_common::oft_fee_detail::OftFeeDetail;
+    use oft_common::oft_limit::OftLimit;
 
     friend oft::oapp_receive;
     friend oft::oapp_compose;
@@ -76,6 +75,10 @@ module oft::oft {
         zro_fee: u64,
     ) {
         // Withdraw the amount and fees from the account
+        assert!(
+            primary_fungible_store::balance(address_of(account), metadata()) >= amount_ld,
+            EINSUFFICIENT_BALANCE,
+        );
         let send_value = primary_fungible_store::withdraw(account, metadata(), amount_ld);
         let (native_fee_fa, zro_fee_fa) = withdraw_lz_fees(account, native_fee, zro_fee);
         let sender = address_of(move account);
@@ -111,7 +114,7 @@ module oft::oft {
             |message, options| {
                 lz_send(dst_eid, message, options, native_fee, zro_fee)
             },
-            |_nothing| debit_fungible_asset(send_value, min_amount_ld, dst_eid),
+            |_nothing| debit_fungible_asset(sender, send_value, min_amount_ld, dst_eid),
             |amount_received_ld, message_type| build_options(
                 message_type,
                 dst_eid,
@@ -199,7 +202,7 @@ module oft::oft {
             |message, options| {
                 lz_send(dst_eid, message, options, native_fee, zro_fee)
             },
-            |_nothing| debit_coin(send_value, min_amount_ld, dst_eid),
+            |_nothing| debit_coin(sender, send_value, min_amount_ld, dst_eid),
             |amount_received_ld, message_type| build_options(
                 message_type,
                 dst_eid,
@@ -319,7 +322,8 @@ module oft::oft {
 
     // =============================================== Ordered Execution ==============================================
 
-    // Provides the next nonce if executor options request ordered execution; returning 0 for disabled ordered execution
+    /// Provides the next nonce if executor options request ordered execution; returns 0 to indicate ordered execution
+    /// is disabled
     public(friend) fun next_nonce_impl(_src_eid: u32, _sender: Bytes32): u64 {
         0
     }
@@ -385,6 +389,9 @@ module oft::oft {
     public fun remove_dust(amount_ld: u64): u64 { oft_core::remove_dust(amount_ld) }
 
     #[view]
+    public fun shared_decimals(): u8 { oft_core::shared_decimals() }
+
+    #[view]
     public fun decimal_conversion_rate(): u64 { oft_core::decimal_conversion_rate() }
 
     #[view]
@@ -407,5 +414,6 @@ module oft::oft {
     // ================================================== Error Codes =================================================
 
     const ECOMPOSE_NOT_IMPLEMENTED: u64 = 1;
-    const EINVALID_METADATA: u64 = 2;
+    const EINSUFFICIENT_BALANCE: u64 = 2;
+    const EINVALID_METADATA: u64 = 3;
 }

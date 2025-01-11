@@ -37,8 +37,6 @@ module oft::oapp_core {
         native_fee: &mut FungibleAsset,
         zro_fee: &mut Option<FungibleAsset>,
     ): MessagingReceipt {
-        assert!(!oapp_store::is_sending_paused(dst_eid), ESEND_PAUSED);
-
         endpoint::send(
             &oapp_store::call_ref(),
             dst_eid,
@@ -74,7 +72,7 @@ module oft::oapp_core {
 
     // ================================================ Delegated Calls ===============================================
 
-    /// Asserts that the delegated call is "authorized," either as the OApp address or the assigned delegate
+    /// Asserts that the delegated call is "authorized," (the assigned delegate)
     /// "authorized" indicates a wallet has permission to act on behalf of the OApp in respect to endpoint calls,
     /// for example, "set_send_library()" or "skip()," but this does not extend to calls that are internal to (stored
     /// on) the OApp like "set_peer()," which is are "admin only" permissions
@@ -86,11 +84,12 @@ module oft::oapp_core {
     public entry fun set_config(
         account: &signer,
         msglib: address,
+        eid: u32,
         config_type: u32,
         config: vector<u8>,
     ) {
         assert_authorized(address_of(move account));
-        endpoint::set_config(&oapp_store::call_ref(), msglib, config_type, config)
+        endpoint::set_config(&oapp_store::call_ref(), msglib, eid, config_type, config)
     }
 
     /// Set the Send Library for an OApp
@@ -251,10 +250,6 @@ module oft::oapp_core {
         assert!(admin == oapp_store::get_admin(), EUNAUTHORIZED);
     }
 
-    public fun we_asfeafeaseffukcthis(): u64 {
-        return 69
-    }
-
     // ===================================================== Peers ====================================================
 
     #[view]
@@ -287,22 +282,6 @@ module oft::oapp_core {
         assert!(oapp_store::has_peer(eid), EUNCONFIGURED_PEER);
         oapp_store::remove_peer(eid);
         emit(PeerSet { eid, peer: ZEROS_32_BYTES() });
-    }
-
-    // ==================================================== Pausing ===================================================
-
-    #[view]
-    /// Check if sending is paused for a destination EID
-    public fun is_sending_paused(dst_eid: u32): bool {
-        oapp_store::is_sending_paused(dst_eid)
-    }
-
-    /// Pause sending for a destination EID
-    /// This will prevent the OApp from sending messages to the EID until unpaused, but it will not affect receiving
-    public entry fun set_pause_sending(account: &signer, dst_eid: u32, paused: bool) {
-        assert_admin(address_of(move account));
-        oapp_store::set_sending_paused(dst_eid, paused);
-        emit(PauseSendingSet { dst_eid, paused });
     }
 
     // =================================================== Delegates ==================================================
@@ -344,9 +323,15 @@ module oft::oapp_core {
         native_fee: u64,
         zro_fee: u64,
     ): (FungibleAsset, Option<FungibleAsset>) {
+        assert!(native_token::balance(address_of(account)) >= native_fee, EINSUFFICIENT_NATIVE_TOKEN_BALANCE);
         let native_fee_fa = native_token::withdraw(account, native_fee);
         let zro_fee_fa = if (zro_fee > 0) {
-            option::some(primary_fungible_store::withdraw(account, get_zro_metadata(), zro_fee))
+            let zro_metadata = get_zro_metadata();
+            assert!(
+                primary_fungible_store::balance(address_of(account), zro_metadata) >= zro_fee,
+                EINSUFFICIENT_ZRO_BALANCE,
+            );
+            option::some(primary_fungible_store::withdraw(account, zro_metadata, zro_fee))
         } else option::none();
         (native_fee_fa, zro_fee_fa)
     }
@@ -381,12 +366,6 @@ module oft::oapp_core {
     }
 
     #[event]
-    struct PauseSendingSet has drop, store {
-        dst_eid: u32,
-        paused: bool,
-    }
-
-    #[event]
     struct DelegateSet has drop, store {
         delegate: address,
     }
@@ -409,11 +388,6 @@ module oft::oapp_core {
     }
 
     #[test_only]
-    public fun pause_sending_set(dst_eid: u32, paused: bool): PauseSendingSet {
-        PauseSendingSet { dst_eid, paused }
-    }
-
-    #[test_only]
     public fun delegate_set_event(delegate: address): DelegateSet {
         DelegateSet { delegate }
     }
@@ -427,8 +401,8 @@ module oft::oapp_core {
 
     const EUNAUTHORIZED: u64 = 1;
     const EUNCONFIGURED_PEER: u64 = 2;
-    const EUNEXPECTED_LZ_RECEIVE_VALUE: u64 = 3;
-    const EINVALID_OPTIONS: u64 = 4;
-    const EINVALID_ACCOUNT: u64 = 5;
-    const ESEND_PAUSED: u64 = 6;
+    const EINSUFFICIENT_NATIVE_TOKEN_BALANCE: u64 = 3;
+    const EINSUFFICIENT_ZRO_BALANCE: u64 = 4;
+    const EINVALID_OPTIONS: u64 = 5;
+    const EINVALID_ACCOUNT: u64 = 6;
 }
