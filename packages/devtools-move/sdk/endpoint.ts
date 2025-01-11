@@ -18,7 +18,7 @@ export class Endpoint {
     async getDefaultSendLibrary(eid: EndpointId): Promise<string> {
         const result = await this.aptos.view({
             payload: {
-                function: `${this.endpoint_address}::endpoint::get_default_send_lib`,
+                function: `${this.endpoint_address}::endpoint::get_default_send_library`,
                 functionArguments: [eid],
             },
         })
@@ -84,7 +84,7 @@ export class Endpoint {
     async getDefaultReceiveLibrary(eid: EndpointId): Promise<string> {
         const result = await this.aptos.view({
             payload: {
-                function: `${this.endpoint_address}::endpoint::get_default_receive_lib`,
+                function: `${this.endpoint_address}::endpoint::get_default_receive_library`,
                 functionArguments: [eid],
             },
         })
