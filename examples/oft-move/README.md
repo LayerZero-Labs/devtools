@@ -168,6 +168,41 @@ pnpm run lz:sdk:move:permanently-disable-blocklist
 pnpm run lz:sdk:move:permanently-disable-freezing
 ```
 
+### Transferring Ownership of your Move OApp (OFT)
+There are three steps to transferring ownership of your Move OFT:
+1. Transfer the delegate to the new delegate
+2. Transfer the OApp owner of the your to the new owner
+3. Transfer the Move-VM object owner to the new owner
+
+To set the delegate, run the following command:
+First ensure that the delegate is specified in the move.layerzero.config.ts file.
+```ts
+    contracts: [
+        {
+            contract: your_contract_name,
+            config: {
+                delegate: 'YOUR_DESIRED_DELEGATE_ACCOUNT_ADDRESS',
+            },
+        },
+        ...
+    ]
+```
+
+Then run the following command:
+```bash
+pnpm run lz:sdk:move:set-delegate --lz-config move.layerzero.config.ts
+```
+
+To transfer the OApp owner, run the following command:
+```bash
+pnpm run lz:sdk:move:transfer-oapp-owner --new-owner <new-owner-address>
+```
+
+To transfer the Move-VM object owner, run the following command:
+```bash
+pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
+```
+
 ### Mint to Account on Move VM OFT:
 > ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
 First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
@@ -210,3 +245,39 @@ pnpm run lz:sdk:help
 npx hardhat lz:deploy
 ```
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+
+
+### Verifying successful ownership transfer of your Move-VM OFT:
+Run the following command:
+```bash
+aptos account list \
+  --account <OBJECT_ADDRESS> \
+  --url https://fullnode.testnet.aptoslabs.com \
+  --query resources
+```
+Note: replace the url with your desired aptos fullnode url.
+
+Look for the following in the output:
+```json
+{
+  "0x1::object::ObjectCore": {
+    ...
+    "owner": "0x<OWNER_ADDRESS>",
+    ...
+  }
+  ...
+}
+```
+If the owner is your desired address, then the ownership transfer was successful.
+
+For verifying the admin look for the following in the output:
+```json
+    {
+      "<your-oft-address>::oapp_store::OAppStore": {
+        "admin": "0x<ADMIN_ADDRESS>",
+        ...
+      }
+    }
+```
+If the admin is your desired address, then the ownership transfer was successful.
+

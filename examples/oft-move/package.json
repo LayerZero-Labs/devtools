@@ -26,6 +26,8 @@
     "lz:sdk:move:set-delegate": "ts-node scripts/cli.ts --vm move --op set-delegate",
     "lz:sdk:move:set-fee": "ts-node scripts/cli.ts --vm move --op set-fee",
     "lz:sdk:move:set-rate-limit": "ts-node scripts/cli.ts --vm move --op set-rate-limit",
+    "lz:sdk:move:transfer-oapp-owner": "ts-node scripts/cli.ts --vm move --op transfer-oapp-owner",
+    "lz:sdk:move:transfer-object-owner": "ts-node scripts/cli.ts --vm move --op transfer-object-owner",
     "lz:sdk:move:unset-rate-limit": "ts-node scripts/cli.ts --vm move --op unset-rate-limit",
     "lz:sdk:move:wire": "ts-node scripts/cli.ts --vm move --op wire",
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
