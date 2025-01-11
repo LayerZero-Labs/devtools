@@ -72,7 +72,7 @@ module oft::oapp_core {
 
     // ================================================ Delegated Calls ===============================================
 
-    /// Asserts that the delegated call is "authorized," either as the OApp address or the assigned delegate
+    /// Asserts that the delegated call is "authorized," (the assigned delegate)
     /// "authorized" indicates a wallet has permission to act on behalf of the OApp in respect to endpoint calls,
     /// for example, "set_send_library()" or "skip()," but this does not extend to calls that are internal to (stored
     /// on) the OApp like "set_peer()," which is are "admin only" permissions
