@@ -5,7 +5,7 @@ class MoveWireOperation implements INewOperation {
     vm = 'move'
     operation = 'wire'
     description = 'Wire Aptos Move contracts'
-    reqArgs = ['lz_config']
+    reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
         await wireMove(args)
