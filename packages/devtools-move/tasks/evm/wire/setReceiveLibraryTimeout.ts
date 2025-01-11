@@ -1,7 +1,6 @@
-import { Contract, utils } from 'ethers'
+import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-import { ZEROADDRESS_EVM } from '../utils/types'
 import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 import type {
     ContractMetadataMapping,
@@ -70,9 +69,9 @@ export async function getReceiveLibraryTimeout(
 
     const recvLib = recvLibTimeoutParam.lib
 
-    if (recvLib === ZEROADDRESS_EVM) {
+    if (recvLib === constants.AddressZero) {
         return {
-            lib: ZEROADDRESS_EVM,
+            lib: constants.AddressZero,
             expiry: BigInt(0),
         }
     }

@@ -1,7 +1,6 @@
-import { Contract, utils } from 'ethers'
+import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-import { ZEROADDRESS_EVM } from '../utils/types'
 import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, RecvLibParam, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
@@ -92,12 +91,12 @@ export async function parseReceiveLibrary(
 export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
     const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
     if (recvLibParam.isDefault) {
-        return ZEROADDRESS_EVM
+        return constants.AddressZero
     }
 
     const recvLib = recvLibParam.lib
     if (recvLib === error_LZ_DefaultReceiveLibUnavailable) {
-        return ZEROADDRESS_EVM
+        return constants.AddressZero
     }
 
     const recvLibAddress = utils.getAddress(recvLib)

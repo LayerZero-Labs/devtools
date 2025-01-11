@@ -1,12 +1,12 @@
-import { Contract, PopulatedTransaction, utils } from 'ethers'
+import { Contract, PopulatedTransaction, utils, constants } from 'ethers'
 
 import { Uln302ExecutorConfig, Uln302UlnUserConfig } from '@layerzerolabs/toolbox-hardhat'
 
-import { returnChecksum, returnChecksums, ZEROADDRESS_EVM } from './types'
+import { returnChecksum, returnChecksums } from './types'
 
 import type { SetConfigParam, address, eid } from './types'
 
-const DEFAULT_CONFIG_MESSAGE = `${ZEROADDRESS_EVM} - DEFAULT`
+const DEFAULT_CONFIG_MESSAGE = `${constants.AddressZero} - DEFAULT`
 
 export async function getConfig(
     epv2Contract: Contract,
@@ -93,7 +93,7 @@ export function decodeConfig(configParam: SetConfigParam[]) {
                 if (config === DEFAULT_CONFIG_MESSAGE) {
                     decodedConfig.executorConfig = {
                         maxMessageSize: 0,
-                        executor: ZEROADDRESS_EVM,
+                        executor: constants.AddressZero,
                     }
                     continue
                 }
