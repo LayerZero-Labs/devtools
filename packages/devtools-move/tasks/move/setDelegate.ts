@@ -25,7 +25,7 @@ async function executeSetDelegate(args: any, useAccountAddress: boolean = false)
 
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const eid = getEidFromMoveNetwork('aptos', network)
+    const eid = getEidFromMoveNetwork(chain, network)
     const delegate = useAccountAddress ? account_address : getDelegateFromLzConfig(eid, lzConfig)
 
     const setDelegatePayload = await setDelegate(oft, delegate, eid)
