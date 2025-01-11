@@ -104,10 +104,22 @@ pnpm run lz:sdk:move:set-delegate --lz-config move.layerzero.config.ts
 ```
 
 ## Wire
+For EVM:
+Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
+```ts
+    contracts: [
+        {
+            contract: your_contract_name,
+            config: {
+                owner: 'YOUR_EVM_ACCOUNT_ADDRESS',
+                delegate: 'YOUR_EVM_ACCOUNT_ADDRESS',
+            },
+        },
+        ...
+    ]
+```
 
 Then run the wire command:
-
-For EVM:
 
 ```bash
 pnpm run lz:sdk:evm:wire --lz-config move.layerzero.config.ts
@@ -142,19 +154,48 @@ pnpm run lz:sdk:move:unset-rate-limit --lz-config move.layerzero.config.ts --to-
 
 ## Permanently Disable Blocklist
 
-Warning: This will permanently disable the blocklist for the OFT.
-It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
+> ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
+
 ```bash
 pnpm run lz:sdk:move:permanently-disable-blocklist
 ```
 
 ## Permanently Disable Freezing
 
-Warning: This will permanently disable the freezing for the OFT.
-It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
+> ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
 pnpm run lz:sdk:move:permanently-disable-freezing
+```
+
+### Mint to Account on Move VM OFT:
+> ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
+First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
+```
+public entry fun mint(
+    admin: &signer,
+    recipient: address,
+    amount: u64,
+) acquires OftImpl {
+    assert_admin(address_of(admin));
+    primary_fungible_store::mint(&store().mint_ref, recipient, amount);
+}
+```
+Then run the following command to mint the move oft:
+```bash
+pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
+```
+
+## Send from Move VM
+
+```bash
+pnpm run lz:sdk:move:send-from-move-oft \
+  --amount-ld 10000 \
+  --min-amount-ld 100 \
+  --src-address <your-move-account-address> \
+  --to-address <your-evm-account-address> \
+  --gas-limit 400000 \
+  --dst-eid <your-dst-eid>\
 ```
 
 ## Help
@@ -168,4 +209,4 @@ pnpm run lz:sdk:help
 ```bash
 npx hardhat lz:deploy
 ```
-Select only the evm networks (DO NOT SELECT APTOS)
+Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)

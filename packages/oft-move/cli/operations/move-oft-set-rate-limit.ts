@@ -8,12 +8,12 @@ class SetFee implements INewOperation {
     description = `
 Set the rate limit configuration for a given endpoint ID
 The rate limit is the maximum amount of OFT that can be sent to the endpoint within a given window
-The rate limit capacity recovers linearly at a rate of limit  window_seconds
-*Important*: Setting the rate limit does not reset the current "in-flight" volume (in-flight refers to the
-decayed rate limit consumption). This means that if the rate limit is set lower than the current in-flight
-volume, the endpoint will not be able to receive OFT until the in-flight volume decays below the new rate limit.
-In order to reset the in-flight volume, the rate limit must be unset and then set again.
-    `
+The rate limit capacity recovers linearly at a rate of limit / window_seconds
+*Important*: Setting the rate limit does not reset the current "in-flight" volume (in-flight refers to the decayed rate limit consumption). 
+This means that if the rate limit is set lower than the current in-flight volume, 
+the endpoint will not be able to receive OFT until the in-flight volume decays below the new rate limit.
+In order to reset the in-flight volume, the rate limit must be unset and then set again.`
+
     reqArgs = ['rate_limit', 'window_seconds', 'to_eid']
 
     addArgs = [
