@@ -67,9 +67,9 @@ rev = "mainnet"
 subdir = "aptos-framework"
 
 [dependencies]
-endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
-endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
-oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/aptos/contracts/oapps/oft_common" }
+endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
+endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2" }
+oft_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/oapps/oft_common" }
 
 [dev-dependencies]
-simple_msglib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/aptos/contracts/msglib/libs/simple_msglib" }
+simple_msglib = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/msglib/libs/simple_msglib" }

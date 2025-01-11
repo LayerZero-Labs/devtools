@@ -125,10 +125,7 @@ module dvn_fee_lib_0::dvn_fee_lib_tests {
             b"1123",
         );
 
-        // *Important*: his test only checks that get_fee does not abort and returns a fee. The following fee assertion
-        // is not rooted in a manual calculation, but rather the fee that was calculated and returned upon writing this
-        // test
-        assert!(fee == 55598026, 0);
+        assert!(fee != 0, 0);
         assert!(deposit == @1234, 0);
 
         // test with a different deposit address
@@ -188,7 +185,9 @@ module dvn_fee_lib_0::dvn_fee_lib_tests {
                 // from the dvn_dst_config
                 assert!(total_gas == 900, 2);
 
-                (40000, 200, 1_000_000, 20_000_000)
+                // 20_000_000 for APTOS 8-decimals - adjust for other native tokens
+                let native_price_usd = 20_000_000 * worker_config::get_native_decimals_rate() / 100_000_000;
+                (40000, 200, 1_000_000, native_price_usd)
             },
         );
 
@@ -203,7 +202,6 @@ module dvn_fee_lib_0::dvn_fee_lib_tests {
 
     #[test]
     fun test_get_fee_with_delegate() {
-        initialize_native_token_for_test();
         // other worker
         initialize_native_token_for_test();
         worker_config::initialize_for_worker_test_only(
@@ -262,7 +260,9 @@ module dvn_fee_lib_0::dvn_fee_lib_tests {
                 // from the dvn_dst_config
                 assert!(total_gas == 900, 2);
 
-                (40000, 200, 1_000_000, 2_000)
+                // 200_000 for APTOS 8-decimals - adjust for other native tokens
+                let native_price_usd = 200_000 * worker_config::get_native_decimals_rate() / 100_000_000;
+                (40000, 200, 100_000, native_price_usd)
             },
         );
 
@@ -270,7 +270,7 @@ module dvn_fee_lib_0::dvn_fee_lib_tests {
 
         // (10050 multiplier_bps) * (40000 chain_fee) / 10000 = 40200
         // vs.
-        // 40000 chain_fee + (1 floor margin) * (1_000_000 native_decimals_rate) / 2_000 native_price_usd = 40500
+        // 40000 chain_fee + (1 floor margin) * (100_000_000 native_decimals_rate) / 200_000 native_price_usd  = 40500
         // 40200 < 40500
         assert!(fee == 40500, 0);
     }

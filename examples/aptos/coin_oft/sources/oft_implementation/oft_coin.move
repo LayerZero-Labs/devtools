@@ -202,7 +202,6 @@ module oft::oft_coin {
     /// Set the fee deposit address for outbound OFT sends
     public entry fun set_fee_deposit_address(admin: &signer, fee_deposit_address: address) {
         assert_admin(address_of(admin));
-        assert!(std::account::exists_at(fee_deposit_address), EINVALID_ACCOUNT);
         oft_impl_config::set_fee_deposit_address(fee_deposit_address);
     }
 
@@ -210,7 +209,7 @@ module oft::oft_coin {
     /// Get the fee deposit address for outbound OFT sends
     public fun fee_deposit_address(): address { oft_impl_config::fee_deposit_address() }
 
-    /// Permantently disable the ability to blocklist addresses
+    /// Permanently disable the ability to blocklist addresses
     public entry fun irrevocably_disable_blocklist(admin: &signer) {
         assert_admin(address_of(admin));
         oft_impl_config::irrevocably_disable_blocklist();
@@ -294,7 +293,7 @@ module oft::oft_coin {
 
     #[view]
     /// Get the frozen status of a CoinStore
-    /// Because of the internal implementtion of coin::is_coin_store_frozen, this will return true also if the the
+    /// Because of the internal implementtion of coin::is_coin_store_frozen, this will return true also if the
     /// CoinStore is not registered for this account
     public fun is_account_frozen(account: address): bool {
         coin::is_coin_store_frozen<PlaceholderCoin>(account)
@@ -377,7 +376,6 @@ module oft::oft_coin {
 
     const EFREEZE_ACCOUNT_DISABLED: u64 = 1;
     const EINSUFFICIENT_BALANCE: u64 = 2;
-    const EINVALID_ACCOUNT: u64 = 3;
-    const ENO_CHANGE: u64 = 4;
-    const ENOT_IMPLEMENTED: u64 = 5;
+    const ENO_CHANGE: u64 = 3;
+    const ENOT_IMPLEMENTED: u64 = 4;
 }

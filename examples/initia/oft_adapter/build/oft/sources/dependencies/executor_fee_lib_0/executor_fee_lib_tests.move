@@ -136,10 +136,7 @@ module executor_fee_lib_0::executor_fee_lib_tests {
             options,
         );
 
-        // *Important*: his test only checks that get_fee does not abort and returns a fee. The following fee assertion
-        // is not rooted in a manual calculation, but rather the fee that was calculated and returned upon writing this
-        // test
-        assert!(fee == 86230666, 0);
+        assert!(fee != 0, 0);
         // worker address
         assert!(deposit == @1234, 1);
 

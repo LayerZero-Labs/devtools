@@ -66,5 +66,5 @@ rev = "77d5f3e140143bdaa41f850115b3035c134193e3"
 subdir = "initia_stdlib"
 
 [dependencies]
-endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/initia/contracts/endpoint_v2_common" }
-endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-dec-31", subdir = "packages/layerzero-v2/initia/contracts/endpoint_v2" }
+endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/initia/contracts/endpoint_v2_common" }
+endpoint_v2 = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/initia/contracts/endpoint_v2" }

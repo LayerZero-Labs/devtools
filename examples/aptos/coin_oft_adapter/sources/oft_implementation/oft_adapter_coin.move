@@ -207,7 +207,7 @@ module oft::oft_adapter_coin {
     /// Get the fee deposit address for outbound OFT sends
     public fun fee_deposit_address(): address { oft_impl_config::fee_deposit_address() }
 
-    /// Permantently disable the ability to blocklist addresses
+    /// Permanently disable the ability to blocklist addresses
     public entry fun irrevocably_disable_blocklist(admin: &signer) {
         assert_admin(address_of(admin));
         oft_impl_config::irrevocably_disable_blocklist();

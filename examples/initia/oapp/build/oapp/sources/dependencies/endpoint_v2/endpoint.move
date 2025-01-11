@@ -328,8 +328,8 @@ module endpoint_v2::endpoint {
         guid: Bytes32,
         message: vector<u8>,
     ) {
-        let oapp = get_oapp_caller(call_ref);
-        messaging_composer::send_compose(oapp, to, index, guid, message);
+        let caller = get_call_ref_caller(call_ref);
+        messaging_composer::send_compose(caller, to, index, guid, message);
     }
 
     /// Internal function to get the address of the OApp caller, and assert that the caller is a registered OApp and

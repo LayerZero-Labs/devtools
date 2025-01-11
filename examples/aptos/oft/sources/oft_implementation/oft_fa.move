@@ -204,7 +204,7 @@ module oft::oft_fa {
     /// Get the fee deposit address for outbound OFT sends
     public fun fee_deposit_address(): address { oft_impl_config::fee_deposit_address() }
 
-    /// Permantently disable the ability to blocklist addresses
+    /// Permanently disable the ability to blocklist addresses
     public entry fun irrevocably_disable_blocklist(admin: &signer) {
         assert_admin(address_of(admin));
         oft_impl_config::irrevocably_disable_blocklist();
@@ -214,7 +214,6 @@ module oft::oft_fa {
     /// If a wallet is blocklisted
     /// - OFT sends from the wallet will be blocked
     /// - OFT receives to the wallet will be be diverted to the admin
-    /// - The wallet address's FungibleAsset store will be frozen (no sends / receives)
     public entry fun set_blocklist(admin: &signer, wallet: address, block: bool) {
         assert_admin(address_of(admin));
         oft_impl_config::set_blocklist(wallet, block);
