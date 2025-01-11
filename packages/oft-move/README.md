@@ -24,7 +24,7 @@ class MoveWireOperation implements INewOperation {
     vm = 'move' // This is the VM we are working with
     operation = 'wire' // This is the new name of the operation
     description = 'Wire Aptos Move contracts' // This is the description of the operation that is displayed when help is called
-    reqArgs = ['lz_config'] // This is the list of args that are required for the operation for wire its just the lz_config path
+    reqArgs = ['oapp_config'] // This is the list of args that are required for the operation for wire its just the oapp_config path
 
     async impl(args: any): Promise<void> {
         await wireMove(args) // call the wireMove function with the args
@@ -64,7 +64,7 @@ async function wireMove(args: any) {
     // Here is where we parse the user info  .yaml file inside of examples/oft-move/.aptos/config.yaml
     // This .yaml is created when the user runs aptos init and enters their private key
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
-    const fullConfigPath = path.join(args.rootDir, args.lz_config)
+    const fullConfigPath = path.join(args.rootDir, args.oapp_config)
     const chain = getChain(fullnode)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
