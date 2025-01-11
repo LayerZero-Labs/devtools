@@ -1,7 +1,6 @@
-import { Contract, utils } from 'ethers'
+import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-import { ZEROADDRESS_EVM } from '../utils/types'
 
 import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
@@ -80,12 +79,12 @@ export async function parseSendLibrary(
 export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, apnewSEid: eid): Promise<string> {
     const isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, apnewSEid)
     if (isDefault) {
-        return ZEROADDRESS_EVM
+        return constants.AddressZero
     }
 
     const sendLib = await epv2Contract.getSendLibrary(evmAddress, apnewSEid)
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
-        return ZEROADDRESS_EVM
+        return constants.AddressZero
     }
     return utils.getAddress(sendLib)
 }
