@@ -138,23 +138,28 @@ export async function createSetReceiveLibraryTimeoutTx(
         printNotSet('Receive library timeout', connection)
         return null
     }
-    const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, connection.to.eid)
-    const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry)
 
-    if (currentTimeoutAsBigInt === BigInt(connection.config.receiveLibraryTimeoutConfig.expiry)) {
+    const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, connection.to.eid)
+    const defaultTimeout = await endpoint.getDefaultReceiveLibraryTimeout(connection.to.eid)
+
+    // If current matches default, we should set the new value regardless
+    const isUsingDefault = currentTimeout.expiry === defaultTimeout.expiry && currentTimeout.lib === defaultTimeout.lib
+
+    if (currentTimeout.expiry === BigInt(connection.config.receiveLibraryTimeoutConfig.expiry) && !isUsingDefault) {
         printAlreadySet('Receive library timeout', connection)
         return null
     } else {
-        let currTimeoutDisplay = '' + currentTimeoutAsBigInt
-        if (currentTimeoutAsBigInt === BigInt(-1)) {
-            currTimeoutDisplay = 'unset'
+        let diffMessage = createDiffMessage(`receive library timeout`, connection)
+        if (isUsingDefault) {
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage(`receive library timeout`, connection)
+
         diffPrinter(
             diffMessage,
-            { timeout: currTimeoutDisplay },
+            { timeout: currentTimeout.expiry },
             { timeout: connection.config.receiveLibraryTimeoutConfig.expiry }
         )
+
         const tx = oft.setReceiveLibraryTimeoutPayload(
             connection.to.eid,
             connection.config.receiveLibraryTimeoutConfig.lib,
@@ -178,7 +183,7 @@ export async function createSetReceiveLibraryTx(
         return null
     }
     const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, connection.to.eid)
-    let currentReceiveLibraryAddress = currentReceiveLibrary[0]
+    const currentReceiveLibraryAddress = currentReceiveLibrary[0]
     const isFallbackToDefault = currentReceiveLibrary[1]
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
@@ -189,10 +194,10 @@ export async function createSetReceiveLibraryTx(
         printAlreadySet('Receive library', connection)
         return null
     } else {
+        let diffMessage = createDiffMessage('receive library', connection)
         if (isFallbackToDefault) {
-            currentReceiveLibraryAddress = 'default: ' + currentReceiveLibraryAddress
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage('receive library', connection)
         diffPrinter(
             diffMessage,
             { address: currentReceiveLibraryAddress },
@@ -221,7 +226,7 @@ export async function createSetSendLibraryTx(
         return null
     }
     const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, connection.to.eid)
-    let currentSendLibraryAddress = currentSendLibrary[0]
+    const currentSendLibraryAddress = currentSendLibrary[0]
     const isFallbackToDefault = currentSendLibrary[1]
 
     // if unset, fallbackToDefault will be true and the receive library should be set regardless of the current value
@@ -229,10 +234,10 @@ export async function createSetSendLibraryTx(
         printAlreadySet('Send library', connection)
         return null
     } else {
+        let diffMessage = createDiffMessage('send library', connection)
         if (isFallbackToDefault) {
-            currentSendLibraryAddress = 'default: ' + currentSendLibraryAddress
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage('send library', connection)
         diffPrinter(diffMessage, { address: currentSendLibraryAddress }, { address: connection.config.sendLibrary })
         const tx = oft.setSendLibraryPayload(connection.to.eid, connection.config.sendLibrary)
         return {
@@ -284,24 +289,25 @@ export async function createSetSendConfigTx(
         ConfigType.SEND_ULN
     )
 
-    const serializedCurrentConfig = UlnConfig.serialize(connection.to.eid as EndpointId, currUlnConfig)
-    const newSerializedUlnConfig = UlnConfig.serialize(connection.to.eid as EndpointId, newUlnConfig)
+    const serializedCurrentConfig = UlnConfig.serialize(currUlnConfig)
+    const newSerializedUlnConfig = UlnConfig.serialize(newUlnConfig)
 
     if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig)) && !newSettingEqualsDefault) {
         printAlreadySet('Send config', connection)
         return null
     } else {
-        if (newSettingEqualsDefault) {
-            currUlnConfig.required_dvns = ['Default:' + defaultUlnConfig.required_dvns.join(',')]
-            currUlnConfig.optional_dvns = ['Default:' + defaultUlnConfig.optional_dvns.join(',')]
-            currUlnConfig.confirmations = defaultUlnConfig.confirmations
+        let diffMessage = createDiffMessage('send config', connection)
+        // Add a note if the current config is set to defaults
+        const currSettingEqualsDefault = checkUlnConfigEqualsDefault(currUlnConfig, defaultUlnConfig)
+        if (currSettingEqualsDefault) {
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage('send config', connection)
+
         diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
 
         const sendLibAddress = connection.config?.sendLibrary ?? currentSendLibraryAddress
 
-        const tx = oft.setConfigPayload(sendLibAddress, ConfigType.SEND_ULN, newSerializedUlnConfig)
+        const tx = oft.setConfigPayload(sendLibAddress, connection.to.eid, ConfigType.SEND_ULN, newSerializedUlnConfig)
         return {
             payload: tx,
             description: buildTransactionDescription('Set Send Config', connection),
@@ -310,15 +316,15 @@ export async function createSetSendConfigTx(
     }
 }
 
-function checkUlnConfigEqualsDefault(newUlnConfig: UlnConfig, defaultUlnConfig: UlnConfig): boolean {
+function checkUlnConfigEqualsDefault(ulnConfig: UlnConfig, defaultUlnConfig: UlnConfig): boolean {
     return (
-        newUlnConfig.confirmations === defaultUlnConfig.confirmations &&
-        newUlnConfig.optional_dvn_threshold === defaultUlnConfig.optional_dvn_threshold &&
-        JSON.stringify(newUlnConfig.optional_dvns.sort()) === JSON.stringify(defaultUlnConfig.optional_dvns.sort()) &&
-        JSON.stringify(newUlnConfig.required_dvns.sort()) === JSON.stringify(defaultUlnConfig.required_dvns.sort()) &&
-        newUlnConfig.use_default_for_confirmations === defaultUlnConfig.use_default_for_confirmations &&
-        newUlnConfig.use_default_for_required_dvns === defaultUlnConfig.use_default_for_required_dvns &&
-        newUlnConfig.use_default_for_optional_dvns === defaultUlnConfig.use_default_for_optional_dvns
+        ulnConfig.confirmations === defaultUlnConfig.confirmations &&
+        ulnConfig.optional_dvn_threshold === defaultUlnConfig.optional_dvn_threshold &&
+        JSON.stringify(ulnConfig.optional_dvns.sort()) === JSON.stringify(defaultUlnConfig.optional_dvns.sort()) &&
+        JSON.stringify(ulnConfig.required_dvns.sort()) === JSON.stringify(defaultUlnConfig.required_dvns.sort()) &&
+        ulnConfig.use_default_for_confirmations === defaultUlnConfig.use_default_for_confirmations &&
+        ulnConfig.use_default_for_required_dvns === defaultUlnConfig.use_default_for_required_dvns &&
+        ulnConfig.use_default_for_optional_dvns === defaultUlnConfig.use_default_for_optional_dvns
     )
 }
 
@@ -364,25 +370,31 @@ export async function createSetReceiveConfigTx(
         ConfigType.RECV_ULN
     )
 
-    const serializedCurrentConfig = UlnConfig.serialize(connection.to.eid as EndpointId, currUlnConfig)
-    const newSerializedUlnConfig = UlnConfig.serialize(connection.to.eid as EndpointId, newUlnConfig)
+    const serializedCurrentConfig = UlnConfig.serialize(currUlnConfig)
+    const newSerializedUlnConfig = UlnConfig.serialize(newUlnConfig)
 
     if (Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedUlnConfig)) && !newSettingEqualsDefault) {
         printAlreadySet('Receive config', connection)
         return null
     } else {
-        if (newSettingEqualsDefault) {
-            currUlnConfig.required_dvns = ['Default:' + defaultUlnConfig.required_dvns.join(',')]
-            currUlnConfig.optional_dvns = ['Default:' + defaultUlnConfig.optional_dvns.join(',')]
-            currUlnConfig.confirmations = defaultUlnConfig.confirmations
+        let diffMessage = createDiffMessage('receive config', connection)
+        // Add a note if the current config is set to defaults
+        const currSettingEqualsDefault = checkUlnConfigEqualsDefault(currUlnConfig, defaultUlnConfig)
+        if (currSettingEqualsDefault) {
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage('receive config', connection)
+
         diffPrinter(diffMessage, currUlnConfig, newUlnConfig)
 
         const receiveLibAddress =
             connection.config?.receiveLibraryConfig?.receiveLibrary ?? currentReceiveLibraryAddress
 
-        const tx = oft.setConfigPayload(receiveLibAddress, ConfigType.RECV_ULN, newSerializedUlnConfig)
+        const tx = oft.setConfigPayload(
+            receiveLibAddress,
+            connection.to.eid,
+            ConfigType.RECV_ULN,
+            newSerializedUlnConfig
+        )
         return {
             payload: tx,
             description: buildTransactionDescription('Set Receive Config', connection),
@@ -424,15 +436,14 @@ export async function createSetExecutorConfigTx(
     )
 
     const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
-    const defaultExecutorConfig = await msgLib.get_default_executor_config(connection.to.eid)
     const newSettingEqualsDefault = await checkExecutorConfigEqualsDefault(msgLib, newExecutorConfig, connection.to.eid)
 
     const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
     currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address
     // We need to re-serialize the current config to compare it with the new config to ensure same format
-    const serializedCurrentConfig = ExecutorConfig.serialize(connection.to.eid as EndpointId, currExecutorConfig)
+    const serializedCurrentConfig = ExecutorConfig.serialize(currExecutorConfig)
 
-    const newSerializedExecutorConfig = ExecutorConfig.serialize(connection.to.eid as EndpointId, newExecutorConfig)
+    const newSerializedExecutorConfig = ExecutorConfig.serialize(newExecutorConfig)
 
     if (
         Buffer.from(serializedCurrentConfig).equals(Buffer.from(newSerializedExecutorConfig)) &&
@@ -441,15 +452,27 @@ export async function createSetExecutorConfigTx(
         printAlreadySet('Executor config', connection)
         return null
     } else {
-        if (newSettingEqualsDefault) {
-            currExecutorConfig.executor_address = 'Default:' + defaultExecutorConfig.executor_address
+        let diffMessage = createDiffMessage('executor config', connection)
+        // Add a note if the current config is set to defaults
+        const currSettingEqualsDefault = await checkExecutorConfigEqualsDefault(
+            msgLib,
+            currExecutorConfig,
+            connection.to.eid
+        )
+        if (currSettingEqualsDefault) {
+            diffMessage += ' (currently set to defaults)'
         }
-        const diffMessage = createDiffMessage('executor config', connection)
+
         diffPrinter(diffMessage, currExecutorConfig, newExecutorConfig)
 
         const sendLibrary = connection.config.sendLibrary ?? currentSendLibraryAddress
 
-        const tx = oft.setConfigPayload(sendLibrary, ConfigType.EXECUTOR, newSerializedExecutorConfig)
+        const tx = oft.setConfigPayload(
+            sendLibrary,
+            connection.to.eid,
+            ConfigType.EXECUTOR,
+            newSerializedExecutorConfig
+        )
         return {
             payload: tx,
             description: buildTransactionDescription('setExecutorConfig', connection),
