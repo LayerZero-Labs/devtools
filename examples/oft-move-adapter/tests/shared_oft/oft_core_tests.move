@@ -23,6 +23,7 @@ module oft::oft_core_tests {
     use oft::oapp_core;
     use oft::oapp_store::OAPP_ADDRESS;
     use oft::oft_core::{Self, SEND, SEND_AND_CALL};
+    use oft::oft_store;
     use oft_common::oft_compose_msg_codec;
     use oft_common::oft_msg_codec;
 
@@ -32,14 +33,16 @@ module oft::oft_core_tests {
     fun setup(local_eid: u32, remote_eid: u32) {
         // Test the send function
         setup_layerzero_for_test(@simple_msglib, local_eid, remote_eid);
-        let oft_account = &create_signer_for_test(OAPP_ADDRESS());
+        let oft_admin = &create_signer_for_test(@oft_admin);
         initialize_native_token_for_test();
         let (_, metadata, _) = create_fa(b"ZRO");
         let local_decimals = fungible_asset::decimals(metadata);
         oft::oapp_test_helper::init_oapp();
-        oft_core::initialize(oft_account, local_decimals, 6);
-        oapp_core::set_peer(oft_account, SRC_EID, from_bytes32(from_address(@1234)));
-        oapp_core::set_peer(oft_account, DST_EID, from_bytes32(from_address(@4321)));
+
+        oft_store::init_module_for_test();
+        oft_core::initialize(local_decimals, 6);
+        oapp_core::set_peer(oft_admin, SRC_EID, from_bytes32(from_address(@1234)));
+        oapp_core::set_peer(oft_admin, DST_EID, from_bytes32(from_address(@4321)));
     }
 
     #[test]
@@ -103,7 +106,6 @@ module oft::oft_core_tests {
         option::destroy_none(zro_fee);
     }
 
-
     #[test]
     fun test_receive() {
         setup(DST_EID, SRC_EID);
@@ -135,6 +137,7 @@ module oft::oft_core_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
+            b""
         );
 
         oft_core::receive(
@@ -204,6 +207,7 @@ module oft::oft_core_tests {
                 nonce,
             ),
             bytes32::from_bytes32(compute_payload_hash(guid, message)),
+            b""
         );
 
         let called_compose = 0;

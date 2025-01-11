@@ -38,7 +38,7 @@ module oft::oapp_receive {
     /// LZ Receive function to be called by the Executor
     /// This is able to be provided a receive value in the form of a FungibleAsset
     /// For self-executing with a value, this should be called with a script
-    /// The WrappedGuid is used by the caller to
+    /// The WrappedGuid is used by the caller script to enforce that the LayerZero endpoint is called by the OApp
     public fun lz_receive_with_value(
         src_eid: u32,
         sender: vector<u8>,
