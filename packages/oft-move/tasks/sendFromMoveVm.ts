@@ -7,14 +7,15 @@ import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getMoveVMOftAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 
-async function quoteSendOFT(
-    amountLd: number,
-    minAmountLd: number,
+async function sendFromMoveVm(
+    amountLd: bigint,
+    minAmountLd: bigint,
     toAddress: string,
-    gasLimit: number,
-    dstEid: EndpointId
+    gasLimit: bigint,
+    dstEid: EndpointId,
+    srcAddress: string
 ) {
     const { account_address, private_key, network } = await parseYaml()
     console.log(`Using aptos network ${network}`)
@@ -27,21 +28,32 @@ async function quoteSendOFT(
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
+    // Pad EVM address to 64 chars
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 
-    console.log(`Attempting to quote send ${amountLd} units`)
+    console.log(`Attempting to send ${amountLd} units`)
     console.log(`Using OFT at address: ${aptosOftAddress}`)
-    console.log(`From account: ${account_address}`)
+    console.log(`From account: ${srcAddress}`)
     console.log(`To account: ${toAddress}`)
     console.log(`dstEid: ${dstEid}`)
+    console.log(`srcAddress: ${srcAddress}`)
 
     const extra_options = options.toBytes()
     const compose_message = new Uint8Array([])
     const oft_cmd = new Uint8Array([])
 
+    console.log(`srcAddress: ${srcAddress}`)
+    console.log(`dstEid: ${dstEid}`)
+    console.log(`toAddressBytes: ${toAddressBytes}`)
+    console.log(`amountLd: ${amountLd}`)
+    console.log(`minAmountLd: ${minAmountLd}`)
+    console.log(`extra_options: ${extra_options}`)
+    console.log(`compose_message: ${compose_message}`)
+    console.log(`oft_cmd: ${oft_cmd}`)
+    console.log(`false: ${false}`)
     const [nativeFee, zroFee] = await oft.quoteSend(
-        account_address,
+        srcAddress,
         dstEid,
         toAddressBytes,
         amountLd,
@@ -49,13 +61,36 @@ async function quoteSendOFT(
         extra_options,
         compose_message,
         oft_cmd,
-        false // pay_in_zro: false to pay in native tokens
+        false
     )
 
     console.log('\nQuote received:')
     console.log('- Native fee:', nativeFee)
     console.log('- ZRO fee:', zroFee)
-    console.log('If the above fees are acceptable, the wiring is confirmed to be successful.')
+
+    const sendPayload = oft.sendPayload(
+        dstEid,
+        toAddressBytes,
+        amountLd,
+        minAmountLd,
+        extra_options,
+        compose_message,
+        oft_cmd,
+        nativeFee,
+        0
+    )
+
+    const payloads = [{ payload: sendPayload, description: 'Send Aptos OFT', eid: dstEid }]
+    await sendAllTxs(aptos, oft, srcAddress, payloads)
+
+    // Check the balance again
+    const balance = await aptos.view({
+        payload: {
+            function: `${aptosOftAddress}::oft::balance`,
+            functionArguments: [srcAddress],
+        },
+    })
+    console.log('New balance:', balance)
 }
 
-export { quoteSendOFT }
+export { sendFromMoveVm }
