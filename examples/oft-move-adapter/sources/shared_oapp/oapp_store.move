@@ -2,7 +2,8 @@
 ///
 /// This module should generally not be modified by the OApp developer.
 module oft::oapp_store {
-    use std::signer::address_of;
+    use std::fungible_asset::{Self, FungibleAsset};
+    use std::object::object_address;
     use std::table::{Self, Table};
 
     use endpoint_v2_common::bytes32::Bytes32;
@@ -15,6 +16,7 @@ module oft::oapp_store {
 
     // ************************************************* CONFIGURATION *************************************************
 
+    /// The address of the OApp
     public inline fun OAPP_ADDRESS(): address { @oft }
 
     // *********************************************** END CONFIGURATION ***********************************************
@@ -27,6 +29,7 @@ module oft::oapp_store {
         enforced_options: Table<EnforcedOptionsKey, vector<u8>>,
     }
 
+    /// Enforced Options are stored by the OApp by EID and a OApp-specific "message type" (u16)
     struct EnforcedOptionsKey has store, copy, drop { eid: u32, msg_type: u16 }
 
     // =================================================== Call Ref ===================================================
@@ -84,6 +87,11 @@ module oft::oapp_store {
     }
 
     // ===================================================== Misc =====================================================
+
+    /// Checks that a token is the native token
+    public(friend) fun is_native_token(token: &FungibleAsset): bool {
+        object_address(&fungible_asset::asset_metadata(token)) == @native_token_metadata_address
+    }
 
     inline fun store(): &OAppStore { borrow_global(OAPP_ADDRESS()) }
 
