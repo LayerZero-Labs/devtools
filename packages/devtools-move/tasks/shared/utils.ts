@@ -6,6 +6,7 @@ import type {
     OAppOmniGraphHardhat,
     OmniEdgeHardhat,
 } from '@layerzerolabs/toolbox-hardhat'
+import { ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 import path from 'path'
 import 'hardhat/register'
 
@@ -41,6 +42,31 @@ export async function createEidToNetworkMapping(_value = 'networkName'): Promise
         }
     }
     return eidNetworkNameMapping
+}
+
+export async function getConfigConnectionsFromChainType(
+    key: keyof OmniEdgeHardhat<OAppEdgeConfig | undefined>,
+    chainType: ChainType,
+    configPath: string
+): Promise<OAppOmniGraphHardhat['connections']> {
+    const configFile = await import(configPath)
+    const config = configFile.default
+    if (!config.connections) {
+        throw new Error('No connections found in config')
+    }
+
+    const conns = config.connections
+    const connections: OAppOmniGraphHardhat['connections'] = []
+
+    for (const conn of conns) {
+        if (key == 'to' && endpointIdToChainType(conn.to.eid) == chainType) {
+            connections.push(conn)
+        } else if (key == 'from' && endpointIdToChainType(conn.from.eid) == chainType) {
+            connections.push(conn)
+        }
+    }
+
+    return connections
 }
 
 export async function getConfigConnections(
