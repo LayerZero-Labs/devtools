@@ -1,9 +1,9 @@
 import { Contract } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-
+import { basexToBytes32 } from '../../shared/basexToBytes32'
 import { createDiffMessage, printAlreadySet } from '../../shared/messageBuilder'
-import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata } from '../utils/types'
+import type { EidTxMap, OmniContractMetadataMapping } from '../utils/types'
 
 /**
  * @notice Sets peer information for connections to wire.
@@ -11,29 +11,32 @@ import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata } from '../u
  * @dev Sets the new peer on the OApp
  * @returns EidTxMap
  */
-export async function createSetPeerTransactions(
-    eidDataMapping: ContractMetadataMapping,
-    nonEvmOapp: NonEvmOAppMetadata
-): Promise<EidTxMap> {
+export async function createSetPeerTransactions(eidDataMappings: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { contract }] of Object.entries(eidDataMapping)) {
-        const { eid: aptosEid, address: targetNonEvmAddress } = nonEvmOapp
+    for (const [toEid, { wireOntoOapps, contract }] of Object.entries(eidDataMappings)) {
+        for (const wireOntoOapp of wireOntoOapps) {
+            const { eid: peerToEid, address: targetNonEvmAddress } = wireOntoOapp
+            const currPeer = await getPeer(contract.oapp, peerToEid)
+            const targetEvmAddressAsBytes32 = basexToBytes32(targetNonEvmAddress, peerToEid)
 
-        const currPeer = await getPeer(contract.oapp, aptosEid)
+            if (currPeer === targetEvmAddressAsBytes32) {
+                printAlreadySet('peer', Number(toEid), Number(peerToEid))
+                continue
+            }
 
-        if (currPeer === targetNonEvmAddress) {
-            printAlreadySet('peer', Number(eid), Number(aptosEid))
-            continue
+            const diffMessage = createDiffMessage('peer', Number(toEid), Number(peerToEid))
+            diffPrinter(
+                diffMessage,
+                { 'base-native': currPeer, 'base-32': currPeer },
+                { 'base-native': targetNonEvmAddress, 'base-32': targetEvmAddressAsBytes32 }
+            )
+
+            const tx = await contract.oapp.populateTransaction.setPeer(peerToEid, targetEvmAddressAsBytes32)
+
+            txTypePool[toEid] = txTypePool[toEid] ?? []
+            txTypePool[toEid].push(tx)
         }
-
-        const diffMessage = createDiffMessage('peer', Number(eid), Number(aptosEid))
-        diffPrinter(diffMessage, { peer: currPeer }, { peer: targetNonEvmAddress })
-
-        const tx = await contract.oapp.populateTransaction.setPeer(aptosEid, targetNonEvmAddress)
-
-        txTypePool[eid] = txTypePool[eid] ?? []
-        txTypePool[eid].push(tx)
     }
 
     return txTypePool
