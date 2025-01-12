@@ -70,14 +70,13 @@ task(TASK_LZ_OAPP_WIRE)
         //
         //
 
-        if (args.solanaSecretKey == null) {
-            logger.warn(
-                `Missing --solana-secret-key CLI argument. A random keypair will be generated and interaction with solana programs will not be possible`
-            )
+        if (!args.solanaSecretKey) {
+            logger.error('Missing --solana-secret-key CLI argument.')
+            return
         }
 
         // The first step is to create the user Keypair from the secret passed in
-        const wallet = args.solanaSecretKey ?? Keypair.generate()
+        const wallet = args.solanaSecretKey
         const userAccount = wallet.publicKey
 
         // Then we grab the programId from the args
