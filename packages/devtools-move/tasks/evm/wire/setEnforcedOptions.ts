@@ -12,7 +12,7 @@ import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/me
 
 import { diffPrinter } from '../../shared/utils'
 
-import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, enforcedOptionParam } from '../utils/types'
+import type { OmniContractMetadataMapping, EidTxMap, enforcedOptionParam } from '../utils/types'
 
 type optionTypes = boolean | ExecutorLzReceiveOption | ExecutorNativeDropOption | ComposeOption | undefined
 
@@ -23,84 +23,86 @@ type optionTypes = boolean | ExecutorLzReceiveOption | ExecutorNativeDropOption 
  * @returns EidTxMap
  */
 export async function createSetEnforcedOptionsTransactions(
-    eidDataMapping: ContractMetadataMapping,
-    _nonEvmOapp: NonEvmOAppMetadata
+    eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (!configOapp?.enforcedOptions) {
-            printNotSet('enforced options', Number(eid), Number(_nonEvmOapp.eid))
-            continue
-        }
-        const toEnforcedOptions = configOapp.enforcedOptions
-        const thisEnforcedOptionBuilder: Record<number, Options> = {}
-
-        // Iterate over toEnforcedOptions and reduce by msgType
-        for (const currEnforcedOption of toEnforcedOptions) {
-            if (!thisEnforcedOptionBuilder[currEnforcedOption.msgType]) {
-                thisEnforcedOptionBuilder[currEnforcedOption.msgType] = Options.newOptions()
+    for (const [eid, { wireOntoOapps, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const wireOntoOapp of wireOntoOapps) {
+            const { eid: peerToEid } = wireOntoOapp
+            if (!configOapp?.enforcedOptions) {
+                printNotSet('enforced options', Number(eid), Number(peerToEid))
+                continue
             }
+            const toEnforcedOptions = configOapp.enforcedOptions
+            const thisEnforcedOptionBuilder: Record<number, Options> = {}
 
-            thisEnforcedOptionBuilder[currEnforcedOption.msgType] = reduceOptionsByMsgType(
-                thisEnforcedOptionBuilder[currEnforcedOption.msgType],
-                currEnforcedOption
-            )
-        }
-
-        // Extract the msgTypes
-        const msgTypes = Object.keys(thisEnforcedOptionBuilder).map((msgType) => Number(msgType))
-
-        // Populate the arguments for the transaction function call
-        const enforcedOptionParams: enforcedOptionParam[] = []
-
-        const diffcurrOptions: Record<number, string> = {}
-        const diffnewOptions: Record<number, string> = {}
-
-        for (const msgType of msgTypes) {
-            const currOptions = await getEnforcedOption(contract.oapp, eid, msgType)
-            const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
-
-            if (currOptions === newOptions) {
-                printAlreadySet('enforced options', Number(eid), Number(_nonEvmOapp.eid))
-            } else {
-                diffcurrOptions[msgType] = currOptions
-                diffnewOptions[msgType] = newOptions
-
-                enforcedOptionParams.push({
-                    eid: eid,
-                    msgType: msgType,
-                    options: newOptions,
-                })
-
-                const currOptionsDecoded: Record<string, optionTypes> = {}
-                const newOptionsDecoded: Record<string, optionTypes> = {}
-                const optionTypeCount = Object.keys(ExecutorOptionType).length / 2
-
-                for (let i = 1; i <= optionTypeCount; i++) {
-                    const currOption = decodeOptionsByMsgType(currOptions, i)
-                    const newOption = decodeOptionsByMsgType(newOptions, i)
-
-                    if (typeof currOption === 'object' && typeof newOption === 'object') {
-                        const newOptionKeys = Object.keys(newOption)
-
-                        if (newOptionKeys.length > 0) {
-                            const optionTypeName = ExecutorOptionType[i]
-                            currOptionsDecoded[`${optionTypeName}`] = currOption
-                            newOptionsDecoded[`${optionTypeName}`] = newOption
-                        }
-                    }
+            // Iterate over toEnforcedOptions and reduce by msgType
+            for (const currEnforcedOption of toEnforcedOptions) {
+                if (!thisEnforcedOptionBuilder[currEnforcedOption.msgType]) {
+                    thisEnforcedOptionBuilder[currEnforcedOption.msgType] = Options.newOptions()
                 }
 
-                diffPrinter(
-                    createDiffMessage('enforced options', Number(eid), Number(_nonEvmOapp.eid)),
-                    currOptionsDecoded,
-                    newOptionsDecoded
+                thisEnforcedOptionBuilder[currEnforcedOption.msgType] = reduceOptionsByMsgType(
+                    thisEnforcedOptionBuilder[currEnforcedOption.msgType],
+                    currEnforcedOption
                 )
-                const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+            }
 
-                txTypePool[eid] = txTypePool[eid] ?? []
-                txTypePool[eid].push(tx)
+            // Extract the msgTypes
+            const msgTypes = Object.keys(thisEnforcedOptionBuilder).map((msgType) => Number(msgType))
+
+            // Populate the arguments for the transaction function call
+            const enforcedOptionParams: enforcedOptionParam[] = []
+
+            const diffcurrOptions: Record<number, string> = {}
+            const diffnewOptions: Record<number, string> = {}
+
+            for (const msgType of msgTypes) {
+                const currOptions = await getEnforcedOption(contract.oapp, peerToEid, msgType)
+                const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
+
+                if (currOptions === newOptions) {
+                    printAlreadySet('enforced options', Number(eid), Number(peerToEid))
+                } else {
+                    diffcurrOptions[msgType] = currOptions
+                    diffnewOptions[msgType] = newOptions
+
+                    enforcedOptionParams.push({
+                        eid: peerToEid,
+                        msgType: msgType,
+                        options: newOptions,
+                    })
+
+                    const currOptionsDecoded: Record<string, optionTypes> = {}
+                    const newOptionsDecoded: Record<string, optionTypes> = {}
+                    const optionTypeCount = Object.keys(ExecutorOptionType).length / 2
+
+                    for (let i = 1; i <= optionTypeCount; i++) {
+                        const currOption = decodeOptionsByMsgType(currOptions, i)
+                        const newOption = decodeOptionsByMsgType(newOptions, i)
+
+                        if (typeof currOption === 'object' && typeof newOption === 'object') {
+                            const newOptionKeys = Object.keys(newOption)
+
+                            if (newOptionKeys.length > 0) {
+                                const optionTypeName = ExecutorOptionType[i]
+                                currOptionsDecoded[`${optionTypeName}`] = currOption
+                                newOptionsDecoded[`${optionTypeName}`] = newOption
+                            }
+                        }
+                    }
+
+                    diffPrinter(
+                        createDiffMessage('enforced options', Number(eid), Number(peerToEid)),
+                        currOptionsDecoded,
+                        newOptionsDecoded
+                    )
+                    const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+
+                    txTypePool[eid] = txTypePool[eid] ?? []
+                    txTypePool[eid].push(tx)
+                }
             }
         }
     }
