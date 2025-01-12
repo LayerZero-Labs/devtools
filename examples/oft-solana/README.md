@@ -81,7 +81,7 @@ cp .env.example .env
 
 In the `.env` just created, set `SOLANA_PRIVATE_KEY` to your private key value in base58 format. Since the locally stored keypair is in an integer array format, we'd need to encode it into base58 first.
 
-You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana.id.json`
+You can run the `npx hardhat lz:solana:base-58` to output your private key in base58 format. Optionally, pass in a value for the `--keypair-file` flag if you want to use the keypair other than the default at `~/.config/solana/id.json`
 
 Also set the `RPC_URL_SOLANA_TESTNET` value. Note that while the naming used here is `TESTNET`, it refers to the [Solana Devnet](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts#solana-testnet). We use `TESTNET` to keep it consistent with the existing EVM testnets.
 
@@ -100,14 +100,18 @@ anchor keys sync
 
 :warning: `--force` flag overwrites the existing keys with the ones you generate.
 
-Run `anchor keys list` to view the generated programIds (public keys). The output should look something like this:
+Run 
+```
+anchor keys list
+```
+to view the generated programIds (public keys). The output should look something like this:
 
 ```
 endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
 
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
+Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs) (located inside this project under oft-solana/programs/oft/src/lib.rs). Note the following snippet:
 
 ```
 declare_id!(Pubkey::new_from_array(program_id_from_env!(
@@ -206,7 +210,7 @@ pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID>
 
 :warning: Use `--additional-minters` flag to add a CSV of additional minter addresses to the Mint Authority Multisig. If you do not want to, you must specify `--only-oft-store true`.
 
-:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation.
+:information_source: You can also specify `--amount <AMOUNT>` to have the OFT minted to your deployer address upon token creation. Remember this is in local decimals, so with local decimals of 9, you would need to pass in `--amount1000000000` to mint 1 OFT.
 
 #### For OFTAdapter:
 
