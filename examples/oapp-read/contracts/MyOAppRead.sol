@@ -93,7 +93,7 @@ contract MyOAppRead is OAppRead, IOAppMapper, IOAppReducer {
      * @param appLabel The application label to use for the message.
      * @param _readRequests An array of `EvmReadRequest` structs containing the read requests to be made.
      * @param _computeRequest A `EvmComputeRequest` struct containing the compute request to be made.
-     * @return cmd The encoded command to be sent to to the channel.
+     * @return cmd The encoded command to be sent to the channel.
      */
     function buildCmd(
         uint16 appLabel,
