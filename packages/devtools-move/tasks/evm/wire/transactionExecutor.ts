@@ -4,7 +4,7 @@ import { Contract, ethers, providers } from 'ethers'
 
 import { promptForConfirmation } from '../../shared/utils'
 
-import type { AccountData, ContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
+import type { AccountData, OmniContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
 import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 /**
@@ -15,7 +15,7 @@ import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
  * - Simulates transactions on-chain and catches any errors before submitting the transaction
  */
 export async function executeTransactions(
-    eidMetaData: ContractMetadataMapping,
+    eidMetaData: OmniContractMetadataMapping,
     TxTypeEidMapping: TxEidMapping,
     rpcUrlsMap: Record<eid, string>,
     simulation = 'dry-run',
@@ -71,7 +71,7 @@ export async function executeTransactions(
 
         const network = getNetworkForChainId(Number(eid))
         console.log(
-            `   • Chain ${network.chainName}-${network.env}: ${ethers.utils.formatEther(
+            `   • Balance on ${network.chainName}-${network.env} for ${signer.address}: ${ethers.utils.formatEther(
                 await newProvider.getBalance(signer.address)
             )} ETH`
         )
@@ -92,6 +92,7 @@ export async function executeTransactions(
                 const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
                 const signer = accountEidMap[eid].signer
 
+                console.log(signer.address)
                 tx.gasLimit = await provider.estimateGas(tx)
                 tx.gasPrice = accountEidMap[eid].gasPrice
                 tx.nonce = accountEidMap[eid].nonce++

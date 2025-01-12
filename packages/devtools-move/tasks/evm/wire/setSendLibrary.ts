@@ -2,7 +2,7 @@ import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 
-import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, address, eid } from '../utils/types'
+import type { OmniContractMetadataMapping, EidTxMap, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
@@ -16,40 +16,40 @@ const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
  * @dev - The "value" of the current default send library is a fixed value that is invariant on LZ changing the default send library.
  * @returns EidTxMap
  */
-export async function createSetSendLibraryTransactions(
-    eidDataMapping: ContractMetadataMapping,
-    nonEvmOapp: NonEvmOAppMetadata
-): Promise<EidTxMap> {
+export async function createSetSendLibraryTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (!configOapp?.sendLibrary) {
-            printNotSet('send library', Number(eid), Number(nonEvmOapp.eid))
-            continue
+    for (const [eid, { wireOntoOapps, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const wireOntoOapp of wireOntoOapps) {
+            const { eid: peerToEid } = wireOntoOapp
+            if (!configOapp?.sendLibrary) {
+                printNotSet('send library', Number(eid), Number(peerToEid))
+                continue
+            }
+
+            const { currSendLibrary, newSendLibrary } = await parseSendLibrary(
+                configOapp.sendLibrary,
+                contract.epv2,
+                address.oapp,
+                peerToEid
+            )
+
+            if (currSendLibrary === newSendLibrary) {
+                printAlreadySet('send library', Number(eid), Number(peerToEid))
+                continue
+            }
+
+            diffPrinter(
+                createDiffMessage('send library', Number(eid), Number(peerToEid)),
+                { sendLibrary: currSendLibrary },
+                { sendLibrary: newSendLibrary }
+            )
+
+            const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, peerToEid, newSendLibrary)
+
+            txTypePool[eid] = txTypePool[eid] ?? []
+            txTypePool[eid].push(tx)
         }
-
-        const { currSendLibrary, newSendLibrary } = await parseSendLibrary(
-            configOapp.sendLibrary,
-            contract.epv2,
-            address.oapp,
-            nonEvmOapp.eid
-        )
-
-        if (currSendLibrary === newSendLibrary) {
-            printAlreadySet('send library', Number(eid), Number(nonEvmOapp.eid))
-            continue
-        }
-
-        diffPrinter(
-            createDiffMessage('send library', Number(eid), Number(nonEvmOapp.eid)),
-            { sendLibrary: currSendLibrary },
-            { sendLibrary: newSendLibrary }
-        )
-
-        const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, nonEvmOapp.eid, newSendLibrary)
-
-        txTypePool[eid] = txTypePool[eid] ?? []
-        txTypePool[eid].push(tx)
     }
 
     return txTypePool
