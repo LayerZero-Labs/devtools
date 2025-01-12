@@ -41,8 +41,18 @@ class AptosEVMCLI {
         if (!this.operations[NewOperation.vm]) {
             this.operations[NewOperation.vm] = {}
         }
-        if (!this.operations[NewOperation.vm][NewOperation.operation]) {
-            this.operations[NewOperation.vm][NewOperation.operation] = {
+
+        const a = this.operations[NewOperation.vm]
+        if (!a) {
+            throw new Error('a is undefined')
+        }
+
+        if (!a[NewOperation.operation]) {
+            const b = this.operations[NewOperation.vm]
+            if (!b) {
+                throw new Error('b is undefined')
+            }
+            b[NewOperation.operation] = {
                 func: NewOperation.impl,
                 requiredArgs: NewOperation.reqArgs || [],
                 description: NewOperation.description,
@@ -70,7 +80,12 @@ class AptosEVMCLI {
         const vm = this.args.vm
         const op = this.args.op
 
-        const exec_op = this.operations[vm][op]
+        const a = this.operations[vm]
+        if (!a) {
+            throw new Error('a is undefined')
+        }
+
+        const exec_op = a[op]
         if (!exec_op) {
             throw new Error(`Operation ${op} is not valid for ${vm}`)
         }
