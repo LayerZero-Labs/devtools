@@ -18,6 +18,11 @@ const ethContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
+const solanaContract: OmniPointHardhat = {
+    eid: EndpointId.SOLANA_V2_TESTNET,
+    contractName: 'MyOFT',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -155,7 +160,68 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveLibraryTimeoutConfig: {
                     lib: '0x188d4bbCeD671A7aA2b5055937F79510A32e9683',
-                    expiry: BigInt(500),
+                    expiry: BigInt(67323472),
+                },
+                sendConfig: {
+                    executorConfig: {
+                        maxMessageSize: 65536,
+                        executor: '0x31894b190a8bAbd9A067Ce59fde0BfCFD2B18470',
+                    },
+                    ulnConfig: {
+                        confirmations: BigInt(5),
+                        requiredDVNs: [
+                            '0x0eE552262f7B562eFcED6DD4A7e2878AB897d405',
+                            '0x6f99eA3Fc9206E2779249E15512D7248dAb0B52e',
+                        ],
+                        optionalDVNs: [
+                            '0x2dDf08e397541721acD82E5b8a1D0775454a180B',
+                            '0x6F978ee5bfd7b1A8085A3eA9e54eB76e668E195a',
+                        ],
+                        optionalDVNThreshold: 1,
+                    },
+                },
+                receiveConfig: {
+                    ulnConfig: {
+                        confirmations: BigInt(5),
+                        requiredDVNs: [
+                            '0x0eE552262f7B562eFcED6DD4A7e2878AB897d405',
+                            '0x6f99eA3Fc9206E2779249E15512D7248dAb0B52e',
+                        ],
+                        optionalDVNs: [
+                            '0x2dDf08e397541721acD82E5b8a1D0775454a180B',
+                            '0x6F978ee5bfd7b1A8085A3eA9e54eB76e668E195a',
+                        ],
+                        optionalDVNThreshold: 1,
+                    },
+                },
+            },
+        },
+        {
+            from: bscContract,
+            to: solanaContract,
+            config: {
+                enforcedOptions: [
+                    {
+                        msgType: 1,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 200000, // gas limit in wei for EndpointV2.lzReceive
+                        value: 0, // msg.value in wei for EndpointV2.lzReceive
+                    },
+                    {
+                        msgType: 2,
+                        optionType: ExecutorOptionType.LZ_RECEIVE,
+                        gas: 200000, // gas limit in wei for EndpointV2.lzCompose
+                        value: 0, // msg.value in wei for EndpointV2.lzCompose
+                    },
+                ],
+                sendLibrary: '0x55f16c442907e86D764AFdc2a07C2de3BdAc8BB7',
+                receiveLibraryConfig: {
+                    receiveLibrary: '0x188d4bbCeD671A7aA2b5055937F79510A32e9683',
+                    gracePeriod: BigInt(0),
+                },
+                receiveLibraryTimeoutConfig: {
+                    lib: '0x188d4bbCeD671A7aA2b5055937F79510A32e9683',
+                    expiry: BigInt(67323472),
                 },
                 sendConfig: {
                     executorConfig: {

@@ -18,10 +18,9 @@ export type eid = string
 export type EidTxMap = Record<eid, [PopulatedTransaction]>
 export type address = string
 
-export type NonEvmOAppMetadata = {
-    address: address
+type WireOntoOapp = {
     eid: eid
-    rpc: string
+    address: address
 }
 
 export type ContractMetadata = {
@@ -33,6 +32,7 @@ export type ContractMetadata = {
         oapp: ethers.Contract
         epv2: ethers.Contract
     }
+    wireOntoOapps: WireOntoOapp[]
     provider: ethers.providers.JsonRpcProvider
     configAccount: OAppNodeConfig
     configOapp: OAppEdgeConfig | undefined
@@ -48,8 +48,8 @@ export type AccountData = {
 //[TxTypes][eid] = PopulatedTransaction
 export type TxEidMapping = Record<TxTypes, EidTxMap>
 
-//[number][address] = ContractMetadata
-export type ContractMetadataMapping = Record<eid, ContractMetadata>
+//[fromEid as number] = ContractMetadata
+export type OmniContractMetadataMapping = Record<eid, ContractMetadata>
 
 export type enforcedOptionParam = {
     eid: eid
