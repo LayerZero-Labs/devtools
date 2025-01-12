@@ -14,13 +14,6 @@ services:
   #                Expose nodes on host ports
   #
   # .oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
-  network-aptos:
-    ports:
-      # The Node API
-      - "10004:8080"
-      # The faucet API
-      - "10005:8081"
-
   network-vengaboys:
     ports:
       - "10001:8545"
