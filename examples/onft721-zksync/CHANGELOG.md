@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.2
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
 ## 1.0.1
 
 ### Patch Changes

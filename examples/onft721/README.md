@@ -16,6 +16,16 @@
 
 <p align="center">Template project for getting started with LayerZero's <code>ONFT721</code> contract development.</p>
 
+### ONFT721Adapter additional setup:
+
+- In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the ONFT721Adapter to:
+  ```typescript
+  // Replace `0x0` with the address of the ERC721 token you want to adapt to the ONFT721 functionality.
+  onft721Adapter: {
+      tokenAddress: '0x0',
+  }
+  ```
+
 ## 1) Developing Contracts
 
 #### Installing dependencies

@@ -1,19 +1,16 @@
-import assert from 'assert'
-
-import { fetchAddressLookupTable, findAssociatedTokenPda, setComputeUnitLimit } from '@metaplex-foundation/mpl-toolbox'
-import { AddressLookupTableInput, PublicKey, TransactionBuilder, publicKey } from '@metaplex-foundation/umi'
+import { findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
+import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
-import { formatEid } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { deriveConnection, getExplorerTxLink, getLayerZeroScanLink } from './index'
+import { addComputeUnitInstructions, deriveConnection, getExplorerTxLink, getLayerZeroScanLink } from './index'
 
 interface Args {
     amount: number
@@ -24,11 +21,7 @@ interface Args {
     mint: string
     escrow: string
     tokenProgram: string
-}
-
-const LOOKUP_TABLE_ADDRESS: Partial<Record<EndpointId, PublicKey>> = {
-    [EndpointId.SOLANA_V2_MAINNET]: publicKey('AokBxha6VMLLgf97B5VYHEtqztamWmYERBmmFvjuTzJB'),
-    [EndpointId.SOLANA_V2_TESTNET]: publicKey('9thqPdbR27A1yLWw2spwJLySemiGMXxPnEvfmXVk4KuK'),
+    computeUnitPriceScaleFactor: number
 }
 
 // Define a Hardhat task for sending OFT from Solana
@@ -41,6 +34,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
     .addParam('programId', 'The OFT program ID', undefined, types.string)
     .addParam('escrow', 'The OFT escrow public key', undefined, types.string)
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), types.string, true)
+    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, types.float, true)
     .setAction(
         async ({
             amount,
@@ -51,8 +45,9 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             programId: programIdStr,
             escrow: escrowStr,
             tokenProgram: tokenProgramStr,
+            computeUnitPriceScaleFactor,
         }: Args) => {
-            const { umi, umiWalletSigner } = await deriveConnection(fromEid)
+            const { connection, umi, umiWalletSigner } = await deriveConnection(fromEid)
 
             const oftProgramId = publicKey(programIdStr)
             const mint = publicKey(mintStr)
@@ -116,18 +111,19 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                     token: tokenProgramId,
                 }
             )
-            const lookupTableAddress = LOOKUP_TABLE_ADDRESS[fromEid]
-            assert(lookupTableAddress != null, `No lookup table found for ${formatEid(fromEid)}`)
-            const addressLookupTableInput: AddressLookupTableInput = await fetchAddressLookupTable(
-                umi,
-                lookupTableAddress
-            )
 
-            const { signature } = await new TransactionBuilder([ix])
-                .add(setComputeUnitLimit(umi, { units: 500_000 }))
-                .setAddressLookupTables([addressLookupTableInput])
-                .sendAndConfirm(umi)
+            let txBuilder = transactionBuilder().add([ix])
+            txBuilder = await addComputeUnitInstructions(
+                connection,
+                umi,
+                fromEid,
+                txBuilder,
+                umiWalletSigner,
+                computeUnitPriceScaleFactor
+            )
+            const { signature } = await txBuilder.sendAndConfirm(umi)
             const transactionSignatureBase58 = bs58.encode(signature)
+
             console.log(`✅ Sent ${amount} token(s) to destination EID: ${toEid}!`)
             const isTestnet = fromEid == EndpointId.SOLANA_V2_TESTNET
             console.log(

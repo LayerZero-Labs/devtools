@@ -1,5 +1,25 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.6
+
+### Patch Changes
+
+- 611511f: fix lz:oapp:config:get regression
+
+## 6.0.5
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/protocol-devtools-evm@3.0.3
+  - @layerzerolabs/devtools-evm-hardhat@2.0.4
+  - @layerzerolabs/protocol-devtools@1.1.2
+  - @layerzerolabs/ua-devtools-evm@5.0.3
+  - @layerzerolabs/devtools-evm@1.0.2
+  - @layerzerolabs/ua-devtools@3.0.2
+  - @layerzerolabs/devtools@0.4.3
+
 ## 6.0.4
 
 ### Patch Changes
