@@ -2,10 +2,10 @@ import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
-import type { ContractMetadataMapping, EidTxMap, NonEvmOAppMetadata, RecvLibParam, address, eid } from '../utils/types'
+import type { OmniContractMetadataMapping, EidTxMap, RecvLibParam, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
-const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
+const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0'
 
 /**
  * @notice Generates setReceiveLibrary transaction per Eid's OFT.
@@ -17,50 +17,52 @@ const error_LZ_DefaultReceiveLibUnavailable = '0x78e84d0│'
  * @returns EidTxMap
  */
 export async function createSetReceiveLibraryTransactions(
-    eidDataMapping: ContractMetadataMapping,
-    nonEvmOapp: NonEvmOAppMetadata
+    eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        if (configOapp?.receiveLibraryConfig === undefined) {
-            printNotSet('receive library', Number(eid), Number(nonEvmOapp.eid))
-            continue
+    for (const [eid, { wireOntoOapps, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const wireOntoOapp of wireOntoOapps) {
+            const { eid: peerToEid } = wireOntoOapp
+            if (configOapp?.receiveLibraryConfig === undefined) {
+                printNotSet('receive library', Number(eid), Number(peerToEid))
+                continue
+            }
+
+            const { currReceiveLibrary, newReceiveLibrary } = await parseReceiveLibrary(
+                configOapp.receiveLibraryConfig,
+                contract.epv2,
+                address.oapp,
+                peerToEid
+            )
+
+            if (newReceiveLibrary === '') {
+                printNotSet('receive library', Number(eid), Number(peerToEid))
+                continue
+            }
+
+            if (currReceiveLibrary === newReceiveLibrary) {
+                printAlreadySet('receive library', Number(eid), Number(peerToEid))
+                continue
+            }
+            const receiveLibraryGracePeriod = configOapp.receiveLibraryConfig.gracePeriod
+
+            diffPrinter(
+                createDiffMessage('receive library', Number(eid), Number(peerToEid)),
+                { receiveLibrary: currReceiveLibrary },
+                { receiveLibrary: newReceiveLibrary }
+            )
+
+            const tx = await contract.epv2.populateTransaction.setReceiveLibrary(
+                address.oapp,
+                peerToEid,
+                newReceiveLibrary,
+                receiveLibraryGracePeriod
+            )
+
+            txTypePool[eid] = txTypePool[eid] ?? []
+            txTypePool[eid].push(tx)
         }
-
-        const { currReceiveLibrary, newReceiveLibrary } = await parseReceiveLibrary(
-            configOapp.receiveLibraryConfig,
-            contract.epv2,
-            address.oapp,
-            nonEvmOapp.eid
-        )
-
-        if (newReceiveLibrary === '') {
-            printNotSet('receive library', Number(eid), Number(nonEvmOapp.eid))
-            continue
-        }
-
-        if (currReceiveLibrary === newReceiveLibrary) {
-            printAlreadySet('receive library', Number(eid), Number(nonEvmOapp.eid))
-            continue
-        }
-        const receiveLibraryGracePeriod = configOapp.receiveLibraryConfig.gracePeriod
-
-        diffPrinter(
-            createDiffMessage('receive library', Number(eid), Number(nonEvmOapp.eid)),
-            { receiveLibrary: currReceiveLibrary },
-            { receiveLibrary: newReceiveLibrary }
-        )
-
-        const tx = await contract.epv2.populateTransaction.setReceiveLibrary(
-            address.oapp,
-            nonEvmOapp.eid,
-            newReceiveLibrary,
-            receiveLibraryGracePeriod
-        )
-
-        txTypePool[eid] = txTypePool[eid] ?? []
-        txTypePool[eid].push(tx)
     }
 
     return txTypePool
@@ -74,6 +76,7 @@ export async function parseReceiveLibrary(
 ): Promise<{ currReceiveLibrary: string; newReceiveLibrary: string }> {
     if (receiveLib === undefined || receiveLib.receiveLibrary === undefined) {
         const currReceiveLibrary = await getDefaultReceiveLibrary(epv2, oappAddress, eid)
+        console.log('currReceiveLibrary', currReceiveLibrary)
 
         return {
             currReceiveLibrary,
@@ -111,7 +114,7 @@ export async function getDefaultReceiveLibrary(
 ): Promise<string> {
     const recvLib = await epv2Contract.getDefaultReceiveLibrary(evmAddress, aptosEid)
 
-    const sendLibAddress = utils.getAddress(recvLib)
+    const recvLibAddress = utils.getAddress(recvLib)
 
-    return sendLibAddress
+    return recvLibAddress
 }
