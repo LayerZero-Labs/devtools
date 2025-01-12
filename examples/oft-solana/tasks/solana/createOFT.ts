@@ -13,7 +13,7 @@ import {
     publicKey,
     transactionBuilder,
 } from '@metaplex-foundation/umi'
-import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
@@ -187,10 +187,13 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
             const mintAuthorityPublicKey = await createMintAuthorityMultisig(
                 connection,
-                toWeb3JsKeypair(umiWalletKeyPair),
+                umi,
+                eid,
+                umiWalletSigner,
                 toWeb3JsPublicKey(oftStorePda),
                 toWeb3JsPublicKey(tokenProgramId), // Only configurable for MABA
-                additionalMinters
+                additionalMinters,
+                computeUnitPriceScaleFactor
             )
             console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
             await checkMultisigSigners(connection, mintAuthorityPublicKey, [
