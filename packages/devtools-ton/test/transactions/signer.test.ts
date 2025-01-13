@@ -1,7 +1,7 @@
 import { OmniSignerTON, serializeMessageRelaxed } from '@/transactions'
 import { OmniTransaction } from '@layerzerolabs/devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { internal, WalletContractV3R2, WalletContractV4 } from '@ton/ton'
+import { internal, TonClient, WalletContractV3R2, WalletContractV4 } from '@ton/ton'
 import { mnemonicToWalletKey } from '@ton/crypto'
 
 describe('transactions/signer', () => {
@@ -9,17 +9,18 @@ describe('transactions/signer', () => {
     const mnemonic =
         process.env.MNEMONIC_TON ||
         'spoon key tower goat diesel labor camera movie chaos entry panic ceiling panel move sibling genius grunt rival buzz just velvet medal butter foam'
+    const client = new TonClient({ endpoint })
 
     describe('OmniSignerTON', () => {
         describe('signAndSend', () => {
             it('should send a token transfer', async () => {
-                const eid = EndpointId.TRON_SANDBOX
+                const eid = EndpointId.TON_V2_SANDBOX
                 const keyPair = await mnemonicToWalletKey(mnemonic.split(' '))
                 const signer = new OmniSignerTON(
-                    EndpointId.TRON_SANDBOX,
+                    EndpointId.TON_V2_SANDBOX,
                     keyPair,
-                    endpoint,
-                    WalletContractV3R2.create({ workchain: 0, publicKey: keyPair.publicKey, walletId: 42 })
+                    WalletContractV3R2.create({ workchain: 0, publicKey: keyPair.publicKey, walletId: 42 }),
+                    client
                 )
 
                 const anotherWallet = WalletContractV4.create({

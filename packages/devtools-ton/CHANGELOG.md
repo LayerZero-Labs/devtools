@@ -1,5 +1,22 @@
 # @layerzerolabs/devtools-ton
 
+## 0.2.0
+
+### Minor Changes
+
+- de8f24f: Added API key factory param to TON client factory
+
+## 0.1.0
+
+### Minor Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
+### Patch Changes
+
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/devtools@0.4.3
+
 ## 0.0.2
 
 ### Patch Changes

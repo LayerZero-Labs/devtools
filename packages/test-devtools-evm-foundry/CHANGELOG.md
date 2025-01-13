@@ -1,5 +1,15 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 6.0.0
+
+### Patch Changes
+
+- Updated dependencies [60cc71c]
+- Updated dependencies [5c47a41]
+- Updated dependencies [e90a1d3]
+  - @layerzerolabs/oft-evm@3.1.0
+  - @layerzerolabs/oapp-evm@0.3.0
+
 ## 5.1.0
 
 ### Minor Changes

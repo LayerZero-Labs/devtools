@@ -5,10 +5,12 @@ import {
     deserialize,
     deserializeMessage,
     deserializeMessageRelaxed,
+    deserializeMessagesRelaxed,
     messageRelaxedToCell,
     messageToCell,
     serializeMessage,
     serializeMessageRelaxed,
+    serializeMessagesRelaxed,
 } from '@/transactions/serde'
 
 describe('transactions/serde', () => {
@@ -130,6 +132,45 @@ describe('transactions/serde', () => {
                     expect(Cell.fromBase64(serialized).equals(messageRelaxedToCell(messageRelaxed))).toBeTruthy()
 
                     const reserialized = serializeMessage(deserialized as Message)
+                    expect(reserialized).toEqual(serialized)
+                })
+            )
+        })
+    })
+
+    describe('serializeMessagesRelaxed', () => {
+        it('should serialize and deserialize an array of internal messages', () => {
+            fc.assert(
+                fc.property(fc.bigInt({ min: 0n, max: 1000n }), fc.boolean(), cellArbitrary, (value, bounce, body) => {
+                    const messageRelaxed = internal({
+                        value,
+                        to: wallet.address,
+                        bounce,
+                        body,
+                    })
+                    const messageRelaxed2 = internal({
+                        value,
+                        to: wallet.address,
+                        bounce,
+                        body,
+                    })
+
+                    const serialized = serializeMessagesRelaxed([messageRelaxed, messageRelaxed2])
+                    const deserialized = deserializeMessagesRelaxed(serialized)
+
+                    // FIXME Jest comparison operators don't work well with message objects
+                    // so a workaround expectation is used
+                    //
+                    // See https://github.com/ton-core/ton-core/blob/e0ed819973daf0484dfbacd0c30a0dcfe4714f8d/src/types/MessageRelaxed.spec.ts
+                    const serializedData = serialized.split(',')
+                    expect(
+                        Cell.fromBase64(serializedData[0]!).equals(messageRelaxedToCell(messageRelaxed))
+                    ).toBeTruthy()
+                    expect(
+                        Cell.fromBase64(serializedData[1]!).equals(messageRelaxedToCell(messageRelaxed2))
+                    ).toBeTruthy()
+
+                    const reserialized = serializeMessagesRelaxed(deserialized)
                     expect(reserialized).toEqual(serialized)
                 })
             )

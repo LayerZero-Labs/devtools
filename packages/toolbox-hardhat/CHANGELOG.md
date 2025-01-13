@@ -1,5 +1,27 @@
 # @layerzerolabs/toolbox-hardhat
 
+## 0.6.4
+
+### Patch Changes
+
+- d1d51ef: Bump ua-devtools-evm-hardhat dependency to 6.0.6+
+
+## 0.6.3
+
+### Patch Changes
+
+- d255778: add metadata-tools package
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/ua-devtools-evm-hardhat@6.0.5
+  - @layerzerolabs/protocol-devtools-evm@3.0.3
+  - @layerzerolabs/devtools-evm-hardhat@2.0.4
+  - @layerzerolabs/protocol-devtools@1.1.2
+  - @layerzerolabs/ua-devtools-evm@5.0.3
+  - @layerzerolabs/devtools-evm@1.0.2
+  - @layerzerolabs/ua-devtools@3.0.2
+  - @layerzerolabs/devtools@0.4.3
+
 ## 0.6.2
 
 ### Patch Changes

@@ -5,7 +5,7 @@ import {
     createV1,
     mintV1,
 } from '@metaplex-foundation/mpl-token-metadata'
-import { setAuthority } from '@metaplex-foundation/mpl-toolbox'
+import { AuthorityType, setAuthority } from '@metaplex-foundation/mpl-toolbox'
 import {
     createNoopSigner,
     createSignerFromKeypair,
@@ -13,20 +13,21 @@ import {
     publicKey,
     transactionBuilder,
 } from '@metaplex-foundation/umi'
-import { fromWeb3JsPublicKey, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { fromWeb3JsPublicKey, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import bs58 from 'bs58'
 import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 import { assertAccountInitialized } from './utils'
 
-import { deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
+import { addComputeUnitInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 9
 
@@ -102,13 +103,15 @@ interface CreateOFTTaskArgs {
      * The URI for the token metadata.
      */
     uri: string
+
+    computeUnitPriceScaleFactor: number
 }
 
 // Define a Hardhat task for creating OFT on Solana
 // * Create the SPL Multisig account for mint authority
 // * Mint the new SPL Token
 // * Initialize the OFT Store account
-// * Set the mint/freeze authority to the multisig account
+// * Set the mint authority to the multisig account. If not in only OFT Store mode, also set the freeze authority to the multisig account.
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
@@ -135,6 +138,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
         devtoolsTypes.string
     )
     .addParam('uri', 'URI for token metadata', '', devtoolsTypes.string)
+    .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(
         async ({
             amount,
@@ -151,6 +155,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             onlyOftStore,
             tokenProgram: tokenProgramStr,
             uri,
+            computeUnitPriceScaleFactor,
         }: CreateOFTTaskArgs) => {
             const isMABA = !!mintStr
             if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
@@ -168,20 +173,27 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             if (!additionalMintersAsStrings) {
                 if (!onlyOftStore) {
                     throw new Error(
-                        'If you want to proceed with only the OFTStore, please specify --only-oft-store true'
+                        'If you want to proceed with only the OFT Store having the ability to mint, please specify --only-oft-store true. Note that this also means the Freeze Authority will be immediately renounced.'
                     )
                 }
-                console.log(
-                    'No additional minters specified.  This will result in only the OFTStore being able to mint new tokens.'
+            }
+
+            if (onlyOftStore) {
+                await promptToContinue(
+                    'You have chosen `--only-oft-store true`. This means that only the OFT Store will be able to mint new tokens and that the Freeze Authority will be immediately renounced.  Continue?'
                 )
             }
+
             const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
             const mintAuthorityPublicKey = await createMintAuthorityMultisig(
                 connection,
-                toWeb3JsKeypair(umiWalletKeyPair),
+                umi,
+                eid,
+                umiWalletSigner,
                 toWeb3JsPublicKey(oftStorePda),
                 toWeb3JsPublicKey(tokenProgramId), // Only configurable for MABA
-                additionalMinters
+                additionalMinters,
+                computeUnitPriceScaleFactor
             )
             console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
             await checkMultisigSigners(connection, mintAuthorityPublicKey, [
@@ -221,51 +233,74 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                             })
                         )
                 }
+                txBuilder = await addComputeUnitInstructions(
+                    connection,
+                    umi,
+                    eid,
+                    txBuilder,
+                    umiWalletSigner,
+                    computeUnitPriceScaleFactor
+                )
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
                 await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
                 console.log(`createTokenTx: ${getExplorerTxLink(bs58.encode(createTokenTx.signature), isTestnet)}`)
             }
 
             const lockboxSigner = createSignerFromKeypair({ eddsa: eddsa }, lockBox)
-            const { signature } = await transactionBuilder()
-                .add(
-                    oft.initOft(
-                        {
-                            payer: umiWalletSigner,
-                            admin: umiWalletKeyPair.publicKey,
-                            mint: mint.publicKey,
-                            escrow: lockboxSigner,
-                        },
-                        types.OFTType.Native,
-                        sharedDecimals,
-                        {
-                            oft: programId,
-                            token: tokenProgramId,
-                        }
-                    )
+            let txBuilder = transactionBuilder().add(
+                oft.initOft(
+                    {
+                        payer: umiWalletSigner,
+                        admin: umiWalletKeyPair.publicKey,
+                        mint: mint.publicKey,
+                        escrow: lockboxSigner,
+                    },
+                    types.OFTType.Native,
+                    sharedDecimals,
+                    {
+                        oft: programId,
+                        token: tokenProgramId,
+                    }
                 )
-                .sendAndConfirm(umi)
+            )
+            txBuilder = await addComputeUnitInstructions(
+                connection,
+                umi,
+                eid,
+                txBuilder,
+                umiWalletSigner,
+                computeUnitPriceScaleFactor
+            )
+            const { signature } = await txBuilder.sendAndConfirm(umi)
             console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
 
             if (!isMABA) {
-                const { signature } = await transactionBuilder()
+                let txBuilder = transactionBuilder()
                     .add(
                         setAuthority(umi, {
                             owned: mint.publicKey,
                             owner: umiWalletSigner,
                             newAuthority: fromWeb3JsPublicKey(mintAuthorityPublicKey),
-                            authorityType: 0,
+                            authorityType: AuthorityType.MintTokens,
                         })
                     )
                     .add(
                         setAuthority(umi, {
                             owned: mint.publicKey,
                             owner: umiWalletSigner,
-                            newAuthority: fromWeb3JsPublicKey(mintAuthorityPublicKey),
-                            authorityType: 1,
+                            newAuthority: onlyOftStore ? null : fromWeb3JsPublicKey(mintAuthorityPublicKey),
+                            authorityType: AuthorityType.FreezeAccount,
                         })
                     )
-                    .sendAndConfirm(umi)
+                txBuilder = await addComputeUnitInstructions(
+                    connection,
+                    umi,
+                    eid,
+                    txBuilder,
+                    umiWalletSigner,
+                    computeUnitPriceScaleFactor
+                )
+                const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
             }
             output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)

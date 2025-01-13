@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-read-example
 
+## 0.2.3
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+
 ## 0.2.2
 
 ### Patch Changes

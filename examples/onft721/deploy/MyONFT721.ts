@@ -33,6 +33,13 @@ const deploy: DeployFunction = async (hre) => {
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
+    // If the onft721Adapter configuration is defined on a network that is deploying an ONFT721,
+    // the deployment will log a warning and skip the deployment
+    if (hre.network.config.onft721Adapter != null) {
+        console.warn(`onft721Adapter configuration found on OFT deployment, skipping ONFT721 deployment`)
+        return
+    }
+
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [

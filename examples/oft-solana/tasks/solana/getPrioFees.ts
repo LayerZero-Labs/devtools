@@ -20,7 +20,7 @@ interface GetPrioFeesTaskArgs {
 
 task('lz:solana:get-priority-fees', 'Fetches prioritization fees from the Solana network')
     .addParam('eid', 'The endpoint ID for the Solana network', undefined, devtoolsTypes.eid)
-    .addParam(
+    .addOptionalParam(
         'address',
         'The address (program ID or account address) that will be written to',
         undefined,

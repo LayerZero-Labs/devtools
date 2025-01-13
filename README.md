@@ -1,6 +1,9 @@
 <p align="center">
-  <a href="https://layerzero.network">
-    <img alt="LayerZero" style="width: 50%" src="https://layerzero.network/static/logo.svg"/>
+  <a href="https://layerzero.network#gh-dark-mode-only">
+    <img alt="LayerZero" style="width: 50%" src="assets/logo-dark.svg#gh-dark-mode-only"/>
+  </a>  
+  <a href="https://layerzero.network#gh-light-mode-only">
+    <img alt="LayerZero" style="width: 50%" src="assets/logo-light.svg#gh-light-mode-only"/>
   </a>
 </p>
 

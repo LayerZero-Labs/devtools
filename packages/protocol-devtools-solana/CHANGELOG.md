@@ -1,5 +1,28 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 4.0.5
+
+### Patch Changes
+
+- 51c4086: Fix setSendConfig and setReceiveConfig for squads multisig
+
+## 4.0.4
+
+### Patch Changes
+
+- 40e6338: Fix squads client to use correct delegate
+
+## 4.0.3
+
+### Patch Changes
+
+- 1d2abff: new SDK methods, tests in devtools-ton, upgraded lz-definitions
+- Updated dependencies [1d2abff]
+  - @layerzerolabs/protocol-devtools@1.1.2
+  - @layerzerolabs/devtools-solana@1.0.4
+  - @layerzerolabs/ua-devtools@3.0.2
+  - @layerzerolabs/devtools@0.4.3
+
 ## 4.0.2
 
 ### Patch Changes
