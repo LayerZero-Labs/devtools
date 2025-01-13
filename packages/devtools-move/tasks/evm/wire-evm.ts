@@ -5,6 +5,7 @@ import { Contract, ethers } from 'ethers'
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
 import { createEidToNetworkMapping, getConfigConnectionsFromChainType, getHHAccountConfig } from '../shared/utils'
+import { basexToBytes32 } from '../shared/basexToBytes32'
 
 import AnvilForkNode from './utils/anvilForkNode'
 import { createSetDelegateTransactions } from './wire/setDelegate'
@@ -27,38 +28,12 @@ import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLib
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
-async function wireEvm(args: any) {
-    const envPath = path.resolve(path.join(args.rootDir, '.env'))
-    const env = dotenv.config({ path: envPath })
-    if (!env.parsed || env.error?.message !== undefined) {
-        console.error('Failed to load .env file.')
-        process.exit(1)
-    }
-
-    const privateKey = env.parsed.EVM_PRIVATE_KEY
-
-    if (!privateKey) {
-        console.error('EVM_PRIVATE_KEY is not set in .env file')
-        process.exit(1)
-    }
-
+async function createEvmOmniContracts(args: any, privateKey: string, chainType: ChainType = ChainType.EVM) {
     const globalConfigPath = path.resolve(path.join(args.rootDir, args.oapp_config))
-    const connectionsToWire = await getConfigConnectionsFromChainType('from', ChainType.EVM, globalConfigPath)
+    const connectionsToWire = await getConfigConnectionsFromChainType('from', chainType, globalConfigPath)
     const accountConfigs = await getHHAccountConfig(globalConfigPath)
     const networks = await createEidToNetworkMapping('networkName')
     const rpcUrls = await createEidToNetworkMapping('url')
-
-    // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
-    const TxTypeEidMapping: TxEidMapping = {
-        setPeer: {},
-        setDelegate: {},
-        setEnforcedOptions: {},
-        setSendLibrary: {},
-        setReceiveLibrary: {},
-        setReceiveLibraryTimeout: {},
-        sendConfig: {},
-        receiveConfig: {},
-    }
 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const omniContracts: OmniContractMetadataMapping = {}
@@ -70,7 +45,7 @@ async function wireEvm(args: any) {
      */
     for (const conn of connectionsToWire) {
         const fromEid = conn.from.eid
-        const toEid = conn.to.eid
+        const toEid = conn.to.eid.toString()
         const fromNetwork = networks[fromEid]
         const toNetwork = networks[toEid]
         const configOapp = conn?.config
@@ -92,9 +67,9 @@ async function wireEvm(args: any) {
         const OAppContract = new Contract(oappAddress, oappAbi, signer)
         const EPV2Contract = new Contract(epv2Address, epv2Abi, signer)
 
-        const currWireOntoOapps = omniContracts[fromEid]?.wireOntoOapps ?? []
-        const wireOntoOapp = { eid: toEid.toString(), address: WireOAppDeploymentData.address }
-        currWireOntoOapps.push(wireOntoOapp)
+        const currPeers = omniContracts[fromEid]?.peers ?? []
+        const peer = { eid: toEid, address: basexToBytes32(WireOAppDeploymentData.address, toEid) }
+        currPeers.push(peer)
 
         omniContracts[fromEid] = {
             address: {
@@ -105,11 +80,41 @@ async function wireEvm(args: any) {
                 oapp: OAppContract,
                 epv2: EPV2Contract,
             },
-            wireOntoOapps: currWireOntoOapps,
+            peers: currPeers,
             provider: provider,
             configAccount: accountConfigs[fromEid],
             configOapp: configOapp,
         }
+    }
+    return omniContracts
+}
+
+async function wireEvm(args: any) {
+    const envPath = path.resolve(path.join(args.rootDir, '.env'))
+    const env = dotenv.config({ path: envPath })
+    if (!env.parsed || env.error?.message !== undefined) {
+        console.error('Failed to load .env file.')
+        process.exit(1)
+    }
+
+    const privateKey = env.parsed.EVM_PRIVATE_KEY
+
+    if (!privateKey) {
+        console.error('EVM_PRIVATE_KEY is not set in .env file')
+        process.exit(1)
+    }
+    const omniContracts = await createEvmOmniContracts(args, privateKey)
+
+    // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
+    const TxTypeEidMapping: TxEidMapping = {
+        setPeer: {},
+        setDelegate: {},
+        setEnforcedOptions: {},
+        setSendLibrary: {},
+        setReceiveLibrary: {},
+        setReceiveLibraryTimeout: {},
+        sendConfig: {},
+        receiveConfig: {},
     }
 
     TxTypeEidMapping.setPeer = await createSetPeerTransactions(omniContracts)

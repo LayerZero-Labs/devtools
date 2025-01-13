@@ -19,9 +19,9 @@ const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 export async function createSetSendLibraryTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { wireOntoOapps, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        for (const wireOntoOapp of wireOntoOapps) {
-            const { eid: peerToEid } = wireOntoOapp
+    for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const peer of peers) {
+            const { eid: peerToEid } = peer
             if (!configOapp?.sendLibrary) {
                 printNotSet('send library - not found in config', Number(eid), Number(peerToEid))
                 continue

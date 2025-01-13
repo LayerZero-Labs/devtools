@@ -22,7 +22,7 @@ type EidTx = {
 export type EidTxMap = Record<eid, EidTx[]>
 export type address = string
 
-type WireOntoOapp = {
+type PeerOApp = {
     eid: eid
     address: address
 }
@@ -36,7 +36,7 @@ export type ContractMetadata = {
         oapp: ethers.Contract
         epv2: ethers.Contract
     }
-    wireOntoOapps: WireOntoOapp[]
+    peers: PeerOApp[]
     provider: ethers.providers.JsonRpcProvider
     configAccount: OAppNodeConfig
     configOapp: OAppEdgeConfig | undefined
