@@ -4,8 +4,10 @@ import { Contract, ethers, providers } from 'ethers'
 
 import { promptForConfirmation } from '../../shared/utils'
 
-import type { AccountData, OmniContractMetadataMapping, TxEidMapping, eid } from '../utils/types'
+import type { AccountData, OmniContractMetadataMapping, TxPool, TxReceiptJson, TxEidMapping, eid } from '../utils/types'
 import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import path from 'path'
+import fs from 'fs'
 
 /**
  * @notice Simulates transactions on the blockchains
@@ -19,8 +21,12 @@ export async function executeTransactions(
     TxTypeEidMapping: TxEidMapping,
     rpcUrlsMap: Record<eid, string>,
     simulation = 'dry-run',
-    privateKey: string
+    privateKey: string,
+    args: any
 ) {
+    const rootDir = args.rootDir
+    const oappConfig = args.oapp_config
+
     const num_chains = Object.entries(eidMetaData).length
     let totalTransactions = 0
 
@@ -48,7 +54,9 @@ export async function executeTransactions(
 
     // Populate simulation account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
     const accountEidMap: AccountData = {}
-    const tx_pool: Promise<providers.TransactionResponse>[] = []
+
+    const tx_pool: Record<string, Record<string, TxPool>> = {}
+    const tx_pool_receipt: Promise<providers.TransactionResponse>[] = []
 
     for (const [eid, _eidData] of Object.entries(eidMetaData)) {
         /*
@@ -80,8 +88,11 @@ export async function executeTransactions(
     console.log('\n🔄 Processing transactions...')
     let processedTx = 0
     for (const [txType, EidTxsMapping] of Object.entries(TxTypeEidMapping)) {
+        if (tx_pool[txType] === undefined) {
+            tx_pool[txType] = {}
+        }
         for (const [eid, TxPool] of Object.entries(EidTxsMapping)) {
-            for (const tx of TxPool) {
+            for (const { toEid, populatedTx } of TxPool) {
                 processedTx++
                 const progress = `[${processedTx}/${totalTransactions}]`
                 const network = getNetworkForChainId(Number(eid))
@@ -92,27 +103,60 @@ export async function executeTransactions(
                 const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
                 const signer = accountEidMap[eid].signer
 
-                console.log(signer.address)
-                tx.gasLimit = await provider.estimateGas(tx)
-                tx.gasPrice = accountEidMap[eid].gasPrice
-                tx.nonce = accountEidMap[eid].nonce++
+                populatedTx.gasLimit = await provider.estimateGas(populatedTx)
+                populatedTx.gasPrice = accountEidMap[eid].gasPrice
+                populatedTx.nonce = accountEidMap[eid].nonce++
 
-                tx_pool.push(signer.sendTransaction(tx))
+                let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
+                if (simulation === 'broadcast') {
+                    sendTx = signer.sendTransaction(populatedTx)
+                    tx_pool_receipt.push(sendTx)
+                }
+
+                if (tx_pool[txType][toEid.toString()] === undefined) {
+                    tx_pool[txType][toEid.toString()] = {
+                        from_eid: eid,
+                        raw: populatedTx,
+                        response: sendTx,
+                    }
+                }
             }
         }
     }
 
-    const txReceipts = await Promise.all(tx_pool)
+    const folderPath = path.join(rootDir, 'transactions', oappConfig, simulation)
+    fs.mkdirSync(folderPath, { recursive: true })
 
-    console.log('\n🎉 Transaction Summary:')
-    console.log('   ChainId | TxHash')
-    console.log('   ---------|----------')
-    for (const txReceipt of txReceipts) {
-        console.log(`   ${txReceipt.chainId.toString().padEnd(8)} | ${txReceipt.hash}`)
+    const runId = fs.readdirSync(folderPath).length + 1
+
+    const filePath = path.join(folderPath, `${runId}.json`)
+    const txReceiptJson: TxReceiptJson = {}
+
+    for (const [txType, eidTxsMapping] of Object.entries(tx_pool)) {
+        if (txReceiptJson[txType] === undefined) {
+            txReceiptJson[txType] = []
+        }
+        for (const [to_eid, txPool] of Object.entries(eidTxsMapping)) {
+            let txHash = undefined
+            if (txPool.response) {
+                txHash = (await txPool.response)?.hash
+            }
+            txReceiptJson[txType].push({
+                src_eid: txPool.from_eid,
+                dst_eid: to_eid,
+                src_from: txPool.raw?.from ?? '',
+                src_to: txPool.raw?.to ?? '',
+                tx_hash: txHash,
+                data: txPool.raw?.data ?? '',
+            })
+        }
     }
+    fs.writeFileSync(filePath, JSON.stringify(txReceiptJson, null, 2))
+
     console.log(
-        `\n✅ Successfully ${simulation === 'dry-run' ? 'simulated' : 'executed'} ${txReceipts.length} transactions`
+        `\n✅ Successfully ${simulation === 'dry-run' ? 'simulated' : 'executed'} ${totalTransactions} transactions`
     )
+    console.log('Transactions have been saved to ', filePath)
 }
 
 export function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {
