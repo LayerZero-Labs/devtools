@@ -14,9 +14,9 @@ import type { OmniContractMetadataMapping, EidTxMap, SetConfigParam } from '../u
 export async function createSetSendConfigTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { wireOntoOapps, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        for (const wireOntoOapp of wireOntoOapps) {
-            const { eid: peerToEid } = wireOntoOapp
+    for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const peer of peers) {
+            const { eid: peerToEid } = peer
             if (configOapp?.sendConfig?.ulnConfig === undefined) {
                 printNotSet('send config - not found in config', Number(eid), Number(peerToEid))
                 continue

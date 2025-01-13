@@ -21,9 +21,9 @@ export async function createSetReceiveLibraryTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { wireOntoOapps, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        for (const wireOntoOapp of wireOntoOapps) {
-            const { eid: peerToEid } = wireOntoOapp
+    for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const peer of peers) {
+            const { eid: peerToEid } = peer
             if (configOapp?.receiveLibraryConfig === undefined) {
                 printNotSet('receive library - not found in config', Number(eid), Number(peerToEid))
                 continue
