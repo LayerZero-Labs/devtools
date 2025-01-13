@@ -65,7 +65,7 @@ const config: OAppOmniGraphHardhat = {
                     executorConfig: {
                         maxMessageSize: 10000,
                         // The configured Executor address on Aptos
-                        executor: '0xfe0b685e4cc9e77d91d008ef4161de68f7d7646c3bf67079fd4c2f0356631be8',
+                        executor: '0x93353700091200ef9fdc536ce6a86182cc7e62da25f94356be9421c6310b9585',
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
@@ -129,7 +129,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveLibraryTimeoutConfig: {
                     lib: '0x188d4bbCeD671A7aA2b5055937F79510A32e9683',
-                    expiry: BigInt(500),
+                    expiry: BigInt(5000),
                 },
                 sendConfig: {
                     executorConfig: {
@@ -138,28 +138,16 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         confirmations: BigInt(5),
-                        requiredDVNs: [
-                            '0x0eE552262f7B562eFcED6DD4A7e2878AB897d405',
-                            '0x6f99eA3Fc9206E2779249E15512D7248dAb0B52e',
-                        ],
-                        optionalDVNs: [
-                            '0x2dDf08e397541721acD82E5b8a1D0775454a180B',
-                            '0x6F978ee5bfd7b1A8085A3eA9e54eB76e668E195a',
-                        ],
+                        requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
+                        optionalDVNs: [],
                         optionalDVNThreshold: 1,
                     },
                 },
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(5),
-                        requiredDVNs: [
-                            '0x0eE552262f7B562eFcED6DD4A7e2878AB897d405',
-                            '0x6f99eA3Fc9206E2779249E15512D7248dAb0B52e',
-                        ],
-                        optionalDVNs: [
-                            '0x2dDf08e397541721acD82E5b8a1D0775454a180B',
-                            '0x6F978ee5bfd7b1A8085A3eA9e54eB76e668E195a',
-                        ],
+                        requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
+                        optionalDVNs: [],
                         optionalDVNThreshold: 1,
                     },
                 },
