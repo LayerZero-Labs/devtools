@@ -16,11 +16,15 @@ export function basexToBytes32(basexAddress: string, eid: string): string {
             return basexAddress
         }
         case ChainType.SOLANA: {
-            const addressBytes = basex(BASE58).decode(basexAddress)
-            return `0x${Buffer.from(addressBytes).toString('hex')}`
+            return decodeSolanaAddress(basexAddress)
         }
         default: {
             throw new Error('Invalid chain type')
         }
     }
+}
+
+export function decodeSolanaAddress(address: string): string {
+    const addressBytes = basex(BASE58).decode(address)
+    return '0x' + Buffer.from(addressBytes).toString('hex')
 }
