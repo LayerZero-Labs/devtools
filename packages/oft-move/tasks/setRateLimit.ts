@@ -1,13 +1,13 @@
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
-import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { createSetRateLimitTx } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 
-async function setRateLimit(rateLimit: bigint, windowSeconds: bigint, toEid: EndpointId) {
+async function setRateLimit(rateLimit: bigint, windowSeconds: bigint, toEid: EndpointId, oftType: OFTType) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
 
     const chain = getChain(fullnode)
@@ -26,7 +26,7 @@ async function setRateLimit(rateLimit: bigint, windowSeconds: bigint, toEid: End
     console.log(`\tRate Limit: ${rateLimit}`)
     console.log(`\tWindow: ${windowSeconds} seconds\n`)
 
-    const setRateLimitPayload = await createSetRateLimitTx(oft, rateLimit, windowSeconds, toEid)
+    const setRateLimitPayload = await createSetRateLimitTx(oft, rateLimit, windowSeconds, toEid, oftType)
 
     sendAllTxs(aptos, oft, account_address, [setRateLimitPayload])
 }

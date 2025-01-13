@@ -12,4 +12,8 @@ export async function attach_oft_move(sdk: AptosEVMCLI) {
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-disable-freezing'))
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/send-from-move-oft'))
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/mint-to-move-oft'))
+    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-disable-blocklist'))
+    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-set-fee'))
+    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-set-rate-limit'))
+    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-oft-adapter-unset-rate-limit'))
 }
