@@ -83,9 +83,9 @@ function getNetworkFromConfig(yamlConfig: {
     private_key: string
     network: Network
     fullnode: string
-    faucet: string
+    faucet?: string
 }): string {
-    if (yamlConfig.faucet.toLowerCase().includes('movement')) {
+    if (yamlConfig.fullnode.toLowerCase().includes('movement')) {
         return 'movement'
     } else {
         return 'aptos'

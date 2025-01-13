@@ -12,7 +12,7 @@ type AptosYamlConfig = {
             public_key: string
             account: string
             rest_url: string
-            faucet_url: string
+            faucet_url?: string
         }
     }
 }

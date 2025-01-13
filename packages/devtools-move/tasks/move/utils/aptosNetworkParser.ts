@@ -41,7 +41,7 @@ export async function parseYaml(_rootDir: string = process.cwd()): Promise<{
     private_key: string
     network: AptosNetworkStage
     fullnode: string
-    faucet: string
+    faucet?: string
 }> {
     const aptosYamlConfig = await loadAptosYamlConfig()
 
@@ -49,7 +49,7 @@ export async function parseYaml(_rootDir: string = process.cwd()): Promise<{
     const private_key = aptosYamlConfig.profiles.default.private_key
     const network = aptosYamlConfig.profiles.default.network.toLowerCase() as AptosNetworkStage
     const fullnode = aptosYamlConfig.profiles.default.rest_url
-    const faucet = aptosYamlConfig.profiles.default.faucet_url
+    const faucet = aptosYamlConfig.profiles.default.faucet_url ?? undefined
 
     if (!account_address.startsWith('0x')) {
         account_address = '0x' + account_address
