@@ -38,6 +38,7 @@ Create a `.env` file with the following variables:
 ACCOUNT_ADDRESS=<your-aptos-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 ```
+
 Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
 Note: aptos account address can be found in .aptos/config.yaml
@@ -53,18 +54,20 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addres
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
+
 First modify deploy-move/OFTAdpaterInitParams.ts and replace the oftMetadata with your desired values:
 
 ```ts
 const oftMetadata = {
-    move_vm_fa_address: '0x0',
-    shared_decimals: 6,
-}
+  move_vm_fa_address: "0x0",
+  shared_decimals: 6,
+};
 ```
 
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
+
 ## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
@@ -99,8 +102,10 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 ## Wire
+
 For EVM:
 Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
+
 ```ts
     contracts: [
         {
@@ -119,6 +124,7 @@ Then run the wire command:
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
+
 Troubleshooting:
 Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
 
@@ -139,6 +145,7 @@ pnpm run lz:sdk:move:adapter-set-fee --oapp-config move.layerzero.config.ts --fe
 ```bash
 pnpm run lz:sdk:move:adapter-set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
 ```
+
 Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
 For example if the rate limit from Aptos to EVM is 100 tokens you can send 100 tokens from Aptos to EVM, however if you receive 50 tokens from EVM to Aptos you are then able to send 150 tokens from Aptos to EVM.
 Window is the number of seconds over which the capacity is restored. If the rate limit is 1000 and window is 10 seconds, then each second you get 100 (1000/10) capacity back. The units of the rate limit are the tokens in local decimals.
@@ -158,13 +165,16 @@ pnpm run lz:sdk:move:adapter-permanently-disable-blocklist
 ```
 
 ### Transferring Ownership of your Move OApp (OFT)
+
 There are three steps to transferring ownership of your Move OFT:
+
 1. Transfer the delegate to the new delegate
 2. Transfer the OApp owner of the your to the new owner
 3. Transfer the Move-VM object owner to the new owner
 
 To set the delegate, run the following command:
 First ensure that the delegate is specified in the move.layerzero.config.ts file.
+
 ```ts
     contracts: [
         {
@@ -178,23 +188,28 @@ First ensure that the delegate is specified in the move.layerzero.config.ts file
 ```
 
 Then run the following command:
+
 ```bash
 pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 To transfer the OApp owner, run the following command:
+
 ```bash
 pnpm run lz:sdk:move:transfer-oapp-owner --new-owner <new-owner-address>
 ```
 
 To transfer the Move-VM object owner, run the following command:
+
 ```bash
 pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
 ```
 
 ### Mint to Account on Move VM OFT:
+
 > ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
-First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
+> First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
+
 ```
 public entry fun mint(
     admin: &signer,
@@ -205,7 +220,9 @@ public entry fun mint(
     primary_fungible_store::mint(&store().mint_ref, recipient, amount);
 }
 ```
+
 Then run the following command to mint the move oft:
+
 ```bash
 pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
@@ -233,20 +250,24 @@ pnpm run lz:sdk:help
 ```bash
 npx hardhat lz:deploy
 ```
+
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
-
 ### Verifying successful ownership transfer of your Move-VM OFT:
+
 Run the following command:
+
 ```bash
 aptos account list \
   --account <OBJECT_ADDRESS> \
   --url https://fullnode.testnet.aptoslabs.com \
   --query resources
 ```
+
 Note: replace the url with your desired aptos fullnode url.
 
 Look for the following in the output:
+
 ```json
 {
   "0x1::object::ObjectCore": {
@@ -257,9 +278,11 @@ Look for the following in the output:
   ...
 }
 ```
+
 If the owner is your desired address, then the ownership transfer was successful.
 
 For verifying the admin look for the following in the output:
+
 ```json
     {
       "<your-oft-address>::oapp_store::OAppStore": {
@@ -268,5 +291,5 @@ For verifying the admin look for the following in the output:
       }
     }
 ```
-If the admin is your desired address, then the ownership transfer was successful.
 
+If the admin is your desired address, then the ownership transfer was successful.
