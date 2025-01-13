@@ -1,6 +1,6 @@
 import { INewOperation, Operation } from './types/NewOperation'
 import { ArgumentParser } from 'argparse'
-import { initOperation } from './types/help'
+import { initOperation } from './operations/init'
 
 class AptosEVMCLI {
     parser: ArgumentParser
@@ -51,7 +51,16 @@ class AptosEVMCLI {
 
         if (NewOperation.addArgs) {
             for (const arg of NewOperation.addArgs) {
-                this.parser.add_argument(arg.name, arg.arg)
+                try {
+                    this.parser.add_argument(arg.name, arg.arg)
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                } catch (e: any) {
+                    // Handles the case when the same argument is added more than once
+                    if (e.message.includes('conflicting option string')) {
+                        continue
+                    }
+                    throw new Error('Error adding argument: \n' + e.message)
+                }
             }
         }
     }

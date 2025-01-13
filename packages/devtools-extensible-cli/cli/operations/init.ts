@@ -1,6 +1,6 @@
-import { INewOperation } from './NewOperation'
+import { INewOperation } from '../types/NewOperation'
 
-class HelpOperation implements INewOperation {
+class InitOperation implements INewOperation {
     vm = '*'
     operation = 'help'
     description = 'lists all the operations for a given vm'
@@ -65,7 +65,7 @@ class HelpOperation implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        console.log('\n Help Operation')
+        console.log('\n Operation Help:\n')
         const ops = args.operations
         const op_names = Object.keys(ops)
 
@@ -85,5 +85,5 @@ class HelpOperation implements INewOperation {
     }
 }
 
-const initOperation = new HelpOperation()
+const initOperation = new InitOperation()
 export { initOperation }
