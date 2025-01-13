@@ -131,8 +131,9 @@ async function wireEvm(args: any) {
 
     try {
         const forkRpcMap = await anvilForkNode.startNodes()
-        await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey)
-        await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey)
+
+        await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
+        await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey, args)
     } catch (error) {
         anvilForkNode.killNodes()
         throw new Error(`Failed to wire EVM contracts: ${error}`)
