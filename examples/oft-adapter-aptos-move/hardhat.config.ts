@@ -53,7 +53,7 @@ const config: HardhatUserConfig = {
     },
     networks: {
         'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET.valueOf(),
+            eid: EndpointId.BSC_V2_TESTNET,
             url: process.env.RPC_URL_BSC || 'https://data-seed-prebsc-1-s1.binance.org:8545',
             accounts,
         },

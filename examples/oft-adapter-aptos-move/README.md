@@ -50,7 +50,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Builds the contracts
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
@@ -65,7 +65,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## Init and Set Delegate

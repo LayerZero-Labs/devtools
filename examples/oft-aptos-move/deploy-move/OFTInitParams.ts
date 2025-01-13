@@ -1,8 +1,8 @@
 const contractName = 'oft'
 
 const oftMetadata = {
-    token_name: 'MyMoveVMOFT',
-    token_symbol: 'MMVMOFT',
+    token_name: 'XAptosOFT',
+    token_symbol: 'XAPTOFT',
     icon_uri: '',
     project_uri: '',
     sharedDecimals: 6,
