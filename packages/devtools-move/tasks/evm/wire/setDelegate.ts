@@ -15,7 +15,8 @@ import type { OmniContractMetadataMapping, EidTxMap } from '../utils/types'
 export async function createSetDelegateTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { address, contract, configAccount }] of Object.entries(eidDataMapping)) {
+    for (const [eid, { wireOntoOapps, address, contract, configAccount }] of Object.entries(eidDataMapping)) {
+        const peerToEid = wireOntoOapps[0].eid
         const currDelegate = await getDelegate(contract.epv2, address.oapp)
 
         if (!configAccount?.delegate) {
@@ -36,7 +37,10 @@ export async function createSetDelegateTransactions(eidDataMapping: OmniContract
         const tx = await contract.oapp.populateTransaction.setDelegate(newDelegate)
 
         txTypePool[eid] = txTypePool[eid] ?? []
-        txTypePool[eid].push(tx)
+        txTypePool[eid].push({
+            toEid: peerToEid,
+            populatedTx: tx,
+        })
     }
 
     return txTypePool

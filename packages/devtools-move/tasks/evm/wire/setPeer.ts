@@ -35,7 +35,10 @@ export async function createSetPeerTransactions(eidDataMappings: OmniContractMet
             const tx = await contract.oapp.populateTransaction.setPeer(peerToEid, targetEvmAddressAsBytes32)
 
             txTypePool[toEid] = txTypePool[toEid] ?? []
-            txTypePool[toEid].push(tx)
+            txTypePool[toEid].push({
+                toEid: peerToEid,
+                populatedTx: tx,
+            })
         }
     }
 

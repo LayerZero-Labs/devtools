@@ -48,7 +48,10 @@ export async function createSetSendLibraryTransactions(eidDataMapping: OmniContr
             const tx = await contract.epv2.populateTransaction.setSendLibrary(address.oapp, peerToEid, newSendLibrary)
 
             txTypePool[eid] = txTypePool[eid] ?? []
-            txTypePool[eid].push(tx)
+            txTypePool[eid].push({
+                toEid: peerToEid,
+                populatedTx: tx,
+            })
         }
     }
 
