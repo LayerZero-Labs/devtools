@@ -63,9 +63,9 @@ export type TxPool = {
 
 export type TxReceipt = {
     src_eid: string
+    dst_eid: string
     src_from: string
     src_to: string
-    dst_eid: string
     tx_hash: string | undefined
     data: string
 }
