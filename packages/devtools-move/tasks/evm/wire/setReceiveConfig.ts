@@ -95,7 +95,10 @@ export async function createSetReceiveConfigTransactions(
             )
 
             txTypePool[eid] = txTypePool[eid] ?? []
-            txTypePool[eid].push(tx)
+            txTypePool[eid].push({
+                toEid: peerToEid,
+                populatedTx: tx,
+            })
         }
     }
 
