@@ -20,7 +20,7 @@ import type { OmniContractMetadataMapping, TxEidMapping } from './utils/types'
 import path from 'path'
 import dotenv from 'dotenv'
 import { getNetworkForChainId, ChainType } from '@layerzerolabs/lz-definitions'
-import { OAppEdgeConfig, OmniEdgeHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
 
 /**
@@ -63,12 +63,12 @@ async function wireEvm(args: any) {
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const omniContracts: OmniContractMetadataMapping = {}
 
-    logPathwayHeader(connectionsToWire)
     /*
      * Looping through the connections we build out the omniContracts and TxTypeEidMapping by reading from the deployment files.
      * omniContracts contains ethers Contract objects for the OApp and EndpointV2 contracts.
      */
     for (const conn of connectionsToWire) {
+        logPathwayHeader(conn)
         const fromEid = conn.from.eid
         const toEid = conn.to.eid
         const fromNetwork = networks[fromEid]
@@ -141,28 +141,16 @@ async function wireEvm(args: any) {
     anvilForkNode.killNodes()
 }
 
-function logPathwayHeader(connections: OmniEdgeHardhat<OAppEdgeConfig | undefined>[]) {
-    const pathwayStrings = []
-    let largestPathwayString = 0
-    console.log('Found wire connection for pathways:')
-    for (const [_fromEid, eidData] of Object.entries(connections)) {
-        const fromNetwork = getNetworkForChainId(Number(eidData.from.eid))
-        const toNetwork = getNetworkForChainId(Number(eidData.to.eid))
+function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
+    const fromNetwork = getNetworkForChainId(connection.from.eid)
+    const toNetwork = getNetworkForChainId(connection.to.eid)
 
-        const pathwayString = `${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}`
+    const pathwayString = `🔄 Building wire transactions for pathway: ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env} 🔄`
+    const borderLine = '━'.repeat(pathwayString.length)
 
-        pathwayStrings.push(pathwayString)
-        if (pathwayString.length > largestPathwayString) {
-            largestPathwayString = pathwayString.length
-        }
-    }
-    const borderLine = '━'.repeat(largestPathwayString + 5)
     console.log(borderLine)
-    for (const [index, pathwayString] of pathwayStrings.entries()) {
-        console.log(`${(index + 1).toString().padStart(2, ' ')}: ${pathwayString}`)
-    }
-    console.log(`${borderLine}`)
-    console.log('🔄 Building wire transactions for all the above pathways.\n')
+    console.log(pathwayString)
+    console.log(`${borderLine}\n`)
 }
 
 export { wireEvm }
