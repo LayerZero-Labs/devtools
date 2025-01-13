@@ -1,6 +1,6 @@
 import { ChildProcess } from 'child_process'
 
-import { PopulatedTransaction, ethers } from 'ethers'
+import { PopulatedTransaction, ethers, providers } from 'ethers'
 
 import type { OAppEdgeConfig, OAppNodeConfig } from '@layerzerolabs/toolbox-hardhat'
 
@@ -15,7 +15,11 @@ export type TxTypes =
     | 'receiveConfig'
 
 export type eid = string
-export type EidTxMap = Record<eid, [PopulatedTransaction]>
+type EidTx = {
+    toEid: eid
+    populatedTx: PopulatedTransaction
+}
+export type EidTxMap = Record<eid, EidTx[]>
 export type address = string
 
 type WireOntoOapp = {
@@ -50,6 +54,22 @@ export type TxEidMapping = Record<TxTypes, EidTxMap>
 
 //[fromEid as number] = ContractMetadata
 export type OmniContractMetadataMapping = Record<eid, ContractMetadata>
+
+export type TxPool = {
+    from_eid: eid
+    raw: ethers.PopulatedTransaction
+    response: Promise<providers.TransactionResponse> | undefined
+}
+
+export type TxReceipt = {
+    src_eid: string
+    src_from: string
+    src_to: string
+    dst_eid: string
+    tx_hash: string | undefined
+    data: string
+}
+export type TxReceiptJson = Record<string, TxReceipt[]> // txType -> txReceipt
 
 export type enforcedOptionParam = {
     eid: eid
