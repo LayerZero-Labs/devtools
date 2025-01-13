@@ -119,7 +119,10 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             const tx = await setConfig(contract.epv2, address.oapp, currSendLibrary.newSendLibrary, setConfigParam)
 
             txTypePool[eid] = txTypePool[eid] ?? []
-            txTypePool[eid].push(tx)
+            txTypePool[eid].push({
+                toEid: peerToEid,
+                populatedTx: tx,
+            })
         }
     }
 
