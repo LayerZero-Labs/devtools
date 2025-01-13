@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // Mock imports
-import { MyOFT } from "../../../contracts/OFT.sol";
+import { MyOFT } from "../../../contracts/MyOFT.sol";
 
 // OApp imports
 import { IOAppOptionsType3, EnforcedOptionParam } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
@@ -26,11 +26,11 @@ import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contract
 contract MyOFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
-    uint32 private bscEid = ;
-    uint32 private aptosEid = 2;
+    uint32 private aEid = 1;
+    uint32 private bEid = 2;
 
-    OFTMock private aOFT;
-    OFTMock private bOFT;
+    MyOFT private aOFT;
+    MyOFT private bOFT;
 
     address private userA = makeAddr("userA");
     address private userB = makeAddr("userB");
@@ -43,25 +43,26 @@ contract MyOFTTest is TestHelperOz5 {
         super.setUp();
         setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        aOFT = OFTMock(
-            _deployOApp(type(OFTMock).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))
+        aOFT = MyOFT(
+            _deployOApp(type(MyOFT).creationCode, abi.encode("aOFT", "aOFT", address(endpoints[aEid]), address(this)))
         );
 
-        bOFT = OFTMock(
-            _deployOApp(type(OFTMock).creationCode, abi.encode("bOFT", "bOFT", address(endpoints[bEid]), address(this)))
+        bOFT = MyOFT(
+            _deployOApp(type(MyOFT).creationCode, abi.encode("bOFT", "bOFT", address(endpoints[bEid]), address(this)))
         );
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
         ofts[0] = address(aOFT);
         ofts[1] = address(bOFT);
+        this.wireOApps(ofts);
 
         // mint tokens
-        aOFT.mint(userA, initialBalance);
-        bOFT.mint(userB, initialBalance);
+        deal(address(aOFT), userA, initialBalance);
+        deal(address(bOFT), userB, initialBalance);
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
 
