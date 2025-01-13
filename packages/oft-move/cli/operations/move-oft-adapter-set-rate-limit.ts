@@ -3,9 +3,9 @@ import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import { setRateLimit } from '../../tasks/setRateLimit'
 import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
-class SetFee implements INewOperation {
+class AdapterSetRateLimit implements INewOperation {
     vm = 'move'
-    operation = 'set-rate-limit'
+    operation = 'adapter-set-rate-limit'
     description = `
 Set the rate limit configuration for a given endpoint ID
 The rate limit is the maximum amount of OFT that can be sent to the endpoint within a given window
@@ -35,9 +35,9 @@ In order to reset the in-flight volume, the rate limit must be unset and then se
     ]
 
     async impl(args: any): Promise<void> {
-        await setRateLimit(BigInt(args.rate_limit), BigInt(args.window_seconds), args.to_eid, OFTType.OFT_FA)
+        await setRateLimit(BigInt(args.rate_limit), BigInt(args.window_seconds), args.to_eid, OFTType.OFT_ADAPTER_FA)
     }
 }
 
-const NewOperation = new SetFee()
+const NewOperation = new AdapterSetRateLimit()
 export { NewOperation }
