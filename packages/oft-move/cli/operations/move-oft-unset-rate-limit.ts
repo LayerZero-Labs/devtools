@@ -1,6 +1,6 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
-import { unsetRateLimit } from '../../tasks/unsetRateLimit'
+import { unsetRateLimit } from '../../tasks/unSetRateLimit'
 import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
 class SetFee implements INewOperation {
