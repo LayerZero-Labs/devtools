@@ -119,9 +119,10 @@ export async function sendAllTxs(
                 sender: account_address,
                 data: cleanedPayloads[i].payload,
             })
-            await oft.signSubmitAndWaitForTx(trans)
+            const result = await oft.signSubmitAndWaitForTx(trans)
 
-            console.log(`✅ ${progress} Transaction ${i} completed\n`)
+            console.log(`   📎 Transaction hash: ${result.hash}`)
+            console.log(`   🔍 Explorer: https://explorer.aptoslabs.com/txn/${result.hash}?network=testnet`)
         }
 
         console.log('🎉 Transaction Summary:')

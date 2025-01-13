@@ -25,3 +25,8 @@ pnpm-error.log
 .idea
 
 .aptos
+
+shell-scripts
+
+transactions/*
+!transactions/.gitkeep
