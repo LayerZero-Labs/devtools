@@ -31,7 +31,7 @@ export async function createSetEnforcedOptionsTransactions(
         for (const wireOntoOapp of wireOntoOapps) {
             const { eid: peerToEid } = wireOntoOapp
             if (!configOapp?.enforcedOptions) {
-                printNotSet('enforced options', Number(eid), Number(peerToEid))
+                printNotSet('enforced options - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
             const toEnforcedOptions = configOapp.enforcedOptions
@@ -63,7 +63,7 @@ export async function createSetEnforcedOptionsTransactions(
                 const newOptions = thisEnforcedOptionBuilder[msgType].toHex()
 
                 if (currOptions === newOptions) {
-                    printAlreadySet('enforced options', Number(eid), Number(peerToEid))
+                    printAlreadySet(`enforced options - msgType ${msgType}`, Number(eid), Number(peerToEid))
                 } else {
                     diffcurrOptions[msgType] = currOptions
                     diffnewOptions[msgType] = newOptions
