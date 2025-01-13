@@ -18,7 +18,7 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
         for (const wireOntoOapp of wireOntoOapps) {
             const { eid: peerToEid } = wireOntoOapp
             if (configOapp?.sendConfig?.ulnConfig === undefined) {
-                printNotSet('send config', Number(eid), Number(peerToEid))
+                printNotSet('send config - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
             const ulnConfig = configOapp.sendConfig.ulnConfig
@@ -61,7 +61,7 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             const setConfigParam: SetConfigParam[] = []
 
             if (currSendConfig.executorConfigBytes === newSendConfig.executorConfigBytes) {
-                printAlreadySet('send config', Number(eid), Number(peerToEid))
+                printAlreadySet('send config - executor', Number(eid), Number(peerToEid))
             } else {
                 diffFromOptions[1] = currSendConfig.executorConfigBytes
                 diffToOptions[1] = newSendConfig.executorConfigBytes
@@ -74,7 +74,7 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             }
 
             if (currSendConfig.ulnConfigBytes === newSendConfig.ulnConfigBytes) {
-                printAlreadySet('send config', Number(peerToEid), Number(eid))
+                printAlreadySet('send config - uln', Number(peerToEid), Number(eid))
             } else {
                 diffFromOptions[2] = currSendConfig.ulnConfigBytes
                 diffToOptions[2] = newSendConfig.ulnConfigBytes

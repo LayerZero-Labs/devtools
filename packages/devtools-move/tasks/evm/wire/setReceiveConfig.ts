@@ -19,7 +19,7 @@ export async function createSetReceiveConfigTransactions(
         for (const wireOntoOapp of wireOntoOapps) {
             const { eid: peerToEid } = wireOntoOapp
             if (!configOapp?.receiveConfig?.ulnConfig) {
-                printNotSet('receive config', Number(eid), Number(peerToEid))
+                printNotSet('receive config - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
 
@@ -54,7 +54,7 @@ export async function createSetReceiveConfigTransactions(
             const setToConfigParam: SetConfigParam[] = []
 
             if (currReceiveConfig.ulnConfigBytes === newReceiveConfig.ulnConfigBytes) {
-                printAlreadySet('receive config', Number(eid), Number(peerToEid))
+                printAlreadySet('receive config - uln', Number(eid), Number(peerToEid))
             } else {
                 diffFromOptions = currReceiveConfig.ulnConfigBytes
                 diffToOptions = newReceiveConfig.ulnConfigBytes
