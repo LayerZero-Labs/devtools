@@ -119,7 +119,7 @@ export async function createSetPeerTx(
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
     const contractAddress = getContractAddress(networkName, connection.to.contractName)
-    const newPeer = toAptosAddress(contractAddress, connection.to.eid)
+    const newPeer = toAptosAddress(contractAddress, connection.to.eid.toString())
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
     if (currentPeerHex === newPeer) {
