@@ -8,6 +8,7 @@ import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { toAptosAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 
 async function sendFromMoveVm(
     amountLd: bigint,
@@ -28,7 +29,8 @@ async function sendFromMoveVm(
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
-    // Pad EVM address to 64 chars
+    // Pad EVM address to 64 chars and convert Solana address to Aptos address
+    toAddress = toAptosAddress(toAddress, dstEid.toString())
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 
