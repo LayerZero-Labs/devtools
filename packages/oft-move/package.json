@@ -8,10 +8,6 @@
     "prebuild": "tsc -noEmit",
     "build": "$npm_execpath tsup --clean",
     "clean": "rm -rf artifacts cache out build",
-    "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
-    "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
-    "compile:forge": "forge build",
-    "compile:hardhat": "hardhat compile",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
