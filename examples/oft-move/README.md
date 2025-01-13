@@ -124,8 +124,6 @@ Then run the wire command:
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
-Troubleshooting:
-Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
 
 For Move-VM:
 
