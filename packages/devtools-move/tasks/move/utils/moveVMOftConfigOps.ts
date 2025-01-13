@@ -8,7 +8,7 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { Endpoint } from '../../../sdk/endpoint'
 import { MsgLib } from '../../../sdk/msgLib'
-import { OFT } from '../../../sdk/oft'
+import { OFT, OFTType } from '../../../sdk/oft'
 import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
 
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
@@ -485,9 +485,10 @@ export async function createSetRateLimitTx(
     oft: OFT,
     rateLimit: bigint,
     window_seconds: bigint,
-    eid: EndpointId
+    eid: EndpointId,
+    oftType: OFTType
 ): Promise<TransactionPayload | null> {
-    const [currentLimit, currentWindow] = await oft.getRateLimitConfig(eid)
+    const [currentLimit, currentWindow] = await oft.getRateLimitConfig(eid, oftType)
     const toNetwork = getNetworkForChainId(eid)
 
     if (currentLimit === rateLimit && currentWindow === window_seconds) {
@@ -500,7 +501,7 @@ export async function createSetRateLimitTx(
             { limit: rateLimit, window: window_seconds }
         )
 
-        const tx = oft.createSetRateLimitTx(eid, rateLimit, window_seconds)
+        const tx = oft.createSetRateLimitTx(eid, rateLimit, window_seconds, oftType)
         return {
             payload: tx,
             description: `Set rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
@@ -509,8 +510,12 @@ export async function createSetRateLimitTx(
     }
 }
 
-export async function createUnsetRateLimitTx(oft: OFT, eid: EndpointId): Promise<TransactionPayload | null> {
-    const tx = oft.createUnsetRateLimitTx(eid)
+export async function createUnsetRateLimitTx(
+    oft: OFT,
+    eid: EndpointId,
+    oftType: OFTType
+): Promise<TransactionPayload | null> {
+    const tx = oft.createUnsetRateLimitTx(eid, oftType)
     const toNetwork = getNetworkForChainId(eid)
     return {
         payload: tx,
@@ -522,9 +527,10 @@ export async function createUnsetRateLimitTx(oft: OFT, eid: EndpointId): Promise
 export async function createSetFeeBpsTx(
     oft: OFT,
     fee_bps: bigint,
-    eid: EndpointId
+    eid: EndpointId,
+    oftType: OFTType
 ): Promise<TransactionPayload | null> {
-    const currentFeeBps = await oft.getFeeBps()
+    const currentFeeBps = await oft.getFeeBps(oftType)
     const toNetwork = getNetworkForChainId(eid)
 
     if (currentFeeBps === fee_bps) {
@@ -537,7 +543,7 @@ export async function createSetFeeBpsTx(
             { fee_bps: fee_bps }
         )
 
-        const tx = oft.createSetFeeBpsTx(fee_bps)
+        const tx = oft.createSetFeeBpsTx(fee_bps, oftType)
         return {
             payload: tx,
             description: `Set fee BPS for ${toNetwork.chainName}-${toNetwork.env}`,
@@ -718,8 +724,8 @@ async function checkNewConfig(
     }
 }
 
-export function createIrrevocablyDisableBlocklistPayload(oft: OFT): TransactionPayload {
-    const payload = oft.irrevocablyDisableBlocklistPayload()
+export function createIrrevocablyDisableBlocklistPayload(oft: OFT, oftType: OFTType): TransactionPayload {
+    const payload = oft.irrevocablyDisableBlocklistPayload(oftType)
     return {
         payload: payload,
         description: `Irrevocably Disable Blocklist`,

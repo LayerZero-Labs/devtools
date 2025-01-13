@@ -1,11 +1,11 @@
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
-import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { createIrrevocablyDisableBlocklistPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 
-async function irrevocablyDisableBlocklist() {
+async function irrevocablyDisableBlocklist(oftType: OFTType) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
 
     const chain = getChain(fullnode)
@@ -22,7 +22,7 @@ async function irrevocablyDisableBlocklist() {
 
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const payload = createIrrevocablyDisableBlocklistPayload(oft)
+    const payload = createIrrevocablyDisableBlocklistPayload(oft, oftType)
 
     sendAllTxs(aptos, oft, account_address, [payload])
 }
