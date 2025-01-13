@@ -43,7 +43,6 @@
     "@aptos-labs/ts-sdk": "^1.33.1",
     "@babel/core": "^7.23.9",
     "@jest/globals": "^29.7.0",
-    "@layerzerolabs/devtools-evm-hardhat": "^2.0.3",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.1",
     "@layerzerolabs/devtools-move": "^0.0.1",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
