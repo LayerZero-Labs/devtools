@@ -20,7 +20,7 @@ export async function createSetReceiveLibraryTimeoutTransactions(
             const { eid: peerToEid } = wireOntoOapp
 
             if (configOapp?.receiveLibraryTimeoutConfig === undefined) {
-                printNotSet('receive library timeout', Number(eid), Number(peerToEid))
+                printNotSet('receive library timeout - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
 

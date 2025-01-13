@@ -19,7 +19,7 @@ export async function createSetDelegateTransactions(eidDataMapping: OmniContract
         const currDelegate = await getDelegate(contract.epv2, address.oapp)
 
         if (!configAccount?.delegate) {
-            printNotSet('delegate', Number(eid), Number(eid))
+            printNotSet('delegate - not found in config', Number(eid), Number(eid))
             continue
         }
 
