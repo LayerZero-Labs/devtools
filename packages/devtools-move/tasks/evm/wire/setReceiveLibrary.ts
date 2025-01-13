@@ -25,7 +25,7 @@ export async function createSetReceiveLibraryTransactions(
         for (const wireOntoOapp of wireOntoOapps) {
             const { eid: peerToEid } = wireOntoOapp
             if (configOapp?.receiveLibraryConfig === undefined) {
-                printNotSet('receive library', Number(eid), Number(peerToEid))
+                printNotSet('receive library - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
 
@@ -37,7 +37,7 @@ export async function createSetReceiveLibraryTransactions(
             )
 
             if (newReceiveLibrary === '') {
-                printNotSet('receive library', Number(eid), Number(peerToEid))
+                printNotSet('receive library - set to null', Number(eid), Number(peerToEid))
                 continue
             }
 
