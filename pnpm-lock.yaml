@@ -957,9 +957,6 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
-      '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.3
-        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.1
         version: link:../../packages/devtools-extensible-cli
@@ -19915,7 +19912,7 @@ packages:
       bundle-require: 4.0.2(esbuild@0.19.11)
       cac: 6.7.14
       chokidar: 3.6.0
-      debug: 4.3.7
+      debug: 4.3.5
       esbuild: 0.19.11
       execa: 5.1.1
       globby: 11.1.0
@@ -19955,7 +19952,7 @@ packages:
       bundle-require: 4.0.2(esbuild@0.19.11)
       cac: 6.7.14
       chokidar: 3.6.0
-      debug: 4.3.7
+      debug: 4.3.5
       esbuild: 0.19.11
       execa: 5.1.1
       globby: 11.1.0
