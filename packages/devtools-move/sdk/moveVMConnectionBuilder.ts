@@ -14,14 +14,14 @@ const MOVEMENT_INDEXER_URLS = {
     [Network.CUSTOM]: 'N/A',
 }
 
-export function getConnection(chain: string, network: Network, fullnode: string, faucet: string): Aptos {
+export function getConnection(chain: string, network: Network, fullnode: string, faucet?: string): Aptos {
     if (chain === CHAIN_MOVEMENT) {
         const indexer = getMovementIndexerUrl(network)
         return new Aptos(
             new AptosConfig({
                 network: Network.CUSTOM,
                 fullnode: fullnode,
-                faucet: faucet,
+                faucet: faucet ?? undefined,
                 indexer: indexer,
             })
         )
