@@ -1,6 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { irrevocablyDisableBlocklist } from '../../tasks/irrevocablyDisableBlocklist'
+import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
 class IrrevocablyDisableBlocklist implements INewOperation {
     vm = 'move'
@@ -9,7 +10,7 @@ class IrrevocablyDisableBlocklist implements INewOperation {
     reqArgs = []
 
     async impl(): Promise<void> {
-        await irrevocablyDisableBlocklist()
+        await irrevocablyDisableBlocklist(OFTType.OFT_FA)
     }
 }
 

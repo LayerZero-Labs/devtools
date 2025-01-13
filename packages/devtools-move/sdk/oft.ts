@@ -12,6 +12,13 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { hexAddrToAptosBytesAddr } from './utils'
 
+export enum OFTType {
+    OFT_FA = 'oft_fa',
+    OFT_ADAPTER_FA = 'oft_adapter_fa',
+    OFT_COIN = 'oft_coin',
+    OFT_ADAPTER_COIN = 'oft_adapter_coin',
+}
+
 export class OFT {
     public moveVMConnection: Aptos
     private private_key: string
@@ -63,26 +70,27 @@ export class OFT {
     createSetRateLimitTx(
         eid: EndpointId,
         limit: number | bigint,
-        window_seconds: number | bigint
+        window_seconds: number | bigint,
+        oftType: OFTType
     ): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft_fa::set_rate_limit`,
+            function: `${this.oft_address}::${oftType}::set_rate_limit`,
             functionArguments: [eid, limit, window_seconds],
         }
     }
 
-    createUnsetRateLimitTx(eid: EndpointId): InputGenerateTransactionPayloadData {
+    createUnsetRateLimitTx(eid: EndpointId, oftType: OFTType): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft_fa::unset_rate_limit`,
+            function: `${this.oft_address}::${oftType}::unset_rate_limit`,
             functionArguments: [eid],
         }
     }
 
     // returns (limit, window_seconds)
-    async getRateLimitConfig(eid: EndpointId): Promise<[bigint, bigint]> {
+    async getRateLimitConfig(eid: EndpointId, oftType: OFTType): Promise<[bigint, bigint]> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oft_fa::rate_limit_config`,
+                function: `${this.oft_address}::${oftType}::rate_limit_config`,
                 functionArguments: [eid],
             },
         })
@@ -91,17 +99,17 @@ export class OFT {
         return [limit, window]
     }
 
-    createSetFeeBpsTx(fee_bps: number | bigint): InputGenerateTransactionPayloadData {
+    createSetFeeBpsTx(fee_bps: number | bigint, oftType: OFTType): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft_fa::set_fee_bps`,
+            function: `${this.oft_address}::${oftType}::set_fee_bps`,
             functionArguments: [fee_bps],
         }
     }
 
-    async getFeeBps(): Promise<bigint> {
+    async getFeeBps(oftType: OFTType): Promise<bigint> {
         const result = await this.moveVMConnection.view({
             payload: {
-                function: `${this.oft_address}::oft_fa::fee_bps`,
+                function: `${this.oft_address}::${oftType}::fee_bps`,
                 functionArguments: [],
             },
         })
@@ -329,9 +337,9 @@ export class OFT {
         }
     }
 
-    irrevocablyDisableBlocklistPayload(): InputGenerateTransactionPayloadData {
+    irrevocablyDisableBlocklistPayload(oftType: OFTType): InputGenerateTransactionPayloadData {
         return {
-            function: `${this.oft_address}::oft_fa::irrevocably_disable_blocklist`,
+            function: `${this.oft_address}::${oftType}::irrevocably_disable_blocklist`,
             functionArguments: [],
         }
     }

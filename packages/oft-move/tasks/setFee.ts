@@ -1,13 +1,13 @@
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
-import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { createSetFeeBpsTx } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 
-async function setFee(feeBps: bigint, toEid: EndpointId) {
+async function setFee(feeBps: bigint, toEid: EndpointId, oftType: OFTType) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
 
     const chain = getChain(fullnode)
@@ -25,7 +25,7 @@ async function setFee(feeBps: bigint, toEid: EndpointId) {
 
     const oft = new OFT(aptos, oftAddress, account_address, private_key)
 
-    const setFeeBpsPayload = await createSetFeeBpsTx(oft, feeBps, toEid)
+    const setFeeBpsPayload = await createSetFeeBpsTx(oft, feeBps, toEid, oftType)
 
     sendAllTxs(aptos, oft, account_address, [setFeeBpsPayload])
 }
