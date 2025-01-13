@@ -13,7 +13,7 @@ import 'hardhat/register'
 /*
  * Parses hardhat.config.ts and returns a mapping of EID to network name or URL.
  */
-export async function createEidToNetworkMapping(_value = 'networkName'): Promise<Record<number, string>> {
+export async function createEidToNetworkMapping(_value = 'networkName'): Promise<Record<string, string>> {
     const hardhatConfigPath = path.resolve(`${process.cwd()}/hardhat.config.ts`)
     const hardhatConfigFile = await import(hardhatConfigPath)
     const hardhatConfig = hardhatConfigFile.default
@@ -23,7 +23,7 @@ export async function createEidToNetworkMapping(_value = 'networkName'): Promise
     }
 
     const networks = hardhatConfig.networks
-    const eidNetworkNameMapping: Record<number, string> = {}
+    const eidNetworkNameMapping: Record<string, string> = {}
     for (const [networkName, networkConfig] of Object.entries(networks)) {
         if (networkName === 'hardhat') {
             continue
@@ -33,11 +33,11 @@ export async function createEidToNetworkMapping(_value = 'networkName'): Promise
             throw new Error(`EID not found for network: ${networkName}`)
         }
         if (_value == 'networkName') {
-            eidNetworkNameMapping[netConfig.eid] = networkName
+            eidNetworkNameMapping[netConfig.eid.toString()] = networkName
         } else {
             const configValue = netConfig.url
             if (configValue !== undefined) {
-                eidNetworkNameMapping[netConfig.eid] = configValue
+                eidNetworkNameMapping[netConfig.eid.toString()] = configValue
             }
         }
     }
