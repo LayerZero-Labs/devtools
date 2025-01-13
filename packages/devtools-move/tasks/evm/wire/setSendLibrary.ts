@@ -23,7 +23,7 @@ export async function createSetSendLibraryTransactions(eidDataMapping: OmniContr
         for (const wireOntoOapp of wireOntoOapps) {
             const { eid: peerToEid } = wireOntoOapp
             if (!configOapp?.sendLibrary) {
-                printNotSet('send library', Number(eid), Number(peerToEid))
+                printNotSet('send library - not found in config', Number(eid), Number(peerToEid))
                 continue
             }
 
