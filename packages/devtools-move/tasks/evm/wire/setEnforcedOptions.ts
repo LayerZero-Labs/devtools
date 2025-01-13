@@ -27,9 +27,9 @@ export async function createSetEnforcedOptionsTransactions(
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
 
-    for (const [eid, { wireOntoOapps, contract, configOapp }] of Object.entries(eidDataMapping)) {
-        for (const wireOntoOapp of wireOntoOapps) {
-            const { eid: peerToEid } = wireOntoOapp
+    for (const [eid, { peers, contract, configOapp }] of Object.entries(eidDataMapping)) {
+        for (const peer of peers) {
+            const { eid: peerToEid } = peer
             if (!configOapp?.enforcedOptions) {
                 printNotSet('enforced options - not found in config', Number(eid), Number(peerToEid))
                 continue
