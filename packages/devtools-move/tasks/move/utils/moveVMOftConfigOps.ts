@@ -3,7 +3,14 @@ import * as path from 'path'
 
 import { InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, Stage, endpointIdToStage, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import {
+    ChainType,
+    EndpointId,
+    Stage,
+    endpointIdToChainType,
+    endpointIdToStage,
+    getNetworkForChainId,
+} from '@layerzerolabs/lz-definitions'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { Endpoint } from '../../../sdk/endpoint'
@@ -16,6 +23,7 @@ import { createSerializableUlnConfig } from './ulnConfigBuilder'
 import { ExecutorConfig, UlnConfig } from '.'
 
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
+import { decodeSolanaAddress } from '../../shared/basexToBytes32'
 
 export type TransactionPayload = {
     payload: InputGenerateTransactionPayloadData
@@ -79,10 +87,18 @@ export async function setDelegate(oft: OFT, delegate: string, eid: EndpointId): 
     }
 }
 
-export function toAptosAddress(address: string): string {
+export function toAptosAddress(address: string, eid: string): string {
     if (!address) {
         return '0x' + '0'.repeat(64)
     }
+
+    const chainType = endpointIdToChainType(Number(eid))
+
+    // Handle Solana addresses by decoding base58 first
+    if (chainType === ChainType.SOLANA) {
+        address = decodeSolanaAddress(address)
+    }
+
     address = address.toLowerCase()
     const hex = address.replace('0x', '')
     // Ensure the hex string is exactly 64 chars by padding or truncating
@@ -103,7 +119,7 @@ export async function createSetPeerTx(
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
     const contractAddress = getContractAddress(networkName, connection.to.contractName)
-    const newPeer = toAptosAddress(contractAddress)
+    const newPeer = toAptosAddress(contractAddress, connection.to.eid)
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
     if (currentPeerHex === newPeer) {
