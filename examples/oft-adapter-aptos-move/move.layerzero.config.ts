@@ -140,7 +140,7 @@ const config: OAppOmniGraphHardhat = {
                         confirmations: BigInt(5),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNs: [],
-                        optionalDVNThreshold: 1,
+                        optionalDVNThreshold: 0,
                     },
                 },
                 receiveConfig: {
@@ -148,7 +148,7 @@ const config: OAppOmniGraphHardhat = {
                         confirmations: BigInt(5),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNs: [],
-                        optionalDVNThreshold: 1,
+                        optionalDVNThreshold: 0,
                     },
                 },
             },
