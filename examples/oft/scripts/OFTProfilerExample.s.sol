@@ -142,8 +142,8 @@ contract OFTProfilerExample is Script {
                 amountLD: fuzzAmount, // Amount to transfer
                 minAmountLD: fuzzAmount, // Minimum amount
                 extraOptions: OptionsBuilder.newOptions(), // Extra options for the transfer
-                composeMsg: hex"", // Optional compose message
-                oftCmd: hex"" // Optional OFT command
+                composeMsg: vm.randomBytes(vm.randomUint(0, 10000)), // simulate random message between 0 and 10_000 bytes
+                oftCmd: ""
             });
 
             // Step 3: Encode the fuzzed message using OFTMsgCodec.
