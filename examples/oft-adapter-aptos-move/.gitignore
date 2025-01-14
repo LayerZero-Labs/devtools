@@ -13,7 +13,6 @@ artifacts
 
 # LayerZero specific files
 .layerzero
-transactions
 
 # foundry test compilation files
 out
@@ -26,3 +25,8 @@ pnpm-error.log
 .idea
 
 .aptos
+
+shell-scripts
+
+transactions/*
+!transactions/.gitkeep

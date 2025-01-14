@@ -33,4 +33,4 @@ export { NewOperation }
 
 You can attach new operations to this via 
 1. Paths `await sdk.extendOperationFromPath('./operations/move-build')` - example: `packages/devtools-movement/operations/init.ts`
-2. Providing an implementation of the `INewOperation` interface `await sdk.extendOperation(NewOperation)` - example: `examples/oft-movement/scripts/cli.ts`
+2. Providing an implementation of the `INewOperation` interface `await sdk.extendOperation(NewOperation)` - example: `examples/oft-aptos-move/scripts/cli.ts`

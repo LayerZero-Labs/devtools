@@ -1,4 +1,4 @@
-## Move-VM OFT Setup and Deployment
+## Move-VM OFT Adapter Setup and Deployment
 
 ### connecting to aptos via cli
 
@@ -55,21 +55,17 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addres
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
 
-First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
+First modify deploy-move/OFTAdpaterInitParams.ts and replace the oftMetadata with your desired values:
 
 ```ts
 const oftMetadata = {
-  token_name: "MyMoveOFT",
-  token_symbol: "MMOFT",
-  icon_uri: "",
-  project_uri: "",
-  sharedDecimals: 6,
-  localDecimals: 6,
+  move_vm_fa_address: "0x0",
+  shared_decimals: 6,
 };
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Init and Set Delegate
@@ -95,10 +91,10 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
     ],
 ```
 
-Then run the following commands:
+Then run the following command:
 
 ```bash
-pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:init-fa-adapter --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ```bash
@@ -129,6 +125,9 @@ Then run the wire command:
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
 
+Troubleshooting:
+Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
+
 For Move-VM:
 
 ```bash
@@ -138,13 +137,13 @@ pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
 ## Set Fee
 
 ```bash
-pnpm run lz:sdk:move:set-fee --oapp-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
+pnpm run lz:sdk:move:adapter-set-fee --oapp-config move.layerzero.config.ts --fee-bps 1000 --to-eid number
 ```
 
 ## Set Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
+pnpm run lz:sdk:move:adapter-set-rate-limit --oapp-config move.layerzero.config.ts --rate-limit 10000 --window-seconds 60 --to-eid number
 ```
 
 Rate limit limits how much is sent netted by the amount that is received. It is set on a per pathway basis.
@@ -154,7 +153,7 @@ Window is the number of seconds over which the capacity is restored. If the rate
 ## Unset Rate Limit
 
 ```bash
-pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
+pnpm run lz:sdk:move:adapter-unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
 ```
 
 ## Permanently Disable Blocklist
@@ -162,15 +161,7 @@ pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --t
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-blocklist
-```
-
-## Permanently Disable Freezing
-
-> ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
-
-```bash
-pnpm run lz:sdk:move:permanently-disable-freezing
+pnpm run lz:sdk:move:adapter-permanently-disable-blocklist
 ```
 
 ### Transferring Ownership of your Move OApp (OFT)
@@ -213,6 +204,7 @@ To transfer the Move-VM object owner, run the following command:
 ```bash
 pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
 ```
+Note: The object owner has the upgrade authority for the Object.
 
 ### Mint to Account on Move VM OFT:
 

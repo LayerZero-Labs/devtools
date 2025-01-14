@@ -8,6 +8,7 @@ import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { toAptosAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 
 async function sendFromMoveVm(
     amountLd: bigint,
@@ -28,30 +29,22 @@ async function sendFromMoveVm(
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
-    // Pad EVM address to 64 chars
+    // Pad EVM address to 64 chars and convert Solana address to Aptos address
+    toAddress = toAptosAddress(toAddress, dstEid.toString())
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 
-    console.log(`Attempting to send ${amountLd} units`)
-    console.log(`Using OFT at address: ${aptosOftAddress}`)
-    console.log(`From account: ${srcAddress}`)
-    console.log(`To account: ${toAddress}`)
-    console.log(`dstEid: ${dstEid}`)
-    console.log(`srcAddress: ${srcAddress}`)
+    console.log(`Sending ${amountLd} units`)
+    console.log(`\tUsing OFT at address: ${aptosOftAddress}`)
+    console.log(`\tFrom account: ${srcAddress}`)
+    console.log(`\tTo account: ${toAddress}`)
+    console.log(`\tdstEid: ${dstEid}`)
+    console.log(`\tsrcAddress: ${srcAddress}`)
 
     const extra_options = options.toBytes()
     const compose_message = new Uint8Array([])
     const oft_cmd = new Uint8Array([])
 
-    console.log(`srcAddress: ${srcAddress}`)
-    console.log(`dstEid: ${dstEid}`)
-    console.log(`toAddressBytes: ${toAddressBytes}`)
-    console.log(`amountLd: ${amountLd}`)
-    console.log(`minAmountLd: ${minAmountLd}`)
-    console.log(`extra_options: ${extra_options}`)
-    console.log(`compose_message: ${compose_message}`)
-    console.log(`oft_cmd: ${oft_cmd}`)
-    console.log(`false: ${false}`)
     const [nativeFee, zroFee] = await oft.quoteSend(
         srcAddress,
         dstEid,
