@@ -62,7 +62,7 @@ contract MyOFTTest is TestHelperOz5 {
         deal(address(bOFT), userB, initialBalance);
     }
 
-    function test_constructor() public view {
+    function test_constructor() public {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
 
