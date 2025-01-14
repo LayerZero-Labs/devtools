@@ -43,10 +43,6 @@ export async function createEvmOmniContracts(
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const omniContracts: OmniContractMetadataMapping = {}
 
-    if (isWire) {
-        logPathwayHeader(connectionsToWire)
-    }
-
     /*
      * Looping through the connections we build out the omniContracts and TxTypeEidMapping by reading from the deployment files.
      * omniContracts contains ethers Contract objects for the OApp and EndpointV2 contracts.
