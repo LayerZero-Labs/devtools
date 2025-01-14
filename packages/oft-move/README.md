@@ -2,11 +2,11 @@
 
 I'm putting together a guide of the CLI where I trace through running one of the commands and explain what files are doing to illustrate the general high-level architecture of the CLI. Hopefully this makes code review slightly more approachable.
 
-`examples/oft-move` is the example for deploying an OFT on Aptos (and later Movement).
+`examples/oft-aptos-move` is the example for deploying an OFT on Aptos (and later Movement).
 
-Inside of `examples/oft-move/`, go into package.json. Here we have a list of the commands that we can run.
+Inside of `examples/oft-aptos-move/`, go into package.json. Here we have a list of the commands that we can run.
 
-You can also run `pnpm run lz:sdk:help` inside of `examples/oft-move/` to see the list of commands.
+You can also run `pnpm run lz:sdk:help` inside of `examples/oft-aptos-move/` to see the list of commands.
 
 For this high-level overview, we will be drilling down into the wire command.
 
@@ -61,7 +61,7 @@ The wire command is defined in `packages/devtools-move/tasks/move/wireMove.ts`. 
 
 ```ts
 async function wireMove(args: any) {
-    // Here is where we parse the user info  .yaml file inside of examples/oft-move/.aptos/config.yaml
+    // Here is where we parse the user info  .yaml file inside of examples/oft-aptos-move/.aptos/config.yaml
     // This .yaml is created when the user runs aptos init and enters their private key
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
     const fullConfigPath = path.join(args.rootDir, args.oapp_config)
@@ -157,7 +157,7 @@ export async function createSetReceiveLibraryTimeoutTx(
 
 The methods of `moveVMOftConfigOps.ts` call our MoveVM SDKs enpoint.ts, msgLib.ts, and oft.ts. These are all very simple and straightforward. The getters call blockchain view functions, but the setters return payloads to later be executed.
 
-For example, the `setReceiveLibraryTimeoutPayload` method returns a payload to be executed on the MoveVM. It calls the `set_receive_library_timeout` function on the `oapp_core` module, at the address of the OFT, that is retrieved from `examples/oft-move/deployments/aptos-testnet/oft.json`.
+For example, the `setReceiveLibraryTimeoutPayload` method returns a payload to be executed on the MoveVM. It calls the `set_receive_library_timeout` function on the `oapp_core` module, at the address of the OFT, that is retrieved from `examples/oft-aptos-move/deployments/aptos-testnet/oft.json`.
 ```ts
 setReceiveLibraryTimeoutPayload(
     remoteEid: number,
