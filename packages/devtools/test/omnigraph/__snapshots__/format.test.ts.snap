@@ -228,6 +228,14 @@ exports[`omnigraph/format formatEid should format 337 correctly 1`] = `"BL4_MAIN
 
 exports[`omnigraph/format formatEid should format 338 correctly 1`] = `"BL5_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 339 correctly 1`] = `"INK_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 340 correctly 1`] = `"SONEIUM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 341 correctly 1`] = `"SPACE_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 342 correctly 1`] = `"GLUE_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -823,6 +831,14 @@ exports[`omnigraph/format formatEid should format 30336 correctly 1`] = `"FLOW_V
 exports[`omnigraph/format formatEid should format 30337 correctly 1`] = `"BL4_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30338 correctly 1`] = `"BL5_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30339 correctly 1`] = `"INK_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30340 correctly 1`] = `"SONEIUM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30341 correctly 1`] = `"SPACE_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30342 correctly 1`] = `"GLUE_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30343 correctly 1`] = `"TON_V2_MAINNET"`;
 
