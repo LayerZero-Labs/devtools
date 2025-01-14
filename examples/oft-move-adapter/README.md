@@ -204,6 +204,7 @@ To transfer the Move-VM object owner, run the following command:
 ```bash
 pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
 ```
+Note: The object owner has the upgrade authority for the Object.
 
 ### Mint to Account on Move VM OFT:
 
