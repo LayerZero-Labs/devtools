@@ -192,7 +192,7 @@ teardown() {
 @test "should work with pnpm & oft aptos example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-aptos"
 
-    LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-move --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-aptos-move --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test
@@ -201,7 +201,7 @@ teardown() {
 @test "should work with pnpm & oft adapter aptos example in CI mode" {
     local DESTINATION="$PROJECTS_DIRECTORY/pnpm-oft-adapter-aptos"
 
-    LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-move-adapter --destination $DESTINATION --package-manager pnpm
+    LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES=1 npx --yes create-lz-oapp --ci --example oft-adapter-aptos-move --destination $DESTINATION --package-manager pnpm
     cd "$DESTINATION"
     pnpm compile
     pnpm test

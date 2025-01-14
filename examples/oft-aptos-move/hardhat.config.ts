@@ -53,13 +53,23 @@ const config: HardhatUserConfig = {
     },
     networks: {
         'bsc-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET.valueOf(),
-            url: process.env.RPC_URL_BSC || 'https://api.zan.top/bsc-testnet',
+            eid: EndpointId.BSC_V2_TESTNET,
+            url: process.env.RPC_URL_BSC || 'wss://bsc-testnet-rpc.publicnode.com',
             accounts,
         },
         'aptos-testnet': {
-            eid: EndpointId.APTOS_V2_TESTNET.valueOf(),
+            eid: EndpointId.APTOS_V2_TESTNET,
             url: process.env.RPC_URL_APTOS_TESTNET || 'https://rpc.ankr.com/http/aptos_testnet/v1[1]',
+            accounts,
+        },
+        'eth-testnet': {
+            eid: EndpointId.ETHEREUM_V2_TESTNET,
+            url: process.env.RPC_URL_ETHEREUM_TESTNET || 'https://sepolia.infura.io/v3/',
+            accounts,
+        },
+        'solana-devnet': {
+            eid: EndpointId.SOLANA_V2_TESTNET,
+            url: process.env.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com',
             accounts,
         },
         hardhat: {
