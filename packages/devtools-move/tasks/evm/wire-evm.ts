@@ -28,7 +28,12 @@ import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLib
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
-async function createEvmOmniContracts(args: any, privateKey: string, chainType: ChainType = ChainType.EVM) {
+export async function createEvmOmniContracts(
+    args: any,
+    privateKey: string,
+    chainType: ChainType = ChainType.EVM,
+    isWire: boolean = false
+) {
     const globalConfigPath = path.resolve(path.join(args.rootDir, args.oapp_config))
     const connectionsToWire = await getConfigConnectionsFromChainType('from', chainType, globalConfigPath)
     const accountConfigs = await getHHAccountConfig(globalConfigPath)
@@ -38,7 +43,10 @@ async function createEvmOmniContracts(args: any, privateKey: string, chainType: 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
     const omniContracts: OmniContractMetadataMapping = {}
 
-    logPathwayHeader(connectionsToWire)
+    if (isWire) {
+        logPathwayHeader(connectionsToWire)
+    }
+
     /*
      * Looping through the connections we build out the omniContracts and TxTypeEidMapping by reading from the deployment files.
      * omniContracts contains ethers Contract objects for the OApp and EndpointV2 contracts.
@@ -89,7 +97,7 @@ async function createEvmOmniContracts(args: any, privateKey: string, chainType: 
     return omniContracts
 }
 
-async function wireEvm(args: any) {
+export function readPrivateKey(args: any) {
     const envPath = path.resolve(path.join(args.rootDir, '.env'))
     const env = dotenv.config({ path: envPath })
     if (!env.parsed || env.error?.message !== undefined) {
@@ -103,7 +111,14 @@ async function wireEvm(args: any) {
         console.error('EVM_PRIVATE_KEY is not set in .env file')
         process.exit(1)
     }
-    const omniContracts = await createEvmOmniContracts(args, privateKey)
+
+    return privateKey
+}
+
+async function wireEvm(args: any) {
+    const privateKey = readPrivateKey(args)
+
+    const omniContracts = await createEvmOmniContracts(args, privateKey, ChainType.EVM, true)
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
     const TxTypeEidMapping: TxEidMapping = {
