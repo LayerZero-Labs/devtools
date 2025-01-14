@@ -898,7 +898,7 @@ importers:
         specifier: ^5.4.4
         version: 5.5.3
 
-  examples/oft-move:
+  examples/oft-adapter-aptos-move:
     devDependencies:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
@@ -909,6 +909,9 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      '@layerzerolabs/devtools-evm-hardhat':
+        specifier: ^2.0.3
+        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.1
         version: link:../../packages/devtools-extensible-cli
@@ -1066,7 +1069,7 @@ importers:
         specifier: ^2.6.1
         version: 2.7.0
 
-  examples/oft-move-adapter:
+  examples/oft-aptos-move:
     devDependencies:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
@@ -1077,9 +1080,6 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
-      '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.3
-        version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.1
         version: link:../../packages/devtools-extensible-cli
