@@ -13,4 +13,5 @@ export async function attach_wire_move(sdk: AptosEVMCLI) {
 export async function attach_wire_evm(sdk: AptosEVMCLI) {
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/evm-wire'))
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/evm-quote-send'))
+    await sdk.extendOperationFromPath(path.join(__dirname, './operations/evm-send'))
 }

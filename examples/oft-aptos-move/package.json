@@ -23,6 +23,7 @@
     "lz:sdk:move:permanently-disable-freezing": "ts-node scripts/cli.ts --vm move --op permanently-disable-freezing",
     "lz:sdk:move:quote-send-evm": "ts-node scripts/cli.ts --vm evm --op quote-send",
     "lz:sdk:move:quote-send-move-oft": "ts-node scripts/cli.ts --vm move --op quote-send-move-oft",
+    "lz:sdk:move:send-evm": "ts-node scripts/cli.ts --vm evm --op send",
     "lz:sdk:move:send-from-move-oft": "ts-node scripts/cli.ts --vm move --op send-from-move-oft",
     "lz:sdk:move:set-delegate": "ts-node scripts/cli.ts --vm move --op set-delegate",
     "lz:sdk:move:set-fee": "ts-node scripts/cli.ts --vm move --op set-fee",
