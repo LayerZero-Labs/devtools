@@ -2,6 +2,7 @@ import { DVNsToAddresses, translatePathwayToConfig } from '@/config-metadata'
 import { IMetadata } from '@/types'
 
 import fujiMetadata from './data/fuji.json'
+import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
 
@@ -9,6 +10,7 @@ describe('config-metadata', () => {
     const metadata: IMetadata = {
         fuji: fujiMetadata,
         solana: solanaMainnetMetadata,
+        polygon: polygonMainnetMetadata,
         'solana-testnet': solanaTestnetMetadata,
     }
 
@@ -103,6 +105,12 @@ describe('config-metadata', () => {
             expect(() => DVNsToAddresses(['LayerZero Labs', 'LayerZero Labs'], 'fuji', metadata)).toThrow(
                 `Duplicate DVN name found: "LayerZero Labs".`
             )
+        })
+
+        it('correctly takes into account the version of the DVN', () => {
+            expect(DVNsToAddresses(['Polyhedra'], 'polygon', metadata)).toStrictEqual([
+                '0x8ddf05f9a5c488b4973897e278b58895bf87cb24',
+            ])
         })
     })
 })
