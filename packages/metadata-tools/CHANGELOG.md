@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 0.2.0
+
+### Minor Changes
+
+- fa73cc4: only use dvn version 2 in metadata-tools
+
 ## 0.1.0
 
 ### Minor Changes
