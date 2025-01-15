@@ -144,18 +144,22 @@ async function wireEvm(args: any) {
         rpcUrlSelfMap[eid] = eidData.provider.connection.url
     }
 
-    const anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8545)
-
+    let anvilForkNode: AnvilForkNode | null = null
     try {
-        const forkRpcMap = await anvilForkNode.startNodes()
-
-        await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
+        anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8545)
+        console.log(args)
+        if (args.simulate === 'true') {
+            const forkRpcMap = await anvilForkNode.startNodes()
+            await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
+        } else {
+            console.warn('--simulate set to false\n Skipping simulation and going directly to broadcast')
+        }
         await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey, args)
     } catch (error) {
-        anvilForkNode.killNodes()
         throw new Error(`Failed to wire EVM contracts: ${error}`)
+    } finally {
+        anvilForkNode?.killNodes()
     }
-    anvilForkNode.killNodes()
 }
 
 function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
