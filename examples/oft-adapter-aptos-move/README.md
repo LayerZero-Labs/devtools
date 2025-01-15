@@ -156,6 +156,21 @@ Window is the number of seconds over which the capacity is restored. If the rate
 pnpm run lz:sdk:move:adapter-unset-rate-limit --oapp-config move.layerzero.config.ts --to-eid number
 ```
 
+## Blocklist Wallet
+
+To block or unblock a specific wallet address:
+
+```bash
+# To block a wallet
+pnpm run lz:sdk:move:adapter-blocklist-wallet --oapp-config move.layerzero.config.ts --wallet-address <your-wallet-address> --block true
+```
+
+To unblock a wallet:
+
+```bash
+pnpm run lz:sdk:move:adapter-blocklist-wallet --oapp-config move.layerzero.config.ts --wallet-address <your-wallet-address> --block false
+```
+
 ## Permanently Disable Blocklist
 
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.

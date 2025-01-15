@@ -351,6 +351,23 @@ export class OFT {
         }
     }
 
+    setBlocklistPayload(walletAddress: string, block: boolean, oftType: OFTType): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::${oftType}::set_blocklist`,
+            functionArguments: [walletAddress, block],
+        }
+    }
+
+    async isBlocklisted(walletAddress: string, oftType: OFTType): Promise<boolean> {
+        const result = await this.moveVMConnection.view({
+            payload: {
+                function: `${this.oft_address}::${oftType}::is_blocklisted`,
+                functionArguments: [walletAddress],
+            },
+        })
+        return result[0] as boolean
+    }
+
     async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
         const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
             signer: this.signer_account,

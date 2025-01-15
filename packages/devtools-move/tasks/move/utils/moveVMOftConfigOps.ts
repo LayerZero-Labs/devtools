@@ -756,6 +756,31 @@ export function createPermanentlyDisableFungibleStoreFreezingPayload(oft: OFT): 
     }
 }
 
+export async function createSetBlocklistPayload(
+    oft: OFT,
+    oftType: OFTType,
+    walletAddress: string,
+    block: boolean
+): Promise<TransactionPayload | null> {
+    const isBlockListed = await oft.isBlocklisted(walletAddress, oftType)
+    if (isBlockListed === block) {
+        console.log(`Wallet ${walletAddress} is already ${block ? 'blocked' : 'unblocked'}`)
+        return null
+    }
+
+    const payload = oft.setBlocklistPayload(walletAddress, block, oftType)
+    diffPrinter(
+        `Set Blocklist for ${walletAddress} to ${block ? 'blocked' : 'unblocked'}`,
+        { block: isBlockListed },
+        { block: block }
+    )
+
+    return {
+        payload: payload,
+        description: `Set Blocklist for ${walletAddress} to ${block ? 'blocked' : 'unblocked'}`,
+    }
+}
+
 function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig): ExecutorConfig {
     return {
         max_message_size: executorConfig.maxMessageSize,

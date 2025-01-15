@@ -15,6 +15,7 @@
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
     "lz:sdk:help": "ts-node scripts/cli.ts --op help --filter all",
+    "lz:sdk:move:adapter-blocklist-wallet": "ts-node scripts/cli.ts --vm move --op adapter-blocklist-wallet",
     "lz:sdk:move:adapter-permanently-disable-blocklist": "ts-node scripts/cli.ts --vm move --op adapter-permanently-disable-blocklist",
     "lz:sdk:move:adapter-set-fee": "ts-node scripts/cli.ts --vm move --op adapter-set-fee",
     "lz:sdk:move:adapter-set-rate-limit": "ts-node scripts/cli.ts --vm move --op adapter-set-rate-limit",
