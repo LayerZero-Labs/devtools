@@ -157,7 +157,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             uri,
             computeUnitPriceScaleFactor,
         }: CreateOFTTaskArgs) => {
-            const isMABA = !!mintStr
+            const isMABA = !!mintStr // the difference between MABA and OFT Adapter is that MABA uses mint/burn mechanism whereas OFT Adapter uses lock/unlock mechanism
             if (tokenProgramStr !== TOKEN_PROGRAM_ID.toBase58() && !isMABA) {
                 throw new Error('Non-Mint-And-Burn-Adapter does not support custom token programs')
             }
@@ -185,21 +185,27 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
 
             const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
-            const mintAuthorityPublicKey = await createMintAuthorityMultisig(
-                connection,
-                umi,
-                eid,
-                umiWalletSigner,
-                toWeb3JsPublicKey(oftStorePda),
-                toWeb3JsPublicKey(tokenProgramId), // Only configurable for MABA
-                additionalMinters,
-                computeUnitPriceScaleFactor
-            )
-            console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
-            await checkMultisigSigners(connection, mintAuthorityPublicKey, [
-                toWeb3JsPublicKey(oftStorePda),
-                ...additionalMinters,
-            ])
+
+            let mintAuthorityPublicKey: PublicKey = toWeb3JsPublicKey(oftStorePda) // we default to the OFT Store as the Mint Authority when there are no additional minters
+
+            if (additionalMintersAsStrings) {
+                // we only need a multisig when we have additional minters
+                mintAuthorityPublicKey = await createMintAuthorityMultisig(
+                    connection,
+                    umi,
+                    eid,
+                    umiWalletSigner,
+                    toWeb3JsPublicKey(oftStorePda),
+                    toWeb3JsPublicKey(tokenProgramId), // Only configurable for MABA
+                    additionalMinters,
+                    computeUnitPriceScaleFactor
+                )
+                console.log(`created SPL multisig @ ${mintAuthorityPublicKey.toBase58()}`)
+                await checkMultisigSigners(connection, mintAuthorityPublicKey, [
+                    toWeb3JsPublicKey(oftStorePda),
+                    ...additionalMinters,
+                ])
+            }
 
             const mint = isMABA
                 ? createNoopSigner(publicKey(mintStr))
