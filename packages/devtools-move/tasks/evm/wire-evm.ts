@@ -1,13 +1,9 @@
-import fs from 'fs'
-
 import { Contract, ethers } from 'ethers'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { getNetworkForChainId, ChainType } from '@layerzerolabs/lz-definitions'
 
-import { createEidToNetworkMapping, getConfigConnectionsFromChainType, getHHAccountConfig } from '../shared/utils'
-import { basexToBytes32 } from '../shared/basexToBytes32'
-
-import AnvilForkNode from './utils/anvilForkNode'
 import { createSetDelegateTransactions } from './wire/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire/setEnforcedOptions'
 import { createSetPeerTransactions } from './wire/setPeer'
@@ -16,13 +12,17 @@ import { createSetReceiveLibraryTransactions } from './wire/setReceiveLibrary'
 import { createSetSendConfigTransactions } from './wire/setSendConfig'
 import { createSetSendLibraryTransactions } from './wire/setSendLibrary'
 import { executeTransactions } from './wire/transactionExecutor'
+import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
 
+import AnvilForkNode from './utils/anvilForkNode'
+import { createEidToNetworkMapping, getConfigConnectionsFromChainType, getHHAccountConfig } from '../shared/utils'
+import { basexToBytes32 } from '../shared/basexToBytes32'
 import type { OmniContractMetadataMapping, TxEidMapping } from './utils/types'
+import { validateOmniContractsOrTerminate } from './utils/validateOmnicontracts'
+
+import fs from 'fs'
 import path from 'path'
 import dotenv from 'dotenv'
-import { getNetworkForChainId, ChainType } from '@layerzerolabs/lz-definitions'
-import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { createSetReceiveLibraryTimeoutTransactions } from './wire/setReceiveLibraryTimeout'
 
 /**
  * @description Handles wiring of EVM contracts with the Aptos OApp
@@ -116,6 +116,7 @@ async function wireEvm(args: any) {
     const privateKey = readPrivateKey(args)
 
     const omniContracts = await createEvmOmniContracts(args, privateKey, ChainType.EVM, true)
+    await validateOmniContractsOrTerminate(omniContracts)
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
     const TxTypeEidMapping: TxEidMapping = {
@@ -147,7 +148,7 @@ async function wireEvm(args: any) {
     let anvilForkNode: AnvilForkNode | null = null
     try {
         anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8545)
-        console.log(args)
+
         if (args.simulate === 'true') {
             const forkRpcMap = await anvilForkNode.startNodes()
             await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
