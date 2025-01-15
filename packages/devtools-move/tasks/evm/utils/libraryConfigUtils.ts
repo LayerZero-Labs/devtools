@@ -16,22 +16,29 @@ export async function getConfig(
     configType: number,
     isSendConfig: boolean
 ): Promise<string> {
-    let isDefault: boolean = false
+    try {
+        let isDefault: boolean = false
 
-    if (isSendConfig) {
-        isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, aptosEid)
-    } else {
-        const receiveConfig = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
-        isDefault = receiveConfig.isDefault
+        if (isSendConfig) {
+            isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, aptosEid)
+        } else {
+            const receiveConfig = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
+            isDefault = receiveConfig.isDefault
+        }
+
+        if (isDefault) {
+            return DEFAULT_CONFIG_MESSAGE
+        }
+
+        const config = await epv2Contract.getConfig(evmAddress, libraryAddress, aptosEid, configType)
+        return config
+    } catch (error) {
+        // Handle empty bytes response
+        if ((error as any).data === '0x') {
+            return DEFAULT_CONFIG_MESSAGE
+        }
+        throw error
     }
-
-    if (isDefault) {
-        return DEFAULT_CONFIG_MESSAGE
-    }
-
-    const config = await epv2Contract.getConfig(evmAddress, libraryAddress, aptosEid, configType)
-
-    return config
 }
 
 export function setConfig(

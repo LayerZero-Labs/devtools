@@ -47,8 +47,14 @@ export async function createSetDelegateTransactions(eidDataMapping: OmniContract
 }
 
 export async function getDelegate(epv2Contract: Contract, oappAddress: string) {
-    const delegate = await epv2Contract.delegates(oappAddress)
-    const delegateAddress = utils.getAddress(delegate)
-
-    return delegateAddress
+    try {
+        const delegate = await epv2Contract.delegates(oappAddress)
+        return delegate === '0x0000000000000000000000000000000000000000' ? delegate : utils.getAddress(delegate)
+    } catch (error) {
+        // If we get empty bytes back, treat it as no delegate set
+        if ((error as any).data === '0x') {
+            return '0x0000000000000000000000000000000000000000'
+        }
+        throw error
+    }
 }
