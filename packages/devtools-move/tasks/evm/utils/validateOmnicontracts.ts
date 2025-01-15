@@ -35,7 +35,7 @@ export async function validateRpcUrl(omniContracts: OmniContractMetadataMapping)
             `The following EIDs have an invalid RPC URL (block number returned by them is 0):\n${Object.entries(
                 badRpcUrls
             )
-                .map(([eid, url]) => `${eid}: ${url}`)
+                .map(([eid, url]) => `EID: ${eid}\t RPC URL: ${url}`)
                 .join('\n')}`
         )
         shouldNotTerminate = false
