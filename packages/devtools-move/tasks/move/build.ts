@@ -78,7 +78,7 @@ async function build(args: any, contractName: string = 'oft') {
         console.log('Building contracts\n')
         await buildMovementContracts(args.named_addresses, configPath)
     } else {
-        console.log('Skipping build - contracts already built')
+        console.log('Skipping build - built modules already exist at: ', buildPath)
     }
 }
 
