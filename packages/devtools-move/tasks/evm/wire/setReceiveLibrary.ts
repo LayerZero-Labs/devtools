@@ -1,7 +1,7 @@
 import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 import type { OmniContractMetadataMapping, EidTxMap, RecvLibParam, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
 
@@ -20,6 +20,7 @@ export async function createSetReceiveLibraryTransactions(
     eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
+    logPathwayHeader('setReceiveLibrary')
 
     for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {

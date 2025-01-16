@@ -1,7 +1,7 @@
 import { Contract, utils, constants } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 import type { OmniContractMetadataMapping, EidTxMap, RecvLibraryTimeoutConfig, eid } from '../utils/types'
 
 /**
@@ -14,6 +14,7 @@ export async function createSetReceiveLibraryTimeoutTransactions(
     eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
+    logPathwayHeader('setReceiveLibraryTimeout')
 
     for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {
