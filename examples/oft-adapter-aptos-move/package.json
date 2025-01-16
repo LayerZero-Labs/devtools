@@ -13,6 +13,8 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
     "lint:sol": "solhint 'contracts/**/*.sol'",
+    "lz:sdk:evm:quote-send-evm": "ts-node scripts/cli.ts --vm evm --op quote-send",
+    "lz:sdk:evm:send-evm": "ts-node scripts/cli.ts --vm evm --op send",
     "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
     "lz:sdk:help": "ts-node scripts/cli.ts --op help --filter all",
     "lz:sdk:move:adapter-permanently-disable-blocklist": "ts-node scripts/cli.ts --vm move --op adapter-permanently-disable-blocklist",

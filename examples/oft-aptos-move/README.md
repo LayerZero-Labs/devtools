@@ -249,12 +249,24 @@ pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-addre
 
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
-  --amount-ld 10000 \
-  --min-amount-ld 100 \
-  --src-address <your-move-account-address> \
-  --to-address <your-evm-account-address> \
-  --gas-limit 400000 \
+  --amount-ld <your-amount-ld> \
+  --min-amount-ld <your-min-amount-ld> \
+  --src-address <your-source-account-address> \
+  --to-address <your-destination-account-address> \
+  --gas-limit <your-gas-limit> \
   --dst-eid <your-dst-eid>\
+```
+
+## Send from EVM
+
+```bash
+pnpm run lz:sdk:evm:send-evm \          
+  --oapp-config move.layerzero.config.ts \
+  --src-eid <your-src-eid> \
+  --dst-eid <your-dst-eid> \
+  --to <your-source-account-address> \
+  --amount <your-amount> \
+  --min-amount <your-min-amount>
 ```
 
 ## Help
