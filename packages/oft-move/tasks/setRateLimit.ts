@@ -14,7 +14,7 @@ async function setRateLimit(rateLimit: bigint, windowSeconds: bigint, toEid: End
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
 
     console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Rate Limit`)
     console.log(`\tFor: ${oftAddress}\n`)

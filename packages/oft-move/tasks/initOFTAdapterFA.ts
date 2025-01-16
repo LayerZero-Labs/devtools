@@ -14,7 +14,7 @@ async function initOFTAdapterFA(move_vm_fa_address: string, shared_decimals: num
 
     const chain = getChain(fullnode)
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAdapterAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const oftAdapterAddress = getMoveVMOftAddress(chain, lzNetworkStage)
 
     console.log(`\n⚡ Initializing OFT Adapter`)
     console.log(`   Address: ${oftAdapterAddress}\n`)
