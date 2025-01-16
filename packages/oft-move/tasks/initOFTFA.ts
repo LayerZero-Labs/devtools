@@ -20,7 +20,7 @@ async function initOFTFA(
     console.log(`Using aptos network ${network}`)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(network, lzNetworkStage)
     const chain = getChain(fullnode)
 
     console.log(`\n⚡ Initializing ${chain}-${lzNetworkStage} OFT`)
