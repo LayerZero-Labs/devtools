@@ -89,8 +89,8 @@ export function getOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
     }
 }
 
-export function getMoveVMOftAddress(stage: Stage, rootDir: string = process.cwd()) {
-    const deploymentPath = path.join(rootDir, `deployments/aptos-${stage}/oft.json`)
+export function getMoveVMOftAddress(network: string, stage: Stage, rootDir: string = process.cwd()) {
+    const deploymentPath = path.join(rootDir, `deployments/${network}-${stage}/oft.json`)
     const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
     return deployment.address
 }

@@ -13,7 +13,7 @@ async function transferOAppOwner(newOwner: string) {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
     console.log(`\n👑 Transferring ${chain}-${lzNetworkStage} OApp Ownership`)
     console.log(`\tFor OApp at: ${oftAddress}\n`)
     console.log(`\tNew Owner: ${newOwner}\n`)
