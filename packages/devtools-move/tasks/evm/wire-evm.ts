@@ -1,7 +1,6 @@
 import { Contract, ethers } from 'ethers'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
-import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 import { getNetworkForChainId, ChainType } from '@layerzerolabs/lz-definitions'
 
 import { createSetDelegateTransactions } from './wire/setDelegate'
@@ -28,12 +27,7 @@ import dotenv from 'dotenv'
  * @description Handles wiring of EVM contracts with the Aptos OApp
  * @dev Creates ethers's populated transactions for the various transaction types (setPeer, setDelegate, setEnforcedOptions, setSendLibrary, setReceiveLibrary, setReceiveLibraryTimeout). It then simulates them on a forked network before executing
  */
-export async function createEvmOmniContracts(
-    args: any,
-    privateKey: string,
-    chainType: ChainType = ChainType.EVM,
-    isWire: boolean = false
-) {
+export async function createEvmOmniContracts(args: any, privateKey: string, chainType: ChainType = ChainType.EVM) {
     const globalConfigPath = path.resolve(path.join(args.rootDir, args.oapp_config))
     const connectionsToWire = await getConfigConnectionsFromChainType('from', chainType, globalConfigPath)
     const accountConfigs = await getHHAccountConfig(globalConfigPath)
@@ -48,7 +42,6 @@ export async function createEvmOmniContracts(
      * omniContracts contains ethers Contract objects for the OApp and EndpointV2 contracts.
      */
     for (const conn of connectionsToWire) {
-        logPathwayHeader(conn)
         const fromEid = conn.from.eid
         const toEid = conn.to.eid.toString()
         const fromNetwork = networks[fromEid]
@@ -117,7 +110,7 @@ export function readPrivateKey(args: any) {
 async function wireEvm(args: any) {
     const privateKey = readPrivateKey(args)
 
-    const omniContracts = await createEvmOmniContracts(args, privateKey, ChainType.EVM, true)
+    const omniContracts = await createEvmOmniContracts(args, privateKey, ChainType.EVM)
     await validateOmniContractsOrTerminate(omniContracts)
 
     // Build a Transaction mapping for each type of transaction. It is further indexed by the eid.
@@ -163,18 +156,6 @@ async function wireEvm(args: any) {
     } finally {
         anvilForkNode?.killNodes()
     }
-}
-
-function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number]) {
-    const fromNetwork = getNetworkForChainId(connection.from.eid)
-    const toNetwork = getNetworkForChainId(connection.to.eid)
-
-    const pathwayString = `🔄 Building wire transactions for pathway: ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env} 🔄`
-    const borderLine = '━'.repeat(pathwayString.length)
-
-    console.log(borderLine)
-    console.log(pathwayString)
-    console.log(`${borderLine}\n`)
 }
 
 export { wireEvm }
