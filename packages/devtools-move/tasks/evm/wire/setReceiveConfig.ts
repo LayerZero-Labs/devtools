@@ -1,9 +1,9 @@
 import { diffPrinter } from '../../shared/utils'
-import { buildConfig, decodeConfig, getConfig, setConfig } from '../utils/libraryConfigUtils'
 
 import { parseReceiveLibrary } from './setReceiveLibrary'
 
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { buildConfig, decodeConfig, getConfig, setConfig } from '../utils/libraryConfigUtils'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 
 import type { OmniContractMetadataMapping, EidTxMap, SetConfigParam } from '../utils/types'
 
@@ -14,7 +14,7 @@ export async function createSetReceiveConfigTransactions(
     eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
-
+    logPathwayHeader('setReceiveConfig')
     for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {
             const { eid: peerToEid } = peer

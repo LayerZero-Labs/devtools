@@ -4,7 +4,7 @@ import { diffPrinter } from '../../shared/utils'
 
 import type { OmniContractMetadataMapping, EidTxMap, address, eid } from '../utils/types'
 import type { OAppEdgeConfig } from '@layerzerolabs/toolbox-hardhat'
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
 
 /**
@@ -18,6 +18,7 @@ const error_LZ_DefaultSendLibUnavailable = '0x6c1ccdb5'
  */
 export async function createSetSendLibraryTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
+    logPathwayHeader('setSendLibrary')
 
     for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {

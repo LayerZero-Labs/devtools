@@ -3,7 +3,7 @@ import { buildConfig, decodeConfig, getConfig, setConfig } from '../utils/librar
 
 import { parseSendLibrary } from './setSendLibrary'
 
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 
 import type { OmniContractMetadataMapping, EidTxMap, SetConfigParam } from '../utils/types'
 
@@ -13,7 +13,7 @@ import type { OmniContractMetadataMapping, EidTxMap, SetConfigParam } from '../u
  */
 export async function createSetSendConfigTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
-
+    logPathwayHeader('setSendConfig')
     for (const [eid, { peers, address, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {
             const { eid: peerToEid } = peer

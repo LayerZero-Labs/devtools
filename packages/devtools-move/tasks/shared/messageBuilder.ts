@@ -46,3 +46,12 @@ export function buildTransactionDescription(action: string, fromEid: number, toE
 
     return `${action} from ${fromNetwork.chainName}-${fromNetwork.env} → ${toNetwork.chainName}-${toNetwork.env}`
 }
+
+export function logPathwayHeader(op: string) {
+    const pathwayString = `🔄 Building ${op} transactions 🔄`
+    const borderLine = '━'.repeat(pathwayString.length)
+
+    console.log(borderLine)
+    console.log(pathwayString)
+    console.log(`${borderLine}\n`)
+}

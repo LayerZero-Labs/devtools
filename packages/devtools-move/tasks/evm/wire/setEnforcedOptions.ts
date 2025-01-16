@@ -8,7 +8,7 @@ import {
     Options,
 } from '@layerzerolabs/lz-v2-utilities'
 
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 
 import { diffPrinter } from '../../shared/utils'
 
@@ -26,7 +26,7 @@ export async function createSetEnforcedOptionsTransactions(
     eidDataMapping: OmniContractMetadataMapping
 ): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
-
+    logPathwayHeader('setEnforcedOptions')
     for (const [eid, { peers, contract, configOapp }] of Object.entries(eidDataMapping)) {
         for (const peer of peers) {
             const { eid: peerToEid } = peer
