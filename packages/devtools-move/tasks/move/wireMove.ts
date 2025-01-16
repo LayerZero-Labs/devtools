@@ -20,7 +20,7 @@ async function wireMove(args: any) {
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const moveVMOftAddress = getMoveVMOftAddress(network, lzNetworkStage)
     const namedAddresses = getNamedAddresses(lzNetworkStage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
 

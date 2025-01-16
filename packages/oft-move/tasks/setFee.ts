@@ -14,7 +14,7 @@ async function setFee(feeBps: bigint, toEid: EndpointId, oftType: OFTType) {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Fee BPS`)
     console.log(`\tFor: ${oftAddress}\n`)

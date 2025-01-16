@@ -19,7 +19,7 @@ async function mintToMoveVM(amountLd: number, toAddress: string) {
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     console.log(`\n🪙  Minting ${chain}-${lzNetworkStage} OFT ✨`)
     console.log(`\tAddress: ${aptosOftAddress}`)

@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 
 import type { OmniContractMetadataMapping } from './types'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 export async function validateOmniContractsOrTerminate(omniContracts: OmniContractMetadataMapping) {
     let shouldNotTerminate = true
@@ -75,8 +76,11 @@ export async function validateEidSupport(omniContracts: OmniContractMetadataMapp
             'The following EIDs are not supported by the EPV2 contract (endpointAddress::isSupportedEid(u32))'
         )
         for (const [eid, badEids] of Object.entries(unsupportedEids)) {
+            const badNetworks = badEids.map((eid) => getNetworkForChainId(parseInt(eid)))
+            const badNetworkNames = badNetworks.map((network) => `${network.chainName}-${network.env}`)
+            const network = getNetworkForChainId(parseInt(eid))
             console.error(
-                `EID: ${eid}\t EndpointV2: ${omniContracts[eid].contract.epv2.address}\t Unsupported EIDs: ${badEids.join(', ')}`
+                `${network.chainName}-${network.env}\t EndpointV2: ${omniContracts[eid].contract.epv2.address}\t Unsupported networks: ${badNetworkNames.join(', ')}`
             )
         }
         shouldNotTerminate = false
