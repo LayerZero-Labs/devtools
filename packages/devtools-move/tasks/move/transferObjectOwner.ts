@@ -13,7 +13,7 @@ async function transferObjectOwner(newOwner: string) {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
     console.log(`\n👑 Transferring ${chain}-${lzNetworkStage} Object Ownership`)
     console.log(`\tFor Object at: ${oftAddress}\n`)
     console.log(`\tNew Owner: ${newOwner}\n`)
