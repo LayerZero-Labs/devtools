@@ -229,16 +229,28 @@ Then run the following command to mint the move oft:
 pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
 
-## Send from Move VM
+## Send Tokens
 
+### Send from Move VM to EVM
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
-  --amount-ld 10000 \
-  --min-amount-ld 100 \
+  --amount-ld <amount-to-send> \
+  --min-amount-ld <minimum-amount-to-receive> \
   --src-address <your-move-account-address> \
-  --to-address <your-evm-account-address> \
+  --to-address <destination-evm-address> \
   --gas-limit 400000 \
-  --dst-eid <your-dst-eid>\
+  --dst-eid <destination-chain-eid>
+```
+
+### Send from EVM to Move VM
+```bash
+pnpm run lz:sdk:evm:send-evm \
+  --oapp-config move.layerzero.config.ts \
+  --src-eid <source-chain-eid> \
+  --dst-eid <destination-chain-eid> \
+  --to <destination-move-address> \
+  --amount <amount-to-send> \
+  --min-amount <minimum-amount-to-receive>
 ```
 
 ## Help
