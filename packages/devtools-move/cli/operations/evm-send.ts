@@ -66,18 +66,24 @@ async function sendOFT(args: any): Promise<MessagingFee> {
     const to = args.to
     const amount = args.amount
     const minAmount = args.min_amount
-    const refundAddress = args.refund_address
 
     const privateKey = readPrivateKey(args)
-
     const omniContracts = await createEvmOmniContracts(args, privateKey)
-
     let oft: ethers.Contract
-    if (omniContracts[srcEid.toString()]) {
-        oft = omniContracts[srcEid.toString()].contract.oapp
+    const contract = omniContracts[srcEid.toString()]
+    if (contract?.contract?.oapp) {
+        oft = contract.contract.oapp
     } else {
         throw new Error(`No OApp found for endpoint ID ${srcEid}`)
     }
+    const refundAddress = args.refund_address || (await oft.signer.getAddress())
+
+    console.log(`\n🚀 Sending ${amount} units`)
+    console.log(`\t📝 Using OFT at address: ${oft.address}`)
+    console.log(`\t👤 From account: ${await oft.signer.getAddress()}`)
+    console.log(`\t🎯 To account: ${to}`)
+    console.log(`\t🌐 dstEid: ${dstEid}`)
+    console.log(`\t🔍 Min amount: ${minAmount}`)
 
     const sendParam: SendParam = {
         dstEid: dstEid,
@@ -91,10 +97,22 @@ async function sendOFT(args: any): Promise<MessagingFee> {
 
     const fee: MessagingFee = await oft.quoteSend(sendParam, false)
 
+    console.log('\n💰 Quote received:')
+    console.log('\t🏦 Native fee:', fee.nativeFee.toString())
+    console.log('\t🪙 LZ token fee:', fee.lzTokenFee.toString())
+
     const tx = await oft.send(sendParam, fee, refundAddress, {
         value: fee.nativeFee,
     })
-    console.log('tx:', tx)
+
+    console.log('\n📨 Transaction sent:')
+    console.log('\t🔑 Hash:', tx.hash)
+    console.log('\t🔍 LayerZero Explorer:', `https://layerzeroscan.com/tx/${tx.hash}`)
+    console.log('\t📤 From:', tx.from)
+    console.log('\t📥 To:', tx.to)
+    console.log('\t💵 Value:', ethers.utils.formatEther(tx.value), 'ETH')
+    console.log('\t⛽ Gas limit:', tx.gasLimit.toString())
+
     return tx
 }
 
