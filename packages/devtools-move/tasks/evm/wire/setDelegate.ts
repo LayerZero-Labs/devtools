@@ -2,7 +2,7 @@ import { Contract, utils } from 'ethers'
 
 import { diffPrinter } from '../../shared/utils'
 
-import { createDiffMessage, printAlreadySet, printNotSet } from '../../shared/messageBuilder'
+import { createDiffMessage, printAlreadySet, printNotSet, logPathwayHeader } from '../../shared/messageBuilder'
 
 import type { OmniContractMetadataMapping, EidTxMap } from '../utils/types'
 
@@ -14,7 +14,7 @@ import type { OmniContractMetadataMapping, EidTxMap } from '../utils/types'
  */
 export async function createSetDelegateTransactions(eidDataMapping: OmniContractMetadataMapping): Promise<EidTxMap> {
     const txTypePool: EidTxMap = {}
-
+    logPathwayHeader('setDelegate')
     for (const [eid, { peers, address, contract, configAccount }] of Object.entries(eidDataMapping)) {
         const peerToEid = peers[0].eid
         const currDelegate = await getDelegate(contract.epv2, address.oapp)
