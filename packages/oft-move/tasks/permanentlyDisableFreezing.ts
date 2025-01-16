@@ -12,7 +12,7 @@ async function permanentlyDisableFreezing() {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
 
     console.log(`\n🔧 Permanently Disabling Freezing for ${chain}-${lzNetworkStage} OFT`)
     console.log(`\tFor: ${oftAddress}\n`)
