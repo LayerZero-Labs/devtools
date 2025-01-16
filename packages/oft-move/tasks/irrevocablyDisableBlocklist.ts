@@ -12,7 +12,7 @@ async function irrevocablyDisableBlocklist(oftType: OFTType) {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
 
     console.log(`\n🔧 Irrevocably Disabling Blocklist for ${chain}-${lzNetworkStage} OFT`)
     console.log(`\tFor: ${oftAddress}\n`)
