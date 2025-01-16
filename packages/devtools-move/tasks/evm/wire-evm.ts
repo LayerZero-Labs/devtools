@@ -64,7 +64,9 @@ export async function createEvmOmniContracts(
         const WireOAppDeploymentPath = path.resolve(`deployments/${toNetwork}/${conn.to.contractName}.json`)
         const WireOAppDeploymentData = JSON.parse(fs.readFileSync(WireOAppDeploymentPath, 'utf8'))
 
-        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetwork, 'EndpointV2')
+        const lzFromNetwork = getNetworkForChainId(fromEid)
+        const lzFromNetworkString = `${lzFromNetwork.chainName}-${lzFromNetwork.env}`
+        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(lzFromNetworkString, 'EndpointV2')
 
         const { address: oappAddress, abi: oappAbi } = OAppDeploymentData
         const { address: epv2Address, abi: epv2Abi } = EndpointV2DeploymentData
