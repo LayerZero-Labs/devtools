@@ -14,7 +14,7 @@ async function unsetRateLimit(toEid: EndpointId, oftType: OFTType) {
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     console.log(`\n🔧 Unsetting ${chain}-${lzNetworkStage} OFT Rate Limit`)
     console.log(`\tFor: ${oftAddress}\n`)

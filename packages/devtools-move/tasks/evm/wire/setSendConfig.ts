@@ -74,7 +74,7 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             }
 
             if (currSendConfig.ulnConfigBytes === newSendConfig.ulnConfigBytes) {
-                printAlreadySet('send config - uln', Number(peerToEid), Number(eid))
+                printAlreadySet('send config - uln', Number(eid), Number(peerToEid))
             } else {
                 diffFromOptions[2] = currSendConfig.ulnConfigBytes
                 diffToOptions[2] = newSendConfig.ulnConfigBytes

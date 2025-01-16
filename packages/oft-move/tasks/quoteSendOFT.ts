@@ -24,7 +24,7 @@ async function quoteSendOFT(
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const aptosOftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 

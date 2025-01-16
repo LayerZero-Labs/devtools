@@ -18,7 +18,7 @@ async function executeSetDelegate(args: any, useAccountAddress: boolean = false)
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OFT Delegate`)
     console.log(`\tFor: ${oftAddress}\n`)
