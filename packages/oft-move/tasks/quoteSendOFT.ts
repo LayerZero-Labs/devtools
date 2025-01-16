@@ -9,6 +9,7 @@ import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { getMoveVMOftAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { toAptosAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
+import { getChain } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 
 async function quoteSendOFT(
     amountLd: number,
@@ -17,14 +18,15 @@ async function quoteSendOFT(
     gasLimit: number,
     dstEid: EndpointId
 ) {
-    const { account_address, private_key, network } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
     const aptosConfig = new AptosConfig({ network: network })
     const aptos = new Aptos(aptosConfig)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const aptosOftAddress = getMoveVMOftAddress(network, lzNetworkStage)
+    const chain = getChain(fullnode)
+    const aptosOftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 
