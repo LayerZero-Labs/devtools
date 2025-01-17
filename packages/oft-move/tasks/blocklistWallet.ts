@@ -12,7 +12,7 @@ async function blocklistWallet(walletAddress: string, block: boolean, oftType: O
     const aptos = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(lzNetworkStage)
+    const oftAddress = getMoveVMOftAddress(network, lzNetworkStage)
 
     console.log(`\n🔒 Blocklisting Wallet for ${chain}-${lzNetworkStage} OFT`)
     console.log(`\t📝 For: ${oftAddress}\n`)
