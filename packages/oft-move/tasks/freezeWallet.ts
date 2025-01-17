@@ -14,7 +14,7 @@ async function freezeWallet(walletAddress: string, frozen: boolean, oftType: OFT
     const lzNetworkStage = getLzNetworkStage(network)
     const oftAddress = getMoveVMOftAddress(lzNetworkStage)
 
-    console.log(`\n🔒 Freezing Wallet for ${chain}-${lzNetworkStage} OFT`)
+    console.log(`\n🔒 Updating Freeze status of Wallet for ${chain}-${lzNetworkStage} OFT`)
     console.log(`\t📝 For: ${oftAddress}\n`)
     console.log(`\t${frozen ? '❄️' : '🌡️'} Setting wallet ${walletAddress} to ${frozen ? 'frozen' : 'unfrozen'}`)
 
