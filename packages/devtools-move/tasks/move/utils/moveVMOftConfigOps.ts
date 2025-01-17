@@ -781,6 +781,31 @@ export async function createSetBlocklistPayload(
     }
 }
 
+export async function createSetPrimaryFungibleStoreFrozenPayload(
+    oft: OFT,
+    oftType: OFTType,
+    account: string,
+    frozen: boolean
+): Promise<TransactionPayload | null> {
+    const isFrozen = await oft.isPrimaryFungibleStoreFrozen(account, oftType)
+    if (isFrozen === frozen) {
+        console.log(`\n✅ Account ${account} is already ${frozen ? 'frozen' : 'unfrozen'}\n`)
+        return null
+    }
+
+    const payload = oft.setPrimaryFungibleStoreFrozenPayload(account, frozen, oftType)
+    diffPrinter(
+        `Set Primary Fungible Store Frozen for ${account} to ${frozen ? 'frozen' : 'unfrozen'}`,
+        { frozen: isFrozen },
+        { frozen: frozen }
+    )
+
+    return {
+        payload: payload,
+        description: `Set Primary Fungible Store Frozen for ${account} to ${frozen ? 'frozen' : 'unfrozen'}`,
+    }
+}
+
 function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig): ExecutorConfig {
     return {
         max_message_size: executorConfig.maxMessageSize,

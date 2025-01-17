@@ -181,6 +181,18 @@ This command allows you to add or remove addresses from the blocklist. Blocked a
 pnpm run lz:sdk:move:permanently-disable-blocklist
 ```
 
+## Freeze Wallet
+
+```bash
+pnpm run lz:sdk:move:freeze-wallet --oapp-config move.layerzero.config.ts --wallet-address <wallet-address> --freeze true
+```
+
+To unfreeze a wallet:
+
+```bash
+pnpm run lz:sdk:move:freeze-wallet --oapp-config move.layerzero.config.ts --wallet-address <wallet-address> --freeze false
+```
+
 ## Permanently Disable Freezing
 
 > ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.

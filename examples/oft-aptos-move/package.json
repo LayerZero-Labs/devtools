@@ -18,6 +18,7 @@
     "lz:sdk:move:blocklist-wallet": "ts-node scripts/cli.ts --vm move --op blocklist-wallet",
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",
     "lz:sdk:move:deploy": "ts-node scripts/cli.ts --vm move --op deploy",
+    "lz:sdk:move:freeze-wallet": "ts-node scripts/cli.ts --vm move --op freeze-wallet",
     "lz:sdk:move:init-fa": "ts-node scripts/cli.ts --vm move --op init-fa",
     "lz:sdk:move:mint-to-move-oft": "ts-node scripts/cli.ts --vm move --op mint-to-move-oft",
     "lz:sdk:move:permanently-disable-blocklist": "ts-node scripts/cli.ts --vm move --op permanently-disable-blocklist",

@@ -368,6 +368,27 @@ export class OFT {
         return result[0] as boolean
     }
 
+    setPrimaryFungibleStoreFrozenPayload(
+        account: string,
+        frozen: boolean,
+        oftType: OFTType
+    ): InputGenerateTransactionPayloadData {
+        return {
+            function: `${this.oft_address}::${oftType}::set_primary_fungible_store_frozen`,
+            functionArguments: [account, frozen],
+        }
+    }
+
+    async isPrimaryFungibleStoreFrozen(account: string, oftType: OFTType): Promise<boolean> {
+        const result = await this.moveVMConnection.view({
+            payload: {
+                function: `${this.oft_address}::${oftType}::is_primary_fungible_store_frozen`,
+                functionArguments: [account],
+            },
+        })
+        return result[0] as boolean
+    }
+
     async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
         const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
             signer: this.signer_account,

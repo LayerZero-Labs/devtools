@@ -28,7 +28,8 @@ class BlocklistWallet implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await blocklistWallet(args.wallet_address, args.block, OFTType.OFT_FA)
+        const block = args.block === 'true'
+        await blocklistWallet(args.wallet_address, block, OFTType.OFT_FA)
     }
 }
 
