@@ -1,5 +1,11 @@
 # @layerzerolabs/metadata-tools
 
+## 0.3.0
+
+### Minor Changes
+
+- dd9bf25: Filter out deprecated DVN addresses
+
 ## 0.2.0
 
 ### Minor Changes
