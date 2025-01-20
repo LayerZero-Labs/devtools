@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli-test
 
+## 0.4.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.4.4
 
 ### Patch Changes

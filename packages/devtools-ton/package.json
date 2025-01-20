@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-ton",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Developer utilities for working with LayerZero TON contracts",
   "repository": {
     "type": "git",
@@ -38,7 +38,7 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
+    "@layerzerolabs/devtools": "~0.4.4",
     "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.45",
     "@layerzerolabs/lz-ton-sdk-v2": "^3.0.27",
@@ -54,7 +54,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
+    "@layerzerolabs/devtools": "~0.4.4",
     "@layerzerolabs/io-devtools": "~0.1.14",
     "@layerzerolabs/lz-definitions": "^3.0.45",
     "@ton/core": "^0.59.0",

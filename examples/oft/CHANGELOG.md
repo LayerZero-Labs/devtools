@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.5.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.5.3
 
 ### Patch Changes
