@@ -245,7 +245,7 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 
 ### Initialize the Solana OFT
 
-:warning: Only do this the first time you are initializing the OFT.
+:warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
 
 ```bash
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
