@@ -46,7 +46,8 @@ export function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMet
         for (const [dvnAddress, dvnDetails] of metadataDVNs) {
             if (dvnDetails.canonicalName === dvn && !dvnDetails.lzReadCompatible && dvnDetails.version === 2) {
                 if (dvnDetails.deprecated) {
-                    console.log(`Warning: DVN "${dvn}" is deprecated.`)
+                    console.log(`Warning: DVN "${dvn}" is deprecated. Ignoring ...`)
+                    continue
                 }
 
                 dvnAddresses.push(dvnAddress)
