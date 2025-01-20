@@ -82,6 +82,7 @@ jobs:
       - name: Test
         run: pnpm test:ci
         env:
+          DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS: "--filter=\!*devtools-ton"
           # We'll use the prebuilt base image
           DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
           # And the prebuilt hardhat EVM node image
