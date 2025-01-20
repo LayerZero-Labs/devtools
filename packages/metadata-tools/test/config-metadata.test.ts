@@ -120,7 +120,9 @@ describe('config-metadata', () => {
         })
 
         it('should throw error if all DVNs are deprecated', () => {
-            expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(`Can't find all DVNs: "Deprec".`)
+            expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(
+                `Can't find DVN: "Deprec" on chainKey: "fuji". Double check you're using valid DVN canonical name (not an address).`
+            )
         })
     })
 })
