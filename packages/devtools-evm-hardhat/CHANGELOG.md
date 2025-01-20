@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.5
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 2.0.4
 
 ### Patch Changes

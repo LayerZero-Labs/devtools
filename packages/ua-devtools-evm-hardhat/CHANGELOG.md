@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.7
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools-evm@3.0.4
+  - @layerzerolabs/devtools-evm-hardhat@2.0.5
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/ua-devtools-evm@5.0.4
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/ua-devtools@3.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 6.0.6
 
 ### Patch Changes

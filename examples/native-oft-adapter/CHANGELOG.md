@@ -1,5 +1,11 @@
 # @layerzerolabs/native-oft-adapter-example
 
+## 0.2.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.2.3
 
 ### Patch Changes

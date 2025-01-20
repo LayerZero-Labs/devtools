@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-ton
 
+## 0.2.1
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/devtools@0.4.4
+
 ## 0.2.0
 
 ### Minor Changes
