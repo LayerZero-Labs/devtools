@@ -112,5 +112,17 @@ describe('config-metadata', () => {
                 '0x8ddf05f9a5c488b4973897e278b58895bf87cb24',
             ])
         })
+
+        it('should ignore deprecated DVNs incase of multiple DVNs', () => {
+            expect(DVNsToAddresses(['Bitgo'], 'fuji', metadata)).toStrictEqual([
+                '0xa1d84e5576299acda9ffed53195eadbe60d48e83',
+            ])
+        })
+
+        it('should throw error if all DVNs are deprecated', () => {
+            expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(
+                `Can't find DVN: "Deprec" on chainKey: "fuji". Double check you're using valid DVN canonical name (not an address).`
+            )
+        })
     })
 })

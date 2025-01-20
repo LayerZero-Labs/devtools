@@ -44,11 +44,12 @@ export function DVNsToAddresses(dvns: string[], chainKey: string, metadata: IMet
 
         let i = 0
         for (const [dvnAddress, dvnDetails] of metadataDVNs) {
-            if (dvnDetails.canonicalName === dvn && !dvnDetails.lzReadCompatible && dvnDetails.version === 2) {
-                if (dvnDetails.deprecated) {
-                    console.log(`Warning: DVN "${dvn}" is deprecated.`)
-                }
-
+            if (
+                !dvnDetails.deprecated &&
+                dvnDetails.canonicalName === dvn &&
+                !dvnDetails.lzReadCompatible &&
+                dvnDetails.version === 2
+            ) {
                 dvnAddresses.push(dvnAddress)
                 break
             }
