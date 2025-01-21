@@ -427,7 +427,6 @@ contract TestHelperOz5 is Test, OptionsHelper {
         for (uint256 i = 0; i < size; i++) {
             vm.selectFork(i);
             IOAppSetPeer localOApp = IOAppSetPeer(oapps[i]);
-            // uint32 localEid = (localOApp.endpoint()).eid();
             for (uint256 j = 0; j < size; j++) {
                 if (i == j) continue;
 
