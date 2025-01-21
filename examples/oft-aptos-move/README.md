@@ -43,17 +43,17 @@ Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRES
 
 Note: aptos account address can be found in .aptos/config.yaml
 
-## Build and deploy
+## Build and deploy aptos move modules
 
 Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
 
-### Builds the contracts
+### Build the modules
 
 ```bash
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
-### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
+### Deploy the modules
 
 First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
 
