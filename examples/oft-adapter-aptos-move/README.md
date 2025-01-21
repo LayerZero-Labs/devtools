@@ -307,3 +307,20 @@ For verifying the admin look for the following in the output:
 ```
 
 If the admin is your desired address, then the ownership transfer was successful.
+
+## Multisig Execute
+
+```bash
+pnpm run lz:sdk:move:multisig-execute --multisig-address <your-multisig-address> --transactions-folder-path <your-transactions-folder-path> --private-key-file-path <your-private-key-file-path> --max-gas <your-max-gas>
+```
+
+To call a specific transaction rather than a batch in the folder, you can use the following aptos CLI command. The above script will just execute this command for each transaction in the folder.
+
+```bash
+aptos multisig execute-with-payload \
+    --multisig-address $multisig_addr \
+    --json-file <your-transaction-file>.json \
+    --private-key-file <your-private-key-file>.key \
+    --max-gas <your-max-gas> \
+    --assume-yes
+```
