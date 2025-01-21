@@ -235,6 +235,8 @@ const solanaContract: OmniPointHardhat = {
 };
 ```
 
+:warning: Ensure that you only specify `address` for the solana contract object. Do not specify addresses for the EVM chain contract objects. Under the hood, we use `hardhat-deploy` to retrieve the contract addresses of the deployed EVM chain contracts. You will run into an error if you specify `address` for an EVM chain contract object.
+
 ### Deploy a sepolia OFT peer
 
 ```bash
