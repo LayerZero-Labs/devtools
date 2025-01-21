@@ -1,8 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { InputGenerateTransactionPayloadData } from '@aptos-labs/ts-sdk'
-
 import {
     ChainType,
     EndpointId,
@@ -15,7 +13,7 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
 import { Endpoint } from '../../../sdk/endpoint'
 import { MsgLib } from '../../../sdk/msgLib'
-import { OFT, OFTType } from '../../../sdk/oft'
+import { OFT, OFTType, TypedInputGenerateTransactionPayloadData } from '../../../sdk/oft'
 import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
 
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
@@ -26,7 +24,7 @@ import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/
 import { decodeSolanaAddress } from '../../shared/basexToBytes32'
 
 export type TransactionPayload = {
-    payload: InputGenerateTransactionPayloadData
+    payload: TypedInputGenerateTransactionPayloadData
     description: string
     eid?: EndpointId
 }
@@ -65,6 +63,7 @@ export function createTransferObjectOwnerPayload(objectAddress: string, toAddres
         payload: {
             function: '0x1::object::transfer_call',
             functionArguments: [objectAddress, toAddress],
+            types: ['address', 'address'],
         },
         description: `Transfer object ${objectAddress} to ${toAddress}`,
     }
@@ -639,7 +638,7 @@ async function createTxFromOptions(
     entry: OAppOmniGraphHardhat['connections'][number],
     oft: OFT,
     msgType: number
-): Promise<InputGenerateTransactionPayloadData | null> {
+): Promise<TypedInputGenerateTransactionPayloadData | null> {
     const newOptions = Options.newOptions()
     for (const enforcedOption of options) {
         addOptions(enforcedOption, newOptions)

@@ -107,7 +107,10 @@ export async function sendAllTxs(
         console.log('✨ No transactions to send.')
         return
     }
-    if (await promptForConfirmation(cleanedPayloads.length)) {
+
+    const action = await promptForConfirmation(cleanedPayloads.length)
+
+    if (action === 'execute') {
         console.log('\n📦 Transaction Summary:')
         console.log(`   • Total transactions: ${cleanedPayloads.length}`)
 
@@ -127,6 +130,8 @@ export async function sendAllTxs(
 
         console.log('🎉 Transaction Summary:')
         console.log(`   • ${cleanedPayloads.length} transactions processed successfully`)
+    } else if (action === 'export') {
+        await exportTransactionsToJson(cleanedPayloads)
     } else {
         console.log('Operation cancelled.')
         process.exit(0)
@@ -137,7 +142,7 @@ function pruneNulls(payloads: (TransactionPayload | null)[]): TransactionPayload
     return payloads.filter((payload): payload is TransactionPayload => payload !== null && payload.payload !== null)
 }
 
-async function promptForConfirmation(txCount: number): Promise<boolean> {
+async function promptForConfirmation(txCount: number): Promise<'execute' | 'export' | 'cancel'> {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -145,13 +150,84 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
 
     const answer = await new Promise<string>((resolve) => {
         rl.question(
-            `\nReview the ${txCount} transaction(s) above carefully.\nWould you like to proceed with execution? (yes/no): `,
+            `\nReview the ${txCount} transaction(s) above carefully.\nChoose an action:\n` +
+                `(y)es - execute transactions\n` +
+                `(e)xport - save as JSON\n` +
+                `(n)o - cancel\n` +
+                `Enter choice: `,
             resolve
         )
     })
 
     rl.close()
-    return ['yes', 'y'].includes(answer.toLowerCase().trim())
+    const choice = answer.toLowerCase().trim()
+    if (['yes', 'y'].includes(choice)) {
+        return 'execute'
+    } else if (['export', 'e'].includes(choice)) {
+        return 'export'
+    } else {
+        return 'cancel'
+    }
+}
+
+async function exportTransactionsToJson(payloads: TransactionPayload[]) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const exportDir = `./transactions/tx-export-${timestamp}`
+
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true })
+    }
+
+    payloads.forEach((payload, index) => {
+        const jsonPayload = {
+            function_id: payload.payload.function,
+            args: payload.payload.functionArguments.map((arg: any, idx: number) => ({
+                type: payload.payload.types[idx],
+                value: formatArgumentValue(arg, payload.payload.types[idx]),
+            })),
+        }
+
+        const filePath = path.join(exportDir, `tx-${index + 1}.json`)
+        fs.writeFileSync(filePath, JSON.stringify(jsonPayload, null, 2))
+    })
+
+    console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
+const formatters = {
+    bool: (arg: any) => (Array.isArray(arg) ? arg : Boolean(arg)),
+
+    address: (arg: any) => {
+        if (Array.isArray(arg)) {
+            return arg.map((item: any) => (Array.isArray(item) ? item.map(String) : String(item)))
+        }
+        return String(arg)
+    },
+
+    raw: (arg: any) => formatHexValue(arg),
+    hex: (arg: any) => formatHexValue(arg),
+
+    u8: Number,
+    u16: Number,
+    u32: Number,
+    u64: Number,
+    u128: Number,
+    u256: Number,
+
+    string: String,
+} as const
+
+function formatHexValue(arg: any): string {
+    if (arg instanceof Uint8Array) {
+        return '0x' + Buffer.from(arg).toString('hex')
+    }
+    return typeof arg === 'string' && arg.startsWith('0x') ? arg : '0x' + Buffer.from(arg).toString('hex')
+}
+
+function formatArgumentValue(arg: any, type: string): any {
+    const formatter = formatters[type as keyof typeof formatters]
+    return formatter ? formatter(arg) : arg
 }
 
 export async function sendInitTransaction(
