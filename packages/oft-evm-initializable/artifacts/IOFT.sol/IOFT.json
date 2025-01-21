@@ -1,0 +1,986 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "approvalRequired",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "oftVersion",
+      "inputs": [],
+      "outputs": [
+        { "name": "interfaceId", "type": "bytes4", "internalType": "bytes4" },
+        { "name": "version", "type": "uint64", "internalType": "uint64" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "quoteOFT",
+      "inputs": [
+        {
+          "name": "_sendParam",
+          "type": "tuple",
+          "internalType": "struct SendParam",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "to", "type": "bytes32", "internalType": "bytes32" },
+            {
+              "name": "amountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minAmountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "extraOptions",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            { "name": "composeMsg", "type": "bytes", "internalType": "bytes" },
+            { "name": "oftCmd", "type": "bytes", "internalType": "bytes" }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct OFTLimit",
+          "components": [
+            {
+              "name": "minAmountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "maxAmountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        },
+        {
+          "name": "oftFeeDetails",
+          "type": "tuple[]",
+          "internalType": "struct OFTFeeDetail[]",
+          "components": [
+            {
+              "name": "feeAmountLD",
+              "type": "int256",
+              "internalType": "int256"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "internalType": "string"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct OFTReceipt",
+          "components": [
+            {
+              "name": "amountSentLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "amountReceivedLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "quoteSend",
+      "inputs": [
+        {
+          "name": "_sendParam",
+          "type": "tuple",
+          "internalType": "struct SendParam",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "to", "type": "bytes32", "internalType": "bytes32" },
+            {
+              "name": "amountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minAmountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "extraOptions",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            { "name": "composeMsg", "type": "bytes", "internalType": "bytes" },
+            { "name": "oftCmd", "type": "bytes", "internalType": "bytes" }
+          ]
+        },
+        { "name": "_payInLzToken", "type": "bool", "internalType": "bool" }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingFee",
+          "components": [
+            {
+              "name": "nativeFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lzTokenFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "send",
+      "inputs": [
+        {
+          "name": "_sendParam",
+          "type": "tuple",
+          "internalType": "struct SendParam",
+          "components": [
+            { "name": "dstEid", "type": "uint32", "internalType": "uint32" },
+            { "name": "to", "type": "bytes32", "internalType": "bytes32" },
+            {
+              "name": "amountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minAmountLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "extraOptions",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            { "name": "composeMsg", "type": "bytes", "internalType": "bytes" },
+            { "name": "oftCmd", "type": "bytes", "internalType": "bytes" }
+          ]
+        },
+        {
+          "name": "_fee",
+          "type": "tuple",
+          "internalType": "struct MessagingFee",
+          "components": [
+            {
+              "name": "nativeFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "lzTokenFee",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        },
+        {
+          "name": "_refundAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct MessagingReceipt",
+          "components": [
+            { "name": "guid", "type": "bytes32", "internalType": "bytes32" },
+            { "name": "nonce", "type": "uint64", "internalType": "uint64" },
+            {
+              "name": "fee",
+              "type": "tuple",
+              "internalType": "struct MessagingFee",
+              "components": [
+                {
+                  "name": "nativeFee",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "lzTokenFee",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct OFTReceipt",
+          "components": [
+            {
+              "name": "amountSentLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "amountReceivedLD",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "sharedDecimals",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint8", "internalType": "uint8" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "token",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "OFTReceived",
+      "inputs": [
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "srcEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "toAddress",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amountReceivedLD",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "OFTSent",
+      "inputs": [
+        {
+          "name": "guid",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "dstEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "fromAddress",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amountSentLD",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "amountReceivedLD",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "InvalidLocalDecimals", "inputs": [] },
+    {
+      "type": "error",
+      "name": "SlippageExceeded",
+      "inputs": [
+        { "name": "amountLD", "type": "uint256", "internalType": "uint256" },
+        { "name": "minAmountLD", "type": "uint256", "internalType": "uint256" }
+      ]
+    }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "approvalRequired()": "9f68b964",
+    "oftVersion()": "156a0d0f",
+    "quoteOFT((uint32,bytes32,uint256,uint256,bytes,bytes,bytes))": "0d35b415",
+    "quoteSend((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),bool)": "3b6f743b",
+    "send((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),(uint256,uint256),address)": "c7c7f5b3",
+    "sharedDecimals()": "857749b0",
+    "token()": "fc0c546a"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidLocalDecimals\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amountLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minAmountLD\",\"type\":\"uint256\"}],\"name\":\"SlippageExceeded\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"srcEid\",\"type\":\"uint32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"toAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountReceivedLD\",\"type\":\"uint256\"}],\"name\":\"OFTReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"fromAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountSentLD\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amountReceivedLD\",\"type\":\"uint256\"}],\"name\":\"OFTSent\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"approvalRequired\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oftVersion\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"},{\"internalType\":\"uint64\",\"name\":\"version\",\"type\":\"uint64\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"to\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amountLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minAmountLD\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraOptions\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"composeMsg\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"oftCmd\",\"type\":\"bytes\"}],\"internalType\":\"struct SendParam\",\"name\":\"_sendParam\",\"type\":\"tuple\"}],\"name\":\"quoteOFT\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"minAmountLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"maxAmountLD\",\"type\":\"uint256\"}],\"internalType\":\"struct OFTLimit\",\"name\":\"\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"int256\",\"name\":\"feeAmountLD\",\"type\":\"int256\"},{\"internalType\":\"string\",\"name\":\"description\",\"type\":\"string\"}],\"internalType\":\"struct OFTFeeDetail[]\",\"name\":\"oftFeeDetails\",\"type\":\"tuple[]\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"amountSentLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountReceivedLD\",\"type\":\"uint256\"}],\"internalType\":\"struct OFTReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"to\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amountLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minAmountLD\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraOptions\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"composeMsg\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"oftCmd\",\"type\":\"bytes\"}],\"internalType\":\"struct SendParam\",\"name\":\"_sendParam\",\"type\":\"tuple\"},{\"internalType\":\"bool\",\"name\":\"_payInLzToken\",\"type\":\"bool\"}],\"name\":\"quoteSend\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"internalType\":\"bytes32\",\"name\":\"to\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amountLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minAmountLD\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"extraOptions\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"composeMsg\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"oftCmd\",\"type\":\"bytes\"}],\"internalType\":\"struct SendParam\",\"name\":\"_sendParam\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"_fee\",\"type\":\"tuple\"},{\"internalType\":\"address\",\"name\":\"_refundAddress\",\"type\":\"address\"}],\"name\":\"send\",\"outputs\":[{\"components\":[{\"internalType\":\"bytes32\",\"name\":\"guid\",\"type\":\"bytes32\"},{\"internalType\":\"uint64\",\"name\":\"nonce\",\"type\":\"uint64\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"nativeFee\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"lzTokenFee\",\"type\":\"uint256\"}],\"internalType\":\"struct MessagingFee\",\"name\":\"fee\",\"type\":\"tuple\"}],\"internalType\":\"struct MessagingReceipt\",\"name\":\"\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"amountSentLD\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountReceivedLD\",\"type\":\"uint256\"}],\"internalType\":\"struct OFTReceipt\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"sharedDecimals\",\"outputs\":[{\"internalType\":\"uint8\",\"name\":\"\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"token\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Interface for the OftChain (OFT) token.Does not inherit ERC20 to accommodate usage by OFTAdapter as well.This specific interface ID is '0x02e49c2c'.\",\"kind\":\"dev\",\"methods\":{\"approvalRequired()\":{\"details\":\"Allows things like wallet implementers to determine integration requirements, without understanding the underlying token implementation.\",\"returns\":{\"_0\":\"requiresApproval Needs approval of the underlying token implementation.\"}},\"oftVersion()\":{\"details\":\"interfaceId: This specific interface ID is '0x02e49c2c'.version: Indicates a cross-chain compatible msg encoding with other OFTs.If a new feature is added to the OFT cross-chain msg encoding, the version will be incremented. ie. localOFT version(x,1) CAN send messages to remoteOFT version(x,1)\",\"returns\":{\"interfaceId\":\"The interface ID.\",\"version\":\"The version.\"}},\"quoteOFT((uint32,bytes32,uint256,uint256,bytes,bytes,bytes))\":{\"params\":{\"_sendParam\":\"The parameters for the send operation.\"},\"returns\":{\"_0\":\"limit The OFT limit information.\",\"_2\":\"receipt The OFT receipt information.\",\"oftFeeDetails\":\"The details of OFT fees.\"}},\"quoteSend((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),bool)\":{\"details\":\"MessagingFee: LayerZero msg fee  - nativeFee: The native fee.  - lzTokenFee: The lzToken fee.\",\"params\":{\"_payInLzToken\":\"Flag indicating whether the caller is paying in the LZ token.\",\"_sendParam\":\"The parameters for the send() operation.\"},\"returns\":{\"_0\":\"fee The calculated LayerZero messaging fee from the send() operation.\"}},\"send((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),(uint256,uint256),address)\":{\"details\":\"MessagingReceipt: LayerZero msg receipt  - guid: The unique identifier for the sent message.  - nonce: The nonce of the sent message.  - fee: The LayerZero fee incurred for the message.\",\"params\":{\"_fee\":\"The fee information supplied by the caller.      - nativeFee: The native fee.      - lzTokenFee: The lzToken fee.\",\"_refundAddress\":\"The address to receive any excess funds from fees etc. on the src.\",\"_sendParam\":\"The parameters for the send operation.\"},\"returns\":{\"_0\":\"receipt The LayerZero messaging receipt from the send() operation.\",\"_1\":\"oftReceipt The OFT receipt information.\"}},\"sharedDecimals()\":{\"returns\":{\"_0\":\"sharedDecimals The shared decimals of the OFT.\"}},\"token()\":{\"returns\":{\"_0\":\"token The address of the ERC20 token implementation.\"}}},\"title\":\"IOFT\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"approvalRequired()\":{\"notice\":\"Indicates whether the OFT contract requires approval of the 'token()' to send.\"},\"oftVersion()\":{\"notice\":\"Retrieves interfaceID and the version of the OFT.\"},\"quoteOFT((uint32,bytes32,uint256,uint256,bytes,bytes,bytes))\":{\"notice\":\"Provides the fee breakdown and settings data for an OFT. Unused in the default implementation.\"},\"quoteSend((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),bool)\":{\"notice\":\"Provides a quote for the send() operation.\"},\"send((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),(uint256,uint256),address)\":{\"notice\":\"Executes the send() operation.\"},\"sharedDecimals()\":{\"notice\":\"Retrieves the shared decimals of the OFT.\"},\"token()\":{\"notice\":\"Retrieves the address of the token associated with the OFT.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IOFT.sol\":\"IOFT\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c\",\"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol\":{\"keccak256\":\"0x6008dabfe393240d73d7dd7688033f72740d570aa422254d29a7dce8568f3aff\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f5196ec75139918c6c7bb4251b36395e668f1fa6d206beba7e7520e74913940d\",\"dweb:/ipfs/QmSyqjksXxmm2mCG6qRd1yuwLykypkSVBbnBnGqJRcuJMi\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0x37bb49513c49c87c4642a891b13b63571bc87013dde806617aa1efb54605f386\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b3036b3a83b7c48f96641f2a9002b9f2dcb6a5958dd670894ada21ae8229b3d0\",\"dweb:/ipfs/QmUNfSBdoVtjhETaUJCYcaC7pTMgbhht926tJ2uXJbiVd3\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0xaf28a975a78550e45f65e559a3ad6a5ad43b9b8a37366999abd1b7084eb70721\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b7bd24e224f67f65bfadf85dc2929fa965456bb2415478bd0125471b5ce35245\",\"dweb:/ipfs/QmRaydGr8BTHs1kvaZfsNU69pKzUAGFrvABn1KiRSbE51y\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "InvalidLocalDecimals" },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "amountLD",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minAmountLD",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "SlippageExceeded"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "uint32",
+              "name": "srcEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "toAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountReceivedLD",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "OFTReceived",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "guid",
+              "type": "bytes32",
+              "indexed": true
+            },
+            {
+              "internalType": "uint32",
+              "name": "dstEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "fromAddress",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountSentLD",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "amountReceivedLD",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "OFTSent",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "approvalRequired",
+          "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "oftVersion",
+          "outputs": [
+            {
+              "internalType": "bytes4",
+              "name": "interfaceId",
+              "type": "bytes4"
+            },
+            { "internalType": "uint64", "name": "version", "type": "uint64" }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes32", "name": "to", "type": "bytes32" },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minAmountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "extraOptions",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "composeMsg",
+                  "type": "bytes"
+                },
+                { "internalType": "bytes", "name": "oftCmd", "type": "bytes" }
+              ]
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "quoteOFT",
+          "outputs": [
+            {
+              "internalType": "struct OFTLimit",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "minAmountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "maxAmountLD",
+                  "type": "uint256"
+                }
+              ]
+            },
+            {
+              "internalType": "struct OFTFeeDetail[]",
+              "name": "oftFeeDetails",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "int256",
+                  "name": "feeAmountLD",
+                  "type": "int256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "description",
+                  "type": "string"
+                }
+              ]
+            },
+            {
+              "internalType": "struct OFTReceipt",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amountSentLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountReceivedLD",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes32", "name": "to", "type": "bytes32" },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minAmountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "extraOptions",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "composeMsg",
+                  "type": "bytes"
+                },
+                { "internalType": "bytes", "name": "oftCmd", "type": "bytes" }
+              ]
+            },
+            { "internalType": "bool", "name": "_payInLzToken", "type": "bool" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "quoteSend",
+          "outputs": [
+            {
+              "internalType": "struct MessagingFee",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "nativeFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lzTokenFee",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct SendParam",
+              "name": "_sendParam",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "dstEid",
+                  "type": "uint32"
+                },
+                { "internalType": "bytes32", "name": "to", "type": "bytes32" },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "minAmountLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "extraOptions",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "composeMsg",
+                  "type": "bytes"
+                },
+                { "internalType": "bytes", "name": "oftCmd", "type": "bytes" }
+              ]
+            },
+            {
+              "internalType": "struct MessagingFee",
+              "name": "_fee",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "nativeFee",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "lzTokenFee",
+                  "type": "uint256"
+                }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "_refundAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "send",
+          "outputs": [
+            {
+              "internalType": "struct MessagingReceipt",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "guid",
+                  "type": "bytes32"
+                },
+                { "internalType": "uint64", "name": "nonce", "type": "uint64" },
+                {
+                  "internalType": "struct MessagingFee",
+                  "name": "fee",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "nativeFee",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "lzTokenFee",
+                      "type": "uint256"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "internalType": "struct OFTReceipt",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "amountSentLD",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountReceivedLD",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "sharedDecimals",
+          "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "token",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "approvalRequired()": {
+            "details": "Allows things like wallet implementers to determine integration requirements, without understanding the underlying token implementation.",
+            "returns": {
+              "_0": "requiresApproval Needs approval of the underlying token implementation."
+            }
+          },
+          "oftVersion()": {
+            "details": "interfaceId: This specific interface ID is '0x02e49c2c'.version: Indicates a cross-chain compatible msg encoding with other OFTs.If a new feature is added to the OFT cross-chain msg encoding, the version will be incremented. ie. localOFT version(x,1) CAN send messages to remoteOFT version(x,1)",
+            "returns": {
+              "interfaceId": "The interface ID.",
+              "version": "The version."
+            }
+          },
+          "quoteOFT((uint32,bytes32,uint256,uint256,bytes,bytes,bytes))": {
+            "params": {
+              "_sendParam": "The parameters for the send operation."
+            },
+            "returns": {
+              "_0": "limit The OFT limit information.",
+              "_2": "receipt The OFT receipt information.",
+              "oftFeeDetails": "The details of OFT fees."
+            }
+          },
+          "quoteSend((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),bool)": {
+            "details": "MessagingFee: LayerZero msg fee  - nativeFee: The native fee.  - lzTokenFee: The lzToken fee.",
+            "params": {
+              "_payInLzToken": "Flag indicating whether the caller is paying in the LZ token.",
+              "_sendParam": "The parameters for the send() operation."
+            },
+            "returns": {
+              "_0": "fee The calculated LayerZero messaging fee from the send() operation."
+            }
+          },
+          "send((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),(uint256,uint256),address)": {
+            "details": "MessagingReceipt: LayerZero msg receipt  - guid: The unique identifier for the sent message.  - nonce: The nonce of the sent message.  - fee: The LayerZero fee incurred for the message.",
+            "params": {
+              "_fee": "The fee information supplied by the caller.      - nativeFee: The native fee.      - lzTokenFee: The lzToken fee.",
+              "_refundAddress": "The address to receive any excess funds from fees etc. on the src.",
+              "_sendParam": "The parameters for the send operation."
+            },
+            "returns": {
+              "_0": "receipt The LayerZero messaging receipt from the send() operation.",
+              "_1": "oftReceipt The OFT receipt information."
+            }
+          },
+          "sharedDecimals()": {
+            "returns": {
+              "_0": "sharedDecimals The shared decimals of the OFT."
+            }
+          },
+          "token()": {
+            "returns": {
+              "_0": "token The address of the ERC20 token implementation."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "approvalRequired()": {
+            "notice": "Indicates whether the OFT contract requires approval of the 'token()' to send."
+          },
+          "oftVersion()": {
+            "notice": "Retrieves interfaceID and the version of the OFT."
+          },
+          "quoteOFT((uint32,bytes32,uint256,uint256,bytes,bytes,bytes))": {
+            "notice": "Provides the fee breakdown and settings data for an OFT. Unused in the default implementation."
+          },
+          "quoteSend((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),bool)": {
+            "notice": "Provides a quote for the send() operation."
+          },
+          "send((uint32,bytes32,uint256,uint256,bytes,bytes,bytes),(uint256,uint256),address)": {
+            "notice": "Executes the send() operation."
+          },
+          "sharedDecimals()": {
+            "notice": "Retrieves the shared decimals of the OFT."
+          },
+          "token()": {
+            "notice": "Retrieves the address of the token associated with the OFT."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": { "contracts/interfaces/IOFT.sol": "IOFT" },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/interfaces/IOFT.sol": {
+        "keccak256": "0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8",
+        "urls": [
+          "bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4",
+          "dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol": {
+        "keccak256": "0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc",
+        "urls": [
+          "bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0",
+          "dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol": {
+        "keccak256": "0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20",
+        "urls": [
+          "bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2",
+          "dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol": {
+        "keccak256": "0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58",
+        "urls": [
+          "bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd",
+          "dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+        "keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
+        "urls": [
+          "bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
+          "dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+        "urls": [
+          "bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
+          "dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol": {
+        "keccak256": "0x6008dabfe393240d73d7dd7688033f72740d570aa422254d29a7dce8568f3aff",
+        "urls": [
+          "bzz-raw://f5196ec75139918c6c7bb4251b36395e668f1fa6d206beba7e7520e74913940d",
+          "dweb:/ipfs/QmSyqjksXxmm2mCG6qRd1yuwLykypkSVBbnBnGqJRcuJMi"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0x37bb49513c49c87c4642a891b13b63571bc87013dde806617aa1efb54605f386",
+        "urls": [
+          "bzz-raw://b3036b3a83b7c48f96641f2a9002b9f2dcb6a5958dd670894ada21ae8229b3d0",
+          "dweb:/ipfs/QmUNfSBdoVtjhETaUJCYcaC7pTMgbhht926tJ2uXJbiVd3"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0xaf28a975a78550e45f65e559a3ad6a5ad43b9b8a37366999abd1b7084eb70721",
+        "urls": [
+          "bzz-raw://b7bd24e224f67f65bfadf85dc2929fa965456bb2415478bd0125471b5ce35245",
+          "dweb:/ipfs/QmRaydGr8BTHs1kvaZfsNU69pKzUAGFrvABn1KiRSbE51y"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Context.sol": {
+        "keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+        "urls": [
+          "bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+          "dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 8
+}

@@ -1,0 +1,176 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "setDefaultFeeBps",
+      "inputs": [
+        { "name": "_feeBps", "type": "uint16", "internalType": "uint16" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "setFeeBps",
+      "inputs": [
+        { "name": "_dstEid", "type": "uint32", "internalType": "uint32" },
+        { "name": "_feeBps", "type": "uint16", "internalType": "uint16" },
+        { "name": "_enabled", "type": "bool", "internalType": "bool" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DefaultFeeBpsSet",
+      "inputs": [
+        {
+          "name": "feeBps",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "FeeBpsSet",
+      "inputs": [
+        {
+          "name": "dstEid",
+          "type": "uint32",
+          "indexed": false,
+          "internalType": "uint32"
+        },
+        {
+          "name": "feeBps",
+          "type": "uint16",
+          "indexed": false,
+          "internalType": "uint16"
+        },
+        {
+          "name": "enabled",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "InvalidBps", "inputs": [] },
+    { "type": "error", "name": "InvalidFeeOwner", "inputs": [] }
+  ],
+  "bytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "deployedBytecode": { "object": "0x", "sourceMap": "", "linkReferences": {} },
+  "methodIdentifiers": {
+    "setDefaultFeeBps(uint16)": "4488b652",
+    "setFeeBps(uint32,uint16,bool)": "6db7bcdb"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidBps\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidFeeOwner\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"feeBps\",\"type\":\"uint16\"}],\"name\":\"DefaultFeeBpsSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint32\",\"name\":\"dstEid\",\"type\":\"uint32\"},{\"indexed\":false,\"internalType\":\"uint16\",\"name\":\"feeBps\",\"type\":\"uint16\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"enabled\",\"type\":\"bool\"}],\"name\":\"FeeBpsSet\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint16\",\"name\":\"_feeBps\",\"type\":\"uint16\"}],\"name\":\"setDefaultFeeBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_dstEid\",\"type\":\"uint32\"},{\"internalType\":\"uint16\",\"name\":\"_feeBps\",\"type\":\"uint16\"},{\"internalType\":\"bool\",\"name\":\"_enabled\",\"type\":\"bool\"}],\"name\":\"setFeeBps\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"setDefaultFeeBps(uint16)\":{\"details\":\"Sets the default fee basis points (BPS) for all destinations.\"},\"setFeeBps(uint32,uint16,bool)\":{\"details\":\"Sets the fee basis points (BPS) for a specific destination LayerZero EndpointV2 ID.\"}},\"title\":\"Fee interface.\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"A generic interface for collecting fees.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interfaces/IFee.sol\":\"IFee\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/interfaces/IFee.sol\":{\"keccak256\":\"0x548eab6ed7c925c9769b6bed6416bb67643338b1785c34491d90ac3b3ad00bc3\",\"urls\":[\"bzz-raw://84e16d44b5e323573b81e7bcd196829b80d9634e48768a2445b872fd1c4ba234\",\"dweb:/ipfs/QmbawDMDYnEXMCenaZjWiBdcRGnDuH1HmnQSt5h1iNN2Wi\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        { "inputs": [], "type": "error", "name": "InvalidBps" },
+        { "inputs": [], "type": "error", "name": "InvalidFeeOwner" },
+        {
+          "inputs": [
+            {
+              "internalType": "uint16",
+              "name": "feeBps",
+              "type": "uint16",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DefaultFeeBpsSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint32",
+              "name": "dstEid",
+              "type": "uint32",
+              "indexed": false
+            },
+            {
+              "internalType": "uint16",
+              "name": "feeBps",
+              "type": "uint16",
+              "indexed": false
+            },
+            {
+              "internalType": "bool",
+              "name": "enabled",
+              "type": "bool",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "FeeBpsSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            { "internalType": "uint16", "name": "_feeBps", "type": "uint16" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDefaultFeeBps"
+        },
+        {
+          "inputs": [
+            { "internalType": "uint32", "name": "_dstEid", "type": "uint32" },
+            { "internalType": "uint16", "name": "_feeBps", "type": "uint16" },
+            { "internalType": "bool", "name": "_enabled", "type": "bool" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setFeeBps"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "setDefaultFeeBps(uint16)": {
+            "details": "Sets the default fee basis points (BPS) for all destinations."
+          },
+          "setFeeBps(uint32,uint16,bool)": {
+            "details": "Sets the fee basis points (BPS) for a specific destination LayerZero EndpointV2 ID."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": { "contracts/interfaces/IFee.sol": "IFee" },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/interfaces/IFee.sol": {
+        "keccak256": "0x548eab6ed7c925c9769b6bed6416bb67643338b1785c34491d90ac3b3ad00bc3",
+        "urls": [
+          "bzz-raw://84e16d44b5e323573b81e7bcd196829b80d9634e48768a2445b872fd1c4ba234",
+          "dweb:/ipfs/QmbawDMDYnEXMCenaZjWiBdcRGnDuH1HmnQSt5h1iNN2Wi"
+        ],
+        "license": null
+      }
+    },
+    "version": 1
+  },
+  "id": 6
+}
