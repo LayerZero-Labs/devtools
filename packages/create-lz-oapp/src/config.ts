@@ -48,7 +48,17 @@ export const getExamples = (): Example[] => {
         },
         // ZK-Solc examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
-            ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
+            ? [
+                  {
+                      id: 'onft721-zksync',
+                      label: 'ONFT721 zksolc',
+                      repository,
+                      directory: 'examples/onft721-zksync',
+                      ref,
+                  },
+                  { id: 'oft-zksync', label: 'OFT zksolc', repository, directory: 'examples/oft-zksync', ref },
+                  { id: 'oapp-zksync', label: 'OApp zksolc', repository, directory: 'examples/oapp-zksync', ref },
+              ]
             : []),
         // Upgradeable contract examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_UPGRADEABLE_EXAMPLE
