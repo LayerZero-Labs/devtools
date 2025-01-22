@@ -161,7 +161,7 @@ pnpm run lz:sdk:move:adapter-unset-rate-limit --oapp-config move.layerzero.confi
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 
 ```bash
-pnpm run lz:sdk:move:adapter-permanently-disable-blocklist
+pnpm run lz:sdk:move:adapter-permanently-disable-blocklist --oapp-config move.layerzero.config.ts
 ```
 
 ### Transferring Ownership of your Move OApp (OFT)
@@ -196,13 +196,13 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 To transfer the OApp owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-oapp-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-oapp-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 To transfer the Move-VM object owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 Note: The object owner has the upgrade authority for the Object.
@@ -226,7 +226,7 @@ public entry fun mint(
 Then run the following command to mint the move oft:
 
 ```bash
-pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
+pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
 
 ## Send Tokens
@@ -234,6 +234,7 @@ pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-addre
 ### Send from Move VM to EVM
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
+  --oapp-config move.layerzero.config.ts \
   --amount-ld <amount-to-send> \
   --min-amount-ld <minimum-amount-to-receive> \
   --src-address <your-move-account-address> \

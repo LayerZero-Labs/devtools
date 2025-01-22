@@ -3,6 +3,7 @@ import path from 'path'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 type AptosYamlConfig = {
     profiles: {
@@ -17,8 +18,23 @@ type AptosYamlConfig = {
     }
 }
 
+export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHardhat> {
+    const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
+    const lzConfigFile = await import(lzConfigPath)
+    const lzConfig = lzConfigFile.default
+    return lzConfig
+}
+
 export async function loadAptosYamlConfig(_rootDir: string = process.cwd()): Promise<AptosYamlConfig> {
-    const file = fs.readFileSync(path.resolve(path.join(_rootDir, '.aptos/config.yaml')), 'utf8')
+    const configPath = path.resolve(path.join(_rootDir, '.aptos/config.yaml'))
+
+    if (!fs.existsSync(configPath)) {
+        throw new Error(
+            `Aptos config file not found at ${configPath}.\n\n\tPlease run "aptos init" to initialize your project.\n`
+        )
+    }
+
+    const file = fs.readFileSync(configPath, 'utf8')
     const config = YAML.parse(file) as AptosYamlConfig
     return config
 }

@@ -12,8 +12,8 @@ let stdErr = ''
  * @dev Wraps the aptos move build command
  * @returns Promise<void>
  */
-async function buildMovementContracts(named_addresses: string, configPath: string) {
-    const aptosYamlConfig = await parseYaml(configPath)
+async function buildMovementContracts(named_addresses: string) {
+    const aptosYamlConfig = await parseYaml()
     const network = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(network)
 
@@ -64,8 +64,7 @@ async function buildMovementContracts(named_addresses: string, configPath: strin
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function build(args: any, contractName: string = 'oft') {
     const buildPath = path.join(process.cwd(), 'build', contractName)
-    const configPath = args.configPath
-    const aptosYamlConfig = await parseYaml(configPath)
+    const aptosYamlConfig = await parseYaml()
     const accountAddress = aptosYamlConfig.account_address
 
     if (!fs.existsSync(buildPath) || args.force_build === 'true') {
@@ -76,7 +75,7 @@ async function build(args: any, contractName: string = 'oft') {
             return
         }
         console.log('Building contracts\n')
-        await buildMovementContracts(args.named_addresses, configPath)
+        await buildMovementContracts(args.named_addresses)
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
     }

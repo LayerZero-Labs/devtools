@@ -19,8 +19,8 @@ let stdErr = ''
  * @dev Wraps the aptos move create-object-and-publish-package command
  * @returns Promise<void>
  */
-async function deployMovementContracts(address_name: string, named_addresses: string, configPath: string) {
-    const aptosYamlConfig = await parseYaml(configPath)
+async function deployMovementContracts(address_name: string, named_addresses: string) {
+    const aptosYamlConfig = await parseYaml()
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
@@ -129,7 +129,7 @@ async function deploy(
     forceDeploy: boolean = false,
     contractName: string = 'oft'
 ) {
-    const aptosYamlConfig = await parseYaml(configPath)
+    const aptosYamlConfig = await parseYaml()
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
@@ -139,14 +139,14 @@ async function deploy(
     if (deploymentExists) {
         if (forceDeploy) {
             console.log(`Follow the prompts to complete the deployment ${contractName}`)
-            await deployMovementContracts(contractName, namedAddresses, configPath)
+            await deployMovementContracts(contractName, namedAddresses)
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
     } else {
         console.warn('You are in force deploy mode:')
         console.log(`Follow the prompts to complete the deployment ${contractName}`)
-        await deployMovementContracts(contractName, namedAddresses, configPath)
+        await deployMovementContracts(contractName, namedAddresses)
     }
 }
 export { deploy }

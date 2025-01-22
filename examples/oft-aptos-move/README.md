@@ -169,7 +169,7 @@ pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --t
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-blocklist
+pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.config.ts
 ```
 
 ## Permanently Disable Freezing
@@ -177,7 +177,7 @@ pnpm run lz:sdk:move:permanently-disable-blocklist
 > ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-freezing
+pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
 
 ### Transferring Ownership of your Move OApp (OFT)
@@ -212,13 +212,13 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 To transfer the OApp owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-oapp-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-oapp-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 To transfer the Move-VM object owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 Note: The object owner has the upgrade authority for the Object.
@@ -242,7 +242,7 @@ public entry fun mint(
 Then run the following command to mint the move oft:
 
 ```bash
-pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
+pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
 
 ## Send from Move VM

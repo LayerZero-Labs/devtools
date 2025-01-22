@@ -6,10 +6,19 @@ import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
 
-import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import {
+    getEidFromMoveNetwork,
+    getLzNetworkStage,
+    parseYaml,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
+import {
+    getContractNameFromLzConfig,
+    getMoveVMOAppAddress,
+    sendAllTxs,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { toAptosAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 import { getChain } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
+import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 
 async function sendFromMoveVm(
     amountLd: bigint,
@@ -17,7 +26,8 @@ async function sendFromMoveVm(
     toAddress: string,
     gasLimit: bigint,
     dstEid: EndpointId,
-    srcAddress: string
+    srcAddress: string,
+    configPath: string
 ) {
     const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
@@ -25,9 +35,12 @@ async function sendFromMoveVm(
     const aptosConfig = new AptosConfig({ network: network })
     const aptos = new Aptos(aptosConfig)
 
-    const lzNetworkStage = getLzNetworkStage(network)
+    const lzConfig = await getLzConfig(configPath)
     const chain = getChain(fullnode)
-    const aptosOftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
+    const lzNetworkStage = getLzNetworkStage(network)
+    const eid = getEidFromMoveNetwork(chain, network)
+    const contractName = getContractNameFromLzConfig(eid, lzConfig)
+    const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
     const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
 

@@ -5,30 +5,33 @@ import { OFT } from '../../sdk/oft'
 import { getConfigConnections } from '../shared/utils'
 
 import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getNamedAddresses } from './utils/config'
+import { getLzConfig, getNamedAddresses } from './utils/config'
 import * as oftConfig from './utils/moveVMOftConfigOps'
 import { TransactionPayload } from './utils/moveVMOftConfigOps'
-import { getMoveVMOftAddress, sendAllTxs } from './utils/utils'
-import path from 'path'
+import { getContractNameFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
 import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import path from 'path'
 
-async function wireMove(args: any) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
-    const fullConfigPath = path.join(args.rootDir, args.oapp_config)
+async function wireMove(configPath: string) {
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const fullConfigPath = path.join(process.cwd(), configPath)
+
+    const lzConfig = await getLzConfig(configPath)
     const chain = getChain(fullnode)
-
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
 
     const lzNetworkStage = getLzNetworkStage(network)
+    const eid = getEidFromMoveNetwork(chain, network)
+    const contractName = getContractNameFromLzConfig(eid, lzConfig)
+    const moveVMOAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
-    const moveVMOftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
     const namedAddresses = getNamedAddresses(lzNetworkStage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
 
-    console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OFT`)
-    console.log(`\tAddress: ${moveVMOftAddress}\n`)
+    console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OApp`)
+    console.log(`\tAddress: ${moveVMOAppAddress}\n`)
 
-    const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
+    const oftSDK = new OFT(moveVMConnection, moveVMOAppAddress, account_address, private_key)
     const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
 
     const currDelegate = await oftSDK.getDelegate()
