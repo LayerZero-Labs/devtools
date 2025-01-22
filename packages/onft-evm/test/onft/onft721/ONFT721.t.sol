@@ -21,7 +21,10 @@ import { SendParam } from "../../../contracts/onft721/interfaces/IONFT721.sol";
 
 import { ONFT721Mock } from "./mocks/ONFT721Mock.sol";
 import { ONFT721AdapterMock } from "./mocks/ONFT721AdapterMock.sol";
+import { ONFT721EnumerableMock } from "./mocks/ONFT721EnumerableMock.sol";
 import { ONFT721Base } from "./ONFT721Base.sol";
+// Forge imports
+import "forge-std/console.sol";
 
 contract ONFT721Test is ONFT721Base {
     using OptionsBuilder for bytes;
@@ -34,20 +37,24 @@ contract ONFT721Test is ONFT721Base {
         assertEq(aONFT.owner(), address(this));
         assertEq(bONFT.owner(), address(this));
         assertEq(cONFTAdapter.owner(), address(this));
+        assertEq(dONFTEnumerable.owner(), address(this));
 
         assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
         assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
         assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+        assertEq(IERC721(dONFTEnumerable.token()).balanceOf(david), DEFAULT_INITIAL_ONFTS_PER_EID);
 
         assertEq(aONFT.token(), address(aONFT));
         assertEq(bONFT.token(), address(bONFT));
         assertEq(cONFTAdapter.token(), address(cERC721Mock));
+        assertEq(dONFTEnumerable.token(), address(dONFTEnumerable));
     }
 
     function test_approvalRequired() public {
         assertFalse(aONFT.approvalRequired());
         assertFalse(bONFT.approvalRequired());
         assertTrue(cONFTAdapter.approvalRequired());
+        assertFalse(dONFTEnumerable.approvalRequired());
     }
 
     function test_onftVersion() public {
@@ -58,66 +65,85 @@ contract ONFT721Test is ONFT721Base {
     }
 
     function test_send(uint16 _tokenToSend) public {
-        // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
-        vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
+    // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
+    vm.assume(_tokenToSend >= 256 * 3 && _tokenToSend < 256 * 4);
 
-        // 2. Set enforced options for SEND
-        _setMeshDefaultEnforcedSendOption();
+    // 2. Set enforced options for SEND
+    _setMeshDefaultEnforcedSendOption();
 
-        // 3. Sanity check token balances and _tokenToSend ownership
-        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(IERC721(cONFTAdapter.token()).ownerOf(_tokenToSend), charlie);
+    // 3. Sanity check token balances and _tokenToSend ownership
+    assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(dONFTEnumerable.balanceOf(david), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(IERC721(cONFTAdapter.token()).ownerOf(_tokenToSend), charlie);
 
-        // 4. Send the same ONFT in a circle 10 times.
-        //   a) C->A
-        //   b) A->B
-        //   c) B->C
-        for (uint8 i = 0; i < 10; i++) {
-            vm.startPrank(charlie);
-            IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), _tokenToSend);
-            vm.stopPrank();
-            _sendAndCheck(
-                _tokenToSend,
-                C_EID,
-                A_EID,
-                charlie,
-                alice,
-                DEFAULT_INITIAL_ONFTS_PER_EID,
-                DEFAULT_INITIAL_ONFTS_PER_EID,
-                true,
-                false
-            );
-            _sendAndCheck(
-                _tokenToSend,
-                A_EID,
-                B_EID,
-                alice,
-                bob,
-                DEFAULT_INITIAL_ONFTS_PER_EID + 1,
-                DEFAULT_INITIAL_ONFTS_PER_EID,
-                false,
-                false
-            );
-            _sendAndCheck(
-                _tokenToSend,
-                B_EID,
-                C_EID,
-                bob,
-                charlie,
-                DEFAULT_INITIAL_ONFTS_PER_EID + 1,
-                DEFAULT_INITIAL_ONFTS_PER_EID - 1,
-                false,
-                true
-            );
-        }
-
-        // 5. Check the final balances
-        assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+    // 4. Send the same ONFT in a circle 10 times.
+    //   a) C->D
+    //   b) D->A
+    //   c) A->B
+    //   d) B->C
+    for (uint8 i = 0; i < 10; i++) {
+        vm.startPrank(charlie);
+        IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), _tokenToSend);
+        vm.stopPrank();
+        _sendAndCheck(
+            _tokenToSend,
+            C_EID,
+            D_EID,
+            charlie,
+            david,
+            DEFAULT_INITIAL_ONFTS_PER_EID,
+            DEFAULT_INITIAL_ONFTS_PER_EID,
+            true,
+            false
+        );
+        console.log("C->D success");
+        _sendAndCheck(
+            _tokenToSend,
+            D_EID,
+            A_EID,
+            david,
+            alice,
+            DEFAULT_INITIAL_ONFTS_PER_EID + 1,
+            DEFAULT_INITIAL_ONFTS_PER_EID,
+            false,
+            false
+        );
+        console.log("D->A success");
+        _sendAndCheck(
+            _tokenToSend,
+            A_EID,
+            B_EID,
+            alice,
+            bob,
+            DEFAULT_INITIAL_ONFTS_PER_EID + 1,
+            DEFAULT_INITIAL_ONFTS_PER_EID,
+            false,
+            false
+        );
+        console.log("A->B success");
+        _sendAndCheck(
+            _tokenToSend,
+            B_EID,
+            C_EID,
+            bob,
+            charlie,
+            DEFAULT_INITIAL_ONFTS_PER_EID + 1,
+            DEFAULT_INITIAL_ONFTS_PER_EID - 1,
+            false,
+            true
+        );
+        console.log("B->C success");
     }
+
+    // 5. Check the final balances
+    assertEq(aONFT.balanceOf(alice), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(bONFT.balanceOf(bob), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(IERC721(cONFTAdapter.token()).balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
+    assertEq(dONFTEnumerable.balanceOf(david), DEFAULT_INITIAL_ONFTS_PER_EID);
+}
+
 
     /// @dev Test to ensure that the quoteSend function reverts when the receiver is invalid.
     function test_quoteSend_InvalidReceiver(uint16 _tokenToSend) public {
@@ -135,7 +161,7 @@ contract ONFT721Test is ONFT721Base {
     /// @dev Test to ensure that the send function reverts when the receiver is invalid.
     function test_send_InvalidReceiver(uint16 _tokenToSend) public {
         // 1. Assume that the token is owned by charlie on C_EID ONFT721Adapter
-        vm.assume(_tokenToSend >= 256 * 2 && _tokenToSend < 256 * 3);
+        vm.assume(_tokenToSend >= 256 * 3 && _tokenToSend < 256 * 4);
 
         // 2. Set enforced options for SEND
         _setMeshDefaultEnforcedSendOption();
@@ -259,14 +285,14 @@ contract ONFT721Test is ONFT721Base {
 
     function test_ONFTAdapter_debitAndCredit(uint16 _tokenId) public {
         // Ensure that the tokenId is owned by userC
-        vm.assume(_tokenId >= DEFAULT_INITIAL_ONFTS_PER_EID * 2 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 3);
+        vm.assume(_tokenId >= DEFAULT_INITIAL_ONFTS_PER_EID * 3 && _tokenId < DEFAULT_INITIAL_ONFTS_PER_EID * 4);
         vm.assume(cERC721Mock.ownerOf(_tokenId) == charlie);
 
         uint32 dstEid = C_EID;
         uint32 srcEid = C_EID;
 
         assertEq(cERC721Mock.balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 3);
 
         vm.prank(charlie);
         cERC721Mock.approve(address(cONFTAdapter), _tokenId);
@@ -278,7 +304,7 @@ contract ONFT721Test is ONFT721Base {
         // 2. The Adapter balance is incremented by 1.
         // 3. The Adapter is the owner of the token
         assertEq(cERC721Mock.balanceOf(charlie), DEFAULT_INITIAL_ONFTS_PER_EID - 1);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2 + 1);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 3 + 1);
         assertEq(cERC721Mock.ownerOf(_tokenId), address(cONFTAdapter));
 
         vm.prank(charlie);
@@ -289,7 +315,7 @@ contract ONFT721Test is ONFT721Base {
         // 2. The Adapter balance is decremented by 1.
         // 3. userB owns the token
         assertEq(cERC721Mock.balanceOf(address(bob)), 1);
-        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 2);
+        assertEq(cERC721Mock.balanceOf(address(cONFTAdapter)), DEFAULT_INITIAL_ONFTS_PER_EID * 3);
         assertEq(cERC721Mock.ownerOf(_tokenId), bob);
     }
 
