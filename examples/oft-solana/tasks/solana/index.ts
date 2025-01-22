@@ -166,7 +166,7 @@ export enum TransactionType {
 
 const TransactionCuEstimates: Record<TransactionType, number> = {
     // for the sample values, they are: devnet, mainnet
-    [TransactionType.CreateToken]: 70_000, // actual sample: 59073, 55785
+    [TransactionType.CreateToken]: 125_000, // actual sample: (59073, 123539), 55785 (more volatile as it has CPI to Metaplex)
     [TransactionType.CreateMultisig]: 5_000, // actual sample: 3,230
     [TransactionType.InitOft]: 70_000, // actual sample: 59207, 65198 (note: this is the only transaction that createOFTAdapter does)
     [TransactionType.SetAuthority]: 8_000, // actual sample: 6424, 6472
