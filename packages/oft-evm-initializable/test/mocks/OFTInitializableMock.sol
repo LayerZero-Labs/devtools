@@ -8,11 +8,9 @@ import { SendParam } from "../../contracts/OFTCoreInitializable.sol";
 
 contract OFTInitializableMock is OFTInitializable {
     constructor(
-        string memory _name,
-        string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) OFTInitializable(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {}
+    ) OFTInitializable(_lzEndpoint, _delegate) Ownable(_delegate) {}
 
     function mint(address _to, uint256 _amount) public {
         _mint(_to, _amount);

@@ -33,8 +33,17 @@ abstract contract OFTAdapterInitializable is OFTCoreInitializable {
         address _lzEndpoint,
         address _delegate
     ) OFTCoreInitializable(_lzEndpoint, _delegate) {
-        __OFTCore_init(IERC20Metadata(_token).decimals());
+        _initialize(IERC20Metadata(_token).decimals());
         innerToken = IERC20(_token);
+    }
+
+    /**
+     * @dev Initialize decimals for the OFTAdapter for ERC-20.
+     * @param _localDecimals The decimals of the OFT
+     */
+    function _initialize(uint8 _localDecimals) internal initializer {
+        // Initialize OFTCore with local decimals
+        __OFTCore_init(_localDecimals);
     }
 
     /**

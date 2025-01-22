@@ -20,8 +20,6 @@ abstract contract OFTInitializable is Initializable, ERC20Upgradeable, OFTCoreIn
      * @param _delegate The delegate capable of making OApp configurations inside of the endpoint.
      */
     constructor(
-        string memory _name,
-        string memory _symbol,
         address _lzEndpoint,
         address _delegate
     ) ERC20Upgradeable() OFTCoreInitializable(_lzEndpoint, _delegate) {}

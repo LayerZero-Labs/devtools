@@ -60,7 +60,7 @@ abstract contract OFTCoreInitializable is Initializable, IOFT, OApp, OAppPreCrim
      * @dev Initialize deimals of the token.
      * @param _localDecimals The decimals of the token on the local chain (this chain).
      **/
-    function __OFTCore_init(uint8 _localDecimals) internal initializer {
+    function __OFTCore_init(uint8 _localDecimals) internal onlyInitializing {
         if (_localDecimals < sharedDecimals()) revert InvalidLocalDecimals();
         _setDecimalConversionRate(10 ** (_localDecimals - sharedDecimals()));
     }

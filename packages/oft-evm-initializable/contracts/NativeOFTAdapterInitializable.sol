@@ -28,6 +28,15 @@ abstract contract NativeOFTAdapterInitializable is OFTCoreInitializable {
         address _lzEndpoint,
         address _delegate
     ) OFTCoreInitializable(_lzEndpoint, _delegate) {
+        _initialize(_localDecimals);
+    }
+
+    /**
+     * @dev Initialize decimals for the OFTAdapter for ERC-20.
+     * @param _localDecimals The decimals of the OFT
+     */
+    function _initialize(uint8 _localDecimals) internal initializer {
+        // Initialize OFTCore with local decimals
         __OFTCore_init(_localDecimals);
     }
 

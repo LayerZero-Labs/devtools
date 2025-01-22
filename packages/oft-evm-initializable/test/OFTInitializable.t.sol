@@ -47,6 +47,7 @@ contract OFTInitializableTest is TestHelperOz5 {
     uint32 internal constant C_EID = 3;
     uint32 internal constant D_EID = 4;
     uint32 internal constant E_EID = 5;
+    uint32 internal constant X_EID = 5;
 
     string internal constant A_OFT_NAME = "aOFT";
     string internal constant A_OFT_SYMBOL = "aOFT";
@@ -56,10 +57,13 @@ contract OFTInitializableTest is TestHelperOz5 {
     string internal constant C_TOKEN_SYMBOL = "cToken";
     string internal constant E_MINTABLE_TOKEN_NAME = "eMintableToken";
     string internal constant E_MINTABLE_TOKEN_SYMBOL = "eToken";
+    string internal constant X_OFT_NAME = "xOFT";
+    string internal constant X_OFT_SYMBOL = "xOFT";
 
 
     OFTInitializable internal aOFT;
     OFTInitializable internal bOFT;
+    OFTInitializable internal xOFT;
     OFTAdapterInitializable internal cOFTAdapter;
     ERC20Mock internal cERC20Mock;
     NativeOFTAdapterInitializable internal dNativeOFTAdapter;
@@ -87,14 +91,23 @@ contract OFTInitializableTest is TestHelperOz5 {
         aOFT = OFTInitializableMock(
             _deployOApp(
                 type(OFTInitializableMock).creationCode,
-                abi.encode(A_OFT_NAME, A_OFT_SYMBOL, address(endpoints[A_EID]), address(this))
+                abi.encode(address(endpoints[A_EID]), address(this))
             )
         );
+        aOFT.initialize(A_OFT_NAME, A_OFT_SYMBOL, 18);
 
         bOFT = OFTInitializableMock(
             _deployOApp(
                 type(OFTInitializableMock).creationCode,
-                abi.encode(B_OFT_NAME, B_OFT_SYMBOL, address(endpoints[B_EID]), address(this))
+                abi.encode(address(endpoints[B_EID]), address(this))
+            )
+        );
+        bOFT.initialize(B_OFT_NAME, B_OFT_SYMBOL, 18);
+
+        xOFT = OFTInitializableMock(
+            _deployOApp(
+                type(OFTInitializableMock).creationCode,
+                abi.encode(address(endpoints[X_EID]), address(this))
             )
         );
 
@@ -170,6 +183,21 @@ contract OFTInitializableTest is TestHelperOz5 {
 
         assertEq(dNativeOFTAdapter.approvalRequired(), false);
         assertEq(eMintBurnOFTAdapter.approvalRequired(), false);
+    }
+
+    function test_initializer() public {
+        assertEq(aOFT.name(), A_OFT_NAME);
+        assertEq(aOFT.symbol(), A_OFT_SYMBOL);
+        assertEq(aOFT.decimals(), 18);
+
+        assertEq(xOFT.name(), "");
+        assertEq(xOFT.symbol(), "");
+
+        xOFT.initialize(X_OFT_NAME, X_OFT_SYMBOL, 18);
+        
+        assertEq(xOFT.name(), X_OFT_NAME);
+        assertEq(xOFT.symbol(), X_OFT_SYMBOL);
+        assertEq(xOFT.decimals(), 18);
     }
 
     function test_oftVersion() public {
