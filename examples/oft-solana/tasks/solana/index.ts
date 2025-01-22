@@ -156,18 +156,18 @@ export const getAddressLookupTable = async (connection: Connection, umi: Umi, fr
 }
 
 export enum TransactionType {
-    CreateToken,
-    CreateMultisig,
-    InitOft,
-    SetAuthority,
-    InitConfig,
-    SendOFT,
+    CreateToken = 'CreateToken',
+    CreateMultisig = 'CreateMultisig',
+    InitOft = 'InitOft',
+    SetAuthority = 'SetAuthority',
+    InitConfig = 'InitConfig',
+    SendOFT = 'SendOFT',
 }
 
 const TransactionCuEstimates: Record<TransactionType, number> = {
     // for the sample values, they are: devnet, mainnet
     [TransactionType.CreateToken]: 70_000, // actual sample: 59073, 55785
-    [TransactionType.CreateMultisig]: 70_000, // TBC
+    [TransactionType.CreateMultisig]: 5_000, // actual sample: 3,230
     [TransactionType.InitOft]: 70_000, // actual sample: 59207, 65198 (note: this is the only transaction that createOFTAdapter does)
     [TransactionType.SetAuthority]: 8_000, // actual sample: 6424, 6472
     [TransactionType.InitConfig]: 42_000, // actual sample: 33157, 40657
