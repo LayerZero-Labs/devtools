@@ -10,13 +10,11 @@ import { OAppSender, MessagingFee, MessagingReceipt } from "./OAppSender.sol";
 import { OAppReceiver, Origin } from "./OAppReceiver.sol";
 import { OAppCore } from "./OAppCore.sol";
 
-import { OAppOptionsType3 } from "./libs/OAppOptionsType3.sol";
-
 /**
  * @title OApp
  * @dev Abstract contract serving as the base for OApp implementation, combining OAppSender and OAppReceiver functionality.
  */
-abstract contract OApp is OAppSender, OAppReceiver, OAppOptionsType3 {
+abstract contract OApp is OAppSender, OAppReceiver {
     /**
      * @dev Constructor to initialize the OApp with the provided endpoint and owner.
      * @param _endpoint The address of the LOCAL LayerZero endpoint.
