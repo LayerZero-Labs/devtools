@@ -7,10 +7,11 @@ import {
     withLayerZeroDeployments,
 } from '@layerzerolabs/devtools-evm-hardhat'
 
-// Here we extend the HardhatUserConfig types & import all the LayerZero tasks
+// Import Hardhat tasks and type extensions
 import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
 import '@layerzerolabs/devtools-evm-hardhat/tasks'
 import '@layerzerolabs/ua-devtools-evm-hardhat/tasks'
+
 import { OmniSDK } from '@layerzerolabs/devtools-evm'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 
@@ -18,44 +19,38 @@ import { createModuleLogger } from '@layerzerolabs/io-devtools'
 OmniSDK.registerErrorParserFactory(createErrorParser)
 
 extendConfig((config, userConfig) => {
-    // First we get the LayerZero config
+    // Extract LayerZero config from userConfig
     const layerZero = userConfig.layerZero
 
-    // Now we check the config for packages from which to import artifacts
+    // Define artifact source packages, including V1 and V2
     const artifactSourcePackages = layerZero?.artifactSourcePackages ?? [
+        '@layerzerolabs/lz-evm-sdk-v1', // Added V1 SDK
         '@layerzerolabs/lz-evm-sdk-v2',
         '@layerzerolabs/test-devtools-evm-hardhat',
     ]
 
-    // And we check the config for packages from which to import deployments as well
-    const deploymentSourcePackages = layerZero?.deploymentSourcePackages ?? ['@layerzerolabs/lz-evm-sdk-v2']
+    // Define deployment source packages, including V1 and V2
+    const deploymentSourcePackages = layerZero?.deploymentSourcePackages ?? [
+        '@layerzerolabs/lz-evm-sdk-v1', // Added V1 SDK
+        '@layerzerolabs/lz-evm-sdk-v2',
+    ]
 
-    // Here we create our two config extenders, two curried functions
-    // that accept hardhat user config and return a hardhat user config with external
-    // artifacts and deployments configured
+    // Create config extenders for artifacts and deployments
     const withArtifacts = withLayerZeroArtifacts(...artifactSourcePackages)
     const withDeployments = withLayerZeroDeployments(...deploymentSourcePackages)
 
-    // To stay on the safe side we'll only use the external configuration
-    // of the extended config and we won't even import the type extensions from hardhat-deploy
-    // just in case the import path changes in one of the versions
-    //
-    // As a result we'll need to type the result of our function call as { external: unknown }
+    // Apply artifact and deployment configurations
     const { external } = withArtifacts(withDeployments(userConfig)) as { external: unknown }
 
-    // To remain on the safe side we are staying on we'll only extend the config
-    // if we got any external deployments
+    // Merge external deployments if available
     if (external != null) {
         Object.assign(config, { external })
     }
 
     // !!!!!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!!!!!!!!
     //
-    // If the LZ_EXPERIMENTAL_WITH_SIMULATION environment variable is set, we'll apply
-    // the simulation settings
-    //
-    // This feature is still in developer preview and requires familiarity with the code
-    // and knowledge of the requirements & developer flow
+    // If the LZ_EXPERIMENTAL_WITH_SIMULATION environment variable is set, apply
+    // simulation settings. This feature is experimental and requires caution.
     //
     // !!!!!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!!!!!!!!
     if (process.env.LZ_EXPERIMENTAL_WITH_SIMULATION) {
