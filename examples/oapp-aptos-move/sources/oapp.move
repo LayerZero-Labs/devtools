@@ -4,14 +4,14 @@
 /// Other than that, this module generally does not need to be updated by the OFT developer. As much as possible,
 /// customizations should be made in the OFT implementation module.
 module oapp::oapp {
-    use std::fungible_asset::{FungibleAsset, Metadata};
-    use std::object;
+    use std::fungible_asset::{FungibleAsset};
     use std::option;
     use std::option::Option;
     use std::primary_fungible_store;
     use std::signer::address_of;
 
     use endpoint_v2_common::bytes32::Bytes32;
+    use endpoint_v2_common::native_token;
     use oapp::oapp_core::{combine_options, lz_quote, lz_send, refund_fees};
     use oapp::oapp_store::OAPP_ADDRESS;
 
@@ -19,6 +19,39 @@ module oapp::oapp {
     friend oapp::oapp_compose;
 
     const STANDARD_MESSAGE_TYPE: u16 = 1;
+
+    struct Counter has key {
+        value: u64
+    }
+
+    fun init_module(account: &signer) {
+        move_to(account, Counter { value: 0 });
+    }
+
+    #[view]
+    public fun get_counter(): u64 acquires Counter {
+        borrow_global<Counter>(@oapp).value
+    }
+
+    public(friend) fun lz_receive_impl(
+        _src_eid: u32,
+        _sender: Bytes32,
+        _nonce: u64,
+        _guid: Bytes32,
+        _message: vector<u8>,
+        _extra_data: vector<u8>,
+        receive_value: Option<FungibleAsset>,
+    ) acquires Counter {
+        // Deposit any received value
+        option::destroy(receive_value, |value| primary_fungible_store::deposit(OAPP_ADDRESS(), value));
+
+        // Increment counter
+        let counter = borrow_global_mut<Counter>(@oapp);
+        counter.value = counter.value + 1;
+
+        // todo: Perform any actions with received message here
+    }
+
 
     // todo: replicate the logic in here where sending a message must happen
     public entry fun example_message_sender(
@@ -28,13 +61,17 @@ module oapp::oapp {
         extra_options: vector<u8>,
         native_fee: u64,
     ) {
-        let sender = address_of(account);
+        // Check normal APT balance
+        let bal = native_token::balance(address_of(account));
+        assert!(bal >= native_fee, EINSUFFICIENT_BALANCE);
 
-        // Withdraw the amount and fees from the account
-        let native_metadata = object::address_to_object<Metadata>(@native_token_metadata_address);
-        let native_fee_fa = primary_fungible_store::withdraw(move account, native_metadata, native_fee);
+        // Withdraw using native_token module
+        let native_fee_fa = native_token::withdraw(account, native_fee);
+
+        // No ZRO fee in this example
         let zro_fee_fa = option::none();
 
+        // Send the cross-chain message
         lz_send(
             dst_eid,
             message,
@@ -43,8 +80,8 @@ module oapp::oapp {
             &mut zro_fee_fa,
         );
 
-        // Return unused amounts and fees to the account
-        refund_fees(sender, native_fee_fa, zro_fee_fa);
+        // Refund any leftover fees back to the user
+        refund_fees(address_of(account), native_fee_fa, zro_fee_fa);
     }
 
     #[view]
@@ -64,21 +101,6 @@ module oapp::oapp {
             options,
             false,
         )
-    }
-
-    public(friend) fun lz_receive_impl(
-        _src_eid: u32,
-        _sender: Bytes32,
-        _nonce: u64,
-        _guid: Bytes32,
-        _message: vector<u8>,
-        _extra_data: vector<u8>,
-        receive_value: Option<FungibleAsset>,
-    ) {
-        // Deposit any received value
-        option::destroy(receive_value, |value| primary_fungible_store::deposit(OAPP_ADDRESS(), value));
-
-        // todo: Perform any actions with received message here
     }
 
     // ==================================================== Compose ===================================================
@@ -107,4 +129,5 @@ module oapp::oapp {
     // ================================================== Error Codes =================================================
 
     const ECOMPOSE_NOT_IMPLEMENTED: u64 = 1;
+    const EINSUFFICIENT_BALANCE: u64 = 2;
 }

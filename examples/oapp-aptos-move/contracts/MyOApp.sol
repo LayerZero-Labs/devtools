@@ -5,11 +5,13 @@ pragma solidity ^0.8.22;
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OApp, MessagingFee, Origin } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
+import { OAppOptionsType3 } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OAppOptionsType3.sol";
 
-contract MyOApp is OApp {
+contract MyOApp is OApp, OAppOptionsType3 {
     constructor(address _endpoint, address _delegate) OApp(_endpoint, _delegate) Ownable(_delegate) {}
 
     string public data = "Nothing received yet.";
+    uint256 public counter = 0;
 
     /**
      * @notice Sends a message from the source chain to a destination chain.
@@ -56,7 +58,7 @@ contract MyOApp is OApp {
      * @dev _executor The address of the Executor responsible for processing the message.
      * @dev _extraData Arbitrary data appended by the Executor to the message.
      *
-     * Decodes the received payload and processes it as per the business logic defined in the function.
+     * Increments the counter.
      */
     function _lzReceive(
         Origin calldata /*_origin*/,
@@ -65,6 +67,6 @@ contract MyOApp is OApp {
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {
-        data = abi.decode(payload, (string));
+        counter += 1;
     }
 }

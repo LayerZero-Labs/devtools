@@ -91,7 +91,6 @@ async function sendFromMoveVm(
     const payloads = [{ payload: sendPayload, description: 'Send Aptos OFT', eid: dstEid }]
     await sendAllTxs(aptos, oft, srcAddress, payloads)
 
-    // Check the balance again
     const balance = await aptos.view({
         payload: {
             function: `${aptosOftAddress}::oft::balance`,

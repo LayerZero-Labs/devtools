@@ -20,18 +20,18 @@ export async function createSetDelegateTransactions(eidDataMapping: OmniContract
         const currDelegate = await getDelegate(contract.epv2, address.oapp)
 
         if (!configAccount?.delegate) {
-            printNotSet('delegate - not found in config', Number(eid), Number(eid))
+            printNotSet('delegate - not found in config', Number(eid), Number(peerToEid))
             continue
         }
 
         const newDelegate = utils.getAddress(configAccount.delegate)
 
         if (currDelegate === newDelegate) {
-            printAlreadySet('delegate', Number(eid), Number(eid))
+            printAlreadySet('delegate', Number(eid), Number(peerToEid))
             continue
         }
 
-        const diffMessage = createDiffMessage('delegate', Number(eid), Number(eid))
+        const diffMessage = createDiffMessage('delegate', Number(eid), Number(peerToEid))
         diffPrinter(diffMessage, { delegate: currDelegate }, { delegate: newDelegate })
 
         const tx = await contract.oapp.populateTransaction.setDelegate(newDelegate)
