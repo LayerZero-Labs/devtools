@@ -54,7 +54,7 @@ const config: HardhatUserConfig = {
     networks: {
         'bsc-testnet': {
             eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BSC || 'wss://bsc-testnet-rpc.publicnode.com',
+            url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
             accounts,
         },
         'aptos-testnet': {
