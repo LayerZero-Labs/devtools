@@ -8,7 +8,6 @@ export async function attach_wire_move(sdk: AptosEVMCLI) {
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-set-delegate'))
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/transfer-oapp-owner'))
     await sdk.extendOperationFromPath(path.join(__dirname, './operations/transfer-object-owner'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/multisig-execute'))
 }
 
 export async function attach_wire_evm(sdk: AptosEVMCLI) {
