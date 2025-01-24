@@ -66,7 +66,8 @@ export async function getEpv1ExecutorConfig(
 
         return executorConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 executor config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 executor config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -106,7 +107,8 @@ export async function getEpv1SendUlnConfig(
 
         return ulnConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 ULN config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 ULN config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -146,7 +148,8 @@ export async function getEpv1ReceiveUlnConfig(
 
         return ulnConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 ULN config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 ULN config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -171,7 +174,8 @@ export async function getEpv1SendLibraryAddress(
 
         return sendLibraryAddress
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 send library address: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 send library: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -197,7 +201,8 @@ export async function getEpv1ReceiveLibraryAddress(
 
         return receiveLibraryAddress
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 receive library address: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 receive library: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -220,7 +225,8 @@ export async function getEpv1DefaultSendLibraryAddress(hre: HardhatRuntimeEnviro
 
         return sendLibraryAddress
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 send library address: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 send library address: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -243,7 +249,8 @@ export async function getEpv1DefaultReceiveLibraryAddress(hre: HardhatRuntimeEnv
 
         return defaultReceiveLibraryAddress
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 receive library address: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 receive library address: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -292,7 +299,8 @@ export async function getEpv1DefaultExecutorConfig(
 
         return executorConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 Default executor config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 default Executor config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -347,7 +355,8 @@ export async function getEpv1DefaultSendConfig(
 
         return ulnConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 Default ULN send config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 default ULN config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -402,7 +411,8 @@ export async function getEpv1DefaultReceiveConfig(
 
         return ulnConfig
     } catch (error) {
-        console.error(`[LzApp] Error fetching EPV1 Default ULN receive config: ${(error as Error).message}`)
+        const moduleLogger = createModuleLogger('LzApp')
+        moduleLogger.error(`Error fetching EPV1 default ULN receive config: ${(error as Error).message}`)
         return undefined
     }
 }
@@ -846,7 +856,6 @@ export const configureLzAppGraph = async (
                     try {
                         logger.info('Checking LzApp trusted remotes configuration')
                         const getTrustedRemoteTx = await getTrustedRemote(hreForEid, from, to.eid)
-                        console.log(ethers.utils.getAddress(getTrustedRemoteTx!), ethers.utils.getAddress(to.address))
                         if (ethers.utils.getAddress(getTrustedRemoteTx!) != ethers.utils.getAddress(to.address)) {
                             const setTrustedRemoteTx = await setTrustedRemote(hreForEid, from, to)
                             if (setTrustedRemoteTx) transactions.push(setTrustedRemoteTx)

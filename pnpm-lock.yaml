@@ -107,9 +107,6 @@ importers:
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.49
         version: 3.0.52
-      '@layerzerolabs/lz-evm-sdk-v2':
-        specifier: ^3.0.49
-        version: 3.0.52
       '@layerzerolabs/lz-evm-v1-0.7':
         specifier: ^3.0.12
         version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
@@ -7101,16 +7098,6 @@ packages:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-
-  /@layerzerolabs/lz-evm-sdk-v2@3.0.52:
-    resolution: {integrity: sha512-OzGqtEIONhcVwxvq1rAO1JZflvP+6sL60W3tff4Ia3OtqqFgEy0VHE8ZOPNcbymbHMVnfPemYyQXAy8p9rABdQ==}
-    dependencies:
-      '@layerzerolabs/evm-sdks-core': 3.0.52
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: true
 
   /@layerzerolabs/lz-evm-v1-0.7@3.0.12(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4):
     resolution: {integrity: sha512-7q8NRDwQ8vt+jpj7Pt8H/Q83v8lwa9RLgH2SXva15RQTC5L+ARoEACek9Pk0qLJrA/tKkpiNcn6MxwTJx+he7g==}

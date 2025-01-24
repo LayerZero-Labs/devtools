@@ -4,16 +4,13 @@
 // - Duplicate .env.example file and name it .env
 // - Fill in the environment variables
 import 'dotenv/config'
-
 import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
 import '@layerzerolabs/toolbox-hardhat'
-import { extendConfig } from 'hardhat/config'
 import { HardhatUserConfig, HttpNetworkAccountsUserConfig } from 'hardhat/types'
 
 // Import LayerZero DevTools functions
-import { withLayerZeroArtifacts, withLayerZeroDeployments } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import '@layerzerolabs/devtools-evm-hardhat/type-extensions'
@@ -83,39 +80,10 @@ const config: HardhatUserConfig = {
             default: 0, // wallet address of index[0], of the mnemonic in .env
         },
     },
-    external: {
-        deployments: {},
+    layerZero: {
+        deploymentSourcePackages: ['@layerzerolabs/lz-evm-sdk-v1', '@layerzerolabs/lz-evm-sdk-v2'],
+        artifactSourcePackages: ['@layerzerolabs/lz-evm-sdk-v1', '@layerzerolabs/lz-evm-sdk-v2'],
     },
 }
-
-extendConfig((config, userConfig) => {
-    // Extract LayerZero config from userConfig
-    const layerZero = userConfig.layerZero
-
-    // Define artifact source packages, including V1 and V2
-    const artifactSourcePackages = layerZero?.artifactSourcePackages ?? [
-        '@layerzerolabs/lz-evm-sdk-v1', // Added V1 SDK
-        '@layerzerolabs/lz-evm-sdk-v2',
-        '@layerzerolabs/test-devtools-evm-hardhat',
-    ]
-
-    // Define deployment source packages, including V1 and V2
-    const deploymentSourcePackages = layerZero?.deploymentSourcePackages ?? [
-        '@layerzerolabs/lz-evm-sdk-v1', // Added V1 SDK
-        '@layerzerolabs/lz-evm-sdk-v2',
-    ]
-
-    // Create config extenders for artifacts and deployments
-    const withArtifacts = withLayerZeroArtifacts(...artifactSourcePackages)
-    const withDeployments = withLayerZeroDeployments(...deploymentSourcePackages)
-
-    // Apply artifact and deployment configurations
-    const { external } = withArtifacts(withDeployments(userConfig)) as { external: unknown }
-
-    // Merge external deployments if available
-    if (external != null) {
-        Object.assign(config, { external })
-    }
-})
 
 export default config
