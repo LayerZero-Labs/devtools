@@ -106,7 +106,7 @@ importers:
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.49
-        version: 3.0.51
+        version: 3.0.52
       '@layerzerolabs/lz-evm-sdk-v2':
         specifier: ^3.0.49
         version: 3.0.52
@@ -6581,15 +6581,6 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/evm-sdks-core@3.0.51:
-    resolution: {integrity: sha512-L0HJZCWD3F8EWlfo1RIJs2eWfCZk4VeCclBHGAaa046++G9bSCdCJSg3teQpYv7MzsQQZOdZb+IaELAFJq3J9g==}
-    dependencies:
-      ethers: 5.7.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: true
-
   /@layerzerolabs/evm-sdks-core@3.0.52:
     resolution: {integrity: sha512-zA92UDk1NqaX8UnIYzOLOzbJIsc/CqOfnEXaHfaoHnjsH9giDonAxm2uRgRTIREig1qgNXUNr52r8oB2B5GpFw==}
     dependencies:
@@ -7090,12 +7081,12 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/lz-evm-sdk-v1@3.0.51:
-    resolution: {integrity: sha512-4HYpQGBf2BkD6thUFBXpa0UuMsIevRQ0NgswDWMXpYRH4e/FNf/tm6D+fnKVVQtTOrThqPBc8HwHhzomyktwRQ==}
+  /@layerzerolabs/lz-evm-sdk-v1@3.0.52:
+    resolution: {integrity: sha512-cnUuZQCKGLE1nOUNPtSpmTGzTPDvqp1JG0wdzYcOPVoLr0k0/syAJqeHun0JaqK9cQHiE03S6Id4UYioBpPFTg==}
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/providers': 5.7.2
-      '@layerzerolabs/evm-sdks-core': 3.0.51
+      '@layerzerolabs/evm-sdks-core': 3.0.52
       ethers: 5.7.2
     transitivePeerDependencies:
       - bufferutil
