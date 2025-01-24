@@ -107,9 +107,6 @@ importers:
       '@layerzerolabs/ua-devtools-evm-hardhat':
         specifier: ^6.0.7
         version: link:../../packages/ua-devtools-evm-hardhat
-      chalk:
-        specifier: ^4.1.2
-        version: 4.1.2
     devDependencies:
       '@babel/core':
         specifier: ^7.23.9
@@ -177,6 +174,9 @@ importers:
       chai:
         specifier: ^4.4.1
         version: 4.5.0
+      chalk:
+        specifier: ^4.1.2
+        version: 4.1.2
       concurrently:
         specifier: ~9.1.0
         version: 9.1.0

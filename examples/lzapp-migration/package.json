@@ -30,8 +30,7 @@
     "@layerzerolabs/solidity-examples": "^1.1.0",
     "@layerzerolabs/ua-devtools": "^3.0.3",
     "@layerzerolabs/ua-devtools-evm": "^5.0.4",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.7",
-    "chalk": "^4.1.2"
+    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
