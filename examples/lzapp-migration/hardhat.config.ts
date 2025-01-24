@@ -81,8 +81,16 @@ const config: HardhatUserConfig = {
         },
     },
     layerZero: {
-        deploymentSourcePackages: ['@layerzerolabs/lz-evm-sdk-v1', '@layerzerolabs/lz-evm-sdk-v2'],
-        artifactSourcePackages: ['@layerzerolabs/lz-evm-sdk-v1', '@layerzerolabs/lz-evm-sdk-v2'],
+        deploymentSourcePackages: [
+            '@layerzerolabs/lz-evm-sdk-v1',
+            '@layerzerolabs/lz-evm-sdk-v2',
+            '@layerzerolabs/test-devtools-evm-hardhat',
+        ],
+        artifactSourcePackages: [
+            '@layerzerolabs/lz-evm-sdk-v1',
+            '@layerzerolabs/lz-evm-sdk-v2',
+            '@layerzerolabs/test-devtools-evm-hardhat',
+        ],
     },
 }
 
