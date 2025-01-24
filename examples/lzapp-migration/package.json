@@ -30,7 +30,8 @@
     "@layerzerolabs/solidity-examples": "^1.1.0",
     "@layerzerolabs/ua-devtools": "^3.0.3",
     "@layerzerolabs/ua-devtools-evm": "^5.0.4",
-    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.7"
+    "@layerzerolabs/ua-devtools-evm-hardhat": "^6.0.7",
+    "eslint-import-resolver-typescript": "^3.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
