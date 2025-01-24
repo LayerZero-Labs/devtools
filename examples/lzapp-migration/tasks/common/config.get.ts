@@ -1,5 +1,3 @@
-// tasks/ConfigGet.ts
-
 import { task } from 'hardhat/config'
 import { ActionType } from 'hardhat/types'
 

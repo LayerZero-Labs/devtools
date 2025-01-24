@@ -1,5 +1,3 @@
-// tasks/taskHelper.ts
-
 import chalk from 'chalk'
 import { Contract, Signer, ethers, utils } from 'ethers'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
