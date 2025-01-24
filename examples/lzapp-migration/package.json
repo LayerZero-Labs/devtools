@@ -31,7 +31,6 @@
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.49",
-    "@layerzerolabs/lz-evm-sdk-v2": "^3.0.49",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/oapp-evm": "^0.3.0",
