@@ -76,6 +76,10 @@ importers:
         version: 1.11.0
 
   examples/lzapp-migration:
+    dependencies:
+      chalk:
+        specifier: ^4.1.2
+        version: 4.1.2
     devDependencies:
       '@ethersproject/bytes':
         specifier: ^5.7.0
@@ -89,9 +93,6 @@ importers:
       '@layerzerolabs/devtools-evm-hardhat':
         specifier: ^2.0.5
         version: link:../../packages/devtools-evm-hardhat
-      '@layerzerolabs/devtools-solana':
-        specifier: ~1.0.5
-        version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -122,9 +123,6 @@ importers:
       '@layerzerolabs/oft-evm':
         specifier: ^3.1.0
         version: link:../../packages/oft-evm
-      '@layerzerolabs/oft-v2-solana-sdk':
-        specifier: 3.0.0
-        version: 3.0.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
@@ -134,9 +132,6 @@ importers:
       '@layerzerolabs/protocol-devtools-evm':
         specifier: ~3.0.4
         version: link:../../packages/protocol-devtools-evm
-      '@layerzerolabs/protocol-devtools-solana':
-        specifier: ^4.0.6
-        version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
