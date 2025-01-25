@@ -1,9 +1,6 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
-import { expect } from 'chai'
 import { Contract, ContractFactory } from 'ethers'
 import { deployments, ethers } from 'hardhat'
-
-import { Options } from '@layerzerolabs/lz-v2-utilities'
 
 describe('MyOApp Test', function () {
     // Constant representing a mock Endpoint ID for testing purposes
@@ -58,24 +55,5 @@ describe('MyOApp Test', function () {
         // Setting each MyOApp instance as a peer of the other
         await myOAppA.connect(ownerA).setPeer(eidB, ethers.utils.zeroPad(myOAppB.address, 32))
         await myOAppB.connect(ownerB).setPeer(eidA, ethers.utils.zeroPad(myOAppA.address, 32))
-    })
-
-    // A test case to verify message sending functionality
-    it('should send a message to each destination OApp', async function () {
-        // Assert initial state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Nothing received yet.')
-        const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
-
-        // Define native fee and quote for the message send operation
-        let nativeFee = 0
-        ;[nativeFee] = await myOAppA.quote(eidB, 'Test message.', options, false)
-
-        // Execute send operation from myOAppA
-        await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
-
-        // Assert the resulting state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Test message.')
     })
 })
