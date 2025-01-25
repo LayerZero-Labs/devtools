@@ -14,7 +14,7 @@ class MoveDeployOperation implements INewOperation {
         {
             name: '--address-name',
             arg: {
-                help: 'address name',
+                help: 'The named address for compiling and using in the contract. This will take the derived account address for the object and put it in this location',
                 required: false,
             },
         },

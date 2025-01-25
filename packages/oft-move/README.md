@@ -80,9 +80,6 @@ async function wireMove(args: any) {
     const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
     const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
 
-    const currDelegate = await oftSDK.getDelegate()
-    validateDelegate(currDelegate, account_address)
-
     const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
     // Here is where we parse the config file to get the connections
     const connectionsFromMoveToAny = await 

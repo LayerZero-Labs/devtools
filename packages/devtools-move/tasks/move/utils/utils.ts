@@ -152,7 +152,7 @@ async function promptForConfirmation(txCount: number): Promise<'execute' | 'expo
         rl.question(
             `\nReview the ${txCount} transaction(s) above carefully.\nChoose an action:\n` +
                 `(y)es - execute transactions\n` +
-                `(e)xport - save as JSON\n` +
+                `(e)xport - save as JSON for multisig execution\n` +
                 `(n)o - cancel\n` +
                 `Enter choice: `,
             resolve
@@ -180,12 +180,14 @@ async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     }
 
     payloads.forEach((payload, index) => {
+        console.log(payload)
         const jsonPayload = {
             function_id: payload.payload.function,
             args: payload.payload.functionArguments.map((arg: any, idx: number) => ({
                 type: payload.payload.types[idx],
-                value: formatArgumentValue(arg, payload.payload.types[idx]),
+                value: formatArgumentValue(arg),
             })),
+            type_args: [],
         }
 
         const filePath = path.join(exportDir, `tx-${index + 1}.json`)
@@ -195,39 +197,11 @@ async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     console.log(`\n📄 Transactions exported to: ${exportDir}`)
 }
 
-const formatters = {
-    bool: (arg: any) => (Array.isArray(arg) ? arg : Boolean(arg)),
-
-    address: (arg: any) => {
-        if (Array.isArray(arg)) {
-            return arg.map((item: any) => (Array.isArray(item) ? item.map(String) : String(item)))
-        }
-        return String(arg)
-    },
-
-    raw: (arg: any) => formatHexValue(arg),
-    hex: (arg: any) => formatHexValue(arg),
-
-    u8: Number,
-    u16: Number,
-    u32: Number,
-    u64: Number,
-    u128: Number,
-    u256: Number,
-
-    string: String,
-} as const
-
-function formatHexValue(arg: any): string {
-    if (arg instanceof Uint8Array) {
-        return '0x' + Buffer.from(arg).toString('hex')
+function formatArgumentValue(arg: any): any {
+    if (Array.isArray(arg)) {
+        return arg.map((item: any) => item)
     }
-    return typeof arg === 'string' && arg.startsWith('0x') ? arg : '0x' + Buffer.from(arg).toString('hex')
-}
-
-function formatArgumentValue(arg: any, type: string): any {
-    const formatter = formatters[type as keyof typeof formatters]
-    return formatter ? formatter(arg) : arg
+    return arg
 }
 
 export async function sendInitTransaction(

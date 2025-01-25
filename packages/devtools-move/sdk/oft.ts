@@ -199,7 +199,7 @@ export class OFT {
                 native_fee,
                 zro_fee,
             ],
-            types: ['u32', 'raw', 'u64', 'u64', 'raw', 'raw', 'raw', 'u64', 'u64'],
+            types: ['u32', 'u8', 'u64', 'u64', 'u8', 'u8', 'u8', 'u64', 'u64'],
         }
     }
 
@@ -208,7 +208,7 @@ export class OFT {
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
             functionArguments: [eid, peerAddressAsBytes],
-            types: ['u32', 'raw'],
+            types: ['u32', 'u8'],
         }
     }
 
@@ -288,7 +288,6 @@ export class OFT {
 
         return result[0] as boolean
     }
-
     setEnforcedOptionsPayload(
         eid: number,
         msgType: number,
@@ -297,7 +296,7 @@ export class OFT {
         return {
             function: `${this.oft_address}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],
-            types: ['u32', 'u16', 'raw'],
+            types: ['u32', 'u16', 'u8'],
         }
     }
 
@@ -353,7 +352,7 @@ export class OFT {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, eid, configType, config],
-            types: ['address', 'u32', 'u32', 'raw'],
+            types: ['address', 'u32', 'u32', 'u8'],
         }
     }
 

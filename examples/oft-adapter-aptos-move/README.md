@@ -50,7 +50,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Builds the contracts
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
 ### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
@@ -65,7 +65,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## Init and Set Delegate
@@ -172,8 +172,7 @@ There are three steps to transferring ownership of your Move OFT:
 2. Transfer the OApp owner of the your to the new owner
 3. Transfer the Move-VM object owner to the new owner
 
-To set the delegate, run the following command:
-First ensure that the delegate is specified in the move.layerzero.config.ts file.
+To set the delegate, first ensure that the delegate is specified in the move.layerzero.config.ts file.
 
 ```ts
     contracts: [
@@ -308,4 +307,28 @@ For verifying the admin look for the following in the output:
 
 If the admin is your desired address, then the ownership transfer was successful.
 
-## Multisig Execute
+## Multisig Transaction Execution
+
+To execute transactions with a multisig account, follow these steps:
+
+1. Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
+
+2. Create the transaction using:
+```bash
+aptos multisig create-transaction \
+    --json-file <path-to-json-file> \
+    --multisig-address <your-multisig-address> \
+    --private-key-file <path-to-private-key> \
+    --assume-yes
+```
+
+3. Approve the transaction:
+```bash
+aptos multisig approve \
+    --multisig-address <your-multisig-address> \
+    --sequence-number <your-sequence-number> \
+    --private-key-file <path-to-private-key> \
+    --assume-yes
+```
+
+For more detailed information about multisig transactions, please refer to the [Aptos Multi-Signature Tutorial](https://aptos.dev/en/build/cli/working-with-move-contracts/multi-signature-tutorial#execute-the-governance-parameter-transaction).

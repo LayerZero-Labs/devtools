@@ -31,9 +31,6 @@ async function wireMove(args: any) {
     const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
     const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
 
-    const currDelegate = await oftSDK.getDelegate()
-    validateDelegate(currDelegate, account_address)
-
     const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
     const connectionsFromMoveToAny = await getConfigConnections('from', moveVMEndpointID, fullConfigPath)
 
@@ -106,13 +103,6 @@ function logPathwayHeader(connection: OAppOmniGraphHardhat['connections'][number
     console.log(`${borderLine}\n`)
 }
 
-function validateDelegate(currDelegate: string, account_address: string) {
-    if (currDelegate != account_address) {
-        throw new Error(
-            `Delegate must be set to account address of the transaction sender for wiring.\n\tCurrent delegate: ${currDelegate}, expected: ${account_address}\n\n`
-        )
-    }
-}
 function getEndpointAddressFromNamedAddresses(namedAddresses: string): string {
     const addresses = namedAddresses.split(',')
     const endpointEntry = addresses.find((addr) => addr.startsWith('endpoint_v2='))

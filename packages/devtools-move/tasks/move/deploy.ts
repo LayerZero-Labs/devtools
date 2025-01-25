@@ -114,7 +114,6 @@ async function createDeployment(deployedAddress: string, file_name: string, netw
 
     fs.writeFileSync(path.join(aptosDir, `${file_name}.json`), JSON.stringify(deployment, null, 2))
     console.log('\n✅ Deployment successful ✅')
-    console.log(`📝 Successfully created deployment file at: ${aptosDir}/${file_name}.json`)
 }
 
 async function checkIfDeploymentExists(network: string, lzNetworkStage: string, contractName: string) {
