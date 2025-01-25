@@ -39,7 +39,7 @@ export const pluralizeOrdinal = (n: number): string => {
  * ```
  *
  * @param {number} n
- * @param {string} singular The signular form of the english noun
+ * @param {string} singular The singular form of the english noun
  * @param {string} [plural] Plural version of the noun for irregular cases
  * @returns {string}
  */
