@@ -33,7 +33,7 @@ native_token_metadata_address = "0xa"
 
 [dev-addresses]
 oapp = "0x302814823"
-oft_common = "0x30281482332"
+oapp_admin = "0x302814821"
 router_node_0 = "0x10000f"
 simple_msglib = "0x100011"
 blocked_msglib = "0x100001"
