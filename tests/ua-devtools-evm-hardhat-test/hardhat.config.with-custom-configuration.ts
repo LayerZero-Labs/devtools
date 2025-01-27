@@ -20,7 +20,7 @@ const SUBTASK_CUSTOM_CONFIGURE = '::my:custom:configure:subtask'
  * Instead of using the default schema, we'll pass our own schema
  * that also validates the `customProperty` value.
  *
- * This step is optional - the default schema will pass any additonal
+ * This step is optional - the default schema will pass any additional
  * properties through (so the customProperty will be included).
  */
 task(
@@ -48,7 +48,7 @@ task(
  * and users might opt to skip the SDK layer altogether and access raw contract
  * data instead.
  *
- * This step is required - the default schema will pass any additonal
+ * This step is required - the default schema will pass any additional
  * properties through (so the customProperty will be included).
  */
 task(SUBTASK_CUSTOM_CONFIGURE, 'Custom configuration subtask', async (args: SubtaskConfigureTaskArgs, hre) => {

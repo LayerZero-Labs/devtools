@@ -48,7 +48,7 @@ export const createSdkFactory = (
         //
         // For our purposes this will always be the user account coming from the secret key passed in
         () => userAccount,
-        // The second paramter is a program ID factory
+        // The second parameter is a program ID factory
         //
         // This is a function that receives an OmniPoint ({ eid, address } object)
         // and returns a program ID to be used with that SDK.
