@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import 'dotenv/config'
 
@@ -21,13 +22,13 @@ async function main() {
     const wallet = new ethers.Wallet(privateKey, provider)
 
     // Contract address
-    const contractAddress = '0xB9e27d6D01fb6f63362C968BD30142840E0A2A0c'
+    const contractAddress = '<your-contract-address>'
 
     // Create contract instance
     const myOApp = new ethers.Contract(contractAddress, ABI, wallet)
 
     // Destination endpoint ID for Aptos
-    const aptosEid = 40108 // Replace with actual Aptos EID
+    const aptosEid = EndpointId.APTOS_V2_TESTNET
 
     // Message to send
     const message = 'Hello Aptos!'
@@ -51,7 +52,7 @@ async function main() {
         console.log('Sending message to Aptos...')
         const receipt = await tx.wait()
         console.log(`Transaction hash: ${receipt?.transactionHash}`)
-        console.log('Message sent successfully!')
+        console.log('Message sent!')
     } catch (error) {
         console.error('Error sending message:', error)
     }

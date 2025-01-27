@@ -60,7 +60,7 @@ async function send() {
     const extraOptions = options.toBytes()
 
     // Prepare the message
-    const message = 'Hello, World!'
+    const message = 'Hello, EVM!'
     const messageBytes = new TextEncoder().encode(message)
     const messageArray = new Uint8Array(messageBytes)
 
@@ -114,7 +114,8 @@ async function send() {
         transactionHash: signedTransaction.hash,
     })
 
-    console.log('Message sent and transaction completed:', executedTransaction.hash)
+    console.log(`Transaction hash: ${executedTransaction.hash}`)
+    console.log('Message sent!')
 }
 
 // Execute the send function and handle any errors
