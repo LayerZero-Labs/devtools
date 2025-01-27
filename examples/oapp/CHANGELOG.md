@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
 ## 0.5.4
 
 ### Patch Changes

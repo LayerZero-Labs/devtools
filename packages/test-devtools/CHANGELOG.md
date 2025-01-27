@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.4
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
 ## 0.4.3
 
 ### Patch Changes

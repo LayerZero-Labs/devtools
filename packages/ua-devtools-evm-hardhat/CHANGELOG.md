@@ -1,5 +1,21 @@
 # @layerzerolabs/ua-devtools-evm-hardhat
 
+## 6.0.8
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools-evm@3.0.5
+  - @layerzerolabs/devtools-evm-hardhat@2.0.6
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/ua-devtools-evm@5.0.5
+  - @layerzerolabs/devtools-evm@1.0.4
+  - @layerzerolabs/ua-devtools@3.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
 ## 6.0.7
 
 ### Patch Changes

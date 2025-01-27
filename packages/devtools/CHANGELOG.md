@@ -1,5 +1,14 @@
 # @layerzerolabs/devtools
 
+## 0.4.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [186442a]
+  - @layerzerolabs/io-devtools@0.1.15
+
 ## 0.4.4
 
 ### Patch Changes

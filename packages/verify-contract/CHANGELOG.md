@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.32
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
 ## 1.1.31
 
 ### Patch Changes
