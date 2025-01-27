@@ -31,7 +31,7 @@
     "@layerzerolabs/devtools-evm": "~1.0.3",
     "@layerzerolabs/devtools-evm-hardhat": "~2.0.5",
     "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.45",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-sdk-v1": "^3.0.12",
