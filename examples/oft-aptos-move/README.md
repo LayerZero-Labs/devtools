@@ -35,11 +35,11 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 Create a `.env` file with the following variables:
 
 ```bash
-ACCOUNT_ADDRESS=<your-aptos-account-address>
+APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 ```
 
-Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
+Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
 Note: aptos account address can be found in .aptos/config.yaml
 
@@ -50,7 +50,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Build the modules
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
 ### Deploy the modules
@@ -69,7 +69,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## Init and Set Delegate
