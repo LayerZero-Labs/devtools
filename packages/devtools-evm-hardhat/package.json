@@ -40,7 +40,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci --forceExit"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci --forceExit"
   },
   "dependencies": {
     "@layerzerolabs/export-deployments": "~0.0.12",

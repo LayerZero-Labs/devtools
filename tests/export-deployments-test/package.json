@@ -14,7 +14,8 @@
     "compile": "$npm_execpath hardhat compile",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci --runInBand --forceExit"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci --runInBand --forceExit"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",

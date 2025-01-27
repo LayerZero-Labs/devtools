@@ -24,7 +24,8 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "node ./cli.js",
-    "test": "jest"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest"
   },
   "dependencies": {
     "typescript": "^5.4.4"
