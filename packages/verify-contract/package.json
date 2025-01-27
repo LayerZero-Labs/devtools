@@ -27,7 +27,8 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "node ./cli.js",
-    "test": "jest"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
