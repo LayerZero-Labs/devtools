@@ -1,5 +1,11 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
+## 0.0.4
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
 ## 0.0.3
 
 ### Patch Changes

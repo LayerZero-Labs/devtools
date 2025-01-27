@@ -1,5 +1,15 @@
 # @layerzerolabs/metadata-tools
 
+## 0.3.1
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.6
+  - @layerzerolabs/ua-devtools@3.0.4
+
 ## 0.3.0
 
 ### Minor Changes

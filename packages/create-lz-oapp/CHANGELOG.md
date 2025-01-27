@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.4.2
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Internal utilities for testing LayerZero packages",
   "repository": {
     "type": "git",

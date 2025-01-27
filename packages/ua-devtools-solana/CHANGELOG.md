@@ -1,5 +1,19 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.0.7
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools-solana@4.0.7
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/devtools-solana@1.0.6
+  - @layerzerolabs/ua-devtools@3.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
 ## 4.0.6
 
 ### Patch Changes
