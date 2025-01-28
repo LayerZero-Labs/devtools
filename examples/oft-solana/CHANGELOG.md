@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.4.7
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.4.6
 
 ### Patch Changes

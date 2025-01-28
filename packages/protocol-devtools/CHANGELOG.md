@@ -1,5 +1,13 @@
 # @layerzerolabs/protocol-devtools
 
+## 1.1.3
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/devtools@0.4.4
+
 ## 1.1.2
 
 ### Patch Changes

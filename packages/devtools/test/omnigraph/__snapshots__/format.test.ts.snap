@@ -236,6 +236,12 @@ exports[`omnigraph/format formatEid should format 341 correctly 1`] = `"SPACE_MA
 
 exports[`omnigraph/format formatEid should format 342 correctly 1`] = `"GLUE_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 359 correctly 1`] = `"CRONOSEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 360 correctly 1`] = `"CRONOSZKEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 361 correctly 1`] = `"GOAT_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -576,6 +582,12 @@ exports[`omnigraph/format formatEid should format 10357 correctly 1`] = `"BL6_TE
 
 exports[`omnigraph/format formatEid should format 10358 correctly 1`] = `"INK_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10359 correctly 1`] = `"CRONOSEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10360 correctly 1`] = `"CRONOSZKEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10361 correctly 1`] = `"STABLEDEVNET_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -841,6 +853,12 @@ exports[`omnigraph/format formatEid should format 30341 correctly 1`] = `"SPACE_
 exports[`omnigraph/format formatEid should format 30342 correctly 1`] = `"GLUE_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30343 correctly 1`] = `"TON_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30359 correctly 1`] = `"CRONOSEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30360 correctly 1`] = `"CRONOSZKEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30361 correctly 1`] = `"GOAT_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -1183,6 +1201,12 @@ exports[`omnigraph/format formatEid should format 40356 correctly 1`] = `"GOAT_V
 exports[`omnigraph/format formatEid should format 40357 correctly 1`] = `"BL6_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40358 correctly 1`] = `"INK_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40359 correctly 1`] = `"CRONOSEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40360 correctly 1`] = `"CRONOSZKEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40361 correctly 1`] = `"STABLEDEVNET_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 

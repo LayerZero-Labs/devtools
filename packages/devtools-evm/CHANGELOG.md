@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools-evm
 
+## 1.0.3
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/devtools@0.4.4
+
 ## 1.0.2
 
 ### Patch Changes

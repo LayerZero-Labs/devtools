@@ -1,5 +1,16 @@
 # @layerzerolabs/protocol-devtools-solana
 
+## 4.0.6
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/devtools-solana@1.0.5
+  - @layerzerolabs/ua-devtools@3.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 4.0.5
 
 ### Patch Changes
