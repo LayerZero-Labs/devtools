@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.5.0
+
+### Minor Changes
+
+- e60d40b: Added lzapp migration example
+
 ## 0.4.2
 
 ### Patch Changes
