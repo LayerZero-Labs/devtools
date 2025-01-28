@@ -104,7 +104,7 @@ FROM machine AS aptos
 
 WORKDIR /app/aptos
 
-ARG APTOS_VERSION=4.2.3
+ARG APTOS_VERSION=6.0.1
 RUN \
     (\
     # We download the source code and extract the archive
