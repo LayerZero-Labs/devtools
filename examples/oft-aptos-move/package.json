@@ -42,7 +42,7 @@
     "hardhat-deploy": "^0.12.1"
   },
   "devDependencies": {
-    "@aptos-labs/ts-sdk": "^1.33.1",
+    "@aptos-labs/ts-sdk": "1.33.1",
     "@babel/core": "^7.23.9",
     "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.1",

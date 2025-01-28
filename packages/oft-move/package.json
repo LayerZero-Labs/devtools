@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@aptos-labs/ts-sdk": "^1.33.1",
+    "@aptos-labs/ts-sdk": "1.33.1",
     "@layerzerolabs/devtools-extensible-cli": "^0.0.1",
     "@layerzerolabs/devtools-move": "^0.0.1",
     "@layerzerolabs/lz-definitions": "^3.0.21",
