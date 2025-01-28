@@ -15,6 +15,14 @@ class EVMWireOperation implements INewOperation {
                 default: 'true',
             },
         },
+        {
+            name: '--mnemonic-index',
+            arg: {
+                help: 'EVM mnemonic index',
+                required: false,
+                default: '-1',
+            },
+        },
     ]
 
     async impl(args: any): Promise<void> {
