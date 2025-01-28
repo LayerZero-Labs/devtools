@@ -14,13 +14,9 @@ use oapp::{
     endpoint::{MessagingFee, MessagingReceipt},
     LzReceiveParams,
 };
-use solana_helper::program_id_from_env;
 use state::*;
 
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
-)));
+declare_id!("9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT");
 
 pub const OFT_SEED: &[u8] = b"OFT";
 pub const PEER_SEED: &[u8] = b"Peer";
@@ -60,6 +56,10 @@ pub mod oft {
 
     pub fn withdraw_fee(mut ctx: Context<WithdrawFee>, params: WithdrawFeeParams) -> Result<()> {
         WithdrawFee::apply(&mut ctx, &params)
+    }
+
+    pub fn renounce_freeze(ctx: Context<RenounceFreezeAuthority>) -> Result<()> {
+        RenounceFreezeAuthority::apply(ctx)
     }
 
     // ============================== Public ==============================

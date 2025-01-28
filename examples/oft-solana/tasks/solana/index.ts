@@ -22,7 +22,7 @@ import {
 } from '@metaplex-foundation/umi'
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
-import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
+import { toWeb3JsInstruction, toWeb3JsKeypair, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import bs58 from 'bs58'
@@ -63,12 +63,14 @@ export const deriveConnection = async (eid: EndpointId) => {
     const umi = createUmi(connection.rpcEndpoint).use(mplToolbox())
     const umiWalletKeyPair = umi.eddsa.createKeypairFromSecretKey(bs58.decode(privateKey))
     const umiWalletSigner = createSignerFromKeypair(umi, umiWalletKeyPair)
+    const web3JsKeypair = toWeb3JsKeypair(umiWalletKeyPair)
     umi.use(signerIdentity(umiWalletSigner))
     return {
         connection,
         umi,
         umiWalletKeyPair,
         umiWalletSigner,
+        web3JsKeypair,
     }
 }
 
