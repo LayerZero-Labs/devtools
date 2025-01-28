@@ -63,10 +63,11 @@ describe('MyOApp Test', function () {
     })
 
     // A test case to verify message sending functionality
-    it('should send a message to each destination OApp', async function () {
-        // Assert initial state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Nothing received yet.')
+    it('should increment counter when receiving a message', async function () {
+        // Assert initial counter state in both MyOApp instances
+        expect((await myOAppA.counter()).toNumber()).to.equal(0)
+        expect((await myOAppB.counter()).toNumber()).to.equal(0)
+
         const options = Options.newOptions().addExecutorLzReceiveOption(200000, 0).toHex().toString()
 
         // Define native fee and quote for the message send operation
@@ -76,8 +77,8 @@ describe('MyOApp Test', function () {
         // Execute send operation from myOAppA
         await myOAppA.send(eidB, 'Test message.', options, { value: nativeFee.toString() })
 
-        // Assert the resulting state of data in both MyOApp instances
-        expect(await myOAppA.data()).to.equal('Nothing received yet.')
-        expect(await myOAppB.data()).to.equal('Test message.')
+        // Assert the counter was incremented in the receiving app
+        expect((await myOAppA.counter()).toNumber()).to.equal(0)
+        expect((await myOAppB.counter()).toNumber()).to.equal(1)
     })
 })
