@@ -85,7 +85,8 @@
     "0x8ca279897cde74350bd880737fd60c047d6d3d64": {
       "version": 2,
       "canonicalName": "Bitgo",
-      "id": "bitgo"
+      "id": "bitgo",
+      "deprecated": true
     },
     "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467": {
       "version": 2,
@@ -136,6 +137,17 @@
       "version": 2,
       "canonicalName": "BWare",
       "id": "bware-labs"
+    },
+    "0xa1d84e5576299acda9ffed53195eadbe60d48e83": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo"
+    },
+    "0xb1c95f6687299acda9ffed53195eadcf71d49f94": {
+      "version": 2,
+      "canonicalName": "Deprec",
+      "id": "deprec",
+      "deprecated": true
     }
   },
   "rpcs": [

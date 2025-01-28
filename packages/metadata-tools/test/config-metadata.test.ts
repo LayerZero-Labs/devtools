@@ -2,6 +2,7 @@ import { DVNsToAddresses, translatePathwayToConfig } from '@/config-metadata'
 import { IMetadata } from '@/types'
 
 import fujiMetadata from './data/fuji.json'
+import polygonMainnetMetadata from './data/polygon-mainnet.json'
 import solanaMainnetMetadata from './data/solana-mainnet.json'
 import solanaTestnetMetadata from './data/solana-testnet.json'
 
@@ -9,6 +10,7 @@ describe('config-metadata', () => {
     const metadata: IMetadata = {
         fuji: fujiMetadata,
         solana: solanaMainnetMetadata,
+        polygon: polygonMainnetMetadata,
         'solana-testnet': solanaTestnetMetadata,
     }
 
@@ -102,6 +104,24 @@ describe('config-metadata', () => {
         it('should handle duplicate DVN names', () => {
             expect(() => DVNsToAddresses(['LayerZero Labs', 'LayerZero Labs'], 'fuji', metadata)).toThrow(
                 `Duplicate DVN name found: "LayerZero Labs".`
+            )
+        })
+
+        it('correctly takes into account the version of the DVN', () => {
+            expect(DVNsToAddresses(['Polyhedra'], 'polygon', metadata)).toStrictEqual([
+                '0x8ddf05f9a5c488b4973897e278b58895bf87cb24',
+            ])
+        })
+
+        it('should ignore deprecated DVNs incase of multiple DVNs', () => {
+            expect(DVNsToAddresses(['Bitgo'], 'fuji', metadata)).toStrictEqual([
+                '0xa1d84e5576299acda9ffed53195eadbe60d48e83',
+            ])
+        })
+
+        it('should throw error if all DVNs are deprecated', () => {
+            expect(() => DVNsToAddresses(['Deprec'], 'fuji', metadata)).toThrow(
+                `Can't find DVN: "Deprec" on chainKey: "fuji". Double check you're using valid DVN canonical name (not an address).`
             )
         })
     })

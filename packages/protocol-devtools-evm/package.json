@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/protocol-devtools-evm",
-  "version": "3.0.3",
+  "version": "3.0.5",
   "description": "Utilities for LayerZero EVM protocol contracts",
   "repository": {
     "type": "git",
@@ -33,7 +33,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "dependencies": {
     "p-memoize": "~4.0.4"
@@ -45,13 +46,13 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.2",
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/devtools-evm": "~1.0.2",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.21",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
-    "@layerzerolabs/test-devtools": "~0.4.2",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
+    "@layerzerolabs/test-devtools": "~0.4.4",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -70,11 +71,11 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/devtools-evm": "~1.0.2",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
     "zod": "^3.22.4"
   },
   "publishConfig": {
