@@ -61,12 +61,43 @@ async function buildMovementContracts(named_addresses: string, configPath: strin
     })
 }
 
+// Add this new helper function
+function compareVersions(installed: string, required: string): boolean {
+    const installedParts = installed.split('.').map(Number)
+    const requiredParts = required.split('.').map(Number)
+
+    for (let i = 0; i < 3; i++) {
+        if (installedParts[i] > requiredParts[i]) {
+            return true
+        }
+        if (installedParts[i] < requiredParts[i]) {
+            return false
+        }
+    }
+    return true // Equal versions
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function build(args: any, contractName: string = 'oft') {
     const buildPath = path.join(process.cwd(), 'build', contractName)
     const configPath = args.configPath
     const aptosYamlConfig = await parseYaml(configPath)
     const accountAddress = aptosYamlConfig.account_address
+
+    try {
+        const version = await getAptosVersion()
+        console.log('🚀 aptos version is:', version)
+        const MIN_VERSION = '6.0.1'
+
+        if (!compareVersions(version, MIN_VERSION)) {
+            console.error(`❌ aptos version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
+            return
+        }
+        console.log('🚀 aptos version is compatible')
+    } catch (error) {
+        console.error('🚨 Failed to check aptos version:', error)
+        return
+    }
 
     if (!fs.existsSync(buildPath) || args.force_build === 'true') {
         if (!args.named_addresses) {
@@ -80,6 +111,28 @@ async function build(args: any, contractName: string = 'oft') {
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
     }
+}
+
+async function getAptosVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn('aptos', ['--version'])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const versionMatch = stdout.match(/aptos (\d+\.\d+\.\d+)/)
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
+            } else {
+                reject(new Error(`aptos --version exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
 }
 
 export { build }
