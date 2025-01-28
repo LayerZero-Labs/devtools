@@ -133,7 +133,7 @@ export async function createSetPeerTx(
         return {
             payload: payload,
             description: buildTransactionDescription('Set Peer', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -156,7 +156,7 @@ export async function createSetReceiveLibraryTimeoutTx(
     }
 
     const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, connection.to.eid)
-    const defaultTimeout = await endpoint.getDefaultReceiveLibraryTimeout(connection.to.eid)
+    const defaultTimeout = await endpoint.getDefaultReceiveLibraryTimeout(connection.to.eid as EndpointId)
 
     // If current matches default, we should set the new value regardless
     const isUsingDefault = currentTimeout.expiry === defaultTimeout.expiry && currentTimeout.lib === defaultTimeout.lib
@@ -184,7 +184,7 @@ export async function createSetReceiveLibraryTimeoutTx(
         return {
             payload: tx,
             description: buildTransactionDescription('Set Receive Library Timeout', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -227,7 +227,7 @@ export async function createSetReceiveLibraryTx(
         return {
             payload: tx,
             description: buildTransactionDescription('Set Receive Library', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -259,7 +259,7 @@ export async function createSetSendLibraryTx(
         return {
             payload: tx,
             description: buildTransactionDescription('Set Send Library', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -287,7 +287,7 @@ export async function createSetSendConfigTx(
     const currentSendLibraryAddress = currentSendLibrary[0]
 
     const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
-    const defaultUlnConfig = await msgLib.get_default_uln_send_config(connection.to.eid)
+    const defaultUlnConfig = await msgLib.get_default_uln_send_config(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
     const currHexSerializedUlnConfig = await endpoint.getConfig(
@@ -327,7 +327,7 @@ export async function createSetSendConfigTx(
         return {
             payload: tx,
             description: buildTransactionDescription('Set Send Config', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -367,7 +367,7 @@ export async function createSetReceiveConfigTx(
     const currentReceiveLibraryAddress = currentReceiveLibrary[0]
 
     const msgLib = new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress)
-    const defaultUlnConfig = await msgLib.get_default_uln_receive_config(connection.to.eid)
+    const defaultUlnConfig = await msgLib.get_default_uln_receive_config(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
     const currHexSerializedUlnConfig = await endpoint.getConfig(
@@ -414,7 +414,7 @@ export async function createSetReceiveConfigTx(
         return {
             payload: tx,
             description: buildTransactionDescription('Set Receive Config', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -452,7 +452,11 @@ export async function createSetExecutorConfigTx(
     )
 
     const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
-    const newSettingEqualsDefault = await checkExecutorConfigEqualsDefault(msgLib, newExecutorConfig, connection.to.eid)
+    const newSettingEqualsDefault = await checkExecutorConfigEqualsDefault(
+        msgLib,
+        newExecutorConfig,
+        connection.to.eid as EndpointId
+    )
 
     const currExecutorConfig = ExecutorConfig.deserialize(currHexSerializedExecutorConfig)
     currExecutorConfig.executor_address = '0x' + currExecutorConfig.executor_address
@@ -473,7 +477,7 @@ export async function createSetExecutorConfigTx(
         const currSettingEqualsDefault = await checkExecutorConfigEqualsDefault(
             msgLib,
             currExecutorConfig,
-            connection.to.eid
+            connection.to.eid as EndpointId
         )
         if (currSettingEqualsDefault) {
             diffMessage += ' (currently set to defaults)'
@@ -492,7 +496,7 @@ export async function createSetExecutorConfigTx(
         return {
             payload: tx,
             description: buildTransactionDescription('setExecutorConfig', connection),
-            eid: connection.to.eid,
+            eid: connection.to.eid as EndpointId,
         }
     }
 }
@@ -617,7 +621,7 @@ export async function createSetEnforcedOptionsTxs(
             txs.push({
                 payload: tx,
                 description: buildTransactionDescription('Set Enforced Options', connection),
-                eid: connection.to.eid,
+                eid: connection.to.eid as EndpointId,
             })
         }
     }
@@ -720,7 +724,7 @@ async function checkNewConfig(
 
     // Check if the new config has less confirmations than the default one and warn if it does
     if (configType === ConfigType.RECV_ULN) {
-        const defaultReceiveConfig = await msgLib.get_default_uln_receive_config(entry.to.eid)
+        const defaultReceiveConfig = await msgLib.get_default_uln_receive_config(entry.to.eid as EndpointId)
         const defaultConfirmations = defaultReceiveConfig.confirmations
         if (newUlnConfig.confirmations < defaultConfirmations) {
             console.log(createWarningMessage(configType, entry))
@@ -729,7 +733,7 @@ async function checkNewConfig(
             )
         }
     } else if (configType === ConfigType.SEND_ULN) {
-        const defaultSendConfig = await msgLib.get_default_uln_send_config(entry.to.eid)
+        const defaultSendConfig = await msgLib.get_default_uln_send_config(entry.to.eid as EndpointId)
         const defaultConfirmations = defaultSendConfig.confirmations
         if (newUlnConfig.confirmations < defaultConfirmations) {
             console.log(createWarningMessage(configType, entry))
