@@ -124,7 +124,8 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 ```
 
 Then run the wire command:
-For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add one field 
+For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add one field
+
 ```json
 {
     "address": <oftStore-Address-from-solana-deployment-folder>
@@ -132,6 +133,7 @@ For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.
 ```
 
 Commands:
+
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
@@ -260,7 +262,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
 ## Send from EVM
 
 ```bash
-pnpm run lz:sdk:evm:send-evm \          
+pnpm run lz:sdk:evm:send-evm \
   --oapp-config move.layerzero.config.ts \
   --src-eid <your-src-eid> \
   --dst-eid <your-dst-eid> \
@@ -323,5 +325,3 @@ For verifying the admin look for the following in the output:
 ```
 
 If the admin is your desired address, then the ownership transfer was successful.
-
-

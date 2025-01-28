@@ -232,6 +232,7 @@ pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-addre
 ## Send Tokens
 
 ### Send from Move VM to EVM
+
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
   --amount-ld <amount-to-send> \
@@ -243,6 +244,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
 ```
 
 ### Send from EVM to Move VM
+
 ```bash
 pnpm run lz:sdk:evm:send-evm \
   --oapp-config move.layerzero.config.ts \
