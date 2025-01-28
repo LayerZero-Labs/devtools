@@ -185,7 +185,7 @@ const action: ActionType<TaskArgs> = async (
     // For display purposes, we'll track the number of networks we deployed
     let numProcessed: number = 0
 
-    // And for diplay purposes we'll also track the failures
+    // And for display purposes we'll also track the failures
     const results: DeployResults = {}
 
     // Now we run all the deployments

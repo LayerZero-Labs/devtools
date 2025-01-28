@@ -1,6 +1,6 @@
 {
   "name": "create-lz-oapp",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Create LayerZero OApp with one command",
   "keywords": [
     "LayerZero",
@@ -27,13 +27,14 @@
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
     "start": "./cli.js",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "dependencies": {
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/io-devtools": "~0.1.14",
+    "@layerzerolabs/io-devtools": "~0.1.15",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",

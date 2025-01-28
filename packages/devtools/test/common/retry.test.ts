@@ -42,7 +42,7 @@ describe('common/retry', () => {
             expect(mock).toHaveBeenCalledTimes(2)
         })
 
-        it('should use the default config if paramter has not been specified', async () => {
+        it('should use the default config if parameter has not been specified', async () => {
             const error = new Error('Told ya')
             const mock = jest.fn().mockRejectedValue(error)
             const handleRetry = jest.fn().mockReturnValue(true)

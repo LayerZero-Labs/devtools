@@ -34,6 +34,11 @@
       "cache": false,
       "dependsOn": ["compile", "^build"],
       "outputs": []
+    },
+    "test:jest": {
+      "cache": false,
+      "dependsOn": ["compile", "^build"],
+      "outputs": []
     }
   },
   "globalDependencies": ["tsconfig.json"],

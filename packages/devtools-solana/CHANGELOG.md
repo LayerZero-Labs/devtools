@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-solana
 
+## 1.0.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
 ## 1.0.5
 
 ### Patch Changes
