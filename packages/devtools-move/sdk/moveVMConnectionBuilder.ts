@@ -9,7 +9,6 @@ const CHAIN_APTOS = 'aptos'
 const MOVEMENT_INDEXER_URLS = {
     [Network.TESTNET]: 'https://indexer.testnet.porto.movementnetwork.xyz/v1/graphql',
     [Network.MAINNET]: 'N/A',
-    [Network.DEVNET]: 'N/A',
     [Network.LOCAL]: 'N/A',
     [Network.CUSTOM]: 'N/A',
 }
