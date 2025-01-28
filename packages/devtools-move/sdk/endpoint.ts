@@ -22,6 +22,7 @@ export class Endpoint {
                 functionArguments: [eid],
             },
         })
+
         return result[0] as string
     }
 

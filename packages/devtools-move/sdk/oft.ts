@@ -134,7 +134,6 @@ export class OFT {
 
         return result[0] as number
     }
-
     async quoteSend(
         userSender: string,
         dst_eid: number,
@@ -162,6 +161,7 @@ export class OFT {
                 ],
             },
         })
+
         return [result[0] as number, result[1] as number]
     }
 
