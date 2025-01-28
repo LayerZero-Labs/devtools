@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-evm",
-  "version": "5.0.3",
+  "version": "5.0.5",
   "description": "Utilities for working with LayerZero contracts",
   "repository": {
     "type": "git",
@@ -28,7 +28,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "dependencies": {
     "p-memoize": "~4.0.4"
@@ -40,15 +41,15 @@
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/devtools-evm": "~1.0.2",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
-    "@layerzerolabs/protocol-devtools-evm": "~3.0.3",
-    "@layerzerolabs/test-devtools": "~0.4.2",
-    "@layerzerolabs/ua-devtools": "~3.0.2",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.5",
+    "@layerzerolabs/test-devtools": "~0.4.4",
+    "@layerzerolabs/ua-devtools": "~3.0.4",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
@@ -63,14 +64,14 @@
   "peerDependencies": {
     "@ethersproject/constants": "^5.7.0",
     "@ethersproject/contracts": "^5.7.0",
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/devtools-evm": "~1.0.2",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/protocol-devtools": "~1.1.2",
-    "@layerzerolabs/protocol-devtools-evm": "~3.0.3",
-    "@layerzerolabs/ua-devtools": "~3.0.2",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.5",
+    "@layerzerolabs/ua-devtools": "~3.0.4",
     "zod": "^3.22.4"
   },
   "publishConfig": {

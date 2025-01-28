@@ -1,5 +1,32 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 5.0.5
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/protocol-devtools-evm@3.0.5
+  - @layerzerolabs/protocol-devtools@1.1.4
+  - @layerzerolabs/devtools-evm@1.0.4
+  - @layerzerolabs/ua-devtools@3.0.4
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
+## 5.0.4
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+- Updated dependencies [ce03876]
+  - @layerzerolabs/protocol-devtools-evm@3.0.4
+  - @layerzerolabs/protocol-devtools@1.1.3
+  - @layerzerolabs/devtools-evm@1.0.3
+  - @layerzerolabs/ua-devtools@3.0.3
+  - @layerzerolabs/devtools@0.4.4
+
 ## 5.0.3
 
 ### Patch Changes

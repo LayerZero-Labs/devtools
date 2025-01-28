@@ -1,7 +1,7 @@
 import { Contract, ethers } from 'ethers'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
-import { getNetworkForChainId, ChainType } from '@layerzerolabs/lz-definitions'
+import { getNetworkForChainId, ChainType, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
 
 import { createSetDelegateTransactions } from './wire/setDelegate'
 import { createSetEnforcedOptionsTransactions } from './wire/setEnforcedOptions'
@@ -68,7 +68,18 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
         const EPV2Contract = new Contract(epv2Address, epv2Abi, signer)
 
         const currPeers = omniContracts[fromEid]?.peers ?? []
-        const peer = { eid: toEid, address: basexToBytes32(WireOAppDeploymentData.address, toEid) }
+
+        let peerAddress
+
+        switch (endpointIdToChainType(parseInt(toEid))) {
+            case ChainType.SOLANA:
+                peerAddress = WireOAppDeploymentData.oftStore
+                break
+            default: // EVM and Aptos
+                peerAddress = WireOAppDeploymentData.address
+        }
+
+        const peer = { eid: toEid, address: basexToBytes32(peerAddress, toEid) }
         currPeers.push(peer)
 
         omniContracts[fromEid] = {
@@ -97,7 +108,16 @@ export function readPrivateKey(args: any) {
         process.exit(1)
     }
 
-    const privateKey = env.parsed.EVM_PRIVATE_KEY
+    let privateKey
+    const evmMnemonicIndex = parseInt(args.mnemonic_index)
+    if (evmMnemonicIndex < 0) {
+        privateKey = env.parsed.EVM_PRIVATE_KEY
+    } else {
+        const mnemonic = env.parsed.EVM_MNEMONIC
+        console.log('Using mnemonic:', mnemonic)
+        console.log('Using mnemonic index:', evmMnemonicIndex)
+        privateKey = ethers.Wallet.fromMnemonic(mnemonic, `m/44'/60'/0'/0/${evmMnemonicIndex}`).privateKey
+    }
 
     if (!privateKey) {
         console.error('EVM_PRIVATE_KEY is not set in .env file')

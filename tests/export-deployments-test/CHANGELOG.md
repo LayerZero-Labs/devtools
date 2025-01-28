@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments-test
 
+## 0.3.3
+
+### Patch Changes
+
+- 186442a: add "test:jest" script
+
 ## 0.3.2
 
 ### Patch Changes

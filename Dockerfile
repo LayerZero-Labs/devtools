@@ -18,7 +18,7 @@ ARG NODE_VERSION=20.10.0
 # while not breaking the flow for local development
 # 
 # Local development does not by default have access to GHCR and would require
-# an additonal step (docker login). While this step is easy, it is still nicer 
+# an additional step (docker login). While this step is easy, it is still nicer 
 # to provide a transiton period during which the local flow remains unchanged 
 # and the base image is built locally
 # 
@@ -104,7 +104,7 @@ FROM machine AS aptos
 
 WORKDIR /app/aptos
 
-ARG APTOS_VERSION=4.2.3
+ARG APTOS_VERSION=6.0.1
 RUN \
     (\
     # We download the source code and extract the archive
