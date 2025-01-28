@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-adapter-example",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.9",
     "@layerzerolabs/eslint-config-next": "~2.3.39",
-    "@layerzerolabs/lz-definitions": "^3.0.45",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
@@ -34,7 +34,7 @@
     "@layerzerolabs/solhint-config": "^3.0.12",
     "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.5",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@openzeppelin/contracts": "^5.0.2",

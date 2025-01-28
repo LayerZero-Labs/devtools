@@ -1,5 +1,15 @@
 # @layerzerolabs/devtools-ton
 
+## 0.2.2
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- Updated dependencies [af91805]
+- Updated dependencies [186442a]
+  - @layerzerolabs/devtools@0.4.5
+  - @layerzerolabs/io-devtools@0.1.15
+
 ## 0.2.1
 
 ### Patch Changes

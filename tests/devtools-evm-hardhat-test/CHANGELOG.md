@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
 ## 0.3.5
 
 ### Patch Changes

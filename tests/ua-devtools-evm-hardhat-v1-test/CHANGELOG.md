@@ -1,5 +1,12 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-v1-test
 
+## 0.3.6
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+- 186442a: add "test:jest" script
+
 ## 0.3.5
 
 ### Patch Changes
