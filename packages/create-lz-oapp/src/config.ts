@@ -47,6 +47,18 @@ export const getExamples = (): Example[] => {
             ref,
         },
         // ZK-Solc examples are feature flagged for the time being
+        ...(process.env.LZ_ENABLE_MIGRATION_EXAMPLE
+            ? [
+                  {
+                      id: 'lzapp-migration',
+                      label: 'EndpointV1 Migration',
+                      repository,
+                      directory: 'examples/lzapp-migration',
+                      ref,
+                  },
+              ]
+            : []),
+        // ZK-Solc examples are feature flagged for the time being
         ...(process.env.LZ_ENABLE_ZKSOLC_EXAMPLE
             ? [{ id: 'onft721-zksync', label: 'ONFT721 zksolc', repository, directory: 'examples/onft721-zksync', ref }]
             : []),
