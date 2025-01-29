@@ -122,6 +122,7 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
+RUN apt install python3 -y
 RUN (echo "y" && cat) | ./scripts/dev_setup.sh
 RUN source ~/.cargo/env
 
