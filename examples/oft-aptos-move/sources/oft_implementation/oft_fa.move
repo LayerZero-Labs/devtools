@@ -307,6 +307,13 @@ module oft::oft_fa {
         fungible_asset::is_frozen<T>(fa_store)
     }
 
+    #[view]
+    /// Get the total supply of the Coin
+    public fun supply(): u128 acquires OftImpl {
+        let supply = fungible_asset::supply<Metadata>(metadata());
+        option::destroy_with_default(supply, 0)
+    }
+
     // ================================================ Initialization ================================================
 
     public entry fun initialize(

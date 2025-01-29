@@ -266,6 +266,13 @@ module oft::oft_adapter_fa {
         oft_limit::new_oft_limit(0, oft_impl_config::rate_limit_capacity(eid))
     }
 
+    #[view]
+    /// Total value locked in the contract
+    public fun tvl(): u64 acquires OftImpl {
+        let escrow = escrow_address();
+        primary_fungible_store::balance<Metadata>(escrow, metadata())
+    }
+
     // ================================================ Initialization ================================================
 
     public entry fun initialize(

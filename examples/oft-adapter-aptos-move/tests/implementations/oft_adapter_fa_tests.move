@@ -1,3 +1,5 @@
+// **Important** These tests are only valid for the default configuration of OFT Adapter FA. If the configuration is
+// changed, these tests will need to be updated to reflect those changes
 #[test_only]
 module oft::oft_adapter_fa_tests {
     use std::account::{create_account_for_test, create_signer_for_test};
@@ -134,6 +136,44 @@ module oft::oft_adapter_fa_tests {
         // escrow balance should be back to 0
         let balance = primary_fungible_store::balance(escrow_address(), oft_adapter_fa::metadata());
         assert!(balance == 0, 0);
+    }
+
+    #[test]
+    fun test_tvl() {
+        let mint_ref = setup();
+
+        let tvl = oft_adapter_fa::tvl();
+        assert!(tvl == 0, 0);
+
+        let eid = 2u32;
+        let amount_ld = 1000000000;
+        let alice = @555;
+
+        // deposit some
+        let fa = mint(&mint_ref, amount_ld);
+        oft_adapter_fa::debit_fungible_asset(
+            alice,
+            &mut fa,
+            0,
+            eid,
+        );
+
+        let tvl = oft_adapter_fa::tvl();
+        assert!(tvl == 1000000000, 1);
+
+        burn_token_for_test(fa);
+
+        // withdraw some
+        let amount_ld = 600000000;
+        oft_adapter_fa::credit(
+            alice,
+            amount_ld,
+            eid,
+            option::none(),
+        );
+
+        let tvl = oft_adapter_fa::tvl();
+        assert!(tvl == 400000000, 2);
     }
 
     #[test]

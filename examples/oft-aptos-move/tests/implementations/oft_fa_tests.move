@@ -108,6 +108,46 @@ module oft::oft_fa_tests {
     }
 
     #[test]
+    fun test_supply() {
+        setup();
+
+        let supply = oft_fa::supply();
+        assert!(supply == 0, 0);
+
+        let amount_ld = 1000000000;
+        let lz_receive_value = option::none();
+        let eid = 12345;
+
+        let alice = @555;
+        let alice_signer = create_account_for_test(alice);
+        // will mint 1_000_000_000 tokens
+        oft_fa::credit(
+            alice,
+            amount_ld,
+            eid,
+            lz_receive_value,
+        );
+
+        let supply = oft_fa::supply();
+        assert!(supply == 1000000000, 1);
+
+        let amount_ld = 600000000;
+        let fa = primary_fungible_store::withdraw<Metadata>(&alice_signer, oft_fa::metadata(), amount_ld);
+        // will burn 600_000_000 tokens
+        oft_fa::debit_fungible_asset(
+            alice,
+            &mut fa,
+            0,
+            eid,
+        );
+
+        let supply = oft_fa::supply();
+        assert!(supply == 400000000, 2);
+
+        burn_token_for_test(fa);
+    }
+
+    #[test]
     fun test_credit_with_extra_lz_receive_drop() {
         setup();
 
