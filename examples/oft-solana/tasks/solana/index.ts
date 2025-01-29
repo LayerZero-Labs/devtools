@@ -29,6 +29,7 @@ import bs58 from 'bs58'
 import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
@@ -204,6 +205,14 @@ export const getComputeUnitPriceAndLimit = async (
         )
     } catch (e) {
         console.error(`Error retrieving simulations compute units from RPC:`, e)
+        const continueByUsingHardcodedEstimate = await promptToContinue(
+            'Failed to call simulateTransaction on the RPC. This can happen when the network is congested. Would you like to use hardcoded estimates (TransactionCuEstimates) ? This may result in slightly overpaying for the transaction.'
+        )
+        if (!continueByUsingHardcodedEstimate) {
+            throw new Error(
+                'Failed to call simulateTransaction on the RPC and user chose to not continue with hardcoded estimate.'
+            )
+        }
         console.log(
             `Falling back to hardcoded estimate for ${transactionType}: ${TransactionCuEstimates[transactionType]} CUs`
         )
