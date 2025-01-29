@@ -90,8 +90,8 @@ jobs:
       - name: Setup environment
         uses: ./.github/workflows/actions/setup-environment
 
-      - name: Setup build cache
-        uses: ./.github/workflows/actions/setup-build-cache
+#      - name: Setup build cache
+#        uses: ./.github/workflows/actions/setup-build-cache
 
       # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
       #
