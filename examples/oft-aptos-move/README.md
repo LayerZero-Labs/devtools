@@ -72,6 +72,14 @@ const oftMetadata = {
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
+## EVM Deployment
+
+```bash
+npx hardhat lz:deploy
+```
+
+Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+
 ## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
@@ -124,7 +132,7 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 ```
 
 Then run the wire command:
-For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add one field
+If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
 
 ```json
 {
@@ -279,14 +287,6 @@ pnpm run lz:sdk:evm:send-evm \
 ```bash
 pnpm run lz:sdk:help
 ```
-
-## EVM Deployment
-
-```bash
-npx hardhat lz:deploy
-```
-
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
 ### Verifying successful ownership transfer of your Move-VM OFT:
 
