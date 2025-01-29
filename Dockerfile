@@ -126,10 +126,10 @@ RUN echo "Building Aptos CLI for $(dpkg --print-architecture)"
 RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then ./scripts/dev_setup.sh -b; fi
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then ./scripts/dev_setup.sh -b -k; fi
         
-RUN . ~/.cargo/env; \
-RUN cargo build --package aptos --profile cli; \
-RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; \
-RUN rm -rf /app/aptos/aptos-core; \
+RUN . ~/.cargo/env; 
+RUN cargo build --package aptos --profile cli; 
+RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; 
+RUN rm -rf /app/aptos/aptos-core; 
 ENV PATH="/root/.aptos/bin:$PATH"
 
 RUN aptos --version
