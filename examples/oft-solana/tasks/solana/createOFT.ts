@@ -27,7 +27,14 @@ import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerol
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 import { assertAccountInitialized } from './utils'
 
-import { addComputeUnitInstructions, deriveConnection, deriveKeys, getExplorerTxLink, output } from './index'
+import {
+    TransactionType,
+    addComputeUnitInstructions,
+    deriveConnection,
+    deriveKeys,
+    getExplorerTxLink,
+    output,
+} from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 9
 
@@ -248,7 +255,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor
+                    computeUnitPriceScaleFactor,
+                    TransactionType.CreateToken
                 )
                 const createTokenTx = await txBuilder.sendAndConfirm(umi)
                 await assertAccountInitialized(connection, toWeb3JsPublicKey(mint.publicKey))
@@ -278,7 +286,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 eid,
                 txBuilder,
                 umiWalletSigner,
-                computeUnitPriceScaleFactor
+                computeUnitPriceScaleFactor,
+                TransactionType.InitOft
             )
             const { signature } = await txBuilder.sendAndConfirm(umi)
             console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
@@ -307,7 +316,8 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor
+                    computeUnitPriceScaleFactor,
+                    TransactionType.SetAuthority
                 )
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)

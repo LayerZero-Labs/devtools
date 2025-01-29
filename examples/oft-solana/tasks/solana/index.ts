@@ -26,8 +26,10 @@ import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi
 import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import bs58 from 'bs58'
+import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
+import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
@@ -155,22 +157,67 @@ export const getAddressLookupTable = async (connection: Connection, umi: Umi, fr
     }
 }
 
+export enum TransactionType {
+    CreateToken = 'CreateToken',
+    CreateMultisig = 'CreateMultisig',
+    InitOft = 'InitOft',
+    SetAuthority = 'SetAuthority',
+    InitConfig = 'InitConfig',
+    SendOFT = 'SendOFT',
+}
+
+const TransactionCuEstimates: Record<TransactionType, number> = {
+    // for the sample values, they are: devnet, mainnet
+    [TransactionType.CreateToken]: 125_000, // actual sample: (59073, 123539), 55785 (more volatile as it has CPI to Metaplex)
+    [TransactionType.CreateMultisig]: 5_000, // actual sample: 3,230
+    [TransactionType.InitOft]: 70_000, // actual sample: 59207, 65198 (note: this is the only transaction that createOFTAdapter does)
+    [TransactionType.SetAuthority]: 8_000, // actual sample: 6424, 6472
+    [TransactionType.InitConfig]: 42_000, // actual sample: 33157, 40657
+    [TransactionType.SendOFT]: 230_000, // actual sample: 217,784
+}
+
 export const getComputeUnitPriceAndLimit = async (
     connection: Connection,
     ixs: Instruction[],
     wallet: KeypairSigner,
-    lookupTableAccount: AddressLookupTableAccount
+    lookupTableAccount: AddressLookupTableAccount,
+    transactionType: TransactionType
 ) => {
     const { averageFeeExcludingZeros } = await getFee(connection)
     const priorityFee = Math.round(averageFeeExcludingZeros)
     const computeUnitPrice = BigInt(priorityFee)
 
-    const computeUnits = await getSimulationComputeUnits(
-        connection,
-        ixs.map((ix) => toWeb3JsInstruction(ix)),
-        toWeb3JsPublicKey(wallet.publicKey),
-        [lookupTableAccount]
-    )
+    let computeUnits
+
+    try {
+        computeUnits = await backOff(
+            () =>
+                getSimulationComputeUnits(
+                    connection,
+                    ixs.map((ix) => toWeb3JsInstruction(ix)),
+                    toWeb3JsPublicKey(wallet.publicKey),
+                    [lookupTableAccount]
+                ),
+            {
+                maxDelay: 3000,
+                numOfAttempts: 3,
+            }
+        )
+    } catch (e) {
+        console.error(`Error retrieving simulations compute units from RPC:`, e)
+        const continueByUsingHardcodedEstimate = await promptToContinue(
+            'Failed to call simulateTransaction on the RPC. This can happen when the network is congested. Would you like to use hardcoded estimates (TransactionCuEstimates) ? This may result in slightly overpaying for the transaction.'
+        )
+        if (!continueByUsingHardcodedEstimate) {
+            throw new Error(
+                'Failed to call simulateTransaction on the RPC and user chose to not continue with hardcoded estimate.'
+            )
+        }
+        console.log(
+            `Falling back to hardcoded estimate for ${transactionType}: ${TransactionCuEstimates[transactionType]} CUs`
+        )
+        computeUnits = TransactionCuEstimates[transactionType]
+    }
 
     if (!computeUnits) {
         throw new Error('Unable to compute units')
@@ -188,7 +235,8 @@ export const addComputeUnitInstructions = async (
     eid: EndpointId,
     txBuilder: TransactionBuilder,
     umiWalletSigner: KeypairSigner,
-    computeUnitPriceScaleFactor: number
+    computeUnitPriceScaleFactor: number,
+    transactionType: TransactionType
 ) => {
     const computeUnitLimitScaleFactor = 1.1 // hardcoded to 1.1 as the estimations are not perfect and can fall slightly short of the actual CU usage on-chain
     const { addressLookupTableInput, lookupTableAccount } = await getAddressLookupTable(connection, umi, eid)
@@ -196,7 +244,8 @@ export const addComputeUnitInstructions = async (
         connection,
         txBuilder.getInstructions(),
         umiWalletSigner,
-        lookupTableAccount
+        lookupTableAccount,
+        transactionType
     )
     // Since transaction builders are immutable, we must be careful to always assign the result of the add and prepend
     // methods to a new variable.
