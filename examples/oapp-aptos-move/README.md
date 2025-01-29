@@ -39,7 +39,7 @@ ACCOUNT_ADDRESS=<your-aptos-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 ```
 
-Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
+Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
 Note: aptos account address can be found in .aptos/config.yaml
 
@@ -50,13 +50,13 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Build the modules
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oapp=$ACCOUNT_ADDRESS,oapp_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
 ### Deploy the modules
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$ACCOUNT_ADDRESS,oapp_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
 ## Set Delegate
