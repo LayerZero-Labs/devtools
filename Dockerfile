@@ -123,7 +123,7 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 RUN apt install python3-pip -y
-RUN ./scripts/dev_setup.sh -b
+RUN ./scripts/dev_setup.sh -b -k
 RUN . ~/.cargo/env
 
 # Install aptos from source
