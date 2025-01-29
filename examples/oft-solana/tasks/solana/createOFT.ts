@@ -179,9 +179,12 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
 
             if (onlyOftStore) {
-                await promptToContinue(
+                const continueWithOnlyOftStore = await promptToContinue(
                     'You have chosen `--only-oft-store true`. This means that only the OFT Store will be able to mint new tokens and that the Freeze Authority will be immediately renounced.  Continue?'
                 )
+                if (!continueWithOnlyOftStore) {
+                    return
+                }
             }
 
             const additionalMinters = additionalMintersAsStrings?.map((minter) => new PublicKey(minter)) ?? []
