@@ -122,8 +122,8 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN apt install python3-full -y
-RUN (echo "y" && cat) | ./scripts/dev_setup.sh
+
+RUN ./scripts/dev_setup.sh -b -k
 RUN source ~/.cargo/env
 
 # Install aptos from source
