@@ -252,6 +252,8 @@ FROM machine AS evm
 
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+RUN rustup default 1.83.0
+
 
 # Install foundry
 ENV PATH="/root/.foundry/bin:$PATH"
@@ -259,7 +261,7 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
-ARG SVM_RS_VERSION=0.5.4
+ARG SVM_RS_VERSION=0.5.11
 RUN cargo install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
