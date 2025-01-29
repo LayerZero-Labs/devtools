@@ -26,6 +26,7 @@ import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi
 import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import bs58 from 'bs58'
+import { backOff } from 'exponential-backoff'
 
 import { formatEid } from '@layerzerolabs/devtools'
 import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
@@ -188,11 +189,18 @@ export const getComputeUnitPriceAndLimit = async (
     let computeUnits
 
     try {
-        computeUnits = await getSimulationComputeUnits(
-            connection,
-            ixs.map((ix) => toWeb3JsInstruction(ix)),
-            toWeb3JsPublicKey(wallet.publicKey),
-            [lookupTableAccount]
+        computeUnits = await backOff(
+            () =>
+                getSimulationComputeUnits(
+                    connection,
+                    ixs.map((ix) => toWeb3JsInstruction(ix)),
+                    toWeb3JsPublicKey(wallet.publicKey),
+                    [lookupTableAccount]
+                ),
+            {
+                maxDelay: 3000,
+                numOfAttempts: 3,
+            }
         )
     } catch (e) {
         console.error(`Error retrieving simulations compute units from RPC:`, e)
