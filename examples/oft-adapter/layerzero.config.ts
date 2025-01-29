@@ -12,7 +12,7 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
  *         eid: EndpointId.SEPOLIA_V2_TESTNET,
  *         url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
  *         accounts,
- *         oft-adapter: {
+ *         oftAdapter: {
  *             tokenAddress: '0x0', // Set the token address for the OFT adapter
  *         },
  *     },
