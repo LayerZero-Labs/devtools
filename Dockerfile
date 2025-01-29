@@ -115,27 +115,13 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-        echo "Building Aptos CLI for ARM64"; \
-        sed -i 's|pip3 install pre-commit|apt install pre-commit|g' scripts/dev_setup.sh; \
-        ./scripts/dev_setup.sh -b; \
-        source ~/.cargo/env; \
-        # Copy the build artifacts
-        cargo build --package aptos --profile cli; \
-        # Delete the source files
-        mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; \
-        rm -rf /app/aptos/aptos-core; \
-    fi
-
-RUN \    
-    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-        echo "Building Aptos CLI for AMD64"; \
-        curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
-        # Then rename the directory just for convenience
-        mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
-    fi
-
-# Make sure we can execute the binary
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then ./scripts/dev_setup.sh -b; fi
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then ./scripts/dev_setup.sh -b -k; fi
+        
+RUN . ~/.cargo/env; \
+RUN cargo build --package aptos --profile cli; \
+RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; \
+RUN rm -rf /app/aptos/aptos-core; \
 ENV PATH="/root/.aptos/bin:$PATH"
 
 RUN aptos --version
@@ -163,6 +149,7 @@ RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
 RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
 
+RUN rustup default 1.78.0
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
