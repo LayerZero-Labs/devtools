@@ -122,6 +122,9 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
+RUN ./scripts/dev_setup.sh -y
+RUN source ~/.cargo/env
+
 # Install aptos from source
 RUN cargo build --package aptos --profile cli
 
