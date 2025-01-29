@@ -262,9 +262,8 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
-ARG SVM_RS_VERSION=0.5.11
-RUN cargo install --locked --git https://github.com/alloy-rs/svm-rs/
-
+ARG SVM_RS_VERSION=0.5.4
+RUN cargo install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
 ARG SOLC_VERSION=0.8.22
