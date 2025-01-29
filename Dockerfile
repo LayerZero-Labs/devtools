@@ -122,9 +122,9 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-
-RUN ./scripts/dev_setup.sh -b -k
-RUN source ~/.cargo/env
+RUN apt install python3-pip -y
+RUN ./scripts/dev_setup.sh -b
+RUN . ~/.cargo/env
 
 # Install aptos from source
 RUN cargo build --package aptos --profile cli
