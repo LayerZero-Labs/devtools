@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.5.0
+
+### Minor Changes
+
+- 4af9800: fallback for getSimulationComputeUnits
+
 ## 0.4.9
 
 ### Patch Changes
