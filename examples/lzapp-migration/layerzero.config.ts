@@ -38,7 +38,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         confirmations: BigInt(1),
-                        requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'], // Outbound: LZ + Nethermind DVNs
+                        requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'],
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
                     },
@@ -46,7 +46,7 @@ const config: OAppOmniGraphHardhat = {
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(1),
-                        requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'], // Inbound: Dead DVN
+                        requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'],
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
                     },
@@ -74,7 +74,6 @@ const config: OAppOmniGraphHardhat = {
                         optionalDVNThreshold: 0,
                     },
                 },
-                // Disable bridging inbound by providing a dead DVN.
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(1),
