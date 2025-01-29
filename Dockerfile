@@ -106,13 +106,6 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
-RUN \
-    (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
-    # Then rename the directory just for convenience
-    mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
-    )
 
 # Switch to the project
 WORKDIR /app/aptos/src
@@ -122,21 +115,29 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN sed -i 's|pip3 install pre-commit|apt install pre-commit|g' scripts/dev_setup.sh
-RUN ./scripts/dev_setup.sh -b
-RUN source ~/.cargo/env
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
+        echo "Building Aptos CLI for ARM64"; \
+        sed -i 's|pip3 install pre-commit|apt install pre-commit|g' scripts/dev_setup.sh; \
+        ./scripts/dev_setup.sh -b; \
+        source ~/.cargo/env; \
+        # Copy the build artifacts
+        cargo build --package aptos --profile cli; \
+        # Delete the source files
+        mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; \
+        rm -rf /app/aptos/aptos-core; \
+    fi
 
-# Install aptos from source
-RUN cargo build --package aptos --profile cli
-
-# Copy the build artifacts
-RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/
-
-# Delete the source files
-RUN rm -rf /app/aptos/aptos-core
+RUN \    
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        echo "Building Aptos CLI for AMD64"; \
+        curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
+        # Then rename the directory just for convenience
+        mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
+    fi
 
 # Make sure we can execute the binary
 ENV PATH="/root/.aptos/bin:$PATH"
+
 RUN aptos --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
