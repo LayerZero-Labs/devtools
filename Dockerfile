@@ -86,6 +86,7 @@ RUN apt-get install --yes \
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
+ENV RUSTUP_VERSION=1.83.0
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
 # Install docker
@@ -121,6 +122,9 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
+RUN ./scripts/dev_setup.sh -y
+RUN source ~/.cargo/env
+
 # Install aptos from source
 RUN cargo build --package aptos --profile cli
 
@@ -152,8 +156,9 @@ WORKDIR /app/avm
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
+RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm
+RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
 
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
@@ -231,7 +236,7 @@ RUN <<-EOF
         *) exit 1 ;;
     esac
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-${TON_ARCH}.zip > ton.zip
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v2024.12-1/ton-linux-${TON_ARCH}.zip > ton.zip
     unzip -qq -d bin ton
     chmod a+x bin/*
 EOF
