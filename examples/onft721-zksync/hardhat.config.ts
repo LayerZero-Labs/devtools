@@ -47,6 +47,7 @@ const config: HardhatUserConfig = {
         compilers: [
             {
                 version: '0.8.22',
+                eraVersion: '1.0.0', //optional. Compile contracts with EraVM compiler
                 settings: {
                     optimizer: {
                         enabled: true,
@@ -57,7 +58,7 @@ const config: HardhatUserConfig = {
         ],
     },
     zksolc: {
-        version: '1.4.1', // Use the latest compatible version
+        version: '1.4.1', // Version of the zksolc compiler to use
         compilerSource: 'binary', // or 'docker' if you prefer
         settings: {
             optimizer: {

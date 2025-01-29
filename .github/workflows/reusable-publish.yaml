@@ -20,11 +20,21 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ${{ matrix.runner }}
+    
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
 
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
+      image: ghcr.io/layerzero-labs/devtools-dev-base:shankar-create_images_for_both_architectures
 
     steps:
       - name: Checkout repo

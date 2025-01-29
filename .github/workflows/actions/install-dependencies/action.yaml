@@ -3,6 +3,14 @@ description: Install everything we need to build this repo
 runs:
   using: "composite"
   steps:
+    # Clean Hardhat cache directory manually
+    - name: Clean Hardhat Cache
+      shell: bash
+      run: |
+        # Clean global hardhat cache directory
+        rm -rf ~/.cache/hardhat-nodejs
+        rm -rf ~/.hardhat
+
     # Fetch the dependencies without running the post-install scripts
     - name: Fetch Dependencies
       shell: bash
