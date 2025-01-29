@@ -106,6 +106,13 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
+RUN \
+    (\
+    # We download the source code and extract the archive
+    curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
+    # Then rename the directory just for convenience
+    mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
+    )
 
 # Switch to the project
 WORKDIR /app/aptos/src
@@ -115,6 +122,7 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
+RUN echo "Building Aptos CLI for $(dpkg --print-architecture)"
 RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then ./scripts/dev_setup.sh -b; fi
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then ./scripts/dev_setup.sh -b -k; fi
         
