@@ -123,6 +123,7 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 RUN apt install python3-pip -y
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
 RUN ./scripts/dev_setup.sh -b -k
 RUN . ~/.cargo/env
 
