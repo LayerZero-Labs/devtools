@@ -122,7 +122,7 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN sed -i 's|pip3 install pre-commit|apt install pre-commit|g' scripts/dev_setup.sh && ./scripts/dev_setup.sh -b
+RUN (echo "y" && cat) | ./scripts/dev_setup.sh
 RUN source ~/.cargo/env
 
 # Install aptos from source
