@@ -156,6 +156,7 @@ WORKDIR /app/avm
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+RUN apt install python3 python3-all-dev python3-setuptools python3-pip -y
 
 RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
