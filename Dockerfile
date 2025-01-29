@@ -121,8 +121,9 @@ WORKDIR /app/aptos/src
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
+RUN apt install python3 python3-all-dev python3-setuptools python3-pip -y
 
-RUN echo "Building Aptos CLI for $(dpkg --print-architecture)"
+# Installing Aptos CLI for ARM64 or AMD64
 RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then ./scripts/dev_setup.sh -b; fi
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then ./scripts/dev_setup.sh -b -k; fi
         
@@ -151,8 +152,8 @@ WORKDIR /app/avm
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-RUN apt install python3 python3-all-dev python3-setuptools python3-pip -y
 
+# Solana requires rust 1.78.0 so we need to install it
 RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
 RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
@@ -255,14 +256,15 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN rustup default 1.83.0
 
 
-# Install foundry
+# Install foundry - this needs rust >= 1.81.0
 ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
 ARG SVM_RS_VERSION=0.5.11
-RUN cargo install svm-rs@${SVM_RS_VERSION}
+RUN cargo install --locked --git https://github.com/alloy-rs/svm-rs/
+
 
 # Install solc 0.8.22
 ARG SOLC_VERSION=0.8.22
