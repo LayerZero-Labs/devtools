@@ -145,7 +145,7 @@ RUN aptos --version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#               Image that builds AVM & Anchor
+#               Image that builds Anchor
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -163,6 +163,8 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 # Install AVM - Anchor version manager for Solana
 #RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
 
+RUN rustup default 1.75.0
+
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 #RUN avm install ${ANCHOR_VERSION}
@@ -171,7 +173,7 @@ RUN cargo install --git https://github.com/coral-xyz/anchor --tag v${ANCHOR_VERS
 
 ENV PATH="/root/.avm/bin:$PATH"
 RUN anchor --version
-RUN avm --version
+#RUN avm --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -258,7 +260,7 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
 # Install SVM, Solidity version manager
-ARG SVM_RS_VERSION=0.5.4
+ARG SVM_RS_VERSION=0.5.11
 RUN cargo install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
@@ -295,8 +297,8 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
 # Get solana tooling
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=avm /root/.avm /root/.avm
+#COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
+#COPY --from=avm /root/.avm /root/.avm
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
@@ -318,7 +320,7 @@ RUN node -v
 RUN pnpm --version
 RUN git --version
 RUN anchor --version
-RUN avm --version
+#RUN avm --version
 RUN aptos --version
 RUN forge --version
 RUN anvil --version
