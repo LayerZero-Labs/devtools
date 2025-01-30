@@ -159,14 +159,15 @@ WORKDIR /app/avm
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN rustup default 1.78.0
+#RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
+#RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
 
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
-RUN avm install ${ANCHOR_VERSION}
-RUN avm use ${ANCHOR_VERSION}
+#RUN avm install ${ANCHOR_VERSION}
+#RUN avm use ${ANCHOR_VERSION}
+RUN cargo install --git https://github.com/coral-xyz/anchor --tag v${ANCHOR_VERSION} anchor-cli
 
 ENV PATH="/root/.avm/bin:$PATH"
 RUN anchor --version
