@@ -22,6 +22,7 @@ interface UpdateMetadataTaskArgs {
     uri: string
 }
 
+// note that if URI is specified, then the name and symbol in there would be used and will override the 'outer' name and symbol
 task('lz:oft:solana:update-metadata', 'Updates the metaplex metadata of the SPL Token')
     .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
     .addParam('mint', 'The Token mint public key', undefined, devtoolsTypes.string)
