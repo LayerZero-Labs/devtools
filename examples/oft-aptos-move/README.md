@@ -336,6 +336,7 @@ To execute transactions with a multisig account via the aptos CLI, follow these 
 1. Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
 
 2. Create the transaction using:
+
 ```bash
 aptos multisig create-transaction \
     --json-file <path-to-json-file> \
@@ -345,6 +346,7 @@ aptos multisig create-transaction \
 ```
 
 3. Approve the transaction:
+
 ```bash
 aptos multisig approve \
     --multisig-address <your-multisig-address> \
