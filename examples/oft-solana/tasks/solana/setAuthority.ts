@@ -11,7 +11,7 @@ import { OftPDA } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 
-import { addComputeUnitInstructions, deriveConnection, getExplorerTxLink } from './index'
+import { TransactionType, addComputeUnitInstructions, deriveConnection, getExplorerTxLink } from './index'
 
 interface SetAuthorityTaskArgs {
     /**
@@ -194,7 +194,8 @@ task('lz:oft:solana:setauthority', 'Create a new Mint Authority SPL multisig and
                     eid,
                     txBuilder,
                     umiWalletSigner,
-                    computeUnitPriceScaleFactor
+                    computeUnitPriceScaleFactor,
+                    TransactionType.SetAuthority
                 )
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(

@@ -1,5 +1,17 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.4
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
+## 1.0.3
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 1.0.2
 
 ### Patch Changes

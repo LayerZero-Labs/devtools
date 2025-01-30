@@ -1,5 +1,29 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.5.0
+
+### Minor Changes
+
+- 4af9800: fallback for getSimulationComputeUnits
+
+## 0.4.9
+
+### Patch Changes
+
+- a2ecefd: fix missing return statement when user chooses no to 'continue with onlyOftStore'
+
+## 0.4.8
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
+## 0.4.7
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.4.6
 
 ### Patch Changes

@@ -72,6 +72,14 @@ const oftMetadata = {
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
+## EVM Deployment
+
+```bash
+npx hardhat lz:deploy
+```
+
+Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+
 ## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
@@ -124,7 +132,8 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 ```
 
 Then run the wire command:
-For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add one field 
+If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
+
 ```json
 {
     "address": <oftStore-Address-from-solana-deployment-folder>
@@ -132,9 +141,13 @@ For wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.
 ```
 
 Commands:
+
 ```bash
-pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
 ```
+
+--simulate <true> and --mnemonic-index <value> are optional.
+--mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
 
 For Move-VM:
 
@@ -260,7 +273,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
 ## Send from EVM
 
 ```bash
-pnpm run lz:sdk:evm:send-evm \          
+pnpm run lz:sdk:evm:send-evm \
   --oapp-config move.layerzero.config.ts \
   --src-eid <your-src-eid> \
   --dst-eid <your-dst-eid> \
@@ -274,14 +287,6 @@ pnpm run lz:sdk:evm:send-evm \
 ```bash
 pnpm run lz:sdk:help
 ```
-
-## EVM Deployment
-
-```bash
-npx hardhat lz:deploy
-```
-
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
 ### Verifying successful ownership transfer of your Move-VM OFT:
 
@@ -326,7 +331,7 @@ If the admin is your desired address, then the ownership transfer was successful
 
 ## Multisig Transaction Execution
 
-To execute transactions with a multisig account, follow these steps:
+To execute transactions with a multisig account via the aptos CLI, follow these steps:
 
 1. Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
 

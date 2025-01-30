@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-solana",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",
@@ -33,7 +33,8 @@
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "jest --ci"
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest --ci"
   },
   "dependencies": {
     "@safe-global/api-kit": "^1.3.0",
@@ -42,10 +43,10 @@
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
-    "@layerzerolabs/test-devtools": "~0.4.2",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/test-devtools": "~0.4.4",
     "@layerzerolabs/test-devtools-solana": "~0.0.4",
     "@solana/web3.js": "~1.95.8",
     "@sqds/multisig": "^2.1.3",
@@ -65,9 +66,9 @@
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/devtools": "~0.4.3",
-    "@layerzerolabs/io-devtools": "~0.1.14",
-    "@layerzerolabs/lz-definitions": "^3.0.27",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
     "@solana/web3.js": "^1.95.8",
     "bn.js": "^5.2.0",
     "fp-ts": "^2.16.2",

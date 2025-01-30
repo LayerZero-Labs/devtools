@@ -15,7 +15,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { assertAccountInitialized } from './utils'
 
-import { addComputeUnitInstructions, getExplorerTxLink } from '.'
+import { TransactionType, addComputeUnitInstructions, getExplorerTxLink } from '.'
 
 export async function createMultisig(
     connection: Connection,
@@ -58,7 +58,8 @@ export async function createMultisig(
             eid,
             txBuilder,
             umiWalletSigner,
-            computeUnitPriceScaleFactor
+            computeUnitPriceScaleFactor,
+            TransactionType.CreateMultisig
         )
     }
 

@@ -10,7 +10,13 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { addComputeUnitInstructions, deriveConnection, getExplorerTxLink, getLayerZeroScanLink } from './index'
+import {
+    TransactionType,
+    addComputeUnitInstructions,
+    deriveConnection,
+    getExplorerTxLink,
+    getLayerZeroScanLink,
+} from './index'
 
 interface Args {
     amount: number
@@ -119,7 +125,8 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
                 fromEid,
                 txBuilder,
                 umiWalletSigner,
-                computeUnitPriceScaleFactor
+                computeUnitPriceScaleFactor,
+                TransactionType.SendOFT
             )
             const { signature } = await txBuilder.sendAndConfirm(umi)
             const transactionSignatureBase58 = bs58.encode(signature)

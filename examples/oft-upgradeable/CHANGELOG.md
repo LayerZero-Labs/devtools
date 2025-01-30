@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.7
+
+### Patch Changes
+
+- af91805: Bump to lz-definitions 3.0.59+
+
+## 0.2.6
+
+### Patch Changes
+
+- ce03876: Get latest EndpointIds by bumping lz-definitions
+
 ## 0.2.5
 
 ### Patch Changes

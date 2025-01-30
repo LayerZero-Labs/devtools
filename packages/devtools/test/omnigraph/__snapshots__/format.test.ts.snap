@@ -236,6 +236,20 @@ exports[`omnigraph/format formatEid should format 341 correctly 1`] = `"SPACE_MA
 
 exports[`omnigraph/format formatEid should format 342 correctly 1`] = `"GLUE_MAINNET"`;
 
+exports[`omnigraph/format formatEid should format 359 correctly 1`] = `"CRONOSEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 360 correctly 1`] = `"CRONOSZKEVM_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 361 correctly 1`] = `"GOAT_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 362 correctly 1`] = `"BERA_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 363 correctly 1`] = `"BAHAMUT_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 364 correctly 1`] = `"STORY_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 365 correctly 1`] = `"XDC_MAINNET"`;
+
 exports[`omnigraph/format formatEid should format 420 correctly 1`] = `"TRON_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 10102 correctly 1`] = `"BSC_TESTNET"`;
@@ -576,6 +590,12 @@ exports[`omnigraph/format formatEid should format 10357 correctly 1`] = `"BL6_TE
 
 exports[`omnigraph/format formatEid should format 10358 correctly 1`] = `"INK_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 10359 correctly 1`] = `"CRONOSEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10360 correctly 1`] = `"CRONOSZKEVM_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 10361 correctly 1`] = `"STABLEDEVNET_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 10420 correctly 1`] = `"TRON_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 20008 correctly 1`] = `"APTOS_SANDBOX"`;
@@ -841,6 +861,20 @@ exports[`omnigraph/format formatEid should format 30341 correctly 1`] = `"SPACE_
 exports[`omnigraph/format formatEid should format 30342 correctly 1`] = `"GLUE_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30343 correctly 1`] = `"TON_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30359 correctly 1`] = `"CRONOSEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30360 correctly 1`] = `"CRONOSZKEVM_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30361 correctly 1`] = `"GOAT_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30362 correctly 1`] = `"BERA_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30363 correctly 1`] = `"BAHAMUT_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30364 correctly 1`] = `"STORY_V2_MAINNET"`;
+
+exports[`omnigraph/format formatEid should format 30365 correctly 1`] = `"XDC_V2_MAINNET"`;
 
 exports[`omnigraph/format formatEid should format 30420 correctly 1`] = `"TRON_V2_MAINNET"`;
 
@@ -1184,6 +1218,12 @@ exports[`omnigraph/format formatEid should format 40357 correctly 1`] = `"BL6_V2
 
 exports[`omnigraph/format formatEid should format 40358 correctly 1`] = `"INK_V2_TESTNET"`;
 
+exports[`omnigraph/format formatEid should format 40359 correctly 1`] = `"CRONOSEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40360 correctly 1`] = `"CRONOSZKEVM_V2_TESTNET"`;
+
+exports[`omnigraph/format formatEid should format 40361 correctly 1`] = `"STABLEDEVNET_V2_TESTNET"`;
+
 exports[`omnigraph/format formatEid should format 40420 correctly 1`] = `"TRON_V2_TESTNET"`;
 
 exports[`omnigraph/format formatEid should format 50008 correctly 1`] = `"APTOS_V2_SANDBOX"`;
@@ -1198,11 +1238,11 @@ exports[`omnigraph/format formatEid should format 50121 correctly 1`] = `"ETHERE
 
 exports[`omnigraph/format formatEid should format 50132 correctly 1`] = `"OPTIMISM_V2_SANDBOX"`;
 
-exports[`omnigraph/format formatEid should format 50143 correctly 1`] = `"ARBITRUM_V2_SANDBOX"`;
-
 exports[`omnigraph/format formatEid should format 50151 correctly 1`] = `"METIS_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50168 correctly 1`] = `"SOLANA_V2_SANDBOX"`;
+
+exports[`omnigraph/format formatEid should format 50231 correctly 1`] = `"ARBITRUM_V2_SANDBOX"`;
 
 exports[`omnigraph/format formatEid should format 50325 correctly 1`] = `"MOVEMENT_V2_SANDBOX"`;
 
