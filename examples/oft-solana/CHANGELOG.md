@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.5.0
+
+### Minor Changes
+
+- 4af9800: fallback for getSimulationComputeUnits
+
+## 0.4.9
+
+### Patch Changes
+
+- a2ecefd: fix missing return statement when user chooses no to 'continue with onlyOftStore'
+
 ## 0.4.8
 
 ### Patch Changes

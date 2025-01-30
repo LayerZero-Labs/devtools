@@ -68,6 +68,14 @@ const oftMetadata = {
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
+## EVM Deployment
+
+```bash
+npx hardhat lz:deploy
+```
+
+Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+
 ## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
@@ -120,10 +128,22 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 ```
 
 Then run the wire command:
+If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
+
+```json
+{
+    "address": <oftStore-Address-from-solana-deployment-folder>
+}
+```
+
+Commands:
 
 ```bash
-pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
 ```
+
+--simulate <true> and --mnemonic-index <value> are optional.
+--mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
 
 Troubleshooting:
 Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
@@ -260,12 +280,6 @@ pnpm run lz:sdk:evm:send-evm \
 
 ```bash
 pnpm run lz:sdk:help
-```
-
-## EVM Deployment
-
-```bash
-npx hardhat lz:deploy
 ```
 
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
