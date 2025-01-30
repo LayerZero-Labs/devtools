@@ -199,7 +199,7 @@ export const getComputeUnitPriceAndLimit = async (
                     [lookupTableAccount]
                 ),
             {
-                maxDelay: 3000,
+                maxDelay: 10000,
                 numOfAttempts: 3,
             }
         )
