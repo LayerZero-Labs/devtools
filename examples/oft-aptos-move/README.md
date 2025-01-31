@@ -330,3 +330,31 @@ For verifying the admin look for the following in the output:
 ```
 
 If the admin is your desired address, then the ownership transfer was successful.
+
+## Multisig Transaction Execution
+
+To execute transactions with a multisig account via the aptos CLI, follow these steps:
+
+1. Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
+
+2. Create the transaction using:
+
+```bash
+aptos multisig create-transaction \
+    --json-file <path-to-json-file> \
+    --multisig-address <your-multisig-address> \
+    --private-key-file <path-to-private-key> \
+    --assume-yes
+```
+
+3. Approve the transaction:
+
+```bash
+aptos multisig approve \
+    --multisig-address <your-multisig-address> \
+    --sequence-number <your-sequence-number> \
+    --private-key-file <path-to-private-key> \
+    --assume-yes
+```
+
+For more detailed information about multisig transactions, please refer to the [Aptos Multi-Signature Tutorial](https://aptos.dev/en/build/cli/working-with-move-contracts/multi-signature-tutorial#execute-the-governance-parameter-transaction).
