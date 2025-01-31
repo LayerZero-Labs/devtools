@@ -121,7 +121,10 @@ export async function sendAllTxs(
         console.log('✨ No transactions to send.')
         return
     }
-    if (await promptForConfirmation(cleanedPayloads.length)) {
+
+    const action = await promptForConfirmation(cleanedPayloads.length)
+
+    if (action === 'execute') {
         console.log('\n📦 Transaction Summary:')
         console.log(`   • Total transactions: ${cleanedPayloads.length}`)
 
@@ -141,6 +144,8 @@ export async function sendAllTxs(
 
         console.log('🎉 Transaction Summary:')
         console.log(`   • ${cleanedPayloads.length} transactions processed successfully`)
+    } else if (action === 'export') {
+        await exportTransactionsToJson(cleanedPayloads)
     } else {
         console.log('Operation cancelled.')
         process.exit(0)
@@ -151,7 +156,7 @@ function pruneNulls(payloads: (TransactionPayload | null)[]): TransactionPayload
     return payloads.filter((payload): payload is TransactionPayload => payload !== null && payload.payload !== null)
 }
 
-async function promptForConfirmation(txCount: number): Promise<boolean> {
+async function promptForConfirmation(txCount: number): Promise<'execute' | 'export' | 'cancel'> {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
@@ -159,13 +164,58 @@ async function promptForConfirmation(txCount: number): Promise<boolean> {
 
     const answer = await new Promise<string>((resolve) => {
         rl.question(
-            `\nReview the ${txCount} transaction(s) above carefully.\nWould you like to proceed with execution? (yes/no): `,
+            `\nReview the ${txCount} transaction(s) above carefully.\nChoose an action:\n` +
+                `(y)es - execute transactions\n` +
+                `(e)xport - save as JSON for multisig execution\n` +
+                `(n)o - cancel\n` +
+                `Enter choice: `,
             resolve
         )
     })
 
     rl.close()
-    return ['yes', 'y'].includes(answer.toLowerCase().trim())
+    const choice = answer.toLowerCase().trim()
+    if (['yes', 'y'].includes(choice)) {
+        return 'execute'
+    } else if (['export', 'e'].includes(choice)) {
+        return 'export'
+    } else {
+        return 'cancel'
+    }
+}
+
+async function exportTransactionsToJson(payloads: TransactionPayload[]) {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const exportDir = `./aptos-raw-transactions/tx-export-${timestamp}`
+
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(exportDir)) {
+        fs.mkdirSync(exportDir, { recursive: true })
+    }
+
+    payloads.forEach((payload, index) => {
+        console.log(payload)
+        const jsonPayload = {
+            function_id: payload.payload.function,
+            args: payload.payload.functionArguments.map((arg: any, idx: number) => ({
+                type: payload.payload.types[idx],
+                value: formatArgumentValue(arg),
+            })),
+            type_args: [],
+        }
+
+        const filePath = path.join(exportDir, `tx-${index + 1}.json`)
+        fs.writeFileSync(filePath, JSON.stringify(jsonPayload, null, 2))
+    })
+
+    console.log(`\n📄 Transactions exported to: ${exportDir}`)
+}
+
+function formatArgumentValue(arg: any): any {
+    if (Array.isArray(arg)) {
+        return arg.map((item: any) => item)
+    }
+    return arg
 }
 
 export async function sendInitTransaction(
