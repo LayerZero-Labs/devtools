@@ -67,31 +67,33 @@ export async function executeTransactions(
     const tx_pool: Record<string, Record<string, TxPool>> = {}
     const tx_pool_receipt: Promise<providers.TransactionResponse>[] = []
 
-    for (const [eid, _eidData] of Object.entries(eidMetaData)) {
-        /*
-         * Create a new provider using the URL from rpcUrlsMap
-         * This is required because:
-         *  - forkUrl != rpcUrl => fork mode
-         *  - forkUrl = rpcUrl => mainnet mode
-         *
-         * The mapping helps keep track of the different chains and their respective providers
-         * We also create a signer object using the private key and provider
-         */
-        const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-        const signer = new ethers.Wallet(privateKey, newProvider)
+    if (executionMode !== 'calldata') {
+        for (const [eid, _eidData] of Object.entries(eidMetaData)) {
+            /*
+             * Create a new provider using the URL from rpcUrlsMap
+             * This is required because:
+             *  - forkUrl != rpcUrl => fork mode
+             *  - forkUrl = rpcUrl => mainnet mode
+             *
+             * The mapping helps keep track of the different chains and their respective providers
+             * We also create a signer object using the private key and provider
+             */
+            const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
+            const signer = new ethers.Wallet(privateKey, newProvider)
 
-        accountEidMap[eid] = {
-            nonce: await signer.getTransactionCount(),
-            gasPrice: await signer.getGasPrice(),
-            signer: signer,
+            accountEidMap[eid] = {
+                nonce: await signer.getTransactionCount(),
+                gasPrice: await signer.getGasPrice(),
+                signer: signer,
+            }
+
+            const network = getNetworkForChainId(Number(eid))
+            console.log(
+                `   • Balance on ${network.chainName}-${network.env} for ${signer.address}: ${ethers.utils.formatEther(
+                    await newProvider.getBalance(signer.address)
+                )} ETH`
+            )
         }
-
-        const network = getNetworkForChainId(Number(eid))
-        console.log(
-            `   • Balance on ${network.chainName}-${network.env} for ${signer.address}: ${ethers.utils.formatEther(
-                await newProvider.getBalance(signer.address)
-            )} ETH`
-        )
     }
 
     console.log('\n🔄 Processing transactions...')
@@ -100,39 +102,40 @@ export async function executeTransactions(
         if (tx_pool[txType] === undefined) {
             tx_pool[txType] = {}
         }
-        for (const [eid, TxPool] of Object.entries(EidTxsMapping)) {
+        for (const [fromEid, TxPool] of Object.entries(EidTxsMapping)) {
             for (const { toEid, populatedTx } of TxPool) {
                 processedTx++
                 const progress = `[${processedTx}/${totalTransactions}]`
-                const network = getNetworkForChainId(Number(eid))
-                console.log(
-                    `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
-                )
-
-                const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-                const signer = accountEidMap[eid].signer
-
-                // Try to estimate gas limit, if it fails, use a default value
-                const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
-                    console.error(
-                        `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
-                    )
-                    return BigNumber.from(1_000_000)
-                })
-
-                populatedTx.gasLimit = gasLimit
-                populatedTx.gasPrice = accountEidMap[eid].gasPrice
-                populatedTx.nonce = accountEidMap[eid].nonce++
-
+                const network = getNetworkForChainId(Number(fromEid))
                 let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
+
                 if (executionMode !== 'calldata') {
+                    console.log(
+                        `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
+                    )
+                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[fromEid])
+                    const signer = accountEidMap[fromEid].signer
+
+                    // Try to estimate gas limit, if it fails, use a default value
+                    const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
+                        console.error(
+                            `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
+                        )
+                        return BigNumber.from(1_000_000)
+                    })
+
+                    populatedTx.gasLimit = gasLimit
+                    populatedTx.gasPrice = accountEidMap[fromEid].gasPrice
+                    populatedTx.nonce = accountEidMap[fromEid].nonce++
+
                     sendTx = signer.sendTransaction(populatedTx)
                     tx_pool_receipt.push(sendTx)
                 }
 
-                if (tx_pool[txType][toEid.toString()] === undefined) {
-                    tx_pool[txType][toEid.toString()] = {
-                        from_eid: eid,
+                if (tx_pool[txType][fromEid.toString()] === undefined) {
+                    tx_pool[txType][fromEid.toString()] = {
+                        from_eid: fromEid,
+                        to_eid: toEid,
                         raw: populatedTx,
                         response: sendTx,
                     }
@@ -146,21 +149,22 @@ export async function executeTransactions(
 
     const runId = fs.readdirSync(folderPath).length + 1
 
-    const filePath = path.join(folderPath, `${runId}.json`)
+    const filePathRunId = path.join(folderPath, `${runId}.json`)
+    const filePathLatest = path.join(folderPath, `latest.json`)
     const txReceiptJson: TxReceiptJson = {}
 
     for (const [txType, eidTxsMapping] of Object.entries(tx_pool)) {
         if (txReceiptJson[txType] === undefined) {
             txReceiptJson[txType] = []
         }
-        for (const [to_eid, txPool] of Object.entries(eidTxsMapping)) {
+        for (const [fromEid, txPool] of Object.entries(eidTxsMapping)) {
             let txHash = undefined
             if (txPool.response) {
                 txHash = (await txPool.response)?.hash
             }
             txReceiptJson[txType].push({
-                src_eid: txPool.from_eid,
-                dst_eid: to_eid,
+                src_eid: fromEid,
+                dst_eid: txPool.to_eid,
                 src_from: txPool.raw?.from ?? '',
                 src_to: txPool.raw?.to ?? '',
                 tx_hash: txHash,
@@ -168,14 +172,20 @@ export async function executeTransactions(
             })
         }
     }
-    fs.writeFileSync(filePath, JSON.stringify(txReceiptJson, null, 2))
+    fs.writeFileSync(filePathRunId, JSON.stringify(txReceiptJson, null, 2))
+
+    // To make it easier to find the latest transactions
+    // we create a new object called {srcRunId} and set it to the txReceiptJson for the latest run
+    const latestJson = { srcRunId: runId, txReceiptJson: txReceiptJson }
+    fs.writeFileSync(filePathLatest, JSON.stringify(latestJson, null, 2))
 
     if (executionMode != 'calldata') {
         console.log(
             `\n✅ Successfully ${executionMode === 'broadcast' ? 'executed' : 'simulated'} ${totalTransactions} transactions`
         )
     }
-    console.log('Transactions have been saved to ', filePath)
+    console.log('Transactions have been saved to ', filePathRunId)
+    console.log('Latest transactions have been saved to ', filePathLatest)
 }
 
 export function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {

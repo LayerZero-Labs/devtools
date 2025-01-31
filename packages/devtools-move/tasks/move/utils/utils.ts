@@ -3,7 +3,7 @@ import * as readline from 'readline'
 
 import { Aptos } from '@aptos-labs/ts-sdk'
 
-import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
+import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
 import { OFT } from '../../../sdk/oft'
 
@@ -137,9 +137,9 @@ export async function sendAllTxs(
                 data: cleanedPayloads[i].payload,
             })
             const result = await oft.signSubmitAndWaitForTx(trans)
-
+            const network = getNetworkForChainId(oft.eid)
             console.log(`   📎 Transaction hash: ${result.hash}`)
-            console.log(`   🔍 Explorer: https://explorer.aptoslabs.com/txn/${result.hash}?network=testnet`)
+            console.log(`   🔍 Explorer: https://explorer.aptoslabs.com/txn/${result.hash}?network=${network.env}`)
         }
 
         console.log('🎉 Transaction Summary:')

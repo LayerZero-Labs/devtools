@@ -15,6 +15,7 @@
     "lint:sol": "solhint 'contracts/**/*.sol'",
     "lz:sdk:evm:quote-send-evm": "ts-node scripts/cli.ts --vm evm --op quote-send",
     "lz:sdk:evm:send-evm": "ts-node scripts/cli.ts --vm evm --op send",
+    "lz:sdk:evm:transaction-parser": "ts-node scripts/cli.ts --vm evm --op transaction-parser",
     "lz:sdk:evm:wire": "ts-node scripts/cli.ts --vm evm --op wire",
     "lz:sdk:help": "ts-node scripts/cli.ts --op help --filter all",
     "lz:sdk:move:build": "ts-node scripts/cli.ts --vm move --op build",

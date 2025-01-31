@@ -28,8 +28,14 @@ export class OFT {
     private private_key: string
     private signer_account: Account
     public oft_address: string
-
-    constructor(moveVMConnection: Aptos, oft_address: string, account_address: string, private_key: string) {
+    public eid: EndpointId
+    constructor(
+        moveVMConnection: Aptos,
+        oft_address: string,
+        account_address: string,
+        private_key: string,
+        eid: EndpointId
+    ) {
         this.moveVMConnection = moveVMConnection
         this.oft_address = oft_address
         this.private_key = PrivateKey.formatPrivateKey(private_key, PrivateKeyVariants.Ed25519)
@@ -37,6 +43,7 @@ export class OFT {
             privateKey: new Ed25519PrivateKey(this.private_key),
             address: account_address,
         })
+        this.eid = eid
     }
 
     initializeOFTFAPayload(

@@ -77,7 +77,7 @@ async function wireMove(args: any) {
     console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OFT`)
     console.log(`\tAddress: ${moveVMOftAddress}\n`)
 
-    const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key)
+    const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key, eid)
     const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
 
     const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
