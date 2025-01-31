@@ -8,11 +8,11 @@ export const Uln302ExecutorConfigSchema = z.object({
 }) satisfies z.ZodSchema<Uln302ExecutorConfig, z.ZodTypeDef, unknown>
 
 export const Uln302UlnConfigSchema = z.object({
-    confirmations: UIntBigIntSchema,
-    requiredDVNs: z.array(AddressSchema),
-    optionalDVNs: z.array(AddressSchema),
-    optionalDVNThreshold: UIntNumberSchema,
-}) satisfies z.ZodSchema<Uln302UlnConfig, z.ZodTypeDef, unknown>
+    optionalDVNThreshold: z.bigint(),
+    requiredDVNs: z.array(z.string()),
+    optionalDVNs: z.array(z.string()),
+    confirmations: z.bigint(),
+}) satisfies z.ZodType<Uln302UlnConfig, z.ZodTypeDef, unknown>
 
 export const Uln302UlnUserConfigSchema = z.object({
     confirmations: UIntBigIntSchema.optional(),

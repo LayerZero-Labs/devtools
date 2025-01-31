@@ -1,17 +1,17 @@
 {
   "abi": [],
   "bytecode": {
-    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220363d96d84c18c99eec3505cc0818013d05c1ccd2c1efa38cbab3eadb3eec262264736f6c63430008160033",
+    "object": "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220da21484070f05d89efba2b38ac296ff30aa6481d630b5bf9c625d20c4b2fb47d64736f6c63430008160033",
     "sourceMap": "174:2519:0:-:0;;;;;;;;;;;;;;;-1:-1:-1;;;174:2519:0;;;;;;;;;;;;;;;;;",
     "linkReferences": {}
   },
   "deployedBytecode": {
-    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220363d96d84c18c99eec3505cc0818013d05c1ccd2c1efa38cbab3eadb3eec262264736f6c63430008160033",
+    "object": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220da21484070f05d89efba2b38ac296ff30aa6481d630b5bf9c625d20c4b2fb47d64736f6c63430008160033",
     "sourceMap": "174:2519:0:-:0;;;;;;;;",
     "linkReferences": {}
   },
   "methodIdentifiers": {},
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"ONFT Composed Message Codec\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Library for encoding and decoding ONFT composed messages.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/libs/ONFTComposeMsgCodec.sol\":\"ONFTComposeMsgCodec\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/libs/ONFTComposeMsgCodec.sol\":{\"keccak256\":\"0x6295798bcb8d26c4cf1ea08243e359a2ea63f2f455519f194198e4506d9b7e14\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4d6b7aa09488ccfa4def2d914d34970f907ea22824f0c7aa48340c2703dfd3ea\",\"dweb:/ipfs/QmWiZwfGP5W3vBDdp93vWDnfRjCqsHoBftwjTAdKmz2v7L\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"ONFT Composed Message Codec\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Library for encoding and decoding ONFT composed messages.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/libs/ONFTComposeMsgCodec.sol\":\"ONFTComposeMsgCodec\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/libs/ONFTComposeMsgCodec.sol\":{\"keccak256\":\"0x6295798bcb8d26c4cf1ea08243e359a2ea63f2f455519f194198e4506d9b7e14\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4d6b7aa09488ccfa4def2d914d34970f907ea22824f0c7aa48340c2703dfd3ea\",\"dweb:/ipfs/QmWiZwfGP5W3vBDdp93vWDnfRjCqsHoBftwjTAdKmz2v7L\"]}},\"version\":1}",
   "metadata": {
     "compiler": { "version": "0.8.22+commit.4fc1097e" },
     "language": "Solidity",
@@ -28,7 +28,7 @@
         "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
         "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
       ],
-      "optimizer": { "enabled": true, "runs": 200 },
+      "optimizer": { "enabled": true, "runs": 20000 },
       "metadata": { "bytecodeHash": "ipfs" },
       "compilationTarget": {
         "contracts/libs/ONFTComposeMsgCodec.sol": "ONFTComposeMsgCodec"

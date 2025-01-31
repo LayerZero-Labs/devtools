@@ -2,7 +2,7 @@
   "extends": "../../tsconfig",
   "compilerOptions": {
     "outDir": "dist",
-    "declaration": false,
+    "declaration": true,
     "jsx": "react",
     "lib": ["dom", "dom.Iterable", "es2022"],
     "resolveJsonModule": true,
