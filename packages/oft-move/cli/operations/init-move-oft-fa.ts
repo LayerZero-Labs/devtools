@@ -7,7 +7,7 @@ class InitOFTFA implements INewOperation {
     vm = 'move'
     operation = 'init-fa'
     description = 'Initialize an OFT with FA'
-    reqArgs = ['move_deploy_script']
+    reqArgs = ['move_deploy_script', 'oapp_config']
 
     async impl(args: any): Promise<void> {
         const fullPathOFTConfig = path.resolve(path.join(args.rootDir, args.move_deploy_script))
@@ -24,7 +24,8 @@ class InitOFTFA implements INewOperation {
             oftMetadata.icon_uri,
             oftMetadata.project_uri,
             oftMetadata.sharedDecimals,
-            oftMetadata.localDecimals
+            oftMetadata.localDecimals,
+            args.oapp_config
         )
     }
 }

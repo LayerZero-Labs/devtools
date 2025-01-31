@@ -7,7 +7,7 @@ class SendFromMoveOFT implements INewOperation {
     operation = 'send-from-move-oft'
     description =
         'Call the send_withdraw method of a move OFT, and send the tokens from the source address to the destination address.'
-    reqArgs = ['amount_ld', 'min_amount_ld', 'src_address', 'to_address', 'gas_limit', 'dst_eid']
+    reqArgs = ['amount_ld', 'min_amount_ld', 'src_address', 'to_address', 'gas_limit', 'dst_eid', 'oapp_config']
 
     addArgs = [
         {
@@ -61,7 +61,8 @@ class SendFromMoveOFT implements INewOperation {
             args.to_address,
             BigInt(args.gas_limit),
             args.dst_eid,
-            args.src_address
+            args.src_address,
+            args.oapp_config
         )
     }
 }
