@@ -186,7 +186,7 @@ async function promptForConfirmation(txCount: number): Promise<'execute' | 'expo
 
 async function exportTransactionsToJson(payloads: TransactionPayload[]) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
-    const exportDir = `./transactions/tx-export-${timestamp}`
+    const exportDir = `./aptos-raw-transactions/tx-export-${timestamp}`
 
     // Create directory if it doesn't exist
     if (!fs.existsSync(exportDir)) {
