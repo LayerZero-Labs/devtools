@@ -24,7 +24,7 @@ async function transferObjectOwner(newOwner: string, configPath: string) {
     console.log(`\tFor Object at: ${oAppAddress}\n`)
     console.log(`\tNew Owner: ${newOwner}\n`)
 
-    const oft = new OFT(aptos, oAppAddress, account_address, private_key)
+    const oft = new OFT(aptos, oAppAddress, account_address, private_key, eid)
 
     const transferOwnerPayload = createTransferObjectOwnerPayload(oAppAddress, newOwner)
 

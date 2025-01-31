@@ -22,7 +22,7 @@ async function executeSetDelegate(args: any, useAccountAddress: boolean = false)
     console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OApp Delegate`)
     console.log(`\tFor: ${oAppAddress}\n`)
 
-    const oft = new OFT(moveVMConnection, oAppAddress, account_address, private_key)
+    const oft = new OFT(moveVMConnection, oAppAddress, account_address, private_key, eid)
 
     const delegate = useAccountAddress ? account_address : getDelegateFromLzConfig(eid, lzConfig)
 

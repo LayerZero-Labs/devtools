@@ -44,7 +44,7 @@ async function initOFTFA(
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
     const moveVMConnection = getConnection(chain, network, fullnode, faucet)
-    const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key)
+    const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key, eid)
 
     const initializePayload = oft.initializeOFTFAPayload(
         token_name,
