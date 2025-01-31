@@ -31,7 +31,7 @@ async function unsetRateLimit(toEid: EndpointId, oftType: OFTType, configPath: s
     console.log(`\n🔧 Unsetting ${chain}-${lzNetworkStage} OFT Rate Limit`)
     console.log(`\tFor: ${oftAddress}\n`)
 
-    const oft = new OFT(aptos, oftAddress, account_address, private_key)
+    const oft = new OFT(aptos, oftAddress, account_address, private_key, eid)
 
     const toNetwork = getNetworkForChainId(toEid)
     console.log(`\tPathway: ${chain}-${lzNetworkStage} -> ${toNetwork.chainName}-${toNetwork.env}\n`)
