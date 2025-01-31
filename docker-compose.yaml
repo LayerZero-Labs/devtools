@@ -61,10 +61,6 @@ services:
       - NETWORK_URL_VENGABOYS=http://network-vengaboys:8545
       - NETWORK_URL_TANGO=http://network-tango:8545
       - DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS=$DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS
-      # Passing environment variables that control the solana tests
-      - RPC_URL_SOLANA_MAINNET=${RPC_URL_SOLANA_MAINNET}
-      - RPC_URL_SOLANA_TESTNET=${RPC_URL_SOLANA_TESTNET}
-      - LZ_DEVTOOLS_ENABLE_SOLANA_TESTS=${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}
     volumes:
       - ./node_modules/.cache/turbo:/app/node_modules/.cache/turbo
       # Hardhat has an issue with caching compilers inside a docker container,
