@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.1",
+    "@layerzerolabs/devtools-extensible-cli": "../devtools-extensible-cli",
     "@layerzerolabs/lz-definitions": "^3.0.40",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.27",
     "@layerzerolabs/lz-serdes": "^3.0.19",
