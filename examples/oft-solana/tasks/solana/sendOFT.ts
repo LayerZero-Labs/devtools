@@ -75,7 +75,7 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             const tokenAccountData = await fetchToken(umi, tokenAccount)
             const balance = Number(tokenAccountData.amount)
 
-            if (amount > balance) {
+            if (amount == 0 || amount > balance) {
                 throw new Error(
                     `Attempting to send ${amount}, but ${umiWalletSigner.publicKey} only has balance of ${balance}`
                 )
