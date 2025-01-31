@@ -23,6 +23,14 @@ class EVMWireOperation implements INewOperation {
                 default: '-1',
             },
         },
+        {
+            name: '--only-calldata',
+            arg: {
+                help: 'Whether to only generate calldata',
+                required: false,
+                default: 'false',
+            },
+        },
     ]
 
     async impl(args: any): Promise<void> {

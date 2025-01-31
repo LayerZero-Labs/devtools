@@ -4,6 +4,7 @@ import { PopulatedTransaction, ethers, providers } from 'ethers'
 
 import type { OAppEdgeConfig, OAppNodeConfig } from '@layerzerolabs/toolbox-hardhat'
 
+export type ExecutionMode = 'calldata' | 'broadcast' | 'dry-run'
 export type TxTypes =
     | 'setPeer'
     | 'setDelegate'
