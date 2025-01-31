@@ -31,7 +31,7 @@ async function initOFTAdapterFA(configPath: string, move_vm_fa_address: string, 
     console.log(`Shared Decimals: ${shared_decimals}`)
     console.log(`${chain} FA Address: ${move_vm_fa_address}`)
 
-    const oft = new OFT(moveVMConnection, oftAdapterAddress, account_address, private_key)
+    const oft = new OFT(moveVMConnection, oftAdapterAddress, account_address, private_key, eid)
 
     const initializePayload = oft.initializeAdapterFAPayload(move_vm_fa_address, shared_decimals)
 

@@ -30,7 +30,7 @@ async function permanentlyDisableFreezing(configPath: string) {
     console.log(`\tFor: ${oftAddress}\n`)
     console.log(`\t\x1b[33m Warning: This action is irreversible and will permanently disable freezing.\x1b[0m`)
 
-    const oft = new OFT(aptos, oftAddress, account_address, private_key)
+    const oft = new OFT(aptos, oftAddress, account_address, private_key, eid)
 
     const payload = createPermanentlyDisableFungibleStoreFreezingPayload(oft)
 

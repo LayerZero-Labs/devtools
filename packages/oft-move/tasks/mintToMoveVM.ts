@@ -34,7 +34,7 @@ async function mintToMoveVM(configPath: string, amountLd: number, toAddress: str
     console.log(`\tAmount: ${amountLd}`)
     console.log(`\tTo: ${toAddress}`)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
+    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key, eid)
     const mintPayload = oft.mintPayload(toAddress, amountLd)
 
     const transactionPayload: TransactionPayload = {

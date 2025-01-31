@@ -42,7 +42,7 @@ async function sendFromMoveVm(
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key)
+    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key, eid)
 
     // Pad EVM address to 64 chars and convert Solana address to Aptos address
     toAddress = toAptosAddress(toAddress, dstEid.toString())

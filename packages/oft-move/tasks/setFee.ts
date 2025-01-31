@@ -35,7 +35,7 @@ async function setFee(feeBps: bigint, toEid: EndpointId, oftType: OFTType, confi
     console.log(`\tPathway: ${chain}-${lzNetworkStage} -> ${toNetwork.chainName}-${toNetwork.env}\n`)
     console.log(`\tFee BPS: ${feeBps}\n`)
 
-    const oft = new OFT(aptos, oftAddress, account_address, private_key)
+    const oft = new OFT(aptos, oftAddress, account_address, private_key, eid)
 
     const setFeeBpsPayload = await createSetFeeBpsTx(oft, feeBps, toEid, oftType)
 

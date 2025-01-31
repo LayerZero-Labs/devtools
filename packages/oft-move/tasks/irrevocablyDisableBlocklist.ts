@@ -32,7 +32,7 @@ async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType)
         `\t\x1b[33m Warning: This action is irreversible and will permanently disable blocklisting ability.\x1b[0m`
     )
 
-    const oft = new OFT(aptos, oftAddress, account_address, private_key)
+    const oft = new OFT(aptos, oftAddress, account_address, private_key, eid)
 
     const payload = createIrrevocablyDisableBlocklistPayload(oft, oftType)
 
