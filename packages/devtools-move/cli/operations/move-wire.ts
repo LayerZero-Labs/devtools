@@ -8,7 +8,7 @@ class MoveWireOperation implements INewOperation {
     reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
-        await wireMove(args)
+        await wireMove(args.oapp_config)
     }
 }
 

@@ -36,7 +36,7 @@ export function getLzNetworkStage(network: AptosNetworkStage): Stage {
     }
 }
 
-export async function parseYaml(_rootDir: string = process.cwd()): Promise<{
+export async function parseYaml(): Promise<{
     account_address: string
     private_key: string
     network: AptosNetworkStage

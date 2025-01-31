@@ -7,10 +7,10 @@ class AdapterUnsetRateLimit implements INewOperation {
     vm = 'move'
     operation = 'adapter-unset-rate-limit'
     description = 'Unset the rate limit configuration for a given endpoint ID'
-    reqArgs = ['to_eid']
+    reqArgs = ['to_eid', 'oapp_config']
 
     async impl(args: any): Promise<void> {
-        await unsetRateLimit(args.to_eid, OFTType.OFT_ADAPTER_FA)
+        await unsetRateLimit(args.to_eid, OFTType.OFT_ADAPTER_FA, args.oapp_config)
     }
 }
 

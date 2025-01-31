@@ -24,6 +24,15 @@ export function getDelegateFromLzConfig(eid: EndpointId, config: OAppOmniGraphHa
     return delegate
 }
 
+export function getContractNameFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat): string {
+    for (const conn of config.contracts) {
+        if (conn.contract.eid == eid) {
+            return conn.contract.contractName ?? ''
+        }
+    }
+    return ''
+}
+
 export function getOwnerFromLzConfig(eid: EndpointId, config: OAppOmniGraphHardhat): string {
     validateConfigHasOwner(config, eid)
     let owner = ''
@@ -89,8 +98,13 @@ export function getOwner(config: OAppOmniGraphHardhat, eid: EndpointId) {
     }
 }
 
-export function getMoveVMOftAddress(network: string, stage: Stage, rootDir: string = process.cwd()) {
-    const deploymentPath = path.join(rootDir, `deployments/${network}-${stage}/oft.json`)
+export function getMoveVMOAppAddress(
+    contractName: string,
+    network: string,
+    stage: Stage,
+    rootDir: string = process.cwd()
+) {
+    const deploymentPath = path.join(rootDir, `deployments/${network}-${stage}/${contractName}.json`)
     const deployment = JSON.parse(fs.readFileSync(deploymentPath, 'utf8'))
     return deployment.address
 }

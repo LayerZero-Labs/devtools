@@ -10,10 +10,10 @@ Permanently disable the ability to freeze a primary fungible store through the O
 This will permanently prevent freezing of new accounts. It will not prevent unfreezing accounts, and existing
 frozen accounts will remain frozen until unfrozen`
 
-    reqArgs = []
+    reqArgs = ['oapp_config']
 
-    async impl(): Promise<void> {
-        await permanentlyDisableFreezing()
+    async impl(args: any): Promise<void> {
+        await permanentlyDisableFreezing(args.oapp_config)
     }
 }
 

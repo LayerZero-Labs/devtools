@@ -7,7 +7,7 @@ class AdapterSetFee implements INewOperation {
     vm = 'move'
     operation = 'adapter-set-fee'
     description = 'Set the fee BPS for an OFT Adapter'
-    reqArgs = ['fee_bps', 'to_eid']
+    reqArgs = ['fee_bps', 'to_eid', 'oapp_config']
 
     addArgs = [
         {
@@ -27,7 +27,7 @@ class AdapterSetFee implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await setFee(BigInt(args.fee_bps), args.to_eid, OFTType.OFT_ADAPTER_FA)
+        await setFee(BigInt(args.fee_bps), args.to_eid, OFTType.OFT_ADAPTER_FA, args.oapp_config)
     }
 }
 

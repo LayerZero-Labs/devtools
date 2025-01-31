@@ -63,7 +63,7 @@ The wire command is defined in `packages/devtools-move/tasks/move/wireMove.ts`. 
 async function wireMove(args: any) {
     // Here is where we parse the user info  .yaml file inside of examples/oft-aptos-move/.aptos/config.yaml
     // This .yaml is created when the user runs aptos init and enters their private key
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml(args.rootDir)
+    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
     const fullConfigPath = path.join(args.rootDir, args.oapp_config)
     const chain = getChain(fullnode)
 

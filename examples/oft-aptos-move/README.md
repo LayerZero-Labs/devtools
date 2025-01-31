@@ -43,17 +43,17 @@ Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_
 
 Note: aptos account address can be found in .aptos/config.yaml
 
-## Build and deploy
+## Build and deploy aptos move modules
 
 Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
 
-### Builds the contracts
+### Build the modules
 
 ```bash
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
-### Checks for build, builds if not, then deploys the contracts, sets the delegate and initializes
+### Deploy the modules
 
 First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
 
@@ -114,6 +114,8 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
 ## Wire
+
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
 For EVM:
 Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
@@ -183,7 +185,7 @@ pnpm run lz:sdk:move:unset-rate-limit --oapp-config move.layerzero.config.ts --t
 > ⚠️ **Warning**: This will permanently disable the blocklist for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use blocklisting abilities.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-blocklist
+pnpm run lz:sdk:move:permanently-disable-blocklist --oapp-config move.layerzero.config.ts
 ```
 
 ## Permanently Disable Freezing
@@ -191,7 +193,7 @@ pnpm run lz:sdk:move:permanently-disable-blocklist
 > ⚠️ **Warning**: This will permanently disable the freezing for the OFT. It is for OFTs that want to demonstrate to their holders that they will never use the freezing ability.
 
 ```bash
-pnpm run lz:sdk:move:permanently-disable-freezing
+pnpm run lz:sdk:move:permanently-disable-freezing --oapp-config move.layerzero.config.ts
 ```
 
 ### Transferring Ownership of your Move OApp (OFT)
@@ -226,13 +228,13 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 To transfer the OApp owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-oapp-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-oapp-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 To transfer the Move-VM object owner, run the following command:
 
 ```bash
-pnpm run lz:sdk:move:transfer-object-owner --new-owner <new-owner-address>
+pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.ts --new-owner <new-owner-address>
 ```
 
 Note: The object owner has the upgrade authority for the Object.
@@ -256,7 +258,7 @@ public entry fun mint(
 Then run the following command to mint the move oft:
 
 ```bash
-pnpm run lz:sdk:move:mint-to-move-oft --amount-ld 1000000000000000000 --to-address <your-move-account-address>
+pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
 ```
 
 ## Send from Move VM

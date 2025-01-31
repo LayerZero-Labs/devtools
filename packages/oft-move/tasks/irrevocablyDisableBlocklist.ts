@@ -1,18 +1,30 @@
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
-import { getLzNetworkStage, parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getMoveVMOftAddress, sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import {
+    getEidFromMoveNetwork,
+    getLzNetworkStage,
+    parseYaml,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
+import {
+    getContractNameFromLzConfig,
+    getMoveVMOAppAddress,
+    sendAllTxs,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { createIrrevocablyDisableBlocklistPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
+import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 
-async function irrevocablyDisableBlocklist(oftType: OFTType) {
+async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType) {
     const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
 
     const chain = getChain(fullnode)
     const aptos = getConnection(chain, network, fullnode, faucet)
 
+    const lzConfig = await getLzConfig(configPath)
     const lzNetworkStage = getLzNetworkStage(network)
-    const oftAddress = getMoveVMOftAddress(chain, lzNetworkStage)
+    const eid = getEidFromMoveNetwork(chain, network)
+    const contractName = getContractNameFromLzConfig(eid, lzConfig)
+    const oftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
     console.log(`\n🔧 Irrevocably Disabling Blocklist for ${chain}-${lzNetworkStage} OFT`)
     console.log(`\tFor: ${oftAddress}\n`)
