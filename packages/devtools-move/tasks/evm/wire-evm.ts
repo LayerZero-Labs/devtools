@@ -164,13 +164,17 @@ async function wireEvm(args: any) {
     try {
         anvilForkNode = new AnvilForkNode(rpcUrlSelfMap, 8545)
 
-        if (args.simulate === 'true') {
-            const forkRpcMap = await anvilForkNode.startNodes()
-            await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
+        if (args.only_calldata === 'true') {
+            await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'calldata', privateKey, args)
         } else {
-            console.warn('--simulate set to false\n Skipping simulation and going directly to broadcast')
+            if (args.simulate === 'true') {
+                const forkRpcMap = await anvilForkNode.startNodes()
+                await executeTransactions(omniContracts, TxTypeEidMapping, forkRpcMap, 'dry-run', privateKey, args)
+            } else {
+                console.warn('--simulate set to false\n Skipping simulation and going directly to broadcast')
+            }
+            await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey, args)
         }
-        await executeTransactions(omniContracts, TxTypeEidMapping, rpcUrlSelfMap, 'broadcast', privateKey, args)
     } catch (error) {
         throw new Error(`Failed to wire EVM contracts: ${error}`)
     } finally {
