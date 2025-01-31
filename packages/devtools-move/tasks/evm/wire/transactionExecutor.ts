@@ -102,19 +102,19 @@ export async function executeTransactions(
         if (tx_pool[txType] === undefined) {
             tx_pool[txType] = {}
         }
-        for (const [eid, TxPool] of Object.entries(EidTxsMapping)) {
+        for (const [fromEid, TxPool] of Object.entries(EidTxsMapping)) {
             for (const { toEid, populatedTx } of TxPool) {
                 processedTx++
                 const progress = `[${processedTx}/${totalTransactions}]`
-                const network = getNetworkForChainId(Number(eid))
+                const network = getNetworkForChainId(Number(fromEid))
                 let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
 
                 if (executionMode !== 'calldata') {
                     console.log(
                         `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
                     )
-                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-                    const signer = accountEidMap[eid].signer
+                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[fromEid])
+                    const signer = accountEidMap[fromEid].signer
 
                     // Try to estimate gas limit, if it fails, use a default value
                     const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
@@ -125,16 +125,17 @@ export async function executeTransactions(
                     })
 
                     populatedTx.gasLimit = gasLimit
-                    populatedTx.gasPrice = accountEidMap[eid].gasPrice
-                    populatedTx.nonce = accountEidMap[eid].nonce++
+                    populatedTx.gasPrice = accountEidMap[fromEid].gasPrice
+                    populatedTx.nonce = accountEidMap[fromEid].nonce++
 
                     sendTx = signer.sendTransaction(populatedTx)
                     tx_pool_receipt.push(sendTx)
                 }
 
-                if (tx_pool[txType][toEid.toString()] === undefined) {
-                    tx_pool[txType][toEid.toString()] = {
-                        from_eid: eid,
+                if (tx_pool[txType][fromEid.toString()] === undefined) {
+                    tx_pool[txType][fromEid.toString()] = {
+                        from_eid: fromEid,
+                        to_eid: toEid,
                         raw: populatedTx,
                         response: sendTx,
                     }
@@ -155,14 +156,14 @@ export async function executeTransactions(
         if (txReceiptJson[txType] === undefined) {
             txReceiptJson[txType] = []
         }
-        for (const [to_eid, txPool] of Object.entries(eidTxsMapping)) {
+        for (const [fromEid, txPool] of Object.entries(eidTxsMapping)) {
             let txHash = undefined
             if (txPool.response) {
                 txHash = (await txPool.response)?.hash
             }
             txReceiptJson[txType].push({
-                src_eid: txPool.from_eid,
-                dst_eid: to_eid,
+                src_eid: fromEid,
+                dst_eid: txPool.to_eid,
                 src_from: txPool.raw?.from ?? '',
                 src_to: txPool.raw?.to ?? '',
                 tx_hash: txHash,

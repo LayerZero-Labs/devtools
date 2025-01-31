@@ -58,6 +58,7 @@ export type OmniContractMetadataMapping = Record<eid, ContractMetadata>
 
 export type TxPool = {
     from_eid: eid
+    to_eid: eid
     raw: ethers.PopulatedTransaction
     response: Promise<providers.TransactionResponse> | undefined
 }
