@@ -1,10 +1,19 @@
 import { exit } from 'process'
 
-import { Contract, ethers, providers } from 'ethers'
+import { BigNumber, Contract, ethers, providers } from 'ethers'
 
 import { promptForConfirmation } from '../../shared/utils'
 
-import type { AccountData, OmniContractMetadataMapping, TxPool, TxReceiptJson, TxEidMapping, eid } from '../utils/types'
+import type {
+    AccountData,
+    OmniContractMetadataMapping,
+    TxPool,
+    TxReceiptJson,
+    TxEidMapping,
+    eid,
+    ExecutionMode,
+} from '../utils/types'
+
 import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import path from 'path'
 import fs from 'fs'
@@ -20,7 +29,7 @@ export async function executeTransactions(
     eidMetaData: OmniContractMetadataMapping,
     TxTypeEidMapping: TxEidMapping,
     rpcUrlsMap: Record<eid, string>,
-    simulation = 'dry-run',
+    executionMode: ExecutionMode = 'dry-run',
     privateKey: string,
     args: any
 ) {
@@ -44,7 +53,7 @@ export async function executeTransactions(
     console.log(`\n📦 Transaction Summary:`)
     console.log(`   • Total chains: ${num_chains}`)
     console.log(`   • Total transactions: ${totalTransactions}`)
-    console.log(`   • Mode: ${simulation === 'dry-run' ? 'SIMULATION (dry-run)' : 'EXECUTION (broadcast)'}`)
+    console.log(`   • Mode: ${executionMode}`)
 
     const flag = await promptForConfirmation(totalTransactions)
     if (!flag) {
@@ -52,7 +61,7 @@ export async function executeTransactions(
         exit(0)
     }
 
-    // Populate simulation account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
+    // Populate executionMode account data - does not need to have an address for each eid because the same deployer accunt is used for all chains
     const accountEidMap: AccountData = {}
 
     const tx_pool: Record<string, Record<string, TxPool>> = {}
@@ -103,12 +112,20 @@ export async function executeTransactions(
                 const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
                 const signer = accountEidMap[eid].signer
 
-                populatedTx.gasLimit = await provider.estimateGas(populatedTx)
+                // Try to estimate gas limit, if it fails, use a default value
+                const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
+                    console.error(
+                        `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
+                    )
+                    return BigNumber.from(1_000_000)
+                })
+
+                populatedTx.gasLimit = gasLimit
                 populatedTx.gasPrice = accountEidMap[eid].gasPrice
                 populatedTx.nonce = accountEidMap[eid].nonce++
 
                 let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
-                if (simulation === 'broadcast') {
+                if (executionMode !== 'calldata') {
                     sendTx = signer.sendTransaction(populatedTx)
                     tx_pool_receipt.push(sendTx)
                 }
@@ -124,7 +141,7 @@ export async function executeTransactions(
         }
     }
 
-    const folderPath = path.join(rootDir, 'transactions', oappConfig, simulation)
+    const folderPath = path.join(rootDir, 'transactions', oappConfig, executionMode)
     fs.mkdirSync(folderPath, { recursive: true })
 
     const runId = fs.readdirSync(folderPath).length + 1
@@ -153,9 +170,11 @@ export async function executeTransactions(
     }
     fs.writeFileSync(filePath, JSON.stringify(txReceiptJson, null, 2))
 
-    console.log(
-        `\n✅ Successfully ${simulation === 'dry-run' ? 'simulated' : 'executed'} ${totalTransactions} transactions`
-    )
+    if (executionMode != 'calldata') {
+        console.log(
+            `\n✅ Successfully ${executionMode === 'broadcast' ? 'executed' : 'simulated'} ${totalTransactions} transactions`
+        )
+    }
     console.log('Transactions have been saved to ', filePath)
 }
 
