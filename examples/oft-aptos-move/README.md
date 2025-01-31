@@ -133,7 +133,6 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-Then run the wire command:
 If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
 
 ```json
