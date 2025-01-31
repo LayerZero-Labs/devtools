@@ -2,10 +2,10 @@ import {
     Account,
     Aptos,
     Ed25519PrivateKey,
-    InputGenerateTransactionPayloadData,
     PrivateKey,
     PrivateKeyVariants,
     SimpleTransaction,
+    InputEntryFunctionData,
 } from '@aptos-labs/ts-sdk'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -17,6 +17,10 @@ export enum OFTType {
     OFT_ADAPTER_FA = 'oft_adapter_fa',
     OFT_COIN = 'oft_coin',
     OFT_ADAPTER_COIN = 'oft_adapter_coin',
+}
+
+export type TypedInputGenerateTransactionPayloadData = InputEntryFunctionData & {
+    types: string[]
 }
 
 export class OFT {
@@ -49,7 +53,7 @@ export class OFT {
         project_uri: string,
         shared_decimals: number,
         local_decimals: number
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         const encoder = new TextEncoder()
         return {
             function: `${this.oft_address}::oft_fa::initialize`,
@@ -61,16 +65,18 @@ export class OFT {
                 shared_decimals,
                 local_decimals,
             ],
+            types: ['u8', 'u8', 'u8', 'u8', 'u8', 'u8'],
         }
     }
 
     initializeAdapterFAPayload(
         tokenMetadataAddress: string,
         sharedDecimals: number
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_adapter_fa::initialize`,
             functionArguments: [tokenMetadataAddress, sharedDecimals],
+            types: ['address', 'u8'],
         }
     }
 
@@ -79,17 +85,19 @@ export class OFT {
         limit: number | bigint,
         window_seconds: number | bigint,
         oftType: OFTType
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::${oftType}::set_rate_limit`,
             functionArguments: [eid, limit, window_seconds],
+            types: ['u32', 'u64', 'u64'],
         }
     }
 
-    createUnsetRateLimitTx(eid: EndpointId, oftType: OFTType): InputGenerateTransactionPayloadData {
+    createUnsetRateLimitTx(eid: EndpointId, oftType: OFTType): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::${oftType}::unset_rate_limit`,
             functionArguments: [eid],
+            types: ['u32'],
         }
     }
 
@@ -106,10 +114,11 @@ export class OFT {
         return [limit, window]
     }
 
-    createSetFeeBpsTx(fee_bps: number | bigint, oftType: OFTType): InputGenerateTransactionPayloadData {
+    createSetFeeBpsTx(fee_bps: number | bigint, oftType: OFTType): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::${oftType}::set_fee_bps`,
             functionArguments: [fee_bps],
+            types: ['u64'],
         }
     }
 
@@ -124,10 +133,11 @@ export class OFT {
         return typeof feeBps === 'string' ? BigInt(feeBps) : (feeBps as bigint)
     }
 
-    mintPayload(recipient: string, amount: number | bigint): InputGenerateTransactionPayloadData {
+    mintPayload(recipient: string, amount: number | bigint): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_fa::mint`,
             functionArguments: [recipient, amount],
+            types: ['address', 'u64'],
         }
     }
 
@@ -138,9 +148,9 @@ export class OFT {
                 functionArguments: [account],
             },
         })
-
         return result[0] as number
     }
+
     async quoteSend(
         userSender: string,
         dst_eid: number,
@@ -168,7 +178,6 @@ export class OFT {
                 ],
             },
         })
-
         return [result[0] as number, result[1] as number]
     }
 
@@ -183,7 +192,7 @@ export class OFT {
         oft_cmd: Uint8Array,
         native_fee: number | bigint,
         zro_fee: number | bigint
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft::send_withdraw`,
             functionArguments: [
@@ -197,21 +206,24 @@ export class OFT {
                 native_fee,
                 zro_fee,
             ],
+            types: ['u32', 'u8', 'u64', 'u64', 'u8', 'u8', 'u8', 'u64', 'u64'],
         }
     }
 
-    setPeerPayload(eid: EndpointId, peerAddress: string): InputGenerateTransactionPayloadData {
+    setPeerPayload(eid: EndpointId, peerAddress: string): TypedInputGenerateTransactionPayloadData {
         const peerAddressAsBytes = hexAddrToAptosBytesAddr(peerAddress)
         return {
             function: `${this.oft_address}::oapp_core::set_peer`,
             functionArguments: [eid, peerAddressAsBytes],
+            types: ['u32', 'u8'],
         }
     }
 
-    setDelegatePayload(delegateAddress: string): InputGenerateTransactionPayloadData {
+    setDelegatePayload(delegateAddress: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_delegate`,
             functionArguments: [delegateAddress],
+            types: ['address'],
         }
     }
 
@@ -237,25 +249,28 @@ export class OFT {
         return result[0] as string
     }
 
-    transferAdminPayload(adminAddress: string): InputGenerateTransactionPayloadData {
+    transferAdminPayload(adminAddress: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::transfer_admin`,
             functionArguments: [adminAddress],
+            types: ['address'],
         }
     }
 
-    transferObjectPayload(object_address: string, new_owner_address: string): InputGenerateTransactionPayloadData {
+    transferObjectPayload(object_address: string, new_owner_address: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: '0x1::object::transfer',
             typeArguments: [`0x1::object::ObjectCore`],
             functionArguments: [object_address, new_owner_address],
+            types: ['address', 'address'],
         }
     }
 
-    renounceAdminPayload(): InputGenerateTransactionPayloadData {
+    renounceAdminPayload(): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::renounce_admin`,
             functionArguments: [],
+            types: [],
         }
     }
 
@@ -280,15 +295,15 @@ export class OFT {
 
         return result[0] as boolean
     }
-
     setEnforcedOptionsPayload(
         eid: number,
         msgType: number,
         enforcedOptions: Uint8Array
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_enforced_options`,
             functionArguments: [eid, msgType, enforcedOptions],
+            types: ['u32', 'u16', 'u8'],
         }
     }
 
@@ -303,10 +318,11 @@ export class OFT {
         return result[0] as string
     }
 
-    setSendLibraryPayload(remoteEid: number, msglibAddress: string): InputGenerateTransactionPayloadData {
+    setSendLibraryPayload(remoteEid: number, msglibAddress: string): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_send_library`,
             functionArguments: [remoteEid, msglibAddress],
+            types: ['u32', 'address'],
         }
     }
 
@@ -314,10 +330,11 @@ export class OFT {
         remoteEid: number,
         msglibAddress: string,
         gracePeriod: number
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library`,
             functionArguments: [remoteEid, msglibAddress, gracePeriod],
+            types: ['u32', 'address', 'u64'],
         }
     }
 
@@ -325,10 +342,11 @@ export class OFT {
         remoteEid: number,
         msglibAddress: string,
         expiry: number
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_receive_library_timeout`,
             functionArguments: [remoteEid, msglibAddress, expiry],
+            types: ['u32', 'address', 'u64'],
         }
     }
 
@@ -337,24 +355,27 @@ export class OFT {
         eid: number,
         configType: number,
         config: Uint8Array
-    ): InputGenerateTransactionPayloadData {
+    ): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oapp_core::set_config`,
             functionArguments: [msgLibAddress, eid, configType, config],
+            types: ['address', 'u32', 'u32', 'u8'],
         }
     }
 
-    irrevocablyDisableBlocklistPayload(oftType: OFTType): InputGenerateTransactionPayloadData {
+    irrevocablyDisableBlocklistPayload(oftType: OFTType): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::${oftType}::irrevocably_disable_blocklist`,
             functionArguments: [],
+            types: [],
         }
     }
 
-    permanentlyDisableFungibleStoreFreezingPayload(): InputGenerateTransactionPayloadData {
+    permanentlyDisableFungibleStoreFreezingPayload(): TypedInputGenerateTransactionPayloadData {
         return {
             function: `${this.oft_address}::oft_fa::permanently_disable_fungible_store_freezing`,
             functionArguments: [],
+            types: [],
         }
     }
 
