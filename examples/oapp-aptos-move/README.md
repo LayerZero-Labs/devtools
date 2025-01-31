@@ -113,8 +113,6 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-Then run the wire commands:
-
 Commands:
 
 ```bash
