@@ -7,10 +7,10 @@ class AdapterIrrevocablyDisableBlocklist implements INewOperation {
     vm = 'move'
     operation = 'adapter-permanently-disable-blocklist'
     description = 'Permanently disable the ability to blocklist wallets for your OFT Adapter'
-    reqArgs = []
+    reqArgs = ['oapp_config']
 
-    async impl(): Promise<void> {
-        await irrevocablyDisableBlocklist(OFTType.OFT_ADAPTER_FA)
+    async impl(args: any): Promise<void> {
+        await irrevocablyDisableBlocklist(args.oapp_config, OFTType.OFT_ADAPTER_FA)
     }
 }
 

@@ -6,10 +6,6 @@ test = 'test/foundry'
 cache_path = 'cache/foundry'
 optimizer = true
 optimizer_runs = 20_000
-<<<<<<< HEAD
-
-=======
->>>>>>> f6b40450 (foundry tomls that i forgot to add optimizer to)
 libs = [
     # We provide a set of useful contract utilities
     # in the lib directory of @layerzerolabs/toolbox-foundry:
