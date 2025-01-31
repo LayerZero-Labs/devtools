@@ -10,7 +10,7 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=20.11.0
 
 # We will allow consumers to override build stages with prebuilt images
 # 
