@@ -1,4 +1,4 @@
-import { findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
+import { fetchToken, findAssociatedTokenPda } from '@metaplex-foundation/mpl-toolbox'
 import { publicKey, transactionBuilder } from '@metaplex-foundation/umi'
 import { fromWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
@@ -69,6 +69,15 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             if (!tokenAccount) {
                 throw new Error(
                     `No token account found for mint ${mintStr} and owner ${umiWalletSigner.publicKey} in program ${tokenProgramId}`
+                )
+            }
+
+            const tokenAccountData = await fetchToken(umi, tokenAccount)
+            const balance = Number(tokenAccountData.amount)
+
+            if (amount > balance) {
+                throw new Error(
+                    `Attempting to send ${amount}, but ${umiWalletSigner.publicKey} only has balance of ${balance}`
                 )
             }
 
