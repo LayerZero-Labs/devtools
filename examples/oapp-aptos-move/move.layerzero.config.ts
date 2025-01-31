@@ -28,8 +28,8 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: bscContract,
             config: {
-                owner: '0x462c2AE39B6B0bdB950Deb2BC82082308cF8cB10',
-                delegate: '0x462c2AE39B6B0bdB950Deb2BC82082308cF8cB10',
+                owner: '',
+                delegate: '',
             },
         },
         {
