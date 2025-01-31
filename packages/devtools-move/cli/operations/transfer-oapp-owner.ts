@@ -5,7 +5,7 @@ class MoveTransferOwnerOperation implements INewOperation {
     vm = 'move'
     operation = 'transfer-oapp-owner'
     description = 'Transfer Aptos Move OApp Ownership'
-    reqArgs = ['new_owner']
+    reqArgs = ['new_owner', 'oapp_config']
 
     addArgs = [
         {
@@ -18,7 +18,7 @@ class MoveTransferOwnerOperation implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await transferOAppOwner(args.new_owner)
+        await transferOAppOwner(args.new_owner, args.oapp_config)
     }
 }
 
