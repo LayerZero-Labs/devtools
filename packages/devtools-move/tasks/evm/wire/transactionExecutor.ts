@@ -1,6 +1,6 @@
 import { exit } from 'process'
 
-import { Contract, ethers, providers } from 'ethers'
+import { BigNumber, Contract, ethers, providers } from 'ethers'
 
 import { promptForConfirmation } from '../../shared/utils'
 
@@ -44,7 +44,7 @@ export async function executeTransactions(
     console.log(`\n📦 Transaction Summary:`)
     console.log(`   • Total chains: ${num_chains}`)
     console.log(`   • Total transactions: ${totalTransactions}`)
-    console.log(`   • Mode: ${simulation === 'dry-run' ? 'SIMULATION (dry-run)' : 'EXECUTION (broadcast)'}`)
+    console.log(`   • Mode: ${simulation}`)
 
     const flag = await promptForConfirmation(totalTransactions)
     if (!flag) {
@@ -103,12 +103,25 @@ export async function executeTransactions(
                 const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
                 const signer = accountEidMap[eid].signer
 
-                populatedTx.gasLimit = await provider.estimateGas(populatedTx)
+                // Try to estimate gas limit, if it fails, use a default value
+                const gasLimit = await provider
+                    .estimateGas(populatedTx)
+                    .then((gasLimit) => {
+                        return gasLimit
+                    })
+                    .catch((error) => {
+                        console.error(
+                            `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
+                        )
+                        return BigNumber.from(1_000_000)
+                    })
+
+                populatedTx.gasLimit = gasLimit
                 populatedTx.gasPrice = accountEidMap[eid].gasPrice
                 populatedTx.nonce = accountEidMap[eid].nonce++
 
                 let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
-                if (simulation === 'broadcast') {
+                if (simulation === 'broadcast' || simulation === 'dry-run') {
                     sendTx = signer.sendTransaction(populatedTx)
                     tx_pool_receipt.push(sendTx)
                 }
