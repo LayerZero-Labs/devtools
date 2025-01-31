@@ -66,7 +66,7 @@ export async function parseSendLibrary(
     eid: eid
 ): Promise<{ currSendLibrary: string; newSendLibrary: string }> {
     if (sendLib === undefined) {
-        const currSendLibrary = await getDefaultSendLibrary(epv2, oappAddress, eid)
+        const currSendLibrary = await getDefaultSendLibrary(epv2, eid)
         return {
             currSendLibrary,
             newSendLibrary: '',
@@ -80,25 +80,21 @@ export async function parseSendLibrary(
     return { currSendLibrary, newSendLibrary }
 }
 
-export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, apnewSEid: eid): Promise<string> {
-    const isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, apnewSEid)
+export async function getSendLibrary(epv2Contract: Contract, evmAddress: string, peerEid: eid): Promise<string> {
+    const isDefault = await epv2Contract.isDefaultSendLibrary(evmAddress, peerEid)
     if (isDefault) {
         return constants.AddressZero
     }
 
-    const sendLib = await epv2Contract.getSendLibrary(evmAddress, apnewSEid)
+    const sendLib = await epv2Contract.getSendLibrary(evmAddress, peerEid)
     if (sendLib === error_LZ_DefaultSendLibUnavailable) {
         return constants.AddressZero
     }
     return utils.getAddress(sendLib)
 }
 
-export async function getDefaultSendLibrary(
-    epv2Contract: Contract,
-    evmAddress: string,
-    apnewSEid: eid
-): Promise<string> {
-    const sendLib = await epv2Contract.getDefaultSendLibrary(evmAddress, apnewSEid)
+export async function getDefaultSendLibrary(epv2Contract: Contract, peerEid: eid): Promise<string> {
+    const sendLib = await epv2Contract.defaultSendLibrary(peerEid)
 
     const sendLibAddress = utils.getAddress(sendLib)
 

@@ -67,31 +67,33 @@ export async function executeTransactions(
     const tx_pool: Record<string, Record<string, TxPool>> = {}
     const tx_pool_receipt: Promise<providers.TransactionResponse>[] = []
 
-    for (const [eid, _eidData] of Object.entries(eidMetaData)) {
-        /*
-         * Create a new provider using the URL from rpcUrlsMap
-         * This is required because:
-         *  - forkUrl != rpcUrl => fork mode
-         *  - forkUrl = rpcUrl => mainnet mode
-         *
-         * The mapping helps keep track of the different chains and their respective providers
-         * We also create a signer object using the private key and provider
-         */
-        const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-        const signer = new ethers.Wallet(privateKey, newProvider)
+    if (executionMode !== 'calldata') {
+        for (const [eid, _eidData] of Object.entries(eidMetaData)) {
+            /*
+             * Create a new provider using the URL from rpcUrlsMap
+             * This is required because:
+             *  - forkUrl != rpcUrl => fork mode
+             *  - forkUrl = rpcUrl => mainnet mode
+             *
+             * The mapping helps keep track of the different chains and their respective providers
+             * We also create a signer object using the private key and provider
+             */
+            const newProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
+            const signer = new ethers.Wallet(privateKey, newProvider)
 
-        accountEidMap[eid] = {
-            nonce: await signer.getTransactionCount(),
-            gasPrice: await signer.getGasPrice(),
-            signer: signer,
+            accountEidMap[eid] = {
+                nonce: await signer.getTransactionCount(),
+                gasPrice: await signer.getGasPrice(),
+                signer: signer,
+            }
+
+            const network = getNetworkForChainId(Number(eid))
+            console.log(
+                `   • Balance on ${network.chainName}-${network.env} for ${signer.address}: ${ethers.utils.formatEther(
+                    await newProvider.getBalance(signer.address)
+                )} ETH`
+            )
         }
-
-        const network = getNetworkForChainId(Number(eid))
-        console.log(
-            `   • Balance on ${network.chainName}-${network.env} for ${signer.address}: ${ethers.utils.formatEther(
-                await newProvider.getBalance(signer.address)
-            )} ETH`
-        )
     }
 
     console.log('\n🔄 Processing transactions...')
@@ -105,27 +107,27 @@ export async function executeTransactions(
                 processedTx++
                 const progress = `[${processedTx}/${totalTransactions}]`
                 const network = getNetworkForChainId(Number(eid))
-                console.log(
-                    `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
-                )
-
-                const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
-                const signer = accountEidMap[eid].signer
-
-                // Try to estimate gas limit, if it fails, use a default value
-                const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
-                    console.error(
-                        `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
-                    )
-                    return BigNumber.from(1_000_000)
-                })
-
-                populatedTx.gasLimit = gasLimit
-                populatedTx.gasPrice = accountEidMap[eid].gasPrice
-                populatedTx.nonce = accountEidMap[eid].nonce++
-
                 let sendTx: Promise<providers.TransactionResponse> | undefined = undefined
+
                 if (executionMode !== 'calldata') {
+                    console.log(
+                        `   ${progress} Submitting transaction on chain ${network.chainName}-${network.env} (${txType})...`
+                    )
+                    const provider: providers.JsonRpcProvider = new providers.JsonRpcProvider(rpcUrlsMap[eid])
+                    const signer = accountEidMap[eid].signer
+
+                    // Try to estimate gas limit, if it fails, use a default value
+                    const gasLimit = await provider.estimateGas(populatedTx).catch((error) => {
+                        console.error(
+                            `Error estimating gas for transaction on chain ${network.chainName}-${network.env}: ${error}`
+                        )
+                        return BigNumber.from(1_000_000)
+                    })
+
+                    populatedTx.gasLimit = gasLimit
+                    populatedTx.gasPrice = accountEidMap[eid].gasPrice
+                    populatedTx.nonce = accountEidMap[eid].nonce++
+
                     sendTx = signer.sendTransaction(populatedTx)
                     tx_pool_receipt.push(sendTx)
                 }

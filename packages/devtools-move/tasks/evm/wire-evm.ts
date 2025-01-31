@@ -101,6 +101,13 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
 }
 
 export function readPrivateKey(args: any) {
+    if (args.only_calldata === 'true') {
+        console.log('Not loading private key for calldata mode')
+        // returning the first private key that anvil creates from the m
+        // test test test test test test test test test test test junk
+        return '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+    }
+
     const envPath = path.resolve(path.join(args.rootDir, '.env'))
     const env = dotenv.config({ path: envPath })
     if (!env.parsed || env.error?.message !== undefined) {

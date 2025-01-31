@@ -30,6 +30,9 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
                 address.oapp,
                 peerToEid
             )
+            if (currSendLibrary.newSendLibrary === '') {
+                currSendLibrary.newSendLibrary = currSendLibrary.currSendLibrary
+            }
 
             const currSendConfig = {
                 executorConfigBytes: '',
@@ -109,7 +112,11 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             if (decodedCurrSendConfigParam && decodedSetConfigParam) {
                 if (decodedCurrSendConfigParam !== decodedSetConfigParam) {
                     diffPrinter(
-                        createDiffMessage('send config', Number(eid), Number(peerToEid)),
+                        createDiffMessage(
+                            `send config @ ${currSendLibrary.newSendLibrary}`,
+                            Number(eid),
+                            Number(peerToEid)
+                        ),
                         decodedCurrSendConfigParam,
                         decodedSetConfigParam
                     )
