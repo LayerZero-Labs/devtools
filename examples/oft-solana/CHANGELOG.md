@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.5.1
+
+### Patch Changes
+
+- 12eaa61: oft-solana(getSimulationComputeUnits): increase backoff max delay from 3s to 10s
+
 ## 0.5.0
 
 ### Minor Changes
