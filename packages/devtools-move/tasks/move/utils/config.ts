@@ -3,7 +3,8 @@ import path from 'path'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
-import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 type AptosYamlConfig = {
     profiles: {
@@ -23,6 +24,17 @@ export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHard
     const lzConfigFile = await import(lzConfigPath)
     const lzConfig = lzConfigFile.default
     return lzConfig
+}
+
+export function getMoveVMContracts(lzConfig: OAppOmniGraphHardhat): OmniPointHardhat[] {
+    const contracts = []
+    for (const entry of lzConfig.contracts) {
+        const chainName = getNetworkForChainId(entry.contract.eid).chainName
+        if (chainName === 'aptos' || chainName === 'initia' || chainName === 'movement') {
+            contracts.push(entry.contract)
+        }
+    }
+    return contracts
 }
 
 export async function loadAptosYamlConfig(_rootDir: string = process.cwd()): Promise<AptosYamlConfig> {

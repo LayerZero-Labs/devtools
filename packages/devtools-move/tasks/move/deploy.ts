@@ -7,8 +7,12 @@ import { Network } from '@aptos-labs/ts-sdk'
 import { deploymentFile } from '../shared/types'
 
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getNamedAddresses } from './utils/config'
+import { getLzConfig, getMoveVMContracts, getNamedAddresses } from './utils/config'
 import path from 'path'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
+
+import inquirer from 'inquirer'
 
 let stdOut = ''
 let stdErr = ''
@@ -19,11 +23,14 @@ let stdErr = ''
  * @dev Wraps the aptos move create-object-and-publish-package command
  * @returns Promise<void>
  */
-async function deployMovementContracts(address_name: string, named_addresses: string) {
+async function deployMovementContracts(address_name: string, named_addresses: string, configPath: string) {
     const aptosYamlConfig = await parseYaml()
     const networkStage = aptosYamlConfig.network
     const lzNetworkStage = getLzNetworkStage(networkStage)
     const network = getNetworkFromConfig(aptosYamlConfig)
+    const lzConfig = await getLzConfig(configPath)
+    const contracts = getMoveVMContracts(lzConfig)
+    const userChosenContractName = await promptUserForContractName(contracts)
 
     const additionalAddresses = getNamedAddresses(lzNetworkStage)
     const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
@@ -60,7 +67,7 @@ async function deployMovementContracts(address_name: string, named_addresses: st
             if (code === 0) {
                 const addresses = stdOut.match(/0x[0-9a-fA-F]{64}/g)!
                 assert(addresses[0] == addresses[1], 'Addresses do not match')
-                createDeployment(addresses[0], address_name, network, lzNetworkStage)
+                createDeployment(addresses[0], userChosenContractName, network, lzNetworkStage)
 
                 resolve()
             } else {
@@ -114,12 +121,29 @@ async function createDeployment(deployedAddress: string, file_name: string, netw
 
     fs.writeFileSync(path.join(aptosDir, `${file_name}.json`), JSON.stringify(deployment, null, 2))
     console.log('\n✅ Deployment successful ✅')
-    console.log(`📝 Successfully created deployment file at: ${aptosDir}/${file_name}.json`)
 }
 
 async function checkIfDeploymentExists(network: string, lzNetworkStage: string, contractName: string) {
     const aptosDir = path.join(process.cwd(), 'deployments', `${network}-${lzNetworkStage}`)
     return fs.existsSync(path.join(aptosDir, `${contractName}.json`))
+}
+
+async function promptUserForContractName(contracts: OmniPointHardhat[]) {
+    const choices = contracts.map((contract) => ({
+        name: `${contract.contractName} (${EndpointId[contract.eid]})`,
+        value: contract.contractName,
+    }))
+
+    const { selectedContract } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'selectedContract',
+            message: 'Select contract to deploy:',
+            choices,
+        },
+    ])
+
+    return selectedContract
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -139,14 +163,14 @@ async function deploy(
     if (deploymentExists) {
         if (forceDeploy) {
             console.log(`Follow the prompts to complete the deployment ${contractName}`)
-            await deployMovementContracts(contractName, namedAddresses)
+            await deployMovementContracts(contractName, namedAddresses, configPath)
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
     } else {
         console.warn('You are in force deploy mode:')
         console.log(`Follow the prompts to complete the deployment ${contractName}`)
-        await deployMovementContracts(contractName, namedAddresses)
+        await deployMovementContracts(contractName, namedAddresses, configPath)
     }
 }
 export { deploy }

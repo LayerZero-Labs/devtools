@@ -111,7 +111,9 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 
 ## Wire
 
-For EVM:
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
+
+For EVM:r
 Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
 
 ```ts

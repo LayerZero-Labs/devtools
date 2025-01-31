@@ -35,15 +35,15 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: aptosContract,
             config: {
-                delegate: '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
-                owner: '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
+                delegate: '',
+                owner: '',
             },
         },
         {
             contract: aptosContract2,
             config: {
-                delegate: '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
-                owner: '0x58b730d07e98a22f2b357bee721115c986e4dc873c1884763708ee3d4006f74e',
+                delegate: '',
+                owner: '',
             },
         },
     ],
@@ -123,13 +123,13 @@ const config: OAppOmniGraphHardhat = {
                     {
                         msgType: MsgType.SEND,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200_000, // gas limit in wei for EndpointV2.lzReceive
+                        gas: 5_000, // gas limit in wei for EndpointV2.lzReceive
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                     {
                         msgType: MsgType.SEND_AND_CALL,
                         optionType: ExecutorOptionType.LZ_RECEIVE,
-                        gas: 200_000, // gas limit in wei for EndpointV2.lzCompose
+                        gas: 5_000, // gas limit in wei for EndpointV2.lzCompose
                         value: 0, // msg.value in wei for EndpointV2.lzCompose
                     },
                 ],

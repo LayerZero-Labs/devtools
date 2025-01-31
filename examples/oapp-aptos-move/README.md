@@ -58,7 +58,6 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addres
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
 ```
-
 ## Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
@@ -88,10 +87,18 @@ Then run the following command:
 pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
+## EVM Deployment
+
+```bash
+npx hardhat lz:deploy
+```
+
 ## Wire
 
 For EVM:
 Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate specified.
+
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
 ```ts
     contracts: [
@@ -166,12 +173,6 @@ Note: The object owner has the upgrade authority for the Object.
 
 ```bash
 pnpm run lz:sdk:help
-```
-
-## EVM Deployment
-
-```bash
-npx hardhat lz:deploy
 ```
 
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
