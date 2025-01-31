@@ -148,6 +148,7 @@ pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true
 
 --simulate <true> and --mnemonic-index <value> are optional.
 --mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
+--only-calldata <true> is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
 For Move-VM:
 
