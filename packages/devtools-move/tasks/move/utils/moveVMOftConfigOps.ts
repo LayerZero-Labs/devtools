@@ -760,6 +760,56 @@ export function createPermanentlyDisableFungibleStoreFreezingPayload(oft: OFT): 
     }
 }
 
+export async function createSetBlocklistPayload(
+    oft: OFT,
+    oftType: OFTType,
+    walletAddress: string,
+    block: boolean
+): Promise<TransactionPayload | null> {
+    const isBlockListed = await oft.isBlocklisted(walletAddress, oftType)
+    if (isBlockListed === block) {
+        console.log(`Wallet ${walletAddress} is already ${block ? 'blocked' : 'unblocked'}`)
+        return null
+    }
+
+    const payload = oft.setBlocklistPayload(walletAddress, block, oftType)
+    diffPrinter(
+        `Set Blocklist for ${walletAddress} to ${block ? 'blocked' : 'unblocked'}`,
+        { block: isBlockListed },
+        { block: block }
+    )
+
+    return {
+        payload: payload,
+        description: `Set Blocklist for ${walletAddress} to ${block ? 'blocked' : 'unblocked'}`,
+    }
+}
+
+export async function createSetPrimaryFungibleStoreFrozenPayload(
+    oft: OFT,
+    oftType: OFTType,
+    account: string,
+    frozen: boolean
+): Promise<TransactionPayload | null> {
+    const isFrozen = await oft.isPrimaryFungibleStoreFrozen(account, oftType)
+    if (isFrozen === frozen) {
+        console.log(`\n✅ Account ${account} is already ${frozen ? 'frozen' : 'unfrozen'}\n`)
+        return null
+    }
+
+    const payload = oft.setPrimaryFungibleStoreFrozenPayload(account, frozen, oftType)
+    diffPrinter(
+        `Set Primary Fungible Store Frozen for ${account} to ${frozen ? 'frozen' : 'unfrozen'}`,
+        { frozen: isFrozen },
+        { frozen: frozen }
+    )
+
+    return {
+        payload: payload,
+        description: `Set Primary Fungible Store Frozen for ${account} to ${frozen ? 'frozen' : 'unfrozen'}`,
+    }
+}
+
 function createSerializableExecutorConfig(executorConfig: Uln302ExecutorConfig): ExecutorConfig {
     return {
         max_message_size: executorConfig.maxMessageSize,
