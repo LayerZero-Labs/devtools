@@ -79,8 +79,7 @@ export async function parseReceiveLibrary(
     eid: eid
 ): Promise<{ currReceiveLibrary: string; newReceiveLibrary: string }> {
     if (receiveLib === undefined || receiveLib.receiveLibrary === undefined) {
-        const currReceiveLibrary = await getDefaultReceiveLibrary(epv2, oappAddress, eid)
-        console.log('currReceiveLibrary', currReceiveLibrary)
+        const currReceiveLibrary = await getDefaultReceiveLibrary(epv2, eid)
 
         return {
             currReceiveLibrary,
@@ -95,8 +94,8 @@ export async function parseReceiveLibrary(
     return { currReceiveLibrary, newReceiveLibrary }
 }
 
-export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, aptosEid: eid): Promise<string> {
-    const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, aptosEid)
+export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: string, peerEid: eid): Promise<string> {
+    const recvLibParam: RecvLibParam = await epv2Contract.getReceiveLibrary(evmAddress, peerEid)
     if (recvLibParam.isDefault) {
         return constants.AddressZero
     }
@@ -111,12 +110,8 @@ export async function getReceiveLibrary(epv2Contract: Contract, evmAddress: stri
     return recvLibAddress
 }
 
-export async function getDefaultReceiveLibrary(
-    epv2Contract: Contract,
-    evmAddress: string,
-    aptosEid: eid
-): Promise<string> {
-    const recvLib = await epv2Contract.getDefaultReceiveLibrary(evmAddress, aptosEid)
+export async function getDefaultReceiveLibrary(epv2Contract: Contract, peerEid: eid): Promise<string> {
+    const recvLib = await epv2Contract.defaultReceiveLibrary(peerEid)
 
     const recvLibAddress = utils.getAddress(recvLib)
 
