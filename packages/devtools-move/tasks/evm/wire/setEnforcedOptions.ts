@@ -49,7 +49,6 @@ export async function createSetEnforcedOptionsTransactions(
                 )
             }
 
-            // Extract the msgTypes
             const msgTypes = Object.keys(thisEnforcedOptionBuilder).map((msgType) => Number(msgType))
 
             // Populate the arguments for the transaction function call
@@ -98,14 +97,16 @@ export async function createSetEnforcedOptionsTransactions(
                         currOptionsDecoded,
                         newOptionsDecoded
                     )
-                    const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
-
-                    txTypePool[eid] = txTypePool[eid] ?? []
-                    txTypePool[eid].push({
-                        toEid: peerToEid,
-                        populatedTx: tx,
-                    })
                 }
+            }
+            if (enforcedOptionParams.length > 0) {
+                const tx = await contract.oapp.populateTransaction.setEnforcedOptions(enforcedOptionParams)
+
+                txTypePool[eid] = txTypePool[eid] ?? []
+                txTypePool[eid].push({
+                    toEid: peerToEid,
+                    populatedTx: tx,
+                })
             }
         }
     }

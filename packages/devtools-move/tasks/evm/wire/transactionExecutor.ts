@@ -149,7 +149,8 @@ export async function executeTransactions(
 
     const runId = fs.readdirSync(folderPath).length + 1
 
-    const filePath = path.join(folderPath, `${runId}.json`)
+    const filePathRunId = path.join(folderPath, `${runId}.json`)
+    const filePathLatest = path.join(folderPath, `latest.json`)
     const txReceiptJson: TxReceiptJson = {}
 
     for (const [txType, eidTxsMapping] of Object.entries(tx_pool)) {
@@ -171,14 +172,20 @@ export async function executeTransactions(
             })
         }
     }
-    fs.writeFileSync(filePath, JSON.stringify(txReceiptJson, null, 2))
+    fs.writeFileSync(filePathRunId, JSON.stringify(txReceiptJson, null, 2))
+
+    // To make it easier to find the latest transactions
+    // we create a new object called {srcRunId} and set it to the txReceiptJson for the latest run
+    const latestJson = { srcRunId: runId, txReceiptJson: txReceiptJson }
+    fs.writeFileSync(filePathLatest, JSON.stringify(latestJson, null, 2))
 
     if (executionMode != 'calldata') {
         console.log(
             `\n✅ Successfully ${executionMode === 'broadcast' ? 'executed' : 'simulated'} ${totalTransactions} transactions`
         )
     }
-    console.log('Transactions have been saved to ', filePath)
+    console.log('Transactions have been saved to ', filePathRunId)
+    console.log('Latest transactions have been saved to ', filePathLatest)
 }
 
 export function getContractForTxType(oappContract: Contract, epv2Contract: Contract, txType: string) {
