@@ -67,7 +67,7 @@ ENV PATH="/root/.cargo/bin:$PATH"
 RUN apt update
 
 # Update the system packages
-RUN apt-get update
+RUN apt-get update && apt-get install -y apt-transport-https
 
 # Add required packages
 RUN apt-get install --yes \
