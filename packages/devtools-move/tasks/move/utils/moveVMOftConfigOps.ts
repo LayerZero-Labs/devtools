@@ -111,13 +111,13 @@ export async function createSetPeerTx(
 ): Promise<TransactionPayload | null> {
     const eidToNetworkMapping = await createEidToNetworkMapping()
 
-    if (!connection.to.contractName) {
+    if (!connection.to.contractName && !connection.to.address) {
         printNotSet('peer', connection)
         return null
     }
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
-    const contractAddress = getContractAddress(networkName, connection.to.contractName)
+    const contractAddress = connection.to.address ?? getContractAddress(networkName, connection.to.contractName)
     const newPeer = toAptosAddress(contractAddress, connection.to.eid.toString())
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
