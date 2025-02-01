@@ -77,8 +77,8 @@ RUN apt-get install --yes \
     expect \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
-    # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    # Utilities required to build solana \
+    build-essential pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
