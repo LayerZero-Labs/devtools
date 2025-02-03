@@ -32,6 +32,8 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 
 ## Setup
 
+Run `pnpm i` in this folder to install the dependencies.
+
 Create a `.env` file with the following variables:
 
 ```bash
@@ -116,8 +118,12 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
 Commands:
 
 ```bash
-pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
 ```
+
+--simulate <true> and --mnemonic-index <value> are optional.
+--mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
+--only-calldata <true> is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
 For Move-VM:
 
@@ -173,7 +179,7 @@ Note: The object owner has the upgrade authority for the Object.
 pnpm run lz:sdk:help
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the evm networks you want to deploy to(DO NOT SELECT APTOS or MOVEMENT)
 
 ### Verifying successful ownership transfer of your Move-VM OFT:
 
