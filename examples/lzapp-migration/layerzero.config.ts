@@ -3,7 +3,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 const sepoliaContract: OmniPointHardhat = {
-    eid: EndpointId.SEPOLIA_TESTNET,
+    eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
     contractName: 'MyLzApp',
 }
 
@@ -12,6 +12,7 @@ const arbSepoliaContract: OmniPointHardhat = {
     contractName: 'MyOApp',
 }
 
+// The values here are for development purposes. E.g. confirmations are set to 1. For production, they should be reviewed and edited accordingly.
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
