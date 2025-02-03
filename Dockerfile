@@ -231,7 +231,7 @@ RUN <<-EOF
         *) exit 1 ;;
     esac
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-${TON_ARCH}.zip > ton.zip
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v2024.12-1/ton-linux-${TON_ARCH}.zip > ton.zip
     unzip -qq -d bin ton
     chmod a+x bin/*
 EOF
