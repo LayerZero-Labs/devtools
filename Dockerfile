@@ -292,10 +292,10 @@ ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 
 # Get solana tooling
-COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=avm /root/.avm /root/.avm
-COPY --from=solana /root/.solana/bin /root/.solana/bin
+#COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
+#COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
+#COPY --from=avm /root/.avm /root/.avm
+#COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
 COPY --from=ton /app/ton/bin /root/.ton/bin
@@ -315,15 +315,15 @@ RUN corepack enable
 RUN node -v
 RUN pnpm --version
 RUN git --version
-RUN anchor --version
-RUN avm --version
+#RUN anchor --version
+#RUN avm --version
 RUN aptos --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
 RUN solc --version
-RUN solana --version
+#RUN solana --version
 RUN func -V
 RUN docker compose version
 
