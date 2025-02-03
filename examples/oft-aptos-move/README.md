@@ -32,6 +32,8 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 
 ## Setup
 
+Run `pnpm i` in this folder to install the dependencies.
+
 Create a `.env` file with the following variables:
 
 ```bash
@@ -78,7 +80,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 npx hardhat lz:deploy
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the evm networks you want to deploy to (DO NOT SELECT APTOS or MOVEMENT)
 
 ## Init and Set Delegate
 

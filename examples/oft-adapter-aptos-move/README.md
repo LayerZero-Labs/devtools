@@ -32,14 +32,16 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 
 ## Setup
 
+Run `pnpm i` in this folder to install the dependencies.
+
 Create a `.env` file with the following variables:
 
 ```bash
-ACCOUNT_ADDRESS=<your-aptos-account-address>
+APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 ```
 
-Then run `source .env` in order for your values to be mapped to `$ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
+Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
 Note: aptos account address can be found in .aptos/config.yaml
 
@@ -50,7 +52,7 @@ Note: to overwrite previous deploy and build, you can use `--force-build true` f
 ### Build the modules
 
 ```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS
 ```
 
 ### Deploy the modules
@@ -65,7 +67,7 @@ const oftMetadata = {
 ```
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTAdapterInitParams.ts
 ```
 
 ## EVM Deployment
@@ -74,7 +76,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --named-addre
 npx hardhat lz:deploy
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the evm networks you want to deploy to (DO NOT SELECT APTOS or MOVEMENT)
 
 ## Init and Set Delegate
 
@@ -145,9 +147,6 @@ pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true
 
 --simulate <true> and --mnemonic-index <value> are optional.
 --mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
-
-Troubleshooting:
-Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
 
 For Move-VM:
 
@@ -227,28 +226,6 @@ pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.t
 ```
 
 Note: The object owner has the upgrade authority for the Object.
-
-### Mint to Account on Move VM OFT:
-
-> ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
-> First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
-
-```
-public entry fun mint(
-    admin: &signer,
-    recipient: address,
-    amount: u64,
-) acquires OftImpl {
-    assert_admin(address_of(admin));
-    primary_fungible_store::mint(&store().mint_ref, recipient, amount);
-}
-```
-
-Then run the following command to mint the move oft:
-
-```bash
-pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
-```
 
 ## Send Tokens
 
