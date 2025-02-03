@@ -78,7 +78,7 @@ RUN apt-get install --yes \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana \
-    build-essential pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang cmake make libprotobuf-dev protobuf-compiler \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
@@ -193,7 +193,7 @@ WORKDIR /app/solana
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN rustup default 1.80.1
+#RUN rustup default 1.80.1
 
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.26
