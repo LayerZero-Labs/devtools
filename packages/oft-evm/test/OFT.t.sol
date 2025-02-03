@@ -463,6 +463,50 @@ contract OFTTest is TestHelperOz5 {
         assertEq(address(dNativeOFTAdapter).balance, 0);
     }
 
+    function test_oft_adapter_quote_oft() public virtual {
+        uint256 amountToSendLD = 1 ether;
+
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(userB),
+            amountToSendLD,
+            amountToSendLD,
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0),
+            "",
+            ""
+        );
+
+        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) =
+            cOFTAdapter.quoteOFT(sendParam);
+
+        assertEq(oftLimit.minAmountLD, 0);
+        assertEq(oftLimit.maxAmountLD, cERC20Mock.totalSupply());
+        assertEq(oftReceipt.amountSentLD, amountToSendLD);
+        assertEq(oftReceipt.amountReceivedLD, amountToSendLD);
+    }
+
+    function test_native_oft_adapter_quote_oft() public virtual {
+        uint256 amountToSendLD = 1 ether;
+
+        SendParam memory sendParam = SendParam(
+            B_EID,
+            addressToBytes32(userB),
+            amountToSendLD,
+            amountToSendLD,
+            OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0),
+            "",
+            ""
+        );
+
+        (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt) =
+            dNativeOFTAdapter.quoteOFT(sendParam);
+
+        assertEq(oftLimit.minAmountLD, 0);
+        assertEq(oftLimit.maxAmountLD, type(uint256).max);
+        assertEq(oftReceipt.amountSentLD, amountToSendLD);
+        assertEq(oftReceipt.amountReceivedLD, amountToSendLD);
+    }
+
     function test_native_oft_adapter_send() public virtual {
         assertEq(userD.balance, initialNativeBalance);
         assertEq(address(dNativeOFTAdapter).balance, 0);

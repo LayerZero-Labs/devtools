@@ -114,7 +114,7 @@ abstract contract OFTCore is IOFT, OApp, OAppPreCrimeSimulator, OAppOptionsType3
         returns (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt)
     {
         uint256 minAmountLD = 0; // Unused in the default implementation.
-        uint256 maxAmountLD = IERC20(this.token()).totalSupply(); // Unused in the default implementation.
+        uint256 maxAmountLD = this.token() == address(0) ? type(uint256).max : IERC20(this.token()).totalSupply(); // Unused in the default implementation.
         oftLimit = OFTLimit(minAmountLD, maxAmountLD);
 
         // Unused in the default implementation; reserved for future complex fee details.
