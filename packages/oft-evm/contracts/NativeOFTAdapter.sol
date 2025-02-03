@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.22;
 
-import { MessagingFee, MessagingReceipt, OFTCore, OFTReceipt, SendParam } from "./OFTCore.sol";
+import { MessagingFee, MessagingReceipt, OFTCore, OFTFeeDetail, OFTLimit, OFTReceipt, SendParam } from "./OFTCore.sol";
 
 /**
  *
@@ -125,5 +125,38 @@ abstract contract NativeOFTAdapter is OFTCore {
      */
     function _payNative(uint256 _nativeFee) internal pure override returns (uint256 nativeFee) {
         return _nativeFee;
+    }
+
+    /**
+     * @notice Provides the fee breakdown and settings data for an OFT. Unused in the default implementation.
+     * @param _sendParam The parameters for the send operation.
+     * @return oftLimit The OFT limit information.
+     * @return oftFeeDetails The details of OFT fees.
+     * @return oftReceipt The OFT receipt information.
+     */
+    function quoteOFT(
+        SendParam calldata _sendParam
+    )
+    external
+    view
+    virtual
+    override
+    returns (OFTLimit memory oftLimit, OFTFeeDetail[] memory oftFeeDetails, OFTReceipt memory oftReceipt)
+    {
+        oftLimit = OFTLimit(0, type(uint256).max);
+
+        // Unused in the default implementation; reserved for future complex fee details.
+        oftFeeDetails = new OFTFeeDetail[](0);
+
+        // @dev This is the same as the send() operation, but without the actual send.
+        // - amountSentLD is the amount in local decimals that would be sent from the sender.
+        // - amountReceivedLD is the amount in local decimals that will be credited to the recipient on the remote OFT instance.
+        // @dev The amountSentLD MIGHT not equal the amount the user actually receives. HOWEVER, the default does.
+        (uint256 amountSentLD, uint256 amountReceivedLD) = _debitView(
+            _sendParam.amountLD,
+            _sendParam.minAmountLD,
+            _sendParam.dstEid
+        );
+        oftReceipt = OFTReceipt(amountSentLD, amountReceivedLD);
     }
 }
