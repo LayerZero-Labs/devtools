@@ -193,25 +193,22 @@ WORKDIR /app/solana
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-#RUN rustup default 1.80.1
+RUN rustup default 1.83.0
 
 # Install Solana using a binary with a fallback to installing from source
-#ARG SOLANA_VERSION=1.18.26
-RUN curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v1.18.26/install | sh -s && \
+ARG SOLANA_VERSION=1.18.26
+
+RUN arch=$(uname -m) && \
+    if [ "$arch" = "x86_64" ]; then \
+        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
         mkdir -p /root/.solana && \
         cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin; \
-
-#RUN arch=$(uname -m) && \
-#    if [ "$arch" = "x86_64" ]; then \
-#        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-#        mkdir -p /root/.solana && \
-#        cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin; \
-#    elif [ "$arch" = "aarch64" ]; then \
-#        curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-#        ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana; \
-#    else \
-#        echo "Unsupported architecture: $arch" && exit 1; \
-#    fi
+    elif [ "$arch" = "aarch64" ]; then \
+        curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+        ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana; \
+    else \
+        echo "Unsupported architecture: $arch" && exit 1; \
+    fi
 
 # Make sure we can execute the binaries
 ENV PATH="/root/.solana/bin:$PATH"
