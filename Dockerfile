@@ -193,7 +193,7 @@ WORKDIR /app/solana
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN rustup default 1.75.0
+RUN rustup default 1.80.1
 
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.26
