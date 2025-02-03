@@ -1282,7 +1282,7 @@ importers:
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.1.0
+        specifier: ^0.2.0
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1393,7 +1393,7 @@ importers:
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.1.0
+        specifier: ^0.2.0
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
