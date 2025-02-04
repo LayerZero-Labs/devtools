@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.6.0
+
+### Minor Changes
+
+- 1ce802a: oft-solana - throw if trying to send more than owned
+
 ## 0.5.1
 
 ### Patch Changes
