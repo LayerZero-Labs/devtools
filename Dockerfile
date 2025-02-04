@@ -87,13 +87,10 @@ RUN apt-get install --yes \
     # Required for TON to run
     libatomic1 libssl-dev ninja-build clang
 
-ENV CC=clang
-ENV CXX=clang++
-
-RUN which clang
-RUN which clang++
-RUN clang --version
-RUN clang++ --version
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
+    export CC=clang; \
+    export CXX=clang++; \
+fi
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
