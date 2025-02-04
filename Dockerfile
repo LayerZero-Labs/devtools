@@ -85,13 +85,19 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev ninja-build
+    libatomic1 libssl-dev ninja-build \
+    # Trying gcc 11
+    gcc-11 g++-11
 
-ENV CC=clang
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
 ENV RUSTUP_VERSION=1.83.0
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+
+ENV CC=gcc-11
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
