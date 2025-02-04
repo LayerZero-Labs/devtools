@@ -82,7 +82,9 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev
+    libatomic1 libssl-dev \
+    # Required for aptos to run
+    apt-utils
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
@@ -152,14 +154,8 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-# RUN rustup default 1.79.0
+RUN rustup default 1.79.0
 # Install AVM - Anchor version manager for Solana
-
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-    # Install rust
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    rustup update; \
-    fi
 
 RUN apt-get install -y clang
 RUN export CC=clang
