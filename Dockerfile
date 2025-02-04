@@ -122,7 +122,7 @@ WORKDIR /app/aptos/src
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=2
+ARG CARGO_BUILD_JOBS=1
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Installing Aptos CLI
@@ -151,7 +151,7 @@ WORKDIR /app/avm
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=2
+ARG CARGO_BUILD_JOBS=1
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
@@ -185,7 +185,7 @@ RUN rustup default 1.75.0
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=2
+ARG CARGO_BUILD_JOBS=1
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN apt-get install -y \
     build-essential \
@@ -292,7 +292,7 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
-ARG CARGO_BUILD_JOBS=2
+ARG CARGO_BUILD_JOBS=1
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN rustup default 1.83.0
 
