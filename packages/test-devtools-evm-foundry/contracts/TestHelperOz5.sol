@@ -66,7 +66,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         address[] receiveLibs;
         address[] readLibs;
         address[] signers;
-        PriceFeed priceFeed;
+        PriceFeed[] priceFeed;
     }
 
     struct LibrarySetup {
@@ -126,6 +126,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     function setUpEndpoints(uint8 _endpointNum, LibraryType _libraryType) public {
         createEndpoints(_endpointNum, _libraryType, new address[](_endpointNum), new string[](_endpointNum));
     }
+
     /**
      * @notice Sets up endpoints for testing.
      * @param _endpointNum The number of endpoints to create.
@@ -150,6 +151,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         endpointSetup.sendLibs = new address[](_endpointNum);
         endpointSetup.receiveLibs = new address[](_endpointNum);
         endpointSetup.readLibs = new address[](_endpointNum);
+        endpointSetup.priceFeed = new PriceFeed[](_endpointNum);
         endpointSetup.signers = new address[](1);
         endpointSetup.signers[0] = vm.addr(1);
 
@@ -167,11 +169,9 @@ contract TestHelperOz5 is Test, OptionsHelper {
 
             // deploy endpoints
             for (uint8 i = 0; i < _endpointNum; i++) {
-                if (eidForkMap[i] > 0) {
-                    vm.selectFork(eidForkMap[i]);
-                }
-
                 uint32 eid = i + 1;
+                vm.selectFork(eidForkMap[eid]);
+
                 endpointSetup.eidList[i] = eid;
 
                 address nativeToken = nativeTokenAddresses[i];
@@ -182,19 +182,15 @@ contract TestHelperOz5 is Test, OptionsHelper {
                     endpointSetup.endpointList[i] = new EndpointV2Alt(eid, address(this), nativeToken);
                 }
                 registerEndpoint(endpointSetup.endpointList[i]);
-                eidForkMap[eid] = forkId;
             }
         }
 
-        // @dev oz4/5 breaking change... constructor init
-        endpointSetup.priceFeed = new PriceFeed(address(this));
-
         for (uint8 i = 0; i < _endpointNum; i++) {
             uint32 eid = i + 1;
+            vm.selectFork(eidForkMap[eid]);
 
-            if (eidForkMap[eid] > 0) {
-                vm.selectFork(eidForkMap[eid]);
-            }
+            // @dev oz4/5 breaking change... constructor init
+            endpointSetup.priceFeed[i] = new PriceFeed(address(this));
 
             if (_libraryType == LibraryType.UltraLightNode) {
                 address endpointAddr = address(endpointSetup.endpointList[i]);
@@ -232,7 +228,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         endpointAddr,
                         address(0x0),
                         messageLibs,
-                        address(endpointSetup.priceFeed),
+                        address(endpointSetup.priceFeed[i]),
                         address(this),
                         admins
                     );
@@ -244,7 +240,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         endpointSetup.eidList[i],
                         i + 1,
                         messageLibs,
-                        address(endpointSetup.priceFeed),
+                        address(endpointSetup.priceFeed[i]),
                         endpointSetup.signers,
                         1,
                         admins
@@ -314,14 +310,14 @@ contract TestHelperOz5 is Test, OptionsHelper {
                         types: BitMap256.wrap(MAP_REDUCE_COMPUTE_TYPES)
                     });
 
-                    uint128 denominator = endpointSetup.priceFeed.getPriceRatioDenominator();
+                    uint128 denominator = endpointSetup.priceFeed[i].getPriceRatioDenominator();
                     ILayerZeroPriceFeed.UpdatePrice[] memory prices = new ILayerZeroPriceFeed.UpdatePrice[](1);
                     prices[0] = ILayerZeroPriceFeed.UpdatePrice(
                         dstEid,
                         ILayerZeroPriceFeed.Price(1 * denominator, 1, 1)
                     );
-                    endpointSetup.priceFeed.setPrice(prices);
-                    endpointSetup.priceFeed.setNativeTokenPriceUSD(NATIVE_TOKEN_PRICE_USD);
+                    endpointSetup.priceFeed[i].setPrice(prices);
+                    endpointSetup.priceFeed[i].setNativeTokenPriceUSD(NATIVE_TOKEN_PRICE_USD);
                 }
 
                 {
@@ -383,9 +379,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
         // config up
         for (uint8 i = 0; i < _endpointNum; i++) {
             uint32 eid = i + 1;
-            if (eidForkMap[eid] > 0) {
-                vm.selectFork(eidForkMap[eid]);
-            }
+            vm.selectFork(eidForkMap[eid]);
 
             EndpointV2 endpoint = endpointSetup.endpointList[i];
             if (_libraryType == LibraryType.UltraLightNode) {
@@ -414,9 +408,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
     ) public returns (address[] memory oapps) {
         oapps = new address[](_oappNum);
         for (uint8 eid = _startEid; eid < _startEid + _oappNum; eid++) {
-            if (eidForkMap[eid] > 0) {
-                vm.selectFork(eidForkMap[eid]);
-            }
+            vm.selectFork(eidForkMap[eid]);
 
             address oapp = _deployOApp(_oappCreationCode, abi.encode(address(endpoints[eid]), address(this), true));
             oapps[eid - _startEid] = oapp;
@@ -433,15 +425,18 @@ contract TestHelperOz5 is Test, OptionsHelper {
     function wireOApps(address[] memory oapps) public {
         uint256 size = oapps.length;
         for (uint256 i = 0; i < size; i++) {
-            if (eidForkMap[uint32(i)] > 0) {
-                vm.selectFork(eidForkMap[uint32(i)]);
-            }
+            vm.selectFork(i);
             IOAppSetPeer localOApp = IOAppSetPeer(oapps[i]);
-            uint32 localEid = (localOApp.endpoint()).eid();
             for (uint256 j = 0; j < size; j++) {
                 if (i == j) continue;
+
+                // find remote eid
+                vm.selectFork(j);
                 IOAppSetPeer remoteOApp = IOAppSetPeer(oapps[j]);
                 uint32 remoteEid = (remoteOApp.endpoint()).eid();
+
+                // set remote peer to local
+                vm.selectFork(i);
                 localOApp.setPeer(remoteEid, addressToBytes32(address(remoteOApp)));
             }
         }
@@ -546,9 +541,7 @@ contract TestHelperOz5 is Test, OptionsHelper {
 
             bytes memory options = optionsLookup[guid];
 
-            if (eidForkMap[_dstEid] > 0) {
-                vm.selectFork(eidForkMap[_dstEid]);
-            }
+            vm.selectFork(eidForkMap[_dstEid]);
 
             if (_executorOptionExists(options, ExecutorOptions.OPTION_TYPE_NATIVE_DROP)) {
                 (uint256 amount, bytes32 receiver) = _parseExecutorNativeDropOption(options);

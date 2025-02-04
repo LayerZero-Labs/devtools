@@ -52,15 +52,18 @@ contract MyOAppTest is TestHelperOz5 {
     }
 
     function test_sendMessage() public {
-        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
+        vm.selectFork(eidForkMap[bEid]);
+        assertEq(bOApp.data(), "Nothing received yet.");
+
         vm.selectFork(eidForkMap[aEid]);
+        vm.prank(userA);
+        bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200000, 0);
 
         uint256 nativeFee = aOApp.quote(bEid, "hello", options, false).nativeFee;
 
-        assertEq(bOApp.data(), "Nothing received yet.");
-
-        vm.prank(userA);
         aOApp.send{ value: nativeFee }(bEid, "hello", options);
+
+        vm.selectFork(eidForkMap[bEid]);
         verifyPackets(bEid, addressToBytes32(address(bOApp)));
 
         assertEq(bOApp.data(), "hello");
