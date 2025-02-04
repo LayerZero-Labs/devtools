@@ -87,11 +87,6 @@ RUN apt-get install --yes \
     # Required for TON to run
     libatomic1 libssl-dev ninja-build clang
 
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-    export CC=clang; \
-    export CXX=clang++; \
-fi
-
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
 ENV RUSTUP_VERSION=1.83.0
@@ -237,6 +232,8 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             # Tell cargo to use the system version of openssl
             export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu && \
             export OPENSSL_INCLUDE_DIR=/usr/include/openssl && \
+            export CC=clang; \
+            export CXX=clang++; \
             # It's buildin time
             cargo build --release && \
             chmod a+x target/release/solana && \
