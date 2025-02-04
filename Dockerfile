@@ -68,7 +68,6 @@ RUN apt update
 
 # Update the system packages
 RUN apt-get update
-RUN apt-get upgrade -y
 
 # Add required packages
 RUN apt-get install --yes \
