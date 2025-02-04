@@ -121,12 +121,10 @@ WORKDIR /app/aptos/src
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-RUN apt install python3 python3-all-dev python3-setuptools python3-pip -y
 
-# Installing Aptos CLI for ARM64 or AMD64
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then ./scripts/dev_setup.sh -b; fi
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then ./scripts/dev_setup.sh -b -k; fi
-        
+# Installing Aptos CLI
+RUN ./scripts/dev_setup.sh -b -k
+
 RUN . ~/.cargo/env; 
 RUN cargo build --package aptos --profile cli; 
 RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/; 
@@ -185,28 +183,58 @@ WORKDIR /app/solana
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-
+RUN apt-get install -y \
+    build-essential \
+    pkg-config \
+    libudev-dev llvm libclang-dev \
+    protobuf-compiler libssl-dev
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.26
-RUN \
-    # First we try to download prebuilt binaries for Solana
-    (\
-    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-    mkdir -p /root/.solana && \
-    # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
-    cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
-    ) || \
-    # If that doesn't work, we'll need to build Solana from source
-    (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-    # Then run the installer
-    # 
-    # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
-    # See here https://github.com/inflation/jpegxl-rs/issues/60
-    ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
-    )
 
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+            # First we try to download prebuilt binaries for Solana
+            (\
+            curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
+            mkdir -p /root/.solana && \
+            # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
+            cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
+            ) || \
+            # If that doesn't work, we'll need to build Solana from source
+            (\
+            # We download the source code and extract the archive
+            curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+            # Then run the installer
+            # 
+            # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
+            # See here https://github.com/inflation/jpegxl-rs/issues/60
+            ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
+            ); \
+        fi
+
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
+            (\            
+            # Install build tools
+            apt install -y build-essential clang cmake curl git libssl-dev pkg-config && \
+            # Now we need to install protobuff for aarch 64
+            curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v29.3/protoc-29.3-linux-aarch_64.zip > protoc.zip && \
+            unzip protoc.zip && \
+            mv bin/protoc /usr/local/bin/protoc && \
+            rm -rf bin protoc.zip && \
+            # Install rust
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+            rustup update && \
+            curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
+            cd solana-${SOLANA_VERSION} && \
+            cargo build --release && \
+            cp target/release/solana /usr/local/bin/ && \
+            mkdir -p/root/.solana/bin && \
+            cp -R target/release/solana* target/release/cargo* deps /root/.solana/bin && \
+            rm -rf solana-${SOLANA_VERSION} \
+            ); \
+         fi
+
+# Make sure we can execute the binaries
+ENV PATH="/root/.solana/bin:$PATH"
 # Make sure we can execute the binaries
 ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
@@ -301,7 +329,10 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
-COPY --from=solana /root/.solana/bin /root/.solana/bin
+
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+    cp -R /root/.solana/bin /root/.solana/bin; \
+    fi
 
 # Get TON tooling
 COPY --from=ton /app/ton/bin /root/.ton/bin
