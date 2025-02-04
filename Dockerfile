@@ -85,7 +85,7 @@ RUN apt-get install --yes \
     libssl-dev libdw-dev lld \
     # Required for TON to run
     libatomic1 libssl-dev \
-    nodejs
+    nodejs npm
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
