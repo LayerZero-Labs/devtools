@@ -145,11 +145,8 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN rustup default 1.75.0
 RUN ./scripts/dev_setup.sh -b -k
 RUN . ~/.cargo/env
-
-# Install aptos from source
 RUN cargo build --package aptos --profile cli
 
 # Copy the build artifacts
