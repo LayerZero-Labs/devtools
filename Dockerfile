@@ -82,9 +82,7 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev \
-    # Required for aptos to run
-    apt-utils
+    libatomic1 libssl-dev
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
