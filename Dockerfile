@@ -226,6 +226,8 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             rm -rf bin protoc.zip && \
             curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
             cd solana-${SOLANA_VERSION} && \
+            export OPENSSL_NO_VENDOR=1 && \
+            export OPENSSL_DIR=/usr && \
             cargo build --release && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
