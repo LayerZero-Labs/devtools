@@ -152,11 +152,11 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.79.0
 # Install AVM - Anchor version manager for Solana
 RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm
 
-RUN rustup default 1.78.0
+RUN rustup default 1.79.0
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
@@ -226,16 +226,18 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
             cd solana-${SOLANA_VERSION} && \
             cargo build --release && \
+            chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
-            mkdir -p/root/.solana/bin && \
-            cp -R target/release/solana* target/release/cargo* deps /root/.solana/bin && \
+            cp target/release/solana /bin/ && \
+            # cp -R target/release/solana* target/release/cargo* deps /root/.solana/bin && \
+            cp -R target/release/solana*  /root/.solana/bin && \
+            ls -la /root/.solana/bin && \
+            chmod a+x /root/.solana/bin/solana && \
             rm -rf solana-${SOLANA_VERSION} \
             ); \
-         fi
+            fi
+            
 
-# Make sure we can execute the binaries
-ENV PATH="/root/.solana/bin:$PATH"
-# Make sure we can execute the binaries
 ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
 
@@ -329,10 +331,7 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
-
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-    cp -R /root/.solana/bin /root/.solana/bin; \
-    fi
+COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
 COPY --from=ton /app/ton/bin /root/.ton/bin
@@ -347,6 +346,7 @@ COPY --from=evm /root/.svm /root/.svm
 # 
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
+
 
 # Output versions
 RUN node -v
