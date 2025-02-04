@@ -86,8 +86,7 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev \
-    nodejs npm
+    libatomic1 libssl-dev
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
@@ -96,11 +95,25 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
 
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV NV=20.10.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NV}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NV}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NV}
+ENV PATH="/root/.nvm/versions/node/v${NV}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
+# Download and install pnpm:
+RUN corepack enable pnpm
+
+#ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 # confirm installation
 RUN node -v
 RUN npm -v
-RUN npm install -g corepack
+#RUN npm install -g corepack
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -326,6 +339,7 @@ COPY --from=evm /root/.svm /root/.svm
 # Enable corepack, new node package manager manager
 # 
 # See more here https://nodejs.org/api/corepack.html
+#ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable
 
 # Output versions
