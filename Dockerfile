@@ -184,9 +184,8 @@ FROM machine AS solana
 WORKDIR /app/solana
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
-RUN rustup default 1.76.0
-
+RUN rustup toolchain install 1.78.0
+RUN rustup toolchain install 1.76.0
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
@@ -198,6 +197,7 @@ ARG SOLANA_VERSION=1.18.26
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
             # First we try to download prebuilt binaries for Solana
             (\
+            rustup default 1.78.0 && \
             curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
             mkdir -p /root/.solana && \
             # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
