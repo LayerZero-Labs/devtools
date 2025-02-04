@@ -10,7 +10,7 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=20.11.0
 
 # We will allow consumers to override build stages with prebuilt images
 # 
@@ -37,12 +37,6 @@ ARG APTOS_NODE_IMAGE=node-aptos-local-testnet
 # This will allow CI environments to supply the prebuilt EVM node image
 # while not breaking the flow for local development
 ARG EVM_NODE_IMAGE=node-evm-hardhat
-
-# We will provide a way for consumers to override the default Solana node image
-# 
-# This will allow CI environments to supply the prebuilt Solana node image
-# while not breaking the flow for local development
-ARG SOLANA_NODE_IMAGE=node-solana-test-validator
 
 # We will provide a way for consumers to override the default TON node image
 # 
@@ -138,79 +132,6 @@ RUN aptos --version
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#               Image that builds AVM & Anchor
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM machine AS avm
-
-WORKDIR /app/avm
-
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=default
-ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-
-# Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm
-
-# Install anchor
-ARG ANCHOR_VERSION=0.29.0
-RUN avm install ${ANCHOR_VERSION}
-RUN avm use ${ANCHOR_VERSION}
-
-ENV PATH="/root/.avm/bin:$PATH"
-RUN anchor --version
-RUN avm --version
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-#                 Image that builds Solana CLI
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM machine AS solana
-
-WORKDIR /app/solana
-
-# Configure cargo. We want to provide a way of limiting cargo resources
-# on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=default
-ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-
-# Install Solana using a binary with a fallback to installing from source
-ARG SOLANA_VERSION=1.18.26
-RUN \
-    # First we try to download prebuilt binaries for Solana
-    (\
-    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-    mkdir -p /root/.solana && \
-    # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
-    cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
-    ) || \
-    # If that doesn't work, we'll need to build Solana from source
-    (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-    # Then run the installer
-    # 
-    # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
-    # See here https://github.com/inflation/jpegxl-rs/issues/60
-    ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
-    )
-
-# Make sure we can execute the binaries
-ENV PATH="/root/.solana/bin:$PATH"
-RUN solana --version
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
 #          Image that builds TON developer tooling
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -286,16 +207,10 @@ WORKDIR /app
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
-ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$PATH"
+ENV PATH="/root/.aptos/bin:/root/.foundry/bin:$TON_PATH:$PATH"
 
 # Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
-
-# Get solana tooling
-COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
-COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
-COPY --from=avm /root/.avm /root/.avm
-COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
 COPY --from=ton /app/ton/bin /root/.ton/bin
@@ -315,15 +230,12 @@ RUN corepack enable
 RUN node -v
 RUN pnpm --version
 RUN git --version
-RUN anchor --version
-RUN avm --version
 RUN aptos --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
 RUN cast --version
 RUN solc --version
-RUN solana --version
 RUN func -V
 RUN docker compose version
 
@@ -516,49 +428,12 @@ ENTRYPOINT ["java", "-jar", "MyLocalTon.jar", "nogui", "ton-http-api"]
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
-#              Image that runs a local Solana node
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM machine AS node-solana-test-validator
-
-ENV PATH="/root/.solana/bin:$PATH"
-
-COPY --from=solana /root/.solana/bin/solana-test-validator /root/.solana/bin/solana-test-validator
-
-# Make sure the binary is there
-RUN solana-test-validator --version
-
-# By default the test validator will expose the following ports:
-# 
-# Gossip:                       1024
-# TPU:                          1027
-# JSON RPC:                     8899
-# WebSocket:                    8900
-ENTRYPOINT ["solana-test-validator"]
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
 #              Image that runs an Aptos node
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM $APTOS_NODE_IMAGE AS node-aptos
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-#                   Image that runs a Solana node
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM $SOLANA_NODE_IMAGE AS node-solana
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
