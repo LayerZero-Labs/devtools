@@ -122,7 +122,7 @@ WORKDIR /app/aptos/src
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=1
+ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Installing Aptos CLI
@@ -151,13 +151,13 @@ WORKDIR /app/avm
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=1
+ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.80.1
 # Install AVM - Anchor version manager for Solana
-RUN cargo +1.78.0 install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm;
+RUN cargo +1.80.1 install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm;
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
@@ -181,11 +181,11 @@ FROM machine AS solana
 WORKDIR /app/solana
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.80.1
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
-ARG CARGO_BUILD_JOBS=1
+ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN apt-get install -y \
     build-essential \
@@ -235,7 +235,7 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             export CC=clang; \
             export CXX=clang++; \
             # It's buildin time
-            cargo +1.78.0 build --release && \
+            cargo +1.80.1 build --release && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
             cp target/release/solana /bin/ && \
@@ -292,7 +292,7 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
-ARG CARGO_BUILD_JOBS=1
+ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN rustup default 1.83.0
 
