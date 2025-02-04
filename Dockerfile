@@ -233,8 +233,8 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             # Tell cargo to use the system version of openssl
             export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu && \
             export OPENSSL_INCLUDE_DIR=/usr/include/openssl && \
-            export CC=clang; \
-            export CXX=clang++; \          
+            # export CC=clang; \
+            # export CXX=clang++; \          
             # It's buildin time
             cargo +1.76.0 build --release && \
             chmod a+x target/release/solana && \
