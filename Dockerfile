@@ -185,6 +185,7 @@ WORKDIR /app/solana
 
 # Solana requires rust 1.78.0 so we need to install it
 RUN rustup default 1.78.0
+RUN rustup default 1.76.0
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
