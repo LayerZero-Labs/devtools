@@ -155,7 +155,7 @@ ARG CARGO_BUILD_JOBS=2
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.75.0
 # Install AVM - Anchor version manager for Solana
 RUN cargo install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm;
 # Install anchor
@@ -181,7 +181,7 @@ FROM machine AS solana
 WORKDIR /app/solana
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.75.0
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
