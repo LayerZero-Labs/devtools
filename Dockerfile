@@ -509,7 +509,7 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM ubuntu:24.04 AS node-ton-my-local-ton
+FROM ubuntu:22.04 AS node-ton-my-local-ton
 
 ENV PYTHONUNBUFFERED=1
 

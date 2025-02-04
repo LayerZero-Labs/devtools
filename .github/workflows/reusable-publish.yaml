@@ -20,7 +20,7 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
 
     # We'll run the job on the prebuilt base image
     container:

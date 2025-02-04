@@ -19,7 +19,7 @@ jobs:
   #
   build-base:
     name: Build base image
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ubuntu-22.04-16xlarge
 
     permissions:
       contents: read
@@ -58,7 +58,7 @@ jobs:
   #
   build-node-aptos:
     name: Build Aptos node image
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ubuntu-22.04-16xlarge
     needs:
       - build-base
 
@@ -99,7 +99,7 @@ jobs:
   #
   build-node-evm:
     name: Build EVM node image
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ubuntu-22.04-16xlarge
     needs:
       - build-base
 
@@ -140,7 +140,7 @@ jobs:
   #
   build-node-solana:
     name: Build Solana node image
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ubuntu-22.04-16xlarge
     needs:
       - build-base
 
@@ -181,7 +181,7 @@ jobs:
   #
   build-node-ton:
     name: Build TON node image
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ubuntu-22.04-16xlarge
     needs:
       - build-base
 
@@ -219,7 +219,7 @@ jobs:
   #
   push-base:
     name: Push base image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
     needs:
       - build-base
 
@@ -245,7 +245,7 @@ jobs:
   #
   push-node-aptos:
     name: Push Aptos node image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
     needs:
       - build-node-aptos
 
@@ -271,7 +271,7 @@ jobs:
   #
   push-node-evm:
     name: Push EVM node image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
     needs:
       - build-node-evm
 
@@ -297,7 +297,7 @@ jobs:
   #
   push-node-solana:
     name: Push Solana node image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
     needs:
       - build-node-solana
 
@@ -323,7 +323,7 @@ jobs:
   #
   push-node-ton:
     name: Push TON node image
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ubuntu-22.04-4xlarge
     needs:
       - build-node-ton
 
