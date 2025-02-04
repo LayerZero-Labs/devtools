@@ -85,7 +85,10 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev
+    libatomic1 libssl-dev clang
+
+# Set CC to clang
+ENV CC=clang
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
