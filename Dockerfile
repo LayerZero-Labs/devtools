@@ -159,7 +159,7 @@ RUN rustup default 1.80.1
 # Install AVM - Anchor version manager for Solana
 RUN cargo +1.80.1 install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm;
 # Install anchor
-ARG ANCHOR_VERSION=0.29.0
+ARG ANCHOR_VERSION=0.30.1
 RUN avm install ${ANCHOR_VERSION}
 RUN avm use ${ANCHOR_VERSION}
 
