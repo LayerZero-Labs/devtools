@@ -214,12 +214,13 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
             ); \
         fi
 
+ARG PROTOC_VERSION=29.3
 RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             (\            
             # Install build tools
             apt install -y build-essential clang cmake curl git libssl-dev pkg-config && \
             # Now we need to install protobuff for aarch 64
-            curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v29.3/protoc-29.3-linux-aarch_64.zip > protoc.zip && \
+            curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip > protoc.zip && \
             unzip protoc.zip && \
             mv bin/protoc /usr/local/bin/protoc && \
             rm -rf bin protoc.zip && \
@@ -234,7 +235,7 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             export CC=clang; \
             export CXX=clang++; \
             # It's buildin time
-            cargo +1.78.0 build --release && \
+            cargo +1.83.0 build --release && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
             cp target/release/solana /bin/ && \
