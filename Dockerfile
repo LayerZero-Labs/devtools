@@ -86,7 +86,8 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev
+    libatomic1 libssl-dev \
+    nodejs npm
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
@@ -95,22 +96,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
 
-# install pnpm
-#RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
-
-# Download and install nvm
-# Install NVM
-ENV NVM_DIR="/root/.nvm"
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-# install node and npm
-RUN source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION
-RUN source $NVM_DIR/nvm.sh && nvm alias default $NODE_VERSION
-RUN source $NVM_DIR/nvm.sh && nvm use default
-
-# add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 # confirm installation
 RUN node -v
 RUN npm -v
