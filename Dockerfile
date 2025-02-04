@@ -85,7 +85,10 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev ninja-build clang
+    libatomic1 libssl-dev ninja-build clang \
+    # Required to build the base image
+    build-essential
+
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
@@ -155,9 +158,9 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.78.0
+RUN rustup default 1.83.0
 # Install AVM - Anchor version manager for Solana
-RUN cargo +1.78.0 install --git https://github.com/coral-xyz/anchor avm --force
+RUN cargo +1.83.0 install --git https://github.com/coral-xyz/anchor avm
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
@@ -187,11 +190,7 @@ RUN rustup default 1.78.0
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-RUN apt-get install -y \
-    build-essential \
-    pkg-config \
-    libudev-dev llvm libclang-dev \
-    protobuf-compiler libssl-dev
+
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.26
 
