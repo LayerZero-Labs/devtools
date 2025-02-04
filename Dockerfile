@@ -10,7 +10,7 @@
 # 
 # This issue does not affect users, it's only related to the test runner
 # so the code will still work on node 18.16.0
-ARG NODE_VERSION=20.10.0
+ARG NODE_VERSION=20.10
 
 # We will allow consumers to override build stages with prebuilt images
 # 
@@ -61,6 +61,8 @@ ARG TON_NODE_IMAGE=node-ton-my-local-ton
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM ubuntu:22.04 AS machine
 
+SHELL ["/bin/bash", "-c"]
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV PATH="/root/.cargo/bin:$PATH"
@@ -96,17 +98,22 @@ RUN curl -sSL https://get.docker.com/ | sh
 # install pnpm
 #RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Create a script file sourced by both interactive and non-interactive bash shells
-ENV BASH_ENV /home/user/.bash_env
-RUN touch "${BASH_ENV}"
-RUN echo '. "${BASH_ENV}"' >> ~/.bashrc
-
 # Download and install nvm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | PROFILE="${BASH_ENV}" bash
+# Install NVM
+ENV NVM_DIR="/root/.nvm"
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+# install node and npm
+RUN source $NVM_DIR/nvm.sh && nvm install $NODE_VERSION
+RUN source $NVM_DIR/nvm.sh && nvm alias default $NODE_VERSION
+RUN source $NVM_DIR/nvm.sh && nvm use default
 
-# Install corepack
+# add node and npm to path so the commands are available
+ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+# confirm installation
+RUN node -v
+RUN npm -v
 RUN npm install -g corepack
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
