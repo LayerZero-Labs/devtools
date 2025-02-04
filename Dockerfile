@@ -145,7 +145,11 @@ WORKDIR /app/aptos/src
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-RUN ./scripts/dev_setup.sh -b -k
+RUN rustup default 1.75.0
+RUN apt install python3-pip -y
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
+RUN ./scripts/dev_setup.sh -b -k -t
 RUN . ~/.cargo/env
 RUN cargo build --package aptos --profile cli
 
