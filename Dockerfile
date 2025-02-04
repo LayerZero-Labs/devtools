@@ -59,7 +59,9 @@ ARG TON_NODE_IMAGE=node-ton-my-local-ton
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION AS machine
+FROM ubuntu:22.04 AS machine
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
@@ -78,7 +80,7 @@ RUN apt-get install --yes \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    libssl-dev curl libudev-dev pkg-config zlib1g-dev llvm clang cmake make libprotobuf-dev protobuf-compiler \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
