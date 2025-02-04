@@ -32,7 +32,7 @@ interface Args {
 
 // Define a Hardhat task for sending OFT from Solana
 task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
-    .addParam('amount', 'The amount of tokens to send', undefined, types.int)
+    .addParam('amount', 'The amount of tokens to send', undefined, types.bigint)
     .addParam('fromEid', 'The source endpoint ID', undefined, types.eid)
     .addParam('to', 'The recipient address on the destination chain')
     .addParam('toEid', 'The destination endpoint ID', undefined, types.eid)
