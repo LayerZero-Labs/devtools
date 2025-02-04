@@ -85,7 +85,15 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev ninja-build
+    libatomic1 libssl-dev ninja-build clang
+
+ENV CC=clang
+ENV CXX=clang++
+
+RUN which clang
+RUN which clang++
+RUN clang --version
+RUN clang++ --version
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
@@ -224,11 +232,15 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             unzip protoc.zip && \
             mv bin/protoc /usr/local/bin/protoc && \
             rm -rf bin protoc.zip && \
+            # Grab the source code
             curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
             cd solana-${SOLANA_VERSION} && \
+            # Tell cargo to not use the vendored version
             export OPENSSL_NO_VENDOR=1 && \
+            # Tell cargo to use the system version of openssl
             export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu && \
             export OPENSSL_INCLUDE_DIR=/usr/include/openssl && \
+            # It's buildin time
             cargo build --release && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
