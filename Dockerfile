@@ -77,11 +77,10 @@ RUN apt-get install --yes \
     expect \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
-    #apt install -y build-essential clang cmake curl git libssl-dev pkg-config
     # Utilities required to build solana
-    build-essential libarchive13 libssl-dev libudev-dev pkg-config zlib1g-dev llvm clang cmake make libprotobuf-dev protobuf-compiler \
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
     # Utilities required to build aptos CLI
-    libdw-dev lld \
+    libssl-dev libdw-dev lld \
     # Required for TON to run
     libatomic1 libssl-dev
 
