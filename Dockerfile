@@ -157,7 +157,7 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 # Solana requires rust 1.78.0 so we need to install it
 RUN rustup default 1.78.0
 # Install AVM - Anchor version manager for Solana
-RUN cargo +1.78.0 install --git https://github.com/coral-xyz/anchor --tag v0.29.0 avm;
+RUN cargo +1.78.0 install --git https://github.com/coral-xyz/anchor avm --force
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
