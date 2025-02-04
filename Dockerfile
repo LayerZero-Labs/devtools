@@ -233,9 +233,9 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu && \
             export OPENSSL_INCLUDE_DIR=/usr/include/openssl && \
             export CC=clang; \
-            export CXX=clang++; \
+            export CXX=clang++; \          
             # It's buildin time
-            cargo +1.83.0 build --release && \
+            cargo +1.76.0 build --release && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
             cp target/release/solana /bin/ && \
@@ -304,7 +304,7 @@ RUN foundryup
 
 # Install SVM, Solidity version manager
 ARG SVM_RS_VERSION=0.5.4
-RUN cargo install svm-rs@${SVM_RS_VERSION}
+RUN cargo +1.83.0 install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
 ARG SOLC_VERSION=0.8.22
