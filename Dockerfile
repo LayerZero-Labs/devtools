@@ -63,14 +63,12 @@ FROM node:$NODE_VERSION AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
-# Change apt to use the current system architecture
-RUN dpkg --print-architecture
-
 # Update package lists
 RUN apt update
 
 # Update the system packages
 RUN apt-get update
+RUN apt-get upgrade -y
 
 # Add required packages
 RUN apt-get install --yes \
@@ -80,19 +78,23 @@ RUN apt-get install --yes \
     expect \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
-    # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    # Maybe required to build the base image
+    build-essential ninja-build \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev ninja-build clang \
-    # Required to build the base image
-    build-essential
+    libatomic1 libssl-dev \
+    # Utilities required to build solana
+    pkg-config libudev-dev llvm libclang-dev 
 
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        # Utilities required to build solana on x86_64
+        apt-get install -y protobuf-compiler; \
+    fi
 
 # Install rust
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
-ENV RUSTUP_VERSION=1.83.0
+ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
 # Install docker
@@ -112,8 +114,7 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
-RUN \
-    (\
+RUN (\
     # We download the source code and extract the archive
     curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
     # Then rename the directory just for convenience
@@ -158,9 +159,10 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Solana requires rust 1.78.0 so we need to install it
-RUN rustup default 1.83.0
+# @Shankar: Maybe not.
+RUN rustup default ${RUST_TOOLCHAIN_VERSION}
 # Install AVM - Anchor version manager for Solana
-RUN cargo +1.83.0 install --git https://github.com/coral-xyz/anchor avm
+RUN cargo +${RUST_TOOLCHAIN_VERSION} install --git https://github.com/coral-xyz/anchor avm
 # Install anchor
 ARG ANCHOR_VERSION=0.29.0
 RUN avm install ${ANCHOR_VERSION}
@@ -186,6 +188,7 @@ WORKDIR /app/solana
 # Solana requires rust 1.78.0 so we need to install it
 RUN rustup toolchain install 1.78.0
 RUN rustup toolchain install 1.76.0
+
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
@@ -193,6 +196,9 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install Solana using a binary with a fallback to installing from source
 ARG SOLANA_VERSION=1.18.26
+
+# We need to install protobuf for arm64
+ARG PROTOC_VERSION=29.3
 
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
             # First we try to download prebuilt binaries for Solana
@@ -215,11 +221,10 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
             ); \
         fi
 
-ARG PROTOC_VERSION=29.3
 RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             (\            
             # Install build tools
-            apt install -y build-essential clang cmake curl git libssl-dev pkg-config && \
+            apt install -y clang cmake curl git libssl-dev && \
             # Now we need to install protobuff for aarch 64
             curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip > protoc.zip && \
             unzip protoc.zip && \
@@ -236,7 +241,7 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             # export CC=clang; \
             # export CXX=clang++; \          
             # It's buildin time
-            cargo +1.76.0 build --release && \
+            cargo +1.76.0 build && \
             chmod a+x target/release/solana && \
             cp target/release/solana /usr/local/bin/ && \
             cp target/release/solana /bin/ && \
