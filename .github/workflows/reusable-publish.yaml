@@ -20,7 +20,15 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
+    
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     # We'll run the job on the prebuilt base image
     container:

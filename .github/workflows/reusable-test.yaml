@@ -20,12 +20,20 @@ env:
 jobs:
   build:
     name: Build & Lint
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
       packages: read
 
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+    
     # We'll run the job on the prebuilt base image
     container:
       image: ghcr.io/layerzero-labs/devtools-dev-base:main
@@ -55,7 +63,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
@@ -112,11 +120,19 @@ jobs:
 
   test-user:
     name: User test
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
       packages: read
+
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repo
