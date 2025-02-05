@@ -269,7 +269,7 @@ RUN <<-EOF
         *) exit 1 ;;
     esac
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v2024.12-1/ton-linux-${TON_ARCH}.zip > ton.zip
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip
     unzip -qq -d bin ton
     chmod a+x bin/*
 EOF
@@ -504,6 +504,7 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM ubuntu:24.04 AS node-ton-my-local-ton
+# We need to be on Ubuntu 24.04 to install gcc-13 and gcc-13-aarch64-linux-gnu without adding a PPA
 
 ENV PYTHONUNBUFFERED=1
 
