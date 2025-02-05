@@ -93,7 +93,7 @@ RUN apt-get install --yes \
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
-ENV ARCH="$(dpkg --print-architecture)"
+
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
 
@@ -194,7 +194,7 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install Solana using a binary with a fallback to installing from source
-RUN if [ "$ARCH" = "amd64" ]; then \
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
             # First we try to download prebuilt binaries for Solana
             (\
             curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
@@ -215,7 +215,7 @@ RUN if [ "$ARCH" = "amd64" ]; then \
         fi
 
 ARG PROTOC_VERSION=29.3
-RUN if [ "$ARCH" = "arm64" ]; then \
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             (\            
             # Now we need to install protobuff for aarch 64
             curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip > protoc.zip && \
@@ -262,17 +262,14 @@ RUN apt-get install -y \
     curl \
     unzip
 
-RUN <<-EOF
-    case "$(uname -m)" in
-        aarch64) TON_ARCH="arm64" ;;
-        x86_64) TON_ARCH="x86_64" ;;
-        *) exit 1 ;;
-    esac
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then TON_ARCH="x86_64"; fi
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then TON_ARCH="arm64"; fi
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip
-    unzip -qq -d bin ton
-    chmod a+x bin/*
-EOF
+RUN (\
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip && \
+    unzip -qq -d bin ton && \
+    chmod a+x bin/* \
+    )
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
