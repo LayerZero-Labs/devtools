@@ -67,8 +67,7 @@ ENV PATH="/root/.cargo/bin:$PATH"
 RUN apt update
 
 # Update the system packages and fix missing dependencies
-RUN apt-get update
-RUN apt-get install --yes --fix-missing
+RUN apt-get update --fix-missing
 
 # Add required packages
 RUN apt-get install --yes \
