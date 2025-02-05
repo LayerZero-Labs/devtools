@@ -60,6 +60,7 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addres
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
 ```
+
 ## Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
