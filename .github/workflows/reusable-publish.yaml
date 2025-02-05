@@ -20,7 +20,7 @@ env:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
 
     # We'll run the job on the prebuilt base image
     container:

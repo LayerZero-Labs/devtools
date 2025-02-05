@@ -32,7 +32,7 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest-16xlarge
           - platform: linux/arm64
-            runner: ubuntu-22.04-arm
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -76,7 +76,7 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest-16xlarge
           - platform: linux/arm64
-            runner: ubuntu-22.04-arm
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -120,7 +120,7 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest-16xlarge
           - platform: linux/arm64
-            runner: ubuntu-22.04-arm
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -163,7 +163,7 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest-16xlarge
           - platform: linux/arm64
-            runner: ubuntu-22.04-arm
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -206,7 +206,7 @@ jobs:
           - platform: linux/amd64
             runner: ubuntu-latest-16xlarge
           - platform: linux/arm64
-            runner: ubuntu-22.04-arm
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -231,7 +231,7 @@ jobs:
   #
   push-base:
     name: Push base image
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
     needs:
       - build-base
 
@@ -257,7 +257,7 @@ jobs:
   #
   push-node-aptos:
     name: Push Aptos node image
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
     needs:
       - build-node-aptos
 
@@ -283,7 +283,7 @@ jobs:
   #
   push-node-evm:
     name: Push EVM node image
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
     needs:
       - build-node-evm
 
@@ -309,7 +309,7 @@ jobs:
   #
   push-node-solana:
     name: Push Solana node image
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
     needs:
       - build-node-solana
 
@@ -335,7 +335,7 @@ jobs:
   #
   push-node-ton:
     name: Push TON node image
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
     needs:
       - build-node-ton
 
