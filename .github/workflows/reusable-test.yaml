@@ -20,7 +20,7 @@ env:
 jobs:
   build:
     name: Build & Lint
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
 
     permissions:
       contents: read
@@ -55,7 +55,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
 
     permissions:
       contents: read
@@ -112,7 +112,7 @@ jobs:
 
   test-user:
     name: User test
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-16xlarge-arm
 
     permissions:
       contents: read
