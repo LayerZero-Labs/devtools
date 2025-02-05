@@ -32,7 +32,7 @@ async function deployMovementContracts(address_name: string, named_addresses: st
     const contracts = getMoveVMContracts(lzConfig)
     const userChosenContractName = await promptUserForContractName(contracts)
 
-    const additionalAddresses = getNamedAddresses(lzNetworkStage)
+    const additionalAddresses = getNamedAddresses(network, lzNetworkStage)
     const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
 
     const cmd = 'aptos'

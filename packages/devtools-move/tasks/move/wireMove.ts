@@ -25,7 +25,7 @@ async function wireMove(configPath: string) {
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const moveVMOAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
-    const namedAddresses = getNamedAddresses(lzNetworkStage)
+    const namedAddresses = getNamedAddresses(chain, lzNetworkStage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
 
     console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OApp`)

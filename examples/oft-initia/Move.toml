@@ -1,0 +1,12 @@
+[package]
+name = "oft"
+version = "0.0.1"
+
+[addresses]
+oft = "_"
+
+
+[dependencies.InitiaStdlib]
+git = "https://github.com/initia-labs/move-natives.git"
+rev = "77d5f3e140143bdaa41f850115b3035c134193e3"
+subdir = "initia_stdlib"

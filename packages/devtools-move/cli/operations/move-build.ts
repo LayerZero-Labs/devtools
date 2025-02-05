@@ -7,6 +7,16 @@ class MoveBuildOperation implements INewOperation {
     description = 'Build Aptos Move contracts'
     reqArgs = ['oapp_config', 'named_addresses']
 
+    addArgs = [
+        {
+            name: '--chain',
+            arg: {
+                help: 'The chain to build the contracts for',
+                required: false,
+            },
+        },
+    ]
+
     async impl(args: any): Promise<void> {
         await buildMove(args)
     }

@@ -58,12 +58,28 @@ export function createAccountFromPrivateKey(privateKey: string, account_address:
     })
 }
 
-export function getNamedAddresses(networkType: string): string {
+export function getNamedAddresses(chain: string, networkType: string): string {
     const addressesPath = path.join(__dirname, './deploymentAddresses.json')
     const addresses = JSON.parse(fs.readFileSync(addressesPath, 'utf8'))
-    const networkAddresses = addresses[`${networkType}-addresses`]
+    const networkAddresses = addresses[`${chain}-${networkType}-addresses`]
+
+    if (!networkAddresses) {
+        throw new Error(`No named addresses found for ${chain}-${networkType}`)
+    }
 
     return Object.entries(networkAddresses)
         .map(([name, addr]) => `${name}=${addr}`)
         .join(',')
+}
+
+export function getCLICmd(chain: string) {
+    if (chain === 'initia') {
+        return 'initiad'
+    } else if (chain === 'aptos') {
+        return 'aptos'
+    } else if (chain === 'movement') {
+        return 'aptos'
+    } else {
+        throw new Error('Invalid chain')
+    }
 }
