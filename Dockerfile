@@ -67,7 +67,7 @@ ENV PATH="/root/.cargo/bin:$PATH"
 RUN apt update
 
 # Update the system packages
-RUN apt-get update
+RUN apt-get update --fix-missing
 
 # Add required packages
 RUN apt-get install --yes \
@@ -82,7 +82,7 @@ RUN apt-get install --yes \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev ninja-build \
+    libatomic1 libssl-dev \
     # Required to build the base image
     build-essential
 
