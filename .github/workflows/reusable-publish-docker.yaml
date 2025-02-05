@@ -19,7 +19,7 @@ jobs:
   #
   build-base:
     name: Build base image
-    runs-on: ubuntu-22.04-16xlarge
+    runs-on: ubuntu-22.04-arm
 
     permissions:
       contents: read
@@ -28,12 +28,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64,arm64]
-        include:
-          - platform: amd64
-            runner: ubuntu-22.04-16xlarge
-          - platform: arm64
-            runner: ubuntu-22.04-arm
+        platform:
+          - linux/amd64
+          - linux/arm64
 
     steps:
       - name: Checkout repository
@@ -61,7 +58,7 @@ jobs:
   #
   build-node-aptos:
     name: Build Aptos node image
-    runs-on: ubuntu-22.04-16xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-base
 
@@ -72,12 +69,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64,arm64]
-        include:
-          - platform: amd64
-            runner: ubuntu-22.04-16xlarge
-          - platform: arm64
-            runner: ubuntu-22.04-arm
+        platform:
+          - linux/amd64
+          - linux/arm64
 
     steps:
       - name: Checkout repository
@@ -105,7 +99,7 @@ jobs:
   #
   build-node-evm:
     name: Build EVM node image
-    runs-on: ubuntu-22.04-16xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-base
 
@@ -116,12 +110,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64,arm64]
-        include:
-          - platform: amd64
-            runner: ubuntu-22.04-16xlarge
-          - platform: arm64
-            runner: ubuntu-22.04-arm
+        platform:
+          - linux/amd64
+          - linux/arm64
 
     steps:
       - name: Checkout repository
@@ -149,7 +140,7 @@ jobs:
   #
   build-node-solana:
     name: Build Solana node image
-    runs-on: ubuntu-22.04-16xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-base
 
@@ -160,12 +151,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64,arm64]
-        include:
-          - platform: amd64
-            runner: ubuntu-22.04-16xlarge
-          - platform: arm64
-            runner: ubuntu-22.04-arm
+        platform:
+          - linux/amd64
+          - linux/arm64
 
     steps:
       - name: Checkout repository
@@ -193,7 +181,7 @@ jobs:
   #
   build-node-ton:
     name: Build TON node image
-    runs-on: ubuntu-22.04-16xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-base
 
@@ -204,12 +192,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [amd64,arm64]
-        include:
-          - platform: amd64
-            runner: ubuntu-22.04-16xlarge
-          - platform: arm64
-            runner: ubuntu-22.04-arm
+        platform:
+          - linux/amd64
+          - linux/arm64
 
     steps:
       - name: Checkout repository
@@ -234,7 +219,7 @@ jobs:
   #
   push-base:
     name: Push base image
-    runs-on: ubuntu-22.04-4xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-base
 
@@ -260,7 +245,7 @@ jobs:
   #
   push-node-aptos:
     name: Push Aptos node image
-    runs-on: ubuntu-22.04-4xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-node-aptos
 
@@ -286,7 +271,7 @@ jobs:
   #
   push-node-evm:
     name: Push EVM node image
-    runs-on: ubuntu-22.04-4xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-node-evm
 
@@ -312,7 +297,7 @@ jobs:
   #
   push-node-solana:
     name: Push Solana node image
-    runs-on: ubuntu-22.04-4xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-node-solana
 
@@ -338,7 +323,7 @@ jobs:
   #
   push-node-ton:
     name: Push TON node image
-    runs-on: ubuntu-22.04-4xlarge
+    runs-on: ubuntu-22.04-arm
     needs:
       - build-node-ton
 
