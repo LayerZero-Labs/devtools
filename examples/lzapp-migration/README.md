@@ -105,7 +105,8 @@ This example demonstrates how to establish cross-chain communication between a L
 
 ## Key Configuration Details
 
-- **Endpoints:**  
+- **Endpoints:**
+
   - **SEPOLIA_TESTNET (V1):** Represented by the contract `MyLzApp`.
   - **ARBSEP_V2_TESTNET (V2):** Represented by the contract `MyOApp`.
 
@@ -113,7 +114,6 @@ This example demonstrates how to establish cross-chain communication between a L
   For each connection, the configuration specifies:
   - **Send/Receive Library Addresses:** The libraries responsible for encoding and decoding messages.
   - **Executor & ULN Configurations:** These determine how messages are processed, including confirmation settings and DVN (Data Validation Node) requirements.
-  
 - **Wiring Process:**  
   The wiring tasks filter connections by endpoint version:
   - **V1 Endpoint Logic:** Custom configuration logic is applied for **SEPOLIA_TESTNET** to handle the specific requirements of a V1 LzApp.
@@ -123,24 +123,24 @@ This example demonstrates how to establish cross-chain communication between a L
 
 The repository includes several custom tasks that extend or override the default LayerZero tooling. Their purposes are as follows:
 
-- **`wire.ts`:**  
-  - **Purpose:** Extends the default wiring task to support filtering of connections by endpoint version.  
-  - **What It Does:**  
+- **`wire.ts`:**
+  - **Purpose:** Extends the default wiring task to support filtering of connections by endpoint version.
+  - **What It Does:**
     - Filters the full omni-graph into V1 and V2 parts.
     - Applies custom configuration logic for V1 endpoints (e.g., fetching and setting trusted remotes, send/receive libraries, and ULN/executor configurations).
     - For V2 endpoints, it defers to the default wiring logic, ensuring compatibility between the two versions.
-    
-- **`config.get.ts`:**  
-  - **Purpose:** Overrides the configuration fetching task to retrieve and display comprehensive configuration details for each connection.  
-  - **What It Does:**  
+- **`config.get.ts`:**
+
+  - **Purpose:** Overrides the configuration fetching task to retrieve and display comprehensive configuration details for each connection.
+  - **What It Does:**
     - Loads the omni-graph configuration for the OApp.
     - Iterates through each connection and retrieves various configuration settings (custom, default, and active).
-    - Outputs a cross-table comparing configurations for send/receive libraries, ULN, and executor settings.  
+    - Outputs a cross-table comparing configurations for send/receive libraries, ULN, and executor settings.
     - This task helps developers verify that the correct configurations are being used for both V1 and V2 endpoints.
 
-- **`taskHelper.ts`:**  
-  - **Purpose:** Provides shared helper functions that simplify interactions with deployed contracts and streamline configuration management.  
-  - **What It Does:**  
+- **`taskHelper.ts`:**
+  - **Purpose:** Provides shared helper functions that simplify interactions with deployed contracts and streamline configuration management.
+  - **What It Does:**
     - Implements functions for encoding and decoding configuration parameters.
     - Retrieves configuration details (such as ULN and executor configs) for both V1 and V2 endpoints.
     - Handles setting trusted remote addresses, send/receive library addresses, and applying ULN configurations.
@@ -153,6 +153,7 @@ The repository includes several custom tasks that extend or override the default
 
 2. **Custom Wiring:**  
    The `wire.ts` task leverages the helper functions in `taskHelper.ts` to:
+
    - Filter connections for V1 and V2 endpoints.
    - Generate and sign the necessary transactions to set the configurations (e.g., trusted remotes, libraries, ULN, and executor settings).
 
