@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.0
+
+### Minor Changes
+
+- 57a80a8: added script to update metaplex metadata
+
 ## 0.6.0
 
 ### Minor Changes
