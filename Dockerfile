@@ -503,16 +503,13 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM ubuntu:22.04 AS node-ton-my-local-ton
+FROM ubuntu:24.04 AS node-ton-my-local-ton
 
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
 # Update system packages
-RUN apt-get update
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt-get update
 
 RUN apt-get install -y \
