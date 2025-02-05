@@ -262,13 +262,17 @@ RUN apt-get install -y \
     curl \
     unzip
 
-RUN (\
-    if [ "$ARCH" = "arm64" ]; then TON_ARCH="arm64"; fi \
-    if [ "$ARCH" = "amd64" ]; then TON_ARCH="x86_64"; fi \
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip && \
-    unzip -qq -d bin ton && \
-    chmod a+x bin/* \
-    )
+RUN <<-EOF
+    case "$(uname -m)" in
+        aarch64) TON_ARCH="arm64" ;;
+        x86_64) TON_ARCH="x86_64" ;;
+        *) exit 1 ;;
+    esac
+
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip
+    unzip -qq -d bin ton
+    chmod a+x bin/*
+EOF
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
