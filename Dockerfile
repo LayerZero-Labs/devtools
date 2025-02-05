@@ -503,30 +503,29 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM node:$NODE_VERSION-alpine AS node-ton-my-local-ton
+FROM ubuntu:22.04 AS node-ton-my-local-ton
 
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
 # Update system packages
-RUN apk update
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-RUN apk update
+RUN apt-get update
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt-get update
 
-
-RUN apk add --no-cache \
+RUN apt-get install -y \
     curl \
     # Java
-    openjdk17-jdk \
+    openjdk-17-jdk \
     # Python
     python3-pip \
     # Build tools
     # 
     # gcc-13 and gcc-13-aarch64-linux-gnu are required for the arm64 platform
     # since without them glibc version incompatibility will prevent ton-http-api from running
-    gcc13 gcc13-aarch64-linux-gnu libc6 libc6-dev \
+    gcc-13 gcc-13-aarch64-linux-gnu libc6 libc6-dev \
     # TON complains about not having this
     lsb-release tzdata
 
@@ -553,6 +552,7 @@ RUN <<-EOF
 
     curl -sLf https://github.com/neodix42/MyLocalTon/releases/download/v120/MyLocalTon-${TON_ARCH}.jar --output MyLocalTon.jar
 EOF
+
 
 # We want to keep the internals of the EVM node images encapsulated so we supply the healthcheckk as a part of the definition
 HEALTHCHECK --start-period=30s --interval=5s --retries=30 CMD curl -sSf http://127.0.0.1:8081
