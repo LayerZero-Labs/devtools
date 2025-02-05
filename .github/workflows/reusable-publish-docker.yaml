@@ -28,9 +28,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        platform: [amd64,arm64]
+        include:
+          - platform: amd64
+            runner: ubuntu-22.04-16xlarge
+          - platform: arm64
+            runner: ubuntu-22.04-arm
 
     steps:
       - name: Checkout repository
@@ -69,9 +72,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        platform: [amd64,arm64]
+        include:
+          - platform: amd64
+            runner: ubuntu-22.04-16xlarge
+          - platform: arm64
+            runner: ubuntu-22.04-arm
 
     steps:
       - name: Checkout repository
@@ -110,9 +116,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        platform: [amd64,arm64]
+        include:
+          - platform: amd64
+            runner: ubuntu-22.04-16xlarge
+          - platform: arm64
+            runner: ubuntu-22.04-arm
 
     steps:
       - name: Checkout repository
@@ -151,9 +160,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        platform: [amd64,arm64]
+        include:
+          - platform: amd64
+            runner: ubuntu-22.04-16xlarge
+          - platform: arm64
+            runner: ubuntu-22.04-arm
 
     steps:
       - name: Checkout repository
@@ -192,9 +204,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
+        platform: [amd64,arm64]
+        include:
+          - platform: amd64
+            runner: ubuntu-22.04-16xlarge
+          - platform: arm64
+            runner: ubuntu-22.04-arm
 
     steps:
       - name: Checkout repository
