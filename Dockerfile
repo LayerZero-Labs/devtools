@@ -66,8 +66,9 @@ ENV PATH="/root/.cargo/bin:$PATH"
 # Update package lists
 RUN apt update
 
-# Update the system packages
-RUN apt-get update --fix-missing
+# Update the system packages and fix missing dependencies
+RUN apt-get update
+RUN apt-get install --yes --fix-missing
 
 # Add required packages
 RUN apt-get install --yes \
@@ -84,14 +85,16 @@ RUN apt-get install --yes \
     # Required for TON to run
     libatomic1 libssl-dev \
     # Required to build the base image
-    build-essential
+    build-essential \
+    # speed up llvm builds
+    ninja-build
 
 
 # Install rust and set the default toolchain to 1.83.0
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
-
+ENV ARCH="$(dpkg --print-architecture)"
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
 
@@ -126,7 +129,7 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Installing Aptos CLI
 RUN ./scripts/dev_setup.sh -b -k
-RUN . ~/.cargo/env;
+RUN . ~/.cargo/env
 RUN cargo build --package aptos --profile cli
 
 # Move the binary to the aptos bin directory and clean up
@@ -192,7 +195,7 @@ ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
 # Install Solana using a binary with a fallback to installing from source
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+RUN if [ "$ARCH" = "amd64" ]; then \
             # First we try to download prebuilt binaries for Solana
             (\
             curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
@@ -213,7 +216,7 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
         fi
 
 ARG PROTOC_VERSION=29.3
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
+RUN if [ "$ARCH" = "arm64" ]; then \
             (\            
             # Now we need to install protobuff for aarch 64
             curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip > protoc.zip && \
@@ -231,7 +234,7 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             # It's buildin time
             cargo +${RUST_TOOLCHAIN_VERSION_SOLANA} build --release && \
             mkdir -p /root/.solana/bin && \
-            cp -R target/release/solana* target/release/cargo* deps /root/.solana/bin && \
+            cp -R target/release/solana* target/release/cargo* /root/.solana/bin && \
             chmod a+x /root/.solana/bin/solana && \
             rm -rf solana-${SOLANA_VERSION} \
             ); \
@@ -254,21 +257,20 @@ FROM machine AS ton
 
 WORKDIR /app/ton
 
+ENV TON_VERSION=2024.12-1
+
 RUN apt-get install -y \
     curl \
     unzip
 
-RUN <<-EOF
-    case "$(uname -m)" in
-        aarch64) TON_ARCH="arm64" ;;
-        x86_64) TON_ARCH="x86_64" ;;
-        *) exit 1 ;;
-    esac
+RUN if [ "$ARCH" = "amd64" ]; then TON_ARCH="x86_64"; fi
+RUN if [ "$ARCH" = "arm64" ]; then TON_ARCH="arm64"; fi
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v2024.12-1/ton-linux-${TON_ARCH}.zip > ton.zip
-    unzip -qq -d bin ton
-    chmod a+x bin/*
-EOF
+RUN (\
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip && \
+    unzip -qq -d bin ton && \
+    chmod a+x bin/* \
+    )
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -281,22 +283,24 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
+
+# Install SVM, Solidity version manager
+ARG SOLC_VERSION=0.8.22
+ARG SVM_RS_VERSION=0.5.4
+
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
-RUN rustup default 1.83.0
-
 
 # Install foundry - this needs rust >= 1.81.0
 ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
-# Install SVM, Solidity version manager
-ARG SVM_RS_VERSION=0.5.4
-RUN cargo +1.83.0 install svm-rs@${SVM_RS_VERSION}
+RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
-ARG SOLC_VERSION=0.8.22
 RUN svm install ${SOLC_VERSION}
 
 # Make sure we can execute the binaries
@@ -497,29 +501,30 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM ubuntu:22.04 AS node-ton-my-local-ton
+FROM node:$NODE_VERSION-alpine AS node-ton-my-local-ton
 
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
 # Update system packages
-RUN apt-get update
-RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-RUN apt-get update
+RUN apk update
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+RUN apk update
 
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --yes \
+
+RUN apk add --no-cache \
     curl \
     # Java
-    openjdk-17-jdk \
+    openjdk17-jdk \
     # Python
     python3-pip \
     # Build tools
     # 
     # gcc-13 and gcc-13-aarch64-linux-gnu are required for the arm64 platform
     # since without them glibc version incompatibility will prevent ton-http-api from running
-    gcc-13 gcc-13-aarch64-linux-gnu libc6 libc6-dev \
+    gcc13 gcc13-aarch64-linux-gnu libc6 libc6-dev \
     # TON complains about not having this
     lsb-release tzdata
 
