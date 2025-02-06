@@ -225,15 +225,11 @@ RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
             # Grab the source code
             curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
             cd solana-${SOLANA_VERSION} && \
-            # Tell cargo to not use the vendored version
-            export OPENSSL_NO_VENDOR=1 && \
-            # Tell cargo to use the system version of openssl
-            export OPENSSL_LIB_DIR=/usr/lib/aarch64-linux-gnu && \
-            export OPENSSL_INCLUDE_DIR=/usr/include/openssl && \
             # It's buildin time
             cargo +${RUST_TOOLCHAIN_VERSION_SOLANA} build --release && \
             mkdir -p /root/.solana/bin && \
-            cp -R target/release/solana* target/release/cargo* /root/.solana/bin && \
+            cp -R target/release/. /root/.solana/bin && \
+            ls -la /root/.solana/bin && \
             chmod a+x /root/.solana/bin/solana && \
             rm -rf solana-${SOLANA_VERSION} \
             ); \
