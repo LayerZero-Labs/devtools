@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-example",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -8,6 +8,9 @@
     "compile": "concurrently -c auto --names forge,hardhat '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat'",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
+    "gas:lzCompose": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzCompose(string,address,uint32,address,uint32,address,address,bytes[],uint256,uint256)'",
+    "gas:lzReceive": "forge script scripts/GasProfiler.s.sol:GasProfilerScript --via-ir --sig 'run_lzReceive(string,address,uint32,address,uint32,address,bytes[],uint256,uint256)'",
+    "gas:run": "forge script scripts/OFTProfilerExample.s.sol:OFTProfilerExample --via-ir --sig 'run(uint256)'",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
@@ -33,7 +36,7 @@
     "@layerzerolabs/oft-evm": "^3.1.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@layerzerolabs/toolbox-hardhat": "~0.6.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",

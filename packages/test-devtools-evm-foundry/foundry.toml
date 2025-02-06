@@ -4,9 +4,9 @@ src = 'contracts'
 out = 'artifacts'
 test = 'test/foundry'
 cache_path = 'cache'
-verbosity = 3
-optimize = true
-optimizer_runs = 1000
+optimizer = true
+optimizer_runs = 20_000
+
 libs = [
     # We provide a set of useful contract utilities
     # in the lib directory of @layerzerolabs/toolbox-foundry:

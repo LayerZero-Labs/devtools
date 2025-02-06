@@ -795,5 +795,21 @@ contract OFTTest is TestHelperOz5 {
         assertEq(0, oftFeeDetails.length);
         assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
         assertEq(minAmountToCreditLD, oftReceipt.amountReceivedLD);
+
+        // Test native
+        sendParam = SendParam(
+            A_EID,
+            to,
+            _amountToSendLD,
+            minAmountToCreditLD,
+            "",
+            "",
+            ""
+        );
+        (oftLimit, oftFeeDetails, oftReceipt) = dNativeOFTAdapter.quoteOFT(sendParam);
+        assertEq(0, oftLimit.minAmountLD);
+        assertEq(type(uint256).max, oftLimit.maxAmountLD);
+        assertEq(0, oftFeeDetails.length);
+        assertEq(minAmountToCreditLD, oftReceipt.amountSentLD);
     }
 }

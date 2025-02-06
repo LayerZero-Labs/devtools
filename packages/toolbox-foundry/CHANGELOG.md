@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.11
+
+### Patch Changes
+
+- 43f3d6c: Bump to latest forge-std version
+
 ## 0.1.10
 
 ### Patch Changes

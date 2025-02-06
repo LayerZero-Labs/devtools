@@ -1,5 +1,6 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
+// import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities'
 import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 // Note:  Do not use address for EVM OmniPointHardhat contracts.  Contracts are loaded using hardhat-deploy.
@@ -14,6 +15,8 @@ const solanaContract: OmniPointHardhat = {
     address: '', // NOTE: update this with the OFTStore address.
 }
 
+// Learn about Message Execution Options: https://docs.layerzero.network/v2/developers/solana/oft/account#message-execution-options
+// Note: for a simpler config experience, check out the experimental Simple Config Generator - https://docs.layerzero.network/v2/developers/evm/technical-reference/simple-config
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {

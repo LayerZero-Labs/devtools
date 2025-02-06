@@ -57,8 +57,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(eslint@8.57.1)
       eslint-plugin-turbo:
-        specifier: ^1.12.3
-        version: 1.12.3(eslint@8.57.1)
+        specifier: ^2.4.0
+        version: 2.4.0(eslint@8.57.1)(turbo@1.11.0)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -139,7 +139,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -253,7 +253,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -589,7 +589,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -706,7 +706,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -820,7 +820,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -967,7 +967,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/test-devtools-evm-hardhat':
         specifier: ~0.5.0
@@ -1171,7 +1171,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -1282,7 +1282,7 @@ importers:
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.1.0
+        specifier: ^0.2.1
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1291,7 +1291,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -1393,7 +1393,7 @@ importers:
         specifier: ^0.3.0
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.1.0
+        specifier: ^0.2.1
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1402,7 +1402,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -1522,7 +1522,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -2716,7 +2716,7 @@ importers:
         specifier: ^0.3.0
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.1
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
         specifier: ~0.1.9
@@ -12763,13 +12763,15 @@ packages:
       string.prototype.matchall: 4.0.10
     dev: true
 
-  /eslint-plugin-turbo@1.12.3(eslint@8.57.1):
-    resolution: {integrity: sha512-7hEyxa+oP898EFNoxVenHlH8jtBwV1hbbIkdQWgqDcB0EmVNGVEZkYRo5Hm6BuMAjR433B+NISBJdj0bQo4/Lg==}
+  /eslint-plugin-turbo@2.4.0(eslint@8.57.1)(turbo@1.11.0):
+    resolution: {integrity: sha512-qCgoRi/OTc1VMxab7+sdKiV1xlkY4qjK9sM+kS7+WogrB1DxLguJSQXvk4HA13SD5VmJsq+8FYOw5q4EUk6Ixg==}
     peerDependencies:
       eslint: '>6.6.0'
+      turbo: '>2.0.0'
     dependencies:
       dotenv: 16.0.3
       eslint: 8.57.1
+      turbo: 1.11.0
     dev: true
 
   /eslint-plugin-unused-imports@3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1):

@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/onft721-zksync-example",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -30,10 +30,10 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/oapp-evm": "^0.3.0",
-    "@layerzerolabs/onft-evm": "^0.1.0",
+    "@layerzerolabs/onft-evm": "^0.2.1",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@layerzerolabs/toolbox-hardhat": "~0.6.6",
     "@matterlabs/hardhat-zksync-deploy": "~0.9.0",

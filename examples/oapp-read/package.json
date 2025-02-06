@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oapp-read-example",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -31,7 +31,7 @@
     "@layerzerolabs/oapp-evm": "^0.3.0",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
     "@layerzerolabs/solhint-config": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@layerzerolabs/toolbox-hardhat": "~0.6.6",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",

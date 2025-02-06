@@ -1,5 +1,41 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
+## 0.7.0
+
+### Minor Changes
+
+- 57a80a8: added script to update metaplex metadata
+
+## 0.6.0
+
+### Minor Changes
+
+- 1ce802a: oft-solana - throw if trying to send more than owned
+
+## 0.5.1
+
+### Patch Changes
+
+- 12eaa61: oft-solana(getSimulationComputeUnits): increase backoff max delay from 3s to 10s
+
+## 0.5.0
+
+### Minor Changes
+
+- 4af9800: fallback for getSimulationComputeUnits
+
+## 0.4.9
+
+### Patch Changes
+
+- a2ecefd: fix missing return statement when user chooses no to 'continue with onlyOftStore'
+
 ## 0.4.8
 
 ### Patch Changes
