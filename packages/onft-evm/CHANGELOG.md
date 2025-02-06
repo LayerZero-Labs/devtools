@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.2.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
 ## 0.2.0
 
 ### Minor Changes

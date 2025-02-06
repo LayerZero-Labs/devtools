@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-foundry
 
+## 6.0.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
 ## 6.0.0
 
 ### Patch Changes

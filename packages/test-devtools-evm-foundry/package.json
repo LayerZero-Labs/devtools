@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-evm-foundry",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Helpers for testing LayerZero EVM contracts using foundry",
   "repository": {
     "type": "git",

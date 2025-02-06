@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/oft-solana-example",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "private": true,
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
@@ -44,7 +44,7 @@
     "@layerzerolabs/protocol-devtools-evm": "~3.0.5",
     "@layerzerolabs/protocol-devtools-solana": "^4.0.7",
     "@layerzerolabs/solhint-config": "^3.0.12",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
     "@layerzerolabs/test-devtools-evm-hardhat": "~0.5.0",
     "@layerzerolabs/toolbox-foundry": "~0.1.9",
     "@layerzerolabs/toolbox-hardhat": "~0.6.6",
