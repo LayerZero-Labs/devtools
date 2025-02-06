@@ -20,10 +20,6 @@ import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFact
 
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
 
-function bigIntReplacer(_key: string, value: any): any {
-    return typeof value === 'bigint' ? value.toString() : value
-}
-
 /**
  * Filters graph connections where `from.eid` is an EndpointV1.
  * @param graph The full OmniGraph to filter.
@@ -34,7 +30,6 @@ const filterGraphForEndpointV1 = (graph: { connections: any[]; contracts: any[] 
     //     ({ vector: { from } }) => endpointIdToVersion(from.eid) === 'v1'
     // )
     const filteredConnections = graph.connections.filter(({ vector: { from } }) => {
-        console.log({ from, filterGraphForEndpointV1Res: endpointIdToVersion(from.eid) === 'v1' })
         return endpointIdToVersion(from.eid) === 'v1'
     })
 
@@ -208,7 +203,6 @@ task(TASK_LZ_OAPP_WIRE)
                     logger.info(`[EndpointV1] Checking connections`)
 
                     // Use the custom `configureLzAppTrustedRemotes` logic for the V1 graph
-                    // console.log(JSON.stringify(v1Graph, bigIntReplacer, 2))
                     const setConfigurationTxs = await configureLzAppGraph(v1Graph, hre)
 
                     const transactions = [...setConfigurationTxs]
