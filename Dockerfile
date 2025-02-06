@@ -111,15 +111,14 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
-RUN (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
-    # Then rename the directory just for convenience
-    mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
-    )
+
+# We download the source code and extract the archive
+RUN curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz
+# Then rename the directory just for convenience
+RUN mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./aptos-v${APTOS_VERSION}
 
 # Switch to the project
-WORKDIR /app/aptos/src
+WORKDIR /app/aptos/aptos-v${APTOS_VERSION}
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
@@ -183,7 +182,7 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.78.0
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
 ARG SOLANA_VERSION=1.18.26
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
@@ -193,49 +192,32 @@ RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-# Install Solana using a binary with a fallback to installing from source
-RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
-            # First we try to download prebuilt binaries for Solana
-            (\
-            curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-            mkdir -p /root/.solana && \
-            # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
-            cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
-            ) || \
-            # If that doesn't work, we'll need to build Solana from source
-            (\
-            # We download the source code and extract the archive
-            curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-            # Then run the installer
-            # 
-            # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
-            # See here https://github.com/inflation/jpegxl-rs/issues/60
-            ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
-            ); \
+RUN BUILD_FROM_SOURCE=true; \
+    # Install Solana using a binary with a fallback to installing from source. 
+    # List of machines that have prebuilt binaries:
+    # - amd64/linux - last checked on Feb 6, 2025
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
+        BUILD_FROM_SOURCE=false; \
+    fi && \
+    # If we need to build from source, we'll do it here
+    # List of machines that need to be built from source:
+    # - arm64/linux - last checked on Feb 6, 2025
+    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+            git clone https://github.com/solana-labs/solana.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
+            # Produces the same directory structure as the prebuilt binaries
+            # Make the active release point to the new release
+            bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
+            ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
+            # Clean up the source code
+            rm -rf ~/solana-v${SOLANA_VERSION}; \
         fi
 
-ARG PROTOC_VERSION=29.3
-RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
-            (\            
-            # Now we need to install protobuff for aarch 64
-            curl -s -L https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-aarch_64.zip > protoc.zip && \
-            unzip protoc.zip && \
-            mv bin/protoc /usr/local/bin/protoc && \
-            rm -rf bin protoc.zip && \
-            # Grab the source code
-            curl -s -L https://github.com/solana-labs/solana/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-            cd solana-${SOLANA_VERSION} && \
-            # It's buildin time
-            cargo +${RUST_TOOLCHAIN_VERSION_SOLANA} build --release && \
-            mkdir -p /root/.solana/bin && \
-            cp -R target/release/. /root/.solana/bin && \
-            ls -la /root/.solana/bin && \
-            chmod a+x /root/.solana/bin/solana && \
-            rm -rf solana-${SOLANA_VERSION} \
-            ); \
-            fi
-            
+# Copy the active release directory into /root/.solana and make it available in the PATH
+RUN mkdir -p /root/.solana
+RUN cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin
 
+RUN ls -la /root/.solana/bin
 ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
 
