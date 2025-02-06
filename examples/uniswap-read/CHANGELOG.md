@@ -1,5 +1,11 @@
 # @layerzerolabs/uniswap-read-example
 
+## 0.2.6
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
 ## 0.2.5
 
 ### Patch Changes

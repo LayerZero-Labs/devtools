@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.1
+
+### Patch Changes
+
+- 213a76b: Enable optimizer explicitly
+
 ## 0.7.0
 
 ### Minor Changes
