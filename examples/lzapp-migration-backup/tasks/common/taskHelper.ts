@@ -805,15 +805,11 @@ export async function getTrustedRemote(
         // Call the contract's getter function
         const path: string = await lzAppContract.trustedRemoteLookup(dstEid)
 
-        if (path === '0x') {
-            return path
-        }
-
         // Decode the path to retrieve the remote address
         const remoteAddress = path.slice(0, path.length - 40) // Remove the last 20 bytes (local address)
+
         return remoteAddress
     } catch (error) {
-        console.error(`Error getting trusted remote: ${(error as Error).message}`)
         return null
     }
 }
@@ -857,16 +853,8 @@ export const configureLzAppGraph = async (
 
                     try {
                         logger.info('Checking LzApp trusted remotes configuration')
-                        const currentTrustedRemote = await getTrustedRemote(hreForEid, from, to.eid)
-                        if (currentTrustedRemote === null) {
-                            throw new Error(`Failed to retrieve trusted remote for ${from.eid} → ${to.eid}`)
-                        }
-
-                        const newRemote = ethers.utils.getAddress(to.address)
-                        const currentRemote =
-                            currentTrustedRemote === '0x' ? '0x' : ethers.utils.getAddress(currentTrustedRemote)
-
-                        if (currentRemote !== newRemote) {
+                        const getTrustedRemoteTx = await getTrustedRemote(hreForEid, from, to.eid)
+                        if (ethers.utils.getAddress(getTrustedRemoteTx!) != ethers.utils.getAddress(to.address)) {
                             const setTrustedRemoteTx = await setTrustedRemote(hreForEid, from, to)
                             if (setTrustedRemoteTx) transactions.push(setTrustedRemoteTx)
                         }
