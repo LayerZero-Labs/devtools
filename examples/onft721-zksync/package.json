@@ -58,6 +58,7 @@
     "hardhat-deploy": "^0.12.1",
     "mocha": "^10.2.0",
     "prettier": "^3.2.5",
+    "solc": "0.8.22",
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
     "ts-node": "^10.9.2",
