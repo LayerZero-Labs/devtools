@@ -160,10 +160,10 @@ jobs:
           DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # Using the local Aptos testnet node
           DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:f59e099f10a5e7dfb8783d30c8379f2f969f657b
-          # Using the local Solana test validator - may fail due to RPC issues
-          # DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # Using the local TON node - i do not know if this is working
-          # DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          # Using the local Solana test validator - may fail due to RPC issues
+          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:f59e099f10a5e7dfb8783d30c8379f2f969f657b
 
 
       # We'll collect the docker compose logs from all containers on failure
