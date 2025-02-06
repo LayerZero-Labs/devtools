@@ -57,8 +57,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(eslint@8.57.1)
       eslint-plugin-turbo:
-        specifier: ^1.12.3
-        version: 1.13.4(eslint@8.57.1)
+        specifier: ^2.4.0
+        version: 2.4.0(eslint@8.57.1)(turbo@1.11.0)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -13245,13 +13245,15 @@ packages:
       string.prototype.matchall: 4.0.10
     dev: true
 
-  /eslint-plugin-turbo@1.13.4(eslint@8.57.1):
-    resolution: {integrity: sha512-82GfMzrewI/DJB92Bbch239GWbGx4j1zvjk1lqb06lxIlMPnVwUHVwPbAnLfyLG3JuhLv9whxGkO/q1CL18JTg==}
+  /eslint-plugin-turbo@2.4.0(eslint@8.57.1)(turbo@1.11.0):
+    resolution: {integrity: sha512-qCgoRi/OTc1VMxab7+sdKiV1xlkY4qjK9sM+kS7+WogrB1DxLguJSQXvk4HA13SD5VmJsq+8FYOw5q4EUk6Ixg==}
     peerDependencies:
       eslint: '>6.6.0'
+      turbo: '>2.0.0'
     dependencies:
       dotenv: 16.0.3
       eslint: 8.57.1
+      turbo: 1.11.0
     dev: true
 
   /eslint-plugin-unused-imports@3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1):
