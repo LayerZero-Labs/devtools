@@ -6,6 +6,7 @@ import { OmniAddress, OmniPoint, OmniTransaction, flattenTransactions } from '@l
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { LzAppOmniGraph, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
@@ -862,9 +863,9 @@ export const configureLzAppGraph = async (
                             throw new Error(`Failed to retrieve trusted remote for ${from.eid} → ${to.eid}`)
                         }
 
-                        const newRemote = ethers.utils.getAddress(to.address)
-                        const currentRemote =
-                            currentTrustedRemote === '0x' ? '0x' : ethers.utils.getAddress(currentTrustedRemote)
+                        const newRemote = addressToBytes32(to.address).toString()
+
+                        const currentRemote = addressToBytes32(currentTrustedRemote).toString()
 
                         if (currentRemote !== newRemote) {
                             const setTrustedRemoteTx = await setTrustedRemote(hreForEid, from, to)
@@ -873,7 +874,12 @@ export const configureLzAppGraph = async (
                         logger.info(`${SUCCESS_SYMBOL} Checked LzApp trusted remotes configuration`)
                         // Generate transactions using the retrieved hre
                         logger.info(`Checking LzApp send libraries configuration`)
-                        const LzApp = await hreForEid.deployments.get(from.contractName!)
+
+                        if (!from.contractName) {
+                            throw new Error(`Failed to retrieve contract name for ${from.eid}`)
+                        }
+
+                        const LzApp = await hreForEid.deployments.get(from.contractName)
                         if (!LzApp) {
                             throw new Error(`Failed to retrieve LzApp deployment for ${from.contractName}`)
                         }
