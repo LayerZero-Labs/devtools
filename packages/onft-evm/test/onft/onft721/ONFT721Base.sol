@@ -13,6 +13,7 @@ import { ONFT721Adapter } from "../../../contracts/onft721/ONFT721Adapter.sol";
 import { ERC721Mock } from "./mocks/ERC721Mock.sol";
 import { ONFT721Mock } from "./mocks/ONFT721Mock.sol";
 import { ONFT721AdapterMock } from "./mocks/ONFT721AdapterMock.sol";
+import { ONFT721EnumerableMock } from "./mocks/ONFT721EnumerableMock.sol";
 import { InspectorMock, IOAppMsgInspector } from "../../mocks/InspectorMock.sol";
 
 import { ONFTBaseTestHelper } from "../ONFTBaseTestHelper.sol";
@@ -26,6 +27,8 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
     string internal constant B_ONFT_SYMBOL = "bONFT";
     string internal constant C_TOKEN_NAME = "cONFT";
     string internal constant C_TOKEN_SYMBOL = "cONFT";
+    string internal constant D_TOKEN_NAME = "dONFTEnumerable";
+    string internal constant D_TOKEN_SYMBOL = "dONFT";
 
     uint256 internal constant DEFAULT_INITIAL_ONFTS_PER_EID = 256;
 
@@ -34,6 +37,7 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
     ONFT721Mock internal bONFT;
     ONFT721AdapterMock internal cONFTAdapter;
     ERC721Mock internal cERC721Mock;
+    ONFT721EnumerableMock internal dONFTEnumerable;
 
     InspectorMock internal oAppInspector;
 
@@ -69,6 +73,13 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
                 abi.encode(address(cERC721Mock), address(endpoints[C_EID]), address(this))
             )
         );
+
+        dONFTEnumerable = ONFT721EnumerableMock(
+            _deployOApp(
+                type(ONFT721EnumerableMock).creationCode,
+                abi.encode(D_TOKEN_NAME, D_TOKEN_SYMBOL, address(endpoints[D_EID]), address(this))
+            )
+        );
     }
 
     /// @dev the initial number of ONFTS to mint per EID
@@ -80,11 +91,12 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
     /// @dev wire the ONFTs and mint the initial ONFTs
     function _wireAndMintInitial() internal {
         // wire the onfts
-        onfts = new address[](3);
+        onfts = new address[](4);
         uint256 onftIndex = 0;
         onfts[onftIndex++] = address(aONFT);
         onfts[onftIndex++] = address(bONFT);
         onfts[onftIndex++] = address(cONFTAdapter);
+        onfts[onftIndex++] = address(dONFTEnumerable);
         wireOApps(onfts);
 
         _mintOnAdapter();
@@ -94,21 +106,24 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
     /// @dev mint ONFTs on the adapter
     function _mintOnAdapter() internal {
         uint256 numONFTsPerEID = _initialNumONFTsPerEID();
-        for (uint256 i = 0; i < numONFTsPerEID * 3; i++) {
+        for (uint256 i = 0; i < numONFTsPerEID * 4; i++) {
             cERC721Mock.mint(charlie, i);
         }
     }
 
-    /// @dev distribute ONFTs across the mesh, giving alice 256 on A_EID and bob 256 on B_EID.
     function _distributeAcrossMesh() internal {
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(200_000, 0);
         uint256 numONFTsPerEID = _initialNumONFTsPerEID();
+
+        // C -> A
         for (uint256 i = 0; i < numONFTsPerEID; i++) {
             vm.startPrank(charlie);
             IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), i);
             vm.stopPrank();
-            _sendAndCheck(i, C_EID, A_EID, charlie, alice, options, numONFTsPerEID * 3 - i, i, true, false);
+            _sendAndCheck(i, C_EID, A_EID, charlie, alice, options, numONFTsPerEID * 4 - i, i, true, false);
         }
+
+        // C -> B
         for (uint256 i = numONFTsPerEID; i < numONFTsPerEID * 2; i++) {
             vm.startPrank(charlie);
             IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), i);
@@ -120,8 +135,27 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
                 charlie,
                 bob,
                 options,
-                numONFTsPerEID * 3 - i,
+                numONFTsPerEID * 4 - i,
                 i - numONFTsPerEID,
+                true,
+                false
+            );
+        }
+
+        // C -> D
+        for (uint256 i = numONFTsPerEID * 2; i < numONFTsPerEID * 3; i++) {
+            vm.startPrank(charlie);
+            IERC721(cONFTAdapter.token()).approve(address(cONFTAdapter), i);
+            vm.stopPrank();
+            _sendAndCheck(
+                i,
+                C_EID,
+                D_EID,
+                charlie,
+                david,
+                options,
+                numONFTsPerEID * 4 - i,
+                i - (numONFTsPerEID * 2),
                 true,
                 false
             );
@@ -189,10 +223,11 @@ abstract contract ONFT721Base is ONFTBaseTestHelper {
     }
 
     function _setMeshDefaultEnforcedSendOption() internal {
-        for (uint32 i = 0; i <= 3; i++) {
+        for (uint32 i = 0; i <= 4; i++) {
             _setDefaultEnforcedSendOption(address(aONFT), i);
             _setDefaultEnforcedSendOption(address(bONFT), i);
             _setDefaultEnforcedSendOption(address(cONFTAdapter), i);
+            _setDefaultEnforcedSendOption(address(dONFTEnumerable), i);
         }
     }
 

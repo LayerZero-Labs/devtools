@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.2.0
+
+### Minor Changes
+
+- a6c0af0: Added ONFT721Enumerable
+
 ## 0.1.0
 
 ### Minor Changes
