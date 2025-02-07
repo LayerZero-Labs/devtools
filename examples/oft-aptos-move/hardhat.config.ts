@@ -30,7 +30,7 @@ const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
 
 if (accounts == null) {
     console.warn(
-        'Could not find MNEMONIC or PRIVATE_KEY environment variables. It will not be possible to execute transactions in your example.'
+        'Could not find MNEMONIC or PRIVATE_KEY environment variables. It will not be possible to execute EVM transactions in your example.'
     )
 }
 

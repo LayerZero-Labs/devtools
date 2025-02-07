@@ -1,6 +1,5 @@
 import { spawn } from 'child_process'
 
-import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { getNamedAddresses } from './utils/config'
 import fs from 'fs'
 import path from 'path'
@@ -12,13 +11,9 @@ let stdErr = ''
  * @dev Wraps the aptos move build command
  * @returns Promise<void>
  */
-async function buildMovementContracts(named_addresses: string, chain: string) {
-    const aptosYamlConfig = await parseYaml()
-    const network = aptosYamlConfig.network
-    const lzNetworkStage = getLzNetworkStage(network)
-
+async function buildMovementContracts(named_addresses: string, chain: string, stage: string) {
     // Get additional named addresses and combine with provided ones
-    const additionalAddresses = getNamedAddresses(chain, lzNetworkStage)
+    const additionalAddresses = getNamedAddresses(chain, stage)
     const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
 
     const cmd = 'aptos'
@@ -106,7 +101,7 @@ async function build(
 
     if (!fs.existsSync(buildPath) || forceBuild) {
         console.log('Building contracts\n')
-        await buildMovementContracts(namedAddresses, chainName)
+        await buildMovementContracts(namedAddresses, chainName, stage)
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
     }

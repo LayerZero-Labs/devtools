@@ -4,11 +4,13 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "build": "ts-node build.ts",
     "clean": "rm -rf artifacts cache out build",
     "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat && $npm_execpath run compile:aptos",
     "compile:aptos": "aptos move compile --dev --skip-attribute-checks --included-artifacts=none --skip-fetch-latest-git-deps",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
+    "deploy": "ts-node deploy.ts",
     "lint": "$npm_execpath run lint:js && $npm_execpath run lint:sol",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}' && prettier --write . && solhint 'contracts/**/*.sol' --fix --noPrompt",
     "lint:js": "eslint '**/*.{js,ts,json}' && prettier --check .",
@@ -37,13 +39,17 @@
     "test": "$npm_execpath run test:forge && $npm_execpath run test:hardhat && $npm_execpath run test:aptos",
     "test:aptos": "aptos move test --dev --skip-fetch-latest-git-deps",
     "test:forge": "forge test",
-    "test:hardhat": "hardhat test",
-    "deploy": "ts-node deploy.ts",
-    "build": "ts-node build.ts"
+    "test:hardhat": "hardhat test"
   },
   "resolutions": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
+  },
+  "dependencies": {
+    "@initia/builder.js": "^0.2.7",
+    "@initia/initia.js": "^0.2.28",
+    "@types/glob": "^8.1.0",
+    "glob": "^11.0.1"
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
@@ -114,11 +120,5 @@
   "overrides": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
-  },
-  "dependencies": {
-    "@initia/builder.js": "^0.2.7",
-    "@initia/initia.js": "^0.2.28",
-    "@types/glob": "^8.1.0",
-    "glob": "^11.0.1"
   }
 }

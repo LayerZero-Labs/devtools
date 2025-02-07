@@ -1,5 +1,7 @@
 ## Move-VM OFT Setup and Deployment
+
 ## Setup
+
 Add key to your keyring:
 
 ```bash
@@ -15,7 +17,6 @@ INITIA_PRIVATE_KEY=<your-initia-private-key>
 INITIA_KEY_NAME=<your-initia-key-name>
 ```
 
-
 Then run `source .env` in order for your values to be mapped to `$INITIA_ACCOUNT_ADDRESS` and `$INITIA_PRIVATE_KEY`
 
 ```bash
@@ -30,66 +31,14 @@ Then, deploy the module using the deploy script I made.
 
 I will soon modify this to be a command. It should not take in any info other than the name of the module that is being deployed, so for this case it should be oft, but maybe we can get that from move.layerzero.config.ts.
 
-
-
 ## Validating object ownership of your deployed Initia OApp:
+
 Go to: https://scan.testnet.initia.xyz/initiation-2/interact?address=0x1&moduleName=object&functionType=view&functionName=owner
 
 For TO: put 0x1::Object::ObjectCore
 For the argument: put your deployed Object Address
 
 Verify the method returns your Initia account address as the owner.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ### Build the modules
 

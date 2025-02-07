@@ -16,8 +16,13 @@ aptos key generate --output-file my_key.pub
 
 Then initialize the aptos cli and connect to the aptos network:
 
+For Aptos Chain:
 ```
 aptos init --network=testnet --private-key=<your-private-key>
+```
+For Movement Chain:
+```
+aptos init --network=custom --private-key=<your-private-key>
 ```
 
 You can then verify that your initialization was successful by running the following command:
@@ -41,48 +46,15 @@ EVM_PRIVATE_KEY=<your-evm-private-key>
 
 Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
 
-Note: aptos account address can be found in .aptos/config.yaml
+Note: aptos account address can be found in `.aptos/config.yaml` after running `aptos init`
 
 ## Build and deploy aptos move modules
 
 Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
 
-### Build the modules
+### Build and Deploy the modules
 
-```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS
-```
-
-### Deploy the modules
-
-First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
-
-```ts
-const oftMetadata = {
-  token_name: "MyMoveOFT",
-  token_symbol: "MMOFT",
-  icon_uri: "",
-  project_uri: "",
-  sharedDecimals: 6,
-  localDecimals: 6,
-};
-```
-
-```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
-```
-
-## EVM Deployment
-
-```bash
-npx hardhat lz:deploy
-```
-
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
-
-## Init and Set Delegate
-
-Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
+Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
 ```ts
     contracts: [
@@ -103,14 +75,39 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
     ],
 ```
 
-Then run the following commands:
-
 ```bash
-pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
 ```
 
+## EVM Deployment
+
+```bash
+npx hardhat lz:deploy
+```
+
+Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+
+## Init and Set Delegate
+First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
+
+```ts
+const oftMetadata = {
+  token_name: "MyMoveOFT",
+  token_symbol: "MMOFT",
+  icon_uri: "",
+  project_uri: "",
+  sharedDecimals: 6,
+  localDecimals: 6,
+};
+```
+Then Run the following command to set the delegate:
 ```bash
 pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
+```
+
+Then Run the following command to initialize the oft:
+```bash
+pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## Wire

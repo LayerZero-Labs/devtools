@@ -75,7 +75,7 @@ class MoveDeployOperation implements INewOperation {
             named_addresses = `${args.address_name}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
             accountAddress = getAptosAccountAddress()
 
-            await build(chainName, forceBuild, named_addresses, args.address_name, stage)
+            // await build(chainName, forceBuild, named_addresses, args.address_name, stage)
         } else if (chainName === 'initia') {
             named_addresses = `${moveTomlAdminName}=${oAppOwner}`
             accountAddress = getInitiaAccountAddress()

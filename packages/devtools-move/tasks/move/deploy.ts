@@ -20,13 +20,13 @@ let stdErr = ''
 async function deployMovementContracts(
     userChosenContract: OAppOmniGraphHardhat['contracts'][number],
     addressName: string,
-    namedAdresses: string,
+    namedAddresses: string,
     chainName: string,
     stage: string
 ) {
     const additionalAddresses = getNamedAddresses(chainName, stage)
-    const namedAddresses = namedAdresses ? `${namedAdresses},${additionalAddresses}` : additionalAddresses
-
+    namedAddresses = namedAddresses ? `${namedAddresses},${additionalAddresses}` : additionalAddresses
+    console.log('namedAddresses', namedAddresses)
     let cmd = ''
     let args: string[] = []
     if (chainName === 'aptos' || chainName === 'movement') {
@@ -47,8 +47,7 @@ async function deployMovementContracts(
         args = [
             'move',
             'deploy-object',
-            'oft',
-            `-p=${process.cwd()}`,
+            addressName,
             `--named-addresses=${namedAddresses}`,
             '--node=https://rpc.testnet.initia.xyz:443',
             `--from=${userAccountName}`,
