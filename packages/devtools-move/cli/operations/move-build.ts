@@ -1,5 +1,5 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
-import { build as buildMove } from '../../tasks/move/build'
+// import { build as buildMove } from '../../tasks/move/build'
 
 class MoveBuildOperation implements INewOperation {
     vm = 'move'
@@ -18,7 +18,8 @@ class MoveBuildOperation implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await buildMove(args)
+        console.log(args)
+        // await buildMove(args)
     }
 }
 

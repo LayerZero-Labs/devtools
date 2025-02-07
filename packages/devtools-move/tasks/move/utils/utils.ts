@@ -2,10 +2,9 @@ import * as fs from 'fs'
 import * as readline from 'readline'
 
 import { Aptos } from '@aptos-labs/ts-sdk'
-
 import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
-import { OFT } from '../../../sdk/oft'
+import { IOFT } from '../../../sdk/IOFT'
 
 import { TransactionPayload } from './moveVMOftConfigOps'
 
@@ -111,7 +110,7 @@ export function getMoveVMOAppAddress(
 
 export async function sendAllTxs(
     aptos: Aptos,
-    oft: OFT,
+    oft: IOFT,
     account_address: string,
     payloads: (TransactionPayload | null)[]
 ) {
@@ -220,7 +219,7 @@ function formatArgumentValue(arg: any): any {
 
 export async function sendInitTransaction(
     moveVMConnection: Aptos,
-    oft: OFT,
+    oft: IOFT,
     account_address: string,
     payloads: TransactionPayload[]
 ) {

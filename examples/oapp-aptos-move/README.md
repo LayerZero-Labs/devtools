@@ -56,7 +56,7 @@ pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addres
 ### Deploy the modules
 
 ```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS --oapp-type oapp
 ```
 ## Set Delegate
 

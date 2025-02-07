@@ -1,5 +1,10 @@
 ## Move-VM OFT Setup and Deployment
 ## Setup
+Add key to your keyring:
+
+```bash
+initiad keys import-hex <your-initia-key-name> <your-initia-private-key> --keyring-backend test
+```
 
 Create a `.env` file with the following variables:
 
@@ -7,9 +12,15 @@ Create a `.env` file with the following variables:
 INITIA_ACCOUNT_ADDRESS=<your-initia-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 INITIA_PRIVATE_KEY=<your-initia-private-key>
+INITIA_KEY_NAME=<your-initia-key-name>
 ```
 
+
 Then run `source .env` in order for your values to be mapped to `$INITIA_ACCOUNT_ADDRESS` and `$INITIA_PRIVATE_KEY`
+
+```bash
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
+```
 
 ## Build and deploy initia move modules
 
@@ -18,7 +29,6 @@ First step generate an object address and then feed that into the build initiad 
 Then, deploy the module using the deploy script I made.
 
 I will soon modify this to be a command. It should not take in any info other than the name of the module that is being deployed, so for this case it should be oft, but maybe we can get that from move.layerzero.config.ts.
-
 
 
 

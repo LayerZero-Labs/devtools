@@ -22,7 +22,7 @@ async function initOFTFA(
     local_decimals: number,
     configPath: string
 ) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
     const lzNetworkStage = getLzNetworkStage(network)
@@ -43,7 +43,7 @@ async function initOFTFA(
     console.log(`\tShared Decimals: ${shared_decimals}`)
     console.log(`\tLocal Decimals: ${local_decimals}`)
 
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
+    const moveVMConnection = getConnection(chain, network)
     const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key, eid)
 
     const initializePayload = oft.initializeOFTFAPayload(

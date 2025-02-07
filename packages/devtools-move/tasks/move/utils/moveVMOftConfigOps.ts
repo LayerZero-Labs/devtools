@@ -14,6 +14,7 @@ import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 import { Endpoint } from '../../../sdk/endpoint'
 import { MsgLib } from '../../../sdk/msgLib'
 import { OFT, OFTType, TypedInputGenerateTransactionPayloadData } from '../../../sdk/oft'
+import { IOFT } from '../../../sdk/IOFT'
 import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
 
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
@@ -69,7 +70,7 @@ export function createTransferObjectOwnerPayload(objectAddress: string, toAddres
     }
 }
 
-export async function setDelegate(oft: OFT, delegate: string, eid: EndpointId): Promise<TransactionPayload | null> {
+export async function setDelegate(oft: IOFT, delegate: string, eid: EndpointId): Promise<TransactionPayload | null> {
     const currDelegate = await oft.getDelegate()
     if (currDelegate == delegate) {
         console.log(`✅ Delegate already set to ${delegate}\n`)

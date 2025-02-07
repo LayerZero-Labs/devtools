@@ -8,11 +8,11 @@ import { getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { getLzConfig } from './utils/config'
 
 async function transferObjectOwner(newOwner: string, configPath: string) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
 
     const lzConfig = await getLzConfig(configPath)
     const chain = getChain(fullnode)
-    const aptos = getConnection(chain, network, fullnode, faucet)
+    const aptos = getConnection(chain, network)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const eid = getEidFromMoveNetwork(chain, network)

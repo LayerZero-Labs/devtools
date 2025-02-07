@@ -2,17 +2,11 @@ import { spawn } from 'child_process'
 import { assert } from 'console'
 import fs from 'fs'
 
-import { Network } from '@aptos-labs/ts-sdk'
-
 import { deploymentFile } from '../shared/types'
 
-import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getLzConfig, getMoveVMContracts, getNamedAddresses } from './utils/config'
+import { getNamedAddresses } from './utils/config'
 import path from 'path'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-
-import inquirer from 'inquirer'
+import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
 
 let stdOut = ''
 let stdErr = ''
@@ -23,25 +17,49 @@ let stdErr = ''
  * @dev Wraps the aptos move create-object-and-publish-package command
  * @returns Promise<void>
  */
-async function deployMovementContracts(address_name: string, named_addresses: string, configPath: string) {
-    const aptosYamlConfig = await parseYaml()
-    const networkStage = aptosYamlConfig.network
-    const lzNetworkStage = getLzNetworkStage(networkStage)
-    const network = getNetworkFromConfig(aptosYamlConfig)
-    const lzConfig = await getLzConfig(configPath)
-    const contracts = getMoveVMContracts(lzConfig)
-    const userChosenContractName = await promptUserForContractName(contracts)
+async function deployMovementContracts(
+    userChosenContract: OAppOmniGraphHardhat['contracts'][number],
+    addressName: string,
+    namedAdresses: string,
+    chainName: string,
+    stage: string
+) {
+    const additionalAddresses = getNamedAddresses(chainName, stage)
+    const namedAddresses = namedAdresses ? `${namedAdresses},${additionalAddresses}` : additionalAddresses
 
-    const additionalAddresses = getNamedAddresses(network, lzNetworkStage)
-    const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
+    let cmd = ''
+    let args: string[] = []
+    if (chainName === 'aptos' || chainName === 'movement') {
+        cmd = 'aptos'
+        args = [
+            'move',
+            'create-object-and-publish-package',
+            `--address-name=${addressName}`,
+            `--named-addresses=${namedAddresses}`,
+        ]
+    } else if (chainName === 'initia') {
+        if (!process.env.INITIA_KEY_NAME) {
+            throw new Error('INITIA_KEY_NAME is not set.\n\nPlease set the INITIA_KEY_NAME environment variable.')
+        }
+        const userAccountName = process.env.INITIA_KEY_NAME
 
-    const cmd = 'aptos'
-    const args = [
-        'move',
-        'create-object-and-publish-package',
-        `--address-name=${address_name}`,
-        `--named-addresses=${namedAddresses}`,
-    ]
+        cmd = 'initiad'
+        args = [
+            'move',
+            'deploy-object',
+            'oft',
+            `-p=${process.cwd()}`,
+            `--named-addresses=${namedAddresses}`,
+            '--node=https://rpc.testnet.initia.xyz:443',
+            `--from=${userAccountName}`,
+            '--gas-prices=0.015uinit',
+            '--gas-adjustment=1.4',
+            '--chain-id=initiation-2',
+            '--gas=auto',
+            '--keyring-backend=test',
+            '-y',
+        ]
+    }
 
     return new Promise<void>((resolve, reject) => {
         const childProcess = spawn(cmd, args, {
@@ -67,7 +85,7 @@ async function deployMovementContracts(address_name: string, named_addresses: st
             if (code === 0) {
                 const addresses = stdOut.match(/0x[0-9a-fA-F]{64}/g)!
                 assert(addresses[0] == addresses[1], 'Addresses do not match')
-                createDeployment(addresses[0], userChosenContractName, network, lzNetworkStage)
+                createDeployment(addresses[0], userChosenContract.contract.contractName ?? '', chainName, stage)
 
                 resolve()
             } else {
@@ -83,20 +101,6 @@ async function deployMovementContracts(address_name: string, named_addresses: st
             reject(err)
         })
     })
-}
-
-function getNetworkFromConfig(yamlConfig: {
-    account_address: string
-    private_key: string
-    network: Network
-    fullnode: string
-    faucet?: string
-}): string {
-    if (yamlConfig.fullnode.toLowerCase().includes('movement')) {
-        return 'movement'
-    } else {
-        return 'aptos'
-    }
 }
 
 async function createDeployment(deployedAddress: string, file_name: string, network: string, lzNetworkStage: string) {
@@ -128,49 +132,32 @@ async function checkIfDeploymentExists(network: string, lzNetworkStage: string, 
     return fs.existsSync(path.join(aptosDir, `${contractName}.json`))
 }
 
-async function promptUserForContractName(contracts: OmniPointHardhat[]) {
-    const choices = contracts.map((contract) => ({
-        name: `${contract.contractName} (${EndpointId[contract.eid]})`,
-        value: contract.contractName,
-    }))
-
-    const { selectedContract } = await inquirer.prompt([
-        {
-            type: 'list',
-            name: 'selectedContract',
-            message: 'Select contract to deploy:',
-            choices,
-        },
-    ])
-
-    return selectedContract
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function deploy(
-    configPath: string,
+    addressName: string,
     namedAddresses: string,
     forceDeploy: boolean = false,
-    contractName: string = 'oft'
+    selectedContract: OAppOmniGraphHardhat['contracts'][number],
+    chainName: string,
+    stage: string
 ) {
-    const aptosYamlConfig = await parseYaml()
-    const networkStage = aptosYamlConfig.network
-    const lzNetworkStage = getLzNetworkStage(networkStage)
-    const network = getNetworkFromConfig(aptosYamlConfig)
-
-    const deploymentExists = await checkIfDeploymentExists(network, lzNetworkStage, contractName)
+    const deploymentExists = await checkIfDeploymentExists(
+        chainName,
+        stage,
+        selectedContract.contract.contractName ?? ''
+    )
 
     if (deploymentExists) {
         if (forceDeploy) {
-            console.log(`Follow the prompts to complete the deployment ${contractName}`)
-            await deployMovementContracts(contractName, namedAddresses, configPath)
+            console.warn('You are in force deploy mode:')
+            console.log(`Follow the prompts to complete the deployment ${selectedContract.contract.contractName}`)
+            await deployMovementContracts(selectedContract, addressName, namedAddresses, chainName, stage)
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
     } else {
-        console.warn('You are in force deploy mode:')
-        console.log(`Follow the prompts to complete the deployment ${contractName}`)
-        await deployMovementContracts(contractName, namedAddresses, configPath)
+        console.log(`Follow the prompts to complete the deployment ${selectedContract.contract.contractName}`)
+        await deployMovementContracts(selectedContract, addressName, namedAddresses, chainName, stage)
     }
 }
 export { deploy }

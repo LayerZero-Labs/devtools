@@ -3,7 +3,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { OFTType, TypedInputGenerateTransactionPayloadData } from './oft'
 import { RESTClient } from '@initia/initia.js'
 
-export interface IOFTInterface {
+export interface IOFT {
     moveVMConnection: Aptos | RESTClient
     oft_address: string
     eid: EndpointId

@@ -14,12 +14,12 @@ import {
 } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 
 async function initOFTAdapterFA(configPath: string, move_vm_fa_address: string, shared_decimals: number) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
     const lzConfig = await getLzConfig(configPath)
     const chain = getChain(fullnode)
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
+    const moveVMConnection = getConnection(chain, network)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const eid = getEidFromMoveNetwork(chain, network)

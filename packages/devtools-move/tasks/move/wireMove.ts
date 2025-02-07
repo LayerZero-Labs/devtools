@@ -3,7 +3,7 @@ import { Endpoint } from '../../sdk/endpoint'
 import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 import { getConfigConnections } from '../shared/utils'
-
+import { Aptos } from '@aptos-labs/ts-sdk'
 import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
 import { getLzConfig, getNamedAddresses } from './utils/config'
 import * as oftConfig from './utils/moveVMOftConfigOps'
@@ -13,12 +13,12 @@ import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import path from 'path'
 
 async function wireMove(configPath: string) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
     const fullConfigPath = path.join(process.cwd(), configPath)
 
     const lzConfig = await getLzConfig(configPath)
     const chain = getChain(fullnode)
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
+    const moveVMConnection = getConnection(chain, network)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const eid = getEidFromMoveNetwork(chain, network)
@@ -31,14 +31,14 @@ async function wireMove(configPath: string) {
     console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OApp`)
     console.log(`\tAddress: ${moveVMOAppAddress}\n`)
 
-    const oftSDK = new OFT(moveVMConnection, moveVMOAppAddress, account_address, private_key, eid)
-    const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
+    const oftSDK = new OFT(moveVMConnection as Aptos, moveVMOAppAddress, account_address, private_key, eid)
+    const moveVMEndpoint = new Endpoint(moveVMConnection as Aptos, endpointAddress)
 
     const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
     const connectionsFromMoveToAny = await getConfigConnections('from', moveVMEndpointID, fullConfigPath)
 
     const txs = await createWiringTxs(oftSDK, moveVMEndpoint, connectionsFromMoveToAny)
-    await sendAllTxs(moveVMConnection, oftSDK, account_address, txs)
+    await sendAllTxs(moveVMConnection as Aptos, oftSDK, account_address, txs)
 }
 
 async function createWiringTxs(

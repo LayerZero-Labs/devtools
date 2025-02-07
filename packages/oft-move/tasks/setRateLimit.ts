@@ -23,10 +23,10 @@ async function setRateLimit(
     oftType: OFTType,
     configPath: string
 ) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
 
     const chain = getChain(fullnode)
-    const aptos = getConnection(chain, network, fullnode, faucet)
+    const aptos = getConnection(chain, network)
 
     const lzNetworkStage = getLzNetworkStage(network)
     const eid = getEidFromMoveNetwork(chain, network)

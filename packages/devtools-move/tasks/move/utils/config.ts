@@ -3,8 +3,15 @@ import path from 'path'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
-import { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+
+import inquirer from 'inquirer'
+
+const OAPP_ADMIN = 'oapp_admin'
+const OFT_ADMIN = 'oft_admin'
+const OAPP_TYPE = 'oapp'
+const OFT_TYPE = 'oft'
 
 type AptosYamlConfig = {
     profiles: {
@@ -19,6 +26,49 @@ type AptosYamlConfig = {
     }
 }
 
+export const ownerNotSetMessage = `Owner is not set.
+In move.layerzero.config.ts, you must set the owner field in the contract config.
+
+Example:
+const config: OAppOmniGraphHardhat = {
+    contracts: [
+        {
+            contract: <your-contract>,
+            config: {
+                owner: '<your-owner-address>',
+                delegate: '<your-delegate-address>',
+            },
+        },
+    ],
+}`
+
+export function getMoveTomlAdminName(oAppType: string): string {
+    const cleanedOAppType = oAppType.toLowerCase()
+    if (cleanedOAppType === OAPP_TYPE) {
+        return OAPP_ADMIN
+    } else if (cleanedOAppType === OFT_TYPE) {
+        return OFT_ADMIN
+    } else {
+        throw new Error(`Invalid OApp type: ${oAppType}`)
+    }
+}
+
+export function getAptosAccountAddress(): string {
+    if (process.env.APTOS_ACCOUNT_ADDRESS) {
+        return process.env.APTOS_ACCOUNT_ADDRESS
+    } else {
+        throw new Error('APTOS_ACCOUNT_ADDRESS must bet set in the environment variables.')
+    }
+}
+
+export function getInitiaAccountAddress(): string {
+    if (process.env.INITIA_ACCOUNT_ADDRESS) {
+        return process.env.INITIA_ACCOUNT_ADDRESS
+    } else {
+        throw new Error('INITIA_ACCOUNT_ADDRESS must bet set in the environment variables.')
+    }
+}
+
 export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHardhat> {
     const lzConfigPath = path.resolve(path.join(process.cwd(), configPath))
     const lzConfigFile = await import(lzConfigPath)
@@ -26,12 +76,32 @@ export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHard
     return lzConfig
 }
 
-export function getMoveVMContracts(lzConfig: OAppOmniGraphHardhat): OmniPointHardhat[] {
+export async function promptUserContractSelection(
+    contracts: OAppOmniGraphHardhat['contracts'][number][]
+): Promise<OAppOmniGraphHardhat['contracts'][number]> {
+    const choices = contracts.map((contractEntry) => ({
+        name: `${contractEntry.contract.contractName} (${EndpointId[contractEntry.contract.eid]})`,
+        value: contractEntry,
+    }))
+
+    const { selectedContract } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'selectedContract',
+            message: 'Select contract to deploy:',
+            choices,
+        },
+    ])
+
+    return selectedContract
+}
+
+export function getMoveVMContracts(lzConfig: OAppOmniGraphHardhat): OAppOmniGraphHardhat['contracts'][number][] {
     const contracts = []
     for (const entry of lzConfig.contracts) {
         const chainName = getNetworkForChainId(entry.contract.eid).chainName
         if (chainName === 'aptos' || chainName === 'initia' || chainName === 'movement') {
-            contracts.push(entry.contract)
+            contracts.push(entry)
         }
     }
     return contracts
@@ -64,7 +134,7 @@ export function getNamedAddresses(chain: string, networkType: string): string {
     const networkAddresses = addresses[`${chain}-${networkType}-addresses`]
 
     if (!networkAddresses) {
-        throw new Error(`No named addresses found for ${chain}-${networkType}`)
+        throw new Error(`${chain}-${networkType} is not supported.`)
     }
 
     return Object.entries(networkAddresses)
@@ -72,14 +142,10 @@ export function getNamedAddresses(chain: string, networkType: string): string {
         .join(',')
 }
 
-export function getCLICmd(chain: string) {
-    if (chain === 'initia') {
-        return 'initiad'
-    } else if (chain === 'aptos') {
-        return 'aptos'
-    } else if (chain === 'movement') {
-        return 'aptos'
-    } else {
-        throw new Error('Invalid chain')
+export function getAptosPrivateKey(): string {
+    const aptosPrivateKey = process.env.APTOS_PRIVATE_KEY
+    if (!aptosPrivateKey) {
+        throw new Error('APTOS_PRIVATE_KEY must be set in the environment variables.')
     }
+    return aptosPrivateKey
 }

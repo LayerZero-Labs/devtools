@@ -1,34 +1,50 @@
-import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
+import { getConnection } from '../../sdk/moveVMConnectionBuilder'
+import { IOFT } from '../../sdk/IOFT'
 import { OFT } from '../../sdk/oft'
+import { InitiaOFT } from '../../sdk/initiaOFT'
+// import { setDelegate } from './utils/moveVMOftConfigOps'
+import {
+    getContractNameFromLzConfig,
+    getDelegateFromLzConfig,
+    getMoveVMOAppAddress /*sendAllTxs */,
+} from './utils/utils'
+import { getAptosPrivateKey } from './utils/config'
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
+import { Aptos } from '@aptos-labs/ts-sdk'
 
-import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { setDelegate } from './utils/moveVMOftConfigOps'
-import { getContractNameFromLzConfig, getDelegateFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
-import { getLzConfig } from './utils/config'
-
-async function executeSetDelegate(args: any, useAccountAddress: boolean = false) {
-    const configPath = args.oapp_config
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-
-    const lzConfig = await getLzConfig(configPath)
-    const chain = getChain(fullnode)
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
-
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
+async function executeSetDelegate(
+    accountAddress: string,
+    lzConfig: any,
+    stage: Stage,
+    chainName: string,
+    eid: EndpointId
+) {
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const oAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
+    const oAppAddress = getMoveVMOAppAddress(contractName, chainName, stage)
 
-    console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OApp Delegate`)
+    console.log(`\n🔧 Setting ${chainName}-${stage} OApp Delegate`)
     console.log(`\tFor: ${oAppAddress}\n`)
 
-    const oft = new OFT(moveVMConnection, oAppAddress, account_address, private_key, eid)
+    const moveVMConnection = getConnection(chainName, stage)
 
-    const delegate = useAccountAddress ? account_address : getDelegateFromLzConfig(eid, lzConfig)
+    let oft: IOFT
+    if (chainName === 'aptos' || chainName === 'movement') {
+        const aptosPrivateKey = getAptosPrivateKey()
+        oft = new OFT(moveVMConnection as Aptos, oAppAddress, accountAddress, aptosPrivateKey, eid)
+    } else if (chainName === 'initia') {
+        oft = new InitiaOFT(moveVMConnection, oAppAddress, eid)
+    } else {
+        throw new Error(`${chainName}-${stage} is not supported`)
+    }
 
-    const setDelegatePayload = await setDelegate(oft, delegate, eid)
+    const delegate = getDelegateFromLzConfig(eid, lzConfig)
 
-    sendAllTxs(moveVMConnection, oft, account_address, [setDelegatePayload])
+    console.log(delegate)
+    console.log(oft)
+
+    // const setDelegatePayload = await setDelegate(oft, delegate, eid)
+
+    // sendAllTxs(moveVMConnection as Aptos, oft, accountAddress, [setDelegatePayload])
 }
 
 export { executeSetDelegate as setDelegate }

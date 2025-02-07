@@ -1,7 +1,7 @@
 import { spawn } from 'child_process'
 
 import { getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getCLICmd, getNamedAddresses } from './utils/config'
+import { getNamedAddresses } from './utils/config'
 import fs from 'fs'
 import path from 'path'
 
@@ -21,7 +21,7 @@ async function buildMovementContracts(named_addresses: string, chain: string) {
     const additionalAddresses = getNamedAddresses(chain, lzNetworkStage)
     const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
 
-    const cmd = getCLICmd(chain)
+    const cmd = 'aptos'
     const args = ['move', 'build', `--named-addresses=${namedAddresses}`]
 
     return new Promise<void>((resolve, reject) => {
@@ -61,7 +61,6 @@ async function buildMovementContracts(named_addresses: string, chain: string) {
     })
 }
 
-// Add this new helper function
 function compareVersions(installed: string, required: string): boolean {
     const installedParts = installed.split('.').map(Number)
     const requiredParts = required.split('.').map(Number)
@@ -74,40 +73,40 @@ function compareVersions(installed: string, required: string): boolean {
             return false
         }
     }
-    return true // Equal versions
+
+    return true
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function build(args: any, contractName: string = 'oft') {
-    const buildPath = path.join(process.cwd(), 'build', contractName)
-    const aptosYamlConfig = await parseYaml()
-    const accountAddress = aptosYamlConfig.account_address
-    if (args.chain === 'aptos') {
+async function build(
+    chainName: string,
+    forceBuild: boolean,
+    namedAddresses: string,
+    addressName: string,
+    stage: string
+) {
+    if (chainName === 'aptos' || chainName === 'movement') {
         try {
             const version = await getAptosVersion()
-            console.log('🚀 aptos version is:', version)
             const MIN_VERSION = '6.0.1'
 
             if (!compareVersions(version, MIN_VERSION)) {
-                console.error(`❌ aptos version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
+                console.error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
                 return
             }
-            console.log('🚀 aptos version is compatible')
+            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
         } catch (error) {
-            console.error('🚨 Failed to check aptos version:', error)
+            console.error('🚨 Failed to check Aptos CLI version:', error)
             return
         }
+    } else {
+        throw new Error(`Chain ${chainName}-${stage} not supported for build.`)
     }
 
-    if (!fs.existsSync(buildPath) || args.force_build === 'true') {
-        if (!args.named_addresses) {
-            console.error(
-                `Missing --named-addresses flag! - usage based on your aptos config:\n --named-addresses oft=${accountAddress},oft_admin=${accountAddress}`
-            )
-            return
-        }
+    const buildPath = path.join(process.cwd(), 'build', addressName)
+
+    if (!fs.existsSync(buildPath) || forceBuild) {
         console.log('Building contracts\n')
-        await buildMovementContracts(args.named_addresses, args.chain)
+        await buildMovementContracts(namedAddresses, chainName)
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
     }

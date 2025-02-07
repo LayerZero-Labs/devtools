@@ -1,6 +1,6 @@
 import { Aptos, SimpleTransaction } from '@aptos-labs/ts-sdk'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { IOFTInterface } from './IOFTInterface'
+import { IOFT } from './IOFT'
 import { OFTType, TypedInputGenerateTransactionPayloadData } from './oft'
 import { bcs, RESTClient } from '@initia/initia.js'
 
@@ -9,7 +9,7 @@ type ViewFunctionResult = {
     value: string[]
 }
 
-export class InitiaOFT implements IOFTInterface {
+export class InitiaOFT implements IOFT {
     public moveVMConnection: Aptos | RESTClient
     public oft_address: string
     public eid: EndpointId
@@ -20,15 +20,7 @@ export class InitiaOFT implements IOFTInterface {
         this.oft_address = oft_address
         this.eid = eid
 
-        if (moveVMConnection instanceof RESTClient) {
-            this.rest = moveVMConnection
-        } else {
-            this.rest = new RESTClient('https://rest.testnet.initia.xyz', {
-                chainId: 'initiation-2',
-                gasPrices: '0.15uinit',
-                gasAdjustment: '1.75',
-            })
-        }
+        this.rest = moveVMConnection as RESTClient
     }
 
     initializeOFTFAPayload(

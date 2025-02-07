@@ -15,10 +15,10 @@ import { createIrrevocablyDisableBlocklistPayload } from '@layerzerolabs/devtool
 import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 
 async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType) {
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const { account_address, private_key, network, fullnode } = await parseYaml()
 
     const chain = getChain(fullnode)
-    const aptos = getConnection(chain, network, fullnode, faucet)
+    const aptos = getConnection(chain, network)
 
     const lzConfig = await getLzConfig(configPath)
     const lzNetworkStage = getLzNetworkStage(network)

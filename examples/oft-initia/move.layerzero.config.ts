@@ -18,6 +18,11 @@ const aptosContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
+const initiaContract: OmniPointHardhat = {
+    eid: EndpointId.INITIA_V2_TESTNET,
+    contractName: 'MyOFT',
+}
+
 const config: OAppOmniGraphHardhat = {
     contracts: [
         {
@@ -32,6 +37,13 @@ const config: OAppOmniGraphHardhat = {
             config: {
                 delegate: '',
                 owner: '',
+            },
+        },
+        {
+            contract: initiaContract,
+            config: {
+                delegate: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
+                owner: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
             },
         },
     ],
