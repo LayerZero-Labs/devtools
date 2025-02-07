@@ -90,7 +90,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           # The name of the image
-          image: devtools-dev-node-aptos-local-testnet:${{ matrix.arch }}
+          image: devtools-dev-node-aptos-local-testnet-${{ matrix.arch }}
           # The target stage of the Dockerfile
           target: node-aptos-local-testnet
           # Since the digests will be shared across jobs as artifacts,
@@ -136,7 +136,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           # The name of the image
-          image: devtools-dev-node-evm-hardhat:${{ matrix.arch }}
+          image: devtools-dev-node-evm-hardhat-${{ matrix.arch }}
           # The target stage of the Dockerfile
           target: node-evm-hardhat
           # Since the digests will be shared across jobs as artifacts,
@@ -181,7 +181,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           # The name of the image
-          image: devtools-dev-node-solana-test-validator:${{ matrix.arch }}
+          image: devtools-dev-node-solana-test-validator-${{ matrix.arch }}
           # The target stage of the Dockerfile
           target: node-solana-test-validator
           # Since the digests will be shared across jobs as artifacts,
@@ -226,7 +226,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           # The name of the image
-          image: devtools-dev-node-ton-my-local-ton:${{ matrix.arch }}
+          image: devtools-dev-node-ton-my-local-ton-${{ matrix.arch }}
           # The target stage of the Dockerfile
           target: node-ton-my-local-ton
           # Since the digests will be shared across jobs as artifacts,
@@ -264,7 +264,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-base:${{ matrix.arch }}
+          image: devtools-dev-base-${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -301,7 +301,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-aptos-local-testnet:${{ matrix.arch }}
+          image: devtools-dev-node-aptos-local-testnet-${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -338,7 +338,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-evm-hardhat:${{ matrix.arch }}
+          image: devtools-dev-node-evm-hardhat-${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -375,7 +375,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-solana-test-validator:${{ matrix.arch }}
+          image: devtools-dev-node-solana-test-validator-${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -412,7 +412,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-ton-my-local-ton:${{ matrix.arch }}
+          image: devtools-dev-node-ton-my-local-ton-${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
