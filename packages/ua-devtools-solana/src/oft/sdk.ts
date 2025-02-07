@@ -1,5 +1,5 @@
 import type { IOApp, OAppEnforcedOptionParam } from '@layerzerolabs/ua-devtools'
-import { accounts, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 import {
     type OmniAddress,
     type OmniTransaction,
@@ -102,7 +102,7 @@ export class OFT extends OmniSDK implements IOApp {
 
         const config = await mapError(
             () => {
-                return accounts.fetchOFTStore(this.umi, this.umiPublicKey)
+                return oft.accounts.fetchOFTStore(this.umi, this.umiPublicKey)
             },
             (error) => new Error(`Failed to get owner for ${this.label}: ${error}`)
         )
