@@ -20,15 +20,23 @@ env:
 jobs:
   build:
     name: Build & Lint
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
       packages: read
 
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+    
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
+      image: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
 
     steps:
       - name: Checkout repo
@@ -55,7 +63,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest-4xlarge
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
@@ -83,18 +91,18 @@ jobs:
         run: pnpm test:ci
         env:
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # And the prebuilt TON node image
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           #
           # FIXME The Solana tests need to be ported to either use a stable deployment
           # or a local node. Until then, we disable the tests
           # LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
-          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
-          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
+          # RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
+          # RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
@@ -112,11 +120,19 @@ jobs:
 
   test-user:
     name: User test
-    runs-on: ubuntu-latest-16xlarge
+    runs-on: ${{ matrix.runner }}
 
     permissions:
       contents: read
       packages: read
+
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repo
@@ -139,9 +155,16 @@ jobs:
           LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          # Using the local Aptos testnet node
+          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          # Using the local Solana test validator - may fail due to RPC issues
+          # DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          # Using the local TON node - i do not know if this is working
+          # DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
