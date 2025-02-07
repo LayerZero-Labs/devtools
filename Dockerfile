@@ -63,6 +63,9 @@ FROM node:$NODE_VERSION AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
+ARG TARGETARCH
+RUN echo "Building for $TARGETARCH"
+
 # Update package lists
 RUN apt update
 
