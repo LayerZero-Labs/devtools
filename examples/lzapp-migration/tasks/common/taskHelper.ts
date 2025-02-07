@@ -771,7 +771,7 @@ export async function setTrustedRemote(
         // Encode the path (remote address followed by local address)
         const path = utils.solidityPack(
             ['address', 'address'],
-            [ethers.utils.getAddress(to.address), ethers.utils.getAddress(lzApp.address)]
+            [addressToBytes32(to.address), ethers.utils.getAddress(lzApp.address)]
         )
 
         const setTrustedRemoteTx = {
