@@ -44,7 +44,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-build-image
         with:
           # The name of the image
-          image: devtools-dev-base
+          image: devtools-dev-base-${{ matrix.arch }}
           # The target stage of the Dockerfile
           target: base
           # Since the digests will be shared across jobs as artifacts,
