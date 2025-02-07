@@ -36,7 +36,7 @@ jobs:
     
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+      image: ghcr.io/layerzero-labs/devtools-dev-base:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
 
     steps:
       - name: Checkout repo
@@ -91,11 +91,11 @@ jobs:
         run: pnpm test:ci
         env:
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # And the prebuilt TON node image
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           #
           # FIXME The Solana tests need to be ported to either use a stable deployment
@@ -155,15 +155,15 @@ jobs:
           LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # Using the local Aptos testnet node
-          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # Using the local TON node - i do not know if this is working
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
           # Using the local Solana test validator - may fail due to RPC issues
-          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:f59e099f10a5e7dfb8783d30c8379f2f969f657b
+          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:${{ matrix.platform }}:shankar-fix_dual_arch_ghub_workflow
 
 
       # We'll collect the docker compose logs from all containers on failure

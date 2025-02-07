@@ -17,7 +17,7 @@ USE VS-CODE. CURSOR DOES NOT WORK.
 ### Prebuilt images (default)
 
 By default, the devcontainer will use the prebuilt base images from [GHCR](https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base).
-(temporary change: using "image": "ghcr.io/layerzero-labs/devtools-dev-base:f59e099f10a5e7dfb8783d30c8379f2f969f657b")
+(temporary change: using "image": "ghcr.io/layerzero-labs/devtools-dev-base:shankar-fix_dual_arch_ghub_workflow")
 
 ### Local images
 

@@ -231,9 +231,18 @@ jobs:
   #
   push-base:
     name: Push base image
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
     needs:
       - build-base
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -243,7 +252,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-base
+          image: devtools-dev-base:${{ matrix.platform }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -257,9 +266,18 @@ jobs:
   #
   push-node-aptos:
     name: Push Aptos node image
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
     needs:
       - build-node-aptos
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -269,7 +287,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-aptos-local-testnet
+          image: devtools-dev-node-aptos-local-testnet:${{ matrix.platform }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -283,9 +301,18 @@ jobs:
   #
   push-node-evm:
     name: Push EVM node image
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
     needs:
       - build-node-evm
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -295,7 +322,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-evm-hardhat
+          image: devtools-dev-node-evm-hardhat:${{ matrix.platform }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -309,9 +336,18 @@ jobs:
   #
   push-node-solana:
     name: Push Solana node image
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
     needs:
       - build-node-solana
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -321,7 +357,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-solana-test-validator
+          image: devtools-dev-node-solana-test-validator:${{ matrix.platform }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -335,9 +371,18 @@ jobs:
   #
   push-node-ton:
     name: Push TON node image
-    runs-on: ubuntu-latest-16xlarge-arm
+    runs-on: ${{ matrix.runner }}
     needs:
       - build-node-ton
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
 
     steps:
       - name: Checkout repository
@@ -347,7 +392,7 @@ jobs:
         uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-node-ton-my-local-ton
+          image: devtools-dev-node-ton-my-local-ton:${{ matrix.platform }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
