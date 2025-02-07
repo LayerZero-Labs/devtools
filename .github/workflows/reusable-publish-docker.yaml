@@ -49,7 +49,7 @@ jobs:
           target: base
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
-          digest-name: base
+          digest-name: base-${{ matrix.arch }}
           platform: ${{ matrix.platform }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
@@ -269,7 +269,7 @@ jobs:
           # we need a unique name (per workflow) for these artifacts
           #
           # This needs to match the digest name of the build stage
-          digest-name: base
+          digest-name: base-${{ matrix.arch }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
