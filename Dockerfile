@@ -220,7 +220,6 @@ RUN BUILD_FROM_SOURCE=true; \
 RUN mkdir -p /root/.solana
 RUN cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin
 
-RUN ls -la /root/.solana/bin
 ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
 
