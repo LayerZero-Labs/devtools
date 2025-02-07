@@ -13,7 +13,24 @@ on:
   workflow_call:
   workflow_dispatch:
 
+
 jobs:
+  # Using a common job to store the YAML anchors
+  _common:
+    if: false  # This job will never run.
+    runs-on: ubuntu-latest
+    strategy: &common-strategy
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+    steps:
+      - run: echo "This job is only for storing YAML anchors."
   #
   # Build the base image and push it as digests
   #
@@ -25,16 +42,7 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -71,16 +79,7 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -117,16 +116,7 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -162,16 +152,7 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -207,16 +188,7 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -245,26 +217,17 @@ jobs:
     needs:
       - build-base
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Push image
-        uses: ./.github/workflows/actions/docker-push-image:${{ matrix.arch }}
+        uses: ./.github/workflows/actions/docker-push-image
         with:
           # The name of the image
-          image: devtools-dev-base:${{ matrix.platform }}
+          image: devtools-dev-base:${{ matrix.arch }}
           # Since the digests will be shared across jobs as artifacts,
           # we need a unique name (per workflow) for these artifacts
           #
@@ -282,16 +245,7 @@ jobs:
     needs:
       - build-node-aptos
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -319,16 +273,7 @@ jobs:
     needs:
       - build-node-evm
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -356,16 +301,7 @@ jobs:
     needs:
       - build-node-solana
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
@@ -393,16 +329,7 @@ jobs:
     needs:
       - build-node-ton
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: linux/amd64
-            runner: ubuntu-latest-16xlarge
-            arch: amd64
-          - platform: linux/arm64
-            runner: ubuntu-latest-16xlarge-arm
-            arch: arm64
+    strategy: *common-strategy
 
     steps:
       - name: Checkout repository
