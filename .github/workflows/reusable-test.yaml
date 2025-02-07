@@ -101,8 +101,8 @@ jobs:
           # FIXME The Solana tests need to be ported to either use a stable deployment
           # or a local node. Until then, we disable the tests
           # LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
-          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
-          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
+          # RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
+          # RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
 
       # We'll collect the docker compose logs from all containers on failure
       - name: Collect docker logs on failure
