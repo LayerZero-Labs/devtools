@@ -48,7 +48,7 @@ const config: OAppOmniGraphHardhat = {
         //             },
         //             ulnConfig: {
         //                 confirmations: BigInt(1),
-        //                 requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'],
+        //                 requiredDVNs: ['0x53f488e93b4f1b60e8e83aa374dbe1780a1ee8a8'], // LayerZero Labs DVN for Arbitrum Sepolia
         //                 optionalDVNs: [],
         //                 optionalDVNThreshold: 0,
         //             },
@@ -56,7 +56,7 @@ const config: OAppOmniGraphHardhat = {
         //         receiveConfig: {
         //             ulnConfig: {
         //                 confirmations: BigInt(1),
-        //                 requiredDVNs: ['0x3a74f7174709842d3b8a14ce60b4aa2499f2a2f2'],
+        //                 requiredDVNs: ['0x53f488e93b4f1b60e8e83aa374dbe1780a1ee8a8'], // LayerZero Labs DVN for Arbitrum Sepolia
         //                 optionalDVNs: [],
         //                 optionalDVNThreshold: 0,
         //             },
@@ -79,7 +79,7 @@ const config: OAppOmniGraphHardhat = {
         //             },
         //             ulnConfig: {
         //                 confirmations: BigInt(1),
-        //                 requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'],
+        //                 requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN on Ethereum Sepolia
         //                 optionalDVNs: [],
         //                 optionalDVNThreshold: 0,
         //             },
@@ -87,7 +87,7 @@ const config: OAppOmniGraphHardhat = {
         //         receiveConfig: {
         //             ulnConfig: {
         //                 confirmations: BigInt(1),
-        //                 requiredDVNs: ['0x68802e01d6321d5159208478f297d7007a7516ed'],
+        //                 requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN on Ethereum Sepolia
         //                 optionalDVNs: [],
         //                 optionalDVNThreshold: 0,
         //             },
@@ -98,7 +98,7 @@ const config: OAppOmniGraphHardhat = {
             from: sepoliaContract,
             to: solanaContract,
             config: {
-                sendLibrary: '0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193',
+                sendLibrary: '0x6862b19f6e42a810946B9C782E6ebE26Ad266C84',
                 receiveLibraryConfig: {
                     receiveLibrary: '0x5937A5fe272fbA38699A1b75B3439389EEFDb399',
                     gracePeriod: BigInt(0),
@@ -110,7 +110,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         confirmations: BigInt(1),
-                        requiredDVNs: ['0x68802e01d6321d5159208478f297d7007a7516ed'],
+                        requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
                     },
@@ -118,7 +118,7 @@ const config: OAppOmniGraphHardhat = {
                 receiveConfig: {
                     ulnConfig: {
                         confirmations: BigInt(1),
-                        requiredDVNs: ['0x68802e01d6321d5159208478f297d7007a7516ed'],
+                        requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'],
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
                     },
@@ -148,7 +148,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // // The number of block confirmations to wait before emitting the message from the source chain.
-                        confirmations: BigInt(10),
+                        confirmations: BigInt(1),
                         // The address of the DVNs you will pay to verify a sent message on the source chain ).
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: [
@@ -166,7 +166,7 @@ const config: OAppOmniGraphHardhat = {
                 receiveConfig: {
                     ulnConfig: {
                         // The number of block confirmations to expect from the `to` chain.
-                        confirmations: BigInt(2),
+                        confirmations: BigInt(1),
                         // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain ).
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
                         requiredDVNs: [
