@@ -5,7 +5,7 @@ import type { OAppOmniGraphHardhat, OmniPointHardhat } from '@layerzerolabs/tool
 
 const sepoliaContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_TESTNET, /// EndpointV1
-    contractName: 'MyLzApp',
+    contractName: 'MyEndpointV1OFTV2Mock', // Update this if trying out the other contracts, i.e. MyLzApp
 }
 
 const arbSepoliaContract: OmniPointHardhat = {
@@ -15,7 +15,7 @@ const arbSepoliaContract: OmniPointHardhat = {
 
 const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
-    address: 'GLG35zL9MjAN9hqs17Cx681GzLwKjdbkPrtCA1kf18fJ', // NOTE: update this with the OFTStore address.
+    address: '', // NOTE: update this with the OFTStore address.
 }
 
 // The values here are for development purposes. E.g. confirmations are set to 1. For production, they should be reviewed and edited accordingly.
