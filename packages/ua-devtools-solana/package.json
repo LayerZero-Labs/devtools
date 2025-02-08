@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/ua-devtools-solana",
-  "version": "4.0.7",
+  "version": "4.1.0",
   "description": "Utilities for LayerZero Solana projects",
   "repository": {
     "type": "git",

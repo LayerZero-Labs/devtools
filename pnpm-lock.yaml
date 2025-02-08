@@ -988,7 +988,7 @@ importers:
         specifier: ~6.0.8
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
-        specifier: ~4.0.7
+        specifier: ~4.1.0
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
@@ -3508,13 +3508,13 @@ importers:
         version: 3.0.59
       '@layerzerolabs/lz-solana-sdk-v2':
         specifier: ^3.0.59
-        version: 3.0.66(typescript@5.5.3)
+        version: 3.0.66(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oft-v2-solana-sdk':
         specifier: ^3.0.59
-        version: 3.0.66(typescript@5.5.3)
+        version: 3.0.66(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
         specifier: ~1.1.4
         version: link:../protocol-devtools
@@ -7375,7 +7375,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/lz-solana-sdk-v2@3.0.66(typescript@5.5.3):
+  /@layerzerolabs/lz-solana-sdk-v2@3.0.66(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-zyuqBYxaVtSa+STdcbO/uzzQV2kyxmBX3flNbvOq7kS2QHBivuaYd/XDbNLE54/egQ63yMtFcilqwy3VzNpclw==}
     dependencies:
       '@layerzerolabs/lz-corekit-solana': 3.0.66(typescript@5.5.3)
@@ -7582,12 +7582,12 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@layerzerolabs/oft-v2-solana-sdk@3.0.66(typescript@5.5.3):
+  /@layerzerolabs/oft-v2-solana-sdk@3.0.66(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3):
     resolution: {integrity: sha512-ijbvj6/Gc4O4WLHfqnrBuKUtIhpaYws/ORj2apZFT1RKSgAX8CCJ9aZmn0ClamEG98i+PpXoroPPU46LMOMZyA==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@layerzerolabs/lz-foundation': 3.0.66(typescript@5.5.3)
-      '@layerzerolabs/lz-solana-sdk-v2': 3.0.66(typescript@5.5.3)
+      '@layerzerolabs/lz-solana-sdk-v2': 3.0.66(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/lz-v2-utilities': 3.0.66
       '@metaplex-foundation/beet': 0.7.2
       '@metaplex-foundation/beet-solana': 0.4.1

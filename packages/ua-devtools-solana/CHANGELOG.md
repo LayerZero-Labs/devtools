@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.1.0
+
+### Minor Changes
+
+- 2341af2: update @layerzerolabs/oft-v2-solana-sdk version
+
 ## 4.0.7
 
 ### Patch Changes
