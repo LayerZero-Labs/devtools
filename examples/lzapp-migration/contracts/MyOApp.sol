@@ -6,7 +6,6 @@ pragma solidity ^0.8.0;
 import { Origin } from "@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroReceiver.sol";
 
 import { OApp, MessagingFee } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 import { LzLib } from "@layerzerolabs/solidity-examples/contracts/lzApp/libs/LzLib.sol";
 
@@ -44,7 +43,7 @@ contract MyOApp is OApp {
      *                  protocol-specific settings for the application, such as managing
      *                  message libraries and configuring messaging parameters.
      */
-    constructor(address _endpoint, address _delegate) OApp(_endpoint, _delegate) Ownable(_delegate) {}
+    constructor(address _endpoint, address _delegate) OApp(_endpoint, _delegate) {}
 
     /**
      * @notice Provides a quote for sending a message to a destination endpoint.
