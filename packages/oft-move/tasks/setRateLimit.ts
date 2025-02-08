@@ -3,18 +3,18 @@ import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
-import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
+import { parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import { createSetRateLimitTx } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 import {
     getContractNameFromLzConfig,
     getMoveVMOAppAddress,
     sendAllTxs,
 } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
+import {
+    getLzConfig,
+    getMoveVMContracts,
+    promptUserContractSelection,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 
 async function setRateLimit(
     rateLimit: bigint,
@@ -28,9 +28,11 @@ async function setRateLimit(
     const chain = getChain(fullnode)
     const aptos = getConnection(chain, network)
 
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
     const lzConfig = await getLzConfig(configPath)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const lzNetworkStage = getNetworkForChainId(eid).env
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const oftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
@@ -46,7 +48,7 @@ async function setRateLimit(
 
     const setRateLimitPayload = await createSetRateLimitTx(oft, rateLimit, windowSeconds, toEid, oftType)
 
-    sendAllTxs(aptos, oft, account_address, [setRateLimitPayload])
+    await sendAllTxs(aptos, oft, account_address, [setRateLimitPayload])
 }
 
 export { setRateLimit }
