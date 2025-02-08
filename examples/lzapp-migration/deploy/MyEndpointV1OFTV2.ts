@@ -1,10 +1,7 @@
 import { ethers } from 'hardhat'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { IMetadata } from '@layerzerolabs/metadata-tools'
-
 const contractName = 'MyEndpointV1OFTV2Mock'
-const METADATA_DEPLOYMENTS_URL = 'https://metadata.layerzero-api.com/v1/metadata/deployments'
 
 const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }) => {
     console.log('Deploy script started...')
@@ -12,10 +9,7 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
     const { deployer } = await getNamedAccounts()
     console.log(`>>> your address: ${deployer}`)
 
-    const metadata = (await fetch(METADATA_DEPLOYMENTS_URL).then((res) => res.json())) as IMetadata
-    const lzDeploymentsForNetwork = metadata[network.name]?.deployments
-    const lzEndpointAddress = lzDeploymentsForNetwork?.find((d) => d.eid === String(network.config.eid))?.endpoint
-        ?.address
+    const lzEndpointAddress = (await deployments.get('Endpoint')).address // retrieved EndpointV1 address based on eid set in hardhat config
 
     if (!lzEndpointAddress) {
         throw new Error(`No endpoint address found for network: ${network.name}`)
