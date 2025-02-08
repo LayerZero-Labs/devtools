@@ -1,0 +1,23 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["target/deploy/**", "target/idl/**"],
+      "inputs": [
+        "programs/**/*",
+        "Cargo.toml",
+        "Cargo.lock",
+        "rust-toolchain.toml"
+      ],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      // No need to cache test outputs
+      "outputs": [],
+      "inputs": [],
+      "cache": true
+    }
+  }
+}

@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 
 // Import the abstract NonblockingLzApp contract
 import { NonblockingLzApp } from "@layerzerolabs/solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 import { LzLib } from "@layerzerolabs/solidity-examples/contracts/lzApp/libs/LzLib.sol";
 
@@ -34,9 +33,8 @@ contract MyLzApp is NonblockingLzApp {
      * @dev Constructor initializes the LzApp with the LayerZero V1 endpoint address.
      *
      * @param _endpoint Address of the LayerZero V1 endpoint contract.
-     * @param _owner The address that will be granted ownership of the contract.
      */
-    constructor(address _endpoint, address _owner) NonblockingLzApp(_endpoint) Ownable(_owner) {}
+    constructor(address _endpoint) NonblockingLzApp(_endpoint) {}
 
     /**
      * @notice Estimates the fees required to send a message to a destination chain.
