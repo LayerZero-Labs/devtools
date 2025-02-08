@@ -6,6 +6,7 @@ import {
     PrivateKeyVariants,
     SimpleTransaction,
     InputEntryFunctionData,
+    RawTransaction,
 } from '@aptos-labs/ts-sdk'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
@@ -30,6 +31,9 @@ export class OFT implements IOFT {
     private signer_account: Account
     public oft_address: string
     public eid: EndpointId
+    public accountAddress: string
+    public sequenceNumber: number
+
     constructor(
         moveVMConnection: Aptos,
         oft_address: string,
@@ -44,7 +48,10 @@ export class OFT implements IOFT {
             privateKey: new Ed25519PrivateKey(this.private_key),
             address: account_address,
         })
+        this.accountAddress = account_address
         this.eid = eid
+        this.sequenceNumber = 0
+        this.syncSequenceNumber()
     }
 
     initializeOFTFAPayload(
@@ -380,17 +387,54 @@ export class OFT implements IOFT {
         }
     }
 
+    async getSequenceNumber(): Promise<number> {
+        const accountData = await this.moveVMConnection.getAccountInfo({ accountAddress: this.accountAddress })
+        return parseInt(accountData.sequence_number)
+    }
+
+    async syncSequenceNumber(): Promise<void> {
+        this.sequenceNumber = await this.getSequenceNumber()
+    }
+
     async signSubmitAndWaitForTx(transaction: SimpleTransaction) {
-        const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
-            signer: this.signer_account,
-            transaction: transaction,
-        })
+        const maxRetries = 3
+        let retryCount = 0
 
-        const executedTransaction = await this.moveVMConnection.waitForTransaction({
-            transactionHash: signedTransaction.hash,
-        })
-        console.log('Transaction executed.')
+        while (retryCount < maxRetries) {
+            try {
+                const newRawTransaction = new RawTransaction(
+                    transaction.rawTransaction.sender,
+                    BigInt(this.sequenceNumber),
+                    transaction.rawTransaction.payload,
+                    transaction.rawTransaction.max_gas_amount,
+                    transaction.rawTransaction.gas_unit_price,
+                    transaction.rawTransaction.expiration_timestamp_secs,
+                    transaction.rawTransaction.chain_id
+                )
+                const transactionWithSyncedSequenceNum = new SimpleTransaction(newRawTransaction)
 
-        return executedTransaction
+                const signedTransaction = await this.moveVMConnection.signAndSubmitTransaction({
+                    signer: this.signer_account,
+                    transaction: transactionWithSyncedSequenceNum,
+                })
+
+                await new Promise((resolve) => setTimeout(resolve, 2000))
+
+                const executedTransaction = await this.moveVMConnection.waitForTransaction({
+                    transactionHash: signedTransaction.hash,
+                })
+                console.log('Transaction executed.')
+                return executedTransaction
+            } catch (error: any) {
+                retryCount++
+                if (retryCount === maxRetries) {
+                    console.error('Failed to submit transaction after 3 attempts.')
+                    throw error
+                }
+
+                await this.syncSequenceNumber()
+                await new Promise((resolve) => setTimeout(resolve, 1000))
+            }
+        }
     }
 }

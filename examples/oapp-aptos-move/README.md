@@ -1,12 +1,17 @@
 ## Move-VM OApp Setup and Deployment
 
-### Connecting to Aptos via CLI
+### connecting to aptos via cli
 
 To install aptos cli, run the following command:
 
 ```
 brew install aptos
 ```
+
+> **Important:** Version requirements:
+>
+> - For Aptos chain: Use version 6.0.1 (installable via brew)
+> - For Movement chain: Use version 3.5.0 (must be built from source following the [Aptos CLI Build Guide](https://aptos.dev/en/network/nodes/building-from-source/))
 
 If you need to generate a new key, run the following command:
 
@@ -16,8 +21,16 @@ aptos key generate --output-file my_key.pub
 
 Then initialize the aptos cli and connect to the aptos network:
 
+For Aptos Chain:
+
 ```
 aptos init --network=testnet --private-key=<your-private-key>
+```
+
+For Movement Chain:
+
+```
+aptos init --network=custom --private-key=<your-private-key>
 ```
 
 You can then verify that your initialization was successful by running the following command:
@@ -35,32 +48,27 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 Create a `.env` file with the following variables:
 
 ```bash
-ACCOUNT_ADDRESS=<your-aptos-account-address>
+MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
+MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1
+MOVEMENT_ACCOUNT_ADDRESS=<your-movement-account-address>
+MOVEMENT_PRIVATE_KEY=<your-movement-private-key>
+
 EVM_PRIVATE_KEY=<your-evm-private-key>
+MNEMONIC=<your-mnemonic>
+
+APTOS_INDEXER_URL=<your-aptos-indexer-url>
+APTOS_FULLNODE_URL=<your-aptos-fullnode-url>
+APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
+APTOS_PRIVATE_KEY=<your-aptos-private-key>
 ```
 
-Then run `source .env` in order for your values to be mapped to `$APTOS_ACCOUNT_ADDRESS` and `$EVM_PRIVATE_KEY`
+Then run `source .env` in order for your values to be mapped.
 
-Note: aptos account address can be found in .aptos/config.yaml
+Note: the aptos and movement specific values can be found in `.aptos/config.yaml` after running `aptos init`
 
-## Build and deploy Aptos move modules
+### Build and Deploy the modules
 
-Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
-
-### Build the modules
-
-```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS
-```
-
-### Deploy the modules
-
-```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --named-addresses oapp=$APTOS_ACCOUNT_ADDRESS,oapp_admin=$APTOS_ACCOUNT_ADDRESS --oapp-type oapp
-```
-## Set Delegate
-
-Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
+Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
 ```ts
     contracts: [
@@ -81,7 +89,11 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
     ],
 ```
 
-Then run the following command:
+```bash
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --oapp-type oapp
+```
+
+## Set Delegate
 
 ```bash
 pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts

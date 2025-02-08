@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as readline from 'readline'
 
 import { Aptos } from '@aptos-labs/ts-sdk'
-import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
+import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 
 import { IOFT } from '../../../sdk/IOFT'
 
@@ -127,18 +127,44 @@ export async function sendAllTxs(
         console.log('\n📦 Transaction Summary:')
         console.log(`   • Total transactions: ${cleanedPayloads.length}`)
 
+        const maxRetries = 3
         for (let i = 0; i < cleanedPayloads.length; i++) {
-            const progress = `[${i + 1}/${cleanedPayloads.length}]`
-            console.log(`🔄 ${progress} Processing transaction ${i}: ${cleanedPayloads[i].description}...`)
+            console.log(
+                `🔄 [${i + 1}/${cleanedPayloads.length}] Processing transaction: ${cleanedPayloads[i].description}...`
+            )
 
-            const trans = await aptos.transaction.build.simple({
-                sender: account_address,
-                data: cleanedPayloads[i].payload,
-            })
-            const result = await oft.signSubmitAndWaitForTx(trans)
-            const network = getNetworkForChainId(oft.eid)
-            console.log(`   📎 Transaction hash: ${result.hash}`)
-            console.log(`   🔍 Explorer: https://explorer.aptoslabs.com/txn/${result.hash}?network=${network.env}`)
+            let retryCount = 0
+            while (retryCount < maxRetries) {
+                try {
+                    await oft.syncSequenceNumber()
+
+                    const trans = await aptos.transaction.build.simple({
+                        sender: account_address,
+                        data: cleanedPayloads[i].payload,
+                    })
+                    const result = await oft.signSubmitAndWaitForTx(trans)
+                    console.log(`   📎 Transaction hash: ${result.hash}`)
+                    // const network = getNetworkForChainId(oft.eid)
+                    // console.log(
+                    //     `   🔍 Explorer: https://explorer.aptoslabs.com/txn/${result.hash}?network=${network.env}`
+                    // )
+                    break // Success, exit retry loop
+                } catch (error: any) {
+                    retryCount++
+                    if (retryCount === maxRetries) {
+                        throw error // Throw if all retries failed
+                    }
+
+                    // If sequence number error, wait and retry
+                    if (error?.data?.error_code === 'sequence_number_too_old') {
+                        console.log('Retrying with updated sequence number...')
+                        await new Promise((resolve) => setTimeout(resolve, 1000)) // Wait 1 second
+                        continue
+                    }
+
+                    throw error // Throw for other errors
+                }
+            }
         }
 
         console.log('🎉 Transaction Summary:')

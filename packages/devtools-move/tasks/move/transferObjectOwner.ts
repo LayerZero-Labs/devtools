@@ -1,11 +1,12 @@
 import { OFT } from '../../sdk/oft'
 
-import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
+import { parseYaml } from './utils/aptosNetworkParser'
 import { createTransferObjectOwnerPayload } from './utils/moveVMOftConfigOps'
 import { getContractNameFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
 import { getChain } from '../../sdk/moveVMConnectionBuilder'
 import { getConnection } from '../../sdk/moveVMConnectionBuilder'
-import { getLzConfig } from './utils/config'
+import { getLzConfig, getMoveVMContracts, promptUserContractSelection } from './utils/config'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 async function transferObjectOwner(newOwner: string, configPath: string) {
     const { account_address, private_key, network, fullnode } = await parseYaml()
@@ -14,8 +15,10 @@ async function transferObjectOwner(newOwner: string, configPath: string) {
     const chain = getChain(fullnode)
     const aptos = getConnection(chain, network)
 
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const lzNetworkStage = getNetworkForChainId(eid).env
 
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const oAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
@@ -30,7 +33,7 @@ async function transferObjectOwner(newOwner: string, configPath: string) {
 
     const payloads = [transferOwnerPayload]
 
-    sendAllTxs(aptos, oft, account_address, payloads)
+    await sendAllTxs(aptos, oft, account_address, payloads)
 }
 
 export { transferObjectOwner }

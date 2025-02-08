@@ -63,8 +63,8 @@ function getMovementIndexerUrl(): string {
 }
 
 function getMovementFullnodeUrl(): string {
-    if (!process.env.MOVEMENT_FULLNODE) {
-        throw new Error('MOVEMENT_FULLNODE must be set in the environment variables.')
+    if (!process.env.MOVEMENT_FULLNODE_URL) {
+        throw new Error('MOVEMENT_FULLNODE_URL must be set in the environment variables.')
     }
-    return process.env.MOVEMENT_FULLNODE
+    return process.env.MOVEMENT_FULLNODE_URL
 }

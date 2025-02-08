@@ -1,31 +1,33 @@
 import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
-import { getChain } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
+import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 
+import { parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
+    getLzConfig,
+    getMoveVMContracts,
+    promptUserContractSelection,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 import { TransactionPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
 import {
     getContractNameFromLzConfig,
     getMoveVMOAppAddress,
     sendAllTxs,
 } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 async function mintToMoveVM(configPath: string, amountLd: number, toAddress: string) {
     const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
     const chain = getChain(fullnode)
-    const aptosConfig = new AptosConfig({ network: network })
-    const aptos = new Aptos(aptosConfig)
+    const moveVMConnection = getConnection(chain, network)
 
     const lzConfig = await getLzConfig(configPath)
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const lzNetworkStage = getNetworkForChainId(eid).env
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
@@ -34,7 +36,7 @@ async function mintToMoveVM(configPath: string, amountLd: number, toAddress: str
     console.log(`\tAmount: ${amountLd}`)
     console.log(`\tTo: ${toAddress}`)
 
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key, eid)
+    const oft = new OFT(moveVMConnection, aptosOftAddress, account_address, private_key, eid)
     const mintPayload = oft.mintPayload(toAddress, amountLd)
 
     const transactionPayload: TransactionPayload = {
@@ -42,7 +44,7 @@ async function mintToMoveVM(configPath: string, amountLd: number, toAddress: str
         description: `Mint ${chain}-${lzNetworkStage} OFT`,
         eid: eid,
     }
-    sendAllTxs(aptos, oft, account_address, [transactionPayload])
+    await sendAllTxs(moveVMConnection, oft, account_address, [transactionPayload])
 }
 
 export default mintToMoveVM

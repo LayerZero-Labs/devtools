@@ -276,6 +276,14 @@ export class InitiaOFT implements IOFT {
         throw new Error('Method not implemented.')
     }
 
+    async getSequenceNumber(): Promise<number> {
+        throw new Error('Method not implemented.')
+    }
+
+    async syncSequenceNumber(): Promise<void> {
+        throw new Error('Method not implemented.')
+    }
+
     initializeAdapterFAPayload(
         tokenMetadataAddress: string,
         sharedDecimals: number

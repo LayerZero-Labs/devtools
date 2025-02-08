@@ -25,7 +25,7 @@ class MoveDeployOperation implements INewOperation {
 
         let accountAddress = ''
         if (chainName === 'movement' || chainName === 'aptos') {
-            accountAddress = getAptosAccountAddress()
+            accountAddress = getAptosAccountAddress(chainName)
         } else if (chainName === 'initia') {
             accountAddress = getInitiaAccountAddress()
         } else {

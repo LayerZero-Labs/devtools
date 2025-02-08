@@ -2,12 +2,8 @@ import { getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { IOFT } from '../../sdk/IOFT'
 import { OFT } from '../../sdk/oft'
 import { InitiaOFT } from '../../sdk/initiaOFT'
-// import { setDelegate } from './utils/moveVMOftConfigOps'
-import {
-    getContractNameFromLzConfig,
-    getDelegateFromLzConfig,
-    getMoveVMOAppAddress /*sendAllTxs */,
-} from './utils/utils'
+import { setDelegate } from './utils/moveVMOftConfigOps'
+import { getContractNameFromLzConfig, getDelegateFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
 import { getAptosPrivateKey } from './utils/config'
 import { EndpointId, Stage } from '@layerzerolabs/lz-definitions'
 import { Aptos } from '@aptos-labs/ts-sdk'
@@ -29,7 +25,7 @@ async function executeSetDelegate(
 
     let oft: IOFT
     if (chainName === 'aptos' || chainName === 'movement') {
-        const aptosPrivateKey = getAptosPrivateKey()
+        const aptosPrivateKey = getAptosPrivateKey(chainName)
         oft = new OFT(moveVMConnection as Aptos, oAppAddress, accountAddress, aptosPrivateKey, eid)
     } else if (chainName === 'initia') {
         oft = new InitiaOFT(moveVMConnection, oAppAddress, eid)
@@ -39,12 +35,9 @@ async function executeSetDelegate(
 
     const delegate = getDelegateFromLzConfig(eid, lzConfig)
 
-    console.log(delegate)
-    console.log(oft)
+    const setDelegatePayload = await setDelegate(oft, delegate, eid)
 
-    // const setDelegatePayload = await setDelegate(oft, delegate, eid)
-
-    // sendAllTxs(moveVMConnection as Aptos, oft, accountAddress, [setDelegatePayload])
+    await sendAllTxs(moveVMConnection as Aptos, oft, accountAddress, [setDelegatePayload])
 }
 
 export { executeSetDelegate as setDelegate }

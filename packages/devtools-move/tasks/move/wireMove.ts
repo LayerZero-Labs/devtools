@@ -4,8 +4,8 @@ import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
 import { OFT } from '../../sdk/oft'
 import { getConfigConnections } from '../shared/utils'
 import { Aptos } from '@aptos-labs/ts-sdk'
-import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { getLzConfig, getNamedAddresses } from './utils/config'
+import { parseYaml } from './utils/aptosNetworkParser'
+import { getLzConfig, getMoveVMContracts, getNamedAddresses, promptUserContractSelection } from './utils/config'
 import * as oftConfig from './utils/moveVMOftConfigOps'
 import { TransactionPayload } from './utils/moveVMOftConfigOps'
 import { getContractNameFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
@@ -20,22 +20,23 @@ async function wireMove(configPath: string) {
     const chain = getChain(fullnode)
     const moveVMConnection = getConnection(chain, network)
 
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const stage = getNetworkForChainId(eid).env
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const moveVMOAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
+    const moveVMOAppAddress = getMoveVMOAppAddress(contractName, chain, stage)
 
-    const namedAddresses = getNamedAddresses(chain, lzNetworkStage)
+    const namedAddresses = getNamedAddresses(chain, stage)
     const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
 
-    console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OApp`)
+    console.log(`\n🔌 Wiring ${chain}-${stage} OApp`)
     console.log(`\tAddress: ${moveVMOAppAddress}\n`)
 
     const oftSDK = new OFT(moveVMConnection as Aptos, moveVMOAppAddress, account_address, private_key, eid)
     const moveVMEndpoint = new Endpoint(moveVMConnection as Aptos, endpointAddress)
 
-    const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
-    const connectionsFromMoveToAny = await getConfigConnections('from', moveVMEndpointID, fullConfigPath)
+    const connectionsFromMoveToAny = await getConfigConnections('from', eid, fullConfigPath)
 
     const txs = await createWiringTxs(oftSDK, moveVMEndpoint, connectionsFromMoveToAny)
     await sendAllTxs(moveVMConnection as Aptos, oftSDK, account_address, txs)

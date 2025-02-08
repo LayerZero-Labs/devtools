@@ -53,11 +53,21 @@ export function getMoveTomlAdminName(oAppType: string): string {
     }
 }
 
-export function getAptosAccountAddress(): string {
-    if (process.env.APTOS_ACCOUNT_ADDRESS) {
-        return process.env.APTOS_ACCOUNT_ADDRESS
+export function getAptosAccountAddress(chain: string): string {
+    if (chain === 'aptos') {
+        if (process.env.APTOS_ACCOUNT_ADDRESS) {
+            return process.env.APTOS_ACCOUNT_ADDRESS
+        } else {
+            throw new Error('APTOS_ACCOUNT_ADDRESS must bet set in the environment variables.')
+        }
+    } else if (chain === 'movement') {
+        if (process.env.MOVEMENT_ACCOUNT_ADDRESS) {
+            return process.env.MOVEMENT_ACCOUNT_ADDRESS
+        } else {
+            throw new Error('MOVEMENT_ACCOUNT_ADDRESS must bet set in the environment variables.')
+        }
     } else {
-        throw new Error('APTOS_ACCOUNT_ADDRESS must bet set in the environment variables.')
+        throw new Error(`${chain} is not supported.`)
     }
 }
 
@@ -79,6 +89,10 @@ export async function getLzConfig(configPath: string): Promise<OAppOmniGraphHard
 export async function promptUserContractSelection(
     contracts: OAppOmniGraphHardhat['contracts'][number][]
 ): Promise<OAppOmniGraphHardhat['contracts'][number]> {
+    if (contracts.length === 1) {
+        return contracts[0]
+    }
+
     const choices = contracts.map((contractEntry) => ({
         name: `${contractEntry.contract.contractName} (${EndpointId[contractEntry.contract.eid]})`,
         value: contractEntry,
@@ -88,7 +102,7 @@ export async function promptUserContractSelection(
         {
             type: 'list',
             name: 'selectedContract',
-            message: 'Select contract to deploy:',
+            message: 'Select contract:',
             choices,
         },
     ])
@@ -142,10 +156,20 @@ export function getNamedAddresses(chain: string, networkType: string): string {
         .join(',')
 }
 
-export function getAptosPrivateKey(): string {
-    const aptosPrivateKey = process.env.APTOS_PRIVATE_KEY
-    if (!aptosPrivateKey) {
-        throw new Error('APTOS_PRIVATE_KEY must be set in the environment variables.')
+export function getAptosPrivateKey(chain: string): string {
+    if (chain === 'aptos') {
+        const aptosPrivateKey = process.env.APTOS_PRIVATE_KEY
+        if (!aptosPrivateKey) {
+            throw new Error('APTOS_PRIVATE_KEY must be set in the environment variables.')
+        }
+        return aptosPrivateKey
+    } else if (chain === 'movement') {
+        const movementPrivateKey = process.env.MOVEMENT_PRIVATE_KEY
+        if (!movementPrivateKey) {
+            throw new Error('MOVEMENT_PRIVATE_KEY must be set in the environment variables.')
+        }
+        return movementPrivateKey
+    } else {
+        throw new Error(`${chain} is not supported.`)
     }
-    return aptosPrivateKey
 }

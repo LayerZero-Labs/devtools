@@ -1,18 +1,18 @@
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 
+import { parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
+    getLzConfig,
+    getMoveVMContracts,
+    promptUserContractSelection,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/config'
 import {
     getContractNameFromLzConfig,
     getMoveVMOAppAddress,
     sendInitTransaction,
 } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 async function initOFTFA(
     token_name: string,
     token_symbol: string,
@@ -25,10 +25,12 @@ async function initOFTFA(
     const { account_address, private_key, network, fullnode } = await parseYaml()
     console.log(`Using aptos network ${network}`)
 
-    const lzNetworkStage = getLzNetworkStage(network)
     const chain = getChain(fullnode)
     const lzConfig = await getLzConfig(configPath)
-    const eid = getEidFromMoveNetwork(chain, network)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const lzNetworkStage = getNetworkForChainId(eid).env
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 

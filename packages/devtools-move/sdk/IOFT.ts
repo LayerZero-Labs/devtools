@@ -111,5 +111,9 @@ export interface IOFT {
 
     permanentlyDisableFungibleStoreFreezingPayload(): TypedInputGenerateTransactionPayloadData
 
+    syncSequenceNumber(): Promise<void>
+
+    getSequenceNumber(): Promise<number>
+
     signSubmitAndWaitForTx(transaction: SimpleTransaction): Promise<any>
 }

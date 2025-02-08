@@ -1,18 +1,19 @@
 import { getChain, getConnection } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
 import { OFT, OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
 
-import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
+import { parseYaml } from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
 import {
     getContractNameFromLzConfig,
     getMoveVMOAppAddress,
     sendAllTxs,
 } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
 import { createIrrevocablyDisableBlocklistPayload } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
+import {
+    getLzConfig,
+    getMoveVMContracts,
+    promptUserContractSelection,
+} from '@layerzerolabs/devtools-move/tasks/move/utils/config'
+import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 
 async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType) {
     const { account_address, private_key, network, fullnode } = await parseYaml()
@@ -21,8 +22,10 @@ async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType)
     const aptos = getConnection(chain, network)
 
     const lzConfig = await getLzConfig(configPath)
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const eid = selectedContract.contract.eid
+    const lzNetworkStage = getNetworkForChainId(eid).env
     const contractName = getContractNameFromLzConfig(eid, lzConfig)
     const oftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
 
@@ -36,7 +39,7 @@ async function irrevocablyDisableBlocklist(configPath: string, oftType: OFTType)
 
     const payload = createIrrevocablyDisableBlocklistPayload(oft, oftType)
 
-    sendAllTxs(aptos, oft, account_address, [payload])
+    await sendAllTxs(aptos, oft, account_address, [payload])
 }
 
 export { irrevocablyDisableBlocklist }
