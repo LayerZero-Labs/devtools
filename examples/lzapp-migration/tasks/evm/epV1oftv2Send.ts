@@ -58,10 +58,10 @@ const action = async function (taskArgs: TaskArguments, hre: HardhatRuntimeEnvir
         },
         { value: fees[0] }
     )
-    await tx.wait()
+    const receipt = await tx.wait()
 
     console.log(
-        `Track cross-chain transfer here: ${getLayerZeroScanLink(tx.transactionHash, dstEid == EndpointId.SOLANA_V2_TESTNET)}`
+        `Track cross-chain transfer here: ${getLayerZeroScanLink(receipt.transactionHash, dstEid == EndpointId.SOLANA_V2_TESTNET)}`
     )
 }
 
