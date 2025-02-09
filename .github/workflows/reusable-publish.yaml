@@ -34,7 +34,7 @@ jobs:
 
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base-${{ matrix.arch }}:shankar-fix_dual_arch_ghub_workflow
+      image: ghcr.io/layerzero-labs/devtools-dev-base:shankar-fix_dual_arch_ghub_workflow
 
     steps:
       - name: Checkout repo
