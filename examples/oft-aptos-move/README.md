@@ -283,6 +283,7 @@ pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --a
 
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
+  --oapp-config move.layerzero.config.ts \
   --amount-ld <your-amount-ld> \
   --min-amount-ld <your-min-amount-ld> \
   --src-address <your-source-account-address> \
