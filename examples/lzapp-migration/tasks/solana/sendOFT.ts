@@ -140,13 +140,13 @@ task('lz:oft:solana:send', 'Send tokens from Solana to a target EVM chain')
             const { signature } = await txBuilder.sendAndConfirm(umi)
             const transactionSignatureBase58 = bs58.encode(signature)
 
-            console.log(`✅ Sent ${amount} token(s) to destination EID: ${toEid}!`)
+            console.log(`\n✅ Sent ${amount} token(s) to destination EID: ${toEid}!`)
             const isTestnet = fromEid == EndpointId.SOLANA_V2_TESTNET
             console.log(
-                `View Solana transaction here: ${getExplorerTxLink(transactionSignatureBase58.toString(), isTestnet)}`
+                `\nView Solana transaction here: ${getExplorerTxLink(transactionSignatureBase58.toString(), isTestnet)}`
             )
             console.log(
-                `Track cross-chain transfer here: ${getLayerZeroScanLink(transactionSignatureBase58, isTestnet)}`
+                `\nTrack cross-chain transfer here: ${getLayerZeroScanLink(transactionSignatureBase58, isTestnet)}\n`
             )
         }
     )
