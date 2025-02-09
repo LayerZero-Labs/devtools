@@ -8,7 +8,7 @@ import "../MyEndpointV1OFTV2.sol";
 contract MyEndpointV1OFTV2Mock is OFTV2 {
     constructor(
         address _layerZeroEndpoint,
-        uint _initialSupply,
+        uint256 _initialSupply,
         uint8 _sharedDecimals
     ) OFTV2("ExampleOFT", "OFT", _sharedDecimals, _layerZeroEndpoint) {
         _mint(_msgSender(), _initialSupply);
