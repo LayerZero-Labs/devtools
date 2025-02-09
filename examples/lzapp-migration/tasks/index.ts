@@ -4,6 +4,7 @@ import './common/wire'
 import './evm/sendV1Message'
 import './evm/sendV2Message'
 import './evm/epV1oftv2Send'
+import './evm/setMinDstGas'
 
 import './solana/createOFT'
 import './solana/sendOFT'
