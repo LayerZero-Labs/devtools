@@ -207,7 +207,7 @@ RUN BUILD_FROM_SOURCE=true; \
     # List of machines that need to be built from source:
     # - arm64/linux - last checked on Feb 6, 2025
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
-            git clone https://github.com/solana-labs/solana.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
+            git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
             # Produces the same directory structure as the prebuilt binaries
             # Make the active release point to the new release
             bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
