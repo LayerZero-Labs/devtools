@@ -12,7 +12,6 @@
 
 <p align="center">Example project for existing Endpoint v1 OFTs that would like to migrate to using ULN 301 to utilize the new security and execution model and to be able to integrate Solana OFTs.</p>
 
-
 ## Example Overview
 
 For this example, we will deploy the EndpointV1 OFT on Ethereum Sepolia and also OFT202 on Solana Devnet.
@@ -54,7 +53,6 @@ pnpm test
 
 #### Compiling your contracts
 
-
 ##### EVM (EndpointV1 OFT)
 
 This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
@@ -94,9 +92,7 @@ Ensure you have Docker running before running the build command.
 anchor build -v # verification flag enabled
 ```
 
-
 ## Deploying Contracts
-
 
 ### EVM (EndpointV1 OFT)
 
@@ -146,7 +142,6 @@ Initialize the Solana OFT Config
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
-
 ### Configuration
 
 #### Update [layerzero.config.ts](./layerzero.config.ts)
@@ -171,18 +166,19 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 The script will set it to the default value of `1`, which is all that's needed in order to bypass gas assertion.
 
 ```bash
-npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168   
+npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168
 ```
 
 ### Calling Send
 
-Sepolia V1 to Solana 
+Sepolia V1 to Solana
 
 ```bash
 npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
 ```
 
 Solana to Sepolia V1
+
 ```bash
 npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 10161 --to <EVM_ADDRESS> --to-eid 40161 --mint HmXXvQf6TEy7WEZXr82kA3vXM4bY1G4jV82pmQmmQyPC --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
@@ -192,7 +188,6 @@ Congratulations!
 ## Behind The Scenes
 
 Below is an expanded README section that describes not only the overall configuration and wiring between the V1 and V2 endpoints but also explains the purpose of the overridden tasks provided in the repository:
-
 
 ## Overview
 

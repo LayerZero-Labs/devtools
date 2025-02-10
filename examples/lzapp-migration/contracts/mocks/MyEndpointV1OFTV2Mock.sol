@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "../MyEndpointV1OFTV2.sol";
+import { OFTV2 } from "@layerzerolabs/solidity-examples/contracts/token/oft/v2/OFTV2.sol";
 
 // @dev mock OFTV2 demonstrating how to inherit OFTV2
 contract MyEndpointV1OFTV2Mock is OFTV2 {
