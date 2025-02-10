@@ -171,7 +171,7 @@ npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <
 The script will set it to the default value of `1`, which is all that's needed in order to bypass gas assertion.
 
 ```bash
-npx hardhat --network sepolia-testnet lz:epv1:set-min-dst-gas --dst-eid 40168   
+npx hardhat --network sepolia-testnet lz:lzapp:set-min-dst-gas --dst-eid 40168   
 ```
 
 ### Calling Send
@@ -179,7 +179,7 @@ npx hardhat --network sepolia-testnet lz:epv1:set-min-dst-gas --dst-eid 40168
 Sepolia V1 to Solana 
 
 ```bash
-npx hardhat --network sepolia-testnet lz:epv1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
+npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 1000000000000000000 --to <SOLANA_ADDRESS>
 ```
 
 Solana to Sepolia V1

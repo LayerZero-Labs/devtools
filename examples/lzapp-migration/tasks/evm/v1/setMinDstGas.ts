@@ -44,7 +44,7 @@ const action = async function (taskArgs: TaskArguments, hre: HardhatRuntimeEnvir
     console.log(`setMinDstGasTxnHash: ${receipt.transactionHash}`)
 }
 
-task('lz:epv1:set-min-dst-gas', 'set min dst gas', action)
+task('lz:lzapp:set-min-dst-gas', 'set min dst gas (Endpoint V1)', action)
     .addParam('dstEid', 'Destination eid', undefined, types.int)
     .addOptionalParam(
         'contractName',

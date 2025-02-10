@@ -7,7 +7,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Options, addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 
-import { getLayerZeroScanLink } from '../solana'
+import { getLayerZeroScanLink } from '../../solana'
 
 interface TaskArguments {
     dstEid: number
@@ -65,7 +65,7 @@ const action = async function (taskArgs: TaskArguments, hre: HardhatRuntimeEnvir
     )
 }
 
-task('lz:epv1:send', 'send tokens to another chain', action)
+task('lz:oft-v1:send', 'send tokens to another chain (from chain using Endpoint V1)', action)
     .addParam('dstEid', 'Destination endpoint ID', undefined, types.int)
     .addParam('amount', 'amount of tokens to send (in wei)', undefined, types.string)
     .addParam('to', 'Recipient address', undefined, types.string, false)
