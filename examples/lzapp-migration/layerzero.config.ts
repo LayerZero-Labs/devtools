@@ -17,7 +17,6 @@ const solanaContract: OmniPointHardhat = {
     eid: EndpointId.SOLANA_V2_TESTNET,
     address: '', // NOTE: update this with the OFTStore address.
 }
-
 // The values here are for development purposes. E.g. confirmations are set to 1. For production, they should be reviewed and edited accordingly.
 const config: OAppOmniGraphHardhat = {
     contracts: [
