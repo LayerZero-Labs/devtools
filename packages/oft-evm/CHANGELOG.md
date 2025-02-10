@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-evm
 
+## 3.1.1
+
+### Patch Changes
+
+- a09c401: Better default NativeOFT.quoteOFT method
+
 ## 3.1.0
 
 ### Minor Changes
