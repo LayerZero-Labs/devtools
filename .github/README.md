@@ -9,7 +9,7 @@ We use the `reusable-test.yaml` workflow to test the images for each architectur
 
 Under each workflow, we have a matrix that includes the architecture and the runner.
 
-Runners as of the last change (2025-02-12):
+Runners as of the last change (2025-02-11):
 
 - ubuntu-latest-16xlarge for amd64
 - ubuntu-latest-16xlarge-arm for arm64

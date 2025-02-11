@@ -80,8 +80,8 @@ RUN apt-get install --yes \
     expect \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
-    # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler cmake\
+    # Utilities required to build solana - and cmake is required for building platform tools used by solana
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler cmake \
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
@@ -199,14 +199,14 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN BUILD_FROM_SOURCE=true; \
     # Install Solana using a binary with a fallback to installing from source. 
     # List of machines that have prebuilt binaries:
-    # - amd64/linux - last checked on Feb 10, 2025
+    # - amd64/linux - last checked on Feb 11, 2025
     if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
         curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
         BUILD_FROM_SOURCE=false; \
     fi && \
     # If we need to build from source, we'll do it here
     # List of machines that need to be built from source:
-    # - arm64/linux - last checked on Feb 10, 2025
+    # - arm64/linux - last checked on Feb 11, 2025
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
             git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
             # Produces the same directory structure as the prebuilt binaries
