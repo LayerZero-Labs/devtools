@@ -30,7 +30,7 @@ networks: {
 
 In `layerzero.config.ts`, for the pathway from Sepolia to Solana, we have specified the following:
 
-- `sendLibrary`: `0x6862b19f6e42a810946B9C782E6ebE26Ad266C84` (ReceiveUln301)
+- `sendLibrary`: `0x6862b19f6e42a810946B9C782E6ebE26Ad266C84` (SendUln301)
 - `receiveLibraryConfig.receiveLibrary`: `0x5937A5fe272fbA38699A1b75B3439389EEFDb399` (ReceiveUln301)
 
 To view the list of ULN addresses on all networks, refer to https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts

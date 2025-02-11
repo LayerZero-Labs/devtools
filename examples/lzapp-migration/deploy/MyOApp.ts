@@ -38,7 +38,6 @@ const deploy: DeployFunction = async (hre) => {
         from: deployer,
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
-            // deployer, // owner // not passing owner to simulate EndpointV1 OFT's usage of openzeppelin v4
         ],
         log: true,
         skipIfAlreadyDeployed: false,
