@@ -20,7 +20,7 @@
     "start": "docker compose -f docker-compose.yaml -f docker-compose.local.yaml up network-britney network-vengaboys network-tango network-ton --wait $DOCKER_COMPOSE_ARGS",
     "stop": "docker compose down",
     "test": "$npm_execpath turbo run test $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS",
-    "test:ci": "docker compose run --build --rm $DOCKER_COMPOSE_ARGS tests",
+    "test:ci": "docker compose run --build --rm $DOCKER_COMPOSE_ARGS tests pnpm turbo run test --verbosity=3 --debug",
     "test:jest": "$npm_execpath turbo run test:jest $DOCKER_COMPOSE_RUN_TESTS_TURBO_ARGS",
     "test:local": ". bin/env && $npm_execpath start && $npm_execpath test",
     "test:local:jest": ". bin/env && $npm_execpath start && $npm_execpath test:jest",
