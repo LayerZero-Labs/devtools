@@ -23,7 +23,7 @@ ARG NODE_VERSION=20.10.0
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
-# e.g. ghcr.io/layerzero-labs/devtools-dev-base:shankar-fix_dual_arch_ghub_workflow
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:shankar-create_images_for_both_architectures
 ARG BASE_IMAGE=base
 
 # We will provide a way for consumers to override the default Aptos node image
