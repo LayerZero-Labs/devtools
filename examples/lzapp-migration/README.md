@@ -182,7 +182,7 @@ npx hardhat --network sepolia-testnet lz:oft-v1:send --dst-eid 40168 --amount 10
 Solana to Sepolia V1
 
 ```bash
-npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 10161 --to <EVM_ADDRESS> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
+npx hardhat lz:oft:solana:send --amount 1000000000 --from-eid 40168 --to <EVM_ADDRESS> --to-eid 10161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
 ```
 
 Congratulations!
