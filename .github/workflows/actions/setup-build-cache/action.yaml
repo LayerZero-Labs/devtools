@@ -11,7 +11,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: node_modules/.cache/turbo
-        key: ${{ runner.os }}-turbo-${{ github.ref_name }}-${{ github.sha }}
+        key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.ref_name }}-${{ github.sha }}
         # The hierarchy of restoring the cache goes as follows:
         #
         # - First we try to match an existing cache from the same branch
@@ -19,10 +19,10 @@ runs:
         # - Then we try to match a cache from the default branch
         # - Then we try to match any cache
         restore-keys: |
-          ${{ runner.os }}-turbo-${{ github.ref_name }}-
-          ${{ runner.os }}-turbo-${{ github.base_ref }}-
-          ${{ runner.os }}-turbo-${{ github.event.repository.default_branch }}-
-          ${{ runner.os }}-turbo-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.ref_name }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.base_ref }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.event.repository.default_branch }}-
+          ${{ runner.os }}-${{ runner.arch }}-turbo-
 
     # Cache hardhat compilers
     #
