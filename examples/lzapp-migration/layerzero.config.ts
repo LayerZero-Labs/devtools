@@ -97,9 +97,9 @@ const config: OAppOmniGraphHardhat = {
             from: sepoliaContract,
             to: solanaContract,
             config: {
-                sendLibrary: '0x6862b19f6e42a810946B9C782E6ebE26Ad266C84',
+                sendLibrary: '0x6862b19f6e42a810946B9C782E6ebE26Ad266C84', // SendULN301 on Ethereum Sepolia
                 receiveLibraryConfig: {
-                    receiveLibrary: '0x5937A5fe272fbA38699A1b75B3439389EEFDb399',
+                    receiveLibrary: '0x5937A5fe272fbA38699A1b75B3439389EEFDb399', // ReceiveULN301 on Ethereum Sepolia
                     gracePeriod: BigInt(0),
                 },
                 sendConfig: {

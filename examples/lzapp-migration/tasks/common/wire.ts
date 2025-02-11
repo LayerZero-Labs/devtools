@@ -179,10 +179,6 @@ task(TASK_LZ_OAPP_WIRE)
             })
         )
 
-        //
-        // end of paste from oft-solana
-        //
-
         if (!args.isSolanaInitConfig) {
             // const evmContractFactory = createConnectedContractFactory()
             // const lzAppFactory = createLzAppFactory(evmContractFactory)
