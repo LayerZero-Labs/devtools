@@ -23,7 +23,7 @@ ARG NODE_VERSION=20.10.0
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
-# e.g. ghcr.io/layerzero-labs/devtools-dev-base:main
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:shankar-create_images_for_both_architectures
 ARG BASE_IMAGE=base
 
 # We will provide a way for consumers to override the default Aptos node image
@@ -63,11 +63,14 @@ FROM node:$NODE_VERSION AS machine
 
 ENV PATH="/root/.cargo/bin:$PATH"
 
+ARG TARGETARCH
+RUN echo "Building for $TARGETARCH"
+
 # Update package lists
 RUN apt update
 
-# Update the system packages
-RUN apt-get update
+# Update the system packages and fix missing dependencies
+RUN apt-get update --fix-missing
 
 # Add required packages
 RUN apt-get install --yes \
@@ -78,14 +81,20 @@ RUN apt-get install --yes \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler cmake\
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
-    libatomic1 libssl-dev
+    libatomic1 libssl-dev \
+    # Required to build the base image
+    build-essential \
+    # speed up llvm builds
+    ninja-build
 
-# Install rust
+
+# Install rust and set the default toolchain to 1.83.0
 ARG RUST_TOOLCHAIN_VERSION=1.83.0
+ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
 # Install docker
@@ -105,33 +114,30 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
-RUN \
-    (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz && \
-    # Then rename the directory just for convenience
-    mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./src \
-    )
+
+# We download the source code and extract the archive
+RUN curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz
+# Then rename the directory just for convenience
+RUN mv ./aptos-core-aptos-cli-v${APTOS_VERSION} ./aptos-v${APTOS_VERSION}
 
 # Switch to the project
-WORKDIR /app/aptos/src
+WORKDIR /app/aptos/aptos-v${APTOS_VERSION}
 
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-# Install aptos from source
+# Installing Aptos CLI
+RUN ./scripts/dev_setup.sh -b -k
+RUN . ~/.cargo/env
 RUN cargo build --package aptos --profile cli
 
-# Copy the build artifacts
+# Move the binary to the aptos bin directory and clean up
 RUN mkdir -p /root/.aptos/bin/ && cp -R ./target/cli/aptos /root/.aptos/bin/
-
-# Delete the source files
 RUN rm -rf /app/aptos/aptos-core
-
-# Make sure we can execute the binary
 ENV PATH="/root/.aptos/bin:$PATH"
+
 RUN aptos --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -147,22 +153,24 @@ FROM machine AS avm
 
 WORKDIR /app/avm
 
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
+ARG ANCHOR_VERSION=0.29.0
+
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-# Install AVM - Anchor version manager for Solana
-RUN cargo install --git https://github.com/coral-xyz/anchor avm
+RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install --git https://github.com/coral-xyz/anchor avm
 
-# Install anchor
-ARG ANCHOR_VERSION=0.29.0
+# Install AVM - Anchor version manager for Solana
 RUN avm install ${ANCHOR_VERSION}
 RUN avm use ${ANCHOR_VERSION}
 
 ENV PATH="/root/.avm/bin:$PATH"
-RUN anchor --version
 RUN avm --version
+RUN anchor --version
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -177,33 +185,72 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
+ARG SOLANA_VERSION=1.18.26
+ARG PLATFORM_TOOLS_VERSION=1.41
+
+RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
+
 # Configure cargo. We want to provide a way of limiting cargo resources
 # on the github runner since it is not large enough to support multiple cargo builds
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-# Install Solana using a binary with a fallback to installing from source
-ARG SOLANA_VERSION=1.18.26
-RUN \
-    # First we try to download prebuilt binaries for Solana
-    (\
-    curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
-    mkdir -p /root/.solana && \
-    # Copy the active release directory into /root/.solana (using cp -L to dereference any symlinks)
-    cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin \
-    ) || \
-    # If that doesn't work, we'll need to build Solana from source
-    (\
-    # We download the source code and extract the archive
-    curl -s -L https://github.com/anza-xyz/agave/archive/refs/tags/v${SOLANA_VERSION}.tar.gz | tar -xz && \
-    # Then run the installer
-    # 
-    # We set the rust version to our default toolchain (must be >= 1.76.0 to avoid problems compiling ptr_from_ref code)
-    # See here https://github.com/inflation/jpegxl-rs/issues/60
-    ./agave-${SOLANA_VERSION}/scripts/cargo-install-all.sh /root/.solana \
-    )
+RUN BUILD_FROM_SOURCE=true; \
+    # Install Solana using a binary with a fallback to installing from source. 
+    # List of machines that have prebuilt binaries:
+    # - amd64/linux - last checked on Feb 10, 2025
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
+        BUILD_FROM_SOURCE=false; \
+    fi && \
+    # If we need to build from source, we'll do it here
+    # List of machines that need to be built from source:
+    # - arm64/linux - last checked on Feb 10, 2025
+    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+            git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
+            # Produces the same directory structure as the prebuilt binaries
+            # Make the active release point to the new release
+            bash ~/solana-v${SOLANA_VERSION}/scripts/cargo-install-all.sh ~/.local/share/solana/install/releases/${SOLANA_VERSION} && \
+            ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
+            # Clean up the source code
+            rm -rf ~/solana-v${SOLANA_VERSION}; \
+        fi
 
-# Make sure we can execute the binaries
+
+RUN mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools && \
+    BUILD_FROM_SOURCE=true; \
+    # If we are NOT building from source, we can simply grab the prebuilt binaries
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        # Platform tools v1.41 has prebuilt binaries for amd64/linux - we extract and move it to the cache directory
+        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.41/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
+        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+        BUILD_FROM_SOURCE=false; \
+    fi && \
+    # List of machines that need to be built from source:
+    # - arm64/linux - last checked on Feb 10, 2025
+    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+            # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
+            curl -sL https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz | tar -xz && \
+            cd platform-tools-${PLATFORM_TOOLS_VERSION} && \
+            # Optimizing (and transforming) the build.sh script
+            # Only cloning the latest commit across the several git clones
+            sed -i '/^git clone/ s/$/ --depth 1/' build.sh && \
+            # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solana
+            sed -i '/llvm\/lib\/python/ s/^/#/' build.sh && \
+            # Now that we're done with the modifications, we can build the binaries into the folder "target"
+            ./build.sh target && \
+            # Extract the binaries to the cache directory
+            tar -xf platform-tools-linux-aarch64.tar.bz2 && \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/ && \
+            # Clean up the source code
+            cd ../ && rm -rf platform-tools-${PLATFORM_TOOLS_VERSION}; \
+        fi
+
+# Copy the active release directory into /root/.solana and make it available in the PATH
+RUN mkdir -p /root/.solana
+RUN cp -LR /root/.local/share/solana/install/active_release/bin /root/.solana/bin
+
 ENV PATH="/root/.solana/bin:$PATH"
 RUN solana --version
 
@@ -220,6 +267,8 @@ FROM machine AS ton
 
 WORKDIR /app/ton
 
+ENV TON_VERSION=2024.12-1
+
 RUN apt-get install -y \
     curl \
     unzip
@@ -231,7 +280,7 @@ RUN <<-EOF
         *) exit 1 ;;
     esac
 
-    curl -sSLf https://github.com/ton-blockchain/ton/releases/latest/download/ton-linux-${TON_ARCH}.zip > ton.zip
+    curl -sSLf https://github.com/ton-blockchain/ton/releases/download/v${TON_VERSION}/ton-linux-${TON_ARCH}.zip > ton.zip
     unzip -qq -d bin ton
     chmod a+x bin/*
 EOF
@@ -247,20 +296,24 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
+ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
+RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
+
+# Install SVM, Solidity version manager
+ARG SOLC_VERSION=0.8.22
+ARG SVM_RS_VERSION=0.5.4
+
 ARG CARGO_BUILD_JOBS=default
 ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 
-# Install foundry
+# Install foundry - this needs rust >= 1.81.0
 ENV PATH="/root/.foundry/bin:$PATH"
 RUN curl -L https://foundry.paradigm.xyz | bash
 RUN foundryup
 
-# Install SVM, Solidity version manager
-ARG SVM_RS_VERSION=0.5.4
-RUN cargo install svm-rs@${SVM_RS_VERSION}
+RUN cargo +${RUST_TOOLCHAIN_VERSION_ANCHOR} install svm-rs@${SVM_RS_VERSION}
 
 # Install solc 0.8.22
-ARG SOLC_VERSION=0.8.22
 RUN svm install ${SOLC_VERSION}
 
 # Make sure we can execute the binaries
@@ -295,6 +348,9 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
+
+# Copy solana cache (for platform-tools) and binaries
+COPY --from=solana /root/.cache/solana /root/.cache/solana
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
@@ -310,6 +366,7 @@ COPY --from=evm /root/.svm /root/.svm
 # 
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
+
 
 # Output versions
 RUN node -v
@@ -461,6 +518,7 @@ FROM $EVM_NODE_IMAGE AS node-evm
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM ubuntu:24.04 AS node-ton-my-local-ton
+# We need to be on Ubuntu 24.04 to install gcc-13 and gcc-13-aarch64-linux-gnu without adding a PPA
 
 ENV PYTHONUNBUFFERED=1
 
@@ -468,7 +526,8 @@ WORKDIR /app
 
 # Update system packages
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install --yes \
+
+RUN apt-get install -y \
     curl \
     # Java
     openjdk-17-jdk \
@@ -505,6 +564,7 @@ RUN <<-EOF
 
     curl -sLf https://github.com/neodix42/MyLocalTon/releases/download/v120/MyLocalTon-${TON_ARCH}.jar --output MyLocalTon.jar
 EOF
+
 
 # We want to keep the internals of the EVM node images encapsulated so we supply the healthcheckk as a part of the definition
 HEALTHCHECK --start-period=30s --interval=5s --retries=30 CMD curl -sSf http://127.0.0.1:8081
