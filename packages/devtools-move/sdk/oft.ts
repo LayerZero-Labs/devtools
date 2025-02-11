@@ -5,25 +5,13 @@ import {
     PrivateKey,
     PrivateKeyVariants,
     SimpleTransaction,
-    InputEntryFunctionData,
     RawTransaction,
 } from '@aptos-labs/ts-sdk'
 
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 
 import { hexAddrToAptosBytesAddr } from './utils'
-import { IOFT } from './IOFT'
-
-export enum OFTType {
-    OFT_FA = 'oft_fa',
-    OFT_ADAPTER_FA = 'oft_adapter_fa',
-    OFT_COIN = 'oft_coin',
-    OFT_ADAPTER_COIN = 'oft_adapter_coin',
-}
-
-export type TypedInputGenerateTransactionPayloadData = InputEntryFunctionData & {
-    types: string[]
-}
+import { IOFT, OFTType, TypedInputGenerateTransactionPayloadData } from './IOFT'
 
 export class OFT implements IOFT {
     public moveVMConnection: Aptos
@@ -37,7 +25,7 @@ export class OFT implements IOFT {
     constructor(
         moveVMConnection: Aptos,
         oft_address: string,
-        account_address: string,
+        accountAddress: string,
         private_key: string,
         eid: EndpointId
     ) {
@@ -46,9 +34,9 @@ export class OFT implements IOFT {
         this.private_key = PrivateKey.formatPrivateKey(private_key, PrivateKeyVariants.Ed25519)
         this.signer_account = Account.fromPrivateKey({
             privateKey: new Ed25519PrivateKey(this.private_key),
-            address: account_address,
+            address: accountAddress,
         })
-        this.accountAddress = account_address
+        this.accountAddress = accountAddress
         this.eid = eid
         this.sequenceNumber = 0
         this.syncSequenceNumber()

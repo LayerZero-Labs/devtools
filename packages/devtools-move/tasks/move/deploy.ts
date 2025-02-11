@@ -4,9 +4,9 @@ import fs from 'fs'
 
 import { deploymentFile } from '../shared/types'
 
-import { getNamedAddresses } from './utils/config'
 import path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
+import { DeployTaskContext, getAptosCLICommand } from '../../sdk/baseTaskHelper'
 
 let stdOut = ''
 let stdErr = ''
@@ -24,13 +24,11 @@ async function deployMovementContracts(
     chainName: string,
     stage: string
 ) {
-    const additionalAddresses = getNamedAddresses(chainName, stage)
-    namedAddresses = namedAddresses ? `${namedAddresses},${additionalAddresses}` : additionalAddresses
-    console.log('namedAddresses', namedAddresses)
     let cmd = ''
     let args: string[] = []
     if (chainName === 'aptos' || chainName === 'movement') {
-        cmd = 'aptos'
+        const aptosCommand = await getAptosCLICommand(chainName, stage)
+        cmd = aptosCommand
         args = [
             'move',
             'create-object-and-publish-package',
@@ -38,16 +36,14 @@ async function deployMovementContracts(
             `--named-addresses=${namedAddresses}`,
         ]
     } else if (chainName === 'initia') {
-        if (!process.env.INITIA_KEY_NAME) {
-            throw new Error('INITIA_KEY_NAME is not set.\n\nPlease set the INITIA_KEY_NAME environment variable.')
-        }
-        const userAccountName = process.env.INITIA_KEY_NAME
+        const userAccountName = getInitiaKeyName()
 
         cmd = 'initiad'
         args = [
             'move',
             'deploy-object',
             addressName,
+            `-p=${process.cwd()}`,
             `--named-addresses=${namedAddresses}`,
             '--node=https://rpc.testnet.initia.xyz:443',
             `--from=${userAccountName}`,
@@ -102,6 +98,13 @@ async function deployMovementContracts(
     })
 }
 
+function getInitiaKeyName() {
+    if (!process.env.INITIA_KEY_NAME) {
+        throw new Error('INITIA_KEY_NAME is not set.\n\nPlease set the INITIA_KEY_NAME environment variable.')
+    }
+    return process.env.INITIA_KEY_NAME
+}
+
 async function createDeployment(deployedAddress: string, file_name: string, network: string, lzNetworkStage: string) {
     fs.mkdirSync('deployments', { recursive: true })
     const aptosDir = `deployments/${network}-${lzNetworkStage}`
@@ -133,30 +136,44 @@ async function checkIfDeploymentExists(network: string, lzNetworkStage: string, 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function deploy(
+    taskContext: DeployTaskContext,
     addressName: string,
-    namedAddresses: string,
     forceDeploy: boolean = false,
-    selectedContract: OAppOmniGraphHardhat['contracts'][number],
-    chainName: string,
-    stage: string
+    namedAddresses: string
 ) {
     const deploymentExists = await checkIfDeploymentExists(
-        chainName,
-        stage,
-        selectedContract.contract.contractName ?? ''
+        taskContext.chain,
+        taskContext.stage,
+        taskContext.selectedContract.contract.contractName ?? ''
     )
 
     if (deploymentExists) {
         if (forceDeploy) {
             console.warn('You are in force deploy mode:')
-            console.log(`Follow the prompts to complete the deployment ${selectedContract.contract.contractName}`)
-            await deployMovementContracts(selectedContract, addressName, namedAddresses, chainName, stage)
+            console.log(
+                `Follow the prompts to complete the deployment ${taskContext.selectedContract.contract.contractName}`
+            )
+            await deployMovementContracts(
+                taskContext.selectedContract,
+                addressName,
+                namedAddresses,
+                taskContext.chain,
+                taskContext.stage
+            )
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
     } else {
-        console.log(`Follow the prompts to complete the deployment ${selectedContract.contract.contractName}`)
-        await deployMovementContracts(selectedContract, addressName, namedAddresses, chainName, stage)
+        console.log(
+            `Follow the prompts to complete the deployment ${taskContext.selectedContract.contract.contractName}`
+        )
+        await deployMovementContracts(
+            taskContext.selectedContract,
+            addressName,
+            namedAddresses,
+            taskContext.chain,
+            taskContext.stage
+        )
     }
 }
 export { deploy }

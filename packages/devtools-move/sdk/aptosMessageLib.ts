@@ -1,30 +1,7 @@
 import { ExecutorConfig } from '../tasks/move/utils'
 import { Aptos } from '@aptos-labs/ts-sdk'
-
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-
-interface MoveVectorResponse {
-    vec: UlnConfig[]
-}
-
-interface UlnConfig {
-    confirmations: bigint
-    optional_dvn_threshold: number
-    optional_dvns: string[]
-    required_dvns: string[]
-    use_default_for_confirmations: boolean
-    use_default_for_optional_dvns: boolean
-    use_default_for_required_dvns: boolean
-}
-
-interface ExecutorConfigResponse {
-    executor_address: string
-    max_message_size: number
-}
-
-interface MoveVectorExecutorResponse {
-    vec: ExecutorConfigResponse[]
-}
+import { IMessageLib, UlnConfig, MoveVectorResponse, MoveVectorExecutorResponse } from './IMessageLib'
 
 const DEFAULT_ULN_CONFIG: UlnConfig = {
     confirmations: BigInt(0),
@@ -41,17 +18,18 @@ const DEFAULT_EXECUTOR_CONFIG: ExecutorConfig = {
     max_message_size: -1,
 }
 
-export class MsgLib {
-    private aptos: Aptos
+export class AptosMsgLib implements IMessageLib {
+    private moveVMConnection: Aptos
     private msgLibAddress: string
-    constructor(aptos: Aptos, msgLibAddress: string) {
-        this.aptos = aptos
+
+    constructor(moveVMConnection: Aptos, msgLibAddress: string) {
+        this.moveVMConnection = moveVMConnection
         this.msgLibAddress = msgLibAddress
     }
 
     async get_default_uln_send_config(eid: EndpointId): Promise<UlnConfig> {
         try {
-            const result = await this.aptos.view({
+            const result = await this.moveVMConnection.view({
                 payload: {
                     function: `${this.msgLibAddress}::msglib::get_default_uln_send_config`,
                     functionArguments: [eid],
@@ -75,7 +53,7 @@ export class MsgLib {
 
     async get_default_uln_receive_config(eid: EndpointId): Promise<UlnConfig> {
         try {
-            const result = await this.aptos.view({
+            const result = await this.moveVMConnection.view({
                 payload: {
                     function: `${this.msgLibAddress}::msglib::get_default_uln_receive_config`,
                     functionArguments: [eid],
@@ -99,7 +77,7 @@ export class MsgLib {
 
     async get_default_executor_config(eid: EndpointId): Promise<ExecutorConfig> {
         try {
-            const result = await this.aptos.view({
+            const result = await this.moveVMConnection.view({
                 payload: {
                     function: `${this.msgLibAddress}::msglib::get_default_executor_config`,
                     functionArguments: [eid],
@@ -107,7 +85,6 @@ export class MsgLib {
             })
             const rawConfig = (result[0] as MoveVectorExecutorResponse)?.vec[0]
             if (!rawConfig) {
-                // In the case where we don't find a default executor config, we return an empty config
                 return DEFAULT_EXECUTOR_CONFIG
             }
             return {
@@ -115,7 +92,6 @@ export class MsgLib {
                 max_message_size: Number(rawConfig.max_message_size),
             }
         } catch (error) {
-            // In the case where we don't find a executor config, we return an empty config
             return DEFAULT_EXECUTOR_CONFIG
         }
     }

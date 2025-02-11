@@ -1,13 +1,9 @@
 import { Aptos } from '@aptos-labs/ts-sdk'
 
 import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { IEndpoint, LibraryTimeoutResponse } from './IEndpoint'
 
-interface LibraryTimeoutResponse {
-    expiry: bigint
-    lib: string
-}
-
-export class Endpoint {
+export class AptosEndpoint implements IEndpoint {
     private aptos: Aptos
     private endpoint_address: string
     constructor(aptos: Aptos, endpoint_address: string) {

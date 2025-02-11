@@ -1,8 +1,8 @@
 import { spawn } from 'child_process'
 
-import { getNamedAddresses } from './utils/config'
 import fs from 'fs'
 import path from 'path'
+import { DeployTaskContext, getAptosCLICommand } from '../../sdk/baseTaskHelper'
 
 let stdErr = ''
 
@@ -11,11 +11,7 @@ let stdErr = ''
  * @dev Wraps the aptos move build command
  * @returns Promise<void>
  */
-async function buildMovementContracts(named_addresses: string, chain: string, stage: string, aptosCommand: string) {
-    // Get additional named addresses and combine with provided ones
-    const additionalAddresses = getNamedAddresses(chain, stage)
-    const namedAddresses = named_addresses ? `${named_addresses},${additionalAddresses}` : additionalAddresses
-
+async function buildMovementContracts(namedAddresses: string, chain: string, stage: string, aptosCommand: string) {
     const cmd = aptosCommand
     const args = ['move', 'build', `--named-addresses=${namedAddresses}`]
 
@@ -56,94 +52,17 @@ async function buildMovementContracts(named_addresses: string, chain: string, st
     })
 }
 
-function compareVersions(installed: string, required: string): boolean {
-    const installedParts = installed.split('.').map(Number)
-    const requiredParts = required.split('.').map(Number)
+async function build(taskContext: DeployTaskContext, forceBuild: boolean, namedAddresses: string) {
+    const aptosCommand = await getAptosCLICommand(taskContext.chain, taskContext.stage)
 
-    for (let i = 0; i < 3; i++) {
-        if (installedParts[i] > requiredParts[i]) {
-            return true
-        }
-        if (installedParts[i] < requiredParts[i]) {
-            return false
-        }
-    }
-
-    return true
-}
-
-async function build(
-    chainName: string,
-    forceBuild: boolean,
-    namedAddresses: string,
-    addressName: string,
-    stage: string
-) {
-    let aptosCommand = ''
-    if (chainName === 'aptos') {
-        try {
-            aptosCommand = 'aptos'
-            const version = await getAptosVersion(aptosCommand)
-            const MIN_VERSION = '6.0.1'
-
-            if (!compareVersions(version, MIN_VERSION)) {
-                console.error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
-                return
-            }
-            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
-        } catch (error) {
-            console.error('🚨 Failed to check Aptos CLI version:', error)
-            return
-        }
-    } else if (chainName === 'movement') {
-        try {
-            aptosCommand = 'aptos'
-            const version = await getAptosVersion(aptosCommand)
-            const MAX_VERSION = '3.5.0'
-
-            if (!compareVersions(version, MAX_VERSION)) {
-                console.error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
-                return
-            }
-            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
-        } catch (error) {
-            console.error('🚨 Failed to check Aptos CLI version:', error)
-            return
-        }
-    } else {
-        throw new Error(`Chain ${chainName}-${stage} not supported for build.`)
-    }
-
-    const buildPath = path.join(process.cwd(), 'build', addressName)
+    const buildPath = path.join(process.cwd(), 'build', taskContext.selectedContract.contract.contractName ?? '')
 
     if (!fs.existsSync(buildPath) || forceBuild) {
         console.log('Building contracts\n')
-        await buildMovementContracts(namedAddresses, chainName, stage, aptosCommand)
+        await buildMovementContracts(namedAddresses, taskContext.chain, taskContext.stage, aptosCommand)
     } else {
         console.log('Skipping build - built modules already exist at: ', buildPath)
     }
-}
-
-async function getAptosVersion(aptosCommand: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const childProcess = spawn(aptosCommand, ['--version'])
-        let stdout = ''
-
-        childProcess.stdout?.on('data', (data) => {
-            stdout += data.toString()
-        })
-
-        childProcess.on('close', (code) => {
-            if (code === 0) {
-                const versionMatch = stdout.match(/aptos (\d+\.\d+\.\d+)/)
-                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
-            } else {
-                reject(new Error(`aptos --version exited with code ${code}`))
-            }
-        })
-
-        childProcess.on('error', reject)
-    })
 }
 
 export { build }

@@ -1,50 +1,35 @@
 import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { Endpoint } from '../../sdk/endpoint'
-import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
-import { OFT } from '../../sdk/oft'
+
 import { getConfigConnections } from '../shared/utils'
 import { Aptos } from '@aptos-labs/ts-sdk'
-import { parseYaml } from './utils/aptosNetworkParser'
-import { getLzConfig, getMoveVMContracts, getNamedAddresses, promptUserContractSelection } from './utils/config'
 import * as oftConfig from './utils/moveVMOftConfigOps'
 import { TransactionPayload } from './utils/moveVMOftConfigOps'
-import { getContractNameFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
+import { sendAllTxs } from './utils/utils'
 import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
-import path from 'path'
+import { TaskContext } from '../../sdk/baseTaskHelper'
+import { IOFT } from '../../sdk/IOFT'
+import { EndpointFactory } from '../../sdk/endpointFactory'
+import { getDeploymentAddresses } from './utils/config'
+import { IEndpoint } from '../../sdk/IEndpoint'
 
-async function wireMove(configPath: string) {
-    const { account_address, private_key, network, fullnode } = await parseYaml()
-    const fullConfigPath = path.join(process.cwd(), configPath)
+async function wireMove(taskContext: TaskContext) {
+    console.log(`\n🔌 Wiring ${taskContext.chain}-${taskContext.stage} OApp`)
+    console.log(`\tAddress: ${taskContext.oAppAddress}\n`)
 
-    const lzConfig = await getLzConfig(configPath)
-    const chain = getChain(fullnode)
-    const moveVMConnection = getConnection(chain, network)
+    const deploymentAddresses = getDeploymentAddresses(taskContext.chain, taskContext.stage)
+    const endpointAddress = getEndpointAddressFromNamedAddresses(deploymentAddresses)
 
-    const moveVMContracts = getMoveVMContracts(lzConfig)
-    const selectedContract = await promptUserContractSelection(moveVMContracts)
-    const eid = selectedContract.contract.eid
-    const stage = getNetworkForChainId(eid).env
-    const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const moveVMOAppAddress = getMoveVMOAppAddress(contractName, chain, stage)
+    const moveVMEndpoint = EndpointFactory.create(taskContext.moveVMConnection as Aptos, endpointAddress)
 
-    const namedAddresses = getNamedAddresses(chain, stage)
-    const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
+    const connectionsFromMoveToAny = await getConfigConnections('from', taskContext.srcEid, taskContext.fullConfigPath)
 
-    console.log(`\n🔌 Wiring ${chain}-${stage} OApp`)
-    console.log(`\tAddress: ${moveVMOAppAddress}\n`)
-
-    const oftSDK = new OFT(moveVMConnection as Aptos, moveVMOAppAddress, account_address, private_key, eid)
-    const moveVMEndpoint = new Endpoint(moveVMConnection as Aptos, endpointAddress)
-
-    const connectionsFromMoveToAny = await getConfigConnections('from', eid, fullConfigPath)
-
-    const txs = await createWiringTxs(oftSDK, moveVMEndpoint, connectionsFromMoveToAny)
-    await sendAllTxs(moveVMConnection as Aptos, oftSDK, account_address, txs)
+    const txs = await createWiringTxs(taskContext.oft, moveVMEndpoint, connectionsFromMoveToAny)
+    await sendAllTxs(taskContext.moveVMConnection, taskContext.oft, taskContext.accountAddress, txs)
 }
 
 async function createWiringTxs(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connectionConfigs: OAppOmniGraphHardhat['connections']
 ): Promise<TransactionPayload[]> {
     const txs: TransactionPayload[] = []

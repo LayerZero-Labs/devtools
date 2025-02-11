@@ -11,10 +11,10 @@ import {
 } from '@layerzerolabs/lz-definitions'
 import { ExecutorOptionType, Options } from '@layerzerolabs/lz-v2-utilities'
 
-import { Endpoint } from '../../../sdk/endpoint'
-import { MsgLib } from '../../../sdk/msgLib'
-import { OFT, OFTType, TypedInputGenerateTransactionPayloadData } from '../../../sdk/oft'
-import { IOFT } from '../../../sdk/IOFT'
+import { MessageLibFactory } from '../../../sdk/messageLibFactory'
+import { IMessageLib } from '../../../sdk/IMessageLib'
+import { IOFT, TypedInputGenerateTransactionPayloadData } from '../../../sdk/IOFT'
+import { OFTType } from '../../../sdk/IOFT'
 import { createEidToNetworkMapping, diffPrinter } from '../../shared/utils'
 
 import { createSerializableUlnConfig } from './ulnConfigBuilder'
@@ -23,10 +23,11 @@ import { ExecutorConfig, UlnConfig } from '.'
 
 import type { OAppOmniGraphHardhat, Uln302ExecutorConfig } from '@layerzerolabs/toolbox-hardhat'
 import { decodeSolanaAddress } from '../../shared/basexToBytes32'
+import { IEndpoint } from '../../../sdk/IEndpoint'
 
 export type TransactionPayload = {
-    payload: TypedInputGenerateTransactionPayloadData
     description: string
+    payload: TypedInputGenerateTransactionPayloadData
     eid?: EndpointId
 }
 
@@ -44,7 +45,7 @@ const configTypeToNameMap = {
 }
 
 export async function createTransferOwnerOAppPayload(
-    oft: OFT,
+    oft: IOFT,
     newOwner: string,
     eid: EndpointId
 ): Promise<TransactionPayload | null> {
@@ -70,7 +71,11 @@ export function createTransferObjectOwnerPayload(objectAddress: string, toAddres
     }
 }
 
-export async function setDelegate(oft: IOFT, delegate: string, eid: EndpointId): Promise<TransactionPayload | null> {
+export async function createSetDelegatePayload(
+    oft: IOFT,
+    delegate: string,
+    eid: EndpointId
+): Promise<TransactionPayload | null> {
     const currDelegate = await oft.getDelegate()
     if (currDelegate == delegate) {
         console.log(`✅ Delegate already set to ${delegate}\n`)
@@ -87,7 +92,7 @@ export async function setDelegate(oft: IOFT, delegate: string, eid: EndpointId):
     }
 }
 
-export function toAptosAddress(address: string, eid: string): string {
+export function evmAddressToAptos(address: string, eid: string): string {
     if (!address) {
         return '0x' + '0'.repeat(64)
     }
@@ -107,7 +112,7 @@ export function toAptosAddress(address: string, eid: string): string {
 }
 
 export async function createSetPeerTx(
-    oft: OFT,
+    oft: IOFT,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     const eidToNetworkMapping = await createEidToNetworkMapping()
@@ -119,7 +124,7 @@ export async function createSetPeerTx(
     const networkName = eidToNetworkMapping[connection.to.eid]
     validateNetwork(networkName, connection)
     const contractAddress = getContractAddress(networkName, connection.to.contractName)
-    const newPeer = toAptosAddress(contractAddress, connection.to.eid.toString())
+    const newPeer = evmAddressToAptos(contractAddress, connection.to.eid.toString())
     const currentPeerHex = await getCurrentPeer(oft, connection.to.eid as EndpointId)
 
     if (currentPeerHex === newPeer) {
@@ -146,8 +151,8 @@ function validateNetwork(networkName: string, entry: OAppOmniGraphHardhat['conne
 }
 
 export async function createSetReceiveLibraryTimeoutTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     if (!connection.config?.receiveLibraryTimeoutConfig) {
@@ -190,8 +195,8 @@ export async function createSetReceiveLibraryTimeoutTx(
 }
 
 export async function createSetReceiveLibraryTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     if (!connection.config?.receiveLibraryConfig?.receiveLibrary) {
@@ -233,8 +238,8 @@ export async function createSetReceiveLibraryTx(
 }
 
 export async function createSetSendLibraryTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ) {
     if (!connection.config?.sendLibrary) {
@@ -265,8 +270,8 @@ export async function createSetSendLibraryTx(
 }
 
 export async function createSetSendConfigTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     if (!connection.config?.sendConfig) {
@@ -286,7 +291,7 @@ export async function createSetSendConfigTx(
     const currentSendLibrary = await endpoint.getSendLibrary(oft.oft_address, connection.to.eid)
     const currentSendLibraryAddress = currentSendLibrary[0]
 
-    const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
+    const msgLib = MessageLibFactory.create(oft.moveVMConnection, currentSendLibraryAddress)
     const defaultUlnConfig = await msgLib.get_default_uln_send_config(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
@@ -299,7 +304,7 @@ export async function createSetSendConfigTx(
     const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
     await checkNewConfig(
-        new MsgLib(oft.moveVMConnection, currentSendLibraryAddress),
+        MessageLibFactory.create(oft.moveVMConnection, currentSendLibraryAddress),
         newUlnConfig,
         connection,
         ConfigType.SEND_ULN
@@ -345,8 +350,8 @@ function checkUlnConfigEqualsDefault(ulnConfig: UlnConfig, defaultUlnConfig: Uln
 }
 
 export async function createSetReceiveConfigTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     if (!connection.config?.receiveConfig) {
@@ -366,7 +371,7 @@ export async function createSetReceiveConfigTx(
     const currentReceiveLibrary = await endpoint.getReceiveLibrary(oft.oft_address, connection.to.eid)
     const currentReceiveLibraryAddress = currentReceiveLibrary[0]
 
-    const msgLib = new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress)
+    const msgLib = MessageLibFactory.create(oft.moveVMConnection, currentReceiveLibraryAddress)
     const defaultUlnConfig = await msgLib.get_default_uln_receive_config(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
@@ -380,7 +385,7 @@ export async function createSetReceiveConfigTx(
     const currUlnConfig = UlnConfig.deserialize(currHexSerializedUlnConfig)
 
     await checkNewConfig(
-        new MsgLib(oft.moveVMConnection, currentReceiveLibraryAddress),
+        MessageLibFactory.create(oft.moveVMConnection, currentReceiveLibraryAddress),
         newUlnConfig,
         connection,
         ConfigType.RECV_ULN
@@ -420,7 +425,7 @@ export async function createSetReceiveConfigTx(
 }
 
 export async function checkExecutorConfigEqualsDefault(
-    msgLib: MsgLib,
+    msgLib: IMessageLib,
     newExecutorConfig: ExecutorConfig,
     eid: EndpointId
 ): Promise<boolean> {
@@ -432,8 +437,8 @@ export async function checkExecutorConfigEqualsDefault(
 }
 
 export async function createSetExecutorConfigTx(
-    oft: OFT,
-    endpoint: Endpoint,
+    oft: IOFT,
+    endpoint: IEndpoint,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload | null> {
     if (!connection.config?.sendConfig?.executorConfig) {
@@ -451,7 +456,7 @@ export async function createSetExecutorConfigTx(
         ConfigType.EXECUTOR
     )
 
-    const msgLib = new MsgLib(oft.moveVMConnection, currentSendLibraryAddress)
+    const msgLib = MessageLibFactory.create(oft.moveVMConnection, currentSendLibraryAddress)
     const newSettingEqualsDefault = await checkExecutorConfigEqualsDefault(
         msgLib,
         newExecutorConfig,
@@ -502,7 +507,7 @@ export async function createSetExecutorConfigTx(
 }
 
 export async function createSetRateLimitTx(
-    oft: OFT,
+    oft: IOFT,
     rateLimit: bigint,
     window_seconds: bigint,
     eid: EndpointId,
@@ -531,7 +536,7 @@ export async function createSetRateLimitTx(
 }
 
 export async function createUnsetRateLimitTx(
-    oft: OFT,
+    oft: IOFT,
     eid: EndpointId,
     oftType: OFTType
 ): Promise<TransactionPayload | null> {
@@ -545,7 +550,7 @@ export async function createUnsetRateLimitTx(
 }
 
 export async function createSetFeeBpsTx(
-    oft: OFT,
+    oft: IOFT,
     fee_bps: bigint,
     eid: EndpointId,
     oftType: OFTType
@@ -573,7 +578,7 @@ export async function createSetFeeBpsTx(
 }
 
 // getPeer errors if there is no peer set, so we need to check if there is a peer before calling getPeer
-async function getCurrentPeer(oft: OFT, eid: EndpointId): Promise<string> {
+async function getCurrentPeer(oft: IOFT, eid: EndpointId): Promise<string> {
     const hasPeer = await oft.hasPeer(eid)
     return hasPeer ? await oft.getPeer(eid) : ''
 }
@@ -604,7 +609,7 @@ function addOptions(enforcedOption: any, options: Options) {
 }
 
 export async function createSetEnforcedOptionsTxs(
-    oft: OFT,
+    oft: IOFT,
     connection: OAppOmniGraphHardhat['connections'][number]
 ): Promise<TransactionPayload[]> {
     const txs: TransactionPayload[] = []
@@ -641,7 +646,7 @@ function getOptionsByMsgType(entry: OAppOmniGraphHardhat['connections'][number],
 async function createTxFromOptions(
     options: Options[],
     entry: OAppOmniGraphHardhat['connections'][number],
-    oft: OFT,
+    oft: IOFT,
     msgType: number
 ): Promise<TypedInputGenerateTransactionPayloadData | null> {
     const newOptions = Options.newOptions()
@@ -708,7 +713,7 @@ function ensureOptionsCompatible(optionsHex: string): string {
 }
 
 async function checkNewConfig(
-    msgLib: MsgLib,
+    msgLib: IMessageLib,
     newUlnConfig: UlnConfig,
     entry: OAppOmniGraphHardhat['connections'][number],
     configType: ConfigType
@@ -744,7 +749,7 @@ async function checkNewConfig(
     }
 }
 
-export function createIrrevocablyDisableBlocklistPayload(oft: OFT, oftType: OFTType): TransactionPayload {
+export function createIrrevocablyDisableBlocklistPayload(oft: IOFT, oftType: OFTType): TransactionPayload {
     const payload = oft.irrevocablyDisableBlocklistPayload(oftType)
     return {
         payload: payload,
@@ -752,7 +757,7 @@ export function createIrrevocablyDisableBlocklistPayload(oft: OFT, oftType: OFTT
     }
 }
 
-export function createPermanentlyDisableFungibleStoreFreezingPayload(oft: OFT): TransactionPayload {
+export function createPermanentlyDisableFungibleStoreFreezingPayload(oft: IOFT): TransactionPayload {
     const payload = oft.permanentlyDisableFungibleStoreFreezingPayload()
     return {
         payload: payload,

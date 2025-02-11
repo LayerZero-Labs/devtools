@@ -13,11 +13,6 @@ const bscContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const aptosContract: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-
 const initiaContract: OmniPointHardhat = {
     eid: EndpointId.INITIA_V2_TESTNET,
     contractName: 'MyOFT',
@@ -33,13 +28,6 @@ const config: OAppOmniGraphHardhat = {
             },
         },
         {
-            contract: aptosContract,
-            config: {
-                delegate: '',
-                owner: '',
-            },
-        },
-        {
             contract: initiaContract,
             config: {
                 delegate: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
@@ -49,7 +37,7 @@ const config: OAppOmniGraphHardhat = {
     ],
     connections: [
         {
-            from: aptosContract,
+            from: initiaContract,
             to: bscContract,
             config: {
                 enforcedOptions: [
@@ -117,7 +105,7 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: bscContract,
-            to: aptosContract,
+            to: initiaContract,
             config: {
                 enforcedOptions: [
                     {

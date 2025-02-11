@@ -1,7 +1,23 @@
-import { Aptos, SimpleTransaction } from '@aptos-labs/ts-sdk'
+import { Aptos, InputEntryFunctionData, SimpleTransaction } from '@aptos-labs/ts-sdk'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFTType, TypedInputGenerateTransactionPayloadData } from './oft'
-import { RESTClient } from '@initia/initia.js'
+import { MsgExecute, RESTClient } from '@initia/initia.js'
+
+export type TypedAptosPayload = InputEntryFunctionData & {
+    types: string[]
+}
+
+export type TypedInitiaPayload = MsgExecute & {
+    types: string[]
+}
+
+export type TypedInputGenerateTransactionPayloadData = TypedAptosPayload | TypedInitiaPayload
+
+export enum OFTType {
+    OFT_FA = 'oft_fa',
+    OFT_ADAPTER_FA = 'oft_adapter_fa',
+    OFT_COIN = 'oft_coin',
+    OFT_ADAPTER_COIN = 'oft_adapter_coin',
+}
 
 export interface IOFT {
     moveVMConnection: Aptos | RESTClient
@@ -15,6 +31,11 @@ export interface IOFT {
         project_uri: string,
         shared_decimals: number,
         local_decimals: number
+    ): TypedInputGenerateTransactionPayloadData
+
+    initializeAdapterFAPayload(
+        tokenMetadataAddress: string,
+        sharedDecimals: number
     ): TypedInputGenerateTransactionPayloadData
 
     createSetRateLimitTx(
@@ -115,5 +136,5 @@ export interface IOFT {
 
     getSequenceNumber(): Promise<number>
 
-    signSubmitAndWaitForTx(transaction: SimpleTransaction): Promise<any>
+    signSubmitAndWaitForTx(transaction: SimpleTransaction | MsgExecute): Promise<any>
 }

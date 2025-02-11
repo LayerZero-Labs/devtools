@@ -8,6 +8,12 @@ Add key to your keyring:
 initiad keys import-hex <your-initia-key-name> <your-initia-private-key> --keyring-backend test
 ```
 
+To list your keys:
+
+```bash
+initiad keys list --keyring-backend test
+```
+
 Create a `.env` file with the following variables:
 
 ```bash
@@ -15,6 +21,7 @@ INITIA_ACCOUNT_ADDRESS=<your-initia-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
 INITIA_PRIVATE_KEY=<your-initia-private-key>
 INITIA_KEY_NAME=<your-initia-key-name>
+INITIA_REST_URL=<your-initia-rest-url>
 ```
 
 Then run `source .env` in order for your values to be mapped to `$INITIA_ACCOUNT_ADDRESS` and `$INITIA_PRIVATE_KEY`
@@ -59,10 +66,6 @@ const oftMetadata = {
   sharedDecimals: 6,
   localDecimals: 6,
 };
-```
-
-```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --move-deploy-script deploy-move/OFTInitParams.ts
 ```
 
 ## EVM Deployment

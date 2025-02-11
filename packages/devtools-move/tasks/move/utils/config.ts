@@ -4,7 +4,7 @@ import path from 'path'
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
 import { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, getNetworkForChainId, Stage } from '@layerzerolabs/lz-definitions'
 
 import inquirer from 'inquirer'
 
@@ -24,6 +24,13 @@ type AptosYamlConfig = {
             faucet_url?: string
         }
     }
+}
+
+export function getOAppOwner(selectedContract: OAppOmniGraphHardhat['contracts'][number]): string {
+    if (!selectedContract.config?.owner) {
+        throw new Error(ownerNotSetMessage)
+    }
+    return selectedContract.config.owner
 }
 
 export const ownerNotSetMessage = `Owner is not set.
@@ -53,7 +60,7 @@ export function getMoveTomlAdminName(oAppType: string): string {
     }
 }
 
-export function getAptosAccountAddress(chain: string): string {
+export function getMoveVMAccountAddress(chain: string): string {
     if (chain === 'aptos') {
         if (process.env.APTOS_ACCOUNT_ADDRESS) {
             return process.env.APTOS_ACCOUNT_ADDRESS
@@ -66,16 +73,14 @@ export function getAptosAccountAddress(chain: string): string {
         } else {
             throw new Error('MOVEMENT_ACCOUNT_ADDRESS must bet set in the environment variables.')
         }
+    } else if (chain === 'initia') {
+        if (process.env.INITIA_ACCOUNT_ADDRESS) {
+            return process.env.INITIA_ACCOUNT_ADDRESS
+        } else {
+            throw new Error('INITIA_ACCOUNT_ADDRESS must bet set in the environment variables.')
+        }
     } else {
         throw new Error(`${chain} is not supported.`)
-    }
-}
-
-export function getInitiaAccountAddress(): string {
-    if (process.env.INITIA_ACCOUNT_ADDRESS) {
-        return process.env.INITIA_ACCOUNT_ADDRESS
-    } else {
-        throw new Error('INITIA_ACCOUNT_ADDRESS must bet set in the environment variables.')
     }
 }
 
@@ -142,7 +147,24 @@ export function createAccountFromPrivateKey(privateKey: string, account_address:
     })
 }
 
-export function getNamedAddresses(chain: string, networkType: string): string {
+export function getNamedAddresses(
+    chain: string,
+    networkType: string,
+    moveTomlAdminName: string,
+    selectedContract: OAppOmniGraphHardhat['contracts'][number]
+): string {
+    const oAppOwner = getOAppOwner(selectedContract)
+    let named_addresses = ''
+    if (chain === 'movement' || chain === 'aptos') {
+        named_addresses = `${oAppOwner}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
+    } else if (chain === 'initia') {
+        named_addresses = `${moveTomlAdminName}=${oAppOwner}`
+    }
+
+    return named_addresses + getDeploymentAddresses(chain, networkType)
+}
+
+export function getDeploymentAddresses(chain: string, networkType: string): string {
     const addressesPath = path.join(__dirname, './deploymentAddresses.json')
     const addresses = JSON.parse(fs.readFileSync(addressesPath, 'utf8'))
     const networkAddresses = addresses[`${chain}-${networkType}-addresses`]
@@ -156,7 +178,7 @@ export function getNamedAddresses(chain: string, networkType: string): string {
         .join(',')
 }
 
-export function getAptosPrivateKey(chain: string): string {
+export function getMoveVMPrivateKey(chain: string): string {
     if (chain === 'aptos') {
         const aptosPrivateKey = process.env.APTOS_PRIVATE_KEY
         if (!aptosPrivateKey) {
@@ -169,7 +191,31 @@ export function getAptosPrivateKey(chain: string): string {
             throw new Error('MOVEMENT_PRIVATE_KEY must be set in the environment variables.')
         }
         return movementPrivateKey
+    } else if (chain === 'initia') {
+        const initiaPrivateKey = process.env.INITIA_PRIVATE_KEY
+        if (!initiaPrivateKey) {
+            throw new Error('INITIA_PRIVATE_KEY must be set in the environment variables.')
+        }
+        return initiaPrivateKey
     } else {
         throw new Error(`${chain} is not supported.`)
     }
+}
+
+export async function getMoveVMOperationArgs(configPath: string): Promise<{
+    lzConfig: OAppOmniGraphHardhat
+    selectedContract: OAppOmniGraphHardhat['contracts'][number]
+    chainName: string
+    stage: Stage
+    accountAddress: string
+}> {
+    const lzConfig = await getLzConfig(configPath)
+    const moveVMContracts = getMoveVMContracts(lzConfig)
+    const selectedContract = await promptUserContractSelection(moveVMContracts)
+    const lzNetwork = getNetworkForChainId(selectedContract.contract.eid)
+    const chainName = lzNetwork.chainName
+    const stage = lzNetwork.env
+    const accountAddress = getMoveVMAccountAddress(chainName)
+
+    return { lzConfig, selectedContract, chainName, stage, accountAddress }
 }

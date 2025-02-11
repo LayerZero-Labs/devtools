@@ -1,7 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { irrevocablyDisableBlocklist } from '../../tasks/irrevocablyDisableBlocklist'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class IrrevocablyDisableBlocklist implements INewOperation {
     vm = 'move'
@@ -10,7 +11,8 @@ class IrrevocablyDisableBlocklist implements INewOperation {
     reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
-        await irrevocablyDisableBlocklist(args.oapp_config, OFTType.OFT_FA)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await irrevocablyDisableBlocklist(taskContext, OFTType.OFT_FA)
     }
 }
 

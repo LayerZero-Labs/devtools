@@ -1,20 +1,10 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
-import { build } from '../../tasks/move/build'
 import { deploy } from '../../tasks/move/deploy'
 import { setDelegate } from '../../tasks/move/setDelegate'
 
-import { getNetworkForChainId } from '@layerzerolabs/lz-definitions'
-
-import {
-    getLzConfig,
-    getMoveVMContracts,
-    promptUserContractSelection,
-    getMoveTomlAdminName,
-    getAptosAccountAddress,
-    getInitiaAccountAddress,
-    ownerNotSetMessage,
-} from '../../tasks/move/utils/config'
+import { getMoveTomlAdminName, getNamedAddresses } from '../../tasks/move/utils/config'
+import { initializeDeployTaskContext, initializeTaskContext } from '../../sdk/baseTaskHelper'
 
 class MoveDeployOperation implements INewOperation {
     vm = 'move'
@@ -47,45 +37,27 @@ class MoveDeployOperation implements INewOperation {
         {
             name: '--force-deploy',
             arg: {
-                help: 'Force the deploy to run even if the Aptos CLI version is too old.',
+                help: 'Include tag "--force-deploy" to force the deploy to run even if the Aptos CLI version is too old.',
                 required: false,
             },
         },
     ]
 
     async impl(args: any): Promise<void> {
-        const lzConfig = await getLzConfig(args.oapp_config)
-        const moveVMContracts = getMoveVMContracts(lzConfig)
-        const selectedContract = await promptUserContractSelection(moveVMContracts)
-        const lzNetwork = getNetworkForChainId(selectedContract.contract.eid)
-        const chainName = lzNetwork.chainName
-        const stage = lzNetwork.env
-        const forceBuild = args.force_build ? true : false
+        const deployTaskContext = await initializeDeployTaskContext(args.oapp_config)
+
         const forceDeploy = args.force_deploy ? true : false
-
-        if (!selectedContract.config?.owner) {
-            throw new Error(ownerNotSetMessage)
-        }
-        const oAppOwner = selectedContract.config?.owner
         const moveTomlAdminName = getMoveTomlAdminName(args.oapp_type)
+        const namedAddresses = getNamedAddresses(
+            deployTaskContext.chain,
+            deployTaskContext.stage,
+            moveTomlAdminName,
+            deployTaskContext.selectedContract
+        )
+        await deploy(deployTaskContext, args.address_name, forceDeploy, namedAddresses)
 
-        let named_addresses = ''
-        let accountAddress = ''
-        if (chainName === 'movement' || chainName === 'aptos') {
-            named_addresses = `${args.address_name}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
-            accountAddress = getAptosAccountAddress(chainName)
-
-            await build(chainName, forceBuild, named_addresses, args.address_name, stage)
-        } else if (chainName === 'initia') {
-            named_addresses = `${moveTomlAdminName}=${oAppOwner}`
-            accountAddress = getInitiaAccountAddress()
-        } else {
-            throw new Error(`lz:sdk:move:deploy does not support ${chainName}-${stage}.`)
-        }
-
-        await deploy(args.address_name, named_addresses, forceDeploy, selectedContract, chainName, stage)
-
-        await setDelegate(accountAddress, lzConfig, stage, chainName, selectedContract.contract.eid)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await setDelegate(taskContext)
     }
 }
 
