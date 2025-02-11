@@ -81,7 +81,7 @@ RUN apt-get install --yes \
     # Parallel is a utilit we use to parallelize the BATS (user) tests
     parallel \
     # Utilities required to build solana
-    pkg-config libudev-dev llvm libclang-dev protobuf-compiler \
+    pkg-config libudev-dev llvm libclang-dev protobuf-compiler cmake\
     # Utilities required to build aptos CLI
     libssl-dev libdw-dev lld \
     # Required for TON to run
@@ -187,6 +187,7 @@ WORKDIR /app/solana
 
 ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
 ARG SOLANA_VERSION=1.18.26
+ARG PLATFORM_TOOLS_VERSION=1.41
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
@@ -198,14 +199,14 @@ ENV CARGO_BUILD_JOBS=$CARGO_BUILD_JOBS
 RUN BUILD_FROM_SOURCE=true; \
     # Install Solana using a binary with a fallback to installing from source. 
     # List of machines that have prebuilt binaries:
-    # - amd64/linux - last checked on Feb 6, 2025
+    # - amd64/linux - last checked on Feb 10, 2025
     if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
         curl --proto '=https' --tlsv1.2 -sSf https://release.anza.xyz/v${SOLANA_VERSION}/install | sh -s && \
         BUILD_FROM_SOURCE=false; \
     fi && \
     # If we need to build from source, we'll do it here
     # List of machines that need to be built from source:
-    # - arm64/linux - last checked on Feb 6, 2025
+    # - arm64/linux - last checked on Feb 10, 2025
     if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
             git clone https://github.com/anza-xyz/agave.git --depth 1 --branch v${SOLANA_VERSION} ~/solana-v${SOLANA_VERSION} && \
             # Produces the same directory structure as the prebuilt binaries
@@ -214,6 +215,36 @@ RUN BUILD_FROM_SOURCE=true; \
             ln --symbolic ~/.local/share/solana/install/releases/${SOLANA_VERSION} ~/.local/share/solana/install/active_release && \
             # Clean up the source code
             rm -rf ~/solana-v${SOLANA_VERSION}; \
+        fi
+
+
+RUN mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools && \
+    BUILD_FROM_SOURCE=true; \
+    # If we are NOT building from source, we can simply grab the prebuilt binaries
+    if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+        # Platform tools v1.41 has prebuilt binaries for amd64/linux - we extract and move it to the cache directory
+        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.41/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
+        mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
+        BUILD_FROM_SOURCE=false; \
+    fi && \
+    # List of machines that need to be built from source:
+    # - arm64/linux - last checked on Feb 10, 2025
+    if [ "$BUILD_FROM_SOURCE" = "true" ]; then \
+            # Grab platform tools's source code at the version tagged in PLATFORM_TOOLS_VERSION
+            curl -sL https://github.com/anza-xyz/platform-tools/archive/refs/tags/v${PLATFORM_TOOLS_VERSION}.tar.gz | tar -xz && \
+            cd platform-tools-${PLATFORM_TOOLS_VERSION} && \
+            # Optimizing (and transforming) the build.sh script
+            # Only cloning the latest commit across the several git clones
+            sed -i '/^git clone/ s/$/ --depth 1/' build.sh && \
+            # Comment out the line that contains *llvm/lib/python (it is line 120) in build.sh to prevent the build from failing due to missing llvm python - not required for solana
+            sed -i '/llvm\/lib\/python/ s/^/#/' build.sh && \
+            # Now that we're done with the modifications, we can build the binaries into the folder "target"
+            ./build.sh target && \
+            # Extract the binaries to the cache directory
+            tar -xf platform-tools-linux-aarch64.tar.bz2 && \
+            mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/ && \
+            # Clean up the source code
+            cd ../ && rm -rf platform-tools-${PLATFORM_TOOLS_VERSION}; \
         fi
 
 # Copy the active release directory into /root/.solana and make it available in the PATH
@@ -317,6 +348,9 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
 COPY --from=avm /root/.cargo/bin/avm /root/.cargo/bin/avm
 COPY --from=avm /root/.avm /root/.avm
+
+# Copy solana cache (for platform-tools) and binaries
+COPY --from=solana /root/.cache/solana /root/.cache/solana
 COPY --from=solana /root/.solana/bin /root/.solana/bin
 
 # Get TON tooling
