@@ -58,10 +58,10 @@ const config: HardhatUserConfig = {
         ],
     },
     zksolc: {
-        version: '1.4.1', // Version of the zksolc compiler to use
+        version: '1.5.11', // Version of the zksolc compiler to use
         compilerSource: 'binary', // or 'docker' if you prefer
         settings: {
-            enableEraVMExtensions: false, // optional.  Enables Yul instructions available only for ZKsync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
+            enableEraVMExtensions: true, // optional.  Enables Yul instructions available only for ZKsync system contracts and libraries. In the older versions of the plugin known as 'isSystem' flag
             optimizer: {
                 enabled: true,
                 mode: 'z',
