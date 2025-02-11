@@ -58,7 +58,7 @@ const config: HardhatUserConfig = {
         ],
     },
     zksolc: {
-        version: '1.5.11', // Version of the zksolc compiler to use
+        version: '1.4.1', // Version of the zksolc compiler to use
         compilerSource: 'binary', // or 'docker' if you prefer
         settings: {
             optimizer: {
