@@ -213,11 +213,30 @@ async function sendAllAptosTxs(
                         sender: account_address,
                         data: cleanedPayloads[i].payload as InputGenerateTransactionPayloadData,
                     })
-                    const result = await oft.signSubmitAndWaitForTx(trans)
-                    console.log(`\t📎 Transaction hash: ${result.hash}`)
-                    const network = getNetworkForChainId(oft.eid)
-                    printExplorerLink(oft.eid, result.hash, network)
+                    try {
+                        const result = await oft.signSubmitAndWaitForTx(trans)
+                        console.log(`\t📎 Transaction hash: ${result.hash}`)
+                        const network = getNetworkForChainId(oft.eid)
+                        printExplorerLink(oft.eid, result.hash, network)
+                    } catch (error: any) {
+                        console.error('❌ Transaction failed.')
+                        const rl = readline.createInterface({
+                            input: process.stdin,
+                            output: process.stdout,
+                        })
 
+                        const answer = await new Promise<string>((resolve) => {
+                            rl.question('Would you like to see the detailed error? (y/n): ', resolve)
+                        })
+
+                        rl.close()
+
+                        if (answer.toLowerCase().trim() === 'y') {
+                            console.error('\nError details:', error)
+                        }
+
+                        throw error // Re-throw the error to maintain the original flow
+                    }
                     break // Success, exit retry loop
                 } catch (error: any) {
                     retryCount++

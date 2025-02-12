@@ -160,6 +160,10 @@ async function deploy(
                 taskContext.chain,
                 taskContext.stage
             )
+
+            if (taskContext.chain === 'initia') {
+                await new Promise((resolve) => setTimeout(resolve, 3000))
+            }
         } else {
             console.log('Skipping deploy - deployment already exists')
         }
@@ -174,6 +178,10 @@ async function deploy(
             taskContext.chain,
             taskContext.stage
         )
+
+        if (taskContext.chain === 'initia') {
+            await new Promise((resolve) => setTimeout(resolve, 3000))
+        }
     }
 }
 export { deploy }

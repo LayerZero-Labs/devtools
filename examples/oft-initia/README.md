@@ -16,6 +16,8 @@ initiad keys list --keyring-backend test
 
 Create a `.env` file with the following variables:
 
+> **Important:** The INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init", for example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3
+
 ```bash
 INITIA_ACCOUNT_ADDRESS=<your-initia-account-address>
 EVM_PRIVATE_KEY=<your-evm-private-key>
@@ -59,6 +61,8 @@ Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 ## Init and Set Delegate
 
 Before running the wire command, first inside of move.layerzero.config.ts, set the delegate address to your account address.
+
+> **Important:** The delegate address must be in hex format (0x...), not the bech32 format
 
 ```ts
     contracts: [
@@ -240,6 +244,8 @@ pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --a
 
 ## Send from Move VM
 
+> **Important:** The source and destination addresses must be in hex format (0x...), not the bech32 format
+
 ```bash
 pnpm run lz:sdk:move:send-from-move-oft \
   --amount-ld <your-amount-ld> \
@@ -251,6 +257,8 @@ pnpm run lz:sdk:move:send-from-move-oft \
 ```
 
 ## Send from EVM
+
+> **Important:** The destination address must be in hex format (0x...), not the bech32 format
 
 ```bash
 pnpm run lz:sdk:evm:send-evm \
