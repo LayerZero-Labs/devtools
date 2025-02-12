@@ -269,7 +269,7 @@ npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secre
 npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
-With a squads multisig, you can simply append the `--multisigKey` flag to the end of the above command.
+With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
 
 ### Mint OFT on Solana
 
