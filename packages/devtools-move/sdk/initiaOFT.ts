@@ -1,6 +1,7 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { IOFT, TypedInputGenerateTransactionPayloadData, OFTType } from './IOFT'
-import { bcs, MsgExecute, RawKey, RESTClient, Wallet } from '@initia/initia.js'
+import { bcs, MsgExecute, RawKey, RESTClient, ViewResponse, Wallet } from '@initia/initia.js'
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 type ViewFunctionResult = {
     type: string
@@ -143,16 +144,16 @@ export class InitiaOFT implements IOFT {
     }
 
     async getRateLimitConfig(eid: EndpointId, oftType: OFTType): Promise<[bigint, bigint]> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string[]>(
             this.oft_address,
             oftType,
             'rate_limit_config',
             [],
             [bcs.u32().serialize(eid).toBase64()]
-        )) as ViewFunctionResult
+        )
 
-        const limit = bcs.u64().parse(Buffer.from(result.value[0], 'base64'))
-        const window = bcs.u64().parse(Buffer.from(result.value[1], 'base64'))
+        const limit = bcs.u64().parse(Buffer.from(result[0], 'base64'))
+        const window = bcs.u64().parse(Buffer.from(result[1], 'base64'))
         return [BigInt(limit), BigInt(window)]
     }
 
@@ -169,15 +170,8 @@ export class InitiaOFT implements IOFT {
     }
 
     async getFeeBps(oftType: OFTType): Promise<bigint> {
-        const result = (await this.rest.move.viewFunction(
-            this.oft_address,
-            oftType,
-            'fee_bps',
-            [],
-            []
-        )) as ViewFunctionResult
-        const feeBps = bcs.u64().parse(Buffer.from(result.value[0], 'base64'))
-        return BigInt(feeBps)
+        const result = await this.rest.move.viewFunction<string>(this.oft_address, oftType, 'fee_bps', [], [])
+        return BigInt(result)
     }
 
     mintPayload(recipient: string, amount: number | bigint): TypedInputGenerateTransactionPayloadData {
@@ -193,14 +187,14 @@ export class InitiaOFT implements IOFT {
     }
 
     async getBalance(account: string): Promise<number> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string>(
             this.oft_address,
             'oft',
             'balance',
             [],
             [bcs.address().serialize(account).toBase64()]
-        )) as ViewFunctionResult
-        return Number(bcs.u64().parse(Buffer.from(result.value[0], 'base64')))
+        )
+        return Number(bcs.u64().parse(Buffer.from(result, 'base64')))
     }
 
     async quoteSend(
@@ -318,25 +312,13 @@ export class InitiaOFT implements IOFT {
     }
 
     async getDelegate(): Promise<string> {
-        const result = (await this.rest.move.viewFunction(
-            this.oft_address,
-            'oapp_core',
-            'get_delegate',
-            [],
-            []
-        )) as ViewFunctionResult
-        return bcs.address().parse(Buffer.from(result.value[0], 'base64'))
+        const result = await this.rest.move.viewFunction<string>(this.oft_address, 'oapp_core', 'get_delegate', [], [])
+        return result
     }
 
     async getAdmin(): Promise<string> {
-        const result = (await this.rest.move.viewFunction(
-            this.oft_address,
-            'oapp_core',
-            'get_admin',
-            [],
-            []
-        )) as ViewFunctionResult
-        return bcs.address().parse(Buffer.from(result.value[0], 'base64'))
+        const result = await this.rest.move.viewFunction<string>(this.oft_address, 'oapp_core', 'get_admin', [], [])
+        return result
     }
 
     transferAdminPayload(adminAddress: string): TypedInputGenerateTransactionPayloadData {
@@ -369,25 +351,25 @@ export class InitiaOFT implements IOFT {
     }
 
     async getPeer(eid: EndpointId): Promise<string> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string>(
             this.oft_address,
             'oapp_core',
             'get_peer',
             [],
             [bcs.u32().serialize(eid).toBase64()]
-        )) as ViewFunctionResult
-        return bcs.address().parse(Buffer.from(result.value[0], 'base64'))
+        )
+        return result
     }
 
     async hasPeer(eid: EndpointId): Promise<boolean> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string>(
             this.oft_address,
             'oapp_core',
             'has_peer',
             [],
             [bcs.u32().serialize(eid).toBase64()]
-        )) as ViewFunctionResult
-        return bcs.bool().parse(Buffer.from(result.value[0], 'base64'))
+        )
+        return bcs.bool().parse(Buffer.from(result, 'base64'))
     }
 
     setEnforcedOptionsPayload(
@@ -552,13 +534,13 @@ export class InitiaOFT implements IOFT {
     }
 
     async getEnforcedOptions(eid: number, msgType: number): Promise<string> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string>(
             this.oft_address,
             'oapp_core',
             'get_enforced_options',
             [],
             [bcs.u32().serialize(eid).toBase64(), bcs.u16().serialize(msgType).toBase64()]
-        )) as ViewFunctionResult
-        return bcs.string().parse(Buffer.from(result.value[0], 'base64'))
+        )
+        return result
     }
 }

@@ -45,7 +45,7 @@ async function deployMovementContracts(
             addressName,
             `-p=${process.cwd()}`,
             `--named-addresses=${namedAddresses}`,
-            '--node=https://rpc.testnet.initia.xyz:443',
+            `--node=${process.env.INITIA_REST_URL}`,
             `--from=${userAccountName}`,
             '--gas-prices=0.015uinit',
             '--gas-adjustment=1.4',

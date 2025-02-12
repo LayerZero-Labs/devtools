@@ -1,5 +1,5 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { IMessageLib, UlnConfig, MoveVectorResponse, MoveVectorExecutorResponse } from './IMessageLib'
+import { IMessageLib, UlnConfig } from './IMessageLib'
 import { ExecutorConfig } from '../tasks/move/utils'
 import { bcs, RESTClient } from '@initia/initia.js'
 
@@ -24,19 +24,17 @@ const DEFAULT_EXECUTOR_CONFIG: ExecutorConfig = {
 }
 
 export class InitiaMsgLib implements IMessageLib {
-    private moveVMConnection: RESTClient
     private msgLibAddress: string
-    private rest: RESTClient
+    private restClient: RESTClient
 
     constructor(moveVMConnection: RESTClient, msgLibAddress: string) {
-        this.moveVMConnection = moveVMConnection
         this.msgLibAddress = msgLibAddress
-        this.rest = moveVMConnection
+        this.restClient = moveVMConnection
     }
 
     async get_default_uln_send_config(eid: EndpointId): Promise<UlnConfig> {
         try {
-            const result = (await this.rest.move.viewFunction(
+            const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,
                 'msglib',
                 'get_default_uln_send_config',
@@ -71,7 +69,7 @@ export class InitiaMsgLib implements IMessageLib {
 
     async get_default_uln_receive_config(eid: EndpointId): Promise<UlnConfig> {
         try {
-            const result = (await this.rest.move.viewFunction(
+            const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,
                 'msglib',
                 'get_default_uln_receive_config',
@@ -106,7 +104,7 @@ export class InitiaMsgLib implements IMessageLib {
 
     async get_default_executor_config(eid: EndpointId): Promise<ExecutorConfig> {
         try {
-            const result = (await this.rest.move.viewFunction(
+            const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,
                 'msglib',
                 'get_default_executor_config',

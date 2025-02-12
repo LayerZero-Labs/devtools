@@ -154,11 +154,11 @@ async function sendAllInitiaTxs(
             let retryCount = 0
             while (retryCount < maxRetries) {
                 try {
-                    await oft.syncSequenceNumber()
+                    // await oft.syncSequenceNumber()
 
                     const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
                     console.log(`\tDUMPING ENTIRE TX LOG}`)
-                    console.dir(result, { depth: null })
+                    // console.dir(result, { depth: null })
                     // console.log(`\t📎 Transaction hash: ${result.txhash}`)
                     // const network = getNetworkForChainId(oft.eid)
                     // const explorerLink = getExplorerLink(oft.eid, result.txhash, network)

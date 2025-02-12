@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
+    "@jest/globals": "^29.7.0",
     "@layerzerolabs/devtools-extensible-cli": "../devtools-extensible-cli",
     "@layerzerolabs/lz-definitions": "^3.0.40",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.27",

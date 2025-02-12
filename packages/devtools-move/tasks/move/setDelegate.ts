@@ -1,6 +1,5 @@
 import { createSetDelegatePayload } from './utils/moveVMOftConfigOps'
 import { getDelegateFromLzConfig, sendAllTxs } from './utils/utils'
-import { Aptos } from '@aptos-labs/ts-sdk'
 import { TaskContext } from '../../sdk/baseTaskHelper'
 
 async function setDelegate(taskContext: TaskContext) {
@@ -10,9 +9,7 @@ async function setDelegate(taskContext: TaskContext) {
     const delegate = getDelegateFromLzConfig(taskContext.srcEid, taskContext.lzConfig)
     const setDelegatePayload = await createSetDelegatePayload(taskContext.oft, delegate, taskContext.srcEid)
 
-    await sendAllTxs(taskContext.moveVMConnection as Aptos, taskContext.oft, taskContext.accountAddress, [
-        setDelegatePayload,
-    ])
+    await sendAllTxs(taskContext.moveVMConnection, taskContext.oft, taskContext.accountAddress, [setDelegatePayload])
 }
 
 export { setDelegate }

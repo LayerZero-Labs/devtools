@@ -1,9 +1,5 @@
-// todo: implement connection builder that reads form yaml and fills in config with movement stuff if needed
-// todo replace all mentions of aptos with move-vm instead
-
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk'
 import { RESTClient } from '@initia/initia.js'
-// import { RESTClient } from '@initia/initia.js'
 
 const CHAIN_MOVEMENT = 'movement'
 const CHAIN_APTOS = 'aptos'
@@ -31,8 +27,14 @@ export function getConnection(chain: string, stage: string): Aptos | RESTClient 
         if (!process.env.INITIA_REST_URL) {
             throw new Error('INITIA_REST_URL must be set in the environment variables.')
         }
-        const node = process.env.INITIA_REST_URL
-        return new RESTClient(node)
+        const initiaRestURL = process.env.INITIA_REST_URL
+        console.log('initiaRestURL', initiaRestURL)
+        const restClient = new RESTClient(initiaRestURL, {
+            chainId: 'initiation-2',
+            gasPrices: '0.015uinit',
+            gasAdjustment: '1.75',
+        })
+        return restClient
     } else {
         throw new Error(`${chain}-${stage} is not supported.`)
     }

@@ -161,7 +161,7 @@ export function getNamedAddresses(
         named_addresses = `${moveTomlAdminName}=${oAppOwner}`
     }
 
-    return named_addresses + getDeploymentAddresses(chain, networkType)
+    return named_addresses + ',' + getDeploymentAddresses(chain, networkType)
 }
 
 export function getDeploymentAddresses(chain: string, networkType: string): string {
