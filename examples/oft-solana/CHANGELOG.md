@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.2
+
+### Patch Changes
+
+- 274b8aa: Add task to get Solana rate limits
+
 ## 0.7.1
 
 ### Patch Changes
