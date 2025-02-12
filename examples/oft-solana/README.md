@@ -254,7 +254,7 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
-npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
 :information_source: `<SECRET_KEY>` should also be in base58 format.
