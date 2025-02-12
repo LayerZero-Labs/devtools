@@ -331,14 +331,44 @@ pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> -
 The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
 included in the `--additional-minters` list.
 
-## Common Errors
 
-### "AnchorError occurred. Error Code: DeclaredProgramIdMismatch. Error Number: 4100. Error Message: The declared program id does not match the actual program id."
+## Appendix
+
+### Transferring ownership
+
+Ownership of OFTs can be transferred via running the wire command after the appropriate changes are made to the LZ Config file (`layerzero.config.ts`). You need to first set the `delegate` value, and then only the `owner` value.
+
+**First, set the `delegate`.**
+
+How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-delegate
+
+Now run 
+
+```
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+```
+
+and execute the transactions.
+
+
+**Then, set the `owner`.**
+
+How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-owner
+
+Now, run for another time
+
+```
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+```
+
+### Common Errors
+
+#### "AnchorError occurred. Error Code: DeclaredProgramIdMismatch. Error Number: 4100. Error Message: The declared program id does not match the actual program id."
 
 This is often caused by failing to manually update [lib.rs](./programs/oft/src/lib.rs) with the updated program ID prior
 to running `solana program deploy...`.
 
-### `anchor build -v` fails
+#### `anchor build -v` fails
 
 There are known issues with downloading rust crates in older versions of docker. Please ensure you are using the most
 up-to-date docker version. The issue manifests similar to:
@@ -374,7 +404,7 @@ Error: Failed to build program
 
 Note: The error occurs after attempting to update crates.io index.
 
-### When sending tokens from Solana `The value of "offset" is out of range. It must be >= 0 and <= 32. Received 41`
+#### When sending tokens from Solana `The value of "offset" is out of range. It must be >= 0 and <= 32. Received 41`
 
 If you receive this error, it may be caused by an improperly configured executor address in your `layerzero.config.ts`
 configuration file. The value for this address is not the programId from listed as `LZ Executor` in the
@@ -409,7 +439,7 @@ RangeError [ERR_OUT_OF_RANGE]: The value of "offset" is out of range. It must be
   code: 'ERR_OUT_OF_RANGE'
 ```
 
-### Failed while deploying the Solana OFT `Error: Account allocation failed: unable to confirm transaction. This can happen in situations such as transaction expiration and insufficient fee-payer funds`
+#### Failed while deploying the Solana OFT `Error: Account allocation failed: unable to confirm transaction. This can happen in situations such as transaction expiration and insufficient fee-payer funds`
 
 This error is caused by the inability to confirm the transaction in time, or by running out of funds. This is not
 specific to OFT deployment, but Solana programs in general. Fortunately, you can retry by recovering the program key and
@@ -420,7 +450,7 @@ solana-keygen recover -o recover.json
 solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
 ```
 
-### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
+#### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
 
 The outbound OApp DVN configuration violates a hard CPI size restriction, as you have included too many DVNs in the
 configuration (more than 3 for Solana outbound). As such, you will need to adjust the DVNs to comply with the CPI size
@@ -449,7 +479,7 @@ which allows more lenient CPI size restrictions, is not yet enabled in the curre
 solana feature status -u devnet --display-all
 ```
 
-### When sending tokens from Solana `base64 encoded solana_sdk::transaction::versioned::VersionedTransaction too large: 1728 bytes (max: encoded/raw 1644/1232).`
+#### When sending tokens from Solana `base64 encoded solana_sdk::transaction::versioned::VersionedTransaction too large: 1728 bytes (max: encoded/raw 1644/1232).`
 
 This error happens when sending for Solana outbound due to the transaction size exceeds the maximum hard limit. To
 alleviate this issue, consider using an Address Lookup Table (ALT) instruction in your transaction. Example ALTs for
