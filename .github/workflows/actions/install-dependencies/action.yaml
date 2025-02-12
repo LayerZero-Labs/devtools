@@ -4,6 +4,15 @@ runs:
   using: "composite"
   steps:
     # Clean Hardhat cache directory manually
+    # Required because certain packages or dependencies like zksolc on hardhat are architecture specific fetches during the building stage. 
+    # We don't want to use the cache of the wrong architecture, so we clean the cache manually.
+    # Running dual caches for hardhat - on amd64 and arm64 because the binaries they generate (for zksolc and hardhat's compiler) is platform dependant) and hardhat checks if the zksolc library exists
+    # 
+    # Example:
+    # ls /root/.cache/hardhat-nodejs/compilers-v2/
+    # linux-amd64  wasm  zksolc  zkvm-solc
+    # 
+    #-> it finds it -> it tries it and you get the error based on pipe Error: write EPIPE as it fetches the wrong architecture's cache
     - name: Clean Hardhat Cache
       shell: bash
       run: |
