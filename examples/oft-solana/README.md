@@ -186,7 +186,7 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 ##### Switch back to Solana `1.17.31`
 
-:warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
+:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
@@ -247,9 +247,11 @@ pnpm hardhat lz:deploy # follow the prompts
 
 Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting. If you do use `MyOFTMock`, make sure to update the `sepoliaContract.contractName` in [layerzero.config.ts](./layerzero.config.ts) to `MyOFTMock`.
 
-### Initialize the Solana OFT
+### Initialize the Solana OFT Config
 
 :warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
+
+Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
@@ -258,6 +260,8 @@ npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secre
 :information_source: `<SECRET_KEY>` should also be in base58 format.
 
 ### Wire
+
+Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
 npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
