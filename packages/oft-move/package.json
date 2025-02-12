@@ -1,7 +1,6 @@
 {
   "name": "@layerzerolabs/oft-move",
   "version": "0.0.1",
-  "private": true,
   "license": "MIT",
   "types": "types/index.d.ts",
   "scripts": {
