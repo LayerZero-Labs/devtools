@@ -22,36 +22,10 @@ EVM_PRIVATE_KEY=<your-evm-private-key>
 INITIA_PRIVATE_KEY=<your-initia-private-key>
 INITIA_KEY_NAME=<your-initia-key-name>
 INITIA_REST_URL=<your-initia-rest-url>
+INITIA_RPC_URL=<your-initia-rpc-url>
 ```
 
-Then run `source .env` in order for your values to be mapped to `$INITIA_ACCOUNT_ADDRESS` and `$INITIA_PRIVATE_KEY`
-
-```bash
-pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
-```
-
-## Build and deploy initia move modules
-
-First step generate an object address and then feed that into the build initiad CLI command. Also feed in the deployment addresses.
-
-Then, deploy the module using the deploy script I made.
-
-I will soon modify this to be a command. It should not take in any info other than the name of the module that is being deployed, so for this case it should be oft, but maybe we can get that from move.layerzero.config.ts.
-
-## Validating object ownership of your deployed Initia OApp:
-
-Go to: https://scan.testnet.initia.xyz/initiation-2/interact?address=0x1&moduleName=object&functionType=view&functionName=owner
-
-For TO: put 0x1::Object::ObjectCore
-For the argument: put your deployed Object Address
-
-Verify the method returns your Initia account address as the owner.
-
-### Build the modules
-
-```bash
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$APTOS_ACCOUNT_ADDRESS,oft_admin=$APTOS_ACCOUNT_ADDRESS --chain aptos
-```
+Then run `source .env`.
 
 ### Deploy the modules
 
@@ -66,6 +40,12 @@ const oftMetadata = {
   sharedDecimals: 6,
   localDecimals: 6,
 };
+```
+
+Then run the following command to build and deploy the modules:
+
+```bash
+pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
 ```
 
 ## EVM Deployment
@@ -239,7 +219,7 @@ Note: The object owner has the upgrade authority for the Object.
 ### Mint to Account on Move VM OFT:
 
 > ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
-> First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
+> First add this function to ./sources/oft_implementation/oft_fa.move in order to expose minting functionality to our move sdk script:
 
 ```
 public entry fun mint(
@@ -288,7 +268,16 @@ pnpm run lz:sdk:evm:send-evm \
 pnpm run lz:sdk:help
 ```
 
-### Verifying successful ownership transfer of your Move-VM OFT:
+## Validating object ownership of your deployed Initia OApp:
+
+Go to: https://scan.testnet.initia.xyz/initiation-2/interact?address=0x1&moduleName=object&functionType=view&functionName=owner
+
+For TO: put 0x1::Object::ObjectCore
+For the argument: put your deployed Object Address
+
+Verify the method returns your desired Initia account address as the owner.
+
+### Verifying successful ownership transfer of your Aptos OFT:
 
 Run the following command:
 
@@ -329,7 +318,7 @@ For verifying the admin look for the following in the output:
 
 If the admin is your desired address, then the ownership transfer was successful.
 
-## Multisig Transaction Execution
+## Aptos Multisig Transaction Execution
 
 To execute transactions with a multisig account via the aptos CLI, follow these steps:
 

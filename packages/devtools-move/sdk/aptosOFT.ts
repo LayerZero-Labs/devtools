@@ -13,7 +13,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { hexAddrToAptosBytesAddr } from './utils'
 import { IOFT, OFTType, TypedInputGenerateTransactionPayloadData } from './IOFT'
 
-export class OFT implements IOFT {
+export class aptosOFT implements IOFT {
     public moveVMConnection: Aptos
     private private_key: string
     private signer_account: Account

@@ -24,7 +24,7 @@ export interface MoveVectorExecutorResponse {
 }
 
 export interface IMessageLib {
-    get_default_uln_send_config(eid: EndpointId): Promise<UlnConfig>
-    get_default_uln_receive_config(eid: EndpointId): Promise<UlnConfig>
-    get_default_executor_config(eid: EndpointId): Promise<ExecutorConfigResponse>
+    getDefaultULNSendConfig(eid: EndpointId): Promise<UlnConfig>
+    getDefaultULNReceiveConfig(eid: EndpointId): Promise<UlnConfig>
+    getDefaultExecutorConfig(eid: EndpointId): Promise<ExecutorConfigResponse>
 }

@@ -32,7 +32,7 @@ export class InitiaMsgLib implements IMessageLib {
         this.restClient = moveVMConnection
     }
 
-    async get_default_uln_send_config(eid: EndpointId): Promise<UlnConfig> {
+    async getDefaultULNSendConfig(eid: EndpointId): Promise<UlnConfig> {
         try {
             const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,
@@ -67,7 +67,7 @@ export class InitiaMsgLib implements IMessageLib {
         }
     }
 
-    async get_default_uln_receive_config(eid: EndpointId): Promise<UlnConfig> {
+    async getDefaultULNReceiveConfig(eid: EndpointId): Promise<UlnConfig> {
         try {
             const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,
@@ -102,7 +102,7 @@ export class InitiaMsgLib implements IMessageLib {
         }
     }
 
-    async get_default_executor_config(eid: EndpointId): Promise<ExecutorConfig> {
+    async getDefaultExecutorConfig(eid: EndpointId): Promise<ExecutorConfig> {
         try {
             const result = (await this.restClient.move.viewFunction(
                 this.msgLibAddress,

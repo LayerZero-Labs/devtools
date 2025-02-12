@@ -31,11 +31,6 @@ export class InitiaEndpoint implements IEndpoint {
                 [],
                 [bcs.address().serialize(oftAddress).toBase64(), bcs.u32().serialize(dstEid).toBase64()]
             )
-            console.log('getSendLibrary', result)
-            console.log('getSendLibrary type is ', typeof result)
-            console.log('getSendLibrary[0]', result[0])
-            console.log('getSendLibrary[1]', result[1])
-            console.dir(result, { depth: null })
             return [result[0], result[1] as unknown as boolean]
         } catch (error) {
             const toNetwork = getNetworkForChainId(dstEid)
@@ -72,7 +67,7 @@ export class InitiaEndpoint implements IEndpoint {
             [bcs.u32().serialize(eid).toBase64()]
         )
         return {
-            expiry: BigInt(bcs.u64().parse(Buffer.from(result[0], 'base64'))),
+            expiry: BigInt(result[0]),
             lib: result[1],
         }
     }
@@ -87,7 +82,7 @@ export class InitiaEndpoint implements IEndpoint {
                 [bcs.address().serialize(oftAddress).toBase64(), bcs.u32().serialize(dstEid).toBase64()]
             )
             return {
-                expiry: BigInt(bcs.u64().parse(Buffer.from(result[0], 'base64'))),
+                expiry: BigInt(result[0]),
                 lib: result[1],
             }
         } catch (error) {
@@ -125,7 +120,13 @@ export class InitiaEndpoint implements IEndpoint {
                     bcs.u32().serialize(configType).toBase64(),
                 ]
             )
-            return Buffer.from(result, 'base64')
+            if (typeof result === 'string') {
+                // Remove '0x' prefix if present and convert to buffer
+                const cleanHex = result.replace(/^0x/, '')
+                const bufferedResult = new Uint8Array(Buffer.from(cleanHex, 'hex'))
+                return bufferedResult
+            }
+            return new Uint8Array(Buffer.from(result, 'base64'))
         } catch (error) {
             throw new Error(
                 `Failed to get config for Message Library: ${msgLibAddress} on ${getNetworkForChainId(eid).chainName}. Please ensure that the Message Library exists.`

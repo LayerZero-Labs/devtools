@@ -2,7 +2,7 @@ import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { Aptos } from '@aptos-labs/ts-sdk'
 import { RESTClient } from '@initia/initia.js'
 import { IOFT } from './IOFT'
-import { OFT } from './oft'
+import { aptosOFT } from './aptosOFT'
 import { InitiaOFT } from './initiaOFT'
 
 export class OFTFactory {
@@ -16,6 +16,6 @@ export class OFTFactory {
         if (connection instanceof RESTClient) {
             return new InitiaOFT(connection, oftAddress, accountAddress, privateKey, eid)
         }
-        return new OFT(connection, oftAddress, accountAddress, privateKey, eid)
+        return new aptosOFT(connection, oftAddress, accountAddress, privateKey, eid)
     }
 }

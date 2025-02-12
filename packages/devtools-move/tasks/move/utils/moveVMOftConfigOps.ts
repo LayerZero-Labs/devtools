@@ -292,7 +292,7 @@ export async function createSetSendConfigTx(
     const currentSendLibraryAddress = currentSendLibrary[0]
 
     const msgLib = MessageLibFactory.create(oft.moveVMConnection, currentSendLibraryAddress)
-    const defaultUlnConfig = await msgLib.get_default_uln_send_config(connection.to.eid as EndpointId)
+    const defaultUlnConfig = await msgLib.getDefaultULNSendConfig(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
     const currHexSerializedUlnConfig = await endpoint.getConfig(
@@ -372,7 +372,7 @@ export async function createSetReceiveConfigTx(
     const currentReceiveLibraryAddress = currentReceiveLibrary[0]
 
     const msgLib = MessageLibFactory.create(oft.moveVMConnection, currentReceiveLibraryAddress)
-    const defaultUlnConfig = await msgLib.get_default_uln_receive_config(connection.to.eid as EndpointId)
+    const defaultUlnConfig = await msgLib.getDefaultULNReceiveConfig(connection.to.eid as EndpointId)
     const newSettingEqualsDefault = checkUlnConfigEqualsDefault(newUlnConfig, defaultUlnConfig)
 
     const currHexSerializedUlnConfig = await endpoint.getConfig(
@@ -429,7 +429,7 @@ export async function checkExecutorConfigEqualsDefault(
     newExecutorConfig: ExecutorConfig,
     eid: EndpointId
 ): Promise<boolean> {
-    const defaultExecutorConfig = await msgLib.get_default_executor_config(eid)
+    const defaultExecutorConfig = await msgLib.getDefaultExecutorConfig(eid)
     return (
         newExecutorConfig.executor_address === defaultExecutorConfig.executor_address &&
         newExecutorConfig.max_message_size === defaultExecutorConfig.max_message_size
@@ -540,12 +540,23 @@ export async function createUnsetRateLimitTx(
     eid: EndpointId,
     oftType: OFTType
 ): Promise<TransactionPayload | null> {
+    const currentLimit = await oft.getRateLimitConfig(eid, oftType)
     const tx = oft.createUnsetRateLimitTx(eid, oftType)
     const toNetwork = getNetworkForChainId(eid)
-    return {
-        payload: tx,
-        description: `Unset rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
-        eid: eid,
+    if (currentLimit[0] === 0n && currentLimit[1] === 0n) {
+        console.log(`✅ Rate limit already unset for ${toNetwork.chainName}-${toNetwork.env}`)
+        return null
+    } else {
+        diffPrinter(
+            `Unset rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
+            { limit: currentLimit[0], window: currentLimit[1] },
+            { limit: 0n, window: 0n }
+        )
+        return {
+            payload: tx,
+            description: `Unset rate limit for ${toNetwork.chainName}-${toNetwork.env}`,
+            eid: eid,
+        }
     }
 }
 
@@ -729,7 +740,7 @@ async function checkNewConfig(
 
     // Check if the new config has less confirmations than the default one and warn if it does
     if (configType === ConfigType.RECV_ULN) {
-        const defaultReceiveConfig = await msgLib.get_default_uln_receive_config(entry.to.eid as EndpointId)
+        const defaultReceiveConfig = await msgLib.getDefaultULNReceiveConfig(entry.to.eid as EndpointId)
         const defaultConfirmations = defaultReceiveConfig.confirmations
         if (newUlnConfig.confirmations < defaultConfirmations) {
             console.log(createWarningMessage(configType, entry))
@@ -738,7 +749,7 @@ async function checkNewConfig(
             )
         }
     } else if (configType === ConfigType.SEND_ULN) {
-        const defaultSendConfig = await msgLib.get_default_uln_send_config(entry.to.eid as EndpointId)
+        const defaultSendConfig = await msgLib.getDefaultULNSendConfig(entry.to.eid as EndpointId)
         const defaultConfirmations = defaultSendConfig.confirmations
         if (newUlnConfig.confirmations < defaultConfirmations) {
             console.log(createWarningMessage(configType, entry))

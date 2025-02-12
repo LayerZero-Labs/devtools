@@ -176,8 +176,8 @@ async function sendAllInitiaTxs(
             }
         }
 
-        console.log('🎉 Transaction Summary:')
-        console.log(`   • ${cleanedPayloads.length} transactions processed successfully`)
+        console.log('🎉 Execution Summary:')
+        console.log(`   • ${cleanedPayloads.length} transactions executed successfully`)
     } else if (action === 'export') {
         console.log('Transaction export not yet supported for Initia.')
         // await exportTransactionsToJson(cleanedPayloads)
@@ -237,8 +237,8 @@ async function sendAllAptosTxs(
             }
         }
 
-        console.log('🎉 Transaction Summary:')
-        console.log(`   • ${cleanedPayloads.length} transactions processed successfully`)
+        console.log('🎉 Execution Summary:')
+        console.log(`   • ${cleanedPayloads.length} transactions executed successfully`)
     } else if (action === 'export') {
         await exportTransactionsToJson(cleanedPayloads)
     } else {

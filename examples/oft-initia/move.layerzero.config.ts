@@ -30,8 +30,8 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: initiaContract,
             config: {
-                delegate: '0x0',
-                owner: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
+                delegate: '',
+                owner: '',
             },
         },
     ],
@@ -63,7 +63,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 // Optional Receive Library Timeout for when the Old Receive Library Address will no longer be valid on Aptos
                 // receiveLibraryTimeoutConfig: {
-                //     lib: '0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10',
+                //     lib: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
                 //     expiry: BigInt(1000000000),
                 // },
                 sendConfig: {
@@ -74,7 +74,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(10),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0x3f12330ba9e26a604e2149b4b67c0710d32fcbc3de0bea76dd43dbb6b747bc8c'],
@@ -143,7 +143,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(10),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },

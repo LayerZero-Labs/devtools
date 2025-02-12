@@ -1,12 +1,7 @@
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { IOFT, TypedInputGenerateTransactionPayloadData, OFTType } from './IOFT'
-import { bcs, MsgExecute, RawKey, RESTClient, ViewResponse, Wallet } from '@initia/initia.js'
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-type ViewFunctionResult = {
-    type: string
-    value: string[]
-}
+import { bcs, MsgExecute, RawKey, RESTClient, Wallet } from '@initia/initia.js'
+import { hexAddrToAptosBytesAddr } from './utils'
 
 export class InitiaOFT implements IOFT {
     public moveVMConnection: RESTClient
@@ -208,7 +203,7 @@ export class InitiaOFT implements IOFT {
         oft_cmd: Uint8Array,
         pay_in_zro: boolean
     ): Promise<[number, number]> {
-        const result = (await this.rest.move.viewFunction(
+        const result = await this.rest.move.viewFunction<string>(
             this.oft_address,
             'oft',
             'quote_send',
@@ -236,10 +231,10 @@ export class InitiaOFT implements IOFT {
                     .toBase64(),
                 bcs.bool().serialize(pay_in_zro).toBase64(),
             ]
-        )) as ViewFunctionResult
+        )
 
-        const nativeFee = Number(bcs.u64().parse(Buffer.from(result.value[0], 'base64')))
-        const zroFee = Number(bcs.u64().parse(Buffer.from(result.value[1], 'base64')))
+        const nativeFee = result[0] as unknown as number
+        const zroFee = result[1] as unknown as number
         return [nativeFee, zroFee]
     }
 
@@ -288,15 +283,22 @@ export class InitiaOFT implements IOFT {
     }
 
     setPeerPayload(eid: EndpointId, peerAddress: string): TypedInputGenerateTransactionPayloadData {
+        const peerAddressAsBytes = hexAddrToAptosBytesAddr(peerAddress)
         const msg = new MsgExecute(
             this.accountAddress,
             this.oft_address,
             'oapp_core',
             'set_peer',
             [],
-            [bcs.u32().serialize(eid).toBase64(), bcs.address().serialize(peerAddress).toBase64()]
+            [
+                bcs.u32().serialize(eid).toBase64(),
+                bcs
+                    .vector(bcs.u8())
+                    .serialize([...peerAddressAsBytes])
+                    .toBase64(),
+            ]
         )
-        return Object.assign(msg, { types: ['u32', 'address'] })
+        return Object.assign(msg, { types: ['u32', 'u8'] })
     }
 
     setDelegatePayload(delegateAddress: string): TypedInputGenerateTransactionPayloadData {
@@ -359,7 +361,7 @@ export class InitiaOFT implements IOFT {
                 [],
                 [bcs.u32().serialize(eid).toBase64()]
             )
-            return result
+            return '0x' + result.replace('0x', '')
         } catch (error) {
             return '0x00'
         }
@@ -553,14 +555,9 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u32().serialize(eid).toBase64(), bcs.u16().serialize(msgType).toBase64()]
         )
-        // console.log('getEnforcedOptions', result)
-        // console.log('getEnforcedOptions type is ', typeof result)
-        // console.log('getenforcedoptions[0]', result[0])
-        // console.log('getenforcedoptions[1]', result[1])
-        // console.dir(result, { depth: null })
         if (result.length === 0) {
             return '0x00'
         }
-        return result[0]
+        return '0x' + result.replace('0x', '')
     }
 }

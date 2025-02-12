@@ -28,7 +28,7 @@ export function getConnection(chain: string, stage: string): Aptos | RESTClient 
             throw new Error('INITIA_REST_URL must be set in the environment variables.')
         }
         const initiaRestURL = process.env.INITIA_REST_URL
-        console.log('initiaRestURL', initiaRestURL)
+
         const restClient = new RESTClient(initiaRestURL, {
             chainId: 'initiation-2',
             gasPrices: '0.015uinit',

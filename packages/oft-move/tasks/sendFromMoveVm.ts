@@ -19,12 +19,13 @@ async function sendFromMoveVm(
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 
-    console.log(`Sending ${amountLd} units`)
-    console.log(`\tUsing OFT at address: ${taskContext.oAppAddress}`)
-    console.log(`\tFrom account: ${taskContext.accountAddress}`)
-    console.log(`\tTo account: ${toAddress}`)
-    console.log(`\tdstEid: ${dstEid}`)
-    console.log(`\tsrcAddress: ${srcAddress}`)
+    console.log(`🚀 Sending ${amountLd} units`)
+    console.log(`📜 Using OFT at address: ${taskContext.oAppAddress}`)
+    console.log(`👤 From account: ${taskContext.accountAddress}`)
+    console.log(`📫 To account: ${toAddress}`)
+    console.log(`🌐 dstEid: ${dstEid}`)
+    console.log(`📍 srcAddress: ${srcAddress}`)
+    console.log(`🔍 Min amount: ${minAmountLd}`)
 
     const extra_options = options.toBytes()
     const compose_message = new Uint8Array([])
@@ -42,9 +43,9 @@ async function sendFromMoveVm(
         false
     )
 
-    console.log('\nQuote received:')
-    console.log('- Native fee:', nativeFee)
-    console.log('- ZRO fee:', zroFee)
+    console.log('\n💰 Quote received:')
+    console.log('💸 Native fee:', nativeFee)
+    console.log('🪙 ZRO fee:', zroFee)
 
     const sendPayload = taskContext.oft.sendPayload(
         dstEid,
