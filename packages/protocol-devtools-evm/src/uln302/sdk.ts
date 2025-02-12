@@ -47,7 +47,13 @@ export class Uln302 extends OmniSDK implements IUln302 {
         //
         // Here we need to spread the config into an object because what ethers gives us
         // is actually an array with extra properties
-        return Uln302UlnConfigSchema.parse({ ...config })
+        const parsed = {
+            confirmations: config.confirmations,
+            requiredDVNs: config.requiredDVNs,
+            optionalDVNs: config.optionalDVNs,
+            optionalDVNThreshold: config.optionalDVNThreshold ?? 0,
+        }
+        return Uln302UlnConfigSchema.parse(parsed)
     }
 
     /**
@@ -71,7 +77,13 @@ export class Uln302 extends OmniSDK implements IUln302 {
         //
         // Here we need to spread the config into an object because what ethers gives us
         // is actually an array with extra properties
-        return Uln302UlnConfigSchema.parse({ ...config })
+        const parsed = {
+            confirmations: config.confirmations,
+            requiredDVNs: config.requiredDVNs,
+            optionalDVNs: config.optionalDVNs,
+            optionalDVNThreshold: config.optionalDVNThreshold ?? 0,
+        }
+        return Uln302UlnConfigSchema.parse(parsed)
     }
 
     /**
@@ -188,7 +200,13 @@ export class Uln302 extends OmniSDK implements IUln302 {
     decodeUlnConfig(ulnConfigBytes: string): Uln302UlnConfig {
         const [rtnConfig] = this.contract.contract.interface.decodeFunctionResult('getUlnConfig', ulnConfigBytes)
 
-        return Uln302UlnConfigSchema.parse({ ...rtnConfig })
+        const parsed = {
+            confirmations: rtnConfig.confirmations,
+            requiredDVNs: rtnConfig.requiredDVNs,
+            optionalDVNs: rtnConfig.optionalDVNs,
+            optionalDVNThreshold: rtnConfig.optionalDVNThreshold ?? 0,
+        }
+        return Uln302UlnConfigSchema.parse(parsed)
     }
 
     encodeUlnConfig(config: Uln302UlnUserConfig): string {
