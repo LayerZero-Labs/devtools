@@ -1,5 +1,12 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.3
+
+### Patch Changes
+
+- e5fffc3: fix import in createOFT.ts
+- fcf924d: docs: default to using solana 1.18
+
 ## 0.7.2
 
 ### Patch Changes
