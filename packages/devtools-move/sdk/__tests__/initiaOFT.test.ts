@@ -70,33 +70,36 @@ describe('InitiaOFT View Methods', () => {
         })
     })
 
-    // describe('getAdmin', () => {
-    //     test('should return admin address as string', async () => {
-    //         const result = await oft.getAdmin()
-    //         expect(typeof result).toBe('string')
-    //         expect(result.startsWith('0x')).toBe(true)
-    //     })
-    // })
+    describe('getAdmin', () => {
+        test('should return admin address as string', async () => {
+            const result = await oft.getAdmin()
+            expect(typeof result).toBe('string')
+            expect(result.startsWith('0x')).toBe(true)
+        })
+    })
 
-    // describe('getPeer', () => {
-    //     test('should return peer address as string', async () => {
-    //         const result = await oft.getPeer(EndpointId.BSC_V2_TESTNET)
-    //         expect(typeof result).toBe('string')
-    //         expect(result.startsWith('0x')).toBe(true)
-    //     })
-    // })
+    describe('getPeer', () => {
+        test('should return peer address as string', async () => {
+            const result = await oft.getPeer(EndpointId.BSC_V2_TESTNET)
+            console.log('getPeer', result)
+            console.log('typeof getPeer', typeof result)
+            expect(typeof result).toBe('string')
+            expect(result.startsWith('0x')).toBe(true)
+        })
+    })
 
-    // describe('hasPeer', () => {
-    //     test('should return boolean', async () => {
-    //         const result = await oft.hasPeer(EndpointId.BSC_V2_TESTNET)
-    //         expect(typeof result).toBe('boolean')
-    //     })
-    // })
+    describe('hasPeer', () => {
+        test('should return boolean', async () => {
+            const result = await oft.hasPeer(EndpointId.BSC_V2_TESTNET)
+            expect(typeof result).toBe('boolean')
+        })
+    })
 
-    // describe('getEnforcedOptions', () => {
-    //     test('should return enforced options as string', async () => {
-    //         const result = await oft.getEnforcedOptions(EndpointId.BSC_V2_TESTNET, 1)
-    //         expect(typeof result).toBe('string')
-    //     })
-    // })
+    describe('getEnforcedOptions', () => {
+        test('should return enforced options as string', async () => {
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            const result = await oft.getEnforcedOptions(EndpointId.BSC_V2_TESTNET, 1)
+            expect(typeof result).toBe('string')
+        })
+    })
 })

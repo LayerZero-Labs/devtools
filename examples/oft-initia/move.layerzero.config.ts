@@ -30,7 +30,7 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: initiaContract,
             config: {
-                delegate: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
+                delegate: '0x0',
                 owner: '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6',
             },
         },
@@ -54,10 +54,10 @@ const config: OAppOmniGraphHardhat = {
                         value: 0, // msg.value in wei for EndpointV2.lzReceive
                     },
                 ],
-                sendLibrary: '0xcc1c03aed42e2841211865758b5efe93c0dde2cb7a2a5dc6cf25a4e33ad23690',
+                sendLibrary: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
                 receiveLibraryConfig: {
                     // Required Receive Library Address on Aptos
-                    receiveLibrary: '0xcc1c03aed42e2841211865758b5efe93c0dde2cb7a2a5dc6cf25a4e33ad23690',
+                    receiveLibrary: '0x3e1b182c40965a986133798e1da76302ef327de2c32c58110361587560285e88',
                     // Optional Grace Period for Switching Receive Library Address on Aptos
                     gracePeriod: BigInt(0),
                 },
@@ -70,14 +70,14 @@ const config: OAppOmniGraphHardhat = {
                     executorConfig: {
                         maxMessageSize: 10_000,
                         // The configured Executor address on Aptos
-                        executor: '0x93353700091200ef9fdc536ce6a86182cc7e62da25f94356be9421c6310b9585',
+                        executor: '0x798c194c8740dde76a0e3f46f444f7ee974765abb2a9db98be03a0ee89ce050c',
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
                         confirmations: BigInt(260),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
-                        requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
+                        requiredDVNs: ['0x3f12330ba9e26a604e2149b4b67c0710d32fcbc3de0bea76dd43dbb6b747bc8c'],
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify a message.
                         optionalDVNs: [],
@@ -93,7 +93,7 @@ const config: OAppOmniGraphHardhat = {
                         confirmations: BigInt(5),
                         // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain.
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
-                        requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
+                        requiredDVNs: ['0x3f12330ba9e26a604e2149b4b67c0710d32fcbc3de0bea76dd43dbb6b747bc8c'],
                         // The address of the `optionalDVNs` you expect to receive verifications from on the `from` chain.
                         // The destination tx will wait until the configured threshold of `optionalDVNs` verify the message.
                         optionalDVNs: [],

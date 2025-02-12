@@ -154,18 +154,9 @@ async function sendAllInitiaTxs(
             let retryCount = 0
             while (retryCount < maxRetries) {
                 try {
-                    // await oft.syncSequenceNumber()
-
                     const result = await oft.signSubmitAndWaitForTx(cleanedPayloads[i].payload as MsgExecute)
-                    console.log(`\tDUMPING ENTIRE TX LOG}`)
-                    // console.dir(result, { depth: null })
-                    // console.log(`\t📎 Transaction hash: ${result.txhash}`)
-                    // const network = getNetworkForChainId(oft.eid)
-                    // const explorerLink = getExplorerLink(oft.eid, result.txhash, network)
-                    // if (explorerLink) {
-                    //     console.log(`\t🔍 Explorer: ${explorerLink}`)
-                    // }
-
+                    console.log(`\t📎 Transaction hash: ${result.txhash}`)
+                    printExplorerLink(oft.eid, result.txhash, getNetworkForChainId(oft.eid))
                     break // Success, exit retry loop
                 } catch (error: any) {
                     retryCount++
@@ -357,8 +348,10 @@ function printExplorerLink(eid: EndpointId, txHash: string, network: { env: stri
         } else if (network.env === 'mainnet') {
             link = `https://explorer.movementnetwork.xyz/txn/${txHash}?network=mainnet`
         }
+    } else if (eid === EndpointId.INITIA_V2_TESTNET) {
+        link = `https://scan.testnet.initia.xyz/initiation-2/txs/${txHash}`
     }
     if (link) {
-        console.log(`\n🔍 Explorer Link: ${link}`)
+        console.log(`\t🔍 Explorer Link: ${link}`)
     }
 }

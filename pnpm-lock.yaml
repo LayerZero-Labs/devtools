@@ -40,7 +40,7 @@ importers:
         version: 17.1.0(eslint-plugin-import@2.29.1)(eslint-plugin-n@16.6.2)(eslint-plugin-promise@6.1.1)(eslint@8.57.1)
       eslint-plugin-import:
         specifier: ^2.29.1
-        version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1)
+        version: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
       eslint-plugin-jest:
         specifier: ^27.6.3
         version: 27.6.3(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1)(typescript@5.5.3)
@@ -568,11 +568,11 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
-        version: link:../../packages/devtools-extensible-cli
+        specifier: ../packages/devtools-extensible-cli
+        version: link:../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
-        version: link:../../packages/devtools-move
+        specifier: ../packages/devtools-move
+        version: link:../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -613,8 +613,8 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
-        version: link:../../packages/oft-move
+        specifier: ../packages/oft-move
+        version: link:../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
@@ -1081,11 +1081,11 @@ importers:
         specifier: ^2.0.3
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
-        version: link:../../packages/devtools-extensible-cli
+        specifier: ../packages/devtools-extensible-cli
+        version: link:../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
-        version: link:../../packages/devtools-move
+        specifier: ../packages/devtools-move
+        version: link:../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
@@ -1126,8 +1126,8 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
-        version: link:../../packages/oft-move
+        specifier: ../packages/oft-move
+        version: link:../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
         version: 2.3.44
@@ -1249,10 +1249,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ../../packages/devtools-extensible-cli
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ../../packages/devtools-move
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1294,7 +1294,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
+        specifier: ../../packages/oft-move
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1430,10 +1430,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ../../packages/devtools-extensible-cli
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ../../packages/devtools-move
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1475,7 +1475,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
+        specifier: ../../packages/oft-move
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -2834,9 +2834,15 @@ importers:
 
   packages/devtools-move:
     dependencies:
+      '@initia/initia.js':
+        specifier: ^0.2.28
+        version: 0.2.28(typescript@5.5.3)
       '@types/chai':
         specifier: ^4.3.11
         version: 4.3.20
+      bech32:
+        specifier: ^2.0.0
+        version: 2.0.0
       chai:
         specifier: ^4.4.1
         version: 4.5.0
@@ -2853,8 +2859,11 @@ importers:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
         version: 1.33.2
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ../devtools-extensible-cli
         version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.40
@@ -3392,10 +3401,10 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ../devtools-extensible-cli
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ../devtools-move
         version: link:../devtools-move
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.21
@@ -7073,35 +7082,6 @@ packages:
       - typescript
     dev: false
 
-  /@initia/initia.js@0.2.26(typescript@5.5.3):
-    resolution: {integrity: sha512-qlChzqPi7I45kxs+ef/8JSP9r7i/nZS0Mx7H3zkBKiXGbg4lgsADyirxT1hsP0JVvpmu0Q+CD8kwx44yRZgFkA==}
-    engines: {node: '>=20'}
-    dependencies:
-      '@bitcoinerlab/secp256k1': 1.2.0
-      '@initia/initia.proto': 0.2.5
-      '@initia/opinit.proto': 0.0.11
-      '@ledgerhq/hw-transport': 6.31.4
-      '@ledgerhq/hw-transport-webhid': 6.30.0
-      '@ledgerhq/hw-transport-webusb': 6.29.4
-      '@mysten/bcs': 1.2.1
-      axios: 1.7.9
-      bech32: 2.0.0
-      bignumber.js: 9.1.2
-      bip32: 5.0.0-rc.0(typescript@5.5.3)
-      bip39: 3.1.0
-      jscrypto: 1.0.3
-      keccak256: 1.0.6
-      ripemd160: 2.0.2
-      secp256k1: 5.0.1
-      semver: 7.6.3
-      ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - typescript
-      - utf-8-validate
-    dev: true
-
   /@initia/initia.js@0.2.28(typescript@5.5.3):
     resolution: {integrity: sha512-bX4/KURHGKm+cMA2JdqPHMpKj/ItowjxH//Y6Qe15i+Ig64TQeTmFfiCNwbw5TqmejMKGPHmCFTfnA445R0xEQ==}
     engines: {node: '>=20'}
@@ -7313,217 +7293,6 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
-    dependencies:
-      '@types/node': 18.18.14
-    dev: false
-
-  /@inquirer/checkbox@4.1.1(@types/node@18.18.14):
-    resolution: {integrity: sha512-os5kFd/52gZTl/W6xqMfhaKVJHQM8V/U1P8jcSaQJ/C4Qhdrf2jEXdA/HaxfQs9iiUA/0yzYhk5d3oRHTxGDDQ==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      ansi-escapes: 4.3.2
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/confirm@5.1.5(@types/node@18.18.14):
-    resolution: {integrity: sha512-ZB2Cz8KeMINUvoeDi7IrvghaVkYT2RB0Zb31EaLWOE87u276w4wnApv0SH2qWaJ3r0VSUa3BIuz7qAV2ZvsZlg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-    dev: false
-
-  /@inquirer/core@10.1.6(@types/node@18.18.14):
-    resolution: {integrity: sha512-Bwh/Zk6URrHwZnSSzAZAKH7YgGYi0xICIBDFOqBQoXNNAzBHw/bgXgLmChfp+GyR3PnChcTbiCTZGC6YJNJkMA==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      ansi-escapes: 4.3.2
-      cli-width: 4.1.0
-      mute-stream: 2.0.0
-      signal-exit: 4.1.0
-      wrap-ansi: 6.2.0
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/editor@4.2.6(@types/node@18.18.14):
-    resolution: {integrity: sha512-l0smvr8g/KAVdXx4I92sFxZiaTG4kFc06cFZw+qqwTirwdUHMFLnouXBB9OafWhpO3cfEkEz2CdPoCmor3059A==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      external-editor: 3.1.0
-    dev: false
-
-  /@inquirer/expand@4.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-k0ouAC6L+0Yoj/j0ys2bat0fYcyFVtItDB7h+pDFKaDDSFJey/C/YY1rmIOqkmFVZ5rZySeAQuS8zLcKkKRLmg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/figures@1.0.10:
-    resolution: {integrity: sha512-Ey6176gZmeqZuY/W/nZiUyvmb1/qInjcpiZjXWi6nON+nxJpD1bxtSoBxNliGISae32n6OwbY+TSXPZ1CfS4bw==}
-    engines: {node: '>=18'}
-    dev: false
-
-  /@inquirer/input@4.1.5(@types/node@18.18.14):
-    resolution: {integrity: sha512-bB6wR5wBCz5zbIVBPnhp94BHv/G4eKbUEjlpCw676pI2chcvzTx1MuwZSCZ/fgNOdqDlAxkhQ4wagL8BI1D3Zg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-    dev: false
-
-  /@inquirer/number@3.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-CTKs+dT1gw8dILVWATn8Ugik1OHLkkfY82J+Musb57KpmF6EKyskv8zmMiEJPzOnLTZLo05X/QdMd8VH9oulXw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-    dev: false
-
-  /@inquirer/password@4.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-MgA+Z7o3K1df2lGY649fyOBowHGfrKRz64dx3+b6c1w+h2W7AwBoOkHhhF/vfhbs5S4vsKNCuDzS3s9r5DpK1g==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      ansi-escapes: 4.3.2
-    dev: false
-
-  /@inquirer/prompts@7.3.1(@types/node@18.18.14):
-    resolution: {integrity: sha512-r1CiKuDV86BDpvj9DRFR+V+nIjsVBOsa2++dqdPqLYAef8kgHYvmQ8ySdP/ZeAIOWa27YGJZRkENdP3dK0H3gg==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/checkbox': 4.1.1(@types/node@18.18.14)
-      '@inquirer/confirm': 5.1.5(@types/node@18.18.14)
-      '@inquirer/editor': 4.2.6(@types/node@18.18.14)
-      '@inquirer/expand': 4.0.8(@types/node@18.18.14)
-      '@inquirer/input': 4.1.5(@types/node@18.18.14)
-      '@inquirer/number': 3.0.8(@types/node@18.18.14)
-      '@inquirer/password': 4.0.8(@types/node@18.18.14)
-      '@inquirer/rawlist': 4.0.8(@types/node@18.18.14)
-      '@inquirer/search': 3.0.8(@types/node@18.18.14)
-      '@inquirer/select': 4.0.8(@types/node@18.18.14)
-      '@types/node': 18.18.14
-    dev: false
-
-  /@inquirer/rawlist@4.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-hl7rvYW7Xl4un8uohQRUgO6uc2hpn7PKqfcGkCOWC0AA4waBxAv6MpGOFCEDrUaBCP+pXPVqp4LmnpWmn1E1+g==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/search@3.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-ihSE9D3xQAupNg/aGDZaukqoUSXG2KfstWosVmFCG7jbMQPaj2ivxWtsB+CnYY/T4D6LX1GHKixwJLunNCffww==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/select@4.0.8(@types/node@18.18.14):
-    resolution: {integrity: sha512-Io2prxFyN2jOCcu4qJbVoilo19caiD3kqkD3WR0q3yDA5HUCo83v4LrRtg55ZwniYACW64z36eV7gyVbOfORjA==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-    dependencies:
-      '@inquirer/core': 10.1.6(@types/node@18.18.14)
-      '@inquirer/figures': 1.0.10
-      '@inquirer/type': 3.0.4(@types/node@18.18.14)
-      '@types/node': 18.18.14
-      ansi-escapes: 4.3.2
-      yoctocolors-cjs: 2.1.2
-    dev: false
-
-  /@inquirer/type@3.0.4(@types/node@18.18.14):
-    resolution: {integrity: sha512-2MNFrDY8jkFYc9Il9DgLsHhMzuHnOYM1+CUYVWbzu9oT0hC7V7EcYvdCKeoll/Fcci04A+ERZ9wcc7cQ8lTkIA==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
     dependencies:
       '@types/node': 18.18.14
     dev: false
@@ -7805,7 +7574,7 @@ packages:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.1)(eslint-plugin-import@2.29.1)(eslint@8.57.1)
       eslint-plugin-autofix: 2.2.0(eslint@8.57.1)
       eslint-plugin-compat: 4.2.0(eslint@8.57.1)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.18.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0)(eslint@8.57.1)(prettier@3.2.5)
       eslint-plugin-unused-imports: 3.2.0(@typescript-eslint/eslint-plugin@7.7.1)(eslint@8.57.1)
       prettier: 3.2.5
@@ -8649,7 +8418,7 @@ packages:
     resolution: {integrity: sha512-epHRTMEwdkRMyRn/J2gSezbQcNdaiEnWD9tpFYLnwWHcSZdVFvuETyOwNRyW6I840fxvNAVBVvotmB8aOpOsTQ==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@initia/initia.js': 0.2.26(typescript@5.5.3)
+      '@initia/initia.js': 0.2.28(typescript@5.5.3)
       '@layerzerolabs/lz-definitions': 3.0.61
       '@solana/web3.js': 1.95.8
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
@@ -11144,6 +10913,7 @@ packages:
       typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@typescript-eslint/parser@7.7.1(eslint@8.57.1)(typescript@5.5.3):
     resolution: {integrity: sha512-vmPzBOOtz48F6JAGVS/kZYk4EkXao6iGrD838sp1w3NQQC0W8ry/q641KU4PrG7AKNAf56NOcR8GOpH8l9FPCw==}
@@ -11180,6 +10950,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.18.0
       '@typescript-eslint/visitor-keys': 7.18.0
+    dev: false
 
   /@typescript-eslint/scope-manager@7.7.1:
     resolution: {integrity: sha512-PytBif2SF+9SpEUKynYn5g1RHFddJUcyynGpztX3l/ik7KmZEv19WCMhUBkHXPU9es/VWGD3/zg3wg90+Dh2rA==}
@@ -11237,6 +11008,7 @@ packages:
   /@typescript-eslint/types@7.18.0:
     resolution: {integrity: sha512-iZqi+Ds1y4EDYUtlOOC+aUmxnE9xS/yCigkjA7XpTKV6nCBd3Hp/PRGGmdwnfkV2ThMyYldP1wRpm/id99spTQ==}
     engines: {node: ^18.18.0 || >=20.0.0}
+    dev: false
 
   /@typescript-eslint/types@7.7.1:
     resolution: {integrity: sha512-AmPmnGW1ZLTpWa+/2omPrPfR7BcbUU4oha5VIbSbS1a1Tv966bklvLNXxp3mrbc+P2j4MNOTfDffNsk4o0c6/w==}
@@ -11284,6 +11056,7 @@ packages:
       typescript: 5.5.3
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@typescript-eslint/typescript-estree@7.7.1(typescript@5.5.3):
     resolution: {integrity: sha512-CXe0JHCXru8Fa36dteXqmH2YxngKJjkQLjxzoj6LYwzZ7qZvgsLSc+eqItCrqIop8Vl2UKoAi0StVWu97FQZIQ==}
@@ -11396,6 +11169,7 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.18.0
       eslint-visitor-keys: 3.4.3
+    dev: false
 
   /@typescript-eslint/visitor-keys@7.7.1:
     resolution: {integrity: sha512-gBL3Eq25uADw1LQ9kVpf3hRM+DWzs0uZknHYK3hq4jcTPqVCClHGDnB6UUUV2SFeBeA4KWHWbbLqmbGcZ4FYbw==}
@@ -13900,7 +13674,7 @@ packages:
       eslint-plugin-promise: ^6.0.0
     dependencies:
       eslint: 8.57.1
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
       eslint-plugin-n: 16.6.2(eslint@8.57.1)
       eslint-plugin-promise: 6.1.1(eslint@8.57.1)
     dev: true
@@ -13926,7 +13700,7 @@ packages:
       enhanced-resolve: 5.16.0
       eslint: 8.57.1
       eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.18.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -13935,35 +13709,6 @@ packages:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
       - eslint-import-resolver-webpack
-      - supports-color
-    dev: true
-
-  /eslint-module-utils@2.8.0(@typescript-eslint/parser@7.18.0)(eslint-import-resolver-node@0.3.9)(eslint@8.57.1):
-    resolution: {integrity: sha512-aWajIYfsqCKRDgUfjEXNN/JlrzauMuSEy5sbd7WXbtW3EH6A6MpwEh42c7qD+MqQo9QMJ6fWLAeIJynx0g6OAw==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint:
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 7.18.0(eslint@8.57.1)(typescript@5.5.3)
-      debug: 3.2.7
-      eslint: 8.57.1
-      eslint-import-resolver-node: 0.3.9
-    transitivePeerDependencies:
       - supports-color
     dev: true
 
@@ -14078,42 +13823,7 @@ packages:
       regexpp: 3.2.0
     dev: true
 
-  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.18.0)(eslint@8.57.1):
-    resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 7.18.0(eslint@8.57.1)(typescript@5.5.3)
-      array-includes: 3.1.7
-      array.prototype.findlastindex: 1.2.3
-      array.prototype.flat: 1.3.2
-      array.prototype.flatmap: 1.3.2
-      debug: 3.2.7
-      doctrine: 2.1.0
-      eslint: 8.57.1
-      eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.18.0)(eslint-import-resolver-node@0.3.9)(eslint@8.57.1)
-      hasown: 2.0.0
-      is-core-module: 2.13.1
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.fromentries: 2.0.7
-      object.groupby: 1.0.1
-      object.values: 1.1.7
-      semver: 6.3.1
-      tsconfig-paths: 3.15.0
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
-    dev: true
-
-  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.1)(eslint@8.57.1):
+  /eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.1)(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1):
     resolution: {integrity: sha512-BbPC0cuExzhiMo4Ff1BTVwHpjjv28C5R+btTOGaCRC7UEz801up0JadwkeSk5Ued6TG34uaczuVuH6qyy5YUxw==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -14488,10 +14198,6 @@ packages:
   /estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
-
-  /estree-walker@2.0.2:
-    resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
-    dev: true
 
   /estree-walker@2.0.2:
     resolution: {integrity: sha512-Rfkk/Mp/DL7JVje3u18FxFujQlTNR2q6QfMSMB7AvCBx91NGj/ba3kCfza0f6dVDbw7YlRf/nDrn7pQrCCyQ/w==}
@@ -16674,16 +16380,6 @@ packages:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
-
-  /jake@10.9.2:
-    resolution: {integrity: sha512-2P4SQ0HrLQ+fw6llpLnOaGAvN2Zu6778SJMrCUwns4fOoG9ayrTiZk3VV8sCPkVZF8ab0zksVpS8FDY5pRCNBA==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      async: 3.2.5
-      chalk: 4.1.2
-      filelist: 1.0.4
-      minimatch: 3.1.2
 
   /jake@10.9.2:
     resolution: {integrity: sha512-2P4SQ0HrLQ+fw6llpLnOaGAvN2Zu6778SJMrCUwns4fOoG9ayrTiZk3VV8sCPkVZF8ab0zksVpS8FDY5pRCNBA==}

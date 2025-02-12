@@ -31,6 +31,11 @@ export class InitiaEndpoint implements IEndpoint {
                 [],
                 [bcs.address().serialize(oftAddress).toBase64(), bcs.u32().serialize(dstEid).toBase64()]
             )
+            console.log('getSendLibrary', result)
+            console.log('getSendLibrary type is ', typeof result)
+            console.log('getSendLibrary[0]', result[0])
+            console.log('getSendLibrary[1]', result[1])
+            console.dir(result, { depth: null })
             return [result[0], result[1] as unknown as boolean]
         } catch (error) {
             const toNetwork = getNetworkForChainId(dstEid)

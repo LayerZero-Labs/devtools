@@ -152,8 +152,8 @@ export class InitiaOFT implements IOFT {
             [bcs.u32().serialize(eid).toBase64()]
         )
 
-        const limit = bcs.u64().parse(Buffer.from(result[0], 'base64'))
-        const window = bcs.u64().parse(Buffer.from(result[1], 'base64'))
+        const limit = result[0]
+        const window = result[1]
         return [BigInt(limit), BigInt(window)]
     }
 
@@ -194,7 +194,7 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.address().serialize(account).toBase64()]
         )
-        return Number(bcs.u64().parse(Buffer.from(result, 'base64')))
+        return Number(result)
     }
 
     async quoteSend(
@@ -351,14 +351,18 @@ export class InitiaOFT implements IOFT {
     }
 
     async getPeer(eid: EndpointId): Promise<string> {
-        const result = await this.rest.move.viewFunction<string>(
-            this.oft_address,
-            'oapp_core',
-            'get_peer',
-            [],
-            [bcs.u32().serialize(eid).toBase64()]
-        )
-        return result
+        try {
+            const result = await this.rest.move.viewFunction<string>(
+                this.oft_address,
+                'oapp_core',
+                'get_peer',
+                [],
+                [bcs.u32().serialize(eid).toBase64()]
+            )
+            return result
+        } catch (error) {
+            return '0x00'
+        }
     }
 
     async hasPeer(eid: EndpointId): Promise<boolean> {
@@ -369,7 +373,7 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u32().serialize(eid).toBase64()]
         )
-        return bcs.bool().parse(Buffer.from(result, 'base64'))
+        return result as unknown as boolean
     }
 
     setEnforcedOptionsPayload(
@@ -497,19 +501,27 @@ export class InitiaOFT implements IOFT {
     }
 
     async signSubmitAndWaitForTx(transaction: MsgExecute): Promise<any> {
-        const signedTx = await this.wallet.createAndSignTx({
-            msgs: [transaction as MsgExecute],
-            memo: 'LayerZero OFT transaction',
-        })
+        try {
+            const signedTx = await this.wallet.createAndSignTx({
+                msgs: [transaction as MsgExecute],
+                memo: 'LayerZero OFT transaction',
+            })
 
-        const result = await this.rest.tx.broadcast(signedTx)
-
-        return result
+            const result = await this.rest.tx.broadcast(signedTx)
+            return result
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Transaction failed:', error.message)
+            } else {
+                console.error('Transaction failed with an unknown error')
+            }
+            throw error
+        }
     }
 
     async getSequenceNumber(): Promise<number> {
         // throw new Error('Method not implemented.')
-        console.log('getSequenceNumber')
+        console.log('Get Sequence Number Not Implemented')
         return 0
     }
 
@@ -541,6 +553,14 @@ export class InitiaOFT implements IOFT {
             [],
             [bcs.u32().serialize(eid).toBase64(), bcs.u16().serialize(msgType).toBase64()]
         )
-        return result
+        // console.log('getEnforcedOptions', result)
+        // console.log('getEnforcedOptions type is ', typeof result)
+        // console.log('getenforcedoptions[0]', result[0])
+        // console.log('getenforcedoptions[1]', result[1])
+        // console.dir(result, { depth: null })
+        if (result.length === 0) {
+            return '0x00'
+        }
+        return result[0]
     }
 }

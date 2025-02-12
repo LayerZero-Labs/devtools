@@ -52,7 +52,7 @@ export async function initializeTaskContext(configPath: string): Promise<TaskCon
     const contractName = getContractNameFromLzConfig(srcEid, lzConfig)
     const oAppAddress = getMoveVMOAppAddress(contractName, chainName, stage)
     const oft = OFTFactory.create(moveVMConnection, oAppAddress, accountAddress, moveVMPrivateKey, srcEid)
-    const fullConfigPath = path.join(__dirname, configPath)
+    const fullConfigPath = path.join(process.cwd(), configPath)
 
     return {
         accountAddress: accountAddress,
@@ -80,7 +80,7 @@ export async function initializeDeployTaskContext(configPath: string): Promise<D
     const moveVMConnection = getConnection(chainName, stage)
     const moveVMPrivateKey = getMoveVMPrivateKey(chainName)
     const srcEid = selectedContract.contract.eid
-    const fullConfigPath = path.join(__dirname, configPath)
+    const fullConfigPath = path.join(process.cwd(), configPath)
 
     return {
         accountAddress: accountAddress,

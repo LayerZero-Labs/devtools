@@ -72,7 +72,7 @@ const oftMetadata = {
 
 ```bash
 npx hardhat lz:deploy
-```
+``` 
 
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
@@ -139,6 +139,8 @@ If you are wiring solana to move-vm, create a file in deployments/solana-mainnet
 
 Commands:
 
+To wire from EVM to Move-VM:
+
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
 ```
@@ -147,7 +149,7 @@ pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true
 --mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
 --only-calldata <true> is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
-For Move-VM:
+To wire from Move-VM to EVM:
 
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
