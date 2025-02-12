@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf target artifacts cache out .anchor",
-    "compile": "concurrently -c auto --names forge,hardhat '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
+    "compile": "concurrently -c auto --names forge,hardhat,anchor '$npm_execpath run compile:forge' '$npm_execpath run compile:hardhat' '$npm_execpath run compile:anchor'",
     "compile:anchor": "anchor build",
     "compile:forge": "forge build",
     "compile:hardhat": "hardhat compile",
