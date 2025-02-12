@@ -12,6 +12,7 @@ import type { Uln302ExecutorConfigInput, Uln302UlnConfigInput } from './types'
  */
 export const Uln302UlnConfigSchema = Uln302UlnConfigSchemaBase.extend({
     confirmations: BigNumberishBigIntSchema,
+    optionalDVNThreshold: z.number().optional(),
 }) satisfies z.ZodSchema<Uln302UlnConfig, z.ZodTypeDef, Uln302UlnConfigInput>
 
 /**

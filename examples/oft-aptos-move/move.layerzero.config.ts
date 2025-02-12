@@ -13,11 +13,6 @@ const bscContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const aptosContract: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-
 const movementContract: OmniPointHardhat = {
     eid: EndpointId.MOVEMENT_V2_TESTNET,
     contractName: 'MyOFT',
