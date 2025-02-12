@@ -156,47 +156,41 @@ Rent-exempt minimum: 3.87415872 SOL
 
 #### Deploy the Solana OFT
 
-```bash
-solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --max-len $(wc -c < target/verifiable/oft.so)
-```
+While for building, we must use Solana `v1.17.31`, for deloying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
 
-:information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
+##### Temporarily switch to Solana `v1.18.26`
 
-:information_source: Regarding `--max-len $(wc -c < target/verifiable/oft.so)` - as we are using Solana CLI `v1.17.31`, the program deploy command would be allocating twice the size of the program bytecode, which leads to needing twice the amount of rent. On mainnet this can be costly. This behavior was changed in `v1.18` to require only the exact size of the program bytecode. To emulate this, we are using the `--max-len` flag and passing it the actual size of the program bytecode.
-
-:warning: If the deployment is slow, it could be that the network is congested. If so, you can either wait it out or opt to include a priority fee (see below).
-
-#### (optional) Deploying with a priority fee
-
-This section only applies if you are unable to land your deployment transaction due to network congestion.
-
-:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
-
-<details>
-  <summary>View instructions</summary>
-  Because building requires Solana CLI version `1.17.31`, but priority fees are only supported in version `1.18`, we will need to switch Solana CLI versions temporarily.
+First, we switch to Solana `v1.18.26` (remember to switch back to `v1.17.31` later)
 
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.18.26/install)"
 ```
 
+##### (Recommended) Deploying with a priority fee
+
+This section applies if you are unable to land your deployment transaction due to network congestion.
+
+:information_source: [Priority Fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees) are Solana's mechanism to allow transactions to be prioritized during periods of network congestion. When the network is busy, transactions without priority fees might never be processed. It is then necessary to include priority fees, or wait until the network is less congested. Priority fees are calculated as follows: `priorityFee = compute budget * compute unit price`. We can make use of priority fees by attaching the `--with-compute-unit-price` flag to our `solana program deploy` command. Note that the flag takes in a value in micro lamports, where 1 micro lamport = 0.000001 lamport.
+
 You can run refer QuickNode's [Solana Priority Fee Tracker](https://www.quicknode.com/gas-tracker/solana) to know what value you'd need to pass into the `--with-compute-unit-price` flag.
 
-:information_source: The average is calculated from getting the prioritization fees across recent blocks, but some blocks may have `0` as the prioritization fee. `averageFeeExcludingZeros` ignores blocks with `0` prioritization fees.
-
-Now let's rerun the deploy command, but with the compute unit price flag.
+##### Run the deploy command
 
 ```bash
 solana program deploy --program-id target/deploy/oft-keypair.json target/verifiable/oft.so -u devnet --with-compute-unit-price <COMPUTE_UNIT_PRICE_IN_MICRO_LAMPORTS>
 ```
 
-:warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
+:information_source: the `-u` flag specifies the RPC URL that should be used. The options are `mainnet-beta, devnet, testnet, localhost`, which also have their respective shorthands: `-um, -ud, -ut, -ul`
+
+:warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
+
+##### Switch back to Solana `1.17.31`
+
+:warning: After deploying, make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 ```
-
-</details>
 
 ### Create the Solana OFT
 
@@ -253,9 +247,11 @@ pnpm hardhat lz:deploy # follow the prompts
 
 Note: If you are on testnet, consider using `MyOFTMock` to allow test token minting. If you do use `MyOFTMock`, make sure to update the `sepoliaContract.contractName` in [layerzero.config.ts](./layerzero.config.ts) to `MyOFTMock`.
 
-### Initialize the Solana OFT
+### Initialize the Solana OFT Config
 
 :warning: Do this only when initializing the OFT for the first time. The only exception is if a new pathway is added later. If so, run this again to properly initialize the pathway.
+
+Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
 npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
@@ -264,6 +260,8 @@ npx hardhat lz:oapp:init:solana --oapp-config layerzero.config.ts --solana-secre
 :information_source: `<SECRET_KEY>` should also be in base58 format.
 
 ### Wire
+
+Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
 npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
