@@ -7,6 +7,8 @@ runs:
     #
     # This step will speed up workflow runs that don't touch the whole codebase
     # (or the ones that don't touch the codebase at all)
+
+    # We build architecture specific caches for turbo builds as there can be differences in the build artifacts between architectures
     - name: Cache turbo build setup
       uses: actions/cache@v4
       with:
@@ -27,6 +29,8 @@ runs:
     # Cache hardhat compilers
     #
     # This step will speed up workflow runs that use hardhat compilation
+
+    # We build architecture specific caches for hardhat compilers as there can be differences in the build artifacts between architectures
     - name: Cache hardhat compilers
       uses: actions/cache@v4
       with:
