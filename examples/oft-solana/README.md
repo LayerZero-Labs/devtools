@@ -331,7 +331,6 @@ pnpm hardhat lz:oft:solana:setauthority --eid <SOLANA_EID> --mint <TOKEN_MINT> -
 The `OFTStore` is automatically added as a mint authority to the newly created mint authority, and does not need to be
 included in the `--additional-minters` list.
 
-
 ## Appendix
 
 ### Transferring ownership
@@ -342,14 +341,13 @@ Ownership of OFTs can be transferred via running the wire command after the appr
 
 How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-delegate
 
-Now run 
+Now run
 
 ```
 npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
 and execute the transactions.
-
 
 **Then, set the `owner`.**
 
