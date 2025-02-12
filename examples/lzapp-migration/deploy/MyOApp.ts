@@ -38,7 +38,6 @@ const deploy: DeployFunction = async (hre) => {
         from: deployer,
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
-            deployer, // owner
         ],
         log: true,
         skipIfAlreadyDeployed: false,

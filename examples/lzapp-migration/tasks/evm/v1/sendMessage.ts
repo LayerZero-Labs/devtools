@@ -26,7 +26,7 @@ interface MessagingFee {
 }
 
 // Define the Hardhat task
-task('lz:lzapp:send', 'Sends a message using an OApp (v1 Implementation)')
+task('lz:lzapp:send', 'Sends a message using an LzApp (Endpoint V1)')
     .addParam('message', 'The message to send', undefined, types.string)
     .addParam('toEid', 'Destination endpoint ID', undefined, types.int)
     .addOptionalParam('extraOptions', 'Extra options for the send operation (hex string)', '0x', types.string)
@@ -45,7 +45,7 @@ task('lz:lzapp:send', 'Sends a message using an OApp (v1 Implementation)')
 
         // Instantiate the OApp contract
         const lzapp = await hre.deployments.get('MyLzApp')
-        const oappContract = await hre.ethers.getContractAt('MyLzApp', lzapp.address)
+        const lzappContract = await hre.ethers.getContractAt('MyLzApp', lzapp.address)
 
         // Prepare the send parameters
         const sendParam: SendParam = {
@@ -54,8 +54,7 @@ task('lz:lzapp:send', 'Sends a message using an OApp (v1 Implementation)')
             adapterParams: adapterParams,
         }
 
-        // Estimate the fees for the send operation
-        const feeQuote: MessagingFee = await oappContract.estimateFee(
+        const feeQuote: MessagingFee = await lzappContract.estimateFee(
             sendParam.dstChainId,
             sendParam.message,
             false, // _useZro set to false
@@ -72,7 +71,7 @@ task('lz:lzapp:send', 'Sends a message using an OApp (v1 Implementation)')
         // This example assumes _useZro is false, so only native fees are required.
 
         // Execute the sendMessage operation
-        const sendTx = await oappContract.sendMessage(
+        const sendTx = await lzappContract.sendMessage(
             sendParam.dstChainId,
             sendParam.message,
             sendParam.adapterParams,

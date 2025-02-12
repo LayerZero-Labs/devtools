@@ -26,7 +26,7 @@ interface MessagingFee {
 }
 
 // Define the Hardhat task
-task('lz:oapp:send', 'Sends a message using an OApp')
+task('lz:oapp:send', 'Sends a message using an OApp (from chain using Endpoint V2')
     .addParam('message', 'The message to send', undefined, types.string)
     .addParam('toEid', 'Destination endpoint ID', undefined, types.bigint)
     .addOptionalParam('extraOptions', 'Extra options for the send operation (hex string)', '0x', types.string)
