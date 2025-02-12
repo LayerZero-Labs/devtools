@@ -155,6 +155,7 @@ Rent-exempt minimum: 3.87415872 SOL
 :information_source: LayerZero's default deployment path for Solana OFTs require you to deploy your own OFT program as this means you own the Upgrade Authority and don't rely on LayerZero to manage that authority for you. Read [this](https://neodyme.io/en/blog/solana_upgrade_authority/) to understand more no why this is important.
 
 #### Deploy the Solana OFT
+
 While for building, we must use Solana `v1.17.31`, for deloying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
 
 ##### Temporarily switch to Solana `v1.18.26`
@@ -183,15 +184,13 @@ solana program deploy --program-id target/deploy/oft-keypair.json target/verifia
 
 :warning: If the deployment is slow, it could be that the network is congested and you might need to increase the priority fee.
 
-
-##### Switch back to Solana  `1.17.31`
+##### Switch back to Solana `1.17.31`
 
 :warning: Make sure to switch back to v1.17.31 after deploying. If you need to rebuild artifacts, you must use Solana CLI version `1.17.31` and Anchor version `0.29.0`
 
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.17.31/install)"
 ```
-
 
 ### Create the Solana OFT
 
