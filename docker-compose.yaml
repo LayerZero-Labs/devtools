@@ -99,4 +99,6 @@ services:
       # as a cache directory for hardhat so that the permissions
       # don't clash
       - ./.cache/hardhat:/root/.cache/hardhat-nodejs
-    command: "pnpm test"
+    command: >
+        sh -c "rustup default 1.75.0 && pnpm test"
+
