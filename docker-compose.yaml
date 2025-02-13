@@ -105,4 +105,4 @@ services:
       # Anchor does not respect file locks on the rustup directory, so the builds fail as it can't overwrite the other example's rustup.
       # Running rustup default before pnpm test ensures that the rustup directory is present and up to date.
     command: >
-        sh -c "rustup default 1.73.0 && pnpm test"
+        sh -c "rustup default 1.75.0 && pnpm test"
