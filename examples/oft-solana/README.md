@@ -353,10 +353,10 @@ and execute the transactions.
 
 How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/configuring-pathways#adding-owner
 
-Now, run for another time
+Now, run
 
 ```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
 ```
 
 ### Common Errors
