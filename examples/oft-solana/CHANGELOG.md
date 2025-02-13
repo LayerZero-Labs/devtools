@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.4
+
+### Patch Changes
+
+- 6bbe466: move solana init to own script and update task name
+
 ## 0.7.3
 
 ### Patch Changes
