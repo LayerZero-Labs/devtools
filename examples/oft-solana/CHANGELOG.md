@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.5
+
+### Patch Changes
+
+- fe71c0e: fix typo and mention how to transfer ownership
+
 ## 0.7.4
 
 ### Patch Changes
