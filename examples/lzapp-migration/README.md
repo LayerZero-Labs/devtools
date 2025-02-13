@@ -16,7 +16,7 @@
 
 For this example, we will deploy the EndpointV1 OFT on Ethereum Sepolia and also OFT202 on Solana Devnet.
 
-:warning: This example repo only works with `@openzeppelin/contracts@^4.0.0` and will not work for `@openzeppelin/contracts@^4.0.0` given the change in the constructor for `Ownable`. The EndpointV1 OFT contracts were built using `@openzeppelin/contracts@^4.0.0` so we emulate that in this repo.
+:warning: This example repo only works with `@openzeppelin/contracts@^4.0.0` and will not work for `@openzeppelin/contracts@^5.0.0` given the change in the constructor for `Ownable`. The EndpointV1 OFT contracts were built using `@openzeppelin/contracts@^4.0.0` so we emulate that in this repo.
 
 ## Preparing config files
 

@@ -35,11 +35,10 @@ const config: OAppOmniGraphHardhat = {
                 },
                 sendConfig: {
                     executorConfig: {
-                        maxMessageSize: 10000,
                         executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA',
                     },
                     ulnConfig: {
-                        confirmations: BigInt(1),
+                        confirmations: BigInt(15),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'], // LayerZero Labs DVN
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
@@ -47,7 +46,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(1),
+                        confirmations: BigInt(32),
                         requiredDVNs: ['0x8eebf8b423b73bfca51a1db4b7354aa0bfca9193'],
                         optionalDVNs: [],
                         optionalDVNThreshold: 0,
@@ -78,7 +77,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // // The number of block confirmations to wait before emitting the message from the source chain.
-                        confirmations: BigInt(1),
+                        confirmations: BigInt(32),
                         // The address of the DVNs you will pay to verify a sent message on the source chain ).
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: [
@@ -96,7 +95,7 @@ const config: OAppOmniGraphHardhat = {
                 receiveConfig: {
                     ulnConfig: {
                         // The number of block confirmations to expect from the `to` chain.
-                        confirmations: BigInt(1),
+                        confirmations: BigInt(15),
                         // The address of the DVNs your `receiveConfig` expects to receive verifications from on the `from` chain ).
                         // The `from` chain's OApp will wait until the configured threshold of `requiredDVNs` verify the message.
                         requiredDVNs: [

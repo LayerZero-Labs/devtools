@@ -180,12 +180,6 @@ task(TASK_LZ_OAPP_WIRE)
         )
 
         if (!args.isSolanaInitConfig) {
-            // const evmContractFactory = createConnectedContractFactory()
-            // const lzAppFactory = createLzAppFactory(evmContractFactory)
-
-            // // Merge EVM and Solana factories into a single SDK factory
-            // const sdkFactory = firstFactory(lzAppFactory)
-
             // Create a default signer factory
             const createSigner = createSignerFactory()
             // Override the configure subtask to include the filtered graph

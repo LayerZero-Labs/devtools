@@ -25,7 +25,6 @@ const action = async function (taskArgs: TaskArguments, hre: HardhatRuntimeEnvir
     const signers = await hre.ethers.getSigners()
     const owner = signers[0]
 
-    // const toAddressBytes = hre.ethers.utils.defaultAbiCoder.encode(['address'], [toAddress])
     const toAddressBytes = addressToBytes32(to)
 
     // get local contract

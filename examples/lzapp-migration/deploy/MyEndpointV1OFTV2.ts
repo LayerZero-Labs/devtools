@@ -15,11 +15,11 @@ const deploy: DeployFunction = async ({ getNamedAccounts, deployments, network }
         throw new Error(`No endpoint address found for network: ${network.name}`)
     }
 
-    const amountInEthers = '1000000' // TODO: accept as param
+    const amountInEther = '1000000' // TODO: accept as param
 
     await deploy(contractName, {
         from: deployer,
-        args: [lzEndpointAddress, ethers.utils.parseUnits(amountInEthers, 18), 6],
+        args: [lzEndpointAddress, ethers.utils.parseUnits(amountInEther, 18), 6],
         log: true,
         waitConfirmations: 1,
     })

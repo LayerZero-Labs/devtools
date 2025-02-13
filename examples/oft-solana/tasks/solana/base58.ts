@@ -15,10 +15,6 @@ interface Base58FeesTaskArgs {
     keypairFile: string
 }
 
-assert(process.env.HOME != undefined, 'process.env.HOME needs to be defined')
-
-const defaultKeypairFile = path.resolve(process.env.HOME, '.config/solana/id.json')
-
 task('lz:solana:base-58', 'Outputs the base58 string for a keypair')
     .addParam(
         'keypairFile',
@@ -27,6 +23,8 @@ task('lz:solana:base-58', 'Outputs the base58 string for a keypair')
         devtoolsTypes.string
     )
     .setAction(async ({ keypairFile }: Base58FeesTaskArgs) => {
+        assert(process.env.HOME != undefined, 'process.env.HOME needs to be defined')
+        const defaultKeypairFile = path.resolve(process.env.HOME, '.config/solana/id.json')
         assert(fs.existsSync(keypairFile), `Keypair file not found: ${keypairFile}`)
         const data = fs.readFileSync(keypairFile, 'utf8')
         const keypairJson = JSON.parse(data)

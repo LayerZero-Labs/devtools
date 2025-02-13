@@ -14,7 +14,6 @@
     },
     "test": {
       "dependsOn": ["build"],
-      // No need to cache test outputs
       "outputs": [],
       "inputs": [],
       "cache": true
