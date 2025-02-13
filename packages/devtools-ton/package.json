@@ -34,7 +34,7 @@
   "dependencies": {
     "@ton/core": "^0.59.0",
     "@ton/crypto": "^3.3.0",
-    "@ton/ton": "^15.1.0",
+    "@ton/ton": "^14.0.0",
     "p-memoize": "~4.0.4"
   },
   "devDependencies": {
@@ -59,7 +59,7 @@
     "@layerzerolabs/lz-definitions": "^3.0.59",
     "@ton/core": "^0.59.0",
     "@ton/crypto": "^3.3.0",
-    "@ton/ton": "^15.1.0"
+    "@ton/ton": "^14.0.0"
   },
   "publishConfig": {
     "access": "public"
