@@ -185,9 +185,9 @@ FROM machine AS solana
 
 WORKDIR /app/solana
 
-ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.75.0
+ENV RUST_TOOLCHAIN_VERSION_SOLANA=1.68.0
 ARG SOLANA_VERSION=1.17.31
-ARG PLATFORM_TOOLS_VERSION=1.41
+ARG PLATFORM_TOOLS_VERSION=1.37
 
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_SOLANA}
 
@@ -223,7 +223,7 @@ RUN mkdir -p /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools && \
     # If we are NOT building from source, we can simply grab the prebuilt binaries
     if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
         # Platform tools v1.41 has prebuilt binaries for amd64/linux - we extract and move it to the cache directory
-        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.41/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
+        curl -sL https://github.com/anza-xyz/platform-tools/releases/download/v1.37/platform-tools-linux-x86_64.tar.bz2 | tar -xj && \
         mv llvm/ rust/ version.md /root/.cache/solana/v${PLATFORM_TOOLS_VERSION}/platform-tools/; \
         BUILD_FROM_SOURCE=false; \
     fi && \
