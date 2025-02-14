@@ -22,3 +22,6 @@
 [submodule "deploy-move-oft-adapter/lib/devtools"]
 	path = deploy-move-oft-adapter/lib/devtools
 	url = https://github.com/LayerZero-Labs/devtools
+[submodule "deploy-move-oft-adapter/lib/layerzero-v2"]
+	path = deploy-move-oft-adapter/lib/layerzero-v2
+	url = https://github.com/LayerZero-Labs/layerzero-v2
