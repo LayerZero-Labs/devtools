@@ -15,7 +15,12 @@ contract MyOFTUpgradeableTest is OFTTest {
             _deployContractAndProxy(
                 type(MyOFTUpgradeable).creationCode,
                 abi.encode(address(endpoints[aEid])),
-                abi.encodeWithSelector(MyOFTUpgradeable.initialize.selector, "oftUpgradeable", "oftUpgradeable", address(this))
+                abi.encodeWithSelector(
+                    MyOFTUpgradeable.initialize.selector,
+                    "oftUpgradeable",
+                    "oftUpgradeable",
+                    address(this)
+                )
             )
         );
 
