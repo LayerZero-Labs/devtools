@@ -76,6 +76,7 @@ Run
 anchor keys sync
 anchor keys list
 ```
+
 :information_source: `anchor keys sync` will replace the example programId value in `declare_id!()` and `Anchor.toml` to match the created keypair's.
 
 :information_source: `anchor keys list` will output the generated programIds (public keys). It should look something like this:
