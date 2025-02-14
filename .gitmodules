@@ -16,3 +16,6 @@
 [submodule "deploy-move-oft-adapter/lib/forge-std"]
 	path = deploy-move-oft-adapter/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "deploy-move-oft-adapter/lib/openzeppelin-contracts"]
+	path = deploy-move-oft-adapter/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
