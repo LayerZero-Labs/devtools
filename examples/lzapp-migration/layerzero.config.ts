@@ -35,6 +35,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 sendConfig: {
                     executorConfig: {
+                        maxMessageSize: 10000,
                         executor: '0x718B92b5CB0a5552039B593faF724D182A881eDA',
                     },
                     ulnConfig: {
