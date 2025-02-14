@@ -1,0 +1,49 @@
+• Packages in scope: @layerzerolabs/oft-evm-move-adapters-example
+• Running build in 1 packages
+• Remote caching disabled
+@layerzerolabs/devtools-extensible-cli:build: cache bypass, force executing 2946d10efc9f7c0d
+@layerzerolabs/test-devtools:build: cache bypass, force executing 9de5146a82dab62c
+@layerzerolabs/toolbox-foundry:build: cache bypass, force executing 2b7c9a97fe4bce9e
+@layerzerolabs/io-devtools:build: cache bypass, force executing 54af3c6052ef18be
+@layerzerolabs/toolbox-foundry:build: 
+@layerzerolabs/toolbox-foundry:build: > @layerzerolabs/toolbox-foundry@0.1.10 build /Users/primata/movement-devtools/packages/toolbox-foundry
+@layerzerolabs/toolbox-foundry:build: > make lib
+@layerzerolabs/toolbox-foundry:build: 
+@layerzerolabs/test-devtools:build: 
+@layerzerolabs/test-devtools:build: > @layerzerolabs/test-devtools@0.4.4 prebuild /Users/primata/movement-devtools/packages/test-devtools
+@layerzerolabs/test-devtools:build: > tsc -noEmit
+@layerzerolabs/test-devtools:build: 
+@layerzerolabs/io-devtools:build: 
+@layerzerolabs/io-devtools:build: > @layerzerolabs/io-devtools@0.1.15 prebuild /Users/primata/movement-devtools/packages/io-devtools
+@layerzerolabs/io-devtools:build: > tsc -noEmit
+@layerzerolabs/io-devtools:build: 
+@layerzerolabs/devtools-extensible-cli:build: 
+@layerzerolabs/devtools-extensible-cli:build: > @layerzerolabs/devtools-extensible-cli@0.0.1 prebuild /Users/primata/movement-devtools/packages/devtools-extensible-cli
+@layerzerolabs/devtools-extensible-cli:build: > tsc -noEmit
+@layerzerolabs/devtools-extensible-cli:build: 
+@layerzerolabs/devtools-extensible-cli:build: sh: tsc: command not found
+@layerzerolabs/test-devtools:build: sh: tsc: command not found
+@layerzerolabs/io-devtools:build: sh: tsc: command not found
+@layerzerolabs/test-devtools:build:  ELIFECYCLE  Command failed.
+@layerzerolabs/devtools-extensible-cli:build:  ELIFECYCLE  Command failed.
+@layerzerolabs/io-devtools:build:  ELIFECYCLE  Command failed.
+@layerzerolabs/test-devtools:build:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+@layerzerolabs/devtools-extensible-cli:build:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+@layerzerolabs/io-devtools:build:  WARN   Local package.json exists, but node_modules missing, did you mean to install?
+@layerzerolabs/toolbox-foundry:build: rm -rf lib
+@layerzerolabs/toolbox-foundry:build: #
+@layerzerolabs/toolbox-foundry:build: # solidity-bytes-utils
+@layerzerolabs/test-devtools:build: ERROR: command finished with error: command (/Users/primata/movement-devtools/packages/test-devtools) /opt/homebrew/bin/pnpm run build exited (1)
+@layerzerolabs/io-devtools:build: ERROR: command finished with error: command (/Users/primata/movement-devtools/packages/io-devtools) /opt/homebrew/bin/pnpm run build exited (1)
+@layerzerolabs/devtools-extensible-cli:build: ERROR: command finished with error: command (/Users/primata/movement-devtools/packages/devtools-extensible-cli) /opt/homebrew/bin/pnpm run build exited (1)
+@layerzerolabs/toolbox-foundry:build: make: *** [node_modules] Interrupt: 2
+@layerzerolabs/test-devtools#build: command (/Users/primata/movement-devtools/packages/test-devtools) /opt/homebrew/bin/pnpm run build exited (1)
+@layerzerolabs/io-devtools#build: command (/Users/primata/movement-devtools/packages/io-devtools) /opt/homebrew/bin/pnpm run build exited (1)
+@layerzerolabs/devtools-extensible-cli#build: command (/Users/primata/movement-devtools/packages/devtools-extensible-cli) /opt/homebrew/bin/pnpm run build exited (1)
+
+ Tasks:    1 successful, 4 total
+Cached:    0 cached, 4 total
+  Time:    600ms 
+Failed:    @layerzerolabs/devtools-extensible-cli#build, @layerzerolabs/io-devtools#build, @layerzerolabs/test-devtools#build
+
+ ERROR  run failed: command  exited (1)

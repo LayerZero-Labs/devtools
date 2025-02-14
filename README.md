@@ -1,3 +1,82 @@
+# Notes for Auditors
+
+Thank you for your review! We look forward to integrating your feedback.
+
+We are building a LayerZero bridge that meets the following requirements from [this doc](https://docs.google.com/document/d/1W7mVEXjt9IBfaoHcFYQJ03F_kDtk6Qj7BqfqC33rRr4/edit?tab=t.0#heading=h.kzt98j48hcuf):
+
+1. Mvmt Labs is the sole owner of the LZ bridge contracts on L1 and L2. Only Mvmt Labs can modify the contracts or its parameters. (STRICT REQUIREMENT)  
+2. Mvmt Labs can set a (total token) volume rate limit in the L1 contract that rejects transfer requests from users on L1 once the rate limit is reached. The rate limit is such that the L2MOVE pool does not get depleted. (this requires diligent human observation of remaining pool balance). (STRICT REQUIREMENT)
+3. Mvmt Labs can set a (total token) volume rate limit on the L2 contract that rejects DVN's completion of transfers on L2. The rate limit on L2 is equal or higher than the rate limit on L1. The rate limit is such that the L2MOVE pool does not get depleted. (this requires diligent human observation of remaining pool balance).(NICE TO HAVE) 
+4. Mvmt Labs are the owners of the locked L1MOVE pool of the L1 bridge contract (the contract to which the user deposits to on L1).(STRICT REQUIREMENT) 
+5. Mvmt Labs are the owners of the locked L2MOVE pool of the L2 bridge contract (STRICT REQUIREMENT) 
+
+Progress satisfying the above five requrements:
+- We believe requirements 1, 4, and 5 are satisfied by virtue of how LayerZero bridges work. Mvmt Labs owns the contracts and token pools by default.
+- Requirement 2 is the motivation for the modifications we've made on the Solidity side.
+- We believe requirement 3 is trivial to implement because we can simply set the L2 volume rate limit by calling:
+```
+    public entry fun set_rate_limit(admin: &signer, eid: u32, limit: u64, window_seconds: u64) {
+        assert_admin(address_of(admin));
+        oft_impl_config::set_rate_limit(eid, limit, window_seconds);
+    }
+```
+in `move_oft_adapter.move`
+
+We have a specification drafted in [PMIP-15](https://github.com/movementlabsxyz/pmip-15). 
+
+> [!NOTE]
+> This specification was written with bidirectional bridging in mind. However, we are now only required to bridge MOVE from L1 to L2 for this iteration of the bridge.  
+
+This repository is our fork of the [LayerZero Devtools repository](https://github.com/layerzero-labs/devtools).
+
+It contains Solidity OFT Adapter -related contracts and tests, and the Move OFT Adapter and tests, in the following files of interest:
+
+## Solidity contracts and tests:
+
+- [`MOVEOFTAdapter.sol`](examples/oft-evm-move-adapters/contracts/MOVEOFTAdapter.sol)
+- [`RateLimiter.sol`](examples/oft-evm-move-adapters/contracts/utils/RateLimiter.sol)
+- [`MOVEMock.sol`](examples/oft-evm-move-adapters/contracts/mocks/MOVEMock.sol)
+- [`MOVEOFTAdapter.t.sol`](examples/oft-evm-move-adapters/test/evm/foundry/MOVEOFTAdapter.t.sol)
+
+To test:
+
+```
+git clone https://github.com/movementlabsxyz/devtoos.git
+cd devtools
+git submodule update --init
+cd examples/oft-evm-move-adapters
+pnpm i
+pnpm turbo build --force
+forge test
+```
+
+## Move contracts and tests:
+- [`move_oft_adapter.move`](examples/oft-evm-move-adapters/sources/oft_implementation/move_oft_adapter.move)
+- [`oapp_receive_using_move_oft_adapter_tests.move`](examples/oft-evm-move-adapters/tests/oapp_receive_using_move_oft_adapter_tests.move)
+- [oft_using_move_oft_adapter_tests.move](https://github.com/movementlabsxyz/devtools/blob/86f0cd4098826e30625ceedbcb526f37936e45f4/examples/oft-evm-move-adapters/tests/oft_using_move_oft_adapter_tests.move)
+
+To test: 
+
+In `examples/oft-evm-move-adapters` run `movement move test -dev` with Movement CLI.
+
+## Additional context
+
+- [Repository for the front-end](https://github.com/movementlabsxyz/bridge-interface/tree/layer-zero) we are building for users to access the bridge.
+- [Working document with how we are integrating LayerZero token sending on the front-end](https://docs.google.com/document/d/1oB8QZ7uUcP5K_L5u37w6GTJbXN4dBo_wCmC7mjJHtyU/edit?tab=t.0) 
+- With a two-adapter solution as we are implementing, LayerZero has expressed concerns about transactions being stuck in-flight. 
+
+As one of their engineers put it:
+> "Javing more than one adapter creates the possibility that one or more of the stores could be used up and result in unfulfillable transfers being stuck in flight. The scenarios possible with a dual lock box become more complicated if you ever want to add other chains into the mix.  The thing I lack clarity on, is that it appears that 10 bn tokens were minted on the ETH side, I presume there will also be tokens minted on the Movement side? Ultimately, using an arrangement like this requires a precise understanding of all the parameters to ensure that we can avoid a “stuck in transit” issue"
+
+One of our researchers responded with:
+
+> "If I understand the proposal correct there is a "store" of L2MOVE that is being slowly used up by the bridge as tokens get transferred to L2. This is aligned with our idea. We would separately mint the L2MOVE and provide the amount to the store.
+> Our premise was the following. We are hoping that the LZ bridge has capability to limit how much L1MOVE it would maximally accept to lock up (X % of total supply). On L2 the LZ bridge would be supplied with an equivalent amount of tokens (X % of total supply). Then any transfer request on L1 that would exceed this restriction should not be accepted by the bridge. Consequently, no transactions could get stuck in transit."
+
+This potential "stuck in transit" issue is one of high interest and priority. 
+
+The remainder of this README contains the default LayerZero `devtools` repo README contents:
+
 <p align="center">
   <a href="https://layerzero.network#gh-dark-mode-only">
     <img alt="LayerZero" style="width: 50%" src="assets/logo-dark.svg#gh-dark-mode-only"/>
