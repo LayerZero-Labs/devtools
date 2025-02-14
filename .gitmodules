@@ -19,3 +19,6 @@
 [submodule "deploy-move-oft-adapter/lib/openzeppelin-contracts"]
 	path = deploy-move-oft-adapter/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "deploy-move-oft-adapter/lib/devtools"]
+	path = deploy-move-oft-adapter/lib/devtools
+	url = https://github.com/LayerZero-Labs/devtools
