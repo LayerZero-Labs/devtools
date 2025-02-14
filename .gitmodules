@@ -13,3 +13,6 @@
 [submodule "tests-user/bats-assert"]
 	path = tests-user/lib/bats-assert
 	url = https://github.com/bats-core/bats-assert.git
+[submodule "deploy-move-oft-adapter/lib/forge-std"]
+	path = deploy-move-oft-adapter/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
