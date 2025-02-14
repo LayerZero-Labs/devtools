@@ -94,8 +94,6 @@ Create `programId` keypair files by running:
 ```bash
 solana-keygen new -o target/deploy/endpoint-keypair.json --force
 solana-keygen new -o target/deploy/oft-keypair.json --force
-
-anchor keys sync
 ```
 
 :warning: `--force` flag overwrites the existing keys with the ones you generate.
@@ -103,26 +101,17 @@ anchor keys sync
 Run
 
 ```
+anchor keys sync
 anchor keys list
 ```
+:information_source: `anchor keys sync` will replace the example programId value in `declare_id!()` and `Anchor.toml` to match the created keypair's.
 
-to view the generated programIds (public keys). The output should look something like this:
+:information_source: `anchor keys list` will output the generated programIds (public keys). It should look something like this:
 
 ```
 endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
-
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
-
-```
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
-)));
-```
-
-Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
 
 ### Building and Deploying the Solana OFT Program
 

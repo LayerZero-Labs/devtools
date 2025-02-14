@@ -68,21 +68,22 @@ pnpm compile
 ```bash
 solana-keygen new -o target/deploy/endpoint-keypair.json --force
 solana-keygen new -o target/deploy/oft-keypair.json --force
+```
 
+Run
+
+```
 anchor keys sync
 anchor keys list
 ```
+:information_source: `anchor keys sync` will replace the example programId value in `declare_id!()` and `Anchor.toml` to match the created keypair's.
 
-Copy the OFT's programId and go into [programs/oft202/lib.rs](./programs/oft202/src/lib.rs). Note the following snippet:
+:information_source: `anchor keys list` will output the generated programIds (public keys). It should look something like this:
 
-```rust
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu"
-)));
 ```
-
-Replace `3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu` with the programId that you have copied.
+endpoint: <ENDPOINT_PROGRAM_ID>
+oft: <OFT_PROGRAM_ID>
+```
 
 ### Building and Deploying the Solana OFT Program
 
