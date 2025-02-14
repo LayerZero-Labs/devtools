@@ -30,7 +30,7 @@ const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
 
 if (accounts == null) {
     console.warn(
-        'Could not find MNEMONIC or PRIVATE_KEY environment variables. It will not be possible to execute transactions in your example.'
+        'Could not find MNEMONIC or PRIVATE_KEY environment variables. It will not be possible to execute EVM transactions in your example.'
     )
 }
 
@@ -55,6 +55,11 @@ const config: HardhatUserConfig = {
         'bsc-testnet': {
             eid: EndpointId.BSC_V2_TESTNET,
             url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
+            accounts,
+        },
+        'movement-testnet': {
+            eid: EndpointId.MOVEMENT_V2_TESTNET,
+            url: process.env.RPC_URL_MOVEMENT_TESTNET || 'https://rpc.ankr.com/http/movement_testnet/v1[1]',
             accounts,
         },
         'aptos-testnet': {

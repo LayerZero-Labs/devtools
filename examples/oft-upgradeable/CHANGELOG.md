@@ -1,11 +1,5 @@
 # @layerzerolabs/oft-upgradeable-example
 
-## 0.2.8
-
-### Patch Changes
-
-- 213a76b: Enable optimizer explicitly
-
 ## 0.2.7
 
 ### Patch Changes

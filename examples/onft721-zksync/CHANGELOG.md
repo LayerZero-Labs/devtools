@@ -1,11 +1,5 @@
 # @layerzerolabs/onft721-zksync-example
 
-## 1.0.5
-
-### Patch Changes
-
-- 213a76b: Enable optimizer explicitly
-
 ## 1.0.4
 
 ### Patch Changes

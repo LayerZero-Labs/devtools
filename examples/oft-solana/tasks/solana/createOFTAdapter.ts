@@ -6,7 +6,7 @@ import { task } from 'hardhat/config'
 
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFT_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OFT_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import {
     TransactionType,
@@ -74,7 +74,7 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
                         mint: mint,
                         escrow: createSignerFromKeypair({ eddsa: eddsa }, lockBox),
                     },
-                    oft.types.OFTType.Adapter,
+                    types.OFTType.Adapter,
                     OFT_DECIMALS,
                     {
                         oft: programId,

@@ -1,9 +1,3 @@
-target/
-!target/deploy/
-!target/idl/
-.anchor
-test-ledger
-
 node_modules
 .env
 coverage

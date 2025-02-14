@@ -22,7 +22,7 @@ import { task } from 'hardhat/config'
 import { types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { promptToContinue } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+import { OFT_DECIMALS as DEFAULT_SHARED_DECIMALS, oft, types } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { checkMultisigSigners, createMintAuthorityMultisig } from './multisig'
 import { assertAccountInitialized } from './utils'
@@ -272,7 +272,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                         mint: mint.publicKey,
                         escrow: lockboxSigner,
                     },
-                    oft.types.OFTType.Native,
+                    types.OFTType.Native,
                     sharedDecimals,
                     {
                         oft: programId,
