@@ -2,8 +2,8 @@
 pragma solidity ^0.8.22;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {OFTAdapter} from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
-import {RateLimiter} from "./utils/RateLimiter.sol";
+import {OFTAdapter} from "layerzerolabs/oapp/contracts/oft/OFTAdapter.sol";
+import {RateLimiter} from "layerzerolabs/oapp/contracts/oapp/utils/RateLimiter.sol";
 
 contract MOVEOFTAdapter is OFTAdapter, RateLimiter {
     constructor(address _token, address _lzEndpoint, address _delegate, RateLimiter.RateLimitConfig[] memory _rateLimitConfig)
@@ -11,6 +11,13 @@ contract MOVEOFTAdapter is OFTAdapter, RateLimiter {
         Ownable(_delegate)
     {
         _setRateLimits(_rateLimitConfig);
+    }
+
+    /**
+     * @dev Returns the number of shared decimals for the OFTAdapter.
+     */
+    function sharedDecimals() public view override returns (uint8) {
+        return 8;
     }
 
     /**
@@ -58,7 +65,7 @@ contract MOVEOFTAdapter is OFTAdapter, RateLimiter {
         override
         returns (uint256 amountReceivedLD)
     {
-        _checkAndUpdateRateLimit(_srcEid, _amountLD);
+        _checkAndUpdateRateLimit(1, _amountLD);
         return super._credit(_to, _amountLD, _srcEid);
     }
 }
