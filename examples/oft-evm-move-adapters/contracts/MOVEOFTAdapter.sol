@@ -44,7 +44,7 @@ contract MOVEOFTAdapter is OFTAdapter, RateLimiter {
         override
         returns (uint256 amountSentLD, uint256 amountReceivedLD)
     {
-        _checkAndUpdateRateLimit(_dstEid, _amountLD);
+        _checkAndUpdateRateLimit(2, _amountLD);
         return super._debit(_from, _amountLD, _minAmountLD, _dstEid);
     }
 
