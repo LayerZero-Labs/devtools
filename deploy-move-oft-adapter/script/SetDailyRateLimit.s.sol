@@ -10,7 +10,7 @@ import {EnforcedOptionParam} from "layerzerolabs/oapp/contracts/oapp/interfaces/
 contract MOVEOFTAdapterScript is Script {
     
     // Input your contract address here
-    MOVEOFTAdapter public adapter = MOVEOFTAdapter(0x1);
+    MOVEOFTAdapter public adapter = MOVEOFTAdapter(address(0x1));
     uint32 public movementEid = 30325;
 
     function run() public {
