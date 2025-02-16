@@ -105,6 +105,10 @@ abstract contract OFTFeeUpgradeable is OFTUpgradeable, FeeUpgradeable {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
         uint256 fee = amountSentLD - amountReceivedLD;
         if (fee > 0) {
+            // @dev Increment the total fees that can be withdrawn.
+            //      Fees include the dust resulting from the de-dust operation.
+            OFTFeeStorage storage $ = _getOFTFeeStorage();
+            $.feeBalance += fee;
             _transfer(_from, address(this), fee);
         }
         _burn(_from, amountReceivedLD);

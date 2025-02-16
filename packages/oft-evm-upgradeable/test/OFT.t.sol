@@ -245,7 +245,7 @@ contract OFTTest is TestHelperOz5 {
         composeMsg = OFTComposeMsgCodec.composeMsg(message);
     }
 
-    function test_debit_slippage_removeDust() public {
+    function test_debit_slippage_removeDust() public virtual {
         uint256 amountToSendLD = 1.23456789 ether;
         uint256 minAmountToCreditLD = 1.23456789 ether;
         uint32 dstEid = aEid;
@@ -259,7 +259,7 @@ contract OFTTest is TestHelperOz5 {
         aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
-    function test_debit_slippage_minAmountToCreditLD() public {
+    function test_debit_slippage_minAmountToCreditLD() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1.00000001 ether;
         uint32 dstEid = aEid;
@@ -278,7 +278,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(amountLD / aOFT.decimalConversionRate(), aOFT.toSD(amountLD));
     }
 
-    function test_oft_debit() public {
+    function test_oft_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
         uint32 dstEid = aEid;
@@ -310,7 +310,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(aOFT.balanceOf(address(this)), 0);
     }
 
-    function test_oft_adapter_debit() public {
+    function test_oft_adapter_debit() public virtual {
         uint256 amountToSendLD = 1 ether;
         uint256 minAmountToCreditLD = 1 ether;
         uint32 dstEid = cEid;
