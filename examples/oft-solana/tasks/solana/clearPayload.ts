@@ -28,7 +28,7 @@ task('lz:oft:solana:clear', 'Clear a stored payload on Solana')
     .addParam('srcEid', 'The source EndpointId', undefined, types.eid)
     .addParam('nonce', 'The nonce of the payload', undefined, types.bigint)
     .addParam('sender', 'The source OApp address (hex)', undefined, types.string)
-    .addParam('dstEid', 'The destination EndpointId', undefined, types.eid)
+    .addParam('dstEid', 'The destination EndpointId (Solana chain)', undefined, types.eid)
     .addParam('receiver', 'The receiver address on the destination Solana chain (bytes58)', undefined, types.string)
     .addParam('guid', 'The GUID of the message (hex)', undefined, types.string)
     .addParam('payload', 'The message payload (hex)', undefined, types.string)
@@ -52,7 +52,7 @@ task('lz:oft:solana:clear', 'Clear a stored payload on Solana')
                 throw new Error('SOLANA_PRIVATE_KEY is not defined in the environment variables.')
             }
 
-            const { connection, umiWalletKeyPair } = await deriveConnection(srcEid)
+            const { connection, umiWalletKeyPair } = await deriveConnection(dstEid)
             const signer = toWeb3JsKeypair(umiWalletKeyPair)
             const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
             const tx = new web3.Transaction({
@@ -89,7 +89,7 @@ task('lz:oft:solana:clear', 'Clear a stored payload on Solana')
             tx.add(instruction)
             tx.recentBlockhash = blockhash
 
-            const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY!))
+            const keypair = Keypair.fromSecretKey(bs58.decode(process.env.SOLANA_PRIVATE_KEY))
             tx.sign(keypair)
 
             const signature = await sendAndConfirmTransaction(connection, tx, [keypair], { skipPreflight: true })
