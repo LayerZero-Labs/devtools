@@ -2,8 +2,8 @@
 pragma solidity ^0.8.22;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import {OFTAdapter} from "layerzerolabs/oapp/contracts/oft/OFTAdapter.sol";
-import {RateLimiter} from "layerzerolabs/oapp/contracts/oapp/utils/RateLimiter.sol";
+import {OFTAdapter} from "@layerzerolabs/oft-evm/contracts/OFTAdapter.sol";
+import {RateLimiter} from "./utils/RateLimiter.sol";
 
 contract MOVEOFTAdapter is OFTAdapter, RateLimiter {
     constructor(address _token, address _lzEndpoint, address _delegate, RateLimiter.RateLimitConfig[] memory _rateLimitConfig)
