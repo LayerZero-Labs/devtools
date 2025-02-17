@@ -67,9 +67,6 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
     uint256 private constant swapAmountIn = 1 ether;
     uint256 private constant swapAmountOut = 1 ether; // Predefined output for SwapRouterMock
 
-    // Events
-    event SwapExecuted(address indexed user, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
-
     /**
      * @notice Sets up the testing environment before each test.
      *
@@ -151,40 +148,49 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
         // ------------------------------
         uint24 fee = 3000; // Example fee tier
 
-        // Encode the compose message with (userA, bTokenOut, fee, receiver)
-        bytes memory composeMsg = abi.encode(userA, address(bTokenOut), fee, receiver);
+        // New slippage parameters.
+        uint256 swapAmountOutMinimum = 100; // Example minimum amount out
+        uint160 swapSqrtPriceLimitX96 = 0; // Example: no price limit (0)
 
-        // Encode the full message using OFTComposeMsgCodec
-        // Parameters:
-        // _nonce: 1 (unique identifier)
-        // _srcEid: aEid (source endpoint ID)
-        // _amountLD: swapAmountIn (amount to be swapped)
-        // _composeMsg: composeMsg (encoded compose message)
+        // Compose message now encodes:
+        // (tokenOut, fee, recipient, amountOutMinimum, sqrtPriceLimitX96)
+        bytes memory composeMsg = abi.encode(
+            address(bTokenOut),
+            fee,
+            receiver,
+            swapAmountOutMinimum,
+            swapSqrtPriceLimitX96
+        );
+
+        // The full message now prepends the source sender (userA) to the composed payload.
+        // Here, addressToBytes32(userA) converts the source sender's address to a bytes32 representation.
         bytes memory fullMessage = OFTComposeMsgCodec.encode(
-            1,
-            aEid,
-            swapAmountIn,
+            1, // _nonce: unique identifier
+            aEid, // _srcEid: source endpoint ID
+            swapAmountIn, // _amountLD: amount to be swapped
             abi.encodePacked(addressToBytes32(userA), composeMsg)
         );
 
         // ------------------------------
         // 2. Simulate Sending the Message
         // ------------------------------
-        // Prank as the authorized endpoint to call lzCompose
+        // Prank as the authorized endpoint to call lzCompose.
         vm.prank(address(endpoints[bEid]));
 
-        // Execute lzCompose with the encoded full message
+        // Execute lzCompose with the encoded full message.
         bComposer.lzCompose(
-            address(bOFT),
+            address(bOFT), // The originating OFT address.
             bytes32(0), // guid (unused in this test)
             fullMessage,
-            address(this), // executor
+            address(this), // executor (unused in this test)
             bytes("") // extraData (unused in this test)
         );
 
         // ------------------------------
         // 3. Verify SwapRouterMock Interactions
         // ------------------------------
+        // Verify that the SwapRouter was called with the correct parameters.
+        // Note: The mock should record the following parameters for inspection.
         assertEq(bSwapRouter.lastSender(), address(bComposer), "SwapRouter sender mismatch");
         assertEq(bSwapRouter.lastTokenIn(), address(bTokenIn), "TokenIn address mismatch");
         assertEq(bSwapRouter.lastTokenOut(), address(bTokenOut), "TokenOut address mismatch");
@@ -196,14 +202,14 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
         // ------------------------------
         // 4. Verify Token Balances After Swap
         // ------------------------------
-        // Verify that bComposer's tokenIn balance decreased by swapAmountIn
+        // Verify that bComposer's tokenIn balance decreased by swapAmountIn.
         assertEq(
             IERC20(bOFT.token()).balanceOf(address(bComposer)),
             initialBalance - swapAmountIn,
             "bComposer TokenIn balance incorrect"
         );
 
-        // Verify that the receiver's tokenOut balance increased by swapAmountOut
+        // Verify that the receiver's tokenOut balance increased by swapAmountOut.
         assertEq(bTokenOut.balanceOf(receiver), swapAmountOut, "Receiver TokenOut balance incorrect");
     }
 
@@ -235,7 +241,7 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
         vm.prank(address(endpoints[bEid]));
 
         // Expect the transaction to revert with "Unauthorized OFT"
-        vm.expectRevert("Unauthorized OFT");
+        vm.expectRevert(UniswapV3Composer.UnauthorizedOFT.selector);
 
         // Attempt to execute lzCompose with an unauthorized OFT address
         bComposer.lzCompose(
