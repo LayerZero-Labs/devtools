@@ -1,4 +1,4 @@
-# Setup and Deployment for EVM and MOVE-VM OFT Adapters
+# Setup and Deployment for EVM and Move-VM OFT Adapters
 
 ## EVM OFT Adapter Setup and Deployment
 
@@ -228,7 +228,7 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
+If you are wiring Solana to Move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
 
 ```json
 {
