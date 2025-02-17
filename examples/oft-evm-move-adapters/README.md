@@ -1,6 +1,6 @@
 # Setup and Deployment for EVM and MOVE-VM OFT Adapters
 
-### EVM OFT Adapter Setup and Deployment
+## EVM OFT Adapter Setup and Deployment
 
 - In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the OFTAdapter to:
   ```typescript
@@ -10,9 +10,9 @@
   }
   ```
 
-## Developing Contracts
+### Developing Contracts
 
-### Installing dependencies
+###$ Installing dependencies
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
 
@@ -20,7 +20,7 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 pnpm install
 ```
 
-### Compiling your contracts
+#### Compiling your contracts
 
 This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
 
@@ -44,7 +44,7 @@ Or adjust the `package.json` to for example remove `forge` build:
 + "compile": "hardhat compile"
 ```
 
-### Running tests
+#### Running tests
 
 Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
 
