@@ -28,7 +28,7 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.oftadapterfee")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant OFT_ADAPTER_FEE_STORAGE_LOCATION =
-        0xfa59b1dc51c6c32c20175ee9f2a15c109f5bc283585a682571fcd93bfcfd4d00; //@TODO: calculate and update
+        0x75ae803fc5bc34bf9750128bd6622421186811a8566aa9e660cbc56033db8c00;
 
     function _getOFTAdapterFeeStorage() internal pure returns (OFTAdapterFeeStorage storage $) {
         assembly {

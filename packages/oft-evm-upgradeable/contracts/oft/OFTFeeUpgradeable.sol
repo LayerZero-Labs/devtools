@@ -16,7 +16,7 @@ abstract contract OFTFeeUpgradeable is OFTUpgradeable, FeeUpgradeable {
 
     // keccak256(abi.encode(uint256(keccak256("layerzerov2.storage.oftfee")) - 1)) & ~bytes32(uint256(0xff))
     bytes32 private constant OFT_FEE_STORAGE_LOCATION =
-        0x4abebe5a7833807a903fad38d08b3addaf1d18bf2da978cb4ed490908875da00; // TODO: calculate and update
+        0x68f1d0d99488c60d21eadee2cca13b58661d56fbcb4e4464d6fc8def1b342200;
 
     function _getOFTFeeStorage() internal pure returns (OFTFeeStorage storage $) {
         assembly {
