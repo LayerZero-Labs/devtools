@@ -108,7 +108,7 @@ contract OFTTest is TestHelperOz5 {
         return address(new TransparentUpgradeableProxy(addr, proxyAdmin, _initializeArgs));
     }
 
-    function test_constructor() public {
+    function test_constructor() public view {
         assertEq(aOFT.owner(), address(this));
         assertEq(bOFT.owner(), address(this));
         assertEq(cOFTAdapter.owner(), address(this));
@@ -122,7 +122,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(cOFTAdapter.token(), address(cERC20Mock));
     }
 
-    function test_oftVersion() public {
+    function test_oftVersion() public view {
         (bytes4 interfaceId, ) = aOFT.oftVersion();
         bytes4 expectedId = 0x02e49c2c;
         assertEq(interfaceId, expectedId);
@@ -209,7 +209,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composer.extraData(), composerMsg_); // default to setting the extraData to the message as well to test
     }
 
-    function test_oft_compose_codec() public {
+    function test_oft_compose_codec() public view {
         uint64 nonce = 1;
         uint32 srcEid = 2;
         uint256 amountCreditLD = 3;
@@ -268,12 +268,12 @@ contract OFTTest is TestHelperOz5 {
         aOFT.debit(amountToSendLD, minAmountToCreditLD, dstEid);
     }
 
-    function test_toLD() public {
+    function test_toLD() public view {
         uint64 amountSD = 1000;
         assertEq(amountSD * aOFT.decimalConversionRate(), aOFT.toLD(uint64(amountSD)));
     }
 
-    function test_toSD() public {
+    function test_toSD() public view {
         uint256 amountLD = 1000000;
         assertEq(amountLD / aOFT.decimalConversionRate(), aOFT.toSD(amountLD));
     }
@@ -366,7 +366,7 @@ contract OFTTest is TestHelperOz5 {
         composeMsg = OFTMsgCodec.composeMsg(message);
     }
 
-    function test_oft_build_msg() public {
+    function test_oft_build_msg() public view {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -399,7 +399,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(composeMsg_, expectedComposeMsg);
     }
 
-    function test_oft_build_msg_no_compose_msg() public {
+    function test_oft_build_msg_no_compose_msg() public view {
         uint32 dstEid = bEid;
         bytes32 to = addressToBytes32(userA);
         uint256 amountToSendLD = 1.23456789 ether;
@@ -505,7 +505,7 @@ contract OFTTest is TestHelperOz5 {
         assertEq(combinedOptions, expectedOptions);
     }
 
-    function test_combine_options_no_enforced_options() public {
+    function test_combine_options_no_enforced_options() public view {
         uint32 eid = 1;
         uint16 msgType = 1;
 
