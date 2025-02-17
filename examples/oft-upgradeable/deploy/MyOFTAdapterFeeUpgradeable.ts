@@ -12,12 +12,6 @@ const deploy: DeployFunction = async (hre) => {
 
     const { address, abi } = getDeploymentAddressAndAbi(hre.network.name, 'EndpointV2')
     const endpointV2Deployment = new Contract(address, abi, signer)
-    try {
-        const proxy = await hre.ethers.getContract('MyOFTFeeUpgradeable')
-        console.log(`Proxy: ${proxy.address}`)
-    } catch (e) {
-        console.log(`Proxy not found`)
-    }
 
     await deploy(contractName, {
         from: signer.address,
