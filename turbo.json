@@ -42,7 +42,7 @@
     }
   },
   "globalDependencies": ["tsconfig.json"],
-  "globalEnv": ["NODE_ENV"],
+  "globalEnv": ["NODE_ENV", "SLACK_WEBHOOK_URL"],
   "globalPassThroughEnv": [
     "LZ_DEVTOOLS_ENABLE_DEPLOY_LOGGING",
     "LZ_DEVTOOLS_ENABLE_SOLANA_TESTS",
