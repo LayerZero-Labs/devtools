@@ -173,7 +173,11 @@ abstract contract OFTAltCore is IOFT, OAppAlt, OAppPreCrimeSimulator, OAppOption
         SendParam calldata _sendParam,
         MessagingFee calldata _fee,
         address _refundAddress
-    ) external payable virtual returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+    ) external payable virtual override returns (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) {
+        if (msg.value > 0) {
+            revert("OFTAltCore::send does not take msg.value. msg.value should be 0");
+        }
+
         return _send(_sendParam, _fee, _refundAddress);
     }
 
