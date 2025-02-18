@@ -1,1 +1,0 @@
-This `package.json` ensures that the `@layerzerolabs/io-devtools/swag` import is available even for older node versions and legacy module systems that don't respect the `exports` field in the root `package.json`

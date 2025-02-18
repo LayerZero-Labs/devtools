@@ -1,5 +1,0 @@
-{
-  "main": "../dist/swag/index.js",
-  "module": "../dist/swag/index.mjs",
-  "types": "../dist/swag/index.d.ts"
-}

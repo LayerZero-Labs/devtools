@@ -1,9 +1,0 @@
-{
-  "include": ["hardhat.config.ts"],
-  "compilerOptions": {
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "types": ["node"]
-  }
-}
