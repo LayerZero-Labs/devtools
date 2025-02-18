@@ -19,8 +19,12 @@ Create a `.env` file with the following variables:
 > **Important:** The INITIA_ACCOUNT_ADDRESS must be in the bech32 format starting with "init", for example: init19ck72hj3vt2ccsw78zwv7mtu4r0rjs9xzf3gc3
 
 ```bash
+# You don't need to set both of these values, just pick the one that you prefer and set that one
+EVM_MNEMONIC=
+EVM_PRIVATE_KEY=
+
+# All Initia values must be specified
 INITIA_ACCOUNT_ADDRESS=<your-initia-account-address>
-EVM_PRIVATE_KEY=<your-evm-private-key>
 INITIA_PRIVATE_KEY=<your-initia-private-key>
 INITIA_KEY_NAME=<your-initia-key-name>
 INITIA_REST_URL=<your-initia-rest-url>
