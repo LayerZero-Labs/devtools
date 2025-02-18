@@ -52,8 +52,7 @@ async function main() {
             await consoleLog(balance);
             //await postToSlack(balance);
         }
-        console.log('Waiting 10 minutes...');
-        await new Promise((resolve) => setTimeout(resolve, 600000)); // Wait 10 minutes
+        await new Promise((resolve) => setTimeout(resolve, 43200000)); // Wait 12 hours
     }
 }
 
