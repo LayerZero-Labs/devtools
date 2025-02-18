@@ -34,7 +34,7 @@ jobs:
 
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
+      image: ghcr.io/layerzero-labs/devtools-dev-base:dockerfile-default_rustup_1_75_0
 
     steps:
       - name: Checkout repo

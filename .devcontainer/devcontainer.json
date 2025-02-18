@@ -1,6 +1,6 @@
 {
   "name": "LayerZero Devtools",
-  "image": "ghcr.io/layerzero-labs/devtools-dev-base:main",
+  "image": "ghcr.io/layerzero-labs/devtools-dev-base:dockerfile-default_rustup_1_75_0",
   "mounts": ["type=volume,target=${containerWorkspaceFolder}/node_modules"],
   "runArgs": ["--env-file", ".env"],
   "features": {
