@@ -31,3 +31,9 @@
 [submodule "examples/oft-evm-move-adapters/deploy-eth/lib/openzeppelin-contracts"]
 	path = examples/oft-evm-move-adapters/deploy-eth/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "examples/oft-evm-move-adapters/deploy-eth/lib/devtools"]
+	path = examples/oft-evm-move-adapters/deploy-eth/lib/devtools
+	url = https://github.com/LayerZero-Labs/devtools
+[submodule "examples/oft-evm-move-adapters/deploy-eth/lib/layerzero-v2"]
+	path = examples/oft-evm-move-adapters/deploy-eth/lib/layerzero-v2
+	url = https://github.com/LayerZero-Labs/layerzero-v2
