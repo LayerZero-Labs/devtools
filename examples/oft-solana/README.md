@@ -224,7 +224,11 @@ pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> 
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
-:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains. Note that before attempting any cross-chain transfers, you must transfer the Mint Authority to the OFT Store address for `lz_receive` to work, as that is not handled in the script. You cannot use this option if your token's Mint Authority has been renounced.
+:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
+
+:warning: You cannot use this option if your token's Mint Authority has been renounced.
+
+:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
 ### Update [layerzero.config.ts](./layerzero.config.ts)
 
