@@ -23,12 +23,13 @@ Create a `.env` file with the following variables:
 EVM_MNEMONIC=
 EVM_PRIVATE_KEY=
 
-# All Initia values must be specified
+# All Initia values must be specified - testnet values can be found in the .env.example file
 INITIA_ACCOUNT_ADDRESS=<your-initia-account-address>
 INITIA_PRIVATE_KEY=<your-initia-private-key>
 INITIA_KEY_NAME=<your-initia-key-name>
 INITIA_REST_URL=<your-initia-rest-url>
 INITIA_RPC_URL=<your-initia-rpc-url>
+INITIA_CHAIN_ID=<your-initia-chain-id>
 ```
 
 Then run `source .env`.

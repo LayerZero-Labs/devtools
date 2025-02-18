@@ -45,11 +45,11 @@ async function deployMovementContracts(
             addressName,
             `-p=${process.cwd()}`,
             `--named-addresses=${namedAddresses}`,
-            `--node=${process.env.INITIA_RPC_URL}`,
+            `--node=${getInitiaRPCUrl()}`,
             `--from=${userAccountName}`,
             '--gas-prices=0.015uinit',
             '--gas-adjustment=1.4',
-            '--chain-id=initiation-2',
+            `--chain-id=${getInitiaChainId()}`,
             '--gas=auto',
             '--keyring-backend=test',
             '-y',
@@ -103,6 +103,20 @@ function getInitiaKeyName() {
         throw new Error('INITIA_KEY_NAME is not set.\n\nPlease set the INITIA_KEY_NAME environment variable.')
     }
     return process.env.INITIA_KEY_NAME
+}
+
+function getInitiaRPCUrl() {
+    if (!process.env.INITIA_RPC_URL) {
+        throw new Error('INITIA_RPC_URL is not set.\n\nPlease set the INITIA_RPC_URL environment variable.')
+    }
+    return process.env.INITIA_RPC_URL
+}
+
+function getInitiaChainId() {
+    if (!process.env.INITIA_CHAIN_ID) {
+        throw new Error('INITIA_CHAIN_ID is not set.\n\nPlease set the INITIA_CHAIN_ID environment variable.')
+    }
+    return process.env.INITIA_CHAIN_ID
 }
 
 async function createDeployment(deployedAddress: string, file_name: string, network: string, lzNetworkStage: string) {
