@@ -322,6 +322,11 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
             }
+            if (isMABA) {
+                console.log(
+                    `Please note that for MABA mode, you must carry out the change of Mint Authority before making any cross-chain transfers.`
+                )
+            }
             output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)
         }
     )
