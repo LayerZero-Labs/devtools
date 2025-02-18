@@ -67,17 +67,10 @@ Before running the wire command, first inside of move.layerzero.config.ts, set t
 ```ts
     contracts: [
         {
-            contract: bscContract,
+            contract: initiaContract,
             config: {
-                owner: 'YOUR_EVM_ACCOUNT_ADDRESS',
-                delegate: 'YOUR_EVM_ACCOUNT_ADDRESS',
-            },
-        },
-        {
-            contract: aptosContract,
-            config: {
-                delegate: 'YOUR_APTOS_ACCOUNT_ADDRESS',
-                owner: 'YOUR_APTOS_ACCOUNT_ADDRESS',
+                delegate: '<your-initia-account-address>',
+                owner: '<your-initia-account-address>',
             },
         },
     ],
@@ -95,10 +88,10 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 
 ## Wire
 
-> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
 For EVM:
-Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
+Ensure that in `move.layerzero.config.ts`, all of your evm contracts have the owner and delegate contract is specified.
 
 ```ts
     contracts: [
@@ -113,11 +106,11 @@ Ensure that in move.layerzero.config.ts, all of your evm contracts have the owne
     ]
 ```
 
-If you are wiring solana to move-vm, create a file in deployments/solana-mainnet/MyOFT.json (solana-testnet if you are using testnet) and add the following field:
+If you are wiring solana to move-vm, create a file in `deployments/solana-mainnet/MyOFT.json` (or `deployments/solana-testnet/MyOFT.json` if you are using testnet) and add the following field:
 
 ```json
 {
-    "address": <oftStore-Address-from-solana-deployment-folder>
+    "address": <oft-store-address-from-solana-deployment-folder>
 }
 ```
 
@@ -131,7 +124,7 @@ pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 
 Note: `--simulate <true>` and `--mnemonic-index <value>` are optional.
 `--mnemonic-index <value>` is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from `.env` is used. Otherwise, the mnemonic is used along with the index.
-`--only-calldata <true>` is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
+If `--only-calldata <true>` is specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
 To wire from Move-VM to EVM:
 
