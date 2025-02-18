@@ -324,7 +324,7 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
             }
             if (isMABA) {
                 console.log(
-                    `Please note that for MABA mode, you must carry out the change of Mint Authority before making any cross-chain transfers.`
+                    `Please note that for MABA mode, you must carry out the change of Mint Authority before making any cross-chain transfers. For more details: https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana#for-oft-mint-and-burn-adapter-maba`
                 )
             }
             output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)
