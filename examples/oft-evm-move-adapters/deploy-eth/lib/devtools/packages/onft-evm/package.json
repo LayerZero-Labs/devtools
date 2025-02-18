@@ -1,0 +1,65 @@
+{
+  "name": "@layerzerolabs/onft-evm",
+  "version": "0.2.1",
+  "description": "LayerZero Labs reference EVM OmniChain Non Fungible Token (ONFT) implementation",
+  "keywords": [
+    "LayerZero",
+    "ONFT",
+    "OmniChain",
+    "NonFungible",
+    "Token",
+    "EndpointV2",
+    "EVM"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LayerZero-Labs/devtools.git"
+  },
+  "license": "MIT",
+  "exports": {
+    "./package.json": "./package.json",
+    "./artifacts/*.json": {
+      "require": "./artifacts/*.json",
+      "imports": "./artifacts/*.json"
+    }
+  },
+  "files": [
+    "artifacts/IONFT721.sol/IONFT721.json",
+    "artifacts/ONFT721.sol/ONFT721.json",
+    "aftifacts/ONFT721Adapter.sol/ONFT721Adapter.json",
+    "artifacts/ONFT721Base.sol/ONFT721Base.json",
+    "artifacts/ONFT721Core.sol/ONFT721Core.json",
+    "artifacts/ONFT721MsgCodec.sol/ONFT721MsgCodec.json",
+    "artifacts/ONFTComposeMsgCodec.sol/ONFTComposeMsgCodec.json",
+    "contracts/**/*"
+  ],
+  "scripts": {
+    "clean": "rimraf .turbo cache out artifacts",
+    "compile": "$npm_execpath compile:forge",
+    "compile:forge": "forge build",
+    "test": "$npm_execpath test:forge",
+    "test:forge": "forge test"
+  },
+  "devDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@layerzerolabs/oapp-evm": "^0.3.0",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
+    "@layerzerolabs/toolbox-foundry": "~0.1.9",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2",
+    "rimraf": "^6.0.1"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

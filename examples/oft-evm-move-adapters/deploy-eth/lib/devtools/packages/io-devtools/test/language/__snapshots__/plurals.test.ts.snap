@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 0 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 1 1`] = `"cactus"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 2 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 3 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 4 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 5 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 11 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 12 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 21 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 100 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun with custom plural should work for 1234 1`] = `"cacti"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 0 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 1 1`] = `"cat"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 2 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 3 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 4 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 5 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 11 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 12 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 21 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 100 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeNoun without custom plural should work for 1234 1`] = `"cats"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 0 1`] = `"0th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 1 1`] = `"1st"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 2 1`] = `"2nd"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 3 1`] = `"3rd"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 4 1`] = `"4th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 5 1`] = `"5th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 11 1`] = `"11th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 12 1`] = `"12th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 21 1`] = `"21st"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 100 1`] = `"100th"`;
+
+exports[`language/plurals pluralizeOrdinal should work for 1234 1`] = `"1234th"`;

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`omnigraph/schema UIntBigIntSchema should mention the object path for undefined values 1`] = `
+"[
+  {
+    "code": "custom",
+    "message": "Invalid BigInt-like value",
+    "path": [
+      "value"
+    ]
+  }
+]"
+`;

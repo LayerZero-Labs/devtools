@@ -1,0 +1,7 @@
+*.exp
+*.log
+.eslintignore
+.prettierignore
+.netrc
+*ignore
+pnpm-lock.yaml

@@ -1,0 +1,32 @@
+# Docker
+Dockerfile
+docker-*.yaml
+
+# Git
+.git
+.gitignore
+
+# CI/CD files
+.changeset/*.md
+.github
+.husky
+.turbo
+.netrc
+.env
+.env*
+
+# Misc
+*ignore
+
+# Dependencies & deployments
+**/node_modules
+
+# Build files & cache
+**/deployments
+**/dist
+**/artifacts
+**/cache
+**/out
+
+# Metadata
+*.md

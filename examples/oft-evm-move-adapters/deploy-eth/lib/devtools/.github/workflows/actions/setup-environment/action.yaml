@@ -1,0 +1,10 @@
+name: Setup environment
+description: Setup node & package manager, checkout code
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v4
+      name: Install pnpm
+      with:
+        run_install: false
+

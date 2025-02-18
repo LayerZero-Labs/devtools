@@ -1,0 +1,385 @@
+{
+  "created": "2025-01-15T05:20:59.000Z",
+  "updated": "2025-01-15T05:20:59.000Z",
+  "tableName": "layerzero-chain_metadata",
+  "environment": "mainnet",
+  "blockExplorers": [
+    {
+      "url": "https://polygonscan.com"
+    }
+  ],
+  "deployments": [
+    {
+      "eid": "9",
+      "relayer": {
+        "address": "0xFe7C30860D01e28371D40434806F4A8fcDD3A098"
+      },
+      "chainKey": "polygon",
+      "stage": "mainnet",
+      "version": 0
+    },
+    {
+      "ultraLightNode": {
+        "address": "0x66A71Dcef29A0fFBDBE3c6a460a3B5BC225Cd675"
+      },
+      "eid": "109",
+      "relayer": {
+        "address": "0xFe7C30860D01e28371D40434806F4A8fcDD3A098"
+      },
+      "endpoint": {
+        "address": "0x3c2269811836af69497E5F486A85D7316753cf62"
+      },
+      "chainKey": "polygon",
+      "stage": "mainnet",
+      "relayerV2": {
+        "address": "0x75dC8e5F50C8221a82CA6aF64aF811caA983B65f"
+      },
+      "ultraLightNodeV2": {
+        "address": "0x4D73AdB72bC3DD368966edD0f0b2148401A178E2"
+      },
+      "version": 1,
+      "nonceContract": {
+        "address": "0x5B905fE05F81F3a8ad8B28C6E17779CFAbf76068"
+      }
+    },
+    {
+      "eid": "30109",
+      "chainKey": "polygon",
+      "endpointV2": {
+        "address": "0x1a44076050125825900e736c501f859c50fE728c"
+      },
+      "readLib1002": {
+        "address": "0xc214d690031d3f873365f94d381d6d50c35aa7fa"
+      },
+      "version": 2,
+      "stage": "mainnet",
+      "executor": {
+        "address": "0xCd3F213AD101472e1713C72B1697E727C803885b"
+      },
+      "deadDVN": {
+        "address": "0x43CFcc293CdF99F7D021F21FfD443f174AB0e843"
+      },
+      "sendUln302": {
+        "address": "0x6c26c61a97006888ea9E4FA36584c7df57Cd9dA3"
+      },
+      "lzExecutor": {
+        "address": "0xe25741bda30bb79a66ADf656E7f2D3f0C4fb3191"
+      },
+      "sendUln301": {
+        "address": "0x5727E81A40015961145330D91cC27b5E189fF3e1"
+      },
+      "receiveUln301": {
+        "address": "0x3823094993190Fbb3bFABfEC8365b8C18517566F"
+      },
+      "receiveUln302": {
+        "address": "0x1322871e4ab09Bc7f5717189434f97bBD9546e95"
+      }
+    }
+  ],
+  "dexContracts": {
+    "uniswapV3QuoterV2": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"
+  },
+  "dvns": {
+    "0x4d52f5bc932cf1a854381a85ad9ed79b8497c153": {
+      "version": 2,
+      "canonicalName": "Delegate",
+      "id": "delegate"
+    },
+    "0xbcefdadb8d24b1d36c26b522235012cd4cf162f6": {
+      "id": "nethermind",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "Nethermind"
+    },
+    "0x547bf6889b1095b7cc6e525a1f8e8fdb26134a38": {
+      "version": 2,
+      "canonicalName": "Republic",
+      "id": "republic-crypto"
+    },
+    "0x9eeee79f5dbc4d99354b5cb547c138af432f937b": {
+      "version": 2,
+      "canonicalName": "P2P",
+      "id": "p2p"
+    },
+    "0xa2d10677441230c4aed58030e4ea6ba7bfd80393": {
+      "version": 2,
+      "canonicalName": "Omnicat",
+      "id": "omnicat"
+    },
+    "0x150a58e9e6bf69cceb1dba5ae97c166dc8792539": {
+      "version": 1,
+      "canonicalName": "Chainlink",
+      "id": "ccip"
+    },
+    "0xf7ddee427507cdb6885e53caaaa1973b1fe29357": {
+      "version": 2,
+      "canonicalName": "Nodesguru",
+      "id": "nodes-guru"
+    },
+    "0x13feb7234ff60a97af04477d6421415766753ba3": {
+      "version": 2,
+      "canonicalName": "Canary",
+      "id": "canary"
+    },
+    "0xd56e4eab23cb81f43168f9f45211eb027b9ac7cc": {
+      "version": 2,
+      "canonicalName": "Google",
+      "id": "google-cloud"
+    },
+    "0x2ac038606fff3fb00317b8f0ccfb4081694acdd0": {
+      "version": 2,
+      "canonicalName": "Planetarium",
+      "id": "planetarium-labs"
+    },
+    "0xab6d3d37d8dc309e7d8086b2e85a953b84ee5fa9": {
+      "id": "animoca-blockdaemon",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "ABDB",
+      "deprecated": true
+    },
+    "0x31f748a368a893bdb5abb67ec95f232507601a73": {
+      "version": 2,
+      "canonicalName": "Nethermind",
+      "id": "nethermind"
+    },
+    "0x66d771b8f938ccb82a1a9cb7a93671cb92016ab0": {
+      "id": "bcw",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "BCW"
+    },
+    "0xe014fe8c4d5c23edb7ac4011f226e869ac7ef5cc": {
+      "version": 1,
+      "canonicalName": "Polyhedra",
+      "id": "polyhedra-network"
+    },
+    "0x1e4ce74ccf5498b19900649d9196e64bab592451": {
+      "version": 2,
+      "canonicalName": "Superform",
+      "id": "superform"
+    },
+    "0x047d9dbe4fc6b5c916f37237f547f9f42809935a": {
+      "version": 2,
+      "canonicalName": "Gitcoin",
+      "id": "gitcoin"
+    },
+    "0xa6f5ddbf0bd4d03334523465439d301080574742": {
+      "version": 2,
+      "canonicalName": "ABDB",
+      "id": "animoca-blockdaemon"
+    },
+    "0x25e0e650a78e6304a3983fc4b7ffc6544b1beea6": {
+      "version": 2,
+      "canonicalName": "Horizen",
+      "id": "horizen-labs"
+    },
+    "0xbabbb709b3cefe563f2ab14898a53301686d48b9": {
+      "id": "altlayer",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "AltLayer"
+    },
+    "0xcd8ea69bbca0a2bb221aed59fa2704f01fc76a9f": {
+      "id": "zenrock",
+      "version": 2,
+      "canonicalName": "Zenrock",
+      "deprecated": true
+    },
+    "0xc79f0b1bcb7cdae9f9ba547dcfc57cbfcd2993a5": {
+      "version": 2,
+      "canonicalName": "Stargate",
+      "id": "stargate"
+    },
+    "0x247624e2143504730aec22912ed41f092498bef2": {
+      "version": 2,
+      "canonicalName": "BWare",
+      "id": "bware-labs"
+    },
+    "0x23de2fe932d9043291f870324b74f820e11dc81a": {
+      "version": 2,
+      "canonicalName": "LayerZero Labs",
+      "id": "layerzero-labs"
+    },
+    "0xcd19d26710cacf8241583769f353ea7395159007": {
+      "version": 2,
+      "canonicalName": "Stakingcabin",
+      "id": "stakingcabin"
+    },
+    "0xa70c51c38d5a9990f3113a403d74eba01fce4ccb": {
+      "id": "layerzero-labs",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "LayerZero Labs"
+    },
+    "0x8ddf05f9a5c488b4973897e278b58895bf87cb24": {
+      "version": 2,
+      "canonicalName": "Polyhedra",
+      "id": "polyhedra-network"
+    },
+    "0xc30291521305bc76115de7bca8034ea7147abe36": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo"
+    },
+    "0x8fc629aa400d4d9c0b118f2685a49316552abf27": {
+      "version": 2,
+      "canonicalName": "Superduper",
+      "id": "portal"
+    },
+    "0x53bdce6dccf7505a55813022f53c43fabfef7b3a": {
+      "id": "stakingcabin",
+      "version": 2,
+      "canonicalName": "Stakingcabin",
+      "deprecated": true
+    },
+    "0x7decc6df3af9cfc275e25d2f9703ecf7ad800d5d": {
+      "version": 2,
+      "canonicalName": "Paxos",
+      "id": "paxos"
+    },
+    "0x2afa3787cd95fee5d5753cd717ef228eb259f4ea": {
+      "version": 2,
+      "canonicalName": "Restake",
+      "id": "restake"
+    },
+    "0xa75abcc0fab6ae09c8fd808bec7be7e88fe31d6b": {
+      "version": 2,
+      "canonicalName": "POPS",
+      "id": "p-ops-team"
+    },
+    "0x06b85533967179ed5bc9c754b84ae7d02f7ed830": {
+      "version": 2,
+      "canonicalName": "Omnix",
+      "id": "omni-x"
+    },
+    "0xabc9b1819cc4d9846550f928b985993cf6240439": {
+      "version": 2,
+      "canonicalName": "Stablelab",
+      "id": "stablelab"
+    },
+    "0xbd40c9047980500c46b8aed4462e2f889299febe": {
+      "version": 2,
+      "canonicalName": "Blockhunters",
+      "id": "blockhunters"
+    },
+    "0x43cfcc293cdf99f7d021f21ffd443f174ab0e843": {
+      "id": "lz-dead-dvn",
+      "version": 2,
+      "canonicalName": "LZDeadDVN",
+      "deprecated": true
+    },
+    "0x54dd79f5ce72b51fcbbcb170dd01e32034323565": {
+      "version": 2,
+      "canonicalName": "Shrapnel",
+      "id": "mercury"
+    },
+    "0xf60c89799c85d8fab79519f7666dcde2a7c97cca": {
+      "id": "nocturnal-labs",
+      "lzReadCompatible": true,
+      "version": 2,
+      "canonicalName": "Nocturnal"
+    },
+    "0x5a54fe5234e811466d5366846283323c954310b2": {
+      "version": 1,
+      "canonicalName": "TSS",
+      "id": "tss"
+    },
+    "0x1bab20e7fdc79257729cb596bef85db76c44915e": {
+      "version": 2,
+      "canonicalName": "MIM",
+      "id": "mim"
+    },
+    "0xd410ddb726991f372b69a05b006d2ae5a8cedbd6": {
+      "version": 2,
+      "canonicalName": "BCW",
+      "id": "bcw"
+    },
+    "0xf0809f6e760a5452ee567975eda7a28da4a83d38": {
+      "version": 2,
+      "canonicalName": "01node",
+      "id": "01node"
+    },
+    "0xd1b5493e712081a6fbab73116405590046668f6b": {
+      "version": 2,
+      "canonicalName": "Luganodes",
+      "id": "luganodes"
+    },
+    "0xc6d46f63578635e4a7140cdf4d0eea0fd7bb50ec": {
+      "version": 2,
+      "canonicalName": "Switchboard",
+      "id": "switchboard"
+    },
+    "0x02152f4624596602dcbb8b8ead2988ad44edc865": {
+      "version": 2,
+      "canonicalName": "Bitgo",
+      "id": "bitgo"
+    },
+    "0x2cabf8f2c0aae35a771a1c19487684e94388b03a": {
+      "version": 2,
+      "canonicalName": "Flowdesk",
+      "id": "flowdesk"
+    }
+  },
+  "rpcs": [
+    {
+      "weight": 1000000,
+      "url": "https://polygon.drpc.org"
+    },
+    {
+      "weight": 0,
+      "url": "https://polygon-pokt.nodies.app"
+    },
+    {
+      "weight": 1000000,
+      "url": "https://matic-mainnet.chainstacklabs.com"
+    },
+    {
+      "url": "https://polygon-mainnet.infura.io/v3/${INFURA_API_KEY}"
+    },
+    {
+      "weight": 1000000,
+      "url": "https://polygon-rpc.com"
+    },
+    {
+      "weight": 1,
+      "url": "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+    },
+    {
+      "weight": 100,
+      "url": "https://polygon-mainnet.g.alchemy.com/v2/me6Q04fTd2kTT74BUYAp82d_3KL-ObCw"
+    },
+    {
+      "weight": 100,
+      "url": "https://polygon-mainnet.g.alchemy.com/v2/q3f-QpPeM_g7rL3G21Cr9tFeuYAquyYl"
+    },
+    {
+      "weight": 1000,
+      "url": "https://polygon.llamarpc.com/rpc/${LLAMANODES_API_KEY}"
+    },
+    {
+      "weight": 100,
+      "url": "https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}"
+    }
+  ],
+  "chainDetails": {
+    "chainKey": "polygon",
+    "nativeChainId": 137,
+    "chainLayer": "L2",
+    "nativeCurrency": {
+      "name": "MATIC",
+      "symbol": "MATIC",
+      "cgId": "matic-network",
+      "cmcId": 3890,
+      "decimals": 18
+    },
+    "cgNetworkId": "polygon_pos",
+    "name": "Polygon",
+    "chainType": "evm",
+    "shortName": "Polygon"
+  },
+  "addressToOApp": {},
+  "chainName": "polygon",
+  "tokens": {},
+  "chainKey": "polygon"
+}

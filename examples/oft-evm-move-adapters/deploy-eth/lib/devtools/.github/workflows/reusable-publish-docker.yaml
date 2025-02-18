@@ -1,0 +1,422 @@
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
+#
+#          Reusable workflow that publishes base development docker images
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
+name: Build base development images
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  #
+  # Build the base image and push it as digests
+  #
+  build-base:
+    name: Build base image
+    runs-on: ${{ matrix.runner }}
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-base
+          # The target stage of the Dockerfile
+          target: base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: base
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+
+  #
+  # Build the Aptos node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
+  build-node-aptos:
+    name: Build Aptos node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-aptos-local-testnet
+          # The target stage of the Dockerfile
+          target: node-aptos-local-testnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-aptos-local-testnet
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+
+  #
+  # Build the EVM node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
+  build-node-evm:
+    name: Build EVM node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-evm-hardhat
+          # The target stage of the Dockerfile
+          target: node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-evm-hardhat
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Build the Solana node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
+  build-node-solana:
+    name: Build Solana node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-solana-test-validator
+          # The target stage of the Dockerfile
+          target: node-solana-test-validator
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-solana-test-validator
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Build the TON node image and push it as digests
+  #
+  # We build the node images after we're done with the base so that we can use the docker layer cache
+  # instead of rebuilding the whole thing from scratch
+  #
+  build-node-ton:
+    name: Build TON node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-ton-my-local-ton
+          # The target stage of the Dockerfile
+          target: node-ton-my-local-ton
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-ton-my-local-ton
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the base image digests and push them to GHCR
+  #
+  push-base:
+    name: Push base image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-base
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: base
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the Aptos node image digests and push them to GHCR
+  #
+  push-node-aptos:
+    name: Push Aptos node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-node-aptos
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-aptos-local-testnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-aptos-local-testnet
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the EVM node image digests and push them to GHCR
+  #
+  push-node-evm:
+    name: Push EVM node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-node-evm
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-evm-hardhat
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-evm-hardhat
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the Solana node image digests and push them to GHCR
+  #
+  push-node-solana:
+    name: Push Solana node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-node-solana
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-solana-test-validator
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-solana-test-validator
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  #
+  # Collect the TON node image digests and push them to GHCR
+  #
+  push-node-ton:
+    name: Push TON node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-node-ton
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-ton-my-local-ton
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-ton-my-local-ton
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}

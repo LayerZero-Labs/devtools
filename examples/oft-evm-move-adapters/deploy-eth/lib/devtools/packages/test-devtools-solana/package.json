@@ -1,0 +1,49 @@
+{
+  "name": "@layerzerolabs/test-devtools-solana",
+  "version": "0.0.4",
+  "description": "Helpers for testing LayerZero Solana packages",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/test-devtools-solana"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup --clean",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@solana/web3.js": "~1.95.8",
+    "bs58": "~6.0.0",
+    "fast-check": "^3.15.1",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": "^1.95.8",
+    "fast-check": "^3.14.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

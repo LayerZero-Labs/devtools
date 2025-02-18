@@ -1,0 +1,71 @@
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#           Reusable services for docker compose
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+
+services:
+  # Service that contains the whole project
+  #
+  # It requires the PACKAGE argument that specifies
+  # the target package it should build (e.g. @layerzerolabs/utils-evm-hardhat)
+  project:
+    build:
+      context: .
+      target: development
+      args:
+        # We'll provide a way to override the base image
+        # build argument using an environment variable
+        #
+        # This will allow Ci environments to override the base image easily
+        BASE_IMAGE: ${DEVTOOLS_BASE_IMAGE:-base}
+    # We'll provide a single testing MNEMONIC for the project so that the test EVM nodes
+    # account are in sync with the hardhat accounts
+    environment:
+      - MNEMONIC=${MNEMONIC}
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"
+
+  # Aptos node for testing purposes
+  aptos-node:
+    build:
+      dockerfile: Dockerfile
+      target: node-aptos
+      args:
+        APTOS_NODE_IMAGE: ${DEVTOOLS_APTOS_NODE_IMAGE:-node-aptos-local-testnet}
+
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"
+
+  # EVM node for testing purposes
+  evm-node:
+    extends:
+      service: project
+    build:
+      target: node-evm
+      args:
+        EVM_NODE_IMAGE: ${DEVTOOLS_EVM_NODE_IMAGE:-node-evm-hardhat}
+
+  # TON node for testing purposes
+  ton-node:
+    build:
+      dockerfile: Dockerfile
+      target: node-ton
+      args:
+        TON_NODE_IMAGE: ${DEVTOOLS_TON_NODE_IMAGE:-node-ton-my-local-ton}
+
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        compress: "false"

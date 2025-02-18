@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stdio/printer printJson should handle bigints 1`] = `
+"{
+	"bigint": "1684996666696914987166688442938726917102321526408785780068975640575"
+}"
+`;
+
+exports[`stdio/printer printRecord should return a list of items with indices for an array 1`] = `
+"┌───┬──────────────────┐
+│ 0 │ something        │
+├───┼──────────────────┤
+│ 1 │ 0                │
+├───┼──────────────────┤
+│ 2 │ false            │
+├───┼──────────────────┤
+│ 3 │ 1                │
+├───┼──────────────────┤
+│ 4 │ null             │
+├───┼──────────────────┤
+│ 5 │ undefined        │
+├───┼──────────────────┤
+│ 6 │ Symbol(oh hello) │
+├───┼──────────────────┤
+│ 7 │ ()=>{}           │
+└───┴──────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return a list of items with indices for an object 1`] = `
+"┌───────────┬──────────────────┐
+│ string    │ something        │
+├───────────┼──────────────────┤
+│ number    │ 0                │
+├───────────┼──────────────────┤
+│ boolean   │ false            │
+├───────────┼──────────────────┤
+│ bigint    │ 1                │
+├───────────┼──────────────────┤
+│ null      │ null             │
+├───────────┼──────────────────┤
+│ undefined │ undefined        │
+├───────────┼──────────────────┤
+│ symbol    │ Symbol(oh hello) │
+├───────────┼──────────────────┤
+│ function  │ ()=>{}           │
+└───────────┴──────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return a list of items with indices with a title for an array 1`] = `
+"┌──────────────────────┐
+│ My items             │
+├───┬──────────────────┤
+│ 0 │ something        │
+├───┼──────────────────┤
+│ 1 │ 0                │
+├───┼──────────────────┤
+│ 2 │ false            │
+├───┼──────────────────┤
+│ 3 │ 1                │
+├───┼──────────────────┤
+│ 4 │ null             │
+├───┼──────────────────┤
+│ 5 │ undefined        │
+├───┼──────────────────┤
+│ 6 │ Symbol(oh hello) │
+├───┼──────────────────┤
+│ 7 │ ()=>{}           │
+└───┴──────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return a list of items with indices with a title for an object 1`] = `
+"┌──────────────────────────────┐
+│ My items                     │
+├───────────┬──────────────────┤
+│ string    │ something        │
+├───────────┼──────────────────┤
+│ number    │ 0                │
+├───────────┼──────────────────┤
+│ boolean   │ false            │
+├───────────┼──────────────────┤
+│ bigint    │ 1                │
+├───────────┼──────────────────┤
+│ null      │ null             │
+├───────────┼──────────────────┤
+│ undefined │ undefined        │
+├───────────┼──────────────────┤
+│ symbol    │ Symbol(oh hello) │
+├───────────┼──────────────────┤
+│ function  │ ()=>{}           │
+└───────────┴──────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return a nested list for a nested object 1`] = `
+"┌──────────────┬──────────────────────────────────┐
+│ string       │ something                        │
+├──────────────┼──────────────────────────────────┤
+│ number       │ 0                                │
+├──────────────┼──────────────────────────────────┤
+│ boolean      │ false                            │
+├──────────────┼──────────────────────────────────┤
+│ bigint       │ 1                                │
+├──────────────┼──────────────────────────────────┤
+│ null         │ null                             │
+├──────────────┼──────────────────────────────────┤
+│ undefined    │ undefined                        │
+├──────────────┼──────────────────────────────────┤
+│ symbol       │ Symbol(oh hello)                 │
+├──────────────┼──────────────────────────────────┤
+│ function     │ ()=>{}                           │
+├──────────────┼──────────────────────────────────┤
+│ nestedArray  │ ┌───┬──────────────────┐         │
+│              │ │ 0 │ something        │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 1 │ 0                │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 2 │ false            │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 3 │ 1                │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 4 │ null             │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 5 │ undefined        │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 6 │ Symbol(oh hello) │         │
+│              │ ├───┼──────────────────┤         │
+│              │ │ 7 │ ()=>{}           │         │
+│              │ └───┴──────────────────┘         │
+│              │                                  │
+├──────────────┼──────────────────────────────────┤
+│ nestedObject │ ┌───────────┬──────────────────┐ │
+│              │ │ string    │ something        │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ number    │ 0                │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ boolean   │ false            │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ bigint    │ 1                │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ null      │ null             │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ undefined │ undefined        │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ symbol    │ Symbol(oh hello) │ │
+│              │ ├───────────┼──────────────────┤ │
+│              │ │ function  │ ()=>{}           │ │
+│              │ └───────────┴──────────────────┘ │
+│              │                                  │
+└──────────────┴──────────────────────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return a nested list for a nested object in array 1`] = `
+"┌───┬──────────────────────────────────┐
+│ 0 │ something                        │
+├───┼──────────────────────────────────┤
+│ 1 │ 0                                │
+├───┼──────────────────────────────────┤
+│ 2 │ false                            │
+├───┼──────────────────────────────────┤
+│ 3 │ 1                                │
+├───┼──────────────────────────────────┤
+│ 4 │ null                             │
+├───┼──────────────────────────────────┤
+│ 5 │ undefined                        │
+├───┼──────────────────────────────────┤
+│ 6 │ Symbol(oh hello)                 │
+├───┼──────────────────────────────────┤
+│ 7 │ ()=>{}                           │
+├───┼──────────────────────────────────┤
+│ 8 │ ┌───┬──────────────────┐         │
+│   │ │ 0 │ something        │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 1 │ 0                │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 2 │ false            │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 3 │ 1                │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 4 │ null             │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 5 │ undefined        │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 6 │ Symbol(oh hello) │         │
+│   │ ├───┼──────────────────┤         │
+│   │ │ 7 │ ()=>{}           │         │
+│   │ └───┴──────────────────┘         │
+│   │                                  │
+├───┼──────────────────────────────────┤
+│ 9 │ ┌───────────┬──────────────────┐ │
+│   │ │ string    │ something        │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ number    │ 0                │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ boolean   │ false            │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ bigint    │ 1                │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ null      │ null             │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ undefined │ undefined        │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ symbol    │ Symbol(oh hello) │ │
+│   │ ├───────────┼──────────────────┤ │
+│   │ │ function  │ ()=>{}           │ │
+│   │ └───────────┴──────────────────┘ │
+│   │                                  │
+└───┴──────────────────────────────────┘
+"
+`;
+
+exports[`stdio/printer printRecord should return an empty string for an empty array 1`] = `""`;
+
+exports[`stdio/printer printZodErrors should work for arrays 1`] = `"Expected array, received string"`;
+
+exports[`stdio/printer printZodErrors should work for arrays 2`] = `"Expected array, received date"`;
+
+exports[`stdio/printer printZodErrors should work for arrays 3`] = `"Expected array, received object"`;
+
+exports[`stdio/printer printZodErrors should work for arrays 4`] = `"Expected array, received object"`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 1`] = `"Expected object, received string"`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 2`] = `
+"Property 'a': Expected array, received string
+Property 'b': Required"
+`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 3`] = `"Property 'b': Expected object, received number"`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 4`] = `
+"Property 'a.0': Expected object, received string
+Property 'b': Expected object, received number"
+`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 5`] = `
+"Property 'a.0.c': Expected number, received string
+Property 'b': Expected object, received number"
+`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 6`] = `
+"Property 'a.0': Expected object, received string
+Property 'b': Expected object, received number"
+`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 7`] = `
+"Property 'a.0.c': Expected number, received array
+Property 'b.c': Expected number, received boolean"
+`;
+
+exports[`stdio/printer printZodErrors should work for nested objects 8`] = `
+"Property 'a': Required
+Property 'b': Required"
+`;
+
+exports[`stdio/printer printZodErrors should work for primitives 1`] = `"Expected number, received string"`;
+
+exports[`stdio/printer printZodErrors should work for primitives 2`] = `"Expected string, received object"`;
+
+exports[`stdio/printer printZodErrors should work for primitives 3`] = `"Expected bigint, received array"`;
+
+exports[`stdio/printer printZodErrors should work for primitives 4`] = `"Expected boolean, received array"`;
+
+exports[`stdio/printer printZodErrors should work for simple objects 1`] = `"Expected object, received string"`;
+
+exports[`stdio/printer printZodErrors should work for simple objects 2`] = `"Property 'a': Expected number, received string"`;
+
+exports[`stdio/printer printZodErrors should work for simple objects 3`] = `"Property 'a': Expected number, received array"`;
+
+exports[`stdio/printer printZodErrors should work for simple objects 4`] = `"Property 'a': Required"`;

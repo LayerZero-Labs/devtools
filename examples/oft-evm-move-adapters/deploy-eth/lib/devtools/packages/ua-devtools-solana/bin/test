@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -z "${LZ_DEVTOOLS_ENABLE_SOLANA_TESTS}" ]; then
+    echo 'Solana tests can be enabled by setting LZ_DEVTOOLS_ENABLE_SOLANA_TESTS environment variable to a non-empty value'
+else
+    jest --ci --pass-with-no-tests $@
+fi

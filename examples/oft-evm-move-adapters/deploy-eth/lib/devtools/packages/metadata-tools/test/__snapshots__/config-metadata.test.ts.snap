@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`config-metadata translatePathwayToConfig should be able to translate a pathway to a config 1`] = `
+[
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "0x819F0FAF2cb1Fba15b9cB24c9A2BDaDb0f895daf",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "0xa7BFA9D51032F82D649A501B6a1f922FC2f7d4e3",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNs": [
+            "0x9f0e79aeb198750f963b6f30b99d87c6ee5a0467",
+          ],
+        },
+      },
+      "sendLibrary": "0x69BF5f48d2072DfeBc670A1D19dff91D0F4E8170",
+    },
+    "from": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+    "to": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+  },
+  {
+    "config": {
+      "enforcedOptions": undefined,
+      "receiveConfig": {
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNs": [
+            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+          ],
+        },
+      },
+      "receiveLibraryConfig": {
+        "gracePeriod": 0n,
+        "receiveLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+      },
+      "sendConfig": {
+        "executorConfig": {
+          "executor": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+          "maxMessageSize": 10000,
+        },
+        "ulnConfig": {
+          "confirmations": 1n,
+          "optionalDVNThreshold": 0,
+          "optionalDVNs": [],
+          "requiredDVNs": [
+            "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb",
+          ],
+        },
+      },
+      "sendLibrary": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH",
+    },
+    "from": {
+      "address": "HBTWw2VKNLuDBjg9e5dArxo5axJRX8csCEBcCo3CFdAy",
+      "eid": 40168,
+    },
+    "to": {
+      "contractName": "MyOFT",
+      "eid": 40106,
+    },
+  },
+]
+`;

@@ -1,0 +1,57 @@
+{
+  "name": "@layerzerolabs/metadata-tools",
+  "version": "0.3.1",
+  "description": "LayerZero metadata API tools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/metadata-tools"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "$npm_execpath tsc --noEmit",
+    "build": "$npm_execpath tsup",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "test": "$npm_execpath test:jest",
+    "test:jest": "jest"
+  },
+  "devDependencies": {
+    "@layerzerolabs/devtools-evm-hardhat": "~2.0.6",
+    "@layerzerolabs/ua-devtools": "~3.0.4",
+    "@swc/core": "^1.4.0",
+    "@swc/jest": "^0.2.36",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/devtools-evm-hardhat": "~2.0.6",
+    "@layerzerolabs/ua-devtools": "~3.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

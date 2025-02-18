@@ -1,0 +1,27 @@
+{
+  "name": "@layerzerolabs/test-evm-node",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EVM node for E2E testing purposes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "tests/test-evm-node"
+  },
+  "license": "MIT",
+  "files": [
+    "./hardhat.config.ts",
+    "./tsconfig.json"
+  ],
+  "scripts": {
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "start": "$npm_execpath hardhat node --hostname 0.0.0.0"
+  },
+  "dependencies": {
+    "hardhat": "^2.22.10",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "typescript": "^5.4.4"
+  }
+}

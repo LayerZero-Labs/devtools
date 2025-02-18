@@ -1,7 +1,7 @@
 {
   "exclude": ["node_modules"],
   "include": [
-    "deploy",
+    "deploy-eth",
     "tasks",
     "test",
     "hardhat.config.ts",

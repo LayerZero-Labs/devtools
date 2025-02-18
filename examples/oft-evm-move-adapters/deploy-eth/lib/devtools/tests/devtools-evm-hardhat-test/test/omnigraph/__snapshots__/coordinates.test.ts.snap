@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`omnigraph/coordinates createContractFactory should have all contract methods for proxy deployments 1`] = `
+{
+  "admin": [Function],
+  "admin()": [Function],
+  "contractMethod": [Function],
+  "contractMethod()": [Function],
+  "implementation": [Function],
+  "implementation()": [Function],
+  "initialize": [Function],
+  "initialize()": [Function],
+  "upgradeTo": [Function],
+  "upgradeTo(address)": [Function],
+  "upgradeToAndCall": [Function],
+  "upgradeToAndCall(address,bytes)": [Function],
+}
+`;

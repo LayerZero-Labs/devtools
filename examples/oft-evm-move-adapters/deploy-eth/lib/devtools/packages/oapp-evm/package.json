@@ -1,0 +1,57 @@
+{
+  "name": "@layerzerolabs/oapp-evm",
+  "version": "0.3.0",
+  "description": "LayerZero Labs reference EVM OmniChain Application (OApp) implementation",
+  "keywords": [
+    "LayerZero",
+    "OmniChain",
+    "EndpointV2",
+    "EVM",
+    "OApp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/oapp-evm"
+  },
+  "license": "MIT",
+  "exports": {
+    "./package.json": "./package.json",
+    "./artifacts/*.json": {
+      "require": "./artifacts/*.json",
+      "imports": "./artifacts/*.json"
+    }
+  },
+  "files": [
+    "artifacts/**/*",
+    "contracts/**/*",
+    "test/**/*"
+  ],
+  "scripts": {
+    "clean": "rm -rf .turbo cache artifacts",
+    "compile": "forge build",
+    "test": "forge test"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.0",
+    "@layerzerolabs/toolbox-foundry": "^0.1.9",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts-upgradeable": "^5.0.2"
+  },
+  "peerDependencies": {
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@openzeppelin/contracts": "^4.8.1 || ^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^4.8.1 || ^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

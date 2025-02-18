@@ -1,0 +1,66 @@
+{
+  "name": "@layerzerolabs/test-setup-devtools-evm-hardhat",
+  "version": "6.0.4",
+  "private": true,
+  "description": "Test setup utilities for hardhat E2E tests",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "tests/test-setup-devtools-evm-hardhat"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "$npm_execpath tsup",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
+  },
+  "devDependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/devtools-evm-hardhat": "~2.0.6",
+    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.5",
+    "@layerzerolabs/ua-devtools": "~3.0.4",
+    "@layerzerolabs/ua-devtools-evm": "~5.0.5",
+    "@types/jest": "^29.5.12",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.10",
+    "hardhat-deploy": "^0.12.1",
+    "ts-node": "^10.9.2",
+    "tslib": "~2.6.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "peerDependencies": {
+    "@ethersproject/providers": "^5.7.2",
+    "@layerzerolabs/devtools": "~0.4.5",
+    "@layerzerolabs/devtools-evm": "~1.0.4",
+    "@layerzerolabs/devtools-evm-hardhat": "~2.0.6",
+    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/protocol-devtools": "~1.1.4",
+    "@layerzerolabs/protocol-devtools-evm": "~3.0.5",
+    "@layerzerolabs/ua-devtools": "~3.0.4",
+    "@layerzerolabs/ua-devtools-evm": "~5.0.5",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.22.10",
+    "hardhat-deploy": "^0.12.1"
+  }
+}

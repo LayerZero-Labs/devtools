@@ -1,0 +1,1 @@
+This `package.json` ensures that the `@layerzerolabs/devtools-evm-hardhat/type-extensions` import is available even for older node versions and legacy module systems that don't respect the `exports` field in the root `package.json`

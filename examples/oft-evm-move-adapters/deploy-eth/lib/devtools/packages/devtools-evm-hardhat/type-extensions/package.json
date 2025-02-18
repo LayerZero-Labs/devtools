@@ -1,0 +1,5 @@
+{
+  "main": "../dist/type-extensions.js",
+  "module": "../dist/type-extensions.mjs",
+  "types": "../dist/type-extensions.d.ts"
+}

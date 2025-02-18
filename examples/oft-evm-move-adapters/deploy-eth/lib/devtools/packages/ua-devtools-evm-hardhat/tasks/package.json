@@ -1,0 +1,5 @@
+{
+  "main": "../dist/tasks/index.js",
+  "module": "../dist/tasks/index.mjs",
+  "types": "../dist/tasks/index.d.ts"
+}

@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`oft/sdk getEnforcedOptions should return an a hex string if we are asking for options that have been set 1`] = `
+_Options {
+  "workerOptions": [
+    {
+      "options": [
+        {
+          "params": "0x0000000000000000000000000000fde8",
+          "type": 1,
+        },
+      ],
+      "workerId": 1,
+    },
+  ],
+}
+`;
+
+exports[`oft/sdk getEnforcedOptions should return an a hex string if we are asking for options that have been set 2`] = `
+_Options {
+  "workerOptions": [
+    {
+      "options": [
+        {
+          "params": "0x0000000000000000000000000000fde8",
+          "type": 1,
+        },
+        {
+          "params": "0x00000000000000000000000000000000c350",
+          "type": 3,
+        },
+      ],
+      "workerId": 1,
+    },
+  ],
+}
+`;
+
+exports[`oft/sdk getEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC @ SOLANA_V2_MAINNET]: Invalid msgType received: 3. Expected one of 1 (send), 2 (send and call)]`;
+
+exports[`oft/sdk setEnforcedOptions should throw if we are trying to get an option for invalid msgType 1`] = `[AssertionError: Solana program @ [8aFeCEhGLwbWHWiiezLAKanfD5Cn3BW3nP6PZ54K9LYC @ SOLANA_V2_MAINNET]: Invalid msgType received: 7. Expected one of 1 (send), 2 (send and call)]`;

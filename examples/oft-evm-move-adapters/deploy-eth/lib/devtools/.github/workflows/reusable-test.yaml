@@ -1,0 +1,198 @@
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
+#
+#        Reusable workflow that runs the whole test suite, linter and build
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-  .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-'   `-`-'   `-`-'
+name: Vape Tests
+
+on:
+  workflow_call:
+
+# We'll default the NPM_TOKEN to an empty value since we use it
+# in .npmrc file and if undefined, the node setup would fail
+env:
+  NPM_TOKEN: ""
+
+jobs:
+  build:
+    name: Build & Lint
+    runs-on: ${{ matrix.runner }}
+
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+    
+    # We'll run the job on the prebuilt base image
+    container:
+      image: ghcr.io/layerzero-labs/devtools-dev-base:main
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Install dependencies
+        uses: ./.github/workflows/actions/install-dependencies
+
+      - name: Setup build cache
+        uses: ./.github/workflows/actions/setup-build-cache
+
+      - name: Lint
+        run: pnpm lint
+
+      # We'll run the build in series to avoid race conditions
+      # when compiling hardhat projects in monorepo setups
+      - name: Build
+        run: pnpm build
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.runner }}
+
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      - name: Setup build cache
+        uses: ./.github/workflows/actions/setup-build-cache
+
+      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      #
+      # See more here https://github.com/docker/compose-cli/issues/1545
+      - name: Authenticate to GHCR
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Test
+        run: pnpm test:ci
+        env:
+          # Disable parallel execution for now
+          LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION: false
+          JEST_TIMEOUT: 30000  # Increase timeout for ARM builds
+          TEST_TIMEOUT: 300000 # 5 minutes timeout for long-running tests
+          # We'll use the prebuilt base image
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          # And the prebuilt hardhat EVM node image
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          # And the prebuilt TON node image
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          # Provided we have good quality Solana RPCs, we can enable Solana tests
+          #
+          # FIXME The Solana tests need to be ported to either use a stable deployment
+          # or a local node. Until then, we disable the tests
+          # LZ_DEVTOOLS_ENABLE_SOLANA_TESTS: 1
+          RPC_URL_SOLANA_MAINNET: ${{ secrets.RPC_URL_SOLANA_MAINNET || 'https://rpc.ankr.com/solana' }}
+          RPC_URL_SOLANA_TESTNET: ${{ secrets.RPC_URL_SOLANA_TESTNET || 'https://api.devnet.solana.com' }}
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Collect docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          dest: "./logs"
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Store docker logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./logs
+
+  test-user:
+    name: User test
+    runs-on: ${{ matrix.runner }}
+
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: Setup environment
+        uses: ./.github/workflows/actions/setup-environment
+
+      # There is a small bug in docker compose that will cause 401 if we don't pull the base image manually
+      #
+      # See more here https://github.com/docker/compose-cli/issues/1545
+      - name: Authenticate to GHCR
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Test
+        run: pnpm test:user
+        env:
+          LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
+          LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
+          # We'll use the prebuilt base image
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          # And the prebuilt hardhat EVM node image
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          # Using the local Aptos testnet node
+          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:main
+          # Using the local TON node - i do not know if this is working
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          # Using the local Solana test validator - may fail due to RPC issues
+          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:main
+
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Collect docker logs on failure
+        if: failure()
+        uses: jwalton/gh-docker-logs@v2
+        with:
+          dest: "./logs"
+
+      # We'll collect the docker compose logs from all containers on failure
+      - name: Store docker logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./logs

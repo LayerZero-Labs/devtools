@@ -1,0 +1,75 @@
+{
+  "created": "2024-12-12T03:31:22.000Z",
+  "updated": "2024-12-12T03:31:22.000Z",
+  "tableName": "layerzero-chain_metadata",
+  "environment": "testnet",
+  "blockExplorers": [
+    {
+      "url": "https://explorer.solana.com"
+    }
+  ],
+  "deployments": [
+    {
+      "eid": "40168",
+      "chainKey": "solana-testnet",
+      "stage": "testnet",
+      "pricefeed": {
+        "address": "8ahPGPjEbpgGaZx2NV1iG5Shj7TDwvsjkEDcGWjt94TP"
+      },
+      "executor": {
+        "pda": "AwrbHeCyniXaQhiJZkLhgWdUCteeWSGaSN1sTfLiY7xK",
+        "address": "6doghB248px58JSSwG4qejQ46kFMW4AMj7vzJnWZHNZn"
+      },
+      "endpointV2": {
+        "address": "76y77prsiCMvXMjuoZ5VRrhG5qYBrUMYTE5WgHqgjEn6"
+      },
+      "sendUln302": {
+        "address": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH"
+      },
+      "blocked_messagelib": {
+        "address": "2XrYqmhBMPJgDsb4SVbjV1PnJBprurd5bzRCkHwiFCJB"
+      },
+      "version": 2,
+      "receiveUln302": {
+        "address": "7a4WjyR8VZ7yZz5XJAKm39BUGn5iT9CKcv2pmG9tdXVH"
+      },
+      "dvn": {
+        "address": "HtEYV4xB4wvsj5fgTkcfuChYpvGYzgzwvNhgDZQNh7wW"
+      }
+    }
+  ],
+  "chainDetails": {
+    "chainKey": "solana-testnet",
+    "nativeChainId": 2,
+    "chainLayer": "L1",
+    "nativeCurrency": {
+      "name": "SOL",
+      "symbol": "SOL",
+      "cgId": "solana",
+      "cmcId": 5426,
+      "decimals": 9
+    },
+    "name": "Solana",
+    "chainType": "solana",
+    "shortName": "Solana testnet"
+  },
+  "dvns": {
+    "4VDjp6XQaxoZf5RGwiPU9NR1EXSZn2TP4ATMmiSzLfhb": {
+      "version": 2,
+      "canonicalName": "LayerZero Labs",
+      "id": "layerzero-labs"
+    },
+    "4HxXbLv37XrivKukEbofybpHr7C8HUGJzd4B5T9USpGh": {
+      "version": 2,
+      "canonicalName": "Paxos",
+      "id": "paxos"
+    }
+  },
+  "rpcs": [
+    {
+      "url": "https://api.devnet.solana.com"
+    }
+  ],
+  "chainName": "solana",
+  "chainKey": "solana-testnet"
+}

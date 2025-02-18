@@ -1,0 +1,60 @@
+{
+  "name": "decode-lz-options",
+  "version": "0.1.0",
+  "description": "Decode LayerZero options with one command",
+  "keywords": [
+    "LayerZero",
+    "OApp",
+    "Options"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LayerZero-Labs/devtools.git",
+    "directory": "packages/decode-lz-options"
+  },
+  "license": "MIT",
+  "bin": {
+    "decode-lz-options": "./cli.js"
+  },
+  "files": [
+    "cli.js",
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "tsc -noEmit",
+    "build": "$npm_execpath tsup",
+    "clean": "rm -rf dist",
+    "dev": "$npm_execpath tsup --watch",
+    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
+    "start": "./cli.js"
+  },
+  "dependencies": {
+    "yoga-layout-prebuilt": "^1.10.0"
+  },
+  "devDependencies": {
+    "@ethersproject/address": "~5.7.0",
+    "@layerzerolabs/devtools": "~0.4.0",
+    "@layerzerolabs/devtools-evm": "~1.0.0",
+    "@layerzerolabs/io-devtools": "~0.1.14",
+    "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@types/prompts": "^2.4.9",
+    "@types/react": "^17.0.74",
+    "commander": "^11.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "ink": "^3.2.0",
+    "ink-gradient": "^2.0.0",
+    "prompts": "^2.4.2",
+    "react": "^17.0.2",
+    "ts-node": "^10.9.2",
+    "tsup": "~8.0.1",
+    "typescript": "^5.4.4"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
