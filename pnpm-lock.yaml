@@ -617,10 +617,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -662,7 +662,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1130,10 +1130,10 @@ importers:
         specifier: ^2.0.3
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1175,7 +1175,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1298,10 +1298,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1343,7 +1343,7 @@ importers:
         specifier: ^3.0.0
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -2722,7 +2722,7 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.40
@@ -3260,10 +3260,10 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../devtools-move
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.21
