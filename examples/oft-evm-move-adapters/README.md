@@ -4,6 +4,8 @@
 
 We used [Foundry](https://book.getfoundry.sh/getting-started/installation) for our MOVEOFTAdapter.sol.
 
+### Compiling your Contracts
+
 ```bash
 cd deploy-eth
 forge compile
@@ -14,6 +16,8 @@ if you find issues, you might want to delete `lib` and reinstall dependencies:
 ```bash
 forge install OpenZeppelin/openzeppelin-contracts foundry-rs/forge-std https://github.com/LayerZero-Labs/devtools https://github.com/LayerZero-Labs/layerzero-v2 --no-commit
 ```
+
+### Deploying your Contracts
 
 Now you are able to deploy. You can get your testnet network `rpc-url` from [Chainlist](https://chainlist.org/). Current variables are adjusted for BSC as it depends on a successful connection with LayerZero endpoints but feel free to adjust according to their [deployment list](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts).
 
@@ -52,6 +56,8 @@ forge script MOVEOFTAdapterScript --rpc-url <rpc-url> --broadcast --verify --eth
 
 (handy bsc testnet rpc-url: `https://data-seed-prebsc-1-s1.bnbchain.org:8545`)
 
+### Helper Scripts
+
 There are some handy scripts for adjusting the Rate Limit (`SetDailyRateLimit.s.sol`) and Enforced Params `SetEnforcedParams.s.sol`.
 
 ```bash
@@ -63,6 +69,7 @@ forge script EnforcedParamsScript --rpc-url <rpc-url> --broadcast
 ```
 
 If you would like to fund your address with MOVEMock tokens use `cast` to mint tokens to your address.
+
 ```bash
 source .env
 ```
@@ -73,7 +80,7 @@ cast send <move-mock-address> "mint(address,uint256)" <your-public-address> <amo
 
 ### Developing Contracts
 
-###$ Installing dependencies
+### $ Installing dependencies
 
 We recommend using `pnpm` as a package manager (but you can of course use a package manager of your choice):
 
@@ -81,108 +88,31 @@ We recommend using `pnpm` as a package manager (but you can of course use a pack
 pnpm install
 ```
 
-#### Compiling your contracts
-
-This project supports both `hardhat` and `forge` compilation. By default, the `compile` command will execute both:
-
-```bash
-pnpm compile
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm compile:forge
-pnpm compile:hardhat
-```
-
-Or adjust the `package.json` to for example remove `forge` build:
-
-```diff
-- "compile": "$npm_execpath run compile:forge && $npm_execpath run compile:hardhat",
-- "compile:forge": "forge build",
-- "compile:hardhat": "hardhat compile",
-+ "compile": "hardhat compile"
-```
-
-#### Running tests
-
-Similarly to the contract compilation, we support both `hardhat` and `forge` tests. By default, the `test` command will execute both:
-
-```bash
-pnpm test
-```
-
-If you prefer one over the other, you can use the tooling-specific commands:
-
-```bash
-pnpm test:forge
-pnpm test:hardhat
-```
-
-Or adjust the `package.json` to for example remove `hardhat` tests:
-
-```diff
-- "test": "$npm_execpath test:forge && $npm_execpath test:hardhat",
-- "test:forge": "forge test",
-- "test:hardhat": "$npm_execpath hardhat test"
-+ "test": "forge test"
-```
-
-### Deploying Contracts
-
-Set up deployer wallet/account:
-
-- Rename `.env.example` -> `.env`
-- Choose your preferred means of setting up your deployer wallet/account:
-
-```
-MNEMONIC="test test test test test test test test test test test junk"
-or...
-PRIVATE_KEY="0xabc...def"
-```
-
-- Fund this address with the corresponding chain's native tokens you want to deploy to.
-
-To deploy your contracts to your desired blockchains, run the following command in your project's folder:
-
-```bash
-npx hardhat lz:deploy
-```
-
-More information about available CLI arguments can be found using the `--help` flag:
-
-```bash
-npx hardhat lz:deploy --help
-```
-
-By following these steps, you can focus more on creating innovative omnichain solutions and less on the complexities of cross-chain communication.
-
 ## Move-VM OFT Adapter Setup and Deployment
 
 ### connecting to aptos via cli
 
 To install aptos cli, run the following command:
 
-```
+```bash
 brew install aptos
 ```
 
 If you need to generate a new key, run the following command:
 
-```
+```bash
 aptos key generate --output-file my_key.pub
 ```
 
 Then initialize the aptos cli and connect to the aptos network:
 
-```
+```bash
 aptos init --network=testnet --private-key=<your-private-key>
 ```
- 
+
 You can then verify that your initialization was successful by running the following command:
 
-```
+```bash
 cat .aptos/config.yaml
 ```
 
@@ -303,8 +233,10 @@ Commands:
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
 ```
 
+```bash
 --simulate <true> and --mnemonic-index <value> are optional.
 --mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
+```
 
 Troubleshooting:
 Sometimes the command will fail part way through and need to be run multiple times. Also running running `pkill anvil` to reset the anvil node can help.
@@ -388,12 +320,12 @@ pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.t
 
 Note: The object owner has the upgrade authority for the Object.
 
-### Mint to Account on Move VM OFT:
+### Mint to Account on Move VM OFT
 
 > ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
 > First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
 
-```
+```rust
 public entry fun mint(
     admin: &signer,
     recipient: address,
@@ -445,7 +377,7 @@ pnpm run lz:sdk:help
 
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
-### Verifying successful ownership transfer of your Move-VM OFT:
+### Verifying successful ownership transfer of your Move-VM OFT
 
 Run the following command:
 
