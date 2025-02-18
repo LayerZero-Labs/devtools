@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-ton
 
+## 0.3.0
+
+### Minor Changes
+
+- 697d2e5: Added tool to debug TON lz messages
+
 ## 0.2.2
 
 ### Patch Changes
