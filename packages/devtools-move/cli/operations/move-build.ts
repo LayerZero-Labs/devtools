@@ -1,5 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
-import { build as buildMove } from '../../tasks/move/build'
+import { build } from '../../tasks/move/build'
+
+import { getMoveTomlAdminName, getNamedAddresses } from '../../tasks/move/utils/config'
+import { initializeDeployTaskContext } from '../../sdk/baseTaskHelper'
 
 class MoveBuildOperation implements INewOperation {
     vm = 'move'
@@ -7,8 +10,29 @@ class MoveBuildOperation implements INewOperation {
     description = 'Build Aptos Move contracts'
     reqArgs = ['oapp_config', 'named_addresses']
 
+    addArgs = [
+        {
+            name: '--chain',
+            arg: {
+                help: 'The chain to build the contracts for',
+                required: false,
+            },
+        },
+    ]
+
     async impl(args: any): Promise<void> {
-        await buildMove(args)
+        const taskContext = await initializeDeployTaskContext(args.oapp_config)
+        const forceBuild = args.force_build ? true : false
+
+        const moveTomlAdminName = getMoveTomlAdminName(args.oapp_type)
+        const named_addresses = getNamedAddresses(
+            taskContext.chain,
+            taskContext.stage,
+            moveTomlAdminName,
+            taskContext.selectedContract
+        )
+
+        await build(taskContext, forceBuild, named_addresses)
     }
 }
 

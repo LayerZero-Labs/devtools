@@ -1,7 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { setRateLimit } from '../../tasks/setRateLimit'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class AdapterSetRateLimit implements INewOperation {
     vm = 'move'
@@ -35,12 +36,13 @@ In order to reset the in-flight volume, the rate limit must be unset and then se
     ]
 
     async impl(args: any): Promise<void> {
+        const taskContext = await initializeTaskContext(args.oapp_config)
         await setRateLimit(
+            taskContext,
             BigInt(args.rate_limit),
             BigInt(args.window_seconds),
             args.to_eid,
-            OFTType.OFT_ADAPTER_FA,
-            args.oapp_config
+            OFTType.OFT_ADAPTER_FA
         )
     }
 }
