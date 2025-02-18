@@ -2,13 +2,74 @@
 
 ## EVM OFT Adapter Setup and Deployment
 
-- In your `hardhat.config.ts` file, add the following configuration to the network you want to deploy the OFTAdapter to:
-  ```typescript
-  // Replace `0x0` with the address of the ERC20 token you want to adapt to the OFT functionality.
-  oftAdapter: {
-      tokenAddress: '0x0',
-  }
-  ```
+We used [Foundry](https://book.getfoundry.sh/getting-started/installation) for our MOVEOFTAdapter.sol.
+
+```bash
+cd deploy-eth
+forge compile
+```
+
+if you find issues, you might want to delete `lib` and reinstall dependencies:
+
+```bash
+forge install OpenZeppelin/openzeppelin-contracts foundry-rs/forge-std https://github.com/LayerZero-Labs/devtools https://github.com/LayerZero-Labs/layerzero-v2 --no-commit
+```
+
+Now you are able to deploy. You can get your testnet network `rpc-url` from [Chainlist](https://chainlist.org/). Current variables are adjusted for BSC as it depends on a successful connection with LayerZero endpoints but feel free to adjust according to their [deployment list](https://docs.layerzero.network/v2/developers/evm/technical-reference/deployed-contracts).
+
+```bash
+touch .env
+```
+
+Set your `PRIVATE_KEY` to the PRIVATE_KEY variable in `.env`.
+
+Fund your public address with proper funds.
+
+Under `script/MOVEOFTAdapter.s.sol` adjust your variables. This assumes `move-oft-adapter.move` has been already deployed.
+Given values are `Ethereum Mainnet` and `BSC Testnet`:
+
+```solidity
+    MOVEOFTAdapter public adapter;
+    // Mainnet
+    address public move = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
+    address public lzEndpoint = 0x1a44076050125825900e736c501f859c50fE728c;
+    uint32 public movementEid = 30325;
+
+    // Testnet
+    address public tMove = <testnet-mock-move-address>;
+    address public tLzEndpoint = <layerzero-endpoint>;
+    uint32 public tMovementEid = <layerzero-movement-testnet-eid>;
+
+    // Enforced options: worker -> gas unit, worker is always the same, adjust hex value for gas unit.
+    bytes public options = abi.encodePacked(uint176(0x00030100110100000000000000000000000000001388));
+    // Movement MOVEOFTAdapter in bytes32
+    bytes32 public moveOftAdapterBytes32 = <movement-oft-adapter>;
+```
+
+```bash
+forge script MOVEOFTAdapterScript --rpc-url <rpc-url> --broadcast --verify --etherscan-api-key <your-api-key>
+```
+
+(handy bsc testnet rpc-url: `https://data-seed-prebsc-1-s1.bnbchain.org:8545`)
+
+There are some handy scripts for adjusting the Rate Limit (`SetDailyRateLimit.s.sol`) and Enforced Params `SetEnforcedParams.s.sol`.
+
+```bash
+forge script DailyRateLimitScript --rpc-url <rpc-url> --broadcast
+```
+
+```bash
+forge script EnforcedParamsScript --rpc-url <rpc-url> --broadcast
+```
+
+If you would like to fund your address with MOVEMock tokens use `cast` to mint tokens to your address.
+```bash
+source .env
+```
+
+```bash
+cast send <move-mock-address> "mint(address,uint256)" <your-public-address> <amount> --rpc-url <rpc-url> --private-key $PRIVATE_KEY
+```
 
 ### Developing Contracts
 

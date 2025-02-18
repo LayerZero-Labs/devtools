@@ -7,7 +7,7 @@ import {MOVEOFTAdapter, RateLimiter} from "../src/MOVEOFTAdapter.sol";
 import {MOVEMock, ERC20} from "../src/MOVEMock.sol";
 import {EnforcedOptionParam} from "layerzerolabs/oapp/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
-contract MOVEOFTAdapterScript is Script {
+contract DailyRateLimitScript is Script {
     
     // Input your contract address here
     MOVEOFTAdapter public adapter = MOVEOFTAdapter(address(0x1));
