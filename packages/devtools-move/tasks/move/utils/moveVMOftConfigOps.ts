@@ -81,8 +81,9 @@ export async function createSetDelegatePayload(
         console.log(`✅ Delegate already set to ${delegate}\n`)
         return null
     } else {
+        const network = getNetworkForChainId(eid)
         diffPrinter(
-            `Set Delegate for Aptos OFT at ${oft.oft_address}`,
+            `Set Delegate for ${network.chainName}-${network.env} OFT at ${oft.oft_address}`,
             { address: currDelegate },
             { address: delegate }
         )

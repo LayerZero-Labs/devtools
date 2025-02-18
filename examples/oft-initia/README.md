@@ -126,12 +126,12 @@ Commands:
 To wire from EVM to Move-VM:
 
 ```bash
-pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts [--simulate true] [--mnemonic-index 0]
+pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
 ```
 
---simulate <true> and --mnemonic-index <value> are optional.
---mnemonic-index <value> is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from .env is used. else the mnemonic is used along with the index.
---only-calldata <true> is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
+Note: `--simulate <true>` and `--mnemonic-index <value>` are optional.
+`--mnemonic-index <value>` is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from `.env` is used. Otherwise, the mnemonic is used along with the index.
+`--only-calldata <true>` is optional. If specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
 To wire from Move-VM to EVM:
 
@@ -292,7 +292,7 @@ Run the following command:
 ```bash
 aptos account list \
   --account <OBJECT_ADDRESS> \
-  --url https://fullnode.testnet.aptoslabs.com \
+  --url <your-fullnode-url> \
   --query resources
 ```
 
@@ -330,9 +330,11 @@ If the admin is your desired address, then the ownership transfer was successful
 
 To execute transactions with a multisig account via the aptos CLI, follow these steps:
 
-1. Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
+Run the CLI command and select `(e)xport - save as JSON for multisig execution` when prompted. This will save a JSON file to the transactions folder.
 
-2. Create the transaction using:
+Using Aptos CLI:
+
+1. Create the transaction using:
 
 ```bash
 aptos multisig create-transaction \
@@ -342,7 +344,7 @@ aptos multisig create-transaction \
     --assume-yes
 ```
 
-3. Approve the transaction:
+2. Approve the transaction:
 
 ```bash
 aptos multisig approve \
@@ -353,3 +355,7 @@ aptos multisig approve \
 ```
 
 For more detailed information about multisig transactions, please refer to the [Aptos Multi-Signature Tutorial](https://aptos.dev/en/build/cli/working-with-move-contracts/multi-signature-tutorial#execute-the-governance-parameter-transaction).
+
+Using Rimosafe:
+
+Follow the instructions here: https://docs.rimosafe.com/docs/introduction

@@ -35,7 +35,7 @@ export class InitiaEndpoint implements IEndpoint {
         } catch (error) {
             const toNetwork = getNetworkForChainId(dstEid)
             throw new Error(
-                `Failed to get send library. Network: ${toNetwork.chainName}-${toNetwork.env} might not be supported.`
+                `Failed to get send library. Wiring to ${toNetwork.chainName}-${toNetwork.env} may not currently be supported for this pathway.`
             )
         }
     }
@@ -53,7 +53,7 @@ export class InitiaEndpoint implements IEndpoint {
         } catch (error) {
             const toNetwork = getNetworkForChainId(dstEid)
             throw new Error(
-                `Failed to get receive library. Network: ${toNetwork.chainName}-${toNetwork.env} might not be supported.`
+                `Failed to get receive library. Wiring to ${toNetwork.chainName}-${toNetwork.env} may not currently be supported for this pathway.`
             )
         }
     }

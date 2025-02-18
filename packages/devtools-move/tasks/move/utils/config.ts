@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { spawn } from 'child_process'
 
 import { Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk'
 import YAML from 'yaml'
@@ -218,4 +219,143 @@ export async function getMoveVMOperationArgs(configPath: string): Promise<{
     const accountAddress = getMoveVMAccountAddress(chainName)
 
     return { lzConfig, selectedContract, chainName, stage, accountAddress }
+}
+
+export async function checkConfigYamlNetwork(chain: string, _rootDir: string = process.cwd()): Promise<void> {
+    const configPath = path.resolve(path.join(_rootDir, '.aptos/config.yaml'))
+
+    if (!fs.existsSync(configPath)) {
+        console.error(
+            `❌ Aptos config file not found at ${configPath}.\n\n\tPlease run "aptos init" to initialize your project.\n`
+        )
+        process.exit(1)
+    }
+
+    const file = fs.readFileSync(configPath, 'utf8')
+    const config = YAML.parse(file) as AptosYamlConfig
+    const network = config.profiles.default.network.toLowerCase()
+
+    let warningMessage = ''
+    if (chain === 'movement') {
+        if (network !== 'custom') {
+            warningMessage = `\x1b[33m⚠️  Warning: You are deploying to Movement chain but your .aptos/config.yaml network is set to "${network}".
+Please run "aptos init --network=custom" and enter your Movement account information.\x1b[0m`
+        }
+    } else if (chain === 'aptos') {
+        if (network === 'custom') {
+            warningMessage = `\x1b[33m⚠️  Warning: You are deploying to Aptos chain but your .aptos/config.yaml network is set to "custom".
+Please run "aptos init" and choose the appropriate Aptos network (mainnet/testnet) for your deployment.\x1b[0m`
+        }
+    }
+
+    if (warningMessage) {
+        console.warn(warningMessage)
+        const { shouldContinue } = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'shouldContinue',
+                message: 'Are you sure you want to continue?',
+                default: false,
+            },
+        ])
+
+        if (!shouldContinue) {
+            console.log('❌ Operation cancelled.')
+            process.exit(1)
+        }
+    }
+}
+
+async function getAptosVersion(aptosCommand: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const childProcess = spawn(aptosCommand, ['--version'])
+        let stdout = ''
+
+        childProcess.stdout?.on('data', (data) => {
+            stdout += data.toString()
+        })
+
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                const versionMatch = stdout.match(/aptos (\d+\.\d+\.\d+)/)
+                versionMatch ? resolve(versionMatch[1]) : reject(new Error('Could not parse version'))
+            } else {
+                reject(new Error(`aptos --version exited with code ${code}`))
+            }
+        })
+
+        childProcess.on('error', reject)
+    })
+}
+
+export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
+    const aptosCommand = getAptosCommand(chain, stage)
+    if (chain === 'aptos') {
+        try {
+            const version = await getAptosVersion(aptosCommand)
+            const MIN_VERSION = '6.0.1'
+
+            if (!compareVersions(version, MIN_VERSION)) {
+                console.error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
+            }
+            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
+        } catch (error) {
+            console.error('🚨 Failed to check Aptos CLI version:', error)
+        }
+    } else if (chain === 'movement') {
+        try {
+            const version = await getAptosVersion(aptosCommand)
+            const MAX_VERSION = '3.5.0'
+
+            if (!compareVersions(version, MAX_VERSION)) {
+                console.error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
+            }
+            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
+        } catch (error) {
+            console.error('🚨 Failed to check Aptos CLI version:', error)
+        }
+    } else {
+        throw new Error(`Chain ${chain}-${stage} not supported for build.`)
+    }
+    return aptosCommand
+}
+
+function getAptosCommand(chain: string, stage: string): string {
+    if (chain === 'aptos') {
+        if (process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH) {
+            console.log(`🚀 Using Aptos CLI from ${process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH}`)
+            return process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH
+        } else {
+            throw new Error(
+                'Aptos CLI path not found. Please set the APOTS_COMPATIBLE_APTOS_CLI_PATH environment variable.'
+            )
+        }
+    } else if (chain === 'movement') {
+        if (process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH) {
+            console.log(`🚀 Using Aptos CLI from ${process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH}`)
+            return process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH
+        } else {
+            throw new Error(
+                'Aptos CLI path not found. Please set the MOVEMENT_COMPATIBLE_APTOS_CLI_PATH environment variable.'
+            )
+        }
+    } else {
+        throw new Error(`Chain ${chain}-${stage} not supported for build.`)
+    }
+}
+
+function compareVersions(installed: string, required: string): boolean {
+    const installedParts = installed.split('.').map(Number)
+    const requiredParts = required.split('.').map(Number)
+
+    for (let i = 0; i < 3; i++) {
+        if (installedParts[i] > requiredParts[i]) {
+            return true
+        }
+        if (installedParts[i] < requiredParts[i]) {
+            return false
+        }
+    }
+
+    return true
 }

@@ -6,8 +6,8 @@ import { deploymentFile } from '../shared/types'
 
 import path from 'path'
 import type { OAppOmniGraphHardhat } from '@layerzerolabs/toolbox-hardhat'
-import { DeployTaskContext, getAptosCLICommand } from '../../sdk/baseTaskHelper'
-
+import { DeployTaskContext } from '../../sdk/baseTaskHelper'
+import { getAptosCLICommand } from './utils/config'
 let stdOut = ''
 let stdErr = ''
 

@@ -34,19 +34,26 @@ export class AptosEndpoint implements IEndpoint {
         } catch (error) {
             const toNetwork = getNetworkForChainId(dstEid)
             throw new Error(
-                `Failed to get send library. Network: ${toNetwork.chainName}-${toNetwork.env} might not be supported.`
+                `Failed to get send library. Wiring to ${toNetwork.chainName}-${toNetwork.env} may not currently be supported for this pathway.`
             )
         }
     }
 
     async getReceiveLibrary(oftAddress: string, dstEid: number): Promise<[string, boolean]> {
-        const result = await this.aptos.view({
-            payload: {
-                function: `${this.endpoint_address}::endpoint::get_effective_receive_library`,
-                functionArguments: [oftAddress, dstEid],
-            },
-        })
-        return [result[0] as string, result[1] as boolean]
+        try {
+            const result = await this.aptos.view({
+                payload: {
+                    function: `${this.endpoint_address}::endpoint::get_effective_receive_library`,
+                    functionArguments: [oftAddress, dstEid],
+                },
+            })
+            return [result[0] as string, result[1] as boolean]
+        } catch (error) {
+            const toNetwork = getNetworkForChainId(dstEid)
+            throw new Error(
+                `Failed to get receive library. Wiring to ${toNetwork.chainName}-${toNetwork.env} may not currently be supported for this pathway.`
+            )
+        }
     }
 
     async getDefaultReceiveLibraryTimeout(eid: EndpointId): Promise<LibraryTimeoutResponse> {

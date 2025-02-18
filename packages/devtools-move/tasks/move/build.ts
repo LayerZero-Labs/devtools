@@ -2,7 +2,8 @@ import { spawn } from 'child_process'
 
 import fs from 'fs'
 import path from 'path'
-import { DeployTaskContext, getAptosCLICommand } from '../../sdk/baseTaskHelper'
+import { DeployTaskContext } from '../../sdk/baseTaskHelper'
+import { getAptosCLICommand } from './utils/config'
 
 let stdErr = ''
 
