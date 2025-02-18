@@ -34,11 +34,3 @@ runs:
     - name: Rebuild NPM packages
       shell: bash
       run: pnpm rebuild --recursive
-
-    # Install Rustup
-    # - name: Install Rustup
-    #   shell: bash
-    #   run: |
-    #     export CARGO_HOME=/root/.cargo
-    #     export RUSTUP_HOME=/root/.rustup
-    #     rustup default 1.75.0
