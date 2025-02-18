@@ -221,7 +221,7 @@ contract MyOFTAltTest is TestHelperOz5 {
         vm.startPrank(userA);
         nativeTokenMock_A.mint(userA, quoteFee.nativeFee);
         IERC20(nativeTokenMock_A).approve(address(aOFT), quoteFee.nativeFee);
-        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send{ value: quoteFee.nativeFee }(
+        (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = aOFT.send(
             sendParam,
             quoteFee,
             payable(address(this))
