@@ -25,3 +25,6 @@
 [submodule "deploy-move-oft-adapter/lib/layerzero-v2"]
 	path = deploy-move-oft-adapter/lib/layerzero-v2
 	url = https://github.com/LayerZero-Labs/layerzero-v2
+[submodule "examples/oft-evm-move-adapters/deploy-eth/lib/forge-std"]
+	path = examples/oft-evm-move-adapters/deploy-eth/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
