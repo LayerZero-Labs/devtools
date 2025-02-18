@@ -1,6 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { permanentlyDisableFreezing } from '../../tasks/permanentlyDisableFreezing'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class IrrevocablyDisableFreezing implements INewOperation {
     vm = 'move'
@@ -13,7 +14,8 @@ frozen accounts will remain frozen until unfrozen`
     reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
-        await permanentlyDisableFreezing(args.oapp_config)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await permanentlyDisableFreezing(taskContext)
     }
 }
 
