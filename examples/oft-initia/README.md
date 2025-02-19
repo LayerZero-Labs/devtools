@@ -59,7 +59,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 
 ```bash
 npx hardhat lz:deploy
-``` 
+```
 
 Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
 
