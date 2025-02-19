@@ -282,7 +282,7 @@ public entry fun mint(
 }
 ```
 
-Then run the following command to mint the move oft:
+Then run the deploy, init, and wire comands again on this new oft. To utilize the mint function, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
@@ -300,6 +300,8 @@ pnpm run lz:sdk:move:send-from-move-oft \
   --gas-limit <your-gas-limit> \
   --dst-eid <your-dst-eid>\
 ```
+
+Troubleshooting: if you get an arithmetic error, that is likely
 
 ## Send from EVM
 
