@@ -85,7 +85,7 @@ task(TASK_LZ_OAPP_WIRE)
         const solanaDeployment = getSolanaDeployment(args.solanaEid)
 
         // Then we grab the programId from the args
-        const programId = solanaDeployment.programId
+        const programId = new PublicKey(solanaDeployment.programId)
 
         if (!programId) {
             logger.error('Missing programId in solana deployment')
