@@ -11,12 +11,13 @@ import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
 // We'll create clones of the wire task and only override the configurator argument
 const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
 
+// TODO: export from wire.ts instead of re-declaring
 /**
  * Additional CLI arguments for our custom wire task
  */
 interface Args {
     logLevel: LogLevel
-    eid: EndpointId
+    solanaEid: EndpointId
     solanaSecretKey?: Keypair
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator

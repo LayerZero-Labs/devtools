@@ -26,7 +26,7 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
  */
 interface Args {
     logLevel: LogLevel
-    eid: EndpointId
+    solanaEid: EndpointId
     solanaSecretKey?: Keypair
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
@@ -46,7 +46,7 @@ task(TASK_LZ_OAPP_WIRE)
         keyPair,
         true
     )
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
+    .addParam('solanaEid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
@@ -82,13 +82,13 @@ task(TASK_LZ_OAPP_WIRE)
         const wallet = args.solanaSecretKey ?? Keypair.generate()
         const userAccount = wallet.publicKey
 
-        const solanaDeployment = getSolanaDeployment(args.eid)
+        const solanaDeployment = getSolanaDeployment(args.solanaEid)
 
         // Then we grab the programId from the args
         const programId = solanaDeployment.programId
 
         if (!programId) {
-            logger.error('Missing --solana-program-id CLI argument')
+            logger.error('Missing programId in solana deployment')
             return
         }
 
@@ -167,7 +167,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
         keyPair,
         true
     )
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
+    .addParam('solanaEid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })

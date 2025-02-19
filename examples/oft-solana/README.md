@@ -258,7 +258,7 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY>
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID> --solana-secret-key <SECRET_KEY>
 ```
 
 :information_source: `<SECRET_KEY>` should also be in base58 format.
@@ -268,7 +268,7 @@ npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana
 Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
@@ -346,7 +346,7 @@ How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-
 Now run
 
 ```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 and execute the transactions.
@@ -358,7 +358,7 @@ How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oap
 Now, run
 
 ```
-npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY>
+npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 ### Common Errors
