@@ -46,7 +46,7 @@ task(TASK_LZ_OAPP_WIRE)
         keyPair,
         true
     )
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
@@ -167,7 +167,7 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
         keyPair,
         true
     )
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
