@@ -14,7 +14,7 @@ import {
     deriveConnection,
     deriveKeys,
     getExplorerTxLink,
-    output,
+    saveSolanaDeployment,
 } from './index'
 
 interface CreateOFTAdapterTaskArgs {
@@ -94,6 +94,13 @@ task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
             const { signature } = await txBuilder.sendAndConfirm(umi)
             console.log(`initOftTx: ${getExplorerTxLink(bs58.encode(signature), eid == EndpointId.SOLANA_V2_TESTNET)}`)
 
-            output(eid, programIdStr, mint, mintAuthority ? mintAuthority.toBase58() : '', escrowPK, oftStorePda)
+            saveSolanaDeployment(
+                eid,
+                programIdStr,
+                mint,
+                mintAuthority ? mintAuthority.toBase58() : '',
+                escrowPK,
+                oftStorePda
+            )
         }
     )

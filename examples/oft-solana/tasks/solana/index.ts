@@ -103,7 +103,7 @@ export const deriveKeys = (programIdStr: string) => {
  * @param escrow {string}
  * @param oftStore {string}
  */
-export const output = (
+export const saveSolanaDeployment = (
     eid: EndpointId,
     programId: string,
     mint: string,
