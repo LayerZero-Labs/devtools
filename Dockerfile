@@ -97,7 +97,6 @@ ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 RUN rustc --version
-
 # Setup go
 ARG GO_VERSION=1.24.0
 RUN curl -sL https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
@@ -148,6 +147,30 @@ RUN rm -rf /app/aptos/aptos-core
 ENV PATH="/root/.aptos/bin:$PATH"
 
 RUN aptos --version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds Initia developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS initia
+
+WORKDIR /app/initia
+
+ARG INITIA_VERSION=0.7.2
+
+RUN git clone https://github.com/initia-labs/initia.git --branch v${INITIA_VERSION} --depth 1
+WORKDIR /app/initia/initia
+RUN make install
+RUN go build -tags "netgo ledger" -o initiad ./cmd/initiad
+RUN mkdir -p /root/.initia/bin && cp initiad /root/.initia/bin/
+ENV PATH="/root/.initia/bin:$PATH"
+
+RUN initiad version --long
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -305,6 +328,8 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
+WORKDIR /app/evm
+
 ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 
@@ -350,8 +375,11 @@ ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
 ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$PATH"
 
-# Get aptos CLI
+### Get movement network clis
+# 1. Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+# 2. Get initia CLI
+COPY --from=initia /root/.initia/bin /root/.initia/bin
 
 # Get solana tooling
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
@@ -384,6 +412,7 @@ RUN git --version
 RUN anchor --version
 RUN avm --version
 RUN aptos --version
+RUN initiad --version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
