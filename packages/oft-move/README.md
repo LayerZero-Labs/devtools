@@ -16,40 +16,52 @@ The wire command is defined in `packages/devtools-move/cli/operations/move-wire.
 `cli/operations/`. This is where we define all of the CLI operations that we want a user to be able to run. It specifiies the command, the arguments, and the description. The implementation is stored elsewhere.
 
 Here is the code for the wire operation. As you can see it just defines what args are required, and passes those in to wireMove, where the actual logic is defined.
+
 ```ts
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
-import { wireMove } from '../../tasks/move/wire'
+import { INewOperation } from "@layerzerolabs/devtools-extensible-cli";
+import { wireMove } from "../../tasks/move/wire";
 
 class MoveWireOperation implements INewOperation {
-    vm = 'move' // This is the VM we are working with
-    operation = 'wire' // This is the new name of the operation
-    description = 'Wire Aptos Move contracts' // This is the description of the operation that is displayed when help is called
-    reqArgs = ['oapp_config'] // This is the list of args that are required for the operation for wire its just the oapp_config path
+  vm = "move"; // This is the VM we are working with
+  operation = "wire"; // This is the new name of the operation
+  description = "Wire Aptos Move contracts"; // This is the description of the operation that is displayed when help is called
+  reqArgs = ["oapp_config"]; // This is the list of args that are required for the operation for wire its just the oapp_config path
 
-    async impl(args: any): Promise<void> {
-        await wireMove(args) // call the wireMove function with the args
-    }
+  async impl(args: any): Promise<void> {
+    await wireMove(args); // call the wireMove function with the args
+  }
 }
 
-const NewOperation = new MoveWireOperation()
-export { NewOperation }
+const NewOperation = new MoveWireOperation();
+export { NewOperation };
 ```
 
 The wire operation is registered in: `packages/devtools-move/cli/init.ts`
 `init.ts` is the location that the CLI will look to find what operations are available.
+
 ```ts
-import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli/cli/AptosEVMCli'
-import path from 'path'
+import { AptosEVMCLI } from "@layerzerolabs/devtools-extensible-cli/cli/AptosEVMCli";
+import path from "path";
 
 export async function attach_wire_move(sdk: AptosEVMCLI) {
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-build'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-deploy'))
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-wire')) // Here is the wire operation
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/move-set-delegate'))
+  await sdk.extendOperationFromPath(
+    path.join(__dirname, "./operations/move-build"),
+  );
+  await sdk.extendOperationFromPath(
+    path.join(__dirname, "./operations/move-deploy"),
+  );
+  await sdk.extendOperationFromPath(
+    path.join(__dirname, "./operations/move-wire"),
+  ); // Here is the wire operation
+  await sdk.extendOperationFromPath(
+    path.join(__dirname, "./operations/move-set-delegate"),
+  );
 }
 
 export async function attach_wire_evm(sdk: AptosEVMCLI) {
-    await sdk.extendOperationFromPath(path.join(__dirname, './operations/evm-wire'))
+  await sdk.extendOperationFromPath(
+    path.join(__dirname, "./operations/evm-wire"),
+  );
 }
 ```
 
@@ -61,36 +73,51 @@ The wire command is defined in `packages/devtools-move/tasks/move/wireMove.ts`. 
 
 ```ts
 async function wireMove(args: any) {
-    // Here is where we parse the user info  .yaml file inside of examples/oft-aptos-move/.aptos/config.yaml
-    // This .yaml is created when the user runs aptos init and enters their private key
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
-    const fullConfigPath = path.join(args.rootDir, args.oapp_config)
-    const chain = getChain(fullnode)
+  // Here is where we parse the user info  .yaml file inside of examples/oft-aptos-move/.aptos/config.yaml
+  // This .yaml is created when the user runs aptos init and enters their private key
+  const { account_address, private_key, network, fullnode, faucet } =
+    await parseYaml();
+  const fullConfigPath = path.join(args.rootDir, args.oapp_config);
+  const chain = getChain(fullnode);
 
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
+  const moveVMConnection = getConnection(chain, network, fullnode, faucet);
 
-    const lzNetworkStage = getLzNetworkStage(network)
-    const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage)
-    const namedAddresses = getNamedAddresses(lzNetworkStage)
-    const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses)
+  const lzNetworkStage = getLzNetworkStage(network);
+  const moveVMOftAddress = getMoveVMOftAddress(lzNetworkStage);
+  const namedAddresses = getNamedAddresses(lzNetworkStage);
+  const endpointAddress = getEndpointAddressFromNamedAddresses(namedAddresses);
 
-    console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OFT`)
-    console.log(`\tAddress: ${moveVMOftAddress}\n`)
+  console.log(`\n🔌 Wiring ${chain}-${lzNetworkStage} OFT`);
+  console.log(`\tAddress: ${moveVMOftAddress}\n`);
 
-    const oftSDK = new OFT(moveVMConnection, moveVMOftAddress, account_address, private_key, eid)
-    const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress)
+  const oftSDK = new OFT(
+    moveVMConnection,
+    moveVMOftAddress,
+    account_address,
+    private_key,
+    eid,
+  );
+  const moveVMEndpoint = new Endpoint(moveVMConnection, endpointAddress);
 
-    const moveVMEndpointID = getEidFromMoveNetwork(chain, network)
-    // Here is where we parse the config file to get the connections
-    const connectionsFromMoveToAny = await 
-    getConfigConnections('from', moveVMEndpointID, fullConfigPath)
-    // Here is where we create and send the payloads
-    const txs = await createWiringTxs(oftSDK, moveVMEndpoint, connectionsFromMoveToAny)
-    await sendAllTxs(moveVMConnection, oftSDK, account_address, txs)
+  const moveVMEndpointID = getEidFromMoveNetwork(chain, network);
+  // Here is where we parse the config file to get the connections
+  const connectionsFromMoveToAny = await getConfigConnections(
+    "from",
+    moveVMEndpointID,
+    fullConfigPath,
+  );
+  // Here is where we create and send the payloads
+  const txs = await createWiringTxs(
+    oftSDK,
+    moveVMEndpoint,
+    connectionsFromMoveToAny,
+  );
+  await sendAllTxs(moveVMConnection, oftSDK, account_address, txs);
 }
 ```
 
-There two main things we need to look at in the wire command: 
+There two main things we need to look at in the wire command:
+
 1. creating the wiring transactions
 2. sending the transactions
 
@@ -100,61 +127,76 @@ This is the crux of the move VM side of this entire project. If there is any fil
 
 Let's drill down on the function (within wireMove.ts) `createSetReceiveLibraryTxs`. The other functions all follow a similar pattern.
 The pattern consists of three steps:
+
 1. Check for no setting - verify if the configuration value exists in the config file
 2. Get the current setting - retrieve the current value from the blockchain
 3. Compare and act:
    - If the current value matches the config, print "already set" message
    - If different, print the diff and create a transaction to update the value
+
 ```ts
 export async function createSetReceiveLibraryTimeoutTx(
-    oft: OFT,
-    endpoint: Endpoint,
-    connection: OAppOmniGraphHardhat['connections'][number]
+  oft: OFT,
+  endpoint: Endpoint,
+  connection: OAppOmniGraphHardhat["connections"][number],
 ): Promise<TransactionPayload | null> {
-    // 1. Check for no config setting
-    if (!connection.config?.receiveLibraryTimeoutConfig) {
-        printNotSet('Receive library timeout', connection)
-        return null
-    }
-    // 2. Get the current setting
-    const currentTimeout = await endpoint.getReceiveLibraryTimeout(oft.oft_address, connection.to.eid)
-    const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry)
+  // 1. Check for no config setting
+  if (!connection.config?.receiveLibraryTimeoutConfig) {
+    printNotSet("Receive library timeout", connection);
+    return null;
+  }
+  // 2. Get the current setting
+  const currentTimeout = await endpoint.getReceiveLibraryTimeout(
+    oft.oft_address,
+    connection.to.eid,
+  );
+  const currentTimeoutAsBigInt = BigInt(currentTimeout.expiry);
 
-    // 3. Compare and act
-    if (currentTimeoutAsBigInt === BigInt(connection.config.receiveLibraryTimeoutConfig.expiry)) {
-        printAlreadySet('Receive library timeout', connection)
-        return null
-    } else {
-        let currTimeoutDisplay = '' + currentTimeoutAsBigInt
-        if (currentTimeoutAsBigInt === BigInt(-1)) {
-            currTimeoutDisplay = 'unset'
-        }
-        // Printing the diff
-        const diffMessage = createDiffMessage(`receive library timeout`, connection)
-        diffPrinter(
-            diffMessage,
-            { timeout: currTimeoutDisplay },
-            { timeout: connection.config.receiveLibraryTimeoutConfig.expiry }
-        )
-        // Create the transaction
-        const tx = oft.setReceiveLibraryTimeoutPayload(
-            connection.to.eid,
-            connection.config.receiveLibraryTimeoutConfig.lib,
-            Number(connection.config.receiveLibraryTimeoutConfig.expiry)
-        )
-        // Return the transaction with the description and eid
-        return {
-            payload: tx,
-            description: buildTransactionDescription('Set Receive Library Timeout', connection),
-            eid: connection.to.eid,
-        }
+  // 3. Compare and act
+  if (
+    currentTimeoutAsBigInt ===
+    BigInt(connection.config.receiveLibraryTimeoutConfig.expiry)
+  ) {
+    printAlreadySet("Receive library timeout", connection);
+    return null;
+  } else {
+    let currTimeoutDisplay = "" + currentTimeoutAsBigInt;
+    if (currentTimeoutAsBigInt === BigInt(-1)) {
+      currTimeoutDisplay = "unset";
     }
+    // Printing the diff
+    const diffMessage = createDiffMessage(
+      `receive library timeout`,
+      connection,
+    );
+    diffPrinter(
+      diffMessage,
+      { timeout: currTimeoutDisplay },
+      { timeout: connection.config.receiveLibraryTimeoutConfig.expiry },
+    );
+    // Create the transaction
+    const tx = oft.setReceiveLibraryTimeoutPayload(
+      connection.to.eid,
+      connection.config.receiveLibraryTimeoutConfig.lib,
+      Number(connection.config.receiveLibraryTimeoutConfig.expiry),
+    );
+    // Return the transaction with the description and eid
+    return {
+      payload: tx,
+      description: buildTransactionDescription(
+        "Set Receive Library Timeout",
+        connection,
+      ),
+      eid: connection.to.eid,
+    };
+  }
 }
 ```
 
 The methods of `moveVMOftConfigOps.ts` call our MoveVM SDKs enpoint.ts, msgLib.ts, and oft.ts. These are all very simple and straightforward. The getters call blockchain view functions, but the setters return payloads to later be executed.
 
 For example, the `setReceiveLibraryTimeoutPayload` method returns a payload to be executed on the MoveVM. It calls the `set_receive_library_timeout` function on the `oapp_core` module, at the address of the OFT, that is retrieved from `examples/oft-aptos-move/deployments/aptos-testnet/oft.json`.
+
 ```ts
 setReceiveLibraryTimeoutPayload(
     remoteEid: number,
@@ -169,17 +211,24 @@ setReceiveLibraryTimeoutPayload(
 ```
 
 After doing a similar process for all of the other config values, we now have a list of transactions in `wire.ts` and are ready to execute them.
+
 ```ts
-const txs = await createWiringTxs(oft, moveVMEndpoint, connectionsFromMoveToAny)
-await sendAllTxs(moveVMConnection, oft, account_address, txs)
+const txs = await createWiringTxs(
+  oft,
+  moveVMEndpoint,
+  connectionsFromMoveToAny,
+);
+await sendAllTxs(moveVMConnection, oft, account_address, txs);
 ```
+
 Then in sendAllTxs, we loop through the transactions, and one by one submit and build them:
+
 ```ts
 const trans = await aptos.transaction.build.simple({
-    sender: account_address,
-    data: cleanedPayloads[i].payload,
-})
-await oft.signSubmitAndWaitForTx(trans)
+  sender: account_address,
+  data: cleanedPayloads[i].payload,
+});
+await oft.signSubmitAndWaitForTx(trans);
 ```
 
 The output of wire looks like this:
@@ -190,97 +239,97 @@ The output of wire looks like this:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Set peer for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | address                        |                                                                          | 0x000000000000000000000000ab88bad042336dcc4550182c12be17f0cc8bb7c5       | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | address                        |                                                                          | 0x000000000000000000000000ab88bad042336dcc4550182c12be17f0cc8bb7c5       |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set enforced options with message type: 1 for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | LzReceiveOption.gas            |                                                                          | 80000                                                                    | 
- | LzReceiveOption.value          |                                                                          | 0                                                                        | 
- | NativeDropOption               | []                                                                       | []                                                                       | 
- | ComposeOption                  | []                                                                       | []                                                                       | 
- | LzReadOption.gas               |                                                                          |                                                                          | 
- | LzReadOption.dataSize          |                                                                          |                                                                          | 
- | LzReadOption.value             |                                                                          |                                                                          | 
- | OrderedExecutionOption         | false                                                                    | false                                                                    | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | LzReceiveOption.gas            |                                                                          | 80000                                                                    |
+ | LzReceiveOption.value          |                                                                          | 0                                                                        |
+ | NativeDropOption               | []                                                                       | []                                                                       |
+ | ComposeOption                  | []                                                                       | []                                                                       |
+ | LzReadOption.gas               |                                                                          |                                                                          |
+ | LzReadOption.dataSize          |                                                                          |                                                                          |
+ | LzReadOption.value             |                                                                          |                                                                          |
+ | OrderedExecutionOption         | false                                                                    | false                                                                    |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set enforced options with message type: 2 for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | LzReceiveOption.gas            |                                                                          | 80000                                                                    | 
- | LzReceiveOption.value          |                                                                          | 0                                                                        | 
- | NativeDropOption               | []                                                                       | []                                                                       | 
- | ComposeOption                  | []                                                                       | []                                                                       | 
- | LzReadOption.gas               |                                                                          |                                                                          | 
- | LzReadOption.dataSize          |                                                                          |                                                                          | 
- | LzReadOption.value             |                                                                          |                                                                          | 
- | OrderedExecutionOption         | false                                                                    | false                                                                    | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | LzReceiveOption.gas            |                                                                          | 80000                                                                    |
+ | LzReceiveOption.value          |                                                                          | 0                                                                        |
+ | NativeDropOption               | []                                                                       | []                                                                       |
+ | ComposeOption                  | []                                                                       | []                                                                       |
+ | LzReadOption.gas               |                                                                          |                                                                          |
+ | LzReadOption.dataSize          |                                                                          |                                                                          |
+ | LzReadOption.value             |                                                                          |                                                                          |
+ | OrderedExecutionOption         | false                                                                    | false                                                                    |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set send library for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | address                        | default: 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3 | 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10       | 
- |                                | f10                                                                      |                                                                          | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | address                        | default: 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3 | 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10       |
+ |                                | f10                                                                      |                                                                          |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set receive library for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | address                        | default: 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3 | 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10       | 
- |                                | f10                                                                      |                                                                          | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | address                        | default: 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3 | 0xbe533727aebe97132ec0a606d99e0ce137dbdf06286eb07d9e0f7154df1f3f10       |
+ |                                | f10                                                                      |                                                                          |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set receive library timeout for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | timeout                        | unset                                                                    | 1000000000                                                               | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | timeout                        | unset                                                                    | 1000000000                                                               |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set send config for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | confirmations                  | 260                                                                      | 260                                                                      | 
- | optional_dvn_threshold         | 0                                                                        | 0                                                                        | 
- | required_dvns[0]               | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 
- | optional_dvns                  | []                                                                       | []                                                                       | 
- | use_default_for_confirmations  | false                                                                    | false                                                                    | 
- | use_default_for_required_dvns  | false                                                                    | false                                                                    | 
- | use_default_for_optional_dvns  | false                                                                    | true                                                                     | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | confirmations                  | 260                                                                      | 260                                                                      |
+ | optional_dvn_threshold         | 0                                                                        | 0                                                                        |
+ | required_dvns[0]               | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       |
+ | optional_dvns                  | []                                                                       | []                                                                       |
+ | use_default_for_confirmations  | false                                                                    | false                                                                    |
+ | use_default_for_required_dvns  | false                                                                    | false                                                                    |
+ | use_default_for_optional_dvns  | false                                                                    | true                                                                     |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set executor config for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | max_message_size               | 10000                                                                    | 10000                                                                    | 
- | executor_address               | Default:0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a68 | 0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a686d       | 
- |                                | 6d                                                                       |                                                                          | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | max_message_size               | 10000                                                                    | 10000                                                                    |
+ | executor_address               | Default:0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a68 | 0xeb514e8d337485dd9ce7492f70128ef5aaa8c34023866e261a24ffa3d61a686d       |
+ |                                | 6d                                                                       |                                                                          |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Set receive config for pathway oft on aptos-testnet → bsc-testnet
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
- | Key                            | Current                                                                  | New                                                                      | 
- |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------| 
- | confirmations                  | 5                                                                        | 5                                                                        | 
- | optional_dvn_threshold         | 0                                                                        | 0                                                                        | 
- | required_dvns[0]               | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 
- | optional_dvns                  | []                                                                       | []                                                                       | 
- | use_default_for_confirmations  | false                                                                    | false                                                                    | 
- | use_default_for_required_dvns  | false                                                                    | false                                                                    | 
- | use_default_for_optional_dvns  | false                                                                    | true                                                                     | 
- ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ | Key                            | Current                                                                  | New                                                                      |
+ |--------------------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------|
+ | confirmations                  | 5                                                                        | 5                                                                        |
+ | optional_dvn_threshold         | 0                                                                        | 0                                                                        |
+ | required_dvns[0]               | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       | 0xd6f420483a90c7db5ce2ec12e8acfc2bfb7b93829c9e6a3b0760bca330be64dd       |
+ | optional_dvns                  | []                                                                       | []                                                                       |
+ | use_default_for_confirmations  | false                                                                    | false                                                                    |
+ | use_default_for_required_dvns  | false                                                                    | false                                                                    |
+ | use_default_for_optional_dvns  | false                                                                    | true                                                                     |
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 Review the 12 transaction(s) above carefully.
