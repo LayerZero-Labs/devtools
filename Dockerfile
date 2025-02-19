@@ -96,6 +96,13 @@ RUN apt-get install --yes \
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+RUN rustc --version
+
+# Setup go
+ARG GO_VERSION=1.24.0
+RUN curl -sL https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
+ENV PATH="/usr/local/go/bin:$PATH"
+RUN go version
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
