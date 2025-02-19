@@ -23,7 +23,7 @@ ARG NODE_VERSION=20.10.0
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
-# e.g. ghcr.io/layerzero-labs/devtools-dev-base:dockerfile-default_rustup_1_75_0
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:dockerfile-rustc_1_75_0
 ARG BASE_IMAGE=base
 
 # We will provide a way for consumers to override the default Aptos node image
@@ -92,8 +92,8 @@ RUN apt-get install --yes \
     ninja-build
 
 
-# Install rust and set the default toolchain to 1.83.0
-ARG RUST_TOOLCHAIN_VERSION=1.83.0
+# Install rust and set the default toolchain to 1.75.0
+ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 
@@ -114,6 +114,8 @@ FROM machine AS aptos
 WORKDIR /app/aptos
 
 ARG APTOS_VERSION=6.0.1
+ENV RUST_TOOLCHAIN_VERSION_APTOS=1.83.0
+RUN rustup default ${RUST_TOOLCHAIN_VERSION_APTOS}
 
 # We download the source code and extract the archive
 RUN curl -s -L https://github.com/aptos-labs/aptos-core/archive/refs/tags/aptos-cli-v${APTOS_VERSION}.tar.gz | tar -xz
