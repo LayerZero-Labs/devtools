@@ -269,7 +269,7 @@ Note: The object owner has the upgrade authority for the Object.
 ### Mint to Account on Move VM OFT:
 
 > ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
-> First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
+> First add this function to oft/sources/internal_oft/oft_fa.move in order to expose minting functionality to our move sdk script:
 
 ```rust
 public entry fun mint(
