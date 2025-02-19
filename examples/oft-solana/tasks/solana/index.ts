@@ -132,6 +132,7 @@ export const saveSolanaDeployment = (
     console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
 }
 
+// TODO: move below outside of solana folder since it's generic
 export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
     isTestnet ? `https://testnet.layerzeroscan.com/tx/${hash}` : `https://layerzeroscan.com/tx/${hash}`
 
