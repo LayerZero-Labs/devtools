@@ -36,7 +36,7 @@ Then run `source .env`.
 
 ### Deploy the modules
 
-First modify deploy-move/OFTInitParams.ts and replace the oftMetadata with your desired values:
+First modify `./deploy-move/OFTInitParams.ts` and replace the `oftMetadata` with your desired values:
 
 ```ts
 const oftMetadata = {
@@ -96,7 +96,7 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 > **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
 For EVM:
-Ensure that in `move.layerzero.config.ts`, all of your evm contracts have the owner and delegate contract is specified.
+Ensure that in `move.layerzero.config.ts`, all of your evm contracts have the owner and delegate addresses specified.
 
 ```ts
     contracts: [
