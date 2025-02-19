@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeAll } from '@jest/globals'
+import { describe, expect, test, beforeAll, afterAll } from '@jest/globals'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { InitiaMsgLib } from '../initiaMsgLib'
 import { RESTClient } from '@initia/initia.js'
@@ -7,6 +7,22 @@ import dotenv from 'dotenv'
 import path from 'path'
 
 dotenv.config({ path: path.resolve(__dirname, '.env') })
+
+// Mock environment variables before any code runs
+beforeAll(() => {
+    process.env.INITIA_REST_URL = 'https://rest.testnet.initia.xyz'
+    process.env.INITIA_RPC_URL = 'https://rpc.testnet.initia.xyz'
+    process.env.INITIA_PRIVATE_KEY = '0000000000000000000000000000000000000000000000000000000000000001'
+    process.env.INITIA_ACCOUNT_ADDRESS = '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6'
+})
+
+// Clean up after all tests
+afterAll(() => {
+    delete process.env.INITIA_REST_URL
+    delete process.env.INITIA_RPC_URL
+    delete process.env.INITIA_PRIVATE_KEY
+    delete process.env.INITIA_ACCOUNT_ADDRESS
+})
 
 describe('InitiaMsgLib View Methods', () => {
     let msgLib: InitiaMsgLib
@@ -23,7 +39,7 @@ describe('InitiaMsgLib View Methods', () => {
 
     describe('get_default_uln_send_config', () => {
         test('should return UlnConfig with correct types', async () => {
-            const result = await msgLib.get_default_uln_send_config(EndpointId.BSC_V2_TESTNET)
+            const result = await msgLib.getDefaultULNSendConfig(EndpointId.BSC_V2_TESTNET)
 
             console.log('get_default_uln_send_config result types:', {
                 confirmations: typeof result.confirmations,
@@ -56,7 +72,7 @@ describe('InitiaMsgLib View Methods', () => {
 
     describe('get_default_uln_receive_config', () => {
         test('should return UlnConfig with correct types', async () => {
-            const result = await msgLib.get_default_uln_receive_config(EndpointId.BSC_V2_TESTNET)
+            const result = await msgLib.getDefaultULNReceiveConfig(EndpointId.BSC_V2_TESTNET)
 
             console.log('get_default_uln_receive_config result types:', {
                 confirmations: typeof result.confirmations,
@@ -89,7 +105,7 @@ describe('InitiaMsgLib View Methods', () => {
 
     describe('get_default_executor_config', () => {
         test('should return ExecutorConfig with correct types', async () => {
-            const result = await msgLib.get_default_executor_config(EndpointId.BSC_V2_TESTNET)
+            const result = await msgLib.getDefaultExecutorConfig(EndpointId.BSC_V2_TESTNET)
 
             console.log('get_default_executor_config result types:', {
                 executor_address: typeof result.executor_address,
