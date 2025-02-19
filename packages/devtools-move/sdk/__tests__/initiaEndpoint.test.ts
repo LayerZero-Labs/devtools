@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeAll } from '@jest/globals'
+import { describe, expect, test, beforeAll, afterAll } from '@jest/globals'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { InitiaEndpoint } from '../initiaEndpoint'
 import { RESTClient } from '@initia/initia.js'
@@ -7,6 +7,22 @@ import dotenv from 'dotenv'
 import path from 'path'
 
 dotenv.config({ path: path.resolve(__dirname, '.env') })
+
+// Mock environment variables before any code runs
+beforeAll(() => {
+    process.env.INITIA_REST_URL = 'https://rest.testnet.initia.xyz'
+    process.env.INITIA_RPC_URL = 'https://rpc.testnet.initia.xyz'
+    process.env.INITIA_PRIVATE_KEY = '0000000000000000000000000000000000000000000000000000000000000001'
+    process.env.INITIA_ACCOUNT_ADDRESS = '0x2e2de55e5162d58c41de389ccf6d7ca8de3940a6'
+})
+
+// Clean up after all tests
+afterAll(() => {
+    delete process.env.INITIA_REST_URL
+    delete process.env.INITIA_RPC_URL
+    delete process.env.INITIA_PRIVATE_KEY
+    delete process.env.INITIA_ACCOUNT_ADDRESS
+})
 
 describe('InitiaEndpoint View Methods', () => {
     let endpoint: InitiaEndpoint
