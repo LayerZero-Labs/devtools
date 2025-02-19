@@ -482,6 +482,38 @@ ENTRYPOINT aptos
 
 CMD ["node", "run-local-testnet", "--force-restart", "--assume-yes"]
 
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that builds an Initia node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS node-initia-localnet
+
+# This is massively built off: <https://github.com/LayerZero-Labs/monorepo/tree/main/docker/devcon/initia>
+# https://docs.cosmos.network/v0.50/user/run-node/run-node
+# https://docs.initia.xyz/run-initia-node/boot-an-initia-node
+
+ENV PATH="/root/.initia/bin:$PATH"
+
+COPY --from=initia /root/.initia/bin /root/.initia/bin
+
+HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:26657/status || exit 1
+# The argument lz is the custom username of your node, it should be human-readable.
+RUN initiad init lz --chain-id lz-test-chain && \
+    echo "test test test test test test test test test test test junk" > key.txt && \
+    initiad keys add lz-validator --keyring-backend test --recover < key.txt && \
+    LZ_VALIDATOR_ADDRESS=$(initiad keys show lz-validator -a --keyring-backend test) && \
+    initiad genesis add-genesis-account $LZ_VALIDATOR_ADDRESS 1000000000000uinit && \
+    initiad genesis gentx lz-validator 100000000uinit --chain-id lz-test-chain --keyring-backend test && \
+    initiad genesis collect-gentxs
+
+ENTRYPOINT initiad start
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
