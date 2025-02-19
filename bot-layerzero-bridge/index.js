@@ -48,17 +48,17 @@ async function checkThresholds(balance) {
     let sendRepeatedAlerts = false;
 
     if (currentMultiplier < THRESHOLDS.OVERDUE) {
-        alertMessage = `🚨 *URGENT:* L2 Escrow critically low at ${balance.toFixed(2)} MOVE (below 3x daily limit). Immediate top-up required!`;
+        alertMessage = `🚨 *URGENT:* L2 Escrow critically low at ${balance.toFixed(2)} MOVE (below 2.9x daily limit). Immediate top-up required!`;
         alertLevel = 'OVERDUE';
         sendRepeatedAlerts = true;
     } else if (currentMultiplier < THRESHOLDS.CRITICAL) {
-        alertMessage = `⚠️ *Critical:* L2 Escrow at ${balance.toFixed(2)} MOVE (exactly 3x daily limit). Top it up to 4x.`;
+        alertMessage = `⚠️ *Critical:* L2 Escrow at ${balance.toFixed(2)} MOVE (below 3x daily limit). Top it up to 4x now.`;
         alertLevel = 'CRITICAL';
     } else if (currentMultiplier < THRESHOLDS.ALERT) {
-        alertMessage = `🔴 *Warning:* L2 Escrow dropped to ${balance.toFixed(2)} MOVE (3.2x daily limit). Keep an eye on it.`;
+        alertMessage = `🔴 *Warning:* L2 Escrow dropped to ${balance.toFixed(2)} MOVE (below 3.2x daily limit). Keep an eye on it.`;
         alertLevel = 'ALERT';
     } else if (currentMultiplier < THRESHOLDS.WARN) {
-        alertMessage = `🟡 *Caution:* L2 Escrow is now ${balance.toFixed(2)} MOVE (3.5x daily limit).`;
+        alertMessage = `🟡 *Caution:* L2 Escrow is now ${balance.toFixed(2)} MOVE (below 3.5x daily limit).`;
         alertLevel = 'WARN';
     }
 
@@ -66,10 +66,12 @@ async function checkThresholds(balance) {
         // If overdue, send alerts every 10 minutes. Otherwise, only send once per threshold level.
         if (sendRepeatedAlerts || alertLevel !== lastAlertLevel) {
             lastAlertLevel = alertLevel;
-            await postToSlack(alertMessage);
+            console.log(alertMessage);
+            // await postToSlack(alertMessage);
         }
     }
 }
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function postToSlack(message) {
     try {
