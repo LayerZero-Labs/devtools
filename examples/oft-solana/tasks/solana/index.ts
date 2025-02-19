@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 import {
     fetchAddressLookupTable,
@@ -130,6 +130,31 @@ export const saveSolanaDeployment = (
         )
     )
     console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
+}
+
+/**
+ * Reads the OFT deployment info from disk for the given endpoint ID.
+ * @param eid {EndpointId}
+ * @returns The contents of the OFT.json file as a JSON object.
+ */
+export const getSolanaDeployment = (
+    eid: EndpointId
+): {
+    programId: string
+    mint: string
+    mintAuthority: string
+    escrow: string
+    oftStore: string
+} => {
+    const outputDir = `./deployments/${endpointIdToNetwork(eid)}`
+    const filePath = `${outputDir}/OFT.json`
+
+    if (!existsSync(filePath)) {
+        throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
+    }
+
+    const fileContents = readFileSync(filePath, 'utf-8')
+    return JSON.parse(fileContents)
 }
 
 // TODO: move below outside of solana folder since it's generic
