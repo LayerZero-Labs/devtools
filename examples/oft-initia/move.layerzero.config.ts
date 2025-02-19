@@ -30,8 +30,8 @@ const config: OAppOmniGraphHardhat = {
         {
             contract: initiaContract,
             config: {
-                delegate: '',
-                owner: '',
+                delegate: '', // For initia, this address must be in hex format i.e. 0x...
+                owner: '', // For initia, this address must be in hex format i.e. 0x...
             },
         },
     ],
