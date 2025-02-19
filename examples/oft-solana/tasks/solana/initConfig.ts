@@ -3,6 +3,7 @@ import { ConfigurableTaskDefinition } from 'hardhat/types'
 
 import { inheritTask } from '@layerzerolabs/devtools-evm-hardhat'
 import { type LogLevel } from '@layerzerolabs/io-devtools'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { type OAppConfigurator } from '@layerzerolabs/ua-devtools'
 import { TASK_LZ_OAPP_WIRE } from '@layerzerolabs/ua-devtools-evm-hardhat'
 import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
@@ -15,7 +16,7 @@ const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
  */
 interface Args {
     logLevel: LogLevel
-    solanaProgramId: PublicKey
+    eid: EndpointId
     solanaSecretKey?: Keypair
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
