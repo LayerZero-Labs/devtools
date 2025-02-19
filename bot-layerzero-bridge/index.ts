@@ -94,7 +94,8 @@ async function checkThresholds(balance: number): Promise<void> {
         // If overdue, send alerts every 10 minutes. Otherwise, only send once per threshold level.
         if (sendRepeatedAlerts || alertLevel !== lastAlertLevel) {
             lastAlertLevel = alertLevel;
-            await postToSlack(alertMessage);
+            await console.log(alertMessage);
+            // await postToSlack(alertMessage);
         }
     }
 }
