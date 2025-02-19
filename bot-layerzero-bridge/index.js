@@ -8,6 +8,9 @@ const APTOS_NODE_URL = 'https://aptos.testnet.bardock.movementlabs.xyz/v1';
 const L2_ESCROW_ADDRESS = process.env.L2_ESCROW_ADDRESS;
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
 const L1_RATE_LIMIT = parseFloat(process.env.L1_RATE_LIMIT); // Daily limit in MOVE
+const L1_OAPP = process.env.L1_OAPP;
+const L2_OAPP = process.env.L2_OAPP;
+const NETWORK = process.env.NETWORK || 'Unknown Network'; // Default to prevent crashes
 
 const client = new AptosClient(APTOS_NODE_URL);
 
@@ -48,17 +51,39 @@ async function checkThresholds(balance) {
     let sendRepeatedAlerts = false;
 
     if (currentMultiplier < THRESHOLDS.OVERDUE) {
-        alertMessage = `🚨 *URGENT:* L2 Escrow critically low at ${balance.toFixed(2)} MOVE (below 2.9x daily limit). Immediate top-up required!`;
+        alertMessage =
+            `🚨 *URGENT: L2 Escrow Critically Low* 🚨\n` +
+            `The L2 escrow balance is *${balance.toFixed(2)} MOVE* (below 2.9x daily limit). Immediate top-up required!\n` +
+            `🔗 *Network:* ${NETWORK}\n` +
+            `🔷 *L1 OApp:* ${L1_OAPP}\n` +
+            `🔶 *L2 OApp:* ${L2_OAPP}\n` +
+            `⚠️ Take action now to avoid issues!`;
         alertLevel = 'OVERDUE';
         sendRepeatedAlerts = true;
     } else if (currentMultiplier < THRESHOLDS.CRITICAL) {
-        alertMessage = `⚠️ *Critical:* L2 Escrow at ${balance.toFixed(2)} MOVE (below 3x daily limit). Top it up to 4x now.`;
+        alertMessage =
+            `⚠️ *Critical Alert: L2 Escrow Needs Topping Up* ⚠️\n` +
+            `Current balance: *${balance.toFixed(2)} MOVE* (below 3x daily limit).\n` +
+            `💡 Consider topping it up to 4x the daily rate.\n` +
+            `🔗 *Network:* ${NETWORK}\n` +
+            `🔷 *L1 OApp:* \`${L1_OAPP}\`\n` +
+            `🔶 *L2 OApp:* \`${L2_OAPP}\``;
         alertLevel = 'CRITICAL';
     } else if (currentMultiplier < THRESHOLDS.ALERT) {
-        alertMessage = `🔴 *Warning:* L2 Escrow dropped to ${balance.toFixed(2)} MOVE (below 3.2x daily limit). Keep an eye on it.`;
+        alertMessage =
+            `🔴 *Warning: L2 Escrow Dropping* 🔴\n` +
+            `Balance has dropped to *${balance.toFixed(2)} MOVE* (below o3.2x daily limit). Keep an eye on it.\n` +
+            `🔗 *Network:* ${NETWORK}\n` +
+            `🔷 *L1 OApp:* \`${L1_OAPP}\`\n` +
+            `🔶 *L2 OApp:* \`${L2_OAPP}\``;
         alertLevel = 'ALERT';
     } else if (currentMultiplier < THRESHOLDS.WARN) {
-        alertMessage = `🟡 *Caution:* L2 Escrow is now ${balance.toFixed(2)} MOVE (below 3.5x daily limit).`;
+        alertMessage =
+            `🟡 *Caution: L2 Escrow Lowering* 🟡\n` +
+            `Balance is now at *${balance.toFixed(2)} MOVE* (3.5x daily limit).\n` +
+            `🔗 *Network:* ${NETWORK}\n` +
+            `🔷 *L1 OApp:* \`${L1_OAPP}\`\n` +
+            `🔶 *L2 OApp:* \`${L2_OAPP}\``;
         alertLevel = 'WARN';
     }
 
@@ -66,12 +91,12 @@ async function checkThresholds(balance) {
         // If overdue, send alerts every 10 minutes. Otherwise, only send once per threshold level.
         if (sendRepeatedAlerts || alertLevel !== lastAlertLevel) {
             lastAlertLevel = alertLevel;
+            // Console log instead of postToSlack to avoid posting to Slack until ready
             console.log(alertMessage);
-            // await postToSlack(alertMessage);
+            //await postToSlack(alertMessage);
         }
     }
 }
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function postToSlack(message) {
     try {
