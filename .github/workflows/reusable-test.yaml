@@ -179,6 +179,8 @@ jobs:
           DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:main
           # Using the local TON node - i do not know if this is working
           DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          # Using the local Initia node
+          DEVTOOLS_INITIA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-initia-localnet:main
           # Using the local Solana test validator - may fail due to RPC issues
           DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:main
 

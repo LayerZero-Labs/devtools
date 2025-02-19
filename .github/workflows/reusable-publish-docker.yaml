@@ -237,6 +237,47 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
   #
+  # Build the Initia node image and push it as digests
+  #
+  build-node-initia:
+    name: Build Initia node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-base
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build image & push the digest
+        uses: ./.github/workflows/actions/docker-build-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-initia-localnet
+          # The target stage of the Dockerfile
+          target: node-initia-localnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          digest-name: node-initia-localnet
+          platform: ${{ matrix.platform }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
   # Collect the base image digests and push them to GHCR
   #
   push-base:
@@ -418,5 +459,43 @@ jobs:
           #
           # This needs to match the digest name of the build stage
           digest-name: node-ton-my-local-ton
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+
+  #
+  # Collect the Initia node image digests and push them to GHCR
+  #
+  push-node-initia:
+    name: Push Initia node image
+    runs-on: ${{ matrix.runner }}
+    needs:
+      - build-node-initia
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest-16xlarge
+            arch: amd64
+          - platform: linux/arm64
+            runner: ubuntu-latest-16xlarge-arm
+            arch: arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push image
+        uses: ./.github/workflows/actions/docker-push-image
+        with:
+          # The name of the image
+          image: devtools-dev-node-initia-localnet
+          # Since the digests will be shared across jobs as artifacts,
+          # we need a unique name (per workflow) for these artifacts
+          #
+          # This needs to match the digest name of the build stage
+          digest-name: node-initia-localnet
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
