@@ -2902,6 +2902,9 @@ importers:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
         version: 1.33.2
+      '@initia/initia.js':
+        specifier: ^0.2.28
+        version: 0.2.29(typescript@5.5.3)
       '@layerzerolabs/devtools-extensible-cli':
         specifier: ^0.0.2
         version: link:../devtools-extensible-cli

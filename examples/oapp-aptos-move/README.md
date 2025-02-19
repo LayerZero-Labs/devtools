@@ -249,7 +249,6 @@ For verifying the admin look for the following in the output:
 
 If the admin is your desired address, then the ownership transfer was successful.
 
-
 ## Multisig Transaction Execution
 
 To execute transactions with a multisig account via the aptos CLI, follow these steps:
