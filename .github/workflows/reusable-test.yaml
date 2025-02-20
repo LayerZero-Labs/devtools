@@ -100,7 +100,9 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Test
-        run: pnpm test:ci
+        run: |
+          echo "LD_LIBRARY_PATH=/root/.initia/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          pnpm test:ci
         env:
           # Disable parallel execution for now
           LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION: false
