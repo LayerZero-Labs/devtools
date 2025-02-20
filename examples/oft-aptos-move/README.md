@@ -83,6 +83,7 @@ Note: the aptos specific values can be found in `.aptos/config.yaml` after runni
 Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
 
 > **Important:** If testing with Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+>
 > ```toml
 > [dependencies.AptosFramework]
 > git = "https://github.com/movementlabsxyz/aptos-core.git"
@@ -107,7 +108,7 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
 
 To build the contracts without deploying them, run the following command:
 
-```bash 
+```bash
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
