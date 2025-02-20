@@ -52,24 +52,9 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
-        'movement-testnet': {
-            eid: EndpointId.MOVEMENT_V2_TESTNET,
-            url: process.env.RPC_URL_MOVEMENT_TESTNET || 'https://rpc.ankr.com/http/movement_testnet/v1[1]',
-            accounts,
-        },
-        'initia-testnet': {
-            eid: EndpointId.INITIA_V2_TESTNET,
-            url: process.env.RPC_URL_INITIA_TESTNET || 'https://rpc.ankr.com/http/initia_testnet/v1[1]',
-            accounts,
-        },
         'bsc-testnet': {
             eid: EndpointId.BSC_V2_TESTNET,
             url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
-            accounts,
-        },
-        'aptos-testnet': {
-            eid: EndpointId.APTOS_V2_TESTNET,
-            url: process.env.RPC_URL_APTOS_TESTNET || 'https://rpc.ankr.com/http/aptos_testnet/v1[1]',
             accounts,
         },
         'eth-testnet': {
