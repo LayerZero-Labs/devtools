@@ -96,6 +96,14 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
     ],
 ```
 
+To build the contracts without deploying them, run the following command:
+
+```bash
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oapp
+```
+
+To build and deploy the contracts, run the following command:
+
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oapp --oapp-type oapp
 ```

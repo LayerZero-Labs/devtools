@@ -1,7 +1,7 @@
 {
   "name": "@layerzerolabs/oft-initia-example",
   "version": "0.0.1",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf artifacts cache out build",
@@ -108,6 +108,9 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "pnpm": {
     "overrides": {

@@ -157,12 +157,14 @@ export function getNamedAddresses(
     const oAppOwner = getOAppOwner(selectedContract)
     let named_addresses = ''
     if (chain === 'movement' || chain === 'aptos') {
-        named_addresses = `${oAppOwner}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
+        named_addresses = `${moveTomlAdminName.replace('_admin', '')}=${oAppOwner},${moveTomlAdminName}=${oAppOwner}`
     } else if (chain === 'initia') {
         named_addresses = `${moveTomlAdminName}=${oAppOwner}`
     }
-
-    return named_addresses + ',' + getDeploymentAddresses(chain, networkType)
+    const deploymentAddresses = getDeploymentAddresses(chain, networkType)
+    const allAddresses = named_addresses + ',' + deploymentAddresses
+    console.log(`🚀 Named addresses: ${allAddresses}`)
+    return allAddresses
 }
 
 export function getDeploymentAddresses(chain: string, networkType: string): string {

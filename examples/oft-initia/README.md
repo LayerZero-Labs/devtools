@@ -34,7 +34,7 @@ INITIA_CHAIN_ID=<your-initia-chain-id>
 
 Then run `source .env`.
 
-### Deploy the modules
+### Build and Deploy the modules
 
 First modify `./deploy-move/OFTInitParams.ts` and replace the `oftMetadata` with your desired values:
 
@@ -49,7 +49,13 @@ const oftMetadata = {
 };
 ```
 
-Then run the following command to build and deploy the modules:
+To build the contracts without deploying them, run the following command:
+
+```bash 
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
+```
+
+To build and deploy the contracts, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft

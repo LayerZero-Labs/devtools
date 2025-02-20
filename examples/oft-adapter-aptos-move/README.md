@@ -87,7 +87,7 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --named-addresses oft=$ACCOUNT_ADDRESS,oft_admin=$ACCOUNT_ADDRESS
 ```
 
-### Deploy the modules
+### Build and Deploy the modules
 
 First modify deploy-move/OFTAdpaterInitParams.ts and replace the oftMetadata with your desired values:
 
@@ -97,6 +97,14 @@ const oftMetadata = {
   shared_decimals: 6,
 };
 ```
+
+To build the contracts without deploying them, run the following command:
+
+```bash 
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
+```
+
+To build and deploy the contracts, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
