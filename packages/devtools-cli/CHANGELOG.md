@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-cli
 
+## 0.0.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.5
 
 ### Patch Changes

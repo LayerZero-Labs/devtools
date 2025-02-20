@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-evm
 
+## 0.3.1
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.3.0
 
 ### Minor Changes

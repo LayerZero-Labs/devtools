@@ -1,5 +1,11 @@
 # @layerzerolabs/test-evm-node
 
+## 0.1.1
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.1.0
 
 ### Minor Changes

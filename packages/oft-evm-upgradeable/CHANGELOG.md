@@ -1,5 +1,13 @@
 # @layerzerolabs/oft-evm-upgradeable
 
+## 3.0.1
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/oapp-evm@0.3.1
+
 ## 3.0.0
 
 ### Patch Changes
