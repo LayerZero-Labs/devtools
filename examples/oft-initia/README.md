@@ -49,7 +49,7 @@ const oftMetadata = {
 
 To build the contracts without deploying them, run the following command:
 
-```bash 
+```bash
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
