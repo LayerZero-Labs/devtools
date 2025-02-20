@@ -32,8 +32,6 @@ INITIA_RPC_URL=<your-initia-rpc-url>
 INITIA_CHAIN_ID=<your-initia-chain-id>
 ```
 
-Then run `source .env`.
-
 ### Build and Deploy the modules
 
 First modify `./deploy-move/OFTInitParams.ts` and replace the `oftMetadata` with your desired values:
@@ -101,7 +99,6 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 
 > **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
-For EVM:
 Ensure that in `move.layerzero.config.ts`, all of your evm contracts have the owner and delegate addresses specified.
 
 ```ts
@@ -125,9 +122,7 @@ If you are wiring solana to move-vm, create a file in `deployments/solana-mainne
 }
 ```
 
-Commands:
-
-To wire from EVM to Move-VM:
+### To wire from EVM to Move-VM:
 
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
@@ -137,7 +132,7 @@ Note: `--simulate <true>` and `--mnemonic-index <value>` are optional.
 `--mnemonic-index <value>` is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from `.env` is used. Otherwise, the mnemonic is used along with the index.
 If `--only-calldata <true>` is specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
-To wire from Move-VM to EVM:
+### To wire from Move-VM to EVM:
 
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts

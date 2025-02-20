@@ -60,17 +60,17 @@ Note: Your private key is stored in the .aptos/config.yaml file and will be extr
 Create a `.env` file with the following variables:
 
 ```bash
+EVM_PRIVATE_KEY=<your-evm-private-key>
+MNEMONIC=<your-mnemonic>
+
 # If you are deploying to Movement chain
-MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql # for testnet
-MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1 # for testnet
+MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
+MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1
 MOVEMENT_ACCOUNT_ADDRESS=<your-movement-account-address>
 MOVEMENT_PRIVATE_KEY=<your-movement-private-key>
 MOVEMENT_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 
-EVM_PRIVATE_KEY=<your-evm-private-key>
-MNEMONIC=<your-mnemonic>
-
-# If you are deploying to Aptos chain, the indexer and fullnode urls are fetched by the Aptos SDK and do not need to be specified.
+# If you are deploying to Aptos chain
 APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
 APTOS_PRIVATE_KEY=<your-aptos-private-key>
 APTOS_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
@@ -78,13 +78,18 @@ APTOS_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 
 Then run `source .env` in order for your values to be mapped.
 
+Note: the aptos specific values can be found in `.aptos/config.yaml` after running `aptos init`
+
 Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
 
-## Build and deploy aptos move modules
+> **Important:** If testing with Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+> ```toml
+> [dependencies.AptosFramework]
+> git = "https://github.com/movementlabsxyz/aptos-core.git"
+> rev = "movement"
+> ```
 
-Note: to overwrite previous deploy and build, you can use `--force-build true` for the build script and `--force-deploy true` for the deploy script.
-
-### Build and Deploy the modules
+### Wire setup
 
 Before running the deploy and wire commands, first inside of `move.layerzero.config.ts`, set the delegate and owner address to your deployer account address. These can be changed in the future with commands shown later in this README, but for now they should be set to the address you will be running the commands from (deployer account address).
 
@@ -103,7 +108,7 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
 To build the contracts without deploying them, run the following command:
 
 ```bash 
-pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft --force-build true 
+pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
 ```bash
@@ -173,9 +178,7 @@ If you are wiring solana to move-vm, create a file in deployments/solana-mainnet
 }
 ```
 
-Commands:
-
-To wire from EVM to Move-VM:
+### To wire from EVM to Move-VM:
 
 ```bash
 pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts
@@ -185,7 +188,7 @@ Note: `--simulate <true>` and `--mnemonic-index <value>` are optional.
 `--mnemonic-index <value>` is the index of the mnemonic to use for the EVM account. If not specified, EVM_PRIVATE_KEY from `.env` is used. Otherwise, the mnemonic is used along with the index.
 If `--only-calldata <true>` is specified, only the calldata is generated and not the transaction (this is primarily for multisig wallets).
 
-To wire from Move-VM to EVM:
+### To wire from Move-VM to EVM:
 
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts

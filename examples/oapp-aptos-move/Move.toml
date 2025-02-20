@@ -59,9 +59,14 @@ dvn_fee_lib_0 = "0x100003"
 dvn = "0x100002"
 
 [dependencies.AptosFramework]
-git = "https://github.com/aptos-labs/aptos-core.git"
+git = "https://github.com/aptos-labs/aptos-framework.git"
 rev = "mainnet"
-subdir = "aptos-move/framework/aptos-framework"
+subdir = "aptos-framework"
+
+# Note: For testing using Aptos CLI version <= 3.5.0 (the version supported by Movement), use the following dependencies:
+# [dependencies.AptosFramework]
+# git = "https://github.com/movementlabsxyz/aptos-core.git"
+# rev = "movement"
 
 [dependencies]
 endpoint_v2_common = { git = "https://github.com/LayerZero-Labs/LayerZero-v2", rev = "aptos-v2-jan-6", subdir = "packages/layerzero-v2/aptos/contracts/endpoint_v2_common" }
