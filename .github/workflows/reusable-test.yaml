@@ -38,7 +38,7 @@ jobs:
     
     # We'll run the job on the prebuilt base image
     container:
-      image: ghcr.io/layerzero-labs/devtools-dev-base:main
+      image: ghcr.io/layerzero-labs/devtools-dev-base:feat-image_initia
 
     steps:
       - name: Checkout repo
@@ -107,11 +107,11 @@ jobs:
           JEST_TIMEOUT: 30000  # Increase timeout for ARM builds
           TEST_TIMEOUT: 300000 # 5 minutes timeout for long-running tests
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:feat-image_initia
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:feat-image_initia
           # And the prebuilt TON node image
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:feat-image_initia
           # Provided we have good quality Solana RPCs, we can enable Solana tests
           #
           # FIXME The Solana tests need to be ported to either use a stable deployment
@@ -172,15 +172,17 @@ jobs:
           LAYERZERO_EXAMPLES_REPOSITORY_URL: https://github.com/${{ github.repository }}.git
           LAYERZERO_EXAMPLES_REPOSITORY_REF: ${{ github.ref }}
           # We'll use the prebuilt base image
-          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
+          DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:feat-image_initia
           # And the prebuilt hardhat EVM node image
-          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:main
+          DEVTOOLS_EVM_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-evm-hardhat:feat-image_initia
           # Using the local Aptos testnet node
-          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:main
+          DEVTOOLS_APTOS_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-aptos-local-testnet:feat-image_initia
           # Using the local TON node - i do not know if this is working
-          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:main
+          DEVTOOLS_TON_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-ton-my-local-ton:feat-image_initia
+          # Using the local Initia node
+          DEVTOOLS_INITIA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-initia-localnet:feat-image_initia
           # Using the local Solana test validator - may fail due to RPC issues
-          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:main
+          DEVTOOLS_SOLANA_NODE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-node-solana-test-validator:feat-image_initia
 
 
       # We'll collect the docker compose logs from all containers on failure

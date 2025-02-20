@@ -23,7 +23,7 @@ ARG NODE_VERSION=20.10.0
 # and the base image is built locally
 # 
 # The CI environment will use base images from https://github.com/LayerZero-Labs/devtools/pkgs/container/devtools-dev-base
-# e.g. ghcr.io/layerzero-labs/devtools-dev-base:main
+# e.g. ghcr.io/layerzero-labs/devtools-dev-base:feat-image_initia
 ARG BASE_IMAGE=base
 
 # We will provide a way for consumers to override the default Aptos node image
@@ -49,6 +49,12 @@ ARG SOLANA_NODE_IMAGE=node-solana-test-validator
 # This will allow CI environments to supply the prebuilt TON node image
 # while not breaking the flow for local development
 ARG TON_NODE_IMAGE=node-ton-my-local-ton
+
+# We will provide a way for consumers to override the default Initia node image
+# 
+# This will allow CI environments to supply the prebuilt Initia node image
+# while not breaking the flow for local development
+ARG INITIA_NODE_IMAGE=node-initia-localnet
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -92,10 +98,22 @@ RUN apt-get install --yes \
     ninja-build
 
 
+### Setup rust
 # Install rust and set the default toolchain to 1.75.0
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
+RUN rustc --version
+
+### Setup go
+ARG GO_VERSION=1.24.0
+RUN curl -sL https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
+ENV PATH="/usr/local/go/bin:$PATH"
+# Configure go pathing
+RUN mkdir -p $HOME/go/{bin,src,pkg}
+ENV GOPATH=$HOME/go
+ENV PATH=$PATH:$GOPATH/bin
+RUN go version
 
 # Install docker
 RUN curl -sSL https://get.docker.com/ | sh
@@ -141,6 +159,52 @@ RUN rm -rf /app/aptos/aptos-core
 ENV PATH="/root/.aptos/bin:$PATH"
 
 RUN aptos --version
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#          Image that builds Initia developer tooling
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS initia
+
+WORKDIR /app/initia
+
+ARG INITIA_VERSION=0.7.2
+
+
+RUN git clone https://github.com/initia-labs/initia.git --branch v${INITIA_VERSION}
+WORKDIR /app/initia/initia
+
+# Now we run into a problem and that is the binaries are installed in /root/go/bin/initiad
+# This also installs a bunch of shared libraries in /root/go/pkg/mod/*
+# We can't just copy /root/go/bin/* in the base image because we _may_ have other go modules which _can_ overlap
+RUN \
+    # Set go pathing
+    export GOPATH=/root/go && \
+    export PATH=$GOPATH/bin:$PATH && \
+    # Get version info
+    git fetch --tags && \
+    # Install initiad into /root/.initia/bin
+    make install
+
+RUN mkdir -p $HOME/.initia/bin
+RUN mkdir -p $HOME/.initia/lib
+RUN ls -la $HOME/.initia/
+
+# We need to copy the iniitad binary to the bin directory
+RUN cp /root/go/bin/initiad $HOME/.initia/bin
+# We now need to copy the shared libraries from the go module cache
+RUN cp /root/go/pkg/mod/github.com/initia-labs/movevm@*/api/lib*.so $HOME/.initia/lib
+
+ENV PATH="/root/.initia/bin:$PATH"
+# Linking the shared libraries to the LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
+
+RUN initiad version --long
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -298,6 +362,8 @@ EOF
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM machine AS evm
 
+WORKDIR /app/evm
+
 ENV RUST_TOOLCHAIN_VERSION_ANCHOR=1.83.0
 RUN rustup default ${RUST_TOOLCHAIN_VERSION_ANCHOR}
 
@@ -341,10 +407,16 @@ WORKDIR /app
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
-ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$PATH"
+ENV INITIA_PATH="/root/.initia/bin"
+ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$INITIA_PATH:$PATH"
+ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
 
-# Get aptos CLI
+### Get movement network clis
+# 1. Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
+# 2. Get initia CLI
+COPY --from=initia /root/.initia/bin /root/.initia/bin
+COPY --from=initia /root/.initia/lib /root/.initia/lib
 
 # Get solana tooling
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
@@ -369,7 +441,6 @@ COPY --from=evm /root/.svm /root/.svm
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
 
-
 # Output versions
 RUN node -v
 RUN pnpm --version
@@ -377,6 +448,7 @@ RUN git --version
 RUN anchor --version
 RUN avm --version
 RUN aptos --version
+RUN initiad version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
@@ -446,6 +518,48 @@ ENTRYPOINT aptos
 
 CMD ["node", "run-local-testnet", "--force-restart", "--assume-yes"]
 
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that builds an Initia node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM machine AS node-initia-localnet
+
+# This is massively built off: <https://github.com/LayerZero-Labs/monorepo/tree/main/docker/devcon/initia>
+# https://docs.cosmos.network/v0.50/user/run-node/run-node
+# https://docs.initia.xyz/run-initia-node/boot-an-initia-node
+
+ENV PATH="/root/.initia/bin:$PATH"
+ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
+
+COPY --from=initia /root/.initia/bin /root/.initia/bin
+COPY --from=initia /root/.initia/lib /root/.initia/lib
+
+HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:26657/status || exit 1
+
+# Initialize node with custom username 'lz'
+RUN initiad init lz --chain-id lz-test-chain
+
+# Create key file and add validator
+# Using xarg wizardry to add the validator to the genesis file by substituting the address generated by the keys command
+RUN echo "test test test test test test test test test test test junk" > key.txt && \
+    initiad keys add lz-validator --keyring-backend test --recover < key.txt && \
+    initiad keys show lz-validator -a --keyring-backend test | \
+    xargs -I {} initiad genesis add-genesis-account {} 1000000000000uinit
+
+# Create gentx and ensure directory exists
+RUN mkdir -p /root/.initia/config && \
+    initiad genesis gentx lz-validator 100000000uinit --chain-id lz-test-chain --keyring-backend test && \
+    initiad genesis collect-gentxs
+
+# Set the entrypoint to start the node
+ENTRYPOINT ["initiad", "start"]
+
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
@@ -498,17 +612,6 @@ HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:8545 || exit 1
 
 # Run the shit
 ENTRYPOINT pnpm start
-
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-#
-#              Image that runs a hardhat EVM node
-#
-#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
-#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
-# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
-FROM $EVM_NODE_IMAGE AS node-evm
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
@@ -604,6 +707,17 @@ ENTRYPOINT ["solana-test-validator"]
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 #
+#              Image that runs a hardhat EVM node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM $EVM_NODE_IMAGE AS node-evm
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
 #              Image that runs an Aptos node
 #
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
@@ -632,6 +746,18 @@ FROM $SOLANA_NODE_IMAGE AS node-solana
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
 # `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
 FROM $TON_NODE_IMAGE AS node-ton
+
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+#
+#              Image that runs an Initia node
+#
+#   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
+#  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
+# `-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'   `-`-'
+FROM $INITIA_NODE_IMAGE AS node-initia
+
 
 #   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-.   .-.-
 #  / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \ \ / / \
