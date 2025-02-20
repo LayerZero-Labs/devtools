@@ -303,7 +303,7 @@ Note that you will need to either enable `enforcedOptions` in [./layerzero.confi
 
 For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
 
-#### If specifing the `_options` value when calling `send()`
+#### (Optional) If specifing the `_options` value when calling `send()`
 
 It's only necessary to specify `_options` if you do not have `enforcedOptions`.
 
