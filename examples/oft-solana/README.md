@@ -299,11 +299,16 @@ spl-token mint <TOKEN_MINT> <AMOUNT> --multisig-signer ~/.config/solana/id.json 
 
 Refer to [Generating Execution Options](https://docs.layerzero.network/v2/developers/solana/gas-settings/options#generating-options) to learn how to build the options param for send transactions.
 
-Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send().
+Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send(). 
 
-#### Specifing the `_options` value when calling `send()`
+For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
+
+#### If specifing the `_options` value when calling `send()`
+
+It's only necessary to specify `_options` if you do not have `enforcedOptions`.
 
 For Sepolia -> Solana, you should pass in the options value into the script at [tasks/evm/send.ts](./tasks/evm/send.ts) as the value for `sendParam.extraOptions`.
+
 For Solana -> Sepolia, you should pass in the options value into the script at [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts) as the value for `options` for both in `quote` and `send`.
 
 ### Send
