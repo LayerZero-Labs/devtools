@@ -1,6 +1,6 @@
 {
   "name": "LayerZero Devtools",
-  "image": "ghcr.io/layerzero-labs/devtools-dev-base:feat-image_initia",
+  "image": "ghcr.io/layerzero-labs/devtools-dev-base:main",
   "mounts": ["type=volume,target=${containerWorkspaceFolder}/node_modules"],
   "runArgs": ["--env-file", ".env"],
   "features": {
