@@ -64,6 +64,14 @@ services:
       args:
         TON_NODE_IMAGE: ${DEVTOOLS_TON_NODE_IMAGE:-node-ton-my-local-ton}
 
+  # Initia node for testing purposes
+  initiad-node:
+    build:
+      dockerfile: Dockerfile
+      target: node-initia
+      args:
+        INITIA_NODE_IMAGE: ${DEVTOOLS_INITIA_NODE_IMAGE:-node-initia-localnet}
+        
     logging:
       driver: local
       options:
