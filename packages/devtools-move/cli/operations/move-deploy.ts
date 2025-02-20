@@ -28,13 +28,6 @@ class MoveDeployOperation implements INewOperation {
             },
         },
         {
-            name: '--force-build',
-            arg: {
-                help: 'Force the build to run even if the Aptos CLI version is too old.',
-                required: false,
-            },
-        },
-        {
             name: '--force-deploy',
             arg: {
                 help: 'Include tag "--force-deploy" to force the deploy to run even if the Aptos CLI version is too old.',

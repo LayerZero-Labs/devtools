@@ -8,18 +8,17 @@ class MoveBuildOperation implements INewOperation {
     vm = 'move'
     operation = 'build'
     description = 'Build Aptos Move contracts'
-    reqArgs = ['oapp_config', 'named_addresses']
+    reqArgs = ['oapp_config', 'oapp_type']
 
     addArgs = [
         {
-            name: '--chain',
+            name: '--force-build',
             arg: {
-                help: 'The chain to build the contracts for',
+                help: 'Add this flag to force build the contracts (overwrites existing build folder)',
                 required: false,
             },
         },
     ]
-
     async impl(args: any): Promise<void> {
         const taskContext = await initializeDeployTaskContext(args.oapp_config)
         const forceBuild = args.force_build ? true : false
