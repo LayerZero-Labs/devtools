@@ -1,5 +1,11 @@
 # @layerzerolabs/verify-contract
 
+## 1.1.33
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 1.1.32
 
 ### Patch Changes

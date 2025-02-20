@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-solana",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Helpers for testing LayerZero Solana packages",
   "repository": {
     "type": "git",

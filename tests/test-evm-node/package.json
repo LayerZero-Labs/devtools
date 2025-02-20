@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-evm-node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "EVM node for E2E testing purposes",
   "repository": {

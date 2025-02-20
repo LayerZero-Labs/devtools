@@ -1,5 +1,11 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
+## 0.0.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.5
 
 ### Patch Changes

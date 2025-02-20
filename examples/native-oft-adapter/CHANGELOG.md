@@ -1,5 +1,11 @@
 # @layerzerolabs/native-oft-adapter-example
 
+## 0.2.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.2.5
 
 ### Patch Changes

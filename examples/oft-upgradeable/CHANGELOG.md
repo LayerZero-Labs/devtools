@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.9
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.2.8
 
 ### Patch Changes

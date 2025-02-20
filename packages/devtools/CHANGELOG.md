@@ -1,5 +1,13 @@
 # @layerzerolabs/devtools
 
+## 0.4.6
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/io-devtools@0.1.16
+
 ## 0.4.5
 
 ### Patch Changes
