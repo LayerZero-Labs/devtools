@@ -98,15 +98,21 @@ RUN apt-get install --yes \
     ninja-build
 
 
+### Setup rust
 # Install rust and set the default toolchain to 1.75.0
 ARG RUST_TOOLCHAIN_VERSION=1.75.0
 ENV RUSTUP_VERSION=${RUST_TOOLCHAIN_VERSION}
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${RUST_TOOLCHAIN_VERSION}
 RUN rustc --version
-# Setup go
+
+### Setup go
 ARG GO_VERSION=1.24.0
 RUN curl -sL https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
 ENV PATH="/usr/local/go/bin:$PATH"
+# Configure go pathing
+RUN mkdir -p $HOME/go/{bin,src,pkg}
+ENV GOPATH=$HOME/go
+ENV PATH=$PATH:$GOPATH/bin
 RUN go version
 
 # Install docker
@@ -169,12 +175,34 @@ WORKDIR /app/initia
 
 ARG INITIA_VERSION=0.7.2
 
-RUN git clone https://github.com/initia-labs/initia.git --branch v${INITIA_VERSION} --depth 1
+
+RUN git clone https://github.com/initia-labs/initia.git --branch v${INITIA_VERSION}
 WORKDIR /app/initia/initia
-RUN make install
-RUN go build -tags "netgo ledger" -o initiad ./cmd/initiad
-RUN mkdir -p /root/.initia/bin && cp initiad /root/.initia/bin/
+
+# Now we run into a problem and that is the binaries are installed in /root/go/bin/initiad
+# This also installs a bunch of shared libraries in /root/go/pkg/mod/*
+# We can't just copy /root/go/bin/* in the base image because we _may_ have other go modules which _can_ overlap
+RUN \
+    # Set go pathing
+    export GOPATH=/root/go && \
+    export PATH=$GOPATH/bin:$PATH && \
+    # Get version info
+    git fetch --tags && \
+    # Install initiad into /root/.initia/bin
+    make install
+
+RUN mkdir -p $HOME/.initia/bin
+RUN mkdir -p $HOME/.initia/lib
+RUN ls -la $HOME/.initia/
+
+# We need to copy the iniitad binary to the bin directory
+RUN cp /root/go/bin/initiad $HOME/.initia/bin
+# We now need to copy the shared libraries from the go module cache
+RUN cp /root/go/pkg/mod/github.com/initia-labs/movevm@*/api/lib*.so $HOME/.initia/lib
+
 ENV PATH="/root/.initia/bin:$PATH"
+# Linking the shared libraries to the LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
 
 RUN initiad version --long
 
@@ -379,13 +407,16 @@ WORKDIR /app
 ENV NPM_TOKEN=
 ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
-ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$PATH"
+ENV INITIA_PATH="/root/.initia/bin"
+ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$INITIA_PATH:$PATH"
+ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
 
 ### Get movement network clis
 # 1. Get aptos CLI
 COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 # 2. Get initia CLI
 COPY --from=initia /root/.initia/bin /root/.initia/bin
+COPY --from=initia /root/.initia/lib /root/.initia/lib
 
 # Get solana tooling
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
@@ -410,7 +441,6 @@ COPY --from=evm /root/.svm /root/.svm
 # See more here https://nodejs.org/api/corepack.html
 RUN corepack enable
 
-
 # Output versions
 RUN node -v
 RUN pnpm --version
@@ -418,7 +448,7 @@ RUN git --version
 RUN anchor --version
 RUN avm --version
 RUN aptos --version
-RUN initiad --version
+RUN initiad version
 RUN forge --version
 RUN anvil --version
 RUN chisel --version
