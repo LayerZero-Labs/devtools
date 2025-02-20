@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools
 
+## 0.4.5
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.4.4
 
 ### Patch Changes

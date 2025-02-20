@@ -1,5 +1,11 @@
 # @layerzerolabs/onft-evm
 
+## 0.2.2
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-solana
 
+## 4.1.1
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-solana@1.0.7
+  - @layerzerolabs/io-devtools@0.1.16
+  - @layerzerolabs/protocol-devtools@1.1.5
+  - @layerzerolabs/protocol-devtools-solana@4.0.8
+  - @layerzerolabs/ua-devtools@3.0.5
+
 ## 4.1.0
 
 ### Minor Changes

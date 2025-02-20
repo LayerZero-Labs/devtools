@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/onft-evm",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "LayerZero Labs reference EVM OmniChain Non Fungible Token (ONFT) implementation",
   "keywords": [
     "LayerZero",
@@ -45,9 +45,9 @@
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/oapp-evm": "^0.3.0",
-    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.1",
-    "@layerzerolabs/toolbox-foundry": "~0.1.9",
+    "@layerzerolabs/oapp-evm": "^0.3.1",
+    "@layerzerolabs/test-devtools-evm-foundry": "~6.0.2",
+    "@layerzerolabs/toolbox-foundry": "~0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
     "rimraf": "^6.0.1"
