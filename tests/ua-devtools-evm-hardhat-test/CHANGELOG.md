@@ -1,5 +1,11 @@
 # @layerzerolabs/ua-devtools-evm-hardhat-test
 
+## 0.7.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.7.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/toolbox-foundry
 
+## 0.1.12
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.1.11
 
 ### Patch Changes

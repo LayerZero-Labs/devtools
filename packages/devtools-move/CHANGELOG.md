@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-move
 
+## 0.0.3
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-example
 
+## 0.5.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.5.6
 
 ### Patch Changes
