@@ -110,8 +110,8 @@ ARG GO_VERSION=1.24.0
 RUN curl -sL https://go.dev/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz | tar -C /usr/local -xzf -
 ENV PATH="/usr/local/go/bin:$PATH"
 # Configure go pathing
-RUN mkdir -p $HOME/go/{bin,src,pkg}
-ENV GOPATH=$HOME/go
+RUN mkdir -p /root/go/{bin,src,pkg}
+ENV GOPATH=/root/go
 ENV PATH=$PATH:$GOPATH/bin
 RUN go version
 
@@ -191,18 +191,19 @@ RUN \
     # Install initiad into /root/.initia/bin
     make install
 
-RUN mkdir -p $HOME/.initia/bin
-RUN mkdir -p $HOME/.initia/lib
-RUN ls -la $HOME/.initia/
+RUN mkdir -p /root/.initia/bin
+RUN mkdir -p /root/.initia/lib
+RUN ls -la /root/.initia/
 
 # We need to copy the iniitad binary to the bin directory
-RUN cp /root/go/bin/initiad $HOME/.initia/bin
+RUN cp /root/go/bin/initiad /root/.initia/bin
 # We now need to copy the shared libraries from the go module cache
-RUN cp /root/go/pkg/mod/github.com/initia-labs/movevm@*/api/lib*.so $HOME/.initia/lib
+RUN cp /root/go/pkg/mod/github.com/initia-labs/movevm@*/api/lib*.so /root/.initia/lib
 
 ENV PATH="/root/.initia/bin:$PATH"
-# Linking the shared libraries to the LD_LIBRARY_PATH
-ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
+
+# Adding in the library path to ldconfig and updating the cache
+RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 RUN initiad version --long
 
@@ -409,7 +410,7 @@ ENV NPM_CONFIG_STORE_DIR=/pnpm
 ENV TON_PATH="/root/.ton/bin"
 ENV INITIA_PATH="/root/.initia/bin"
 ENV PATH="/root/.aptos/bin:/root/.avm/bin:/root/.foundry/bin:/root/.solana/bin:$TON_PATH:$INITIA_PATH:$PATH"
-ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
+
 
 ### Get movement network clis
 # 1. Get aptos CLI
@@ -417,6 +418,8 @@ COPY --from=aptos /root/.aptos/bin /root/.aptos/bin
 # 2. Get initia CLI
 COPY --from=initia /root/.initia/bin /root/.initia/bin
 COPY --from=initia /root/.initia/lib /root/.initia/lib
+# Adding in the library path to ldconfig and updating the cache
+RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 # Get solana tooling
 COPY --from=avm /root/.cargo/bin/anchor /root/.cargo/bin/anchor
@@ -534,11 +537,14 @@ FROM machine AS node-initia-localnet
 # https://docs.cosmos.network/v0.50/user/run-node/run-node
 # https://docs.initia.xyz/run-initia-node/boot-an-initia-node
 
+
 ENV PATH="/root/.initia/bin:$PATH"
-ENV LD_LIBRARY_PATH="/root/.initia/lib:$LD_LIBRARY_PATH"
 
 COPY --from=initia /root/.initia/bin /root/.initia/bin
 COPY --from=initia /root/.initia/lib /root/.initia/lib
+
+# Adding in the library path to ldconfig and updating the cache
+RUN echo "/root/.initia/lib" > /etc/ld.so.conf.d/initia.conf && ldconfig
 
 HEALTHCHECK --interval=2s --retries=20 CMD curl -f http://0.0.0.0:26657/status || exit 1
 
