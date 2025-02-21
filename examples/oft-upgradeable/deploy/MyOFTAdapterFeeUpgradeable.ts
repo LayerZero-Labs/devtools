@@ -3,7 +3,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
-const contractName = 'MyOFTAdapterUpgradeable'
+const contractName = 'MyOFTAdapterFeeUpgradeable'
 
 const deploy: DeployFunction = async (hre) => {
     const { deploy } = hre.deployments
