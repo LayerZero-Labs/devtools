@@ -24,6 +24,11 @@ runs:
       shell: bash
       run: git config --global --add safe.directory /__w/devtools/devtools
 
+    - name: Force HTTPS Instead of SSH for Git
+      shell: bash
+      run: git config --global url."https://github.com/".insteadOf "git@github.com:"
+
+
     - name: Ensure Git Submodules Are Up-to-Date
       shell: bash
       run: |
