@@ -21,6 +21,7 @@ runs:
         rm -rf ~/.hardhat
 
     - name: Ensure Git Submodules Are Up-to-Date
+      shell: bash
       run: |
         git submodule sync --recursive
         git submodule update --init --recursive
