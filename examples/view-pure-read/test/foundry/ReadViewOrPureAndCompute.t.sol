@@ -165,7 +165,7 @@ contract ReadViewOrPureAndComputeTest is TestHelperOz5 {
                 break;
             }
         }
-        require(found, "SumReceived event not found");
+        assertEq(found, true, "SumReceived event not found");
         assertEq(sumReceived, initialSum + 1, "Sum received does not match expected value");
     }
 }
