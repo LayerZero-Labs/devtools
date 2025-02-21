@@ -1,5 +1,6 @@
 import assert from 'assert'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 
 import {
     fetchAddressLookupTable,
@@ -155,8 +156,8 @@ export const getSolanaDeployment = (
     escrow: string
     oftStore: string
 } => {
-    const outputDir = `./deployments/${endpointIdToNetwork(eid)}`
-    const filePath = `${outputDir}/OFT.json`
+    const outputDir = path.join('deployments', endpointIdToNetwork(eid))
+    const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
 
     if (!existsSync(filePath)) {
         throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
