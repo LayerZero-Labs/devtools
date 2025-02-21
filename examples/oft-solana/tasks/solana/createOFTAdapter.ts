@@ -45,7 +45,7 @@ interface CreateOFTAdapterTaskArgs {
 task('lz:oft-adapter:solana:create', 'Creates new OFT Adapter (OFT Store PDA)')
     .addParam('mint', 'The Token Mint public key')
     .addParam('programId', 'The OFT program ID')
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addParam('tokenProgram', 'The Token Program public key', TOKEN_PROGRAM_ID.toBase58(), devtoolsTypes.string, true)
     .addParam('computeUnitPriceScaleFactor', 'The compute unit price scale factor', 4, devtoolsTypes.float, true)
     .setAction(

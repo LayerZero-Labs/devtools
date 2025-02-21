@@ -122,7 +122,7 @@ interface CreateOFTTaskArgs {
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
     .addOptionalParam('sharedDecimals', 'OFT shared decimals (default=6)', DEFAULT_SHARED_DECIMALS, devtoolsTypes.int)
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
