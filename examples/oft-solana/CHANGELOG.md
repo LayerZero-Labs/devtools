@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.7.5
 
 ### Patch Changes

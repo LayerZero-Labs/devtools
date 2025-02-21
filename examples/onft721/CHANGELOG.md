@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-example
 
+## 0.3.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.3.6
 
 ### Patch Changes

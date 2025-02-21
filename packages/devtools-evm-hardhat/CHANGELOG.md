@@ -1,5 +1,16 @@
 # @layerzerolabs/devtools-evm-hardhat
 
+## 2.0.7
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-evm@1.0.5
+  - @layerzerolabs/export-deployments@0.0.16
+  - @layerzerolabs/io-devtools@0.1.16
+
 ## 2.0.6
 
 ### Patch Changes

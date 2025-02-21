@@ -1,5 +1,11 @@
 # create-lz-oapp
 
+## 0.5.1
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.5.0
 
 ### Minor Changes

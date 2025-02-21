@@ -1,5 +1,14 @@
 # @layerzerolabs/metadata-tools
 
+## 0.3.2
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools-evm-hardhat@2.0.7
+  - @layerzerolabs/ua-devtools@3.0.5
+
 ## 0.3.1
 
 ### Patch Changes

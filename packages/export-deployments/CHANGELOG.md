@@ -1,5 +1,11 @@
 # @layerzerolabs/export-deployments
 
+## 0.0.16
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.15
 
 ### Patch Changes

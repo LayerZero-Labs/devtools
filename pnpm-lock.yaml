@@ -79,19 +79,19 @@ importers:
   examples/lzapp-migration:
     dependencies:
       '@layerzerolabs/devtools':
-        specifier: ^0.4.4
+        specifier: ^0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.5
+        specifier: ^2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ^1.0.6
+        specifier: ^1.0.7
         version: link:../../packages/devtools-solana
       '@layerzerolabs/export-deployments':
-        specifier: ^0.0.14
-        version: 0.0.14
+        specifier: ^0.0.16
+        version: link:../../packages/export-deployments
       '@layerzerolabs/io-devtools':
-        specifier: ^0.1.14
+        specifier: ^0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-evm-sdk-v1':
         specifier: ^3.0.49
@@ -100,22 +100,22 @@ importers:
         specifier: ^3.0.64
         version: 3.0.66(@types/node@18.18.14)(chai@4.5.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
-        specifier: ^1.1.3
+        specifier: ^1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/solidity-examples':
         specifier: ^1.1.0
         version: 1.1.0(@nomiclabs/hardhat-ethers@2.2.3)(@nomiclabs/hardhat-etherscan@3.1.8)(ethers@5.7.2)(ts-node@10.9.2)(typescript@5.5.3)
       '@layerzerolabs/ua-devtools':
-        specifier: ^3.0.3
+        specifier: ^3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ^5.0.4
+        specifier: ^5.0.6
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ^6.0.7
+        specifier: ^6.0.9
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
-        specifier: ^4.1.0
+        specifier: ^4.1.1
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
@@ -173,7 +173,7 @@ importers:
         specifier: ^3.0.67
         version: 3.0.67
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -182,13 +182,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.5
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -290,10 +290,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -302,13 +302,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -404,10 +404,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -416,13 +416,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ^6.0.0
+        specifier: ^6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -518,7 +518,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -527,13 +527,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -617,10 +617,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -656,13 +656,13 @@ importers:
         specifier: ^3.0.15
         version: 3.0.59
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -671,13 +671,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~5.1.0
-        version: 5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.12)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)
+        specifier: ~6.0.2
+        version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -797,7 +797,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -806,13 +806,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -890,7 +890,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.6
+        specifier: ^2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -911,10 +911,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -923,13 +923,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1025,10 +1025,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1037,13 +1037,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1127,13 +1127,13 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.3
+        specifier: ^2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1169,13 +1169,13 @@ importers:
         specifier: ^3.0.15
         version: 3.0.59
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1184,13 +1184,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1298,10 +1298,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1337,13 +1337,13 @@ importers:
         specifier: ^3.0.15
         version: 3.0.59
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1352,13 +1352,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1463,22 +1463,22 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.6
+        specifier: ^2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/devtools-solana':
-        specifier: ~1.0.6
+        specifier: ~1.0.7
         version: link:../../packages/devtools-solana
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
         version: 2.3.44(typescript@5.5.3)
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -1502,10 +1502,10 @@ importers:
         specifier: ^0.3.1
         version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-v2-solana-sdk':
         specifier: ^3.0.59
@@ -1514,40 +1514,40 @@ importers:
         specifier: ^2.3.39
         version: 2.3.44
       '@layerzerolabs/protocol-devtools':
-        specifier: ^1.1.4
+        specifier: ^1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ^4.0.7
+        specifier: ^4.0.8
         version: link:../../packages/protocol-devtools-solana
       '@layerzerolabs/solhint-config':
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.8
+        specifier: ~6.0.9
         version: link:../../packages/ua-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools-solana':
-        specifier: ~4.1.0
+        specifier: ~4.1.1
         version: link:../../packages/ua-devtools-solana
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.2.1
@@ -1688,7 +1688,7 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ^2.0.6
+        specifier: ^2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1712,16 +1712,16 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/oapp-evm-upgradeable':
-        specifier: ^0.1.0
+        specifier: ^0.1.1
         version: link:../../packages/oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-evm-upgradeable':
-        specifier: ^3.0.0
+        specifier: ^3.0.1
         version: link:../../packages/oft-evm-upgradeable
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1730,13 +1730,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
@@ -1838,10 +1838,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.2.1
+        specifier: ^0.2.2
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1850,13 +1850,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -1949,10 +1949,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/onft-evm':
-        specifier: ^0.2.1
+        specifier: ^0.2.2
         version: link:../../packages/onft-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -1961,13 +1961,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@matterlabs/hardhat-zksync-deploy':
         specifier: ~0.9.0
@@ -2072,7 +2072,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -2081,13 +2081,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(typescript@5.5.3)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../../packages/test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../../packages/toolbox-foundry
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -2202,13 +2202,13 @@ importers:
         specifier: ~5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.0
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.14
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
@@ -2257,7 +2257,7 @@ importers:
         version: 1.10.0
     devDependencies:
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -2336,13 +2336,13 @@ importers:
         specifier: ~5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.0
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.0
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.14
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
@@ -2403,13 +2403,13 @@ importers:
         specifier: ~5.7.0
         version: 5.7.0
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -2452,13 +2452,13 @@ importers:
         version: 1.10.0
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.0
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.14
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.0
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@types/prompts':
         specifier: ^2.4.9
@@ -2540,16 +2540,16 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@safe-global/safe-core-sdk-types':
         specifier: ^2.3.0
@@ -2594,7 +2594,7 @@ importers:
   packages/devtools-evm-hardhat:
     dependencies:
       '@layerzerolabs/export-deployments':
-        specifier: ~0.0.15
+        specifier: ~0.0.16
         version: link:../export-deployments
       '@safe-global/protocol-kit':
         specifier: ^1.3.0
@@ -2625,13 +2625,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -2640,10 +2640,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../test-devtools-evm-hardhat
       '@nomiclabs/hardhat-ethers':
         specifier: ^2.2.3
@@ -2725,7 +2725,7 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.40
@@ -2740,7 +2740,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.67
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.3
+        specifier: ~0.6.7
         version: link:../toolbox-hardhat
       '@types/argparse':
         specifier: ^2.0.17
@@ -2801,19 +2801,19 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../test-devtools-solana
       '@solana/web3.js':
         specifier: ~1.95.8
@@ -2880,10 +2880,10 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -2929,7 +2929,7 @@ importers:
         version: 5.5.3
     devDependencies:
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -3041,10 +3041,10 @@ importers:
   packages/metadata-tools:
     devDependencies:
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -3084,13 +3084,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3115,10 +3115,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3143,13 +3143,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3170,19 +3170,19 @@ importers:
         specifier: ^3.0.12
         version: 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-alt-evm':
-        specifier: ^0.0.1
+        specifier: ^0.0.2
         version: link:../oapp-alt-evm
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../oft-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3203,13 +3203,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3233,19 +3233,19 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/oapp-evm-upgradeable':
-        specifier: ^0.1.0
+        specifier: ^0.1.1
         version: link:../oapp-evm-upgradeable
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../oft-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.0
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3263,10 +3263,10 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.2
+        specifier: ^0.0.3
         version: link:../devtools-move
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.21
@@ -3302,13 +3302,13 @@ importers:
   packages/omnicounter-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -3345,28 +3345,28 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../omnicounter-devtools
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../ua-devtools-evm
       '@swc/core':
         specifier: ^1.4.0
@@ -3411,13 +3411,13 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/test-devtools-evm-foundry':
-        specifier: ~6.0.1
+        specifier: ~6.0.2
         version: link:../test-devtools-evm-foundry
       '@layerzerolabs/toolbox-foundry':
-        specifier: ~0.1.9
+        specifier: ~0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3432,16 +3432,16 @@ importers:
   packages/protocol-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -3499,13 +3499,13 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -3514,10 +3514,10 @@ importers:
         specifier: ^3.0.21
         version: 3.0.22
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -3566,13 +3566,13 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~1.0.6
+        specifier: ~1.0.7
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -3587,16 +3587,16 @@ importers:
         specifier: ^3.0.38
         version: 3.0.38(@swc/core@1.4.0)(@types/node@18.18.14)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../test-devtools-solana
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@metaplex-foundation/umi':
         specifier: ^0.9.2
@@ -3675,10 +3675,10 @@ importers:
   packages/test-devtools-evm-foundry:
     dependencies:
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: link:../oft-evm
     devDependencies:
       '@layerzerolabs/lz-evm-messagelib-v2':
@@ -3691,7 +3691,7 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@5.0.2)(@openzeppelin/contracts@5.0.2)(hardhat-deploy@0.12.4)
       '@layerzerolabs/toolbox-foundry':
-        specifier: ^0.1.9
+        specifier: ^0.1.12
         version: link:../toolbox-foundry
       '@openzeppelin/contracts':
         specifier: ^5.0.2
@@ -3724,10 +3724,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12(@openzeppelin/contracts-upgradeable@4.9.5)(@openzeppelin/contracts@4.9.5)(hardhat-deploy@0.12.4)
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../oapp-evm
       '@layerzerolabs/oft-evm':
-        specifier: ^3.0.0
+        specifier: ^3.1.2
         version: link:../oft-evm
       '@openzeppelin/contracts':
         specifier: ^4.9.5
@@ -3853,16 +3853,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -3877,22 +3877,22 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../test-devtools-evm-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.8
+        specifier: ~6.0.9
         version: link:../ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.2
@@ -3953,10 +3953,10 @@ importers:
   packages/ua-devtools:
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -3965,10 +3965,10 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -4026,13 +4026,13 @@ importers:
         specifier: ^5.7.0
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4041,16 +4041,16 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../protocol-devtools-evm
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@swc/core':
         specifier: ^1.4.0
@@ -4108,16 +4108,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4129,16 +4129,16 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../ua-devtools-evm
       '@swc/core':
         specifier: ^1.4.0
@@ -4193,13 +4193,13 @@ importers:
         version: 4.0.4
     devDependencies:
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../devtools
       '@layerzerolabs/devtools-solana':
-        specifier: ~1.0.6
+        specifier: ~1.0.7
         version: link:../devtools-solana
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4214,19 +4214,19 @@ importers:
         specifier: ^3.0.59
         version: 3.0.66(@swc/core@1.4.0)(@types/node@18.18.14)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.5.3)
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../protocol-devtools
       '@layerzerolabs/protocol-devtools-solana':
-        specifier: ~4.0.7
+        specifier: ~4.0.8
         version: link:../protocol-devtools-solana
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../test-devtools
       '@layerzerolabs/test-devtools-solana':
-        specifier: ~0.0.4
+        specifier: ~0.0.5
         version: link:../test-devtools-solana
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../ua-devtools
       '@metaplex-foundation/mpl-toolbox':
         specifier: ^0.9.4
@@ -4286,7 +4286,7 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../io-devtools
       '@solidity-parser/parser':
         specifier: ^0.16.1
@@ -4355,19 +4355,19 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-cli':
-        specifier: ~0.0.4
+        specifier: ~0.0.6
         version: link:../../packages/devtools-cli
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4388,37 +4388,37 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~5.0.4
+        specifier: ~5.0.5
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/test-setup-devtools-evm-hardhat':
-        specifier: ~6.0.4
+        specifier: ~6.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.8
+        specifier: ~6.0.9
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -4496,16 +4496,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4526,28 +4526,28 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~5.0.4
+        specifier: ~5.0.5
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../../packages/test-devtools
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/test-setup-devtools-evm-hardhat':
-        specifier: ~6.0.4
+        specifier: ~6.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -4616,16 +4616,16 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/test-devtools':
-        specifier: ~0.4.4
+        specifier: ~0.4.5
         version: link:../../packages/test-devtools
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -4667,16 +4667,16 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9
       '@layerzerolabs/export-deployments':
-        specifier: ~0.0.15
+        specifier: ~0.0.16
         version: link:../../packages/export-deployments
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/test-setup-devtools-evm-hardhat':
-        specifier: ~6.0.4
+        specifier: ~6.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -4748,31 +4748,31 @@ importers:
         specifier: ^5.7.2
         version: 5.7.2
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
         version: 3.0.59
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../../packages/ua-devtools-evm
       '@types/jest':
         specifier: ^29.5.12
@@ -4826,16 +4826,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -4856,37 +4856,37 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~5.0.4
+        specifier: ~5.0.5
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/test-setup-devtools-evm-hardhat':
-        specifier: ~6.0.4
+        specifier: ~6.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.8
+        specifier: ~6.0.9
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -4964,16 +4964,16 @@ importers:
         specifier: ^5.7.0
         version: 5.7.0
       '@layerzerolabs/devtools':
-        specifier: ~0.4.5
+        specifier: ~0.4.6
         version: link:../../packages/devtools
       '@layerzerolabs/devtools-evm':
-        specifier: ~1.0.4
+        specifier: ~1.0.5
         version: link:../../packages/devtools-evm
       '@layerzerolabs/devtools-evm-hardhat':
-        specifier: ~2.0.6
+        specifier: ~2.0.7
         version: link:../../packages/devtools-evm-hardhat
       '@layerzerolabs/io-devtools':
-        specifier: ~0.1.15
+        specifier: ~0.1.16
         version: link:../../packages/io-devtools
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.59
@@ -5000,37 +5000,37 @@ importers:
         specifier: ^3.0.12
         version: 3.0.12
       '@layerzerolabs/oapp-evm':
-        specifier: ^0.3.0
+        specifier: ^0.3.1
         version: link:../../packages/oapp-evm
       '@layerzerolabs/omnicounter-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/omnicounter-devtools
       '@layerzerolabs/omnicounter-devtools-evm':
-        specifier: ~5.0.4
+        specifier: ~5.0.5
         version: link:../../packages/omnicounter-devtools-evm
       '@layerzerolabs/protocol-devtools':
-        specifier: ~1.1.4
+        specifier: ~1.1.5
         version: link:../../packages/protocol-devtools
       '@layerzerolabs/protocol-devtools-evm':
-        specifier: ~3.0.5
+        specifier: ~3.0.6
         version: link:../../packages/protocol-devtools-evm
       '@layerzerolabs/test-devtools-evm-hardhat':
-        specifier: ~0.5.0
+        specifier: ~0.5.1
         version: link:../../packages/test-devtools-evm-hardhat
       '@layerzerolabs/test-setup-devtools-evm-hardhat':
-        specifier: ~6.0.4
+        specifier: ~6.0.5
         version: link:../test-setup-devtools-evm-hardhat
       '@layerzerolabs/toolbox-hardhat':
-        specifier: ~0.6.6
+        specifier: ~0.6.7
         version: link:../../packages/toolbox-hardhat
       '@layerzerolabs/ua-devtools':
-        specifier: ~3.0.4
+        specifier: ~3.0.5
         version: link:../../packages/ua-devtools
       '@layerzerolabs/ua-devtools-evm':
-        specifier: ~5.0.5
+        specifier: ~5.0.6
         version: link:../../packages/ua-devtools-evm
       '@layerzerolabs/ua-devtools-evm-hardhat':
-        specifier: ~6.0.8
+        specifier: ~6.0.9
         version: link:../../packages/ua-devtools-evm-hardhat
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -7498,13 +7498,6 @@ packages:
       - bufferutil
       - utf-8-validate
 
-  /@layerzerolabs/export-deployments@0.0.14:
-    resolution: {integrity: sha512-OBwqci1LZGCq9ZSYfB4nHGZ3QKNVjr+yOUQB4M4gEpPrwaJGLOuOxQNLSEkRWPD8si22Nk48Elbrku8M1Ke3Ow==}
-    hasBin: true
-    dependencies:
-      typescript: 5.5.3
-    dev: false
-
   /@layerzerolabs/lz-config-types@3.0.59(ethers@5.7.2):
     resolution: {integrity: sha512-V8hcvabSMG/fCA1pt+mkumVwcT1/uWeH4jFqIcC+Elisw4e6C+ALsWBWKRkiOVzi8yFkKaddE9fPrI3iK46vsQ==}
     dependencies:
@@ -8821,26 +8814,6 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
-
-  /@layerzerolabs/test-devtools-evm-foundry@5.1.0(@layerzerolabs/lz-evm-messagelib-v2@3.0.12)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@layerzerolabs/oapp-evm@packages+oapp-evm)(@layerzerolabs/oft-evm@packages+oft-evm)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0):
-    resolution: {integrity: sha512-LDfBMeb5VQRMRXadpNgUe5Knib5FdCQ24S2o+kWMS/qPS6ZbPGe7fnhFPhcifautuhMS8i9Rk7cMjoAxRGFdfQ==}
-    peerDependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-protocol-v2': ^3.0.12
-      '@layerzerolabs/lz-evm-v1-0.7': ^3.0.12
-      '@layerzerolabs/oapp-evm': ^0.3.0
-      '@layerzerolabs/oft-evm': ^3.0.0
-      '@openzeppelin/contracts': ^4.9.5 || ^5.0.0
-      '@openzeppelin/contracts-upgradeable': ^4.9.5 || ^5.0.0
-    dependencies:
-      '@layerzerolabs/lz-evm-messagelib-v2': 3.0.12(@axelar-network/axelar-gmp-sdk-solidity@5.10.0)(@chainlink/contracts-ccip@0.7.6)(@eth-optimism/contracts@0.6.0)(@layerzerolabs/lz-evm-protocol-v2@3.0.12)(@layerzerolabs/lz-evm-v1-0.7@3.0.15)(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-protocol-v2': 3.0.12(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)(solidity-bytes-utils@0.8.2)
-      '@layerzerolabs/lz-evm-v1-0.7': 3.0.15(@openzeppelin/contracts-upgradeable@5.1.0)(@openzeppelin/contracts@5.1.0)(hardhat-deploy@0.12.4)
-      '@layerzerolabs/oapp-evm': link:packages/oapp-evm
-      '@layerzerolabs/oft-evm': link:packages/oft-evm
-      '@openzeppelin/contracts': 5.1.0
-      '@openzeppelin/contracts-upgradeable': 5.1.0(@openzeppelin/contracts@5.1.0)
-    dev: true
 
   /@layerzerolabs/ton@15.2.0-rc.3(@jest/globals@29.7.0)(@layerzerolabs/ton@15.2.0-rc.3)(@ton/core@0.59.0)(@ton/crypto@3.3.0)(@types/node@18.18.14)(chai@4.5.0)(typescript@5.5.3):
     resolution: {integrity: sha512-Aq7htcWn31DxSYs8l0sJcQ76uAJRPy50lg6M2G+qNLSXpO01sPcUSb8oK/TmCKo+S+rDIFWUNKFjT0B/rll1YQ==}

@@ -1,5 +1,11 @@
 # @layerzerolabs/test-devtools-evm-hardhat
 
+## 0.5.1
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.5.0
 
 ### Minor Changes
