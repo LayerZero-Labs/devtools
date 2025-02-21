@@ -1,5 +1,11 @@
 # @layerzerolabs/onft721-zksync-example
 
+## 1.0.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @layerzerolabs/build-devtools
 
+## 0.0.4
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.0.3
 
 ### Patch Changes

@@ -1,4 +1,4 @@
-import { Keypair, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { firstFactory } from '@layerzerolabs/devtools'
@@ -14,9 +14,9 @@ import {
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-import { getSolanaDeployment } from '../solana'
+import { getSolanaDeployment, useWeb3Js } from '../solana'
 
-import { keyPair, publicKey } from './types'
+import { publicKey } from './types'
 import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFactory } from './utils'
 
 import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/tasks'
@@ -27,7 +27,6 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
 interface Args {
     logLevel: LogLevel
     solanaEid: EndpointId
-    solanaSecretKey?: Keypair
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
 }
@@ -36,16 +35,6 @@ interface Args {
  * We extend the default wiring task to add functionality required by Solana
  */
 task(TASK_LZ_OAPP_WIRE)
-    // The first thing we add is the solana secret key, used to create a signer
-    //
-    // This secret key will also be used as the user account, required to use the OFT SDK
-    .addParam(
-        'solanaSecretKey',
-        'Secret key of the user account that will be used to send transactions',
-        undefined,
-        keyPair,
-        true
-    )
     .addParam('solanaEid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
@@ -72,15 +61,9 @@ task(TASK_LZ_OAPP_WIRE)
         //
         //
 
-        if (args.solanaSecretKey == null) {
-            logger.warn(
-                `Missing --solana-secret-key CLI argument. A random keypair will be generated and interaction with solana programs will not be possible`
-            )
-        }
-
-        // The first step is to create the user Keypair from the secret passed in
-        const wallet = args.solanaSecretKey ?? Keypair.generate()
-        const userAccount = wallet.publicKey
+        // construct the user's keypair via the SOLANA_PRIVATE_KEY env var
+        const keypair = useWeb3Js().web3JsKeypair
+        const userAccount = keypair.publicKey
 
         const solanaDeployment = getSolanaDeployment(args.solanaEid)
 
@@ -110,7 +93,7 @@ task(TASK_LZ_OAPP_WIRE)
         const sdkFactory = createSdkFactory(userAccount, programId, connectionFactory)
 
         // We'll also need a signer factory
-        const solanaSignerFactory = createSolanaSignerFactory(wallet, connectionFactory, args.multisigKey)
+        const solanaSignerFactory = createSolanaSignerFactory(keypair, connectionFactory, args.multisigKey)
 
         //
         //
@@ -157,16 +140,6 @@ task(TASK_LZ_OAPP_WIRE)
 // The two tasks are identical and the only drawback of this approach is the fact
 // that the logs will say "Wiring OApp" instead of "Transferring ownership"
 task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
-    // The first thing we add is the solana secret key, used to create a signer
-    //
-    // This secret key will also be used as the user account, required to use the OFT SDK
-    .addParam(
-        'solanaSecretKey',
-        'Secret key of the user account that will be used to send transactions',
-        undefined,
-        keyPair,
-        true
-    )
     .addParam('solanaEid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     .setAction(async (args: Args, hre) => {

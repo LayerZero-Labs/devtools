@@ -1,5 +1,11 @@
 # @layerzerolabs/uniswap-read-example
 
+## 0.2.7
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.2.6
 
 ### Patch Changes

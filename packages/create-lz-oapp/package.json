@@ -1,6 +1,6 @@
 {
   "name": "create-lz-oapp",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Create LayerZero OApp with one command",
   "keywords": [
     "LayerZero",
@@ -34,7 +34,7 @@
     "yoga-layout-prebuilt": "^1.10.0"
   },
   "devDependencies": {
-    "@layerzerolabs/io-devtools": "~0.1.15",
+    "@layerzerolabs/io-devtools": "~0.1.16",
     "@swc/core": "^1.4.0",
     "@swc/jest": "^0.2.36",
     "@types/jest": "^29.5.12",
