@@ -20,6 +20,11 @@ runs:
         rm -rf ~/.cache/hardhat-nodejs
         rm -rf ~/.hardhat
 
+    - name: Ensure Git Submodules Are Up-to-Date
+      run: |
+        git submodule sync --recursive
+        git submodule update --init --recursive
+
     # Fetch the dependencies without running the post-install scripts
     - name: Fetch Dependencies
       shell: bash
