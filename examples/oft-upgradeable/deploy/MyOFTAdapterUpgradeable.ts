@@ -1,6 +1,6 @@
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, endpointIdToNetwork } from '@layerzerolabs/lz-definitions'
 import { getDeploymentAddressAndAbi } from '@layerzerolabs/lz-evm-sdk-v2'
 
 const contractName = 'MyOFTAdapterUpgradeable'
@@ -11,8 +11,7 @@ const deploy: DeployFunction = async (hre) => {
     console.log(`deploying ${contractName} on network: ${hre.network.name} with ${signer.address}`)
 
     const eid = hre.network.config.eid as EndpointId
-    const networkStage = getNetworkForChainId(eid)
-    const lzNetworkName = `${networkStage.chainName}-${networkStage.env}`
+    const lzNetworkName = endpointIdToNetwork(eid)
 
     const { address } = getDeploymentAddressAndAbi(lzNetworkName, 'EndpointV2')
 
