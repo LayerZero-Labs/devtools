@@ -104,8 +104,8 @@ jobs:
         env:
           # Disable parallel execution for now
           LZ_ENABLE_EXPERIMENTAL_PARALLEL_EXECUTION: false
-          JEST_TIMEOUT: 30000  # Increase timeout for ARM builds
-          TEST_TIMEOUT: 300000 # 5 minutes timeout for long-running tests
+          JEST_TIMEOUT: 60_000  # Increase timeout for ARM builds
+          TEST_TIMEOUT: 600_000 # 10 minutes timeout for long-running tests
           # We'll use the prebuilt base image
           DEVTOOLS_BASE_IMAGE: ghcr.io/layerzero-labs/devtools-dev-base:main
           # And the prebuilt hardhat EVM node image
