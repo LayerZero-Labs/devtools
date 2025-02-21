@@ -2,8 +2,10 @@ import assert from 'assert'
 
 import { type DeployFunction } from 'hardhat-deploy/types'
 
+import { ChannelId } from '@layerzerolabs/lz-definitions'
+
 // TODO declare your contract name here
-const contractName = 'MyOAppRead'
+const contractName = 'ReadPublic'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -39,7 +41,7 @@ const deploy: DeployFunction = async (hre) => {
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
-            `oAppRead-${hre.network.name}`,
+            ChannelId.READ_CHANNEL_1,
         ],
         log: true,
         skipIfAlreadyDeployed: false,

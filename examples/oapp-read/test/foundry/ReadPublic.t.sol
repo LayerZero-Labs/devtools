@@ -102,7 +102,7 @@ contract ReadPublicTest is TestHelperOz5 {
                 break;
             }
         }
-        require(found, "DataReceived event not found");
+        assertEq(found, true, "DataReceived event not found");
         assertEq(dataReceived, 42, "Data received does not match expected value");
     }
 }
