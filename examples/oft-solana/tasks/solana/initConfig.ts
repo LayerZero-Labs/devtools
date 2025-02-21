@@ -1,4 +1,4 @@
-import { Keypair, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { ConfigurableTaskDefinition } from 'hardhat/types'
 
 import { inheritTask } from '@layerzerolabs/devtools-evm-hardhat'
@@ -16,7 +16,6 @@ const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
 interface Args {
     logLevel: LogLevel
     solanaProgramId: PublicKey
-    solanaSecretKey?: Keypair
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
 }

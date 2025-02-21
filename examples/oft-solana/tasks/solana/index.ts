@@ -23,7 +23,7 @@ import {
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults'
 import { createWeb3JsEddsa } from '@metaplex-foundation/umi-eddsa-web3js'
 import { toWeb3JsInstruction, toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
-import { AddressLookupTableAccount, Connection } from '@solana/web3.js'
+import { AddressLookupTableAccount, Connection, Keypair } from '@solana/web3.js'
 import { getSimulationComputeUnits } from '@solana-developers/helpers'
 import bs58 from 'bs58'
 import { backOff } from 'exponential-backoff'
@@ -71,6 +71,15 @@ export const deriveConnection = async (eid: EndpointId) => {
         umi,
         umiWalletKeyPair,
         umiWalletSigner,
+    }
+}
+
+export const useWeb3Js = () => {
+    const privateKey = getSolanaPrivateKeyFromEnv()
+    const secretKeyBytes = bs58.decode(privateKey)
+    const keypair = Keypair.fromSecretKey(secretKeyBytes)
+    return {
+        web3JsKeypair: keypair,
     }
 }
 
