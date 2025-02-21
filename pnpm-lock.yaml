@@ -1498,6 +1498,9 @@ importers:
       '@layerzerolabs/lz-v2-utilities':
         specifier: ^3.0.12
         version: 3.0.12
+      '@layerzerolabs/metadata-tools':
+        specifier: ^0.3.1
+        version: link:../../packages/metadata-tools
       '@layerzerolabs/oapp-evm':
         specifier: ^0.3.1
         version: link:../../packages/oapp-evm
