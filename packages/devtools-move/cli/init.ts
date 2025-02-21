@@ -1,4 +1,4 @@
-import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli/cli/AptosEVMCli'
+import { AptosEVMCLI } from '@layerzerolabs/devtools-extensible-cli'
 import path from 'path'
 
 export async function attach_wire_move(sdk: AptosEVMCLI) {

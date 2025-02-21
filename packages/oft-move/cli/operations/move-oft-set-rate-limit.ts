@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 
 import { setRateLimit } from '../../tasks/setRateLimit'
 import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'

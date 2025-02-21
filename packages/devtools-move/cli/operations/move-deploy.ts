@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 
 import { deploy } from '../../tasks/move/deploy'
 import { setDelegate } from '../../tasks/move/setDelegate'

@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import type { TxReceiptJson } from '../../tasks/evm/utils/types'
 import path from 'path'
 import fs from 'fs'

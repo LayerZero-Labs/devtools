@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 
 import { sendFromMoveVm } from '../../tasks/sendFromMoveVm'
 import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'

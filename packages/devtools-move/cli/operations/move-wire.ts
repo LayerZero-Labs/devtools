@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { wireMove } from '../../tasks/move/wireMove'
 import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 

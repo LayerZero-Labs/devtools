@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { wireEvm } from '../../tasks/evm/wire-evm'
 
 class EVMWireOperation implements INewOperation {

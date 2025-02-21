@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { transferOAppOwner } from '../../tasks/move/transferOwnerOapp'
 import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 

@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 
 import { setFee } from '../../tasks/setFee'
 import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'

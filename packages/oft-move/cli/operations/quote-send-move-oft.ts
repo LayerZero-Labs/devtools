@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 
 import { quoteSendOFT } from '../../tasks/quoteSendOFT'
 import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'

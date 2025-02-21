@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { build } from '../../tasks/move/build'
 
 import { getMoveTomlAdminName, getNamedAddresses } from '../../tasks/move/utils/config'

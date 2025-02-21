@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { setDelegate } from '../../tasks/move/setDelegate'
 import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 

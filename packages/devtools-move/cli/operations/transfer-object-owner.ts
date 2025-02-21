@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { transferObjectOwner } from '../../tasks/move/transferObjectOwner'
 import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 class MoveTransferObjectOwnerOperation implements INewOperation {

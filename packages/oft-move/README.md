@@ -18,7 +18,7 @@ The wire command is defined in `packages/devtools-move/cli/operations/move-wire.
 Here is the code for the wire operation. As you can see it just defines what args are required, and passes those in to wireMove, where the actual logic is defined.
 
 ```ts
-import { INewOperation } from "@layerzerolabs/devtools-extensible-cli";
+import { INewOperation } from "@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation";
 import { wireMove } from "../../tasks/move/wire";
 
 class MoveWireOperation implements INewOperation {

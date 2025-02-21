@@ -2,13 +2,15 @@
   "name": "@layerzerolabs/oft-move",
   "version": "0.0.2",
   "license": "MIT",
-  "types": "types/index.d.ts",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "$npm_execpath tsup --clean",
-    "clean": "rm -rf artifacts cache out build",
-    "dev": "$npm_execpath tsup --watch",
-    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
+    "build": "tsup --clean",
+    "clean": "rm -rf dist",
+    "dev": "tsup --watch",
+    "lint": "eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
@@ -18,6 +20,7 @@
     "@layerzerolabs/lz-definitions": "^3.0.21",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/prettier-config-next": "^2.3.39",
+    "@layerzerolabs/toolbox-hardhat": "~0.6.3",
     "argparse": "^2.0.1",
     "depcheck": "^1.4.7",
     "eslint": "^8.55.0",

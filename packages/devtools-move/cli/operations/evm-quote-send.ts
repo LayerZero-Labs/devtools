@@ -1,4 +1,4 @@
-import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
+import { INewOperation } from '@layerzerolabs/devtools-extensible-cli/cli/types/NewOperation'
 import { createEvmOmniContracts, readPrivateKey } from '../../tasks/evm/wire-evm'
 import { ethers } from 'ethers'
 

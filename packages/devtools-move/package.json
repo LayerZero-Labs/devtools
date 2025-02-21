@@ -2,17 +2,19 @@
   "name": "@layerzerolabs/devtools-move",
   "version": "0.0.2",
   "license": "MIT",
-  "types": "types/index.d.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "prebuild": "tsc -noEmit",
-    "build": "$npm_execpath tsup --clean",
+    "build": "tsup --clean",
     "clean": "rm -rf dist",
-    "dev": "$npm_execpath tsup --watch",
-    "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "$npm_execpath jest"
+    "dev": "tsup --watch",
+    "lint": "eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "dependencies": {
+    "@layerzerolabs/toolbox-hardhat": "~0.6.3",
     "@types/chai": "^4.3.11",
     "chai": "^4.4.1",
     "inquirer": "^12.3.3",
@@ -28,7 +30,6 @@
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.27",
     "@layerzerolabs/lz-serdes": "^3.0.19",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
-    "@layerzerolabs/toolbox-hardhat": "~0.6.3",
     "@types/argparse": "^2.0.17",
     "@types/jest": "^29.5.12",
     "@types/node": "~18.18.14",
