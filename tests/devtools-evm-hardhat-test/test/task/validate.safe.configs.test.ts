@@ -21,7 +21,15 @@ describe(`task ${TASK_LZ_VALIDATE_SAFE_CONFIGS}`, () => {
             expect(result.status).toBe(0)
         })
 
-        it('should validate valid safe configs', async () => {
+        /* 
+            SKIP TEST because of Safe UI hack on Feb 21, 2025
+            Safe's API was turned off to prevent future hacks.
+            https://safe-transaction-mainnet.safe.global/ - returns 404
+            Information about the hack - https://twitter.com/senamakel/status/1893001991971905542
+            TODO: remove skip when the hack is fixed
+        */
+        // eslint-disable-next-line jest/no-disabled-tests
+        it.skip('should validate valid safe configs', async () => {
             const result = runExpect('validate-valid-safe-configs')
 
             expect(result.status).toBe(0)
