@@ -2,9 +2,10 @@ import { PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { firstFactory } from '@layerzerolabs/devtools'
-import { SUBTASK_LZ_SIGN_AND_SEND, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { SUBTASK_LZ_SIGN_AND_SEND, types as devtoolsTypes } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
+import { EndpointId } from '@layerzerolabs/lz-definitions'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
 import {
     SUBTASK_LZ_OAPP_WIRE_CONFIGURE,
@@ -13,7 +14,7 @@ import {
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
 
-import { useWeb3Js } from '../solana'
+import { getSolanaDeployment, useWeb3Js } from '../solana'
 
 import { publicKey } from './types'
 import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFactory } from './utils'
@@ -25,7 +26,7 @@ import type { SignAndSendTaskArgs } from '@layerzerolabs/devtools-evm-hardhat/ta
  */
 interface Args {
     logLevel: LogLevel
-    solanaProgramId: PublicKey
+    solanaEid: EndpointId
     multisigKey?: PublicKey
     internalConfigurator?: OAppConfigurator
 }
@@ -34,14 +35,14 @@ interface Args {
  * We extend the default wiring task to add functionality required by Solana
  */
 task(TASK_LZ_OAPP_WIRE)
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
+    .addParam('solanaEid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     // We use this argument to get around the fact that we want to both override the task action for the wiring task
     // and wrap this task with custom configurators
     //
     // By default, this argument will be left empty and the default OApp configurator will be used.
     // The tasks that are using custom configurators will override this argument with the configurator of their choice
-    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, types.fn, true)
+    .addParam('internalConfigurator', 'FOR INTERNAL USE ONLY', undefined, devtoolsTypes.fn, true)
     .setAction(async (args: Args, hre, runSuper) => {
         const logger = createLogger(args.logLevel)
 
@@ -64,11 +65,13 @@ task(TASK_LZ_OAPP_WIRE)
         const keypair = useWeb3Js().web3JsKeypair
         const userAccount = keypair.publicKey
 
+        const solanaDeployment = getSolanaDeployment(args.solanaEid)
+
         // Then we grab the programId from the args
-        const programId = args.solanaProgramId
+        const programId = new PublicKey(solanaDeployment.programId)
 
         if (!programId) {
-            logger.error('Missing --solana-program-id CLI argument')
+            logger.error('Missing programId in solana deployment')
             return
         }
 
@@ -137,11 +140,7 @@ task(TASK_LZ_OAPP_WIRE)
 // The two tasks are identical and the only drawback of this approach is the fact
 // that the logs will say "Wiring OApp" instead of "Transferring ownership"
 task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
-    // The next (optional) parameter is the OFT program ID
-    //
-    // Only pass this if you deployed a new OFT program, if you are using the default
-    // LayerZero OFT program you can omit this
-    .addParam('solanaProgramId', 'The OFT program ID to use', undefined, publicKey, true)
+    .addParam('solanaEid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid, true)
     .addParam('multisigKey', 'The MultiSig key', undefined, publicKey, true)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })

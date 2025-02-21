@@ -258,7 +258,7 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 ### Wire
@@ -266,7 +266,7 @@ npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana
 Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
@@ -309,7 +309,7 @@ For Solana -> Sepolia, you should pass in the options value into the script at [
 #### Send SOL -> Sepolia
 
 ```bash
-npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
+npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161
 ```
 
 #### Send Sepolia -> SOL
@@ -344,7 +344,7 @@ How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-
 Now run
 
 ```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 and execute the transactions.
@@ -356,7 +356,7 @@ How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oap
 Now, run
 
 ```
-npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-program-id <PROGRAM_ID>
+npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 ### Common Errors

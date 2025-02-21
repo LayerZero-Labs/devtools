@@ -32,7 +32,7 @@ task(
 )
     .addParam('mint', 'The OFT token mint public key')
     .addParam('programId', 'The OFT Program id')
-    .addParam('eid', 'Solana mainnet or testnet', undefined, types.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, types.eid)
     .addParam('dstEid', 'The destination endpoint ID', undefined, types.eid)
     .addParam('oftStore', 'The OFTStore account')
     .addParam('capacity', 'The capacity of the rate limit', undefined, types.bigint)

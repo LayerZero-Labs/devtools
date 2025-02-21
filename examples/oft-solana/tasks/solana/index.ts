@@ -1,5 +1,6 @@
 import assert from 'assert'
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 
 import {
     fetchAddressLookupTable,
@@ -112,7 +113,7 @@ export const deriveKeys = (programIdStr: string) => {
  * @param escrow {string}
  * @param oftStore {string}
  */
-export const output = (
+export const saveSolanaDeployment = (
     eid: EndpointId,
     programId: string,
     mint: string,
@@ -141,6 +142,32 @@ export const output = (
     console.log(`Accounts have been saved to ${outputDir}/OFT.json`)
 }
 
+/**
+ * Reads the OFT deployment info from disk for the given endpoint ID.
+ * @param eid {EndpointId}
+ * @returns The contents of the OFT.json file as a JSON object.
+ */
+export const getSolanaDeployment = (
+    eid: EndpointId
+): {
+    programId: string
+    mint: string
+    mintAuthority: string
+    escrow: string
+    oftStore: string
+} => {
+    const outputDir = path.join('deployments', endpointIdToNetwork(eid))
+    const filePath = path.join(outputDir, 'OFT.json') // Note: if you have multiple deployments, change this filename to refer to the desired deployment file
+
+    if (!existsSync(filePath)) {
+        throw new Error(`Could not find Solana deployment file for eid ${eid} at: ${filePath}`)
+    }
+
+    const fileContents = readFileSync(filePath, 'utf-8')
+    return JSON.parse(fileContents)
+}
+
+// TODO: move below outside of solana folder since it's generic
 export const getLayerZeroScanLink = (hash: string, isTestnet = false) =>
     isTestnet ? `https://testnet.layerzeroscan.com/tx/${hash}` : `https://layerzeroscan.com/tx/${hash}`
 
