@@ -72,7 +72,6 @@ contract ReadPublicTest is TestHelperOz5 {
 
     function test_send_read() public {
         bytes memory options = OptionsBuilder.newOptions().addExecutorLzReadOption(1e8, 100, 0);
-        console.logBytes(options);
 
         // Prepare the read request parameters
         uint32 targetEid = aEid;

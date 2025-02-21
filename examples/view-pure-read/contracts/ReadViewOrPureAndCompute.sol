@@ -35,10 +35,10 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
     uint16 public constant READ_TYPE = 1;
 
     /// @notice Target chain's Endpoint ID.
-    uint32 public targetEid;
+    uint32 public immutable targetEid;
 
     /// @notice Target contract address on the target chain.
-    address public targetContractAddress;
+    address public immutable targetContractAddress;
 
     /**
      * @notice Constructor to initialize the OAppRead contract.
