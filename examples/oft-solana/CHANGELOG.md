@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.8
+
+### Patch Changes
+
+- ce3a36b: introduce getSolanaDeploymentFunction and simplify solana task params
+
 ## 0.7.7
 
 ### Patch Changes
