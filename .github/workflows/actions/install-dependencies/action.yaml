@@ -20,6 +20,10 @@ runs:
         rm -rf ~/.cache/hardhat-nodejs
         rm -rf ~/.hardhat
 
+    - name: Mark Git Directory as Safe
+      shell: bash
+      run: git config --global --add safe.directory /__w/devtools/devtools
+
     - name: Ensure Git Submodules Are Up-to-Date
       shell: bash
       run: |
