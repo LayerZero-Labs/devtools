@@ -19,10 +19,7 @@ use oapp::{
 use solana_helper::program_id_from_env;
 use state::*;
 
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu"
-)));
+declare_id!("3ThC8DDzimnnrt4mvJSKFpWQA3UvnbzKM3mT6SHoNQKu");
 
 pub const OFT_SEED: &[u8] = b"OFT";
 pub const PEER_SEED: &[u8] = b"Peer";
