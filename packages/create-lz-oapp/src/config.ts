@@ -143,6 +143,17 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
+        ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLE
+            ? [
+                  {
+                      id: 'oft-initia',
+                      label: 'OFT (Initia)',
+                      repository,
+                      directory: 'examples/oft-initia',
+                      ref,
+                  },
+              ]
+            : []),
     ]
 }
 

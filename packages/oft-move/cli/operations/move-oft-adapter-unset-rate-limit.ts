@@ -1,7 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { unsetRateLimit } from '../../tasks/unSetRateLimit'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class AdapterUnsetRateLimit implements INewOperation {
     vm = 'move'
@@ -10,7 +11,8 @@ class AdapterUnsetRateLimit implements INewOperation {
     reqArgs = ['to_eid', 'oapp_config']
 
     async impl(args: any): Promise<void> {
-        await unsetRateLimit(args.to_eid, OFTType.OFT_ADAPTER_FA, args.oapp_config)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await unsetRateLimit(taskContext, args.to_eid, OFTType.OFT_ADAPTER_FA)
     }
 }
 

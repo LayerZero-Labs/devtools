@@ -2,6 +2,7 @@ import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import path from 'path'
 
 import { initOFTAdapterFA } from '../../tasks/initOFTAdapterFA'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class InitOFTFAAdapter implements INewOperation {
     vm = 'move'
@@ -18,7 +19,9 @@ class InitOFTFAAdapter implements INewOperation {
             throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
         }
 
-        await initOFTAdapterFA(args.oapp_config, oftMetadata.move_vm_fa_address, oftMetadata.shared_decimals)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+
+        await initOFTAdapterFA(taskContext, oftMetadata.move_vm_fa_address, oftMetadata.shared_decimals)
     }
 }
 
