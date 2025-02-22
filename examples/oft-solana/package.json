@@ -36,6 +36,7 @@
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-solana-sdk-v2": "3.0.0",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
+    "@layerzerolabs/metadata-tools": "^0.3.1",
     "@layerzerolabs/oapp-evm": "^0.3.1",
     "@layerzerolabs/oft-evm": "^3.1.2",
     "@layerzerolabs/oft-v2-solana-sdk": "^3.0.59",
