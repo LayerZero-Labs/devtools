@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools-evm-hardhat-test
 
+## 0.3.8
+
+### Patch Changes
+
+- c03791c: skip test that validates valid safe config
+
 ## 0.3.7
 
 ### Patch Changes

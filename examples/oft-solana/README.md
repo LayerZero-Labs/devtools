@@ -266,7 +266,7 @@ npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana
 Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key --solana-eid <SOLANA_ENDPOINT_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
