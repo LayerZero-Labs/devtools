@@ -47,6 +47,6 @@ Options:
   -d,--destination <path>      Project directory
   -e,--example <name>          Example project (choices: "oft", "oapp")
   --log-level <level>          Log level (choices: "error", "warn", "info", "http", "verbose", "debug", "silly", default: "info")
-  -p,--package-manager <name>  Node package manager to use (choices: "npm", "yarn", "pnpm", "bun")
+  -p,--package-manager <name>  Node package manager to use (choices: "npm", "pnpm", "bun")
   -h, --help                   display help for command
 ```
