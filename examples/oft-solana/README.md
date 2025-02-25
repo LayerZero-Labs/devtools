@@ -296,7 +296,7 @@ Note that you will need to either enable `enforcedOptions` in [./layerzero.confi
 
 For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
 
-#### (Optional) If specifing the `_options` value when calling `send()`
+#### (Optional) If specifying the `_options` value when calling `send()`
 
 It's only necessary to specify `_options` if you do not have `enforcedOptions`.
 
@@ -332,6 +332,11 @@ The `OFTStore` is automatically added as a mint authority to the newly created m
 included in the `--additional-minters` list.
 
 ## Appendix
+
+
+### Solana Program Verification
+
+Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
 
 ### Transferring ownership
 
