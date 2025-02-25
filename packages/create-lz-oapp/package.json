@@ -1,6 +1,6 @@
 {
   "name": "create-lz-oapp",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Create LayerZero OApp with one command",
   "keywords": [
     "LayerZero",
