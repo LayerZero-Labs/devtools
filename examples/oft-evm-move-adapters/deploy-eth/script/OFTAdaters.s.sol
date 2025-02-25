@@ -2,11 +2,9 @@
 pragma solidity ^0.8.27;
 
 import {Script} from "forge-std/Script.sol";
-import {console} from "forge-std/Console.sol";
 import {USDCFTAdapter} from "../src/USDCFTAdapter.sol";
 import {USDTFTAdapter} from "../src/USDTFTAdapter.sol";
 import {WETHFTAdapter} from "../src/WETHFTAdapter.sol";
-import {ERC20} from "../src/MOVEMock.sol";
 import {EnforcedOptionParam} from "layerzerolabs/oapp/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 contract OFTAdaptersScript is Script {
