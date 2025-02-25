@@ -123,37 +123,6 @@ export const getExamples = (): Example[] => {
                   },
               ]
             : []),
-
-        // The Aptos examples are feature flagged for the time being
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_MOVE_VM_EXAMPLES
-            ? [
-                  {
-                      id: 'oft-move',
-                      label: 'OFT (Aptos Fungible Asset)',
-                      repository,
-                      directory: 'examples/oft-aptos-move',
-                      ref,
-                  },
-                  {
-                      id: 'oft-adapter-move',
-                      label: 'OFT Adapter (Aptos Fungible Asset)',
-                      repository,
-                      directory: 'examples/oft-adapter-aptos-move',
-                      ref,
-                  },
-              ]
-            : []),
-        ...(process.env.LZ_ENABLE_EXPERIMENTAL_INITIA_EXAMPLE
-            ? [
-                  {
-                      id: 'oft-initia',
-                      label: 'OFT (Initia)',
-                      repository,
-                      directory: 'examples/oft-initia',
-                      ref,
-                  },
-              ]
-            : []),
     ]
 }
 
