@@ -2,17 +2,16 @@
 pragma solidity ^0.8.27;
 
 import {Script} from "forge-std/Script.sol";
-import {USDCFTAdapter} from "../src/USDCFTAdapter.sol";
-import {USDTFTAdapter} from "../src/USDTFTAdapter.sol";
-import {WETHFTAdapter} from "../src/WETHFTAdapter.sol";
+import {USDCOFTAdapter} from "../src/USDCOFTAdapter.sol";
+import {USDTOFTAdapter} from "../src/USDTOFTAdapter.sol";
+import {WETHOFTAdapter} from "../src/WETHOFTAdapter.sol";
 import {EnforcedOptionParam} from "layerzerolabs/oapp/contracts/oapp/interfaces/IOAppOptionsType3.sol";
 
 contract OFTAdaptersScript is Script {
-    MOVEOFTAdapter public adapter;
     // Mainnet
     address public usdc = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
-    address public usdc = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
-    address public usdc = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
+    address public usdt = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
+    address public weth = 0x3073f7aAA4DB83f95e9FFf17424F71D4751a3073;
 
     address public lzEndpoint = 0x1a44076050125825900e736c501f859c50fE728c;
     uint32 public movementEid = 30325;
@@ -23,6 +22,10 @@ contract OFTAdaptersScript is Script {
     address public tWeth = 0x50e288885258bC62da02d7Bd1e37d5c7B27F814F;
     address public tLzEndpoint = 0x6EDCE65403992e310A62460808c4b910D972f10f;
     uint32 public tMovementEid = 40325;
+
+    USDCOFTAdapter public usdcA;
+    USDTOFTAdapter public usdtA;
+    WETHOFTAdapter public wethA;
 
     // Enforced options: worker -> gas units
     bytes public options = abi.encodePacked(uint176(0x00030100110100000000000000000000000000001388));

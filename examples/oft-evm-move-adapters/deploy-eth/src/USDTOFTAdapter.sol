@@ -4,7 +4,7 @@ pragma solidity ^0.8.22;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {OFTAdapter} from "layerzerolabs/oapp/contracts/oft/OFTAdapter.sol";
 
-contract USDTOFTAdapter is OFTAdapter, RateLimiter {
+contract USDTOFTAdapter is OFTAdapter {
     constructor(
         address _token,
         address _lzEndpoint,
