@@ -160,12 +160,6 @@ const PACKAGE_MANAGERS: PackageManager[] = [
         label: 'npm',
     },
     {
-        id: 'yarn',
-        executable: 'yarn',
-        args: ['install'],
-        label: 'yarn',
-    },
-    {
         id: 'bun',
         executable: 'bun',
         args: ['install'],
