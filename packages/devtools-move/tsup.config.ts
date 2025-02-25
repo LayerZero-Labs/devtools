@@ -1,12 +1,12 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-    entry: ['types/index.d.ts'],
-    outDir: './dist',
-    clean: true,
+    entry: ['src/index.ts'],
+    // in most cases, we want to support both cjs and esm
+    format: ['cjs', 'esm'],
     dts: true,
-    sourcemap: true,
     splitting: false,
-    treeshake: true,
-    format: ['esm', 'cjs'],
+    sourcemap: true,
+    clean: true,
+    target: 'node16',
 })
