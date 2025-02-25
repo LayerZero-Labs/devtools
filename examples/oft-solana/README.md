@@ -127,8 +127,8 @@ anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 
 Where `<OFT_PROGRAM_ID>` is replaced with your OFT Program ID copied from the previous step.
 
-
 <!-- TODO: move the following 'preview rent costs' into docs and replace below with link to docs page -->
+
 #### Preview Rent Costs for the Solana OFT
 
 :information_source: The majority of the SOL required to deploy your program will be for [**rent**](https://solana.com/docs/core/fees#rent) (specifically, for the minimum balance of SOL required for [rent-exemption](https://solana.com/docs/core/fees#rent-exempt)), which is calculated based on the amount of bytes the program or account uses. Programs typically require more rent than PDAs as more bytes are required to store the program's executable code.
@@ -333,7 +333,6 @@ included in the `--additional-minters` list.
 
 ## Appendix
 
-
 ### Solana Program Verification
 
 Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
@@ -454,6 +453,7 @@ solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --pr
 ```
 
 <!-- consider removing below since loosen_cpi_size_restriction is now active -->
+
 #### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
 
 The outbound OApp DVN configuration violates a hard CPI size restriction, as you have included too many DVNs in the
