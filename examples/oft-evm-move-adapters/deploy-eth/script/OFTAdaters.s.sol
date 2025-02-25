@@ -26,13 +26,12 @@ contract OFTAdaptersScript is Script {
     USDCOFTAdapter public usdcA;
     USDTOFTAdapter public usdtA;
     WETHOFTAdapter public wethA;
-
     // Enforced options: worker -> gas units
     bytes public options = abi.encodePacked(uint176(0x00030100110100000000000000000000000000001388));
     // Movement MOVEOFTAdapter in bytes32
-    bytes32 public usdcOftAdapterBytes32 = 0x1f6569607261e5d6c8e1053325e4b9a3b2966d3a1a58efd627381069d453b9de;
-    bytes32 public usdtOftAdapterBytes32 = 0x1f6569607261e5d6c8e1053325e4b9a3b2966d3a1a58efd627381069d453b9de;
-    bytes32 public wethOftAdapterBytes32 = 0x1f6569607261e5d6c8e1053325e4b9a3b2966d3a1a58efd627381069d453b9de;
+    bytes32 public usdcOftAdapterBytes32 = 0x33987308d6698c3def1f155c8ea394360e9756b0a22e64fb20834327f04a1e42;
+    bytes32 public usdtOftAdapterBytes32 = 0x9cda672762a6f88e4b608428dd063e03aaf6712f0a427923dd0f1416afa1c075;
+    bytes32 public wethOftAdapterBytes32 = 0x2fa1f2914aa17d239410cb81ab46dd8fa9230272c58bc84e9e8b971eded79ca5;
 
     function run() public {
         uint256 pk = vm.envUint("PRIVATE_KEY");
@@ -56,9 +55,11 @@ contract OFTAdaptersScript is Script {
         usdcA.setPeer(movementEid, usdcOftAdapterBytes32);
         usdtA.setPeer(movementEid, usdtOftAdapterBytes32);
         wethA.setPeer(movementEid, wethOftAdapterBytes32);
+
         EnforcedOptionParam[] memory enforcedParams = new EnforcedOptionParam[](2);
         enforcedParams[0] = EnforcedOptionParam({eid: movementEid, msgType: uint16(1), options: options});
         enforcedParams[1] = EnforcedOptionParam({eid: movementEid, msgType: uint16(2), options: options});
+
         usdcA.setEnforcedOptions(enforcedParams);
         usdtA.setEnforcedOptions(enforcedParams);
         wethA.setEnforcedOptions(enforcedParams);
