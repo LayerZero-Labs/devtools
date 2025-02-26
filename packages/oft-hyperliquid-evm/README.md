@@ -16,6 +16,10 @@
   <a href="https://www.npmjs.com/package/@layerzerolabs/oft-hyperliquid-evm"><img alt="NPM License" src="https://img.shields.io/npm/l/@layerzerolabs/oft-hyperliquid-evm"/></a>
 </p>
 
+## EXPERIMENTAL CHAINED LZ COMPOSE
+
+This is an experimental implementation of a chained LayerZero Compose for users that have pre-existing `lzCompose()` calls.
+
 ## Installation
 
 ```bash
