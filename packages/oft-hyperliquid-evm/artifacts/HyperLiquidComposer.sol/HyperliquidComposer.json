@@ -1,0 +1,337 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        { "name": "_endpoint", "type": "address", "internalType": "address" },
+        { "name": "_oApp", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "HL_NATIVE_TRANSFER",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "endpoint",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lzCompose",
+      "inputs": [
+        { "name": "_oApp", "type": "address", "internalType": "address" },
+        { "name": "", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "oApp",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "error",
+      "name": "HyperliquidComposer_NotCalledFromEndpoint",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "HyperliquidComposer_NotCalledFromOFT",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60c060405234801561000f575f80fd5b5060405161075938038061075983398101604081905261002e91610060565b6001600160a01b039182166080521660a052610091565b80516001600160a01b038116811461005b575f80fd5b919050565b5f8060408385031215610071575f80fd5b61007a83610045565b915061008860208401610045565b90509250929050565b60805160a0516106946100c55f395f818160530152818161017e015261038d01525f818160d6015261012501526106945ff3fe60806040526004361061003e575f3560e01c806352ae28791461004257806356d5e2e51461009e5780635e280f11146100c5578063d0a10260146100f8575b5f80fd5b34801561004d575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b3480156100a9575f80fd5b5061007573222222222222222222222222222222222222222281565b3480156100d0575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b61010b6101063660046104fb565b61010d565b005b3373ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000161461017c576040517f691f498c00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff168773ffffffffffffffffffffffffffffffffffffffff160361020d575f6101da8686610248565b8060200190518101906101ed9190610595565b90505f6101fa8787610294565b905061020682826102b3565b505061023f565b6040517f677d016700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b50505050505050565b606061025782604c81866105b0565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f6102a3602c600c84866105b0565b6102ac916105d7565b9392505050565b60405173ffffffffffffffffffffffffffffffffffffffff831660248201527322222222222222222222222222222222222222226044820152606481018290525f90608401604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167f30e0789e00000000000000000000000000000000000000000000000000000000179052519091505f90819073ffffffffffffffffffffffffffffffffffffffff7f000000000000000000000000000000000000000000000000000000000000000016906103b9908590610613565b5f604051808303815f865af19150503d805f81146103f2576040519150601f19603f3d011682016040523d82523d5f602084013e6103f7565b606091505b5091509150818015610421575080511580610421575080806020019051810190610421919061063f565b61048b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600f60248201527f5472616e73666572206661696c65640000000000000000000000000000000000604482015260640160405180910390fd5b5050505050565b73ffffffffffffffffffffffffffffffffffffffff811681146104b3575f80fd5b50565b5f8083601f8401126104c6575f80fd5b50813567ffffffffffffffff8111156104dd575f80fd5b6020830191508360208285010111156104f4575f80fd5b9250929050565b5f805f805f805f60a0888a031215610511575f80fd5b873561051c81610492565b965060208801359550604088013567ffffffffffffffff8082111561053f575f80fd5b61054b8b838c016104b6565b909750955060608a0135915061056082610492565b90935060808901359080821115610575575f80fd5b506105828a828b016104b6565b989b979a50959850939692959293505050565b5f602082840312156105a5575f80fd5b81516102ac81610492565b5f80858511156105be575f80fd5b838611156105ca575f80fd5b5050820193919092039150565b8035602083101561028e577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b1692915050565b5f82515f5b818110156106325760208186018101518583015201610618565b505f920191825250919050565b5f6020828403121561064f575f80fd5b815180151581146102ac575f80fdfea26469706673582212201513670c04d02f8eb86e7d1dc1a2882dbc5665b32512023260ffa14bb1d8c6c364736f6c63430008160033",
+    "sourceMap": "475:1878:0:-:0;;;1064:105;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1120:20:0;;;;;1150:12;;;475:1878;;14:177:18;93:13;;-1:-1:-1;;;;;135:31:18;;125:42;;115:70;;181:1;178;171:12;115:70;14:177;;;:::o;196:293::-;275:6;283;336:2;324:9;315:7;311:23;307:32;304:52;;;352:1;349;342:12;304:52;375:40;405:9;375:40;:::i;:::-;365:50;;434:49;479:2;468:9;464:18;434:49;:::i;:::-;424:59;;196:293;;;;;:::o;:::-;475:1878:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x60806040526004361061003e575f3560e01c806352ae28791461004257806356d5e2e51461009e5780635e280f11146100c5578063d0a10260146100f8575b5f80fd5b34801561004d575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b3480156100a9575f80fd5b5061007573222222222222222222222222222222222222222281565b3480156100d0575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b61010b6101063660046104fb565b61010d565b005b3373ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000161461017c576040517f691f498c00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff168773ffffffffffffffffffffffffffffffffffffffff160361020d575f6101da8686610248565b8060200190518101906101ed9190610595565b90505f6101fa8787610294565b905061020682826102b3565b505061023f565b6040517f677d016700000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b50505050505050565b606061025782604c81866105b0565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f6102a3602c600c84866105b0565b6102ac916105d7565b9392505050565b60405173ffffffffffffffffffffffffffffffffffffffff831660248201527322222222222222222222222222222222222222226044820152606481018290525f90608401604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529181526020820180517bffffffffffffffffffffffffffffffffffffffffffffffffffffffff167f30e0789e00000000000000000000000000000000000000000000000000000000179052519091505f90819073ffffffffffffffffffffffffffffffffffffffff7f000000000000000000000000000000000000000000000000000000000000000016906103b9908590610613565b5f604051808303815f865af19150503d805f81146103f2576040519150601f19603f3d011682016040523d82523d5f602084013e6103f7565b606091505b5091509150818015610421575080511580610421575080806020019051810190610421919061063f565b61048b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600f60248201527f5472616e73666572206661696c65640000000000000000000000000000000000604482015260640160405180910390fd5b5050505050565b73ffffffffffffffffffffffffffffffffffffffff811681146104b3575f80fd5b50565b5f8083601f8401126104c6575f80fd5b50813567ffffffffffffffff8111156104dd575f80fd5b6020830191508360208285010111156104f4575f80fd5b9250929050565b5f805f805f805f60a0888a031215610511575f80fd5b873561051c81610492565b965060208801359550604088013567ffffffffffffffff8082111561053f575f80fd5b61054b8b838c016104b6565b909750955060608a0135915061056082610492565b90935060808901359080821115610575575f80fd5b506105828a828b016104b6565b989b979a50959850939692959293505050565b5f602082840312156105a5575f80fd5b81516102ac81610492565b5f80858511156105be575f80fd5b838611156105ca575f80fd5b5050820193919092039150565b8035602083101561028e577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b1692915050565b5f82515f5b818110156106325760208186018101518583015201610618565b505f920191825250919050565b5f6020828403121561064f575f80fd5b815180151581146102ac575f80fdfea26469706673582212201513670c04d02f8eb86e7d1dc1a2882dbc5665b32512023260ffa14bb1d8c6c364736f6c63430008160033",
+    "sourceMap": "475:1878:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;692:29;;;;;;;;;;;;;;;;;;190:42:18;178:55;;;160:74;;148:2;133:18;692:29:0;;;;;;;560:87;;;;;;;;;;;;605:42;560:87;;653:33;;;;;;;;;;;;;;;1175:730;;;;;;:::i;:::-;;:::i;:::-;;;1401:10;:31;1423:8;1401:31;;1397:112;;1455:43;;;;;;;;;;;;;;1397:112;1589:4;1580:13;;:5;:13;;;1576:323;;1609:17;1640:39;1670:8;;1640:29;:39::i;:::-;1629:62;;;;;;;;;;;;:::i;:::-;1609:82;;1705:17;1725:37;1753:8;;1725:27;:37::i;:::-;1705:57;;1777:35;1791:9;1802;1777:13;:35::i;:::-;1595:228;;1576:323;;;1850:38;;;;;;;;;;;;;;1576:323;1175:730;;;;;;;:::o;2273:128:9:-;2337:12;2368:26;:4;335:2;2368:4;;:26;:::i;:::-;2361:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;2361:33:9;;-1:-1:-1;;;;2273:128:9;;;;;:::o;1676:150::-;1738:7;1780:37;282:2;232;1780:4;;:37;:::i;:::-;1772:46;;;:::i;:::-;1764:55;1676:150;-1:-1:-1;;;1676:150:9:o;1911:440:0:-;2009:159;;2956:42:18;3025:15;;2009:159:0;;;3007:34:18;605:42:0;3057:18:18;;;3050:43;3109:18;;;3102:34;;;1989:17:0;;2919:18:18;;2009:159:0;;;;;;;;;;;;;;;;;;;;;;;;2221:15;2009:159;;-1:-1:-1;;;;;2221:9:0;:4;:9;;:15;;2009:159;;2221:15;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2179:57;;;;2255:7;:69;;;;-1:-1:-1;2267:17:0;;:22;;:56;;;2304:10;2293:30;;;;;;;;;;;;:::i;:::-;2247:97;;;;;;;4048:2:18;2247:97:0;;;4030:21:18;4087:2;4067:18;;;4060:30;4126:17;4106:18;;;4099:45;4161:18;;2247:97:0;;;;;;;;1979:372;;;1911:440;;:::o;245:154:18:-;331:42;324:5;320:54;313:5;310:65;300:93;;389:1;386;379:12;300:93;245:154;:::o;404:347::-;455:8;465:6;519:3;512:4;504:6;500:17;496:27;486:55;;537:1;534;527:12;486:55;-1:-1:-1;560:20:18;;603:18;592:30;;589:50;;;635:1;632;625:12;589:50;672:4;664:6;660:17;648:29;;724:3;717:4;708:6;700;696:19;692:30;689:39;686:59;;;741:1;738;731:12;686:59;404:347;;;;;:::o;756:1063::-;873:6;881;889;897;905;913;921;974:3;962:9;953:7;949:23;945:33;942:53;;;991:1;988;981:12;942:53;1030:9;1017:23;1049:31;1074:5;1049:31;:::i;:::-;1099:5;-1:-1:-1;1151:2:18;1136:18;;1123:32;;-1:-1:-1;1206:2:18;1191:18;;1178:32;1229:18;1259:14;;;1256:34;;;1286:1;1283;1276:12;1256:34;1325:58;1375:7;1366:6;1355:9;1351:22;1325:58;:::i;:::-;1402:8;;-1:-1:-1;1299:84:18;-1:-1:-1;1489:2:18;1474:18;;1461:32;;-1:-1:-1;1502:33:18;1461:32;1502:33;:::i;:::-;1554:7;;-1:-1:-1;1614:3:18;1599:19;;1586:33;;1631:16;;;1628:36;;;1660:1;1657;1650:12;1628:36;;1699:60;1751:7;1740:8;1729:9;1725:24;1699:60;:::i;:::-;756:1063;;;;-1:-1:-1;756:1063:18;;-1:-1:-1;756:1063:18;;;;1673:86;;-1:-1:-1;;;756:1063:18:o;1824:259::-;1902:6;1955:2;1943:9;1934:7;1930:23;1926:32;1923:52;;;1971:1;1968;1961:12;1923:52;2003:9;1997:16;2022:31;2047:5;2022:31;:::i;2088:331::-;2193:9;2204;2246:8;2234:10;2231:24;2228:44;;;2268:1;2265;2258:12;2228:44;2297:6;2287:8;2284:20;2281:40;;;2317:1;2314;2307:12;2281:40;-1:-1:-1;;2343:23:18;;;2388:25;;;;;-1:-1:-1;2088:331:18:o;2424:315::-;2544:19;;2583:2;2575:11;;2572:161;;;2655:66;2644:2;2640:12;;;2637:1;2633:20;2629:93;2618:105;2424:315;;;;:::o;3147:412::-;3276:3;3314:6;3308:13;3339:1;3349:129;3363:6;3360:1;3357:13;3349:129;;;3461:4;3445:14;;;3441:25;;3435:32;3422:11;;;3415:53;3378:12;3349:129;;;-1:-1:-1;3533:1:18;3497:16;;3522:13;;;-1:-1:-1;3497:16:18;3147:412;-1:-1:-1;3147:412:18:o;3564:277::-;3631:6;3684:2;3672:9;3663:7;3659:23;3655:32;3652:52;;;3700:1;3697;3690:12;3652:52;3732:9;3726:16;3785:5;3778:13;3771:21;3764:5;3761:32;3751:60;;3807:1;3804;3797:12",
+    "linkReferences": {},
+    "immutableReferences": {
+      "20": [
+        { "start": 214, "length": 32 },
+        { "start": 293, "length": 32 }
+      ],
+      "22": [
+        { "start": 83, "length": 32 },
+        { "start": 382, "length": 32 },
+        { "start": 909, "length": 32 }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "HL_NATIVE_TRANSFER()": "56d5e2e5",
+    "endpoint()": "5e280f11",
+    "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260",
+    "oApp()": "52ae2879"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_endpoint\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_oApp\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"HyperliquidComposer_NotCalledFromEndpoint\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"HyperliquidComposer_NotCalledFromOFT\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"HL_NATIVE_TRANSFER\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"endpoint\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oApp\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oApp\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"details\":\"Initializes the contract.\",\"params\":{\"_endpoint\":\"LayerZero Endpoint address\",\"_oApp\":\"The address of the OApp that is sending the composed message.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Constructs the StableComposer contract.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/HyperLiquidComposer.sol\":\"HyperliquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/HyperLiquidComposer.sol\":{\"keccak256\":\"0xfc6050e753914d9ee6372e489510911240511df5d2a9f76c26988b812ad277e7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://152edb7be740a5aca8f8bb63cb23df6c5370f1c94065530eeef637cf6d8e0de0\",\"dweb:/ipfs/QmSYgRrku2n8tfiyntbe3HYJYw63xrTwvfSTaQT3jr8Bin\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol\":{\"keccak256\":\"0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e\",\"dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_endpoint",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_oApp", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "HyperliquidComposer_NotCalledFromEndpoint"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "HyperliquidComposer_NotCalledFromOFT"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "HL_NATIVE_TRANSFER",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "endpoint",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oApp", "type": "address" },
+            { "internalType": "bytes32", "name": "", "type": "bytes32" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            { "internalType": "address", "name": "", "type": "address" },
+            { "internalType": "bytes", "name": "", "type": "bytes" }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "lzCompose"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "oApp",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "constructor": {
+            "details": "Initializes the contract.",
+            "params": {
+              "_endpoint": "LayerZero Endpoint address",
+              "_oApp": "The address of the OApp that is sending the composed message."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "constructor": { "notice": "Constructs the StableComposer contract." }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/HyperLiquidComposer.sol": "HyperliquidComposer"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/HyperLiquidComposer.sol": {
+        "keccak256": "0xfc6050e753914d9ee6372e489510911240511df5d2a9f76c26988b812ad277e7",
+        "urls": [
+          "bzz-raw://152edb7be740a5aca8f8bb63cb23df6c5370f1c94065530eeef637cf6d8e0de0",
+          "dweb:/ipfs/QmSYgRrku2n8tfiyntbe3HYJYw63xrTwvfSTaQT3jr8Bin"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol": {
+        "keccak256": "0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49",
+        "urls": [
+          "bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf",
+          "dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol": {
+        "keccak256": "0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae",
+        "urls": [
+          "bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d",
+          "dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol": {
+        "keccak256": "0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58",
+        "urls": [
+          "bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd",
+          "dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol": {
+        "keccak256": "0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5",
+        "urls": [
+          "bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e",
+          "dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol": {
+        "keccak256": "0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7",
+        "urls": [
+          "bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b",
+          "dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+        "keccak256": "0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724",
+        "urls": [
+          "bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a",
+          "dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
+        "keccak256": "0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c",
+        "urls": [
+          "bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba",
+          "dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7",
+        "urls": [
+          "bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db",
+          "dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310",
+        "urls": [
+          "bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862",
+          "dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5",
+        "urls": [
+          "bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23",
+          "dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Errors.sol": {
+        "keccak256": "0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123",
+        "urls": [
+          "bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf",
+          "dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8",
+        "urls": [
+          "bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621",
+          "dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 0
+}
