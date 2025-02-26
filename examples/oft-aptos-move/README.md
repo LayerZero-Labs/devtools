@@ -1,8 +1,14 @@
-## Move-VM OFT Setup and Deployment
+## Setup and Installation
 
-### connecting to aptos via cli
+First, clone the repository and navigate to the example directory:
 
-To install aptos cli, run the following command:
+```bash
+git clone --recurse-submodules https://github.com/LayerZero-Labs/devtools.git --depth 1
+cd devtools
+cd examples/oft-aptos-move
+```
+
+Install the Aptos CLI (required for deployment):
 
 ```bash
 brew install aptos
@@ -12,6 +18,17 @@ brew install aptos
 >
 > - For deploying to Aptos chain: Use version >= 6.0.1 (installable via brew)
 > - For deploying to Movement chain: Use version <= 3.5.0 (must be built from source following the [Aptos CLI Build Guide](https://aptos.dev/en/network/nodes/building-from-source/))
+
+Install dependencies and build the project:
+
+```bash
+pnpm install
+pnpm turbo build --force
+```
+
+## Move-VM OFT Setup and Deployment
+
+### connecting to aptos via cli
 
 After installing the aptos cli, you can set the aptos cli path in the .env file. This allows you to have two different aptos cli versions installed on your machine and not have to switch between them for deployments.
 
