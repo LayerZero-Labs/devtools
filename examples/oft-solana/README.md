@@ -113,16 +113,7 @@ endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
 
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
-
-```
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
-)));
-```
-
-Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
+Copy the OFT's program ID, which you will use in the build step.
 
 ### Building and Deploying the Solana OFT Program
 
@@ -131,8 +122,12 @@ Ensure you have Docker running before running the build command.
 #### Build the Solana OFT program
 
 ```bash
-anchor build -v # verification flag enabled
+anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 ```
+
+Where `<OFT_PROGRAM_ID>` is replaced with your OFT Program ID copied from the previous step.
+
+<!-- TODO: move the following 'preview rent costs' into docs and replace below with link to docs page -->
 
 #### Preview Rent Costs for the Solana OFT
 
@@ -156,7 +151,7 @@ Rent-exempt minimum: 3.87415872 SOL
 
 #### Deploy the Solana OFT
 
-While for building, we must use Solana `v1.17.31`, for deloying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
+While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
 
 ##### Temporarily switch to Solana `v1.18.26`
 
@@ -301,7 +296,7 @@ Note that you will need to either enable `enforcedOptions` in [./layerzero.confi
 
 For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
 
-#### (Optional) If specifing the `_options` value when calling `send()`
+#### (Optional) If specifying the `_options` value when calling `send()`
 
 It's only necessary to specify `_options` if you do not have `enforcedOptions`.
 
@@ -337,6 +332,10 @@ The `OFTStore` is automatically added as a mint authority to the newly created m
 included in the `--additional-minters` list.
 
 ## Appendix
+
+### Solana Program Verification
+
+Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
 
 ### Transferring ownership
 
@@ -452,6 +451,8 @@ re-running with `--buffer` flag similar to the following:
 solana-keygen recover -o recover.json
 solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
 ```
+
+<!-- consider removing below since loosen_cpi_size_restriction is now active -->
 
 #### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
 
