@@ -32,7 +32,7 @@ process_asset() {
 
     echo "Quoting transfer fee for $ASSET_NAME..."
     #  quote_send(address, u32, vector<u8>, u64, u64, vector<u8>, vector<u8>, vector<u8>, bool)
-    QUOTE_RESULT=$(aptos move view --function-id $TOKEN_ADDRESS::oft::quote_send --args address:$PUBLIC_ADDRESS u32:$TARGET_EID hex:$RECIPIENT_ADDRESS u64:$AMOUNT u64:$AMOUNT 'u8:[0, 3, 1, 0, 17, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 26, 128]' hex:0x00 hex:0x00 "bool:false")
+    QUOTE_RESULT=$(aptos move view --function-id $TOKEN_ADDRESS::oft::quote_send --args address:$PUBLIC_ADDRESS u32:$TARGET_EID hex:$RECIPIENT_ADDRESS u64:$AMOUNT u64:$AMOUNT hex:0x hex:0x hex:0x "bool:false")
     QUOTE_RESULT=$(echo "$QUOTE_RESULT" | jq -r '.Result[0]')
     echo    "QUOTE_RESULT: $QUOTE_RESULT"
     NATIVE_FEE_HEX=$(echo "$QUOTE_RESULT" | cut -c 1-66)
@@ -43,7 +43,7 @@ process_asset() {
     # Send the tokens
     echo "Sending $ASSET_NAME..."
     # send_withdraw(account: &signer, dst_eid: u32, to: vector<u8>, amount_ld: u64, min_amount_ld: u64, extra_options: vector<u8>, compose_message: vector<u8>, oft_cmd: vector<u8>, native_fee: u64, zro_fee: u64,)
-    aptos move run --function-id $TOKEN_ADDRESS::oft::send_withdraw --args u32:$TARGET_EID hex:$RECIPIENT_ADDRESS u64:$AMOUNT u64:$AMOUNT 'u8:[0, 3, 1, 0, 17, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 26, 128]' hex:0x00 hex:0x00 u64:$NATIVE_FEE u64:0 --assume-yes
+    aptos move run --function-id $TOKEN_ADDRESS::oft::send_withdraw --args u32:$TARGET_EID hex:$RECIPIENT_ADDRESS u64:$AMOUNT u64:$AMOUNT hex:0x hex:0x hex:0x u64:$NATIVE_FEE u64:0 --assume-yes
     echo "$ASSET_NAME processing complete."
 }
 
