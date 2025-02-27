@@ -1,0 +1,66 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "HyperLiquidComposerCodec",
+  "sourceName": "@layerzerolabs/oft-hyperliquid-evm/contracts/library/HyperLiquidComposerCodec.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "message",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "length",
+          "type": "uint256"
+        }
+      ],
+      "name": "HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BASE_ASSET_BRIDGE_ADDRESS",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BASE_ASSET_BRIDGE_ADDRESS_UINT256",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "VALID_COMPOSE_MESSAGE_LENGTH_PACKED",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60c7610039600b82828239805160001a60731461002c57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361060475760003560e01c806303e41b7714604c578063807d6c3f146069578063d58daedf146070575b600080fd5b60566001609d1b81565b6040519081526020015b60405180910390f35b6056601481565b607a6001609d1b81565b6040516001600160a01b039091168152602001606056fea2646970667358221220087f6bc34ef883d2eafaa122a91a29903bd29599ac807fcc9fdd216bd07a9f8064736f6c63430008160033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040526004361060475760003560e01c806303e41b7714604c578063807d6c3f146069578063d58daedf146070575b600080fd5b60566001609d1b81565b6040519081526020015b60405180910390f35b6056601481565b607a6001609d1b81565b6040516001600160a01b039091168152602001606056fea2646970667358221220087f6bc34ef883d2eafaa122a91a29903bd29599ac807fcc9fdd216bd07a9f8064736f6c63430008160033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
