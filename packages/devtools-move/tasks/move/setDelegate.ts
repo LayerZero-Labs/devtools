@@ -1,34 +1,15 @@
-import { getChain, getConnection } from '../../sdk/moveVMConnectionBuilder'
-import { OFT } from '../../sdk/oft'
+import { createSetDelegatePayload } from './utils/moveVMOftConfigOps'
+import { getDelegateFromLzConfig, sendAllTxs } from './utils/utils'
+import { TaskContext } from '../../sdk/baseTaskHelper'
 
-import { getEidFromMoveNetwork, getLzNetworkStage, parseYaml } from './utils/aptosNetworkParser'
-import { setDelegate } from './utils/moveVMOftConfigOps'
-import { getContractNameFromLzConfig, getDelegateFromLzConfig, getMoveVMOAppAddress, sendAllTxs } from './utils/utils'
-import { getLzConfig } from './utils/config'
+async function setDelegate(taskContext: TaskContext) {
+    console.log(`\n🔧 Setting ${taskContext.chain}-${taskContext.stage} OApp Delegate`)
+    console.log(`\tFor: ${taskContext.oAppAddress}\n`)
 
-async function executeSetDelegate(args: any, useAccountAddress: boolean = false) {
-    const configPath = args.oapp_config
-    const { account_address, private_key, network, fullnode, faucet } = await parseYaml()
+    const delegate = getDelegateFromLzConfig(taskContext.srcEid, taskContext.lzConfig)
+    const setDelegatePayload = await createSetDelegatePayload(taskContext.oft, delegate, taskContext.srcEid)
 
-    const lzConfig = await getLzConfig(configPath)
-    const chain = getChain(fullnode)
-    const moveVMConnection = getConnection(chain, network, fullnode, faucet)
-
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
-    const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const oAppAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
-
-    console.log(`\n🔧 Setting ${chain}-${lzNetworkStage} OApp Delegate`)
-    console.log(`\tFor: ${oAppAddress}\n`)
-
-    const oft = new OFT(moveVMConnection, oAppAddress, account_address, private_key, eid)
-
-    const delegate = useAccountAddress ? account_address : getDelegateFromLzConfig(eid, lzConfig)
-
-    const setDelegatePayload = await setDelegate(oft, delegate, eid)
-
-    sendAllTxs(moveVMConnection, oft, account_address, [setDelegatePayload])
+    await sendAllTxs(taskContext.moveVMConnection, taskContext.oft, taskContext.accountAddress, [setDelegatePayload])
 }
 
-export { executeSetDelegate as setDelegate }
+export { setDelegate }

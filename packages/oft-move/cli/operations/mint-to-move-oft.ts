@@ -1,6 +1,7 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import mintToMoveVM from '../../tasks/mintToMoveVM'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class MintToMoveOFT implements INewOperation {
     vm = 'move'
@@ -9,7 +10,8 @@ class MintToMoveOFT implements INewOperation {
     reqArgs = ['amount_ld', 'to_address', 'oapp_config']
 
     async impl(args: any): Promise<void> {
-        await mintToMoveVM(args.oapp_config, args.amount_ld, args.to_address)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await mintToMoveVM(taskContext, args.amount_ld, args.to_address)
     }
 }
 

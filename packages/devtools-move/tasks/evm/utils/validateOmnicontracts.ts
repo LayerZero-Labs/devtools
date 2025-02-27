@@ -18,7 +18,7 @@ export async function validateRpcUrl(omniContracts: OmniContractMetadataMapping)
     let shouldNotTerminate = true
     const badRpcUrls: Record<string, string> = {}
 
-    for (const [fromEid, { provider }] of Object.entries(omniContracts)) {
+    for (const [eid, { provider }] of Object.entries(omniContracts)) {
         let blockNumber = 0
         try {
             blockNumber = await getBlockNumber(provider)
@@ -27,7 +27,7 @@ export async function validateRpcUrl(omniContracts: OmniContractMetadataMapping)
         }
 
         if (blockNumber === 0) {
-            badRpcUrls[fromEid] = provider.connection.url
+            badRpcUrls[eid] = provider.connection.url
         }
     }
 
@@ -49,7 +49,7 @@ export async function validateEidSupport(omniContracts: OmniContractMetadataMapp
     let shouldNotTerminate = true
     const unsupportedEids: Record<string, string[]> = {}
 
-    for (const [fromEid, { contract, peers }] of Object.entries(omniContracts)) {
+    for (const [eid, { contract, peers }] of Object.entries(omniContracts)) {
         const epv2 = contract.epv2
 
         for (const peer of peers) {
@@ -59,15 +59,14 @@ export async function validateEidSupport(omniContracts: OmniContractMetadataMapp
             try {
                 isSupported = await epv2.isSupportedEid(peerEid)
             } catch (error) {
-                console.error(error)
+                if (!unsupportedEids[eid]) {
+                    unsupportedEids[eid] = []
+                }
                 isSupported = false
             }
 
             if (!isSupported) {
-                if (!unsupportedEids[fromEid]) {
-                    unsupportedEids[fromEid] = []
-                }
-                unsupportedEids[fromEid].push(peerEid)
+                unsupportedEids[eid].push(peerEid)
             }
         }
     }
@@ -76,12 +75,12 @@ export async function validateEidSupport(omniContracts: OmniContractMetadataMapp
         console.error(
             'The following EIDs are not supported by the EPV2 contract (endpointAddress::isSupportedEid(u32))'
         )
-        for (const [fromEid, badEids] of Object.entries(unsupportedEids)) {
+        for (const [eid, badEids] of Object.entries(unsupportedEids)) {
             const badNetworks = badEids.map((eid) => getNetworkForChainId(parseInt(eid)))
             const badNetworkNames = badNetworks.map((network) => `${network.chainName}-${network.env}`)
-            const network = getNetworkForChainId(parseInt(fromEid))
+            const network = getNetworkForChainId(parseInt(eid))
             console.error(
-                `${network.chainName}-${network.env}\t EndpointV2: ${omniContracts[fromEid].contract.epv2.address}\t Unsupported networks: ${badNetworkNames.join(', ')}`
+                `${network.chainName}-${network.env}\t EndpointV2: ${omniContracts[eid].contract.epv2.address}\t Unsupported networks: ${badNetworkNames.join(', ')}`
             )
         }
         shouldNotTerminate = false
