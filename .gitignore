@@ -19,6 +19,7 @@ node_modules/
 # Editor and OS files
 .DS_Store
 .idea
+.vscode
 
 # Build artifacts
 dist
