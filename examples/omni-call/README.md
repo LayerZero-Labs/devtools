@@ -85,7 +85,7 @@ MessagingFee memory fee = omniCall.quote(
     MessageType.NON_ATOMIC,
     dstEid,
     Call(address(0), 0, ""),
-    Transfer(dstAddress, 1 ether),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
 ```
@@ -97,9 +97,15 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
     MessageType.NON_ATOMIC,
     dstEid,
     Call(address(0), 0, ""),
-    Transfer(dstAddress, 1 ether),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
+```
+
+You can also do that using a hardhat task:
+
+```bash
+npx hardhat call --message-type non-atomic --to-eid <DESTINATION_EID> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
 ```
 
 ### Sending a function call
@@ -128,6 +134,18 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 );
 ```
 
+To do this using a hardhat task, you can use the following command:
+
+```bash
+npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL>  --gas-limit <GAS_LIMIT>
+```
+
+To encode a function call, you can Foundry's `cast` command:
+
+```bash
+cast calldata "mint(address,uint256)" <DESTINATION_ADDRESS> 100000000000000000000
+```
+
 ### Sending a function call with a native drop
 
 Imagine you want to call the `mint` function of the `token` contract on the destination chain, and you need to transfer 10ˆ18 native tokens to the destination chain. You want to mint 10 tokens to `dstAddress` and this token has 18 decimals. First, call the `quote` function to get the correct `MessagingFee`.
@@ -137,7 +155,7 @@ MessagingFee memory fee = omniCall.quote(
     MessageType.ATOMIC,
     dstEid,
     Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
-    Transfer(dstAddress, 1 ether),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
 ```
@@ -149,9 +167,21 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
     MessageType.ATOMIC,
     dstEid,
     Call(address(token), 0, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
-    Transfer(dstAddress, 1 ether),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
+```
+
+To do this using a hardhat task, you can use the following command:
+
+```bash
+npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
+```
+
+To encode a function call, you can Foundry's `cast` command:
+
+```bash
+cast calldata "mint(address,uint256)" <DESTINATION_ADDRESS> 100000000000000000000
 ```
 
 ### Sending a function call with value and a native drop
@@ -162,8 +192,8 @@ Imagine you want to call the `mint` function of the `token` contract on the dest
 MessagingFee memory fee = omniCall.quote(
     MessageType.ATOMIC,
     dstEid,
-    Call(address(token), 1 ether, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
-    Transfer(dstAddress, 1 ether),
+    Call(address(token), 0.000001 ether, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
 ```
@@ -174,10 +204,21 @@ Then, call the `send` function to send the message.
 MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
     MessageType.ATOMIC,
     dstEid,
-    Call(address(token), 1 ether, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
-    Transfer(dstAddress, 1 ether),
+    Call(address(token), 0.000001 ether, abi.encodeWithSignature("mint(address,uint256)", dstAddress, 10 ether)),
+    Transfer(dstAddress, 0.000001 ether),
     dstGasLimit
 );
+```
+
+To do this using a hardhat task, you can use the following command:
+```bash
+npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0.000001 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --gas-limit <GAS_LIMIT> --ether
+```
+
+To encode a function call, you can Foundry's `cast` command:
+
+```bash
+cast calldata "mint(address,uint256)" <DESTINATION_ADDRESS> 100000000000000000000
 ```
 
 ## Testing
@@ -188,12 +229,7 @@ To run the tests, you can use the following command:
 forge test
 ```
 
-## Features
-
-- Send arbitrary message and transfer native tokens between any EVM chains ✅
-- lzRead ❌
-- lzCompose ❌
-- Support for Solana chain ❌
+:warning: `OmniCall` does not support Solana yet. :warning:
 
 
 

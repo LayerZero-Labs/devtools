@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.27;
 
 /// -----------------------------------------------------------------------
@@ -8,7 +8,7 @@ pragma solidity 0.8.27;
 //  ==========  External imports    ==========
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { OApp, MessagingFee, Origin, OAppSender, OAppReceiver } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
+import { OApp, MessagingFee, Origin, OAppReceiver } from "@layerzerolabs/oapp-evm/contracts/oapp/OApp.sol";
 import { MessagingReceipt } from "@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol";
 import { OptionsBuilder } from "@layerzerolabs/oapp-evm/contracts/oapp/libs/OptionsBuilder.sol";
 
@@ -60,9 +60,9 @@ struct Transfer {
 /// -----------------------------------------------------------------------
 
 /**
- * @title Generic omnichain proxy.
+ * @title Generic omnichain call.
  * @author LayerZeroLabs (@EWCunha).
- * @notice Generic proxy that handles cross-chain communication
+ * @notice Generic contract that handles cross-chain communication
  * without the need to set-up security stack and messaging options.
  */
 contract OmniCall is OApp {
