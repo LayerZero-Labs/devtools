@@ -193,3 +193,21 @@ This is where `HyperLiquidERC20Extended` comes in.
 This permissioned function lets us access the internal function `_transfer` to transfer tokens to the L1 spot address with the `from` address as the `token receiver` address.
 
 This emits the `Transfer` event that Hyperliquid L1 nodes/relayers listen to in order to credit the `receiver` address on the L1.
+
+## Hyperliquid L1 Api
+
+```bash
+curl -X POST https://api.hyperliquid-testnet.xyz/info \
+  -H "Content-Type: application/json" \
+  -d '{"type": "spotMeta"}'
+```
+
+This will give you the spot meta data for the Hyperliquid L1. (this is an example)
+
+```json
+{"universe": [{"name": "ALICE", "szDecimals": 0, "weiDecimals": 6, "index": 1231, "tokenId": "0x503e1e612424896ec6e7a02c7350c963", "isCanonical": false, "evmContract": null, "fullName": null, "deployerTradingFeeShare": "1.0"}]}
+```
+
+The `tokenId` is the address of the token on the HyperLiquid L1.
+The `evmContract` is the address of the token on the HyperEVM.
+The `deployerTradingFeeShare` is the fee share for the deployer of the token.
