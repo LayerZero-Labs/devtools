@@ -130,9 +130,6 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
     ) internal virtual override returns (uint256 amountSentLD, uint256 amountReceivedLD) {
         (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
 
-        // @dev Lock tokens by moving them into this contract from the caller.
-        innerToken.safeTransferFrom(_from, address(this), amountSentLD);
-
         if (amountSentLD > amountReceivedLD) {
             // @dev Increment the total fees that can be withdrawn.
             //      Fees include the dust resulting from the de-dust operation.
@@ -141,6 +138,9 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
                 $.feeBalance += (amountSentLD - amountReceivedLD);
             }
         }
+
+        // @dev Lock tokens by moving them into this contract from the caller.
+        innerToken.safeTransferFrom(_from, address(this), amountSentLD);
     }
 
     /**
@@ -155,8 +155,6 @@ abstract contract OFTAdapterFeeUpgradeable is OFTAdapterUpgradeable, FeeUpgradea
         uint256 _amountLD,
         uint32 // _srcEid
     ) internal virtual override returns (uint256 amountReceivedLD) {
-        if (_to == address(0x0)) _to = address(0xdead);
-
         // @dev Unlock the tokens and transfer to the recipient.
         innerToken.safeTransfer(_to, _amountLD);
         // @dev In the case of NON-default OFTAdapter, the amountLD MIGHT not be == amountReceivedLD.
