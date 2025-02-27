@@ -12,6 +12,8 @@
 
 <p align="center">Example project for existing Endpoint v1 OFTs that would like to migrate to using ULN 301 to utilize the new security and execution model and to be able to integrate Solana OFTs.</p>
 
+:warning: The backward compatible Solana OFT (OFT202) will only work with Endpoint V1 OFT V2s. In other words, it will only work if the EVM OFT extended [OFTCoreV2](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v2/OFTCoreV2.sol) and will not work if the EVM OFT extended [OFTCore](https://github.com/LayerZero-Labs/endpoint-v1-solidity-examples/blob/main/contracts/token/oft/v1/OFTCore.sol).
+
 ## Example Overview
 
 For this example, we will deploy the EndpointV1 OFT on Ethereum Sepolia and also OFT202 on Solana Devnet.
@@ -259,5 +261,5 @@ By overriding these tasks, the example streamlines the complex process of ensuri
 <br></br>
 
 <p align="center">
-  Join our community on <a href="https://discord-layerzero.netlify.app/discord" style="color: #a77dff">Discord</a> | Follow us on <a href="https://twitter.com/LayerZero_Labs" style="color: #a77dff">Twitter</a>
+  Join our <a href="https://layerzero.network/community" style="color: #a77dff">community</a>! | Follow us on <a href="https://x.com/LayerZero_Labs" style="color: #a77dff">X (formerly Twitter)</a>
 </p>

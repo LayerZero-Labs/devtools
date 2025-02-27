@@ -33,7 +33,7 @@ import {
     deriveConnection,
     deriveKeys,
     getExplorerTxLink,
-    output,
+    saveSolanaDeployment,
 } from './index'
 
 const DEFAULT_LOCAL_DECIMALS = 9
@@ -122,7 +122,7 @@ interface CreateOFTTaskArgs {
 // Note:  Only supports SPL Token Standard.
 task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store account')
     .addOptionalParam('amount', 'The initial supply to mint on solana', undefined, devtoolsTypes.int)
-    .addParam('eid', 'Solana mainnet or testnet', undefined, devtoolsTypes.eid)
+    .addParam('eid', 'Solana mainnet (30168) or testnet (40168)', undefined, devtoolsTypes.eid)
     .addOptionalParam('localDecimals', 'Token local decimals (default=9)', DEFAULT_LOCAL_DECIMALS, devtoolsTypes.int)
     .addOptionalParam('sharedDecimals', 'OFT shared decimals (default=6)', DEFAULT_SHARED_DECIMALS, devtoolsTypes.int)
     .addParam('name', 'Token Name', 'MockOFT', devtoolsTypes.string)
@@ -322,6 +322,18 @@ task('lz:oft:solana:create', 'Mints new SPL Token and creates new OFT Store acco
                 const { signature } = await txBuilder.sendAndConfirm(umi)
                 console.log(`setAuthorityTx: ${getExplorerTxLink(bs58.encode(signature), isTestnet)}`)
             }
-            output(eid, programIdStr, mint.publicKey, mintAuthorityPublicKey.toBase58(), escrowPK, oftStorePda)
+            if (isMABA) {
+                console.log(
+                    `Please note that for MABA mode, you must carry out the change of Mint Authority before making any cross-chain transfers. For more details: https://github.com/LayerZero-Labs/devtools/tree/main/examples/oft-solana#for-oft-mint-and-burn-adapter-maba`
+                )
+            }
+            saveSolanaDeployment(
+                eid,
+                programIdStr,
+                mint.publicKey,
+                mintAuthorityPublicKey.toBase58(),
+                escrowPK,
+                oftStorePda
+            )
         }
     )

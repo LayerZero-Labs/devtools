@@ -1,5 +1,18 @@
 # @layerzerolabs/ua-devtools-evm
 
+## 5.0.6
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/devtools-evm@1.0.5
+  - @layerzerolabs/io-devtools@0.1.16
+  - @layerzerolabs/protocol-devtools@1.1.5
+  - @layerzerolabs/protocol-devtools-evm@3.0.6
+  - @layerzerolabs/ua-devtools@3.0.5
+
 ## 5.0.5
 
 ### Patch Changes

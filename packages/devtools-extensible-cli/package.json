@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools-extensible-cli",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "types": "types/index.d.ts",
   "scripts": {
@@ -19,5 +19,8 @@
   },
   "engines": {
     "node": ">=18.16.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

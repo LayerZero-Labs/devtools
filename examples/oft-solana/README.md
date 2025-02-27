@@ -113,16 +113,7 @@ endpoint: <ENDPOINT_PROGRAM_ID>
 oft: <OFT_PROGRAM_ID>
 ```
 
-Copy the OFT's programId and go into [lib.rs](./programs/oft/src/lib.rs). Note the following snippet:
-
-```
-declare_id!(Pubkey::new_from_array(program_id_from_env!(
-    "OFT_ID",
-    "9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT"
-)));
-```
-
-Replace `9UovNrJD8pQyBLheeHNayuG1wJSEAoxkmM14vw5gcsTT` with the programId that you have copied.
+Copy the OFT's program ID, which you will use in the build step.
 
 ### Building and Deploying the Solana OFT Program
 
@@ -131,8 +122,12 @@ Ensure you have Docker running before running the build command.
 #### Build the Solana OFT program
 
 ```bash
-anchor build -v # verification flag enabled
+anchor build -v -e OFT_ID=<OFT_PROGRAM_ID>
 ```
+
+Where `<OFT_PROGRAM_ID>` is replaced with your OFT Program ID copied from the previous step.
+
+<!-- TODO: move the following 'preview rent costs' into docs and replace below with link to docs page -->
 
 #### Preview Rent Costs for the Solana OFT
 
@@ -156,7 +151,7 @@ Rent-exempt minimum: 3.87415872 SOL
 
 #### Deploy the Solana OFT
 
-While for building, we must use Solana `v1.17.31`, for deloying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
+While for building, we must use Solana `v1.17.31`, for deploying, we will be using `v1.18.26` as it provides an improved program deployment experience (i.e. ability to attach priority fees and also exact-sized on-chain program length which prevents needing to provide 2x the rent as in `v1.17.31`).
 
 ##### Temporarily switch to Solana `v1.18.26`
 
@@ -224,7 +219,11 @@ pnpm hardhat lz:oft-adapter:solana:create --eid 40168 --program-id <PROGRAM_ID> 
 pnpm hardhat lz:oft:solana:create --eid 40168 --program-id <PROGRAM_ID> --mint <TOKEN_MINT> --token-program <TOKEN_PROGRAM_ID>
 ```
 
-:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains. Note that before attempting any cross-chain transfers, you must transfer the Mint Authority to the OFT Store address for `lz_receive` to work, as that is not handled in the script. You cannot use this option if your token's Mint Authority has been renounced.
+:information_source: You can use OFT Mint-And-Burn Adapter if you want to use an existing token on Solana. For OFT Mint-And-Burn Adapter, tokens will be burned when sending to other chains and minted when receiving from other chains.
+
+:warning: You cannot use this option if your token's Mint Authority has been renounced.
+
+:warning: Note that for MABA mode, before attempting any cross-chain transfers, **you must transfer the Mint Authority** for `lz_receive` to work, as that is not handled in the script (since you are using an existing token). If you opted for `--additional-minters`, then you must transfer the Mint Authority to the newly created multisig (this is the `mintAuthority` value in the `/deployments/solana-<mainnet/testnet>/OFT.json`). If not, then it should be set to the OFT Store address, which is `oftStore` in the same file.
 
 ### Update [layerzero.config.ts](./layerzero.config.ts)
 
@@ -254,17 +253,15 @@ Note: If you are on testnet, consider using `MyOFTMock` to allow test token mint
 Run the following command to init the pathway config. This step is unique to pathways that involve Solana.
 
 ```bash
-npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-secret-key <SECRET_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oft:solana:init-config --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
-
-:information_source: `<SECRET_KEY>` should also be in base58 format.
 
 ### Wire
 
 Run the following to wire the pathways specified in your `layerzero.config.ts`
 
 ```bash
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 With a squads multisig, you can simply append the `--multisig-key` flag to the end of the above command.
@@ -297,9 +294,14 @@ Refer to [Generating Execution Options](https://docs.layerzero.network/v2/develo
 
 Note that you will need to either enable `enforcedOptions` in [./layerzero.config.ts](./layerzero.config.ts) or pass in a value for `_options` when calling `send()`. Having neither will cause a revert when calling send().
 
-#### Specifing the `_options` value when calling `send()`
+For this example, we have already included `enforcedOptions` by default in the `layerzero.config.ts`, which will take effect in the wiring step.
+
+#### (Optional) If specifying the `_options` value when calling `send()`
+
+It's only necessary to specify `_options` if you do not have `enforcedOptions`.
 
 For Sepolia -> Solana, you should pass in the options value into the script at [tasks/evm/send.ts](./tasks/evm/send.ts) as the value for `sendParam.extraOptions`.
+
 For Solana -> Sepolia, you should pass in the options value into the script at [tasks/solana/sendOFT.ts](./tasks/solana/sendOFT.ts) as the value for `options` for both in `quote` and `send`.
 
 ### Send
@@ -307,7 +309,7 @@ For Solana -> Sepolia, you should pass in the options value into the script at [
 #### Send SOL -> Sepolia
 
 ```bash
-npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161 --mint <MINT_ADDRESS> --program-id <PROGRAM_ID> --escrow <ESCROW>
+npx hardhat lz:oft:solana:send --amount <AMOUNT> --from-eid 40168 --to <TO> --to-eid 40161
 ```
 
 #### Send Sepolia -> SOL
@@ -331,6 +333,10 @@ included in the `--additional-minters` list.
 
 ## Appendix
 
+### Solana Program Verification
+
+Refer to [Verify the OFT Program](https://docs.layerzero.network/v2/developers/solana/oft/program#optional-verify-the-oft-program).
+
 ### Transferring ownership
 
 Ownership of OFTs can be transferred via running the wire command after the appropriate changes are made to the LZ Config file (`layerzero.config.ts`). You need to first set the `delegate` value, and then only the `owner` value.
@@ -342,7 +348,7 @@ How to set delegate: https://docs.layerzero.network/v2/developers/evm/create-lz-
 Now run
 
 ```
-npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:oapp:wire --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 and execute the transactions.
@@ -354,7 +360,7 @@ How to set owner: https://docs.layerzero.network/v2/developers/evm/create-lz-oap
 Now, run
 
 ```
-npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-secret-key <PRIVATE_KEY> --solana-program-id <PROGRAM_ID>
+npx hardhat lz:ownable:transfer-ownership --oapp-config layerzero.config.ts --solana-eid <SOLANA_ENDPOINT_ID>
 ```
 
 ### Common Errors
@@ -445,6 +451,8 @@ re-running with `--buffer` flag similar to the following:
 solana-keygen recover -o recover.json
 solana program deploy --buffer recover.json --upgrade-authority <pathToKey> --program-id <programId> target/verifiable/oft.so -u mainnet-beta
 ```
+
+<!-- consider removing below since loosen_cpi_size_restriction is now active -->
 
 #### When sending tokens from Solana `Instruction passed to inner instruction is too large (1388 > 1280)`
 

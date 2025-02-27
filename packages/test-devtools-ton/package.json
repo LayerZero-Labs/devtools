@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/test-devtools-ton",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Helpers for testing LayerZero TON contracts",
   "repository": {

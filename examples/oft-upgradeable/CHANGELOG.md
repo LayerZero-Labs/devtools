@@ -1,5 +1,17 @@
 # @layerzerolabs/oft-upgradeable-example
 
+## 0.2.10
+
+### Patch Changes
+
+- 389d6c9: fix: deploy scripts does not rely on hardhat network name being the same as layerzero network name
+
+## 0.2.9
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.2.8
 
 ### Patch Changes

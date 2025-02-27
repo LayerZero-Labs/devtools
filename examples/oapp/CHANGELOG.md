@@ -1,5 +1,11 @@
 # @layerzerolabs/oapp-example
 
+## 0.5.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.5.5
 
 ### Patch Changes

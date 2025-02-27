@@ -1,5 +1,23 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.8
+
+### Patch Changes
+
+- ce3a36b: introduce getSolanaDeploymentFunction and simplify solana task params
+
+## 0.7.7
+
+### Patch Changes
+
+- e4f8538: feat(oft-solana): remove need to pass in solana secret key flag
+
+## 0.7.6
+
+### Patch Changes
+
+- e256387: Updating packages
+
 ## 0.7.5
 
 ### Patch Changes

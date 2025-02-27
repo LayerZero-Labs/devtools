@@ -1,5 +1,20 @@
 # @layerzerolabs/devtools-ton
 
+## 0.3.1
+
+### Patch Changes
+
+- e256387: Updating packages
+- Updated dependencies [e256387]
+  - @layerzerolabs/devtools@0.4.6
+  - @layerzerolabs/io-devtools@0.1.16
+
+## 0.3.0
+
+### Minor Changes
+
+- 697d2e5: Added tool to debug TON lz messages
+
 ## 0.2.2
 
 ### Patch Changes
