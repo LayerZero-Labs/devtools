@@ -268,6 +268,8 @@ There are three steps to transferring ownership of your Move OFT:
 2. Transfer the OApp owner
 3. Transfer the object owner
 
+> **Note:** These ownership transfer commands only affect the Move VM (Aptos/Movement) implementation of your OFT. To transfer ownership of EVM implementations, you'll need to use the corresponding EVM ownership transfer commands.
+
 To transfer the delegate, run the following command:
 First ensure that the delegate you wish to transfer to is specified in the move.layerzero.config.ts file.
 
