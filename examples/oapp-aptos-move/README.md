@@ -19,6 +19,12 @@ brew install aptos
 > - For deploying to Aptos chain: Use version >= 6.0.1 (installable via brew)
 > - For deploying to Movement chain: Use version <= 3.5.0 (must be built from source following the [Aptos CLI Build Guide](https://aptos.dev/en/network/nodes/building-from-source/))
 
+Set pnpm to the required version:
+
+```bash
+npm install -g pnpm@8.14.0
+```
+
 Install dependencies and build the project:
 
 ```bash
