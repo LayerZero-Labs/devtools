@@ -5,8 +5,7 @@ import "forge-std/console.sol";
 
 // Mock imports
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
-import {MOVEOFTAdapter} from "../../../contracts/MOVEOFTAdapter.sol";
-import {RateLimiter} from "../../../contracts/utils/RateLimiter.sol";
+import {MOVEOFTAdapter, RateLimiter} from "../../../deploy-eth/src/MOVEOFTAdapter.sol";
 
 // OApp imports
 import {

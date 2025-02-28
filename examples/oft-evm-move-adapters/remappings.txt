@@ -1,1 +1,2 @@
 forge-std/=node_modules/@layerzerolabs/toolbox-foundry/src/forge-std/src/
+layerzerolabs/oapp/=lib/layerzero-v2/packages/layerzero-v2/evm/oapp/contracts/
