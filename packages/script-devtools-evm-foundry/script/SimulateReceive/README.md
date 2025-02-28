@@ -1,3 +1,5 @@
+# SimulateReceive
+
 ## Usage
 
 ```shell
@@ -12,11 +14,12 @@ forge build
 
 If you get an error from SimulateReceive script eg. `script failed: custom error 7182306f` you can do:
 
-```
+```shell
 cast 4byte 7182306f
 ```
 
 Example result:
-```
+
+```solidity
 LZ_PayloadHashNotFound(bytes32,bytes32)
 ```

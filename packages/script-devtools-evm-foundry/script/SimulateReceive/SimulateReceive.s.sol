@@ -15,7 +15,7 @@ contract SimulateReceive is Script {
     using stdJson for string;
     using Base58Decoder for string; // Use the library
 
-    function run() public {
+    function run() public virtual {
         // -- New mainnet/testnet toggle added here --
         bool mainnet = true; // Set to false for testnet
         string memory txHash = "0x88a79d59222628aba22c5c616580212c80beae353aaa8ffbd3976dd5aa5d12f8";
