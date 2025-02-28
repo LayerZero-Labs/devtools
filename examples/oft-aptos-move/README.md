@@ -336,8 +336,6 @@ pnpm run lz:sdk:move:send-from-move-oft \
   --dst-eid <your-dst-eid>\
 ```
 
-Troubleshooting: if you get an arithmetic error, that is likely
-
 ## Send from EVM
 
 ```bash
