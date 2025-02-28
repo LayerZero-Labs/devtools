@@ -42,7 +42,14 @@ import { LZUtils } from "@layerzerolabs/script-devtools-evm-foundry/scripts/LZSc
 
 Simulate receiving a message on an EVM chain - [Read more](./script/SimulateReceive/README.md)
 Source code: [SimulateReceive.s.sol](./script/SimulateReceive/SimulateReceive.s.sol)
+Shell command:
 
 ```sh
 forge script SimulateReceive --rpc-url $DESTINATION_CHAIN_RPC_URL --ffi
 ```
+
+### 2. GasProfiler
+
+Profile the gas usage of OFT transfers on multiple mainnet networks - [Read more](./script/GasProfiling/README.md)
+Source code: [OFTProfilerExample.s.sol](./script/GasProfiling/OFTProfilerExample.s.sol)
+Shell command: Not available
