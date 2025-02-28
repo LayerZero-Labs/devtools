@@ -68,6 +68,8 @@ For Movement Chain:
 aptos init --network=custom --private-key=<your-private-key>
 ```
 
+Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
+
 You can then verify that your initialization was successful by running the following command:
 
 ```bash
