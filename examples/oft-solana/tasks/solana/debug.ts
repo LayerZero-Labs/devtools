@@ -1,4 +1,5 @@
-import { publicKey } from '@metaplex-foundation/umi'
+import { fetchMint } from '@metaplex-foundation/mpl-toolbox' // Import fetchToken function
+import { publicKey, unwrapOption } from '@metaplex-foundation/umi'
 import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
@@ -10,6 +11,29 @@ import { oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
+// Logger class for better logging
+class Logger {
+    static keyValue(key: string, value: any) {
+        console.log(`\x1b[33m${key}:\x1b[0m ${value}`)
+    }
+
+    static header(text: string) {
+        console.log(`\x1b[36m${text}\x1b[0m`)
+    }
+
+    static separator() {
+        console.log('\x1b[90m----------------------------------------\x1b[0m')
+    }
+}
+
+const DEBUG_ACTIONS = {
+    OFT_STORE: 'oft-store',
+    GET_ADMIN: 'admin',
+    GET_DELEGATE: 'delegate',
+    CHECKS: 'checks',
+    GET_TOKEN: 'token',
+}
+
 /**
  * Get the OFTStore account from the task arguments, the deployment file, or throw an error.
  * @param {EndpointId} eid
@@ -17,47 +41,7 @@ import { deriveConnection, getSolanaDeployment } from './index'
  */
 const getOftStore = (eid: EndpointId, oftStore?: string) => publicKey(oftStore ?? getSolanaDeployment(eid).oftStore)
 
-task('lz:oft:solana:dump-oft-store', 'Gets the OFTStore information')
-    .addParam(
-        'eid',
-        'Solana mainnet (30168) or testnet (40168).  Defaults to mainnet.',
-        EndpointId.SOLANA_V2_MAINNET,
-        types.eid
-    )
-    .addParam(
-        'oftStore',
-        'The OFTStore public key. Derived from deployments if not provided.',
-        undefined,
-        types.string,
-        true
-    )
-    .setAction(async (taskArgs, _) => {
-        const { umi } = await deriveConnection(taskArgs.eid)
-        const oftStore = getOftStore(taskArgs.eid, taskArgs.oftStore)
-        console.dir(await oft.accounts.fetchOFTStore(umi, oftStore), { depth: null })
-    })
-
-task('lz:oft:solana:get-admin', 'Gets the OFTStore information')
-    .addParam(
-        'eid',
-        'Solana mainnet (30168) or testnet (40168).  Defaults to mainnet.',
-        EndpointId.SOLANA_V2_MAINNET,
-        types.eid
-    )
-    .addParam(
-        'oftStore',
-        'The OFTStore public key. Derived from deployments if not provided.',
-        undefined,
-        types.string,
-        true
-    )
-    .setAction(async (taskArgs, _) => {
-        const { umi } = await deriveConnection(taskArgs.eid)
-        const oftStore = getOftStore(taskArgs.eid, taskArgs.oftStore)
-        console.log(`admin: ${(await oft.accounts.fetchOFTStore(umi, oftStore)).admin}`)
-    })
-
-task('lz:oft:solana:get-delegate', 'Gets the OAppRegistry information')
+task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
     .addParam(
         'eid',
         'Solana mainnet (30168) or testnet (40168).  Defaults to mainnet.',
@@ -72,14 +56,99 @@ task('lz:oft:solana:get-delegate', 'Gets the OAppRegistry information')
         true
     )
     .addParam('endpoint', 'The Endpoint public key', EndpointProgram.PROGRAM_ID.toBase58(), types.string)
+    .addOptionalParam(
+        'action',
+        `The action to perform: ${Object.keys(DEBUG_ACTIONS).join(', ')} (defaults to all)`,
+        undefined,
+        types.string
+    )
     .setAction(async (taskArgs, _) => {
-        const { connection } = await deriveConnection(taskArgs.eid)
-        const deriver = new EndpointPDADeriver(new PublicKey(taskArgs.endpoint))
-        const oftStore = getOftStore(taskArgs.eid, taskArgs.oftStore)
-        const [oAppRegistry] = deriver.oappRegistry(toWeb3JsPublicKey(oftStore))
-        const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
-            connection,
-            oAppRegistry
-        )
-        console.log(`delegate: ${oAppRegistryInfo?.delegate?.toBase58()}`)
+        const { eid, oftStore, endpoint, action } = taskArgs
+        const { umi, connection } = await deriveConnection(eid)
+        const store = getOftStore(eid, oftStore)
+        const oftStoreInfo = await oft.accounts.fetchOFTStore(umi, store)
+        const mintAccount = await fetchMint(umi, publicKey(oftStoreInfo.tokenMint))
+
+        const printOftStore = async () => {
+            Logger.header('OFT Store Information')
+            Logger.keyValue('Owner', oftStoreInfo.header.owner)
+            Logger.keyValue('OFT Type', oft.types.OFTType[oftStoreInfo.oftType])
+            Logger.keyValue('Admin', oftStoreInfo.admin)
+            Logger.keyValue('Token Mint', oftStoreInfo.tokenMint)
+            Logger.keyValue('Token Escrow', oftStoreInfo.tokenEscrow)
+            Logger.keyValue('Endpoint Program', oftStoreInfo.endpointProgram)
+            Logger.separator()
+        }
+
+        const printAdmin = async () => {
+            const admin = oftStoreInfo.admin
+            Logger.keyValue('Admin', admin)
+        }
+
+        const printDelegate = async () => {
+            const deriver = new EndpointPDADeriver(new PublicKey(endpoint))
+            const [oAppRegistry] = deriver.oappRegistry(toWeb3JsPublicKey(store))
+            const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
+                connection,
+                oAppRegistry
+            )
+            const delegate = oAppRegistryInfo?.delegate?.toBase58()
+            Logger.header('OApp Registry Information')
+            Logger.keyValue('Delegate', delegate)
+            Logger.separator()
+        }
+
+        const printToken = async () => {
+            Logger.header('Token Information')
+            Logger.keyValue('Mint Authority', unwrapOption(mintAccount.mintAuthority))
+            Logger.keyValue(
+                'Freeze Authority',
+                unwrapOption(mintAccount.freezeAuthority, () => 'None')
+            )
+            Logger.separator()
+        }
+
+        const printChecks = async () => {
+            const admin = oftStoreInfo.admin
+
+            const deriver = new EndpointPDADeriver(new PublicKey(endpoint))
+            const [oAppRegistry] = deriver.oappRegistry(toWeb3JsPublicKey(store))
+            const oAppRegistryInfo = await EndpointProgram.accounts.OAppRegistry.fromAccountAddress(
+                connection,
+                oAppRegistry
+            )
+            const delegate = oAppRegistryInfo?.delegate?.toBase58()
+
+            Logger.header('Checks')
+            Logger.keyValue('Admin (Owner) same as Delegate', admin === delegate)
+            Logger.keyValue('Token Mint Authority is OFT Store', unwrapOption(mintAccount.mintAuthority) === store)
+            Logger.separator()
+        }
+
+        if (action) {
+            switch (action) {
+                case DEBUG_ACTIONS.OFT_STORE:
+                    await printOftStore()
+                    break
+                case DEBUG_ACTIONS.GET_ADMIN:
+                    await printAdmin()
+                    break
+                case DEBUG_ACTIONS.GET_DELEGATE:
+                    await printDelegate()
+                    break
+                case DEBUG_ACTIONS.CHECKS:
+                    await printChecks()
+                    break
+                case DEBUG_ACTIONS.GET_TOKEN:
+                    await printToken()
+                    break
+                default:
+                    console.error(`Invalid action specified. Use any of ${Object.keys(DEBUG_ACTIONS)}.`)
+            }
+        } else {
+            await printOftStore()
+            await printDelegate()
+            await printToken()
+            await printChecks()
+        }
     })
