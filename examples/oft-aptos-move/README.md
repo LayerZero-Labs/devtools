@@ -131,6 +131,8 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
     ],
 ```
 
+> **Note:** By default, minting functionality is not available on the OFT. If you need to mint tokens for testing, please follow the [Mint to Account on Move VM OFT](#mint-to-account-on-move-vm-oft) instructions at the bottom of this README.
+
 To build the contracts without deploying them, run the following command:
 
 ```bash
