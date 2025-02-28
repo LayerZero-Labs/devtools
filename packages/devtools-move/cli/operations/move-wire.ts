@@ -1,5 +1,6 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import { wireMove } from '../../tasks/move/wireMove'
+import { initializeTaskContext } from '../../sdk/baseTaskHelper'
 
 class MoveWireOperation implements INewOperation {
     vm = 'move'
@@ -8,7 +9,8 @@ class MoveWireOperation implements INewOperation {
     reqArgs = ['oapp_config']
 
     async impl(args: any): Promise<void> {
-        await wireMove(args.oapp_config)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await wireMove(taskContext)
     }
 }
 

@@ -1,14 +1,16 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
-import { build } from '../../tasks/move/build'
 import { deploy } from '../../tasks/move/deploy'
 import { setDelegate } from '../../tasks/move/setDelegate'
+
+import { getMoveTomlAdminName, getNamedAddresses } from '../../tasks/move/utils/config'
+import { initializeDeployTaskContext, initializeTaskContext } from '../../sdk/baseTaskHelper'
 
 class MoveDeployOperation implements INewOperation {
     vm = 'move'
     operation = 'deploy'
     description = 'Deploy Aptos Move contracts'
-    reqArgs = ['oapp_config', 'address_name', 'named_addresses']
+    reqArgs = ['oapp_config', 'address_name']
 
     addArgs = [
         {
@@ -18,12 +20,37 @@ class MoveDeployOperation implements INewOperation {
                 required: false,
             },
         },
+        {
+            name: '--oapp-type',
+            arg: {
+                help: 'The type of OApp that is being deployed. Options are "oapp" and "oft". Use type "oft" for any OFTs including adapters.',
+                required: false,
+            },
+        },
+        {
+            name: '--force-deploy',
+            arg: {
+                help: 'Include tag "--force-deploy" to force the deploy to run even if the Aptos CLI version is too old.',
+                required: false,
+            },
+        },
     ]
 
     async impl(args: any): Promise<void> {
-        await build(args)
-        await deploy(args.oapp_config, args.named_addresses, args.force_deploy, args.address_name)
-        await setDelegate(args, true)
+        const deployTaskContext = await initializeDeployTaskContext(args.oapp_config)
+
+        const forceDeploy = args.force_deploy ? true : false
+        const moveTomlAdminName = getMoveTomlAdminName(args.oapp_type)
+        const namedAddresses = getNamedAddresses(
+            deployTaskContext.chain,
+            deployTaskContext.stage,
+            moveTomlAdminName,
+            deployTaskContext.selectedContract
+        )
+        await deploy(deployTaskContext, args.address_name, forceDeploy, namedAddresses)
+
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await setDelegate(taskContext)
     }
 }
 

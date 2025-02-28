@@ -2,6 +2,7 @@ import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 import path from 'path'
 
 import { initOFTFA } from '../../tasks/initOFTFA'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class InitOFTFA implements INewOperation {
     vm = 'move'
@@ -18,6 +19,8 @@ class InitOFTFA implements INewOperation {
             throw new Error(`${fullPathOFTConfig} does not contain an oftMetadata object`)
         }
 
+        const taskContext = await initializeTaskContext(args.oapp_config)
+
         await initOFTFA(
             oftMetadata.token_name,
             oftMetadata.token_symbol,
@@ -25,7 +28,7 @@ class InitOFTFA implements INewOperation {
             oftMetadata.project_uri,
             oftMetadata.sharedDecimals,
             oftMetadata.localDecimals,
-            args.oapp_config
+            taskContext
         )
     }
 }

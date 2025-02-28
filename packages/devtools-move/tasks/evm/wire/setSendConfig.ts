@@ -112,11 +112,7 @@ export async function createSetSendConfigTransactions(eidDataMapping: OmniContra
             if (decodedCurrSendConfigParam && decodedSetConfigParam) {
                 if (decodedCurrSendConfigParam !== decodedSetConfigParam) {
                     diffPrinter(
-                        createDiffMessage(
-                            `send config @ ${currSendLibrary.newSendLibrary}`,
-                            Number(eid),
-                            Number(peerToEid)
-                        ),
+                        createDiffMessage(`send config`, Number(eid), Number(peerToEid)),
                         decodedCurrSendConfigParam,
                         decodedSetConfigParam
                     )

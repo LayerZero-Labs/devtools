@@ -7,20 +7,17 @@ const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 export function basexToBytes32(basexAddress: string, eid: string): string {
     const chainType = endpointIdToChainType(Number(eid))
 
-    switch (chainType) {
-        case ChainType.EVM: {
-            const addressBytes = ethers.utils.zeroPad(basexAddress, 32)
-            return `0x${Buffer.from(addressBytes).toString('hex')}`
-        }
-        case ChainType.APTOS: {
-            return basexAddress
-        }
-        case ChainType.SOLANA: {
-            return decodeSolanaAddress(basexAddress)
-        }
-        default: {
-            throw new Error('Invalid chain type')
-        }
+    if (chainType === ChainType.EVM) {
+        const addressBytes = ethers.utils.zeroPad(basexAddress, 32)
+        return `0x${Buffer.from(addressBytes).toString('hex')}`
+    } else if (chainType === ChainType.APTOS) {
+        return basexAddress
+    } else if (chainType === ChainType.SOLANA) {
+        return decodeSolanaAddress(basexAddress)
+    } else if (chainType === ChainType.INITIA) {
+        return basexAddress
+    } else {
+        throw new Error('Invalid chain type')
     }
 }
 
