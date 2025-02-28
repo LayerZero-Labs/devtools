@@ -2,8 +2,6 @@ import { BigNumber, constants } from 'ethers'
 import { task, types } from 'hardhat/config'
 import { ActionType, HardhatRuntimeEnvironment } from 'hardhat/types'
 
-const etherValue = 10 ** 18
-
 interface TaskArguments {
     messageType: string
     toEid: number
@@ -38,14 +36,6 @@ const action: ActionType<TaskArguments> = async (
     const contract = await hre.ethers.getContractAt(contractName, deployment.address)
     const omniCall = contract.connect(signer)
 
-    // if (isSepolia(hre.network.name)) {
-    //     // @ts-ignore
-    //     const erc20Token = (await hre.ethers.getContractAt(IERC20, address)).connect(signer)
-    //     const approvalTxResponse = await erc20Token.approve(token.address, amount)
-    //     const approvalTxReceipt = await approvalTxResponse.wait()
-    //     console.log(`approve: ${amount}: ${approvalTxReceipt.transactionHash}`)
-    // }
-
     let messageTypeInt
     if (messageType === 'non-atomic') {
         messageTypeInt = BigNumber.from(0)
@@ -74,20 +64,25 @@ const action: ActionType<TaskArguments> = async (
         callCalldata = '0x'
     }
 
+    let callValueBigNumber: BigNumber
+    let transferValueBigNumber: BigNumber
     if (ether) {
-        callValue = callValue * etherValue
-        transferValue = transferValue * etherValue
+        callValueBigNumber = hre.ethers.utils.parseEther(callValue.toString())
+        transferValueBigNumber = hre.ethers.utils.parseEther(transferValue.toString())
+    } else {
+        callValueBigNumber = BigNumber.from(callValue)
+        transferValueBigNumber = BigNumber.from(transferValue)
     }
 
     const call = {
         target: callTarget,
-        value: BigNumber.from(callValue),
+        value: callValueBigNumber,
         callData: callCalldata,
     }
 
     const transfer = {
         to: transferTo,
-        value: BigNumber.from(transferValue),
+        value: transferValueBigNumber,
     }
 
     const bigNumberToEid = BigNumber.from(toEid)

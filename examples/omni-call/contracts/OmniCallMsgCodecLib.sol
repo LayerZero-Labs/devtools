@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.27;
+pragma solidity 0.8.22;
 
 /// -----------------------------------------------------------------------
 /// Imports
@@ -94,16 +94,17 @@ library OmniCallMsgCodecLib {
     ) internal pure returns (address to, uint128 transferValue, address target, uint128 value, bytes memory callData) {
         uint8 messageType = uint8(data[0]);
         if (messageType == CALL_TYPE) {
-            require(!(data.length < MINIMAL_LENGTH_CALL), LZ_OmniCallMsgCodecLib__InvalidDataLength(data.length));
+            if (data.length < MINIMAL_LENGTH_CALL) {
+                revert LZ_OmniCallMsgCodecLib__InvalidDataLength(data.length);
+            }
 
             target = address(uint160(bytes20(data[1:21])));
             value = uint128(bytes16(data[21:37]));
             callData = data[37:];
         } else if (messageType == CALL_AND_TRANSFER_TYPE) {
-            require(
-                !(data.length < MINIMAL_LENGTH_CALL_AND_TRANSFER),
-                LZ_OmniCallMsgCodecLib__InvalidDataLength(data.length)
-            );
+            if (data.length < MINIMAL_LENGTH_CALL_AND_TRANSFER) {
+                revert LZ_OmniCallMsgCodecLib__InvalidDataLength(data.length);
+            }
 
             to = address(uint160(bytes20(data[1:21])));
             transferValue = uint128(bytes16(data[21:37]));

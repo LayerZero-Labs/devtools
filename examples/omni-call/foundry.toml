@@ -1,5 +1,5 @@
 [profile.default]
-solc-version = '0.8.27'
+solc-version = '0.8.22'
 src = 'contracts'
 script = 'deploy'
 out = 'out'

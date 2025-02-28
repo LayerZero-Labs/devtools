@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.27;
+pragma solidity 0.8.22;
 
 /// -----------------------------------------------------------------------
 /// Imports
@@ -75,9 +75,6 @@ contract OmniCall is OApp {
     /// -----------------------------------------------------------------------
     /// Custom errors
     /// -----------------------------------------------------------------------
-
-    /// @dev Error for when an invalid calldata is passed as a parameter.
-    error LZ_OmniCall__InvalidCallData();
 
     /// @dev Error for when a zero gas limit is passed as a parameter.
     error LZ_OmniCall__ZeroGasLimit();
@@ -229,7 +226,9 @@ contract OmniCall is OApp {
         Transfer calldata dstTransfer,
         uint128 dstGasLimit
     ) internal view returns (MessagingFee memory fee, bytes memory options) {
-        require(dstGasLimit > 0, LZ_OmniCall__ZeroGasLimit());
+        if (dstGasLimit == 0) {
+            revert LZ_OmniCall__ZeroGasLimit();
+        }
 
         if (messageType == MessageType.ATOMIC) {
             options = OptionsBuilder.newOptions().addExecutorLzReceiveOption(

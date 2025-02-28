@@ -24,7 +24,6 @@ const MNEMONIC = process.env.MNEMONIC
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 
-// @ts-ignore
 const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
     ? { mnemonic: MNEMONIC }
     : PRIVATE_KEY
@@ -44,7 +43,7 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: '0.8.27',
+                version: '0.8.22',
                 settings: {
                     optimizer: {
                         enabled: true,
@@ -57,17 +56,17 @@ const config: HardhatUserConfig = {
     networks: {
         'sepolia-testnet': {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPOLIA,
+            url: process.env.RPC_URL_SEPOLIA || 'https://rpc.sepolia.org/',
             accounts,
         },
         'avalanche-testnet': {
             eid: EndpointId.AVALANCHE_V2_TESTNET,
-            url: process.env.RPC_URL_FUJI,
+            url: process.env.RPC_URL_FUJI || 'https://rpc.ankr.com/avalanche_fuji',
             accounts,
         },
         'amoy-testnet': {
             eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY,
+            url: process.env.RPC_URL_AMOY || 'https://polygon-amoy-bor-rpc.publicnode.com',
             accounts,
         },
     },

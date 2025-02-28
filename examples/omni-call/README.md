@@ -105,7 +105,7 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 You can also do that using a hardhat task:
 
 ```bash
-npx hardhat call --message-type non-atomic --to-eid <DESTINATION_EID> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
+npx hardhat call --network <SOURCE_NETWORK> --message-type non-atomic --to-eid <DESTINATION_EID> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
 ```
 
 ### Sending a function call
@@ -137,7 +137,7 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 To do this using a hardhat task, you can use the following command:
 
 ```bash
-npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL>  --gas-limit <GAS_LIMIT>
+npx hardhat call --network <SOURCE_NETWORK> --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL>  --gas-limit <GAS_LIMIT>
 ```
 
 To encode a function call, you can Foundry's `cast` command:
@@ -175,7 +175,7 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 To do this using a hardhat task, you can use the following command:
 
 ```bash
-npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
+npx hardhat call --network <SOURCE_NETWORK> --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --ether --gas-limit <GAS_LIMIT>
 ```
 
 To encode a function call, you can Foundry's `cast` command:
@@ -212,7 +212,7 @@ MessagingReceipt memory receipt = omniCall.send{ value: fee.nativeFee }(
 
 To do this using a hardhat task, you can use the following command:
 ```bash
-npx hardhat call --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0.000001 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --gas-limit <GAS_LIMIT> --ether
+npx hardhat call --network <SOURCE_NETWORK> --message-type atomic --to-eid <DESTINATION_EID> --call-target <DESTINATION_ADDRESS> --call-value 0.000001 --call-calldata <ENCODED_FUNCTION_CALL> --transfer-to <DESTINATION_ADDRESS> --transfer-value 0.000001 --gas-limit <GAS_LIMIT> --ether
 ```
 
 To encode a function call, you can Foundry's `cast` command:
