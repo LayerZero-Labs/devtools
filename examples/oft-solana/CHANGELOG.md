@@ -1,5 +1,11 @@
 # @layerzerolabs/oft-solana-example
 
+## 0.7.9
+
+### Patch Changes
+
+- a843edf: Debugging Hardhat tasks
+
 ## 0.7.8
 
 ### Patch Changes
