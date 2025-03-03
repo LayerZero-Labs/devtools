@@ -3,7 +3,7 @@ import assert from 'assert'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
 // TODO declare your contract name here
-const contractName = 'MyOAppRead'
+const contractName = 'ReadViewOrPure'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
@@ -33,13 +33,16 @@ const deploy: DeployFunction = async (hre) => {
     //   }
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
+    const exampleContractDeployment = await hre.deployments.get('ExampleContract')
+    const targetEid = hre.network.config.eid
 
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             deployer, // owner
-            `oAppRead-${hre.network.name}`,
+            targetEid, // targetEid
+            exampleContractDeployment.address, // ExampleContract address
         ],
         log: true,
         skipIfAlreadyDeployed: false,
