@@ -111,12 +111,12 @@ contract ReadPublic is OAppRead, OAppOptionsType3 {
     /**
      * @notice Constructs the read command to fetch the `data` variable.
      *
-     * @param targetContractAddress The address of the contract containing the `data` variable.
-     * @param targetEid The target chain's Endpoint ID.
+     * @param _targetContractAddress The address of the contract containing the `data` variable.
+     * @param _targetEid The target chain's Endpoint ID.
      *
      * @return cmd The encoded command.
      */
-    function _getCmd(address targetContractAddress, uint32 targetEid) internal view returns (bytes memory cmd) {
+    function _getCmd(address _targetContractAddress, uint32 _targetEid) internal view returns (bytes memory cmd) {
         // Use the function selector from the interface to ensure correctness
         bytes memory callData = abi.encodeWithSelector(IExampleContract.data.selector);
 
@@ -124,11 +124,11 @@ contract ReadPublic is OAppRead, OAppOptionsType3 {
         EVMCallRequestV1[] memory readRequests = new EVMCallRequestV1[](1);
         readRequests[0] = EVMCallRequestV1({
             appRequestLabel: 1, // Application-specific label for tracking
-            targetEid: targetEid, // Endpoint ID of the target chain
+            targetEid: _targetEid, // Endpoint ID of the target chain
             isBlockNum: false, // Use timestamp instead of block number
             blockNumOrTimestamp: uint64(block.timestamp), // Timestamp to read the state at
             confirmations: 15, // Number of confirmations to wait for finality
-            to: targetContractAddress, // Address of the contract to read from
+            to: _targetContractAddress, // Address of the contract to read from
             callData: callData // Encoded function call data
         });
 

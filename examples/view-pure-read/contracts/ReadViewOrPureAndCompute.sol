@@ -78,23 +78,23 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
      *
      * @dev The caller must send enough ETH to cover the messaging fee.
      *
-     * @param a The first number.
-     * @param b The second number.
+     * @param _a The first number.
+     * @param _b The second number.
      * @param _extraOptions Additional messaging options.
      *
      * @return The LayerZero messaging receipt for the request.
      */
     function readSum(
-        uint256 a,
-        uint256 b,
+        uint256 _a,
+        uint256 _b,
         bytes calldata _extraOptions
     ) external payable returns (MessagingReceipt memory) {
-        bytes memory cmd = _getCmd(a, b);
+        bytes memory cmd = _getCmd(_a, _b);
         return
             _lzSend(
                 READ_CHANNEL,
                 cmd,
-                _combineOptions(READ_CHANNEL, READ_TYPE, _extraOptions),
+                combineOptions(READ_CHANNEL, READ_TYPE, _extraOptions),
                 MessagingFee(msg.value, 0),
                 payable(msg.sender)
             );
@@ -103,31 +103,31 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
     /**
      * @notice Estimates the messaging fee required to perform the read and compute operation.
      *
-     * @param a The first number to sum.
-     * @param b The second number to sum.
+     * @param _a The first number to sum.
+     * @param _b The second number to sum.
      * @param _extraOptions Additional messaging options.
      *
      * @return fee The estimated messaging fee.
      */
     function quoteReadFee(
-        uint256 a,
-        uint256 b,
+        uint256 _a,
+        uint256 _b,
         bytes calldata _extraOptions
     ) external view returns (MessagingFee memory fee) {
-        return _quote(READ_CHANNEL, _getCmd(a, b), _combineOptions(READ_CHANNEL, READ_TYPE, _extraOptions), false);
+        return _quote(READ_CHANNEL, _getCmd(_a, _b), combineOptions(READ_CHANNEL, READ_TYPE, _extraOptions), false);
     }
 
     /**
      * @notice Constructs the read command to call the `add` function and sets up compute requests.
      *
-     * @param a The first number.
-     * @param b The second number.
+     * @param _a The first number.
+     * @param _b The second number.
      *
      * @return The encoded command.
      */
-    function _getCmd(uint256 a, uint256 b) internal view returns (bytes memory) {
-        // Encode callData to call add(a, b) function using the function selector
-        bytes memory callData = abi.encodeWithSelector(IExampleContract.add.selector, a, b);
+    function _getCmd(uint256 _a, uint256 _b) internal view returns (bytes memory) {
+        // Encode callData to call add(_a, _b) function using the function selector
+        bytes memory callData = abi.encodeWithSelector(IExampleContract.add.selector, _a, _b);
 
         // Create an array of EVMCallRequestV1 with a single read request
         EVMCallRequestV1[] memory readRequests = new EVMCallRequestV1[](1);
@@ -212,22 +212,5 @@ contract ReadViewOrPureAndCompute is OAppRead, IOAppMapper, IOAppReducer, OAppOp
         require(_message.length == 32, "Invalid message length");
         uint256 sum = abi.decode(_message, (uint256));
         emit SumReceived(sum);
-    }
-
-    /**
-     * @notice Combines the options for messaging.
-     *
-     * @param _channelId The channel ID.
-     * @param _msgType The message type.
-     * @param _extraOptions Additional options.
-     *
-     * @return options The combined options.
-     */
-    function _combineOptions(
-        uint32 _channelId,
-        uint16 _msgType,
-        bytes calldata _extraOptions
-    ) internal view returns (bytes memory options) {
-        options = combineOptions(_channelId, _msgType, _extraOptions);
     }
 }
