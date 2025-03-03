@@ -293,29 +293,23 @@ async function getAptosVersion(aptosCommand: string): Promise<string> {
 export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
     const aptosCommand = getAptosCommand(chain, stage)
     if (chain === 'aptos') {
-        try {
-            const version = await getAptosVersion(aptosCommand)
-            const MIN_VERSION = '6.0.1'
+        const version = await getAptosVersion(aptosCommand)
+        const MIN_VERSION = '6.0.1'
 
-            if (!compareVersions(version, MIN_VERSION)) {
-                console.error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
-            }
-            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
-        } catch (error) {
-            console.error('🚨 Failed to check Aptos CLI version:', error)
+        if (!compareVersions(version, MIN_VERSION)) {
+            throw Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
         }
+
+        console.log(`🚀 Aptos CLI version ${version} is compatible.`)
     } else if (chain === 'movement') {
-        try {
-            const version = await getAptosVersion(aptosCommand)
-            const MAX_VERSION = '3.5.0'
+        const version = await getAptosVersion(aptosCommand)
+        const MAX_VERSION = '3.5.0'
 
-            if (!compareVersions(version, MAX_VERSION)) {
-                console.error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
-            }
-            console.log(`🚀 Aptos CLI version ${version} is compatible.`)
-        } catch (error) {
-            console.error('🚨 Failed to check Aptos CLI version:', error)
+        if (compareVersions(version, MAX_VERSION)) {
+            throw Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
         }
+
+        console.log(`🚀 Aptos CLI version ${version} is compatible.`)
     } else {
         throw new Error(`Chain ${chain}-${stage} not supported for build.`)
     }
