@@ -1,6 +1,6 @@
 {
   "name": "@layerzerolabs/devtools",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Core utilities for working with LayerZero on-chain infrastructure",
   "repository": {
     "type": "git",

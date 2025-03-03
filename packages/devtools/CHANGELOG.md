@@ -1,5 +1,11 @@
 # @layerzerolabs/devtools
 
+## 0.4.7
+
+### Patch Changes
+
+- 22bb6c4: Adding optional metadata property to OmniTransaction to improve logging
+
 ## 0.4.6
 
 ### Patch Changes
