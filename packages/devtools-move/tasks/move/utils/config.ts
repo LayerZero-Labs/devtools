@@ -296,7 +296,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         const version = await getAptosVersion(aptosCommand)
         const MIN_VERSION = '6.0.1'
 
-        if (!compareVersions(version, MIN_VERSION)) {
+        if (compareVersions(version, MIN_VERSION)) {
             throw Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
         }
 
@@ -305,7 +305,7 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         const version = await getAptosVersion(aptosCommand)
         const MAX_VERSION = '3.5.0'
 
-        if (compareVersions(version, MAX_VERSION)) {
+        if (!compareVersions(version, MAX_VERSION)) {
             throw Error(`❌ Aptos CLI version too new. Required: ${MAX_VERSION} or older, Found: ${version}`)
         }
 
@@ -345,7 +345,7 @@ function compareVersions(installed: string, required: string): boolean {
     const requiredParts = required.split('.').map(Number)
 
     for (let i = 0; i < 3; i++) {
-        if (installedParts[i] > requiredParts[i]) {
+        if (installedParts[i] >= requiredParts[i]) {
             return true
         }
         if (installedParts[i] < requiredParts[i]) {
