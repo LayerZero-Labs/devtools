@@ -1,7 +1,8 @@
 import { INewOperation } from '@layerzerolabs/devtools-extensible-cli'
 
 import { setFee } from '../../tasks/setFee'
-import { OFTType } from '@layerzerolabs/devtools-move/sdk/oft'
+import { OFTType } from '@layerzerolabs/devtools-move/sdk/IOFT'
+import { initializeTaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 
 class SetFee implements INewOperation {
     vm = 'move'
@@ -27,7 +28,8 @@ class SetFee implements INewOperation {
     ]
 
     async impl(args: any): Promise<void> {
-        await setFee(BigInt(args.fee_bps), args.to_eid, OFTType.OFT_FA, args.oapp_config)
+        const taskContext = await initializeTaskContext(args.oapp_config)
+        await setFee(BigInt(args.fee_bps), args.to_eid, OFTType.OFT_FA, taskContext)
     }
 }
 
