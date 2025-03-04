@@ -85,3 +85,21 @@ export const createSolanaSignerFactory = (
             : new OmniSignerSolana(eid, await connectionFactory(eid), wallet)
     }
 }
+
+export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string {
+    const hexString = Buffer.from(uint8Array).toString('hex')
+    return prefix ? `0x${hexString}` : hexString
+}
+
+export function parse32BytesArrayIntoEvmAddress(uint8Array: Uint8Array): string {
+    return uint8ArrayToHex(uint8Array.slice(12), true)
+}
+
+export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array: Uint8Array) {
+    switch (chainType) {
+        case ChainType.EVM:
+            return parse32BytesArrayIntoEvmAddress(uint8Array)
+        default:
+            throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
+    }
+}

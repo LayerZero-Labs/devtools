@@ -5,9 +5,11 @@ import { PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { ChainType, EndpointId, endpointIdToChainType, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, endpointIdToChainType, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
+
+import { formatBytesAddressPerChainType, uint8ArrayToHex } from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
@@ -189,21 +191,3 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             await printChecks()
         }
     })
-
-export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string {
-    const hexString = Buffer.from(uint8Array).toString('hex')
-    return prefix ? `0x${hexString}` : hexString
-}
-
-export function parse32BytesArrayIntoEvmAddress(uint8Array: Uint8Array): string {
-    return uint8ArrayToHex(uint8Array.slice(12), true)
-}
-
-export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array: Uint8Array) {
-    switch (chainType) {
-        case ChainType.EVM:
-            return parse32BytesArrayIntoEvmAddress(uint8Array)
-        default:
-            throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
-    }
-}
