@@ -270,28 +270,6 @@ pnpm run lz:sdk:move:transfer-object-owner --oapp-config move.layerzero.config.t
 
 Note: The object owner has the upgrade authority for the Object.
 
-### Mint to Account on Move VM OFT:
-
-> ⚠️ **Warning**: This mint command is only for testing and experimentation purposes. Do not use in production.
-> First add this function to oft/sources/internal_oft/oft_impl.move in order to expose minting functionality to our move sdk script:
-
-```
-public entry fun mint(
-    admin: &signer,
-    recipient: address,
-    amount: u64,
-) acquires OftImpl {
-    assert_admin(address_of(admin));
-    primary_fungible_store::mint(&store().mint_ref, recipient, amount);
-}
-```
-
-Then run the following command to mint the move oft:
-
-```bash
-pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
-```
-
 ## Send Tokens
 
 ### Send from Move VM to EVM
