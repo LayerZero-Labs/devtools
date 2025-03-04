@@ -15,8 +15,14 @@ import { deriveConnection, getSolanaDeployment } from './index'
 
 // Logger class for better logging
 class Logger {
-    static keyValue(key: string, value: any) {
-        console.log(`\x1b[33m${key}:\x1b[0m ${value}`)
+    static keyValue(key: string, value: any, indentLevel = 0) {
+        const indent = ' '.repeat(indentLevel * 2)
+        console.log(`${indent}\x1b[33m${key}:\x1b[0m ${value}`)
+    }
+
+    static keyHeader(key: string, indentLevel = 0) {
+        const indent = ' '.repeat(indentLevel * 2)
+        console.log(`${indent}\x1b[33m${key}:\x1b[0m`)
     }
 
     static header(text: string) {
@@ -148,11 +154,9 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 if (info) {
                     Logger.keyValue('PeerConfig Account', peerConfigs[index].toString())
                     Logger.keyValue('Peer Address', formatBytesAddressPerChainType(chainType, info.peerAddress))
-                    Logger.keyValue('Enforced Options Send', uint8ArrayToHex(info.enforcedOptions.send, true))
-                    Logger.keyValue(
-                        'Enforced Options SendAndCall',
-                        uint8ArrayToHex(info.enforcedOptions.sendAndCall, true)
-                    )
+                    Logger.keyHeader('Enforced Options')
+                    Logger.keyValue('Send', uint8ArrayToHex(info.enforcedOptions.send, true), 2)
+                    Logger.keyValue('SendAndCall', uint8ArrayToHex(info.enforcedOptions.sendAndCall, true), 2)
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }
