@@ -164,8 +164,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }
-                Logger.separator()
             })
+            Logger.separator()
         }
 
         if (action) {
