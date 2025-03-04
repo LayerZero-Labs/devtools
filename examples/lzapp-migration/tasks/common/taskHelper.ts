@@ -6,7 +6,6 @@ import { OmniAddress, OmniPoint, OmniTransaction, flattenTransactions } from '@l
 import { createGetHreByEid } from '@layerzerolabs/devtools-evm-hardhat'
 import { createModuleLogger } from '@layerzerolabs/io-devtools'
 import { EndpointId } from '@layerzerolabs/lz-definitions'
-import { addressToBytes32 } from '@layerzerolabs/lz-v2-utilities'
 import { Uln302ExecutorConfig, Uln302UlnConfig } from '@layerzerolabs/protocol-devtools'
 import { LzAppOmniGraph, OAppEdgeConfig } from '@layerzerolabs/ua-devtools'
 
@@ -771,7 +770,7 @@ export async function setTrustedRemote(
         // Encode the path (remote address followed by local address)
         const path = utils.solidityPack(
             ['address', 'address'],
-            [addressToBytes32(to.address), ethers.utils.getAddress(lzApp.address)]
+            [ethers.utils.getAddress(to.address), ethers.utils.getAddress(lzApp.address)]
         )
 
         const setTrustedRemoteTx = {
@@ -806,15 +805,11 @@ export async function getTrustedRemote(
         // Call the contract's getter function
         const path: string = await lzAppContract.trustedRemoteLookup(dstEid)
 
-        if (path === '0x') {
-            return path
-        }
-
         // Decode the path to retrieve the remote address
         const remoteAddress = path.slice(0, path.length - 40) // Remove the last 20 bytes (local address)
+
         return remoteAddress
     } catch (error) {
-        console.error(`Error getting trusted remote: ${(error as Error).message}`)
         return null
     }
 }
@@ -858,28 +853,15 @@ export const configureLzAppGraph = async (
 
                     try {
                         logger.info('Checking LzApp trusted remotes configuration')
-                        const currentTrustedRemote = await getTrustedRemote(hreForEid, from, to.eid)
-                        if (currentTrustedRemote === null) {
-                            throw new Error(`Failed to retrieve trusted remote for ${from.eid} → ${to.eid}`)
-                        }
-
-                        const newRemote = addressToBytes32(to.address).toString()
-
-                        const currentRemote = addressToBytes32(currentTrustedRemote).toString()
-
-                        if (currentRemote !== newRemote) {
+                        const getTrustedRemoteTx = await getTrustedRemote(hreForEid, from, to.eid)
+                        if (ethers.utils.getAddress(getTrustedRemoteTx!) != ethers.utils.getAddress(to.address)) {
                             const setTrustedRemoteTx = await setTrustedRemote(hreForEid, from, to)
                             if (setTrustedRemoteTx) transactions.push(setTrustedRemoteTx)
                         }
                         logger.info(`${SUCCESS_SYMBOL} Checked LzApp trusted remotes configuration`)
                         // Generate transactions using the retrieved hre
                         logger.info(`Checking LzApp send libraries configuration`)
-
-                        if (!from.contractName) {
-                            throw new Error(`Failed to retrieve contract name for ${from.eid}`)
-                        }
-
-                        const LzApp = await hreForEid.deployments.get(from.contractName)
+                        const LzApp = await hreForEid.deployments.get(from.contractName!)
                         if (!LzApp) {
                             throw new Error(`Failed to retrieve LzApp deployment for ${from.contractName}`)
                         }

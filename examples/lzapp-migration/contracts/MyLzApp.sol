@@ -4,51 +4,25 @@ pragma solidity ^0.8.0;
 
 // Import the abstract NonblockingLzApp contract
 import { NonblockingLzApp } from "@layerzerolabs/solidity-examples/contracts/lzApp/NonblockingLzApp.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 import { LzLib } from "@layerzerolabs/solidity-examples/contracts/lzApp/libs/LzLib.sol";
 
 /**
  * @title MyLzApp
- *
- * @notice This contract utilizes LayerZero V1's NonblockingLzApp to facilitate cross-chain messaging.
- *
- * @custom:warning This contract can only be used with LayerZero V1 protocol contracts. Using Endpoint V2
- *                    will result in errors.
- *
- * @dev A simple LayerZero Endpoint V1 application to send and receive string messages across chains.
+ * @dev A simple LayerZero application to send and receive string messages across chains.
  */
 contract MyLzApp is NonblockingLzApp {
     using LzLib for bytes32;
-    /**
-     * @notice Emitted when a message is received from another chain.
-     *
-     * @param srcChainId The LayerZero identifier of the source chain (endpoint id).
-     * @param srcAddress The address from the source chain that sent the message.
-     * @param nonce The unique nonce of the message.
-     * @param message The string message that was received.
-     */
+    // Event emitted when a message is received
     event MessageReceived(uint16 indexed srcChainId, address srcAddress, uint64 nonce, string message);
 
     /**
-     * @dev Constructor initializes the LzApp with the LayerZero V1 endpoint address.
-     *
-     * @param _endpoint Address of the LayerZero V1 endpoint contract.
+     * @dev Constructor initializes the LzApp with the LayerZero endpoint.
+     * @param _endpoint Address of the LayerZero endpoint contract.
      */
-    constructor(address _endpoint) NonblockingLzApp(_endpoint) {}
+    constructor(address _endpoint, address _owner) NonblockingLzApp(_endpoint) Ownable(_owner) {}
 
-    /**
-     * @notice Estimates the fees required to send a message to a destination chain.
-     *
-     * @dev Calls the LayerZero V1 endpoint to calculate the native and ZRO token fees based on the provided parameters.
-     *
-     * @param _dstChainId The identifier of the destination chain.
-     * @param _message The string message intended for the destination chain.
-     * @param _useZro A boolean indicating whether ZRO tokens are used to pay for fees.
-     * @param _adapterParams Encoded gas limit and additional parameters for the LayerZero message on destination.
-     *
-     * @return nativeFee The estimated fee in native tokens.
-     * @return zroFee The estimated fee in ZRO tokens.
-     */
     function estimateFee(
         uint16 _dstChainId,
         string memory _message,
@@ -59,13 +33,10 @@ contract MyLzApp is NonblockingLzApp {
     }
 
     /**
-     * @notice Sends a string message to a specified destination chain.
-     *
-     * @dev Encodes the message and utilizes the internal _lzSend function to dispatch it.
-     *
-     * @param _dstChainId The identifier of the destination chain.
-     * @param _message The string message to be sent.
-     * @param _adapterParams Additional parameters for the LayerZero adapter.
+     * @dev Sends a string message to a specified destination chain and address.
+     * @param _dstChainId The destination chain identifier.
+     * @param _message The string message to send.
+     * @param _adapterParams Additional adapter parameters.
      */
     function sendMessage(uint16 _dstChainId, string calldata _message, bytes calldata _adapterParams) external payable {
         bytes memory _payload = abi.encode(_message);
@@ -75,7 +46,6 @@ contract MyLzApp is NonblockingLzApp {
     /**
      * @dev Overrides the _nonblockingLzReceive function from NonblockingLzApp.
      *      Decodes the incoming payload and emits a MessageReceived event.
-     *
      * @param _srcChainId The source chain identifier.
      * @param _nonce The message nonce.
      * @param _payload The payload containing the string message.

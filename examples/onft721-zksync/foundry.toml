@@ -7,7 +7,6 @@ cache_path = 'cache/foundry'
 verbosity = 3
 optimizer = true
 optimizer_runs = 20_000
-
 libs = [
     # We provide a set of useful contract utilities
     # in the lib directory of @layerzerolabs/toolbox-foundry:

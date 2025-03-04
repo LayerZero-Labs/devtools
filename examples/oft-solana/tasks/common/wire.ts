@@ -2,7 +2,7 @@ import { Keypair, PublicKey } from '@solana/web3.js'
 import { subtask, task } from 'hardhat/config'
 
 import { firstFactory } from '@layerzerolabs/devtools'
-import { SUBTASK_LZ_SIGN_AND_SEND, types } from '@layerzerolabs/devtools-evm-hardhat'
+import { SUBTASK_LZ_SIGN_AND_SEND, inheritTask, types } from '@layerzerolabs/devtools-evm-hardhat'
 import { setTransactionSizeBuffer } from '@layerzerolabs/devtools-solana'
 import { type LogLevel, createLogger } from '@layerzerolabs/io-devtools'
 import { type IOApp, type OAppConfigurator, type OAppOmniGraph, configureOwnable } from '@layerzerolabs/ua-devtools'
@@ -12,6 +12,7 @@ import {
     TASK_LZ_OAPP_WIRE,
     TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP,
 } from '@layerzerolabs/ua-devtools-evm-hardhat'
+import { initOFTAccounts } from '@layerzerolabs/ua-devtools-solana'
 
 import { keyPair, publicKey } from './types'
 import { createSdkFactory, createSolanaConnectionFactory, createSolanaSignerFactory } from './utils'
@@ -171,3 +172,13 @@ task(TASK_LZ_OWNABLE_TRANSFER_OWNERSHIP)
     .setAction(async (args: Args, hre) => {
         return hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: configureOwnable })
     })
+
+// We'll create clones of the wire task and only override the configurator argument
+const wireLikeTask = inheritTask(TASK_LZ_OAPP_WIRE)
+
+// This task will use the `initOFTAccounts` configurator that initializes the Solana accounts
+wireLikeTask('lz:oapp:init:solana')
+    .setDescription('Initialize OFT accounts for Solana')
+    .setAction(async (args: Args, hre) =>
+        hre.run(TASK_LZ_OAPP_WIRE, { ...args, internalConfigurator: initOFTAccounts })
+    )

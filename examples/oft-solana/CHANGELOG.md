@@ -1,42 +1,5 @@
 # @layerzerolabs/oft-solana-example
 
-## 0.7.5
-
-### Patch Changes
-
-- fe71c0e: fix typo and mention how to transfer ownership
-
-## 0.7.4
-
-### Patch Changes
-
-- 6bbe466: move solana init to own script and update task name
-
-## 0.7.3
-
-### Patch Changes
-
-- e5fffc3: fix import in createOFT.ts
-- fcf924d: docs: default to using solana 1.18
-
-## 0.7.2
-
-### Patch Changes
-
-- 274b8aa: Add task to get Solana rate limits
-
-## 0.7.1
-
-### Patch Changes
-
-- 213a76b: Enable optimizer explicitly
-
-## 0.7.0
-
-### Minor Changes
-
-- 57a80a8: added script to update metaplex metadata
-
 ## 0.6.0
 
 ### Minor Changes

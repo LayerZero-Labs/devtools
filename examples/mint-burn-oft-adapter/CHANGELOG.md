@@ -1,11 +1,5 @@
 # @layerzerolabs/mint-burn-oft-adapter-example
 
-## 0.0.5
-
-### Patch Changes
-
-- 213a76b: Enable optimizer explicitly
-
 ## 0.0.4
 
 ### Patch Changes
