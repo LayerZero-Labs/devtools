@@ -38,19 +38,27 @@ pnpm turbo build --force
 
 If you need to generate a new key, run the following command:
 
-```
+```bash
 aptos key generate --output-file my_key.pub
 ```
 
 Then initialize the aptos cli and connect to the aptos network:
 
-```
+For Aptos Chain:
+
+```bash
 aptos init --network=testnet --private-key=<your-private-key>
+```
+
+For Movement Chain:
+
+```bash
+aptos init --network=custom --private-key=<your-private-key>
 ```
 
 You can then verify that your initialization was successful by running the following command:
 
-```
+```bash
 cat .aptos/config.yaml
 ```
 
