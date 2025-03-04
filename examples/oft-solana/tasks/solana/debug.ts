@@ -9,7 +9,7 @@ import { EndpointId, endpointIdToChainType, getNetworkForChainId } from '@layerz
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { formatBytesAddressPerChainType, uint8ArrayToHex } from '../common/utils'
+import { decodeLzReceiveOptions, formatBytesAddressPerChainType, uint8ArrayToHex } from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
@@ -155,8 +155,12 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                     Logger.keyValue('PeerConfig Account', peerConfigs[index].toString())
                     Logger.keyValue('Peer Address', formatBytesAddressPerChainType(chainType, info.peerAddress))
                     Logger.keyHeader('Enforced Options')
-                    Logger.keyValue('Send', uint8ArrayToHex(info.enforcedOptions.send, true), 2)
-                    Logger.keyValue('SendAndCall', uint8ArrayToHex(info.enforcedOptions.sendAndCall, true), 2)
+                    Logger.keyValue('Send', decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.send, true)), 2)
+                    Logger.keyValue(
+                        'SendAndCall',
+                        decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.sendAndCall, true)),
+                        2
+                    )
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }

@@ -18,7 +18,7 @@ import {
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { bytes32ToEthAddress } from '@layerzerolabs/lz-v2-utilities'
+import { Options, bytes32ToEthAddress } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
@@ -98,5 +98,23 @@ export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array:
             return bytes32ToEthAddress(uint8Array)
         default:
             throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
+    }
+}
+
+function formatBigIntForDisplay(n: bigint) {
+    return n.toLocaleString().replace(/,/g, '_')
+}
+
+export function decodeLzReceiveOptions(hex: string): string {
+    try {
+        // Handle empty/undefined values first
+        if (!hex || hex === '0x') return 'No options set'
+        const options = Options.fromOptions(hex)
+        const lzReceiveOpt = options.decodeExecutorLzReceiveOption()
+        return lzReceiveOpt
+            ? `gas: ${formatBigIntForDisplay(lzReceiveOpt.gas)} , value: ${formatBigIntForDisplay(lzReceiveOpt.value)} wei`
+            : 'No executor options'
+    } catch (e) {
+        return `Invalid options (${hex.slice(0, 12)}...)`
     }
 }
