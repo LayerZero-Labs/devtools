@@ -146,8 +146,11 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 if (info) {
                     Logger.keyValue('PeerConfig Account', peerConfigs[index].toString())
                     Logger.keyValue('Peer Address', formatBytesAddressPerChainType(chainType, info.peerAddress))
-                    Logger.keyValue('Enforced Options Send', bytesToHexStr(info.enforcedOptions.send))
-                    Logger.keyValue('Enforced Options SendAndCall', bytesToHexStr(info.enforcedOptions.sendAndCall))
+                    Logger.keyValue('Enforced Options Send', uint8ArrayToHex(info.enforcedOptions.send, true))
+                    Logger.keyValue(
+                        'Enforced Options SendAndCall',
+                        uint8ArrayToHex(info.enforcedOptions.sendAndCall, true)
+                    )
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }
@@ -187,20 +190,13 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
         }
     })
 
-function bytesToHexStr(data: Uint8Array): string {
-    return '0x' + Buffer.from(data).toString('hex')
-}
-
-export function uint8ArrayToHex(uint8Array: Uint8Array): string {
-    return Array.from(uint8Array)
-        .map((byte) => byte.toString(16).padStart(2, '0')) // Convert each byte to a 2-character hex string
-        .join('') // Join all hex strings into a single string
+export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string {
+    const hexString = Buffer.from(uint8Array).toString('hex')
+    return prefix ? `0x${hexString}` : hexString
 }
 
 export function parse32BytesArrayIntoEvmAddress(uint8Array: Uint8Array): string {
-    const hexString: string = uint8ArrayToHex(uint8Array)
-    const zeroesRemoved = hexString.substring(24)
-    return `0x${zeroesRemoved}`
+    return uint8ArrayToHex(uint8Array.slice(12), true)
 }
 
 export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array: Uint8Array) {
@@ -209,6 +205,5 @@ export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array:
             return parse32BytesArrayIntoEvmAddress(uint8Array)
         default:
             throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
-            break
     }
 }
