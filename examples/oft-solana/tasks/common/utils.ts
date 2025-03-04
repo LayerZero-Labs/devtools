@@ -18,6 +18,7 @@ import {
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
+import { bytes32ToEthAddress } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
@@ -91,14 +92,10 @@ export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string 
     return prefix ? `0x${hexString}` : hexString
 }
 
-export function parse32BytesArrayIntoEvmAddress(uint8Array: Uint8Array): string {
-    return uint8ArrayToHex(uint8Array.slice(12), true)
-}
-
 export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array: Uint8Array) {
     switch (chainType) {
         case ChainType.EVM:
-            return parse32BytesArrayIntoEvmAddress(uint8Array)
+            return bytes32ToEthAddress(uint8Array)
         default:
             throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
     }
