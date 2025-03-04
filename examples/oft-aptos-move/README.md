@@ -107,12 +107,12 @@ Note: the aptos specific values can be found in `.aptos/config.yaml` after runni
 
 Note: the Movement specific values can be found at: https://docs.movementnetwork.xyz/devs/networkEndpoints#movement-bardock-testnet-aptos-environment and currently Bardock testnet is the only Movement testnet with a deployed layerzero endpoint.
 
-> **Important:** If testing with Aptos CLI version 3.5.0 (required for Movement chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
->
-> ```toml
-> [dependencies.AptosFramework]
-> git = "https://github.com/movementlabsxyz/aptos-core.git"
-> rev = "movement"
+> **Important:** If using Aptos CLI version >= 6.1.0 (required for Aptos chain), you need to uncomment the following lines in Move.toml and remove the existing AptosFramework dependency:
+> ```
+> # [dependencies.AptosFramework]
+> # git = "https://github.com/aptos-labs/aptos-framework.git"
+> # rev = "mainnet"
+> # subdir = "aptos-framework"
 > ```
 
 ### Wire setup
