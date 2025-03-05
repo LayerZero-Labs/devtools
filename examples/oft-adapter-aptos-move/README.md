@@ -74,7 +74,7 @@ Create a `.env` file with the following variables:
 
 ```bash
 EVM_PRIVATE_KEY=<your-evm-private-key>
-MNEMONIC=<your-mnemonic>
+EVM_MNEMONIC=<your-mnemonic>
 
 # If you are deploying to Movement chain
 MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
