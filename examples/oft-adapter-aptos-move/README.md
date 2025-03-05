@@ -1,3 +1,5 @@
+# OFT Adapter Aptos Move Example
+
 ## Setup and Installation
 
 First, clone the repository and navigate to the example directory:
@@ -34,7 +36,7 @@ pnpm turbo build --force
 
 ## Move-VM OFT Adapter Setup and Deployment
 
-### connecting to aptos via cli
+### Connecting to Aptos via CLI
 
 If you need to generate a new key, run the following command:
 
@@ -119,7 +121,7 @@ Before running the deploy and wire commands, first inside of `move.layerzero.con
 
 ### Build and Deploy the modules
 
-First modify deploy-move/OFTAdapaterInitParams.ts and replace the oftMetadata with your desired values:
+First modify deploy-move/OFTAdapterInitParams.ts and replace the oftMetadata with your desired values:
 
 ```ts
 const oftMetadata = {
@@ -146,7 +148,7 @@ pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-nam
 npx hardhat lz:deploy
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the EVM networks (DO NOT SELECT APTOS or MOVEMENT).
 
 ## Init and Set Delegate
 
@@ -160,9 +162,9 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 
 ## Wire
 
-> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
-Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
+Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate specified.
 
 ```ts
     contracts: [
@@ -238,7 +240,7 @@ pnpm run lz:sdk:move:adapter-permanently-disable-blocklist --oapp-config move.la
 There are three steps to transferring ownership of your Move OFT:
 
 1. Transfer the delegate to the new delegate
-2. Transfer the OApp owner of the your to the new owner
+2. Transfer the OApp owner to the new owner
 3. Transfer the Move-VM object owner to the new owner
 
 > **Note:** These ownership transfer commands only affect the Move VM (Aptos/Movement) implementation of your OFT. To transfer ownership of EVM implementations, you'll need to use the corresponding EVM ownership transfer commands.
@@ -311,7 +313,7 @@ pnpm run lz:sdk:evm:send-evm \
 pnpm run lz:sdk:help
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the EVM networks (DO NOT SELECT APTOS or MOVEMENT).
 
 ### Verifying successful ownership transfer of your Move-VM OFT:
 

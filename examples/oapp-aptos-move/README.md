@@ -1,3 +1,5 @@
+# OApp Aptos Move Example
+
 ## Setup and Installation
 
 First, clone the repository and navigate to the example directory:
@@ -32,9 +34,9 @@ pnpm install
 pnpm turbo build --force
 ```
 
-## Move-VM OFT Setup and Deployment
+## Move-VM OApp Setup and Deployment
 
-### connecting to aptos via cli
+### Connecting to Aptos via CLI
 
 After installing the aptos cli, you can set the aptos cli path in the .env file. This allows you to have two different aptos cli versions installed on your machine and not have to switch between them for deployments.
 
@@ -153,11 +155,13 @@ pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 npx hardhat lz:deploy
 ```
 
+Select only the EVM networks (DO NOT SELECT APTOS or MOVEMENT).
+
 ## Wire
 
 Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate specified.
 
-> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
+> **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands.
 
 ```ts
     contracts: [
@@ -248,9 +252,9 @@ Note: The object owner has the upgrade authority for the Object.
 pnpm run lz:sdk:help
 ```
 
-Select only the evm networks (DO NOT SELECT APTOS or MOVEMENT)
+Select only the EVM networks (DO NOT SELECT APTOS or MOVEMENT).
 
-### Verifying successful ownership transfer of your Move-VM OFT:
+### Verifying successful ownership transfer of your Move-VM OApp:
 
 Run the following command:
 
