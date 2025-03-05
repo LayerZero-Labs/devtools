@@ -18,7 +18,7 @@ import {
     createRpcUrlFactory,
 } from '@layerzerolabs/devtools-solana'
 import { ChainType, EndpointId, endpointIdToChainType } from '@layerzerolabs/lz-definitions'
-import { Options, bytes32ToEthAddress } from '@layerzerolabs/lz-v2-utilities'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { IOApp } from '@layerzerolabs/ua-devtools'
 import { createOAppFactory } from '@layerzerolabs/ua-devtools-evm'
 import { createOFTFactory } from '@layerzerolabs/ua-devtools-solana'
@@ -90,15 +90,6 @@ export const createSolanaSignerFactory = (
 export function uint8ArrayToHex(uint8Array: Uint8Array, prefix = false): string {
     const hexString = Buffer.from(uint8Array).toString('hex')
     return prefix ? `0x${hexString}` : hexString
-}
-
-export function formatBytesAddressPerChainType(chainType: ChainType, uint8Array: Uint8Array) {
-    switch (chainType) {
-        case ChainType.EVM:
-            return bytes32ToEthAddress(uint8Array)
-        default:
-            throw new Error(`formatBytesAddressPerChainType not implemented yet for chain type ${chainType}`)
-    }
 }
 
 function formatBigIntForDisplay(n: bigint) {

@@ -4,12 +4,13 @@ import { toWeb3JsPublicKey } from '@metaplex-foundation/umi-web3js-adapters'
 import { PublicKey } from '@solana/web3.js'
 import { task } from 'hardhat/config'
 
+import { denormalizePeer } from '@layerzerolabs/devtools'
 import { types } from '@layerzerolabs/devtools-evm-hardhat'
-import { EndpointId, endpointIdToChainType, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { EndpointPDADeriver, EndpointProgram } from '@layerzerolabs/lz-solana-sdk-v2'
 import { OftPDA, oft } from '@layerzerolabs/oft-v2-solana-sdk'
 
-import { decodeLzReceiveOptions, formatBytesAddressPerChainType, uint8ArrayToHex } from '../common/utils'
+import { decodeLzReceiveOptions, uint8ArrayToHex } from '../common/utils'
 
 import { deriveConnection, getSolanaDeployment } from './index'
 
@@ -149,11 +150,10 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
             dstEids.forEach((dstEid, index) => {
                 const info = peerConfigInfos[index]
                 const network = getNetworkForChainId(dstEid)
-                const chainType = endpointIdToChainType(dstEid)
                 Logger.header(`${dstEid} (${network.chainName})`)
                 if (info) {
                     Logger.keyValue('PeerConfig Account', peerConfigs[index].toString())
-                    Logger.keyValue('Peer Address', formatBytesAddressPerChainType(chainType, info.peerAddress))
+                    Logger.keyValue('Peer Address', denormalizePeer(info.peerAddress, dstEid))
                     Logger.keyHeader('Enforced Options')
                     Logger.keyValue('Send', decodeLzReceiveOptions(uint8ArrayToHex(info.enforcedOptions.send, true)), 2)
                     Logger.keyValue(
@@ -164,8 +164,8 @@ task('lz:oft:solana:debug', 'Manages OFTStore and OAppRegistry information')
                 } else {
                     console.log(`No PeerConfig account found for ${dstEid} (${network.chainName}).`)
                 }
+                Logger.separator()
             })
-            Logger.separator()
         }
 
         if (action) {
