@@ -84,7 +84,11 @@ export async function createSetReceiveConfigTransactions(
 
             if (decodedSetFromConfigParam && decodedSetToConfigParam) {
                 diffPrinter(
-                    createDiffMessage(`receive config`, Number(eid), Number(peerToEid)),
+                    createDiffMessage(
+                        `receive config @ ${currReceiveLibrary.newReceiveLibrary}`,
+                        Number(eid),
+                        Number(peerToEid)
+                    ),
                     decodedSetFromConfigParam,
                     decodedSetToConfigParam
                 )
