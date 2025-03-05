@@ -1,3 +1,5 @@
+# OFT Aptos Move Example
+
 ## Setup and Installation
 
 First, clone the repository and navigate to the example directory:
@@ -34,7 +36,7 @@ pnpm turbo build --force
 
 ## Move-VM OFT Setup and Deployment
 
-### connecting to aptos via cli
+### Connecting to Aptos via CLI
 
 After installing the aptos cli, you can set the aptos cli path in the .env file. This allows you to have two different aptos cli versions installed on your machine and not have to switch between them for deployments.
 
@@ -139,6 +141,8 @@ To build the contracts without deploying them, run the following command:
 pnpm run lz:sdk:move:build --oapp-config move.layerzero.config.ts --oapp-type oft
 ```
 
+To build and deploy the contracts, run the following command:
+
 ```bash
 pnpm run lz:sdk:move:deploy --oapp-config move.layerzero.config.ts --address-name oft --move-deploy-script deploy-move/OFTInitParams.ts --oapp-type oft
 ```
@@ -166,13 +170,13 @@ const oftMetadata = {
 };
 ```
 
-Then Run the following command to set the delegate:
+Then run the following command to set the delegate:
 
 ```bash
 pnpm run lz:sdk:move:set-delegate --oapp-config move.layerzero.config.ts
 ```
 
-Then Run the following command to initialize the oft:
+Then run the following command to initialize the oft:
 
 ```bash
 pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts
@@ -183,7 +187,7 @@ pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deplo
 > **Important:** Follow the [LayerZero Project Configuration Guide](https://docs.layerzero.network/v2/developers/evm/create-lz-oapp/project-config) to properly set up your `move.layerzero.config.ts` file with correct endpoint IDs and network configurations before running wiring commands. The configuration can be modified to wire any number supported networks to each other.
 
 EVM Wiring:
-Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate contract is specified.
+Ensure that in move.layerzero.config.ts, all of your evm contracts have the owner and delegate specified.
 
 ```ts
     contracts: [
@@ -321,7 +325,7 @@ public entry fun mint(
 }
 ```
 
-Then run the deploy, init, and wire comands again on this new oft. To utilize the mint function, run the following command:
+Then run the deploy, init, and wire commands again on this new oft. To utilize the mint function, run the following command:
 
 ```bash
 pnpm run lz:sdk:move:mint-to-move-oft --oapp-config move.layerzero.config.ts --amount-ld 1000000000000000000 --to-address <your-move-account-address>
@@ -337,7 +341,7 @@ pnpm run lz:sdk:move:send-from-move-oft \
   --src-address <your-source-account-address> \
   --to-address <your-destination-account-address> \
   --gas-limit <your-gas-limit> \
-  --dst-eid <your-dst-eid>\
+  --dst-eid <your-dst-eid>
 ```
 
 ## Send from EVM
