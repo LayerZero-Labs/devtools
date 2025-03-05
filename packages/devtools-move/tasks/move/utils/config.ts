@@ -319,12 +319,12 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
 
 function getAptosCommand(chain: string, stage: string): string {
     if (chain === 'aptos') {
-        if (process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH) {
-            console.log(`🚀 Using Aptos CLI from ${process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH}`)
-            return process.env.APOTS_COMPATIBLE_APTOS_CLI_PATH
+        if (process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH) {
+            console.log(`🚀 Using Aptos CLI from ${process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH}`)
+            return process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH
         } else {
             throw new Error(
-                'Aptos CLI path not found. Please set the APOTS_COMPATIBLE_APTOS_CLI_PATH environment variable.'
+                'Aptos CLI path not found. Please set the APTOS_COMPATIBLE_APTOS_CLI_PATH environment variable.'
             )
         }
     } else if (chain === 'movement') {
