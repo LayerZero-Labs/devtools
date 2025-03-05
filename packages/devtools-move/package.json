@@ -9,8 +9,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "$npm_execpath jest"
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "dependencies": {
     "@types/chai": "^4.3.11",
