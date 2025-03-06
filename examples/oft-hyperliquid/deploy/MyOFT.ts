@@ -20,9 +20,6 @@ const deploy: DeployFunction = async (hre) => {
 
     assert(deployer, 'Missing named deployer account')
 
-    console.log(`Network: ${hre.network.name}`)
-    console.log(`Deployer: ${deployer}`)
-
     const privateKey = process.env.PRIVATE_KEY_HYPERLIQUID
     if (!privateKey) {
         console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
@@ -31,8 +28,13 @@ const deploy: DeployFunction = async (hre) => {
 
     const wallet = new Wallet(privateKey)
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
-    let res = await useBigBlock(wallet, isTestnet)
-    console.log(res)
+
+    console.log(`Network: ${hre.network.name}`)
+    console.log(`Deployer: ${deployer}`)
+
+    // Get logger from hardhat flag --log-level
+    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
+    console.log(`Log level: ${loglevel}`)
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -52,9 +54,19 @@ const deploy: DeployFunction = async (hre) => {
     // }
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
-    console.log(
-        `Trying to deploy ${contractName} to ${hre.network.name}. \nDeplying a contract uses big block which is mined at a transaction per minute.`
-    )
+    // Switch to hyperliquidbig block if the contract is not deployed
+    const isDeployed = await hre.deployments.get(contractName)
+    if (!isDeployed) {
+        console.log(
+            `Contract ${contractName} is not deployed - switching to hyperliquid big block for the address ${deployer}`
+        )
+        const res = await useBigBlock(wallet, isTestnet, loglevel)
+        console.log(res)
+        console.log(
+            `Trying to deploy ${contractName} to ${hre.network.name}. \nDeplying a contract uses big block which is mined at a transaction per minute.`
+        )
+    }
+
     const { address } = await deploy(contractName, {
         from: deployer,
         args: [
@@ -64,13 +76,15 @@ const deploy: DeployFunction = async (hre) => {
             deployer, // owner
         ],
         log: true,
-        skipIfAlreadyDeployed: false,
+        skipIfAlreadyDeployed: true,
     })
 
     console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
 
-    res = await useSmallBlock(wallet, isTestnet)
-    console.log(res)
+    // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
+    console.log(`Using small block with address ${address} for faster transactions`)
+    const res = await useSmallBlock(wallet, isTestnet, loglevel)
+    console.log(JSON.stringify(res, null, 2))
 
     exit(0)
     const nativeSpot = getNativeSpot(nativeSpots, nativeSpotName)
@@ -81,7 +95,8 @@ const deploy: DeployFunction = async (hre) => {
         hre.network.name === 'hyperliquid-mainnet',
         address,
         evmExtraWeiDecimals,
-        nativeSpot.index
+        nativeSpot.index,
+        loglevel
     )
 }
 
