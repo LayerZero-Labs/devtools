@@ -1,40 +1,30 @@
 import assert from 'assert'
-import { exit } from 'process'
 
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { getNativeSpot, requestEvmContract, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
+import { useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
 
-import { nativeSpots } from './nativeSpot'
-
-const contractName = 'MyOFT'
-const evmDecimals = 18
-const nativeSpotName = 'ALICE'
+const contractName_oft = 'MyHyperLiquidOFT'
 
 const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
-
     assert(deployer, 'Missing named deployer account')
 
     const privateKey = process.env.PRIVATE_KEY_HYPERLIQUID
-    if (!privateKey) {
-        console.error('PRIVATE_KEY_HYPERLIQUID is not set in .env file')
-        process.exit(1)
-    }
+    assert(privateKey, 'PRIVATE_KEY_HYPERLIQUID is not set in .env file')
+
+    // Get logger from hardhat flag --log-level
+    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
 
     const wallet = new Wallet(privateKey)
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
 
     console.log(`Network: ${hre.network.name}`)
     console.log(`Deployer: ${deployer}`)
-
-    // Get logger from hardhat flag --log-level
-    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
-    console.log(`Log level: ${loglevel}`)
 
     // This is an external deployment pulled in from @layerzerolabs/lz-evm-sdk-v2
     //
@@ -55,19 +45,17 @@ const deploy: DeployFunction = async (hre) => {
     const endpointV2Deployment = await hre.deployments.get('EndpointV2')
 
     // Switch to hyperliquidbig block if the contract is not deployed
-    const isDeployed = await hre.deployments.get(contractName)
-    if (!isDeployed) {
-        console.log(
-            `Contract ${contractName} is not deployed - switching to hyperliquid big block for the address ${deployer}`
-        )
+    const isDeployed_oft = await hre.deployments.getOrNull(contractName_oft)
+
+    if (!isDeployed_oft) {
+        console.log(`Switching to hyperliquid big block for the address ${deployer} to deploy ${contractName_oft}`)
         const res = await useBigBlock(wallet, isTestnet, loglevel)
         console.log(res)
-        console.log(
-            `Trying to deploy ${contractName} to ${hre.network.name}. \nDeplying a contract uses big block which is mined at a transaction per minute.`
-        )
+        console.log(`Deplying a contract uses big block which is mined at a transaction per minute.`)
     }
 
-    const { address } = await deploy(contractName, {
+    // Deploy the OFT on HyperEVM
+    const { address: address_oft } = await deploy(contractName_oft, {
         from: deployer,
         args: [
             'MyOFT', // name
@@ -79,27 +67,16 @@ const deploy: DeployFunction = async (hre) => {
         skipIfAlreadyDeployed: true,
     })
 
-    console.log(`Deployed contract: ${contractName}, network: ${hre.network.name}, address: ${address}`)
+    console.log(`Deployed OFT contract: ${contractName_oft}, network: ${hre.network.name}, address: ${address_oft}`)
 
     // Set small block eitherway as we do not have a method to check which hyperliquidblock we are on
-    console.log(`Using small block with address ${address} for faster transactions`)
-    const res = await useSmallBlock(wallet, isTestnet, loglevel)
-    console.log(JSON.stringify(res, null, 2))
-
-    exit(0)
-    const nativeSpot = getNativeSpot(nativeSpots, nativeSpotName)
-    const evmExtraWeiDecimals = evmDecimals - nativeSpot.weiDecimals
-
-    await requestEvmContract(
-        wallet,
-        hre.network.name === 'hyperliquid-mainnet',
-        address,
-        evmExtraWeiDecimals,
-        nativeSpot.index,
-        loglevel
-    )
+    {
+        console.log(`Using small block with address ${deployer} for faster transactions`)
+        const res = await useSmallBlock(wallet, isTestnet, loglevel)
+        console.log(JSON.stringify(res, null, 2))
+    }
 }
 
-deploy.tags = [contractName]
+deploy.tags = [contractName_oft]
 
 export default deploy
