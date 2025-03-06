@@ -1,6 +1,6 @@
-import { Wallet } from 'ethers'
 import { HyperliquidClient } from '@/signer'
 import { EvmUserModifyRequest } from '@/types'
+import { Wallet } from 'ethers'
 
 export async function useBigBlock(wallet: Wallet, isTestnet: boolean) {
     const action: EvmUserModifyRequest['action'] = {

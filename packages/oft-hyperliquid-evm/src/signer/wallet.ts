@@ -1,8 +1,7 @@
-import { Wallet } from 'ethers'
-import axios, { AxiosInstance } from 'axios'
-import { HYPERLIQUID_URLS } from '@/types'
-
 import { getTimestampMs, signL1Action } from '@/signer'
+import { HYPERLIQUID_URLS, ValueType } from '@/types'
+import axios, { AxiosInstance } from 'axios'
+import { Wallet } from 'ethers'
 
 export class HyperliquidClient {
     private readonly client: AxiosInstance
@@ -20,7 +19,7 @@ export class HyperliquidClient {
         })
     }
 
-    async submitHyperliquidAction(endpoint: string, wallet: Wallet, action: any) {
+    async submitHyperliquidAction(endpoint: string, wallet: Wallet, action: ValueType) {
         const nonce = getTimestampMs()
 
         const signature = await signL1Action({
