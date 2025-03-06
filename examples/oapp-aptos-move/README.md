@@ -321,3 +321,7 @@ For more detailed information about multisig transactions, please refer to the [
 Using Rimosafe:
 
 Follow the instructions here: https://docs.rimosafe.com/docs/introduction
+
+For Movement we recommend using MSafe:
+
+Follow the instructions here: https://doc.m-safe.io/aptos
