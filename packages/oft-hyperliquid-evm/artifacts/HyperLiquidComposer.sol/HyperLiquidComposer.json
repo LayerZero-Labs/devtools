@@ -1,0 +1,493 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        { "name": "_endpoint", "type": "address", "internalType": "address" },
+        { "name": "_oft", "type": "address", "internalType": "address" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "endpoint",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "hyperliquidHopTransferableToken",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "contract IERC20HyperliquidHopTransferable"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lzCompose",
+      "inputs": [
+        { "name": "_oft", "type": "address", "internalType": "address" },
+        { "name": "", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "oft",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "error",
+      "name": "HyperLiquidComposer_Codec_InvalidMessage_HasExtraData",
+      "inputs": [
+        { "name": "_message", "type": "bytes", "internalType": "bytes" },
+        { "name": "_length", "type": "uint256", "internalType": "uint256" }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "HyperLiquidComposer_InvalidCall_NotEndpoint",
+      "inputs": [
+        {
+          "name": "_notEndpointAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "HyperLiquidComposer_InvalidCall_NotOFT",
+      "inputs": [
+        {
+          "name": "_internalOFTAddress",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_receivedOFTAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension",
+      "inputs": [
+        { "name": "_oft", "type": "address", "internalType": "address" },
+        { "name": "_token", "type": "address", "internalType": "address" }
+      ]
+    }
+  ],
+  "bytecode": {
+    "object": "0x60e060405234801561000f575f80fd5b5060405161086338038061086383398101604081905261002e91610163565b806001600160a01b031663fc0c546a6040518163ffffffff1660e01b8152600401602060405180830381865afa15801561006a573d5f803e3d5ffd5b505050506040513d601f19601f8201168201806040525081019061008e9190610194565b6001600160a01b031660c0819052604080516367ddeba960e01b815290516367ddeba9916004808201926020929091908290030181865afa1580156100d5573d5f803e3d5ffd5b505050506040513d601f19601f820116820180604052508101906100f991906101b4565b6101315760c05160405163db9a4c6b60e01b81526001600160a01b038084166004830152909116602482015260440160405180910390fd5b6001600160a01b039182166080521660a0526101d3565b80516001600160a01b038116811461015e575f80fd5b919050565b5f8060408385031215610174575f80fd5b61017d83610148565b915061018b60208401610148565b90509250929050565b5f602082840312156101a4575f80fd5b6101ad82610148565b9392505050565b5f602082840312156101c4575f80fd5b815180151581146101ad575f80fd5b60805160a05160c05161064d6102165f395f818160f701526102b201525f818160af015281816101a8015261021f01525f818160530152610131015261064d5ff3fe60806040526004361061003e575f3560e01c80635e280f11146100425780639b5215f61461009e578063d0a10260146100d1578063d2159547146100e6575b5f80fd5b34801561004d575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b3480156100a9575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b6100e46100df36600461045e565b610119565b005b3480156100f1575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b3373ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000161461018f576040517feee35e6f0000000000000000000000000000000000000000000000000000000081523360048201526024015b60405180910390fd5b8673ffffffffffffffffffffffffffffffffffffffff167f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff1614610254576040517f86fee0c000000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff7f00000000000000000000000000000000000000000000000000000000000000008116600483015288166024820152604401610186565b5f806102608787610316565b6040517f1bb6e3bc00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff8084166004830152602482018390529294509092507f000000000000000000000000000000000000000000000000000000000000000090911690631bb6e3bc906044015f604051808303815f87803b1580156102f5575f80fd5b505af1158015610307573d5f803e3d5ffd5b50505050505050505050505050565b5f805f6103238585610386565b905060148151146103645780516040517f90140d6e0000000000000000000000000000000000000000000000000000000081526101869183916004016104f5565b61036d81610565565b60601c925061037c85856103d2565b9150509250929050565b606061039582604c81866105b4565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f6103e1602c600c84866105b4565b6103ea916105db565b9392505050565b803573ffffffffffffffffffffffffffffffffffffffff81168114610414575f80fd5b919050565b5f8083601f840112610429575f80fd5b50813567ffffffffffffffff811115610440575f80fd5b602083019150836020828501011115610457575f80fd5b9250929050565b5f805f805f805f60a0888a031215610474575f80fd5b61047d886103f1565b965060208801359550604088013567ffffffffffffffff808211156104a0575f80fd5b6104ac8b838c01610419565b90975095508591506104c060608b016103f1565b945060808a01359150808211156104d5575f80fd5b506104e28a828b01610419565b989b979a50959850939692959293505050565b604081525f83518060408401525f5b818110156105215760208187018101516060868401015201610504565b505f6060828501015260607fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f8301168401019150508260208301529392505050565b5f815160208301517fffffffffffffffffffffffffffffffffffffffff000000000000000000000000808216935060148310156105ac5780818460140360031b1b83161693505b505050919050565b5f80858511156105c2575f80fd5b838611156105ce575f80fd5b5050820193919092039150565b803560208310156103cc577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b169291505056fea264697066735822122014bd6aa04de67fdb8dc3c043948ea4a088f24b7899f3b1a6f50928e25644d6f264736f6c63430008160033",
+    "sourceMap": "412:3107:1:-:0;;;1098:658;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;1414:4;-1:-1:-1;;;;;1409:16:1;;:18;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;-1:-1:-1;;;;;1342:86:1;;;;;1443:68;;;-1:-1:-1;;;1443:68:1;;;;:66;;:68;;;;;;;;;;;;;;;1342:86;1443:68;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;1438:261;;1642:31;;1534:154;;-1:-1:-1;;;1534:154:1;;-1:-1:-1;;;;;1219:15:138;;;1534:154:1;;;1201:34:138;1271:15;;;1251:18;;;1244:43;1136:18;;1534:154:1;;;;;;;1438:261;-1:-1:-1;;;;;1709:20:1;;;;;1739:10;;;412:3107;;14:177:138;93:13;;-1:-1:-1;;;;;135:31:138;;125:42;;115:70;;181:1;178;171:12;115:70;14:177;;;:::o;196:293::-;275:6;283;336:2;324:9;315:7;311:23;307:32;304:52;;;352:1;349;342:12;304:52;375:40;405:9;375:40;:::i;:::-;365:50;;434:49;479:2;468:9;464:18;434:49;:::i;:::-;424:59;;196:293;;;;;:::o;494:208::-;564:6;617:2;605:9;596:7;592:23;588:32;585:52;;;633:1;630;623:12;585:52;656:40;686:9;656:40;:::i;:::-;646:50;494:208;-1:-1:-1;;;494:208:138:o;707:277::-;774:6;827:2;815:9;806:7;802:23;798:32;795:52;;;843:1;840;833:12;795:52;875:9;869:16;928:5;921:13;914:21;907:5;904:32;894:60;;950:1;947;940:12;989:304;412:3107:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x60806040526004361061003e575f3560e01c80635e280f11146100425780639b5215f61461009e578063d0a10260146100d1578063d2159547146100e6575b5f80fd5b34801561004d575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b3480156100a9575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b6100e46100df36600461045e565b610119565b005b3480156100f1575f80fd5b506100757f000000000000000000000000000000000000000000000000000000000000000081565b3373ffffffffffffffffffffffffffffffffffffffff7f0000000000000000000000000000000000000000000000000000000000000000161461018f576040517feee35e6f0000000000000000000000000000000000000000000000000000000081523360048201526024015b60405180910390fd5b8673ffffffffffffffffffffffffffffffffffffffff167f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff1614610254576040517f86fee0c000000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff7f00000000000000000000000000000000000000000000000000000000000000008116600483015288166024820152604401610186565b5f806102608787610316565b6040517f1bb6e3bc00000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff8084166004830152602482018390529294509092507f000000000000000000000000000000000000000000000000000000000000000090911690631bb6e3bc906044015f604051808303815f87803b1580156102f5575f80fd5b505af1158015610307573d5f803e3d5ffd5b50505050505050505050505050565b5f805f6103238585610386565b905060148151146103645780516040517f90140d6e0000000000000000000000000000000000000000000000000000000081526101869183916004016104f5565b61036d81610565565b60601c925061037c85856103d2565b9150509250929050565b606061039582604c81866105b4565b8080601f0160208091040260200160405190810160405280939291908181526020018383808284375f920191909152509293505050505b92915050565b5f6103e1602c600c84866105b4565b6103ea916105db565b9392505050565b803573ffffffffffffffffffffffffffffffffffffffff81168114610414575f80fd5b919050565b5f8083601f840112610429575f80fd5b50813567ffffffffffffffff811115610440575f80fd5b602083019150836020828501011115610457575f80fd5b9250929050565b5f805f805f805f60a0888a031215610474575f80fd5b61047d886103f1565b965060208801359550604088013567ffffffffffffffff808211156104a0575f80fd5b6104ac8b838c01610419565b90975095508591506104c060608b016103f1565b945060808a01359150808211156104d5575f80fd5b506104e28a828b01610419565b989b979a50959850939692959293505050565b604081525f83518060408401525f5b818110156105215760208187018101516060868401015201610504565b505f6060828501015260607fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0601f8301168401019150508260208301529392505050565b5f815160208301517fffffffffffffffffffffffffffffffffffffffff000000000000000000000000808216935060148310156105ac5780818460140360031b1b83161693505b505050919050565b5f80858511156105c2575f80fd5b838611156105ce575f80fd5b5050820193919092039150565b803560208310156103cc577fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602084900360031b1b169291505056fea264697066735822122014bd6aa04de67fdb8dc3c043948ea4a088f24b7899f3b1a6f50928e25644d6f264736f6c63430008160033",
+    "sourceMap": "412:3107:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;471:33;;;;;;;;;;;;;;;;;;190:42:138;178:55;;;160:74;;148:2;133:18;471:33:1;;;;;;;510:28;;;;;;;;;;;;;;;2162:1355;;;;;;:::i;:::-;;:::i;:::-;;544:81;;;;;;;;;;;;;;;2162:1355;2530:10;:31;2552:8;2530:31;;2526:124;;2584:55;;;;;2628:10;2584:55;;;160:74:138;133:18;;2584:55:1;;;;;;;;2526:124;2671:4;2664:11;;:3;:11;;;2660:98;;2698:49;;;;;2193:42:138;2737:3:1;2262:15:138;;2698:49:1;;;2244:34:138;2314:15;;2294:18;;;2287:43;2156:18;;2698:49:1;2009:327:138;2660:98:1;3085:17;3104;3125:64;3180:8;;3125:54;:64::i;:::-;3430:80;;;;;:58;2533:55:138;;;3430:80:1;;;2515:74:138;2605:18;;;2598:34;;;3084:105:1;;-1:-1:-1;3084:105:1;;-1:-1:-1;3430:31:1;:58;;;;;;2488:18:138;;3430:80:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2365:1152;;2162:1355;;;;;;;:::o;605:734:5:-;708:17;727;756:20;779:46;809:15;;779:29;:46::i;:::-;756:69;;497:2;964:7;:14;:53;960:169;;1103:14;;1040:78;;;;;;;1094:7;;1040:78;;;:::i;960:169::-;1249:16;1257:7;1249:16;:::i;:::-;1241:25;;1229:37;;1288:44;1316:15;;1288:27;:44::i;:::-;1276:56;;746:593;605:734;;;;;:::o;2273:128:73:-;2337:12;2368:26;:4;335:2;2368:4;;:26;:::i;:::-;2361:33;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;2361:33:73;;-1:-1:-1;;;;2273:128:73;;;;;:::o;1676:150::-;1738:7;1780:37;282:2;232;1780:4;;:37;:::i;:::-;1772:46;;;:::i;:::-;1764:55;1676:150;-1:-1:-1;;;1676:150:73:o;245:196:138:-;313:20;;373:42;362:54;;352:65;;342:93;;431:1;428;421:12;342:93;245:196;;;:::o;446:347::-;497:8;507:6;561:3;554:4;546:6;542:17;538:27;528:55;;579:1;576;569:12;528:55;-1:-1:-1;602:20:138;;645:18;634:30;;631:50;;;677:1;674;667:12;631:50;714:4;706:6;702:17;690:29;;766:3;759:4;750:6;742;738:19;734:30;731:39;728:59;;;783:1;780;773:12;728:59;446:347;;;;;:::o;798:935::-;915:6;923;931;939;947;955;963;1016:3;1004:9;995:7;991:23;987:33;984:53;;;1033:1;1030;1023:12;984:53;1056:29;1075:9;1056:29;:::i;:::-;1046:39;;1132:2;1121:9;1117:18;1104:32;1094:42;;1187:2;1176:9;1172:18;1159:32;1210:18;1251:2;1243:6;1240:14;1237:34;;;1267:1;1264;1257:12;1237:34;1306:58;1356:7;1347:6;1336:9;1332:22;1306:58;:::i;:::-;1383:8;;-1:-1:-1;1280:84:138;-1:-1:-1;1280:84:138;;-1:-1:-1;1437:38:138;1471:2;1456:18;;1437:38;:::i;:::-;1427:48;;1528:3;1517:9;1513:19;1500:33;1484:49;;1558:2;1548:8;1545:16;1542:36;;;1574:1;1571;1564:12;1542:36;;1613:60;1665:7;1654:8;1643:9;1639:24;1613:60;:::i;:::-;798:935;;;;-1:-1:-1;798:935:138;;-1:-1:-1;798:935:138;;;;1587:86;;-1:-1:-1;;;798:935:138:o;2643:661::-;2818:2;2807:9;2800:21;2781:4;2850:6;2844:13;2893:6;2888:2;2877:9;2873:18;2866:34;2918:1;2928:144;2942:6;2939:1;2936:13;2928:144;;;3055:4;3039:14;;;3035:25;;3029:32;3024:2;3005:17;;;3001:26;2994:68;2957:12;2928:144;;;2932:3;3121:1;3116:2;3107:6;3096:9;3092:22;3088:31;3081:42;3250:2;3180:66;3175:2;3167:6;3163:15;3159:88;3148:9;3144:104;3140:113;3132:121;;;3291:6;3284:4;3273:9;3269:20;3262:36;2643:661;;;;;:::o;3309:410::-;3393:5;3433;3427:12;3475:4;3468:5;3464:16;3458:23;3500:66;3592:2;3588;3584:11;3575:20;;3618:2;3610:6;3607:14;3604:109;;;3700:2;3694;3684:6;3680:2;3676:15;3673:1;3669:23;3665:32;3661:2;3657:41;3653:50;3644:59;;3604:109;;;;3309:410;;;:::o;3724:331::-;3829:9;3840;3882:8;3870:10;3867:24;3864:44;;;3904:1;3901;3894:12;3864:44;3933:6;3923:8;3920:20;3917:40;;;3953:1;3950;3943:12;3917:40;-1:-1:-1;;3979:23:138;;;4024:25;;;;;-1:-1:-1;3724:331:138:o;4060:315::-;4180:19;;4219:2;4211:11;;4208:161;;;4291:66;4280:2;4276:12;;;4273:1;4269:20;4265:93;4254:105;4060:315;;;;:::o",
+    "linkReferences": {},
+    "immutableReferences": {
+      "137": [
+        { "start": 83, "length": 32 },
+        { "start": 305, "length": 32 }
+      ],
+      "139": [
+        { "start": 175, "length": 32 },
+        { "start": 424, "length": 32 },
+        { "start": 543, "length": 32 }
+      ],
+      "142": [
+        { "start": 247, "length": 32 },
+        { "start": 690, "length": 32 }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "endpoint()": "5e280f11",
+    "hyperliquidHopTransferableToken()": "d2159547",
+    "lzCompose(address,bytes32,bytes,address,bytes)": "d0a10260",
+    "oft()": "9b5215f6"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.22+commit.4fc1097e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_endpoint\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_oft\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"uint256\",\"name\":\"_length\",\"type\":\"uint256\"}],\"name\":\"HyperLiquidComposer_Codec_InvalidMessage_HasExtraData\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_notEndpointAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotEndpoint\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_internalOFTAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_receivedOFTAddress\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_NotOFT\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oft\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"}],\"name\":\"HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"endpoint\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"hyperliquidHopTransferableToken\",\"outputs\":[{\"internalType\":\"contract IERC20HyperliquidHopTransferable\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_oft\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"_message\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"lzCompose\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"oft\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"details\":\"This constructor is called by the `HyperLiquidOFT` contractPost deployment, this address needs to be approved (via approveCaller) by the `owner` of the `HyperLiquidOFT` contract to call the `transferToHyperLiquidL1` function\",\"params\":{\"_endpoint\":\"The LayerZero endpoint address\",\"_oft\":\"The OFT contract address associated with this composer\"}},\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"details\":\"This function is called by the OFTCore contract when a message is sent\",\"params\":{\"_message\":\"The encoded message content, expected to be of type: (address receiver).\",\"_oft\":\"The address of the OFT contract.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"constructor\":{\"notice\":\"Constructor for the HyperLiquidLZComposer contract\"},\"lzCompose(address,bytes32,bytes,address,bytes)\":{\"notice\":\"Composes a message to be sent to the HyperLiquidLZComposerThis function is the only new addition to the OFT standard\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/HyperLiquidComposer.sol\":\"HyperLiquidComposer\"},\"evmVersion\":\"shanghai\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":20000},\"remappings\":[\":@layerzerolabs/=node_modules/@layerzerolabs/\",\":@openzeppelin/=node_modules/@openzeppelin/\",\":ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/\",\":forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/\",\":solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/\"]},\"sources\":{\"contracts/HyperLiquidComposer.sol\":{\"keccak256\":\"0xb1f74e137e0bda12ee9ac7918cf302fee6d3e131edbba5e531a987da3b915f6e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://974e1ed7195ee811bcd4dbc439e4370191441f86a231f49330c1a8277945cdad\",\"dweb:/ipfs/Qma8dxigqjfsAYpGP56LxWX4RUXSwnLnAEXSJbbJH9PYSi\"]},\"contracts/interfaces/IERC20HyperliquidHopTransferable.sol\":{\"keccak256\":\"0x7bdf9416946fe1599bc4b4bf3229c687ea92c84d5fcc4ede904ab5c60075c113\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://fb37fb2fadf0f8c2fc9c820749d30758912a3ef4b69743e23dff47dfc246b3e1\",\"dweb:/ipfs/QmXsVTHuxAbMPdf3u4915oXPnD9KCS5r5p44fDkeyLqZbt\"]},\"contracts/interfaces/IHyperLiquidComposer.sol\":{\"keccak256\":\"0x1993201137205a55de2d138ca680bdca78a3c9820a9ec7e0b74237b24e9e8b99\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c6ebca26c5504e65e8ec14b7292cf47797a5afa1ae9866a3f1c5912c68542ea5\",\"dweb:/ipfs/QmRwQjxd2Vsav1a7NCD2fm858fiFLLEq6yiyM9SkJVASJX\"]},\"contracts/library/HyperLiquidOFTComposeMsgCodec.sol\":{\"keccak256\":\"0x3c7fdad27c8e1857923943495b8b688f59c30888a7447a0a1c25dc9d7f79fd34\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5e79b0fe8797df598349fc5f06810449a2ad471e0b714170a7b05f3d3b1f22bb\",\"dweb:/ipfs/QmarS5wcDLEfsHuNYBH6WAS3tT7ddfkDUyHS7Vses1GHeH\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol\":{\"keccak256\":\"0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf\",\"dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol\":{\"keccak256\":\"0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083\",\"dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol\":{\"keccak256\":\"0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b\",\"dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol\":{\"keccak256\":\"0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927\",\"dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol\":{\"keccak256\":\"0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d\",\"dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk\"]},\"node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol\":{\"keccak256\":\"0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6\",\"dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol\":{\"keccak256\":\"0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0\",\"dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol\":{\"keccak256\":\"0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2\",\"dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol\":{\"keccak256\":\"0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d\",\"dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx\"]},\"node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol\":{\"keccak256\":\"0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd\",\"dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol\":{\"keccak256\":\"0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4\",\"dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs\"]},\"node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol\":{\"keccak256\":\"0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e\",\"dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK\"]},\"node_modules/@openzeppelin/contracts/access/Ownable.sol\":{\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6\",\"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol\":{\"keccak256\":\"0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b\",\"dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC165.sol\":{\"keccak256\":\"0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a\",\"dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS\"]},\"node_modules/@openzeppelin/contracts/interfaces/IERC20.sol\":{\"keccak256\":\"0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba\",\"dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db\",\"dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9\"]},\"node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol\":{\"keccak256\":\"0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862\",\"dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w\"]},\"node_modules/@openzeppelin/contracts/utils/Address.sol\":{\"keccak256\":\"0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23\",\"dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb\"]},\"node_modules/@openzeppelin/contracts/utils/Context.sol\":{\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12\",\"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF\"]},\"node_modules/@openzeppelin/contracts/utils/Errors.sol\":{\"keccak256\":\"0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf\",\"dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB\"]},\"node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621\",\"dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.22+commit.4fc1097e" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_endpoint",
+              "type": "address"
+            },
+            { "internalType": "address", "name": "_oft", "type": "address" }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            { "internalType": "uint256", "name": "_length", "type": "uint256" }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposer_Codec_InvalidMessage_HasExtraData"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_notEndpointAddress",
+              "type": "address"
+            }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposer_InvalidCall_NotEndpoint"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_internalOFTAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_receivedOFTAddress",
+              "type": "address"
+            }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposer_InvalidCall_NotOFT"
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oft", "type": "address" },
+            { "internalType": "address", "name": "_token", "type": "address" }
+          ],
+          "type": "error",
+          "name": "HyperLiquidComposer_InvalidCall_TokenDoesNotSupportExtension"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "endpoint",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "hyperliquidHopTransferableToken",
+          "outputs": [
+            {
+              "internalType": "contract IERC20HyperliquidHopTransferable",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "address", "name": "_oft", "type": "address" },
+            { "internalType": "bytes32", "name": "", "type": "bytes32" },
+            { "internalType": "bytes", "name": "_message", "type": "bytes" },
+            { "internalType": "address", "name": "", "type": "address" },
+            { "internalType": "bytes", "name": "", "type": "bytes" }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "lzCompose"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "oft",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "constructor": {
+            "details": "This constructor is called by the `HyperLiquidOFT` contractPost deployment, this address needs to be approved (via approveCaller) by the `owner` of the `HyperLiquidOFT` contract to call the `transferToHyperLiquidL1` function",
+            "params": {
+              "_endpoint": "The LayerZero endpoint address",
+              "_oft": "The OFT contract address associated with this composer"
+            }
+          },
+          "lzCompose(address,bytes32,bytes,address,bytes)": {
+            "details": "This function is called by the OFTCore contract when a message is sent",
+            "params": {
+              "_message": "The encoded message content, expected to be of type: (address receiver).",
+              "_oft": "The address of the OFT contract."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "constructor": {
+            "notice": "Constructor for the HyperLiquidLZComposer contract"
+          },
+          "lzCompose(address,bytes32,bytes,address,bytes)": {
+            "notice": "Composes a message to be sent to the HyperLiquidLZComposerThis function is the only new addition to the OFT standard"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@layerzerolabs/=node_modules/@layerzerolabs/",
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "ds-test/=node_modules/@layerzerolabs/toolbox-foundry/lib/ds-test/",
+        "forge-std/=node_modules/@layerzerolabs/toolbox-foundry/lib/forge-std/",
+        "solidity-bytes-utils/contracts/=node_modules/@layerzerolabs/toolbox-foundry/lib/solidity-bytes-utils/"
+      ],
+      "optimizer": { "enabled": true, "runs": 20000 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": {
+        "contracts/HyperLiquidComposer.sol": "HyperLiquidComposer"
+      },
+      "evmVersion": "shanghai",
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/HyperLiquidComposer.sol": {
+        "keccak256": "0xb1f74e137e0bda12ee9ac7918cf302fee6d3e131edbba5e531a987da3b915f6e",
+        "urls": [
+          "bzz-raw://974e1ed7195ee811bcd4dbc439e4370191441f86a231f49330c1a8277945cdad",
+          "dweb:/ipfs/Qma8dxigqjfsAYpGP56LxWX4RUXSwnLnAEXSJbbJH9PYSi"
+        ],
+        "license": "MIT"
+      },
+      "contracts/interfaces/IERC20HyperliquidHopTransferable.sol": {
+        "keccak256": "0x7bdf9416946fe1599bc4b4bf3229c687ea92c84d5fcc4ede904ab5c60075c113",
+        "urls": [
+          "bzz-raw://fb37fb2fadf0f8c2fc9c820749d30758912a3ef4b69743e23dff47dfc246b3e1",
+          "dweb:/ipfs/QmXsVTHuxAbMPdf3u4915oXPnD9KCS5r5p44fDkeyLqZbt"
+        ],
+        "license": "MIT"
+      },
+      "contracts/interfaces/IHyperLiquidComposer.sol": {
+        "keccak256": "0x1993201137205a55de2d138ca680bdca78a3c9820a9ec7e0b74237b24e9e8b99",
+        "urls": [
+          "bzz-raw://c6ebca26c5504e65e8ec14b7292cf47797a5afa1ae9866a3f1c5912c68542ea5",
+          "dweb:/ipfs/QmRwQjxd2Vsav1a7NCD2fm858fiFLLEq6yiyM9SkJVASJX"
+        ],
+        "license": "MIT"
+      },
+      "contracts/library/HyperLiquidOFTComposeMsgCodec.sol": {
+        "keccak256": "0x3c7fdad27c8e1857923943495b8b688f59c30888a7447a0a1c25dc9d7f79fd34",
+        "urls": [
+          "bzz-raw://5e79b0fe8797df598349fc5f06810449a2ad471e0b714170a7b05f3d3b1f22bb",
+          "dweb:/ipfs/QmarS5wcDLEfsHuNYBH6WAS3tT7ddfkDUyHS7Vses1GHeH"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroComposer.sol": {
+        "keccak256": "0xfaca7205d4211ee9208a7e59171e2301731f3d2a20c49b4a839821871f5fdd49",
+        "urls": [
+          "bzz-raw://f254bc60ac26687b5320a43a556e30777b0745abf7cd64d5f4720d9b1d1f7fdf",
+          "dweb:/ipfs/QmRSJEZVgxaC3L2DdE6s8P5qkYfM3V5JMeseeFJJqGR4xz"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/ILayerZeroEndpointV2.sol": {
+        "keccak256": "0xf7f941bee89ea6369950fe54e8ac476ae6478b958b20fc0e8a83e8ff1364eac3",
+        "urls": [
+          "bzz-raw://bacc29fd3866af71e59cb0bdc1cf82c882a4a7f4e2652fd413c9f12649762083",
+          "dweb:/ipfs/QmZh2toLnrQDWaNYhS5K4NoW7Vxd2GdZx9KA77vKEDLAqs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessageLibManager.sol": {
+        "keccak256": "0x919b37133adff4dc528e3061deb2789c3149971b530c61e556fb3d09ab315dfc",
+        "urls": [
+          "bzz-raw://d8ff6a8a89297fa127f86b54e0db3eba1d6a6eeb4f6398d3c84d569665ac8f1b",
+          "dweb:/ipfs/QmVSwhw6xFDrLRAX4RXaCM47yBaBtac4wf36DYEq6KCTvT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingChannel.sol": {
+        "keccak256": "0x0878f64dffebf58c4165569416372f40860fab546b88cd926eba0d5cb6d8d972",
+        "urls": [
+          "bzz-raw://7e1b245d58221d16d8b5e0f01ef3e289a24a7df1ace3b94239e4d5b954ad5927",
+          "dweb:/ipfs/Qmappsgp7PCY9rSSNE9Cdn4BTRX591WfCSEgq2HxhA3z6S"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingComposer.sol": {
+        "keccak256": "0x85bc7090134529ec474866dc4bb1c48692d518c756eb0a961c82574829c51901",
+        "urls": [
+          "bzz-raw://b18b23a1643fc6636c4ad9d9023e2e6ca2d3c2a4a046482d4655bff09950598d",
+          "dweb:/ipfs/Qma6G5SqiovwrMPfgqTrRngK1HWW373Wkf9c6YP2NhXpPk"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/lz-evm-protocol-v2/contracts/interfaces/IMessagingContext.sol": {
+        "keccak256": "0xff0c546c2813dae3e440882f46b377375f7461b0714efd80bd3f0c6e5cb8da4e",
+        "urls": [
+          "bzz-raw://5173fc9143bea314b159ca5a9adb5626659ef763bc598e27de5fa46efe3291a6",
+          "dweb:/ipfs/QmSLFeMFPmVeGxT4sxRPW28ictjAS22M8rLeYRu9TXkA6D"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppCore.sol": {
+        "keccak256": "0x13a9c2d1d2c1f086b8624f2e84c4a4702212daae36f701d92bb915b535cbe4cc",
+        "urls": [
+          "bzz-raw://606515dd9193551bd2c94ac8c304f3776fafcc70e544ebf441f334658b2fd5f0",
+          "dweb:/ipfs/QmZ88ey7DdZqV5taAoebabvszX5kdPMSrQCAmTteVdDtcH"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/OAppSender.sol": {
+        "keccak256": "0x518cf4adca601923ed4baa6619846a253ea32b8d8775f8bc1faa3dfac7f67c20",
+        "urls": [
+          "bzz-raw://d42b471418efadcc3577ef3fa9f8f504e8bed7db90c3b0c862038d8b29529eb2",
+          "dweb:/ipfs/QmZETDQiJN4U92fmLKo8T9ZbdDf7BNBUUvo9H7M7GqAyFU"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol": {
+        "keccak256": "0xe5014c411acb2b59dd74ae74a1bab02cf32d94a41a548a5ab553d64aeeb55dae",
+        "urls": [
+          "bzz-raw://29dfb7bc121002fc7e7931c34eb17af0ae0f0127dcc3199511c83a58a917160d",
+          "dweb:/ipfs/QmPdq1wcRRBdUP169LHCLoLuPRunN9eR71TQN42FjGpowx"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppCore.sol": {
+        "keccak256": "0x40e49f2de74506e1da5dcaed53a39853f691647f4ceb0fccc8f49a68d3f47c58",
+        "urls": [
+          "bzz-raw://4a1deb2a6a3eb1fb83936c9578469142bff470295f403d7d07d955a76be3adbd",
+          "dweb:/ipfs/QmS9bjSfBaE4YhQ1PCQ1TknbEPbNfRXzBK9E7SaPGyiZEv"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol": {
+        "keccak256": "0x7ba6bb62fba7ee83451cfb0e727ddeef0e96b4388bd4e9ff0fc6ce103e1101c8",
+        "urls": [
+          "bzz-raw://cfbd447f2e8a730bd46a14c3c3e6a0b2bf7446145579603a9793ba5ac1dd38b4",
+          "dweb:/ipfs/QmZ4nx4iGrFmBHvYFgki5TXFdCHz4Co38hgdgwpRaM7NLs"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol": {
+        "keccak256": "0xaae73d6eb8b9561c43f1802f3c416c00ccd35f172b711f9781ccdf1b25a40db5",
+        "urls": [
+          "bzz-raw://7beda2d895ae9e15269dd261a492ce0a29b498e5bebf088ed6f2ae6a5185719e",
+          "dweb:/ipfs/QmScog2tW1YVyEPLVcUVqGGc85ub46sA28nUKNzFEZcFdK"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/access/Ownable.sol": {
+        "keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
+        "urls": [
+          "bzz-raw://8ed324d3920bb545059d66ab97d43e43ee85fd3bd52e03e401f020afb0b120f6",
+          "dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC1363.sol": {
+        "keccak256": "0x9b6b3e7803bc5f2f8cd7ad57db8ac1def61a9930a5a3107df4882e028a9605d7",
+        "urls": [
+          "bzz-raw://da62d6be1f5c6edf577f0cb45666a8aa9c2086a4bac87d95d65f02e2f4c36a4b",
+          "dweb:/ipfs/QmNkpvBpoCMvX8JwAFNSc5XxJ2q5BXJpL5L1txb4QkqVFF"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC165.sol": {
+        "keccak256": "0xde7e9fd9aee8d4f40772f96bb3b58836cbc6dfc0227014a061947f8821ea9724",
+        "urls": [
+          "bzz-raw://11fea9f8bc98949ac6709f0c1699db7430d2948137aa94d5a9e95a91f61a710a",
+          "dweb:/ipfs/QmQdfRXxQjwP6yn3DVo1GHPpriKNcFghSPi94Z1oKEFUNS"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/interfaces/IERC20.sol": {
+        "keccak256": "0xce41876e78d1badc0512229b4d14e4daf83bc1003d7f83978d18e0e56f965b9c",
+        "urls": [
+          "bzz-raw://a2608291cb038b388d80b79a06b6118a42f7894ff67b7da10ec0dbbf5b2973ba",
+          "dweb:/ipfs/QmWohqcBLbcxmA4eGPhZDXe5RYMMEEpFq22nfkaUMvTfw1"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+        "keccak256": "0xe06a3f08a987af6ad2e1c1e774405d4fe08f1694b67517438b467cecf0da0ef7",
+        "urls": [
+          "bzz-raw://df6f0c459663c9858b6cba2cda1d14a7d05a985bed6d2de72bd8e78c25ee79db",
+          "dweb:/ipfs/QmeTTxZ7qVk9rjEv2R4CpCwdf8UMCcRqDNMvzNxHc3Fnn9"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+        "keccak256": "0xca2ae13e0610f6a99238dd00b97bd786bc92732dae6d6b9d61f573ec51018310",
+        "urls": [
+          "bzz-raw://75f8c71ce0c91c40dd5f249ace0b7d8270f8f1767231bcf71490f7157d6ba862",
+          "dweb:/ipfs/QmYXgxeDyFHvz3JsXxLEYN6GNUR44ThHeFj5XkpkgMoG4w"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Address.sol": {
+        "keccak256": "0x9d8da059267bac779a2dbbb9a26c2acf00ca83085e105d62d5d4ef96054a47f5",
+        "urls": [
+          "bzz-raw://c78e2aa4313323cecd1ef12a8d6265b96beee1a199923abf55d9a2a9e291ad23",
+          "dweb:/ipfs/QmUTs2KStXucZezzFo3EYeqYu47utu56qrF7jj1Gue65vb"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Context.sol": {
+        "keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+        "urls": [
+          "bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+          "dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/Errors.sol": {
+        "keccak256": "0x6afa713bfd42cf0f7656efa91201007ac465e42049d7de1d50753a373648c123",
+        "urls": [
+          "bzz-raw://ba1d02f4847670a1b83dec9f7d37f0b0418d6043447b69f3a29a5f9efc547fcf",
+          "dweb:/ipfs/QmQ7iH2keLNUKgq2xSWcRmuBE5eZ3F5whYAkAGzCNNoEWB"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x79796192ec90263f21b464d5bc90b777a525971d3de8232be80d9c4f9fb353b8",
+        "urls": [
+          "bzz-raw://f6fda447a62815e8064f47eff0dd1cf58d9207ad69b5d32280f8d7ed1d1e4621",
+          "dweb:/ipfs/QmfDRc7pxfaXB2Dh9np5Uf29Na3pQ7tafRS684wd3GLjVL"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 1
+}
