@@ -3,7 +3,10 @@ pragma solidity ^0.8.0;
 
 // Import necessary interfaces and libraries
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+
 import { IOAppComposer } from "@layerzerolabs/oapp-evm/contracts/oapp/interfaces/IOAppComposer.sol";
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
@@ -16,6 +19,7 @@ import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTCom
  * @dev This contract inherits from IOAppComposer and interacts with Uniswap V3's SwapRouter to execute token swaps.
  */
 contract UniswapV3Composer is IOAppComposer {
+    using SafeERC20 for IERC20;
     /// @notice The Uniswap V3 SwapRouter used to perform token swaps.
     ISwapRouter public immutable swapRouter;
 
@@ -43,11 +47,22 @@ contract UniswapV3Composer is IOAppComposer {
      */
     event SwapExecuted(
         bytes32 indexed srcSender,
+        address recipient,
         address tokenIn,
         address tokenOut,
         uint256 amountIn,
         uint256 amountOut
     );
+
+    /**
+     * @notice Emitted when a token swap fails and the OFT tokens are refunded to the recipient.
+     *
+     * @param srcSender The bytes32 address of the user initiating the swap on the source chain.
+     * @param recipient The address of the recipient of the OFT tokens.
+     * @param tokenIn The address of the ERC20 token being swapped from (OFT).
+     * @param amountIn The amount of `tokenIn` being refunded.
+     */
+    event SwapFailedAndRefunded(bytes32 indexed srcSender, address tokenIn, address recipient, uint256 amountIn);
 
     /**
      * @notice Initializes the UniswapV3Composer contract with necessary parameters.
@@ -86,6 +101,8 @@ contract UniswapV3Composer is IOAppComposer {
      * using Uniswap V3. It ensures that only the authorized OFT and the LayerZero Endpoint can invoke this function.
      *
      * Emits a {SwapExecuted} event upon successful execution of the swap.
+     *
+     * Transfers the OFT tokens directly to the recipient if the swap fails.
      *
      * Requirements:
      *
@@ -129,10 +146,13 @@ contract UniswapV3Composer is IOAppComposer {
             sqrtPriceLimitX96: sqrtPriceLimitX96
         });
 
-        // Execute the swap on Uniswap V3.
-        uint256 amountOut = swapRouter.exactInputSingle(params);
-
-        // Emit an event to log the swap details.
-        emit SwapExecuted(srcSender, tokenIn, tokenOut, amountIn, amountOut);
+        // Attempt to execute the swap on Uniswap V3.
+        try swapRouter.exactInputSingle(params) returns (uint256 amountOut) {
+            emit SwapExecuted(srcSender, recipient, tokenIn, tokenOut, amountIn, amountOut);
+        } catch {
+            // Refund the OFT tokens to the recipient if the swap fails.
+            IERC20(tokenIn).safeTransfer(recipient, amountIn);
+            emit SwapFailedAndRefunded(srcSender, tokenIn, recipient, amountIn);
+        }
     }
 }

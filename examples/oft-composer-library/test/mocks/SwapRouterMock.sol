@@ -3,12 +3,8 @@ pragma solidity ^0.8.20;
 
 // Import the ISwapRouter interface from Uniswap V3 Periphery
 import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
-
 import { IOFT } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
-
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-// Import the ERC20Mock to simulate token behavior
 import { ERC20Mock } from "../mocks/ERC20Mock.sol";
 
 /**
@@ -33,6 +29,9 @@ contract SwapRouterMock is ISwapRouter {
     // Predefined amountOut to return on swaps
     uint256 private predefinedAmountOut;
 
+    // Flag to simulate revert behavior
+    bool public shouldRevert;
+
     /**
      * @notice Initializes the SwapRouterMock with predefined tokens and amountOut.
      * @param _oftIn The OFT address being swapped from.
@@ -54,20 +53,34 @@ contract SwapRouterMock is ISwapRouter {
     }
 
     /**
+     * @notice Sets whether the swap should revert to simulate failure conditions.
+     * @param _shouldRevert If true, the swap will revert.
+     */
+    function setShouldRevert(bool _shouldRevert) external {
+        shouldRevert = _shouldRevert;
+    }
+
+    /**
      * @notice Mocks the exactInputSingle function of Uniswap V3's ISwapRouter.
      * @param params The parameters for the swap, as defined in ISwapRouter.ExactInputSingleParams.
      * @return amountOut The amount of tokenOut received from the swap.
      *
      * @dev This function records the swap parameters and returns a predefined amountOut.
-     *      It also simulates the token transfer by minting tokenOut to the recipient.
+     *      It simulates the token transfer by minting tokenOut to the recipient.
+     *      If shouldRevert is true, it reverts to simulate a swap failure.
      */
     function exactInputSingle(
         ExactInputSingleParams calldata params
     ) external payable override returns (uint256 amountOut) {
-        // Validate amountIn
+        // Simulate a swap failure if requested.
+        if (shouldRevert) {
+            revert("SwapRouterMock: swap reverted as requested");
+        }
+
+        // Validate amountIn.
         require(params.amountIn > 0, "SwapRouterMock: amountIn must be greater than zero");
 
-        // Record the parameters of the swap
+        // Record the parameters of the swap.
         lastSender = msg.sender;
         lastTokenIn = params.tokenIn;
         lastTokenOut = params.tokenOut;
@@ -76,46 +89,36 @@ contract SwapRouterMock is ISwapRouter {
         lastAmountIn = params.amountIn;
         lastAmountOut = predefinedAmountOut;
 
-        // Simulate the transfer of tokenIn from the sender to the SwapRouterMock
+        // Simulate the transfer of tokenIn from the sender to the SwapRouterMock.
         tokenIn.transferFrom(msg.sender, address(this), params.amountIn);
 
-        // Simulate minting tokenOut to the recipient
+        // Simulate minting tokenOut to the recipient.
         tokenOut.mint(params.recipient, predefinedAmountOut);
 
-        // Return the predefined amountOut
+        // Return the predefined amountOut.
         return predefinedAmountOut;
     }
 
-    /**
-     * @notice Mocks other functions from the ISwapRouter interface.
-     * @dev These functions are left unimplemented and will revert if called, indicating they are not supported in the mock.
-     */
+    // The following functions are not implemented in this mock and will revert if called.
 
-    // Swaps with exact input along a specified path
     function exactInput(
         ISwapRouter.ExactInputParams calldata /*params*/
     ) external payable override returns (uint256 /*amountOut*/) {
         revert("SwapRouterMock: exactInput not implemented");
     }
 
-    // Swaps to receive an exact amount of output tokens with single-hop
     function exactOutputSingle(
         ISwapRouter.ExactOutputSingleParams calldata /*params*/
     ) external payable override returns (uint256 /*amountIn*/) {
         revert("SwapRouterMock: exactOutputSingle not implemented");
     }
 
-    // Swaps to receive an exact amount of output tokens along a specified path
     function exactOutput(
         ISwapRouter.ExactOutputParams calldata /*params*/
     ) external payable override returns (uint256 /*amountIn*/) {
         revert("SwapRouterMock: exactOutput not implemented");
     }
 
-    /**
-     * @notice Mocks the uniswapV3SwapCallback function from IUniswapV3SwapCallback.
-     * @dev This mock does not handle actual swap callbacks and will revert if called.
-     */
     function uniswapV3SwapCallback(
         int256 /*amount0Delta*/,
         int256 /*amount1Delta*/,
