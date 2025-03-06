@@ -31,11 +31,11 @@ abstract contract HyperLiquidOFT is OFTCore, ERC20HyperliquidHopTransferable {
         string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) ERC20HyperliquidHopTransferable(_name, _symbol) OFTCore(decimals(), _lzEndpoint, _delegate) {}
+    ) ERC20HyperliquidHopTransferable(_name, _symbol, _delegate) OFTCore(decimals(), _lzEndpoint, _delegate) {}
 
     /// @dev Retrieves the address of the underlying ERC20 implementation.
     /// @dev In the case of OFT, address(this) and erc20 are the same contract.
-    ///
+    /// 
     /// @return The address of the OFT token.
     function token() public view returns (address) {
         return address(this);
