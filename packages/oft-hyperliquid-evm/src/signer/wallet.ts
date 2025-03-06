@@ -3,14 +3,18 @@ import { HYPERLIQUID_URLS, ValueType } from '@/types'
 import axios, { AxiosInstance } from 'axios'
 import { Wallet } from 'ethers'
 
+import { Logger, createLogger } from '@layerzerolabs/io-devtools'
+
 export class HyperliquidClient {
     private readonly client: AxiosInstance
     private readonly baseUrl: string
     private readonly isTestnet: boolean
+    private readonly logger: Logger
 
-    constructor(isTestnet: boolean) {
+    constructor(isTestnet: boolean, logLevel: string) {
         this.baseUrl = isTestnet ? HYPERLIQUID_URLS.TESTNET : HYPERLIQUID_URLS.MAINNET
         this.isTestnet = isTestnet
+        this.logger = createLogger(logLevel)
         this.client = axios.create({
             baseURL: this.baseUrl,
             headers: {
@@ -38,11 +42,10 @@ export class HyperliquidClient {
             vaultAddress: null,
         }
 
-        try {
-            console.log('Sending payload:', JSON.stringify(payload, null, 2))
-            console.log(`Sending to: ${this.baseUrl}${endpoint}`)
+        this.logger.debug(`Sending payload to full url: ${this.baseUrl}${endpoint}`)
+        this.logger.debug(`payload: ${JSON.stringify(payload, null, 2)}`)
 
-            // Direct POST to the full endpoint
+        try {
             const response = await this.client.post(endpoint, payload)
             return response.data
         } catch (error) {

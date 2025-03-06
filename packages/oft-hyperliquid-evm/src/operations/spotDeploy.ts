@@ -7,7 +7,8 @@ export async function requestEvmContract(
     isTestnet: boolean,
     evmSpotTokenAddress: string,
     evmExtraWeiDecimals: number,
-    nativeSpotTokenId: number
+    nativeSpotTokenId: number,
+    logLevel: string
 ) {
     const requestEvmContract: EvmSpotDeployRequest['action']['requestEVMContract'] = {
         type: 'requestEvmContract',
@@ -21,7 +22,7 @@ export async function requestEvmContract(
         requestEVMContract: requestEvmContract,
     }
 
-    const hyperliquidClient = new HyperliquidClient(isTestnet)
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
     const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
     return response
 }
