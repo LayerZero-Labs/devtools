@@ -9,8 +9,7 @@
     "clean": "rm -rf dist",
     "dev": "$npm_execpath tsup --watch",
     "lint": "$npm_execpath eslint '**/*.{js,ts,json}'",
-    "lint:fix": "eslint --fix '**/*.{js,ts,json}'",
-    "test": "$npm_execpath jest"
+    "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "dependencies": {
     "@types/chai": "^4.3.11",
@@ -21,7 +20,9 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.3",
+    "@initia/initia.js": "^0.2.28",
+    "@jest/globals": "^29.7.0",
+    "@layerzerolabs/devtools-extensible-cli": "../devtools-extensible-cli",
     "@layerzerolabs/lz-definitions": "^3.0.40",
     "@layerzerolabs/lz-evm-sdk-v2": "^3.0.27",
     "@layerzerolabs/lz-serdes": "^3.0.19",

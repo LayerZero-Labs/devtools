@@ -22,6 +22,7 @@ describe('simulation/anvil', () => {
                 derivationPath: undefined,
                 state: undefined,
                 stateInterval: undefined,
+                pruneHistory: undefined,
             }
 
             expect(createAnvilCliOptions(anvilOptionsWithEverythingUndefined)).toStrictEqual([])
