@@ -1298,10 +1298,10 @@ importers:
         specifier: ^29.7.0
         version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.3
+        specifier: ../../packages/devtools-extensible-cli
         version: link:../../packages/devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.3
+        specifier: ../../packages/devtools-move
         version: link:../../packages/devtools-move
       '@layerzerolabs/eslint-config-next':
         specifier: ~2.3.39
@@ -1343,7 +1343,7 @@ importers:
         specifier: ^3.1.2
         version: link:../../packages/oft-evm
       '@layerzerolabs/oft-move':
-        specifier: ^0.0.3
+        specifier: ../../packages/oft-move
         version: link:../../packages/oft-move
       '@layerzerolabs/prettier-config-next':
         specifier: ^2.3.39
@@ -2832,8 +2832,14 @@ importers:
       '@aptos-labs/ts-sdk':
         specifier: ^1.33.1
         version: 1.33.2
+      '@initia/initia.js':
+        specifier: ^0.2.28
+        version: 0.2.32(typescript@5.5.3)
+      '@jest/globals':
+        specifier: ^29.7.0
+        version: 29.7.0
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.3
+        specifier: ../devtools-extensible-cli
         version: link:../devtools-extensible-cli
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.40
@@ -3371,10 +3377,10 @@ importers:
         specifier: ^1.33.1
         version: 1.33.2
       '@layerzerolabs/devtools-extensible-cli':
-        specifier: ^0.0.3
+        specifier: ../devtools-extensible-cli
         version: link:../devtools-extensible-cli
       '@layerzerolabs/devtools-move':
-        specifier: ^0.0.3
+        specifier: ../devtools-move
         version: link:../devtools-move
       '@layerzerolabs/lz-definitions':
         specifier: ^3.0.21
@@ -7032,12 +7038,12 @@ packages:
       browser-headers: 0.4.1
       google-protobuf: 3.21.4
 
-  /@initia/initia.js@0.2.24(typescript@5.5.3):
-    resolution: {integrity: sha512-w2u9k/y9Ghof2vsql4rXTUWCBhXMjv1RtEx/c4WKXRrr3lAiCdVL80HarAopVFhQU1XsRLtkwOubSfcdlazMQg==}
+  /@initia/initia.js@0.2.32(typescript@5.5.3):
+    resolution: {integrity: sha512-1cubXNK49tMwEUvRKx2Y962U9rdDQIi9ZKrxibjjkH1YkhA8xan0EDA+Nz0T357zvKMU8p6Pr016/iSfPeq8Bg==}
     engines: {node: '>=20'}
     dependencies:
       '@bitcoinerlab/secp256k1': 1.2.0
-      '@initia/initia.proto': 0.2.4
+      '@initia/initia.proto': 0.2.6
       '@initia/opinit.proto': 0.0.11
       '@ledgerhq/hw-transport': 6.31.4
       '@ledgerhq/hw-transport-webhid': 6.30.0
@@ -7060,8 +7066,8 @@ packages:
       - typescript
       - utf-8-validate
 
-  /@initia/initia.proto@0.2.4:
-    resolution: {integrity: sha512-/QTENbGto8MxoTrYxw0qQFU3IjCeEv3KEmeAmd1DgVzXrLVBimZjSYSW72JfDVQrNaXEeNTCtLjd5ZivWPbcLA==}
+  /@initia/initia.proto@0.2.6:
+    resolution: {integrity: sha512-khiCPUxZTkyAl+SQbQCOlcJId/a0ToUhG+ChrVXN9a+1ypPz5355j2UP2IvnUf+lAix/+zzdekcqO/Lig7htAQ==}
     dependencies:
       '@improbable-eng/grpc-web': 0.15.0(google-protobuf@3.21.4)
       google-protobuf: 3.21.4
@@ -8637,7 +8643,7 @@ packages:
     resolution: {integrity: sha512-PDc3YAdUcNCnFGbQ7oDg1Pja/wt0O+FyRbhwoyTBQdqjNT/hG35KI7sz1yZgAQG0IItzgqKGI/5n4LKMvjZH/Q==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@initia/initia.js': 0.2.24(typescript@5.5.3)
+      '@initia/initia.js': 0.2.32(typescript@5.5.3)
       '@layerzerolabs/lz-definitions': 3.0.66
       '@solana/web3.js': 1.95.8
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
@@ -8666,7 +8672,7 @@ packages:
     resolution: {integrity: sha512-PDc3YAdUcNCnFGbQ7oDg1Pja/wt0O+FyRbhwoyTBQdqjNT/hG35KI7sz1yZgAQG0IItzgqKGI/5n4LKMvjZH/Q==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@initia/initia.js': 0.2.24(typescript@5.5.3)
+      '@initia/initia.js': 0.2.32(typescript@5.5.3)
       '@layerzerolabs/lz-definitions': 3.0.66
       '@solana/web3.js': 1.95.8
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)
@@ -8696,7 +8702,7 @@ packages:
     resolution: {integrity: sha512-PDc3YAdUcNCnFGbQ7oDg1Pja/wt0O+FyRbhwoyTBQdqjNT/hG35KI7sz1yZgAQG0IItzgqKGI/5n4LKMvjZH/Q==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@initia/initia.js': 0.2.24(typescript@5.5.3)
+      '@initia/initia.js': 0.2.32(typescript@5.5.3)
       '@layerzerolabs/lz-definitions': 3.0.66
       '@solana/web3.js': 1.95.8
       '@ton/core': 0.59.0(@ton/crypto@3.3.0)

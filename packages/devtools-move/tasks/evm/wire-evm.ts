@@ -31,7 +31,6 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
     const globalConfigPath = path.resolve(path.join(args.rootDir, args.oapp_config))
     const connectionsToWire = await getConfigConnectionsFromChainType('from', chainType, globalConfigPath)
     const accountConfigs = await getHHAccountConfig(globalConfigPath)
-    const networks = await createEidToNetworkMapping('networkName')
     const rpcUrls = await createEidToNetworkMapping('url')
 
     // Indexed by the eid it contains information about the contract, provider, and configuration of the account and oapp.
@@ -44,22 +43,23 @@ export async function createEvmOmniContracts(args: any, privateKey: string, chai
     for (const conn of connectionsToWire) {
         const fromEid = conn.from.eid
         const toEid = conn.to.eid.toString()
-        const fromNetwork = networks[fromEid]
-        const toNetwork = networks[toEid]
+        const fromNetwork = getNetworkForChainId(fromEid)
+        const toNetwork = getNetworkForChainId(parseInt(toEid))
+        const fromNetworkFolderString = `${fromNetwork.chainName}-${fromNetwork.env}`
+        const toNetworkFolderString = `${toNetwork.chainName}-${toNetwork.env}`
+
         const configOapp = conn?.config
 
         const provider = new ethers.providers.JsonRpcProvider(rpcUrls[fromEid])
         const signer = new ethers.Wallet(privateKey, provider)
 
-        const OAppDeploymentPath = path.resolve(`deployments/${fromNetwork}/${conn.from.contractName}.json`)
+        const OAppDeploymentPath = path.resolve(`deployments/${fromNetworkFolderString}/${conn.from.contractName}.json`)
         const OAppDeploymentData = JSON.parse(fs.readFileSync(OAppDeploymentPath, 'utf8'))
 
-        const WireOAppDeploymentPath = path.resolve(`deployments/${toNetwork}/${conn.to.contractName}.json`)
+        const WireOAppDeploymentPath = path.resolve(`deployments/${toNetworkFolderString}/${conn.to.contractName}.json`)
         const WireOAppDeploymentData = JSON.parse(fs.readFileSync(WireOAppDeploymentPath, 'utf8'))
 
-        const lzFromNetwork = getNetworkForChainId(fromEid)
-        const lzFromNetworkString = `${lzFromNetwork.chainName}-${lzFromNetwork.env}`
-        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(lzFromNetworkString, 'EndpointV2')
+        const EndpointV2DeploymentData = getDeploymentAddressAndAbi(fromNetworkFolderString, 'EndpointV2')
 
         const { address: oappAddress, abi: oappAbi } = OAppDeploymentData
         const { address: epv2Address, abi: epv2Abi } = EndpointV2DeploymentData

@@ -1,103 +1,108 @@
-import { Aptos, AptosConfig } from '@aptos-labs/ts-sdk'
-
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { EndpointId, getNetworkForChainId } from '@layerzerolabs/lz-definitions'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
+import * as readline from 'readline'
 
-import { OFT } from '@layerzerolabs/devtools-move/sdk/oft'
 import { hexAddrToAptosBytesAddr } from '@layerzerolabs/devtools-move/sdk/utils'
-
-import {
-    getEidFromMoveNetwork,
-    getLzNetworkStage,
-    parseYaml,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/aptosNetworkParser'
-import {
-    getContractNameFromLzConfig,
-    getMoveVMOAppAddress,
-    sendAllTxs,
-} from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
-import { toAptosAddress } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
-import { getChain } from '@layerzerolabs/devtools-move/sdk/moveVMConnectionBuilder'
-import { getLzConfig } from '@layerzerolabs/devtools-move/tasks/move/utils/config'
-
+import { sendAllTxs } from '@layerzerolabs/devtools-move/tasks/move/utils/utils'
+import { evmAddressToAptos } from '@layerzerolabs/devtools-move/tasks/move/utils/moveVMOftConfigOps'
+import { TaskContext } from '@layerzerolabs/devtools-move/sdk/baseTaskHelper'
 async function sendFromMoveVm(
+    taskContext: TaskContext,
     amountLd: bigint,
     minAmountLd: bigint,
     toAddress: string,
     gasLimit: bigint,
     dstEid: EndpointId,
-    srcAddress: string,
-    configPath: string
+    srcAddress: string
 ) {
-    const { account_address, private_key, network, fullnode } = await parseYaml()
-    console.log(`Using aptos network ${network}`)
-
-    const aptosConfig = new AptosConfig({ network: network })
-    const aptos = new Aptos(aptosConfig)
-
-    const lzConfig = await getLzConfig(configPath)
-    const chain = getChain(fullnode)
-    const lzNetworkStage = getLzNetworkStage(network)
-    const eid = getEidFromMoveNetwork(chain, network)
-    const contractName = getContractNameFromLzConfig(eid, lzConfig)
-    const aptosOftAddress = getMoveVMOAppAddress(contractName, chain, lzNetworkStage)
-
-    const oft = new OFT(aptos, aptosOftAddress, account_address, private_key, eid)
-
     // Pad EVM address to 64 chars and convert Solana address to Aptos address
-    toAddress = toAptosAddress(toAddress, dstEid.toString())
+    toAddress = evmAddressToAptos(toAddress, dstEid.toString())
     const toAddressBytes = hexAddrToAptosBytesAddr(toAddress)
     const options = Options.newOptions().addExecutorLzReceiveOption(BigInt(gasLimit))
 
-    console.log(`Sending ${amountLd} units`)
-    console.log(`\tUsing OFT at address: ${aptosOftAddress}`)
-    console.log(`\tFrom account: ${srcAddress}`)
-    console.log(`\tTo account: ${toAddress}`)
-    console.log(`\tdstEid: ${dstEid}`)
-    console.log(`\tsrcAddress: ${srcAddress}`)
+    console.log(`🚀 Sending ${amountLd} units`)
+    console.log(`📜 Using OFT at address: ${taskContext.oAppAddress}`)
+    console.log(`👤 From account: ${taskContext.accountAddress}`)
+    console.log(`📫 To account: ${toAddress}`)
+    console.log(`🌐 dstEid: ${dstEid}`)
+    console.log(`📍 srcAddress: ${srcAddress}`)
+    console.log(`🔍 Min amount: ${minAmountLd}`)
 
     const extra_options = options.toBytes()
     const compose_message = new Uint8Array([])
     const oft_cmd = new Uint8Array([])
 
-    const [nativeFee, zroFee] = await oft.quoteSend(
-        srcAddress,
-        dstEid,
-        toAddressBytes,
-        amountLd,
-        minAmountLd,
-        extra_options,
-        compose_message,
-        oft_cmd,
-        false
-    )
+    try {
+        const [nativeFee, zroFee] = await taskContext.oft.quoteSend(
+            srcAddress,
+            dstEid,
+            toAddressBytes,
+            amountLd,
+            minAmountLd,
+            extra_options,
+            compose_message,
+            oft_cmd,
+            false
+        )
 
-    console.log('\nQuote received:')
-    console.log('- Native fee:', nativeFee)
-    console.log('- ZRO fee:', zroFee)
+        console.log('\n💰 Quote received:')
+        console.log('💸 Native fee:', nativeFee)
+        console.log('🪙 ZRO fee:', zroFee)
 
-    const sendPayload = oft.sendPayload(
-        dstEid,
-        toAddressBytes,
-        amountLd,
-        minAmountLd,
-        extra_options,
-        compose_message,
-        oft_cmd,
-        nativeFee,
-        0
-    )
+        const sendPayload = taskContext.oft.sendPayload(
+            dstEid,
+            toAddressBytes,
+            amountLd,
+            minAmountLd,
+            extra_options,
+            compose_message,
+            oft_cmd,
+            nativeFee,
+            0
+        )
 
-    const payloads = [{ payload: sendPayload, description: 'Send Aptos OFT', eid: dstEid }]
-    await sendAllTxs(aptos, oft, srcAddress, payloads)
+        const payloads = [{ payload: sendPayload, description: 'Send Aptos OFT', eid: dstEid }]
+        await sendAllTxs(taskContext.moveVMConnection, taskContext.oft, srcAddress, payloads)
+    } catch (error) {
+        const errorString = (error instanceof Error ? error.message : String(error)).toLowerCase()
 
-    const balance = await aptos.view({
-        payload: {
-            function: `${aptosOftAddress}::oft::balance`,
-            functionArguments: [srcAddress],
-        },
-    })
-    console.log('New balance:', balance)
+        if (errorString.includes('arithmetic_error')) {
+            console.error(
+                '\n\n\x1b[31m❌ Arithmetic Error Received. Most likely the OFT has not been initialized.\x1b[0m'
+            )
+            console.log(
+                '\n💡 Please set your configuration values in deploy-move/OFTInitParams.ts and then run the following command:'
+            )
+            console.log(
+                'pnpm run lz:sdk:move:init-fa --oapp-config move.layerzero.config.ts --move-deploy-script deploy-move/OFTInitParams.ts'
+            )
+        } else if (errorString.includes('invalid_input')) {
+            const srcNetwork = getNetworkForChainId(taskContext.srcEid)
+            const dstNetwork = getNetworkForChainId(dstEid)
+            console.error(
+                `\n\n\x1b[31m❌ Invalid Input Error Received. Most likely the OFT has not been wired between ${srcNetwork.chainName}-${srcNetwork.env} and ${dstNetwork.chainName}-${dstNetwork.env}.\x1b[0m`
+            )
+            console.log('\n💡 Try running the following commands:')
+            console.log('pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts')
+            console.log('pnpm run lz:sdk:evm:wire --oapp-config move.layerzero.config.ts')
+        }
+
+        console.log('\nWould you like to see the full error? (y/n)')
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        })
+
+        await new Promise<void>((resolve) => {
+            rl.question('', (answer) => {
+                if (answer.toLowerCase() === 'y') {
+                    console.log('\nFull error:', error)
+                }
+                rl.close()
+                resolve()
+            })
+        })
+    }
 }
 
 export { sendFromMoveVm }
