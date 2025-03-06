@@ -1,6 +1,7 @@
-import { NativeSpots, NativeSpot } from '@/types'
 import fs from 'fs'
 import path from 'path'
+
+import { NativeSpot, NativeSpots } from '@/types'
 
 export function getNativeSpot(nativeSpots: NativeSpots, key: string): NativeSpot {
     for (const spot of Object.values(nativeSpots)) {

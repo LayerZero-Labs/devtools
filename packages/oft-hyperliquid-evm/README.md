@@ -19,13 +19,13 @@
 ## Installation
 
 ```bash
-pnpm install @layerzerolabs/oft-evm
+pnpm install @layerzerolabs/oft-hyperliquid-evm
 ```
 
 ```bash
-yarn install @layerzerolabs/oft-evm
+yarn install @layerzerolabs/oft-hyperliquid-evm
 ```
 
 ```bash
-npm install @layerzerolabs/oft-evm
+npm install @layerzerolabs/oft-hyperliquid-evm
 ```

@@ -1,6 +1,6 @@
-import { Wallet } from 'ethers'
 import { HyperliquidClient } from '@/signer'
 import { EvmSpotDeployRequest } from '@/types'
+import { Wallet } from 'ethers'
 
 export async function requestEvmContract(
     wallet: Wallet,
