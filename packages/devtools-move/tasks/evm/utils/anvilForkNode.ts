@@ -23,8 +23,8 @@ class AnvilForkNode {
 
     // Start the Anvil fork nodes at incremental ports
     public async startNodes(): Promise<Record<string, string>> {
-        // const numPorts = Object.keys(this.eidRpcMap).length
-        // await this.checkFreePorts(this.startingPort, numPorts)
+        const numPorts = Object.keys(this.eidRpcMap).length
+        await this.checkFreePorts(this.startingPort, numPorts)
 
         for (const [eid, rpcUrl] of Object.entries(this.eidRpcMap)) {
             console.log(`Starting Anvil node on port ${this.startingPort} using fork URL ${rpcUrl}...`)
@@ -39,9 +39,14 @@ class AnvilForkNode {
 
     // Method to start an individual Anvil fork node
     private startAnvilForkNode(forkUrl: string, port: string): Promise<AnvilNode> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const anvilNode = spawn('anvil', ['--fork-url', forkUrl, '--port', port], {
-                stdio: 'ignore', // Silence output so you don't see the logs
+                stdio: ['ignore', 'ignore', 'pipe'], // Capture only stderr for errors
+            })
+
+            // Handle all potential errors
+            anvilNode.on('error', (err) => {
+                reject(new Error(`Failed to start Anvil: ${err.message}`))
             })
 
             // Wait for the node to start
@@ -51,6 +56,25 @@ class AnvilForkNode {
                     rpcUrl: `http://127.0.0.1:${port}`,
                 })
             }, 1000)
+        })
+    }
+
+    private async checkFreePort(port: number): Promise<boolean> {
+        return new Promise((resolve) => {
+            const server = net.createServer()
+
+            server.once('error', () => {
+                resolve(false)
+            })
+
+            server.once('listening', () => {
+                server.close()
+                server.once('close', () => {
+                    resolve(true)
+                })
+            })
+
+            server.listen(port, '127.0.0.1')
         })
     }
 
@@ -65,14 +89,6 @@ class AnvilForkNode {
         return true
     }
 
-    private async checkFreePort(port: number): Promise<boolean> {
-        return new Promise((resolve) => {
-            const server = net.createServer()
-            server.on('error', () => resolve(false))
-            server.listen(port, () => resolve(true))
-            server.close()
-        })
-    }
     // Method to stop all running Anvil fork nodes
     public killNodes(): void {
         for (const node of this.nodes) {

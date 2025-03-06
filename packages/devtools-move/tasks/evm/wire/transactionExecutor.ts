@@ -51,7 +51,7 @@ export async function executeTransactions(
     }
 
     console.log(`\n📦 Transaction Summary:`)
-    console.log(`   • Total chains: ${num_chains}`)
+    console.log(`   • Total EVM chains: ${num_chains}`)
     console.log(`   • Total transactions: ${totalTransactions}`)
     console.log(`   • Mode: ${executionMode}`)
 

@@ -62,8 +62,8 @@ dvn_fee_lib_0 = "0x100003"
 dvn = "0x100002"
 
 [dependencies.AptosFramework]
-git = "https://github.com/aptos-labs/aptos-core.git"
-rev = "mainnet"
+git = "https://github.com/movementlabsxyz/aptos-core.git"
+rev = "movement-cli-v3.5.0"
 subdir = "aptos-move/framework/aptos-framework"
 
 [dependencies]
