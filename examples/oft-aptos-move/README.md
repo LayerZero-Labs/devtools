@@ -35,24 +35,15 @@ Install dependencies and build the project:
 
 ```bash
 pnpm install
+
+cd examples/oft-aptos-move
+
 pnpm turbo build --force
 ```
 
 ## Move-VM OFT Setup and Deployment
 
-### Connecting to Aptos via CLI
-
-After installing the aptos cli, you can set the aptos cli path in the .env file. This allows you to have two different aptos cli versions installed on your machine and not have to switch between them for deployments.
-
-For example:
-
-```bash
-# if installed globally, the aptos command will be available in your PATH:
-APTOS_COMPATIBLE_APTOS_CLI_PATH=aptos
-
-# if installed from source the aptos command path to the aptos binary must be specified:
-MOVEMENT_COMPATIBLE_APTOS_CLI_PATH=/Users/your-username/Documents/aptos-core/target/cli/aptos
-```
+### Connecting to Move-VM via Aptos CLI
 
 If you need to generate a new key, run the following command:
 
@@ -99,12 +90,10 @@ MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
 MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1
 MOVEMENT_ACCOUNT_ADDRESS=<your-movement-account-address>
 MOVEMENT_PRIVATE_KEY=<your-movement-private-key>
-MOVEMENT_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 
 # If you are deploying to Aptos chain
 APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
 APTOS_PRIVATE_KEY=<your-aptos-private-key>
-APTOS_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 ```
 
 Then run `source .env` in order for your values to be mapped.

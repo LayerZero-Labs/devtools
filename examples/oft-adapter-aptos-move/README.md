@@ -35,12 +35,15 @@ Install dependencies and build the project:
 
 ```bash
 pnpm install
+
+cd examples/oft-adapter-aptos-move
+
 pnpm turbo build --force
 ```
 
 ## Move-VM OFT Adapter Setup and Deployment
 
-### Connecting to Aptos via CLI
+### Connecting to Move-VM via Aptos CLI
 
 If you need to generate a new key, run the following command:
 
@@ -85,12 +88,10 @@ MOVEMENT_INDEXER_URL=https://indexer.testnet.movementnetwork.xyz/v1/graphql
 MOVEMENT_FULLNODE_URL=https://aptos.testnet.bardock.movementlabs.xyz/v1
 MOVEMENT_ACCOUNT_ADDRESS=<your-movement-account-address>
 MOVEMENT_PRIVATE_KEY=<your-movement-private-key>
-MOVEMENT_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 
 # If you are deploying to Aptos chain
 APTOS_ACCOUNT_ADDRESS=<your-aptos-account-address>
 APTOS_PRIVATE_KEY=<your-aptos-private-key>
-APTOS_COMPATIBLE_APTOS_CLI_PATH=<path-to-aptos-cli>
 ```
 
 Then run `source .env` in order for your values to be mapped.

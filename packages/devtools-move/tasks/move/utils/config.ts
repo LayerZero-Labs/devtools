@@ -291,10 +291,10 @@ async function getAptosVersion(aptosCommand: string): Promise<string> {
 }
 
 export async function getAptosCLICommand(chain: string, stage: string): Promise<string> {
-    const aptosCommand = getAptosCommand(chain, stage)
+    const aptosCommand = 'aptos'
+    const version = await getAptosVersion(aptosCommand)
     if (chain === 'aptos') {
         console.log('Aptos chain detected')
-        const version = await getAptosVersion(aptosCommand)
         const MIN_VERSION = '6.0.1'
 
         if (greaterThanOrEqualTo(version, MIN_VERSION)) {
@@ -303,7 +303,6 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
             throw Error(`❌ Aptos CLI version too old. Required: ${MIN_VERSION} or newer, Found: ${version}`)
         }
     } else if (chain === 'movement') {
-        const version = await getAptosVersion(aptosCommand)
         const MAX_VERSION = '3.5.0'
 
         if (lessThanOrEqualTo(version, MAX_VERSION)) {
@@ -315,30 +314,6 @@ export async function getAptosCLICommand(chain: string, stage: string): Promise<
         throw new Error(`Chain ${chain}-${stage} not supported for build.`)
     }
     return aptosCommand
-}
-
-function getAptosCommand(chain: string, stage: string): string {
-    if (chain === 'aptos') {
-        if (process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH) {
-            console.log(`🚀 Using Aptos CLI from ${process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH}`)
-            return process.env.APTOS_COMPATIBLE_APTOS_CLI_PATH
-        } else {
-            throw new Error(
-                'Aptos CLI path not found. Please set the APTOS_COMPATIBLE_APTOS_CLI_PATH environment variable.'
-            )
-        }
-    } else if (chain === 'movement') {
-        if (process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH) {
-            console.log(`🚀 Using Aptos CLI from ${process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH}`)
-            return process.env.MOVEMENT_COMPATIBLE_APTOS_CLI_PATH
-        } else {
-            throw new Error(
-                'Aptos CLI path not found. Please set the MOVEMENT_COMPATIBLE_APTOS_CLI_PATH environment variable.'
-            )
-        }
-    } else {
-        throw new Error(`Chain ${chain}-${stage} not supported for build.`)
-    }
 }
 
 function greaterThanOrEqualTo(installed: string, required: string): boolean {
