@@ -57,11 +57,6 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_BSC || 'https://bsc-testnet.public.blastapi.io',
             accounts,
         },
-        'aptos-testnet': {
-            eid: EndpointId.APTOS_V2_TESTNET,
-            url: process.env.RPC_URL_APTOS_TESTNET || 'https://rpc.ankr.com/http/aptos_testnet/v1[1]',
-            accounts,
-        },
         'eth-testnet': {
             eid: EndpointId.ETHEREUM_V2_TESTNET,
             url: process.env.RPC_URL_ETHEREUM_TESTNET || 'https://sepolia.infura.io/v3/',

@@ -63,7 +63,7 @@ export { NewOperation }
 async function sendOFT(args: any): Promise<MessagingFee> {
     const srcEid = args.src_eid
     const dstEid = args.dst_eid
-    const to = args.to
+    const to = ethers.utils.hexZeroPad(args.to, 32)
     const amount = args.amount
     const minAmount = args.min_amount
 

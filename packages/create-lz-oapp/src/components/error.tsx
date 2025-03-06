@@ -18,7 +18,9 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   config,
   error,
 }) => {
-  if (error == null) return null;
+  if (error == null) {
+    return null;
+  }
 
   switch (true) {
     case error instanceof DestinationNotEmptyError:

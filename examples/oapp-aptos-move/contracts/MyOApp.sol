@@ -52,7 +52,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
      * @dev Internal function override to handle incoming messages from another chain.
      * @dev _origin A struct containing information about the message sender.
      * @dev _guid A unique global packet identifier for the message.
-     * @param payload The encoded message payload being received.
+     * @dev payload The encoded message payload being received.
      *
      * @dev The following params are unused in the current implementation of the OApp.
      * @dev _executor The address of the Executor responsible for processing the message.
@@ -63,7 +63,7 @@ contract MyOApp is OApp, OAppOptionsType3 {
     function _lzReceive(
         Origin calldata /*_origin*/,
         bytes32 /*_guid*/,
-        bytes calldata payload,
+        bytes calldata /*payload*/,
         address /*_executor*/,
         bytes calldata /*_extraData*/
     ) internal override {

@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@aptos-labs/ts-sdk": "^1.33.1",
-    "@layerzerolabs/devtools-extensible-cli": "^0.0.3",
-    "@layerzerolabs/devtools-move": "^0.0.3",
+    "@layerzerolabs/devtools-extensible-cli": "../devtools-extensible-cli",
+    "@layerzerolabs/devtools-move": "../devtools-move",
     "@layerzerolabs/lz-definitions": "^3.0.21",
     "@layerzerolabs/lz-v2-utilities": "^3.0.12",
     "@layerzerolabs/prettier-config-next": "^2.3.39",

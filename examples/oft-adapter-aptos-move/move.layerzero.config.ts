@@ -13,13 +13,8 @@ const bscContract: OmniPointHardhat = {
     contractName: 'MyOFT',
 }
 
-const aptosContract: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_TESTNET,
-    contractName: 'MyOFT',
-}
-
-const aptosContract2: OmniPointHardhat = {
-    eid: EndpointId.APTOS_V2_MAINNET,
+const movementContract: OmniPointHardhat = {
+    eid: EndpointId.MOVEMENT_V2_TESTNET,
     contractName: 'MyOFT',
 }
 
@@ -33,14 +28,7 @@ const config: OAppOmniGraphHardhat = {
             },
         },
         {
-            contract: aptosContract,
-            config: {
-                delegate: '',
-                owner: '',
-            },
-        },
-        {
-            contract: aptosContract2,
+            contract: movementContract,
             config: {
                 delegate: '',
                 owner: '',
@@ -49,7 +37,7 @@ const config: OAppOmniGraphHardhat = {
     ],
     connections: [
         {
-            from: aptosContract,
+            from: movementContract,
             to: bscContract,
             config: {
                 enforcedOptions: [
@@ -86,7 +74,7 @@ const config: OAppOmniGraphHardhat = {
                     },
                     ulnConfig: {
                         // The number of block confirmations to wait on Aptos before emitting the message from the source chain.
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(5),
                         // The address of the DVNs you will pay to verify a sent message on the source chain.
                         // The destination tx will wait until ALL `requiredDVNs` verify the message.
                         requiredDVNs: ['0x756f8ab056688d22687740f4a9aeec3b361170b28d08b719e28c4d38eed1043e'],
@@ -117,7 +105,7 @@ const config: OAppOmniGraphHardhat = {
         },
         {
             from: bscContract,
-            to: aptosContract,
+            to: movementContract,
             config: {
                 enforcedOptions: [
                     {
@@ -155,7 +143,7 @@ const config: OAppOmniGraphHardhat = {
                 },
                 receiveConfig: {
                     ulnConfig: {
-                        confirmations: BigInt(260),
+                        confirmations: BigInt(5),
                         requiredDVNs: ['0x0eE552262f7B562eFcED6DD4A7e2878AB897d405'],
                         optionalDVNThreshold: 0,
                     },
