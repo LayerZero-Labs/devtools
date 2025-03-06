@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.22;
+pragma solidity ^0.8.20;
 
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { HyperLiquidOFT } from "@layerzerolabs/oft-hyperliquid-evm/contracts/HyperLiquidOFT.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract MyHyperLiquidOFT is HyperLiquidOFT {
     constructor(
@@ -10,8 +10,8 @@ contract MyHyperLiquidOFT is HyperLiquidOFT {
         string memory _symbol,
         address _lzEndpoint,
         address _delegate
-    ) HyperLiquidOFT(_name, _symbol, _lzEndpoint, _delegate) {
-        _mint(msg.sender, 100e18);
+    ) HyperLiquidOFT(_name, _symbol, _lzEndpoint, _delegate) Ownable(_delegate) {
+        _mint(_delegate, 100e18);
     }
 
     function mint(address _to, uint256 _amount) public virtual {
