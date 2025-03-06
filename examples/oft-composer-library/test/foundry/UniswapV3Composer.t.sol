@@ -214,6 +214,84 @@ contract UniswapV3ComposerTest is TestHelperOz5 {
     }
 
     /**
+     * @notice Tests the fallback logic in `lzCompose` when the swap fails.
+     *
+     * This test simulates a swap failure by setting the SwapRouterMock to revert.
+     * In that case, the fallback logic in the catch block should transfer the full token amount
+     * from the composer to the specified recipient.
+     */
+    function test_lzCompose_Fallback() public {
+        // ------------------------------
+        // 1. Prepare the Compose Message
+        // ------------------------------
+        uint24 fee = 3000; // Example fee tier
+        uint256 swapAmountOutMinimum = 100; // Example minimum amount out
+        uint160 swapSqrtPriceLimitX96 = 0; // Example: no price limit
+
+        // Compose message now encodes:
+        // (tokenOut, fee, recipient, amountOutMinimum, sqrtPriceLimitX96)
+        bytes memory composeMsg = abi.encode(
+            address(bTokenOut),
+            fee,
+            receiver,
+            swapAmountOutMinimum,
+            swapSqrtPriceLimitX96
+        );
+
+        // The full message now prepends the source sender (userA) to the composed payload.
+        // addressToBytes32(userA) converts the source sender's address to a bytes32 representation.
+        bytes memory fullMessage = OFTComposeMsgCodec.encode(
+            1, // _nonce: unique identifier
+            aEid, // _srcEid: source endpoint ID
+            swapAmountIn, // _amountLD: amount to be swapped
+            abi.encodePacked(addressToBytes32(userA), composeMsg)
+        );
+
+        // ------------------------------
+        // 2. Configure the SwapRouterMock to Revert
+        // ------------------------------
+        // Instruct the mock to revert when swapRouter.exactInputSingle() is called.
+        // This simulates a condition where the swap fails (e.g., slippage exceeded).
+        bSwapRouter.setShouldRevert(true);
+
+        // Capture initial tokenIn balances for later verification.
+        uint256 initialComposerBalance = IERC20(bOFT.token()).balanceOf(address(bComposer));
+        uint256 initialReceiverBalance = IERC20(bOFT.token()).balanceOf(receiver);
+
+        // ------------------------------
+        // 3. Simulate Sending the Message
+        // ------------------------------
+        // Prank as the authorized endpoint to call lzCompose.
+        vm.prank(address(endpoints[bEid]));
+
+        // Execute lzCompose with the encoded full message.
+        bComposer.lzCompose(
+            address(bOFT), // The originating OFT address.
+            bytes32(0), // guid (unused in this test)
+            fullMessage,
+            address(this), // executor (unused in this test)
+            bytes("") // extraData (unused in this test)
+        );
+
+        // ------------------------------
+        // 4. Verify Fallback Logic Execution
+        // ------------------------------
+        // Since the swap reverted, the catch block should have transferred swapAmountIn of tokenIn
+        // directly from bComposer to the receiver.
+        assertEq(
+            IERC20(bOFT.token()).balanceOf(address(bComposer)),
+            initialComposerBalance - swapAmountIn,
+            "bComposer TokenIn balance incorrect after fallback transfer"
+        );
+
+        assertEq(
+            IERC20(bOFT.token()).balanceOf(receiver),
+            initialReceiverBalance + swapAmountIn,
+            "Receiver TokenIn balance incorrect after fallback transfer"
+        );
+    }
+
+    /**
      * @notice Tests that `lzCompose` reverts when called with an unauthorized OFT.
      * @dev Attempts to invoke `lzCompose` with a different OFT address and expects a revert.
      */
