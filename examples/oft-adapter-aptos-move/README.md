@@ -12,14 +12,18 @@ cd examples/oft-adapter-aptos-move
 
 Install the Aptos CLI (required for deployment):
 
+Aptos does not have native version management capabilities. To simplify the installation process, LayerZero has developed an Aptos CLI Version Manager.
+
+Clone the repository and follow the instructions in its README.md:
+
 ```bash
-brew install aptos
+git clone https://github.com/LayerZero-Labs/aptosup
 ```
 
 > **Important:** Version requirements:
 >
-> - For Aptos chain: Use version 6.0.1 (installable via brew)
-> - For Movement chain: Use version 3.5.0 (must be built from source following the [Aptos CLI Build Guide](https://aptos.dev/en/network/nodes/building-from-source/))
+> - For Aptos chain: Use version 6.0.1
+> - For Movement chain: Use version 3.5.0
 
 Set pnpm to the required version:
 

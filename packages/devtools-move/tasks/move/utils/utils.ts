@@ -357,6 +357,7 @@ export async function sendInitTransaction(
         }
     }
 }
+
 function printExplorerLink(eid: EndpointId, txHash: string, network: { env: string }): void {
     let link = ''
     if (eid === EndpointId.APTOS_V2_TESTNET || eid === EndpointId.APTOS_V2_MAINNET) {
