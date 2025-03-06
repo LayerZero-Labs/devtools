@@ -22,3 +22,5 @@ pnpm-error.log
 # Editor and OS files
 .DS_Store
 .idea
+
+deployments/nativeSpot.ts
