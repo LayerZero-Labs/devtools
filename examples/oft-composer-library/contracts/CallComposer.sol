@@ -40,21 +40,10 @@ contract CallComposer is IOAppComposer {
     error InvalidTarget();
 
     /// @notice Emitted when an arbitrary call is successfully executed.
-    event CallExecuted(
-        bytes32 indexed srcSender,
-        address target,
-        address token,
-        uint256 amount,
-        bytes result
-    );
+    event CallExecuted(bytes32 indexed srcSender, address target, address token, uint256 amount, bytes result);
 
     /// @notice Emitted when an arbitrary call fails and the tokens are refunded.
-    event CallFailedAndRefunded(
-        bytes32 indexed srcSender,
-        address token,
-        address refundReceiver,
-        uint256 amount
-    );
+    event CallFailedAndRefunded(bytes32 indexed srcSender, address token, address refundReceiver, uint256 amount);
 
     /**
      * @notice Initializes the CallComposer contract.
