@@ -35,9 +35,6 @@ Install dependencies and build the project:
 
 ```bash
 pnpm install
-
-cd examples/oft-aptos-move
-
 pnpm turbo build --force
 ```
 
