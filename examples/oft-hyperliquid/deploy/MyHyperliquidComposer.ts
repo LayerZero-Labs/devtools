@@ -6,7 +6,7 @@ import { type DeployFunction } from 'hardhat-deploy/types'
 
 import { getNativeSpot, requestEvmContract, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
 
-import { nativeSpots } from './nativeSpot'
+import { nativeSpots } from '../deployments/nativeSpot'
 
 const contractName_composer = 'MyHyperLiquidComposer'
 
