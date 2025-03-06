@@ -9,10 +9,11 @@ import { IOFT, SendParam, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/in
 import { MessagingFee, MessagingReceipt } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { MyHyperLiquidOFT } from "../../contracts/MyHyperLiquidOFT.sol";
-import { MyOFTComposer } from "../../contracts/MyOFTComposer.sol";
+import { MyHyperLiquidOFTMock as MyHyperLiquidOFT } from "../../contracts/mocks/MyHyperLiquidOFTMock.sol";
+import { MyHyperLiquidComposer } from "../../contracts/MyHyperLiquidComposer.sol";
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import { IERC20HyperliquidHopTransferable, IERC20 } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IERC20HyperliquidHopTransferable.sol";
+import { ERC20HyperliquidHopTransferable } from "@layerzerolabs/oft-hyperliquid-evm/contracts/ERC20HyperliquidHopTransferable.sol";
 
 import { console } from "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
@@ -31,7 +32,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
     MyHyperLiquidOFT internal srcOFT;
     MyHyperLiquidOFT internal dstOFT;
 
-    MyOFTComposer internal dstLZComposer;
+    MyHyperLiquidComposer internal dstLZComposer;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
@@ -50,7 +51,7 @@ contract MyHyperLiquidOFTTest is TestHelperOz5 {
         srcOFT = new MyHyperLiquidOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
         dstOFT = new MyHyperLiquidOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
-        dstLZComposer = new MyOFTComposer(address(endpoints[DST_EID]), address(dstOFT));
+        dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT));
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
