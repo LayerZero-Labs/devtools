@@ -211,3 +211,24 @@ This will give you the spot meta data for the Hyperliquid L1. (this is an exampl
 The `tokenId` is the address of the token on the HyperLiquid L1.
 The `evmContract` is the address of the token on the HyperEVM.
 The `deployerTradingFeeShare` is the fee share for the deployer of the token.
+
+## Hyperliquid L1 Actions
+
+You need to use ethers-v6 to sign the actions - <https://docs.ethers.org/v6/api/providers/#Signer-signTypedData>
+
+```bash
+# add ethers-v6 to your project as an alias for ethers@^6.13.5
+pnpm add ethers-v6@npm:ethers@^6.13.5
+```
+
+```ts
+import { Wallet } from 'ethers' // ethers-v5 wallet
+import { Wallet as ethersV6Wallet } from 'ethers-v6' // ethers-v6 wallet
+
+const signerv6 = new ethersV6Wallet(wallet.privateKey) // where wallet is an ethers.Wallet from ethers-v5
+const signature = await signerv6.signTypedData(domain, types, message)
+```
+
+This is because in ethers-v5 EIP-712 signing is not stable. - <https://docs.ethers.org/v5/api/signer/#Signer-signTypedData>
+> Experimental feature (this method name will change)
+> This is still an experimental feature. If using it, please specify the exact version of ethers you are using (e.g. spcify "5.0.18", not "^5.0.18") as the method name will be renamed from _signTypedData to signTypedData once it has been used in the field a bit.
