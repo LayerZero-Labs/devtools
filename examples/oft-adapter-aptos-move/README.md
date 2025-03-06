@@ -204,6 +204,8 @@ If `--only-calldata <true>` is specified, only the calldata is generated and not
 
 ### To wire from Move-VM to EVM:
 
+> **⚠️ Important Security Consideration:** When configuring your `move.layerzero.config.ts` file, pay careful attention to the `confirmations` parameter. This value determines the number of block confirmations to wait on Aptos before emitting the message from the source chain. The default value of `5` is for illustration purposes only. For production deployments, it is critical to select an appropriate confirmation value based on your security requirements and risk assessment. Default recommended values can be found at: https://layerzeroscan.com/tools/defaults
+
 ```bash
 pnpm run lz:sdk:move:wire --oapp-config move.layerzero.config.ts
 ```
