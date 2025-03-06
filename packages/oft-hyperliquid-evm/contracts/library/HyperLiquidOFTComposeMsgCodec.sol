@@ -9,7 +9,7 @@ library HyperLiquidOFTComposeMsgCodec {
     /// @dev We are in encodePacked mode, if we are in encode mode, the length is 42 bytes
     uint256 public constant VALID_COMPOSE_MESSAGE_LENGTH_PACKED = 20;
 
-    error HyperLiquidComposer_Codec_InvalidMessage_HasExtraData(bytes _message, uint256 _length);
+    error HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(bytes message, uint256 length);
 
     function validateAndDecodeMessage(
         bytes calldata _composeMessage
@@ -19,7 +19,7 @@ library HyperLiquidOFTComposeMsgCodec {
         // Addresses in EVM are 20 bytes
         // So if the message's length is not 20 bytes, we can pre-emptively revert
         if (message.length != VALID_COMPOSE_MESSAGE_LENGTH_PACKED) {
-            revert HyperLiquidComposer_Codec_InvalidMessage_HasExtraData(message, message.length);
+            revert HyperLiquidComposer_Codec_InvalidMessage_UnexpectedLength(message, message.length);
         }
 
         // Since we are encodePacked, we can just decode the first 20 bytes as an address
