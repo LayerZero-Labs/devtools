@@ -18,9 +18,9 @@
     "lint:fix": "eslint --fix '**/*.{js,ts,json}'"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/toolbox-foundry": "^0.1.12",
     "@openzeppelin/contracts": "^5.0.2",
     "@openzeppelin/contracts-upgradeable": "^5.0.2",
@@ -30,9 +30,9 @@
     "typescript": "^5.4.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
-    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
+    "@layerzerolabs/lz-evm-messagelib-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-protocol-v2": "^3.0.75",
+    "@layerzerolabs/lz-evm-v1-0.7": "^3.0.75",
     "@layerzerolabs/oapp-evm": "^0.3.1",
     "@layerzerolabs/oft-evm": "^3.1.2",
     "@openzeppelin/contracts": "^4.9.5 || ^5.0.0",
