@@ -33,7 +33,7 @@
     "@scure/bip39": "~1.2.2"
   },
   "devDependencies": {
-    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
     "bs58": "^6.0.0",
     "fast-check": "^3.15.1",
     "ts-node": "^10.9.2",
@@ -42,7 +42,7 @@
     "typescript": "^5.4.4"
   },
   "peerDependencies": {
-    "@layerzerolabs/lz-definitions": "^3.0.59",
+    "@layerzerolabs/lz-definitions": "^3.0.75",
     "bs58": "^6.0.0",
     "fast-check": "^3.14.0"
   },
