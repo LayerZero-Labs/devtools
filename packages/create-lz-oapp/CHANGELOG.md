@@ -1,5 +1,15 @@
 # create-lz-oapp
 
+## 0.7.0
+
+### Minor Changes
+
+- 24311f8: adding initia and move example
+
+### Patch Changes
+
+- 24311f8: Minor bug fixes
+
 ## 0.6.0
 
 ### Minor Changes

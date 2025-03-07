@@ -1,6 +1,6 @@
 {
   "name": "decode-lz-options",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Decode LayerZero options with one command",
   "keywords": [
     "LayerZero",
@@ -34,8 +34,8 @@
   },
   "devDependencies": {
     "@ethersproject/address": "~5.7.0",
-    "@layerzerolabs/devtools": "~0.4.6",
-    "@layerzerolabs/devtools-evm": "~1.0.5",
+    "@layerzerolabs/devtools": "~0.4.8",
+    "@layerzerolabs/devtools-evm": "~1.0.6",
     "@layerzerolabs/io-devtools": "~0.1.16",
     "@layerzerolabs/lz-v2-utilities": "^3.0.75",
     "@types/prompts": "^2.4.9",
