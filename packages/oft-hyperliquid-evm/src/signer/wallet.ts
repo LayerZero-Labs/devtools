@@ -50,8 +50,11 @@ export class HyperliquidClient {
             return response.data
         } catch (error) {
             console.error(error)
+            this.logger.error(error)
+            this.logger.error(`Sending payload to full url: ${this.baseUrl}${endpoint}`)
+            this.logger.error(`payload: ${JSON.stringify(payload, null, 2)}`)
             if (axios.isAxiosError(error) && error.response) {
-                console.error('API Error:', {
+                this.logger.error('API Error:', {
                     status: error.response.status,
                     statusText: error.response.statusText,
                     data: error.response.data,

@@ -1,27 +1,46 @@
 import fs from 'fs'
 import path from 'path'
 
-import { NativeSpot, NativeSpots } from '@/types'
+import { NativeSpotDeployment } from '@/types'
 
-export function getNativeSpot(nativeSpots: NativeSpots, key: string): NativeSpot {
-    for (const spot of Object.values(nativeSpots)) {
-        if (spot.name === key) {
-            return spot
-        }
+const DEPLOY_DIR = path.join('deploy', 'native-spots')
+
+export function getNativeSpot(key: string): NativeSpotDeployment {
+    const nativeSpotPath = path.join(process.cwd(), DEPLOY_DIR, `${key}.json`)
+    const nativeSpot = fs.readFileSync(nativeSpotPath, 'utf8')
+    if (!nativeSpot) {
+        throw new Error(
+            `Native spot ${key} not found - make sure the native spot for the token ${key} is found at ${nativeSpotPath}`
+        )
     }
-
-    throw new Error(`Native spot ${key} not found`)
+    return JSON.parse(nativeSpot) as NativeSpotDeployment
 }
 
 export function writeUpdatedNativeSpots(
-    nativeSpots: NativeSpots,
     key: string,
     tokenAddress: string,
-    tokenName: string
+    tokenName: string,
+    txHash: string,
+    nonce: number,
+    from: string,
+    connected: boolean
 ) {
-    const spot = getNativeSpot(nativeSpots, key)
-    spot.evmContract = tokenAddress
-    spot.fullName = tokenName
+    const spot = getNativeSpot(key)
+    spot.nativeSpot.evmContract = tokenAddress
+    spot.nativeSpot.fullName = tokenName
+    spot.txData.txHash = txHash
+    spot.txData.nonce = nonce
+    spot.txData.from = from
+    spot.txData.connected = connected
 
-    fs.writeFileSync(path.join(process.cwd(), 'nativeSpots.ts'), JSON.stringify(nativeSpots, null, 2))
+    fs.writeFileSync(path.join(process.cwd(), DEPLOY_DIR, `${key}.json`), JSON.stringify(spot, null, 2))
+    console.log(`Updated native spot ${key}`)
+}
+
+export function writeNativeSpotConnected(key: string, connected: boolean) {
+    const spot = getNativeSpot(key)
+    spot.txData.connected = connected
+
+    fs.writeFileSync(path.join(process.cwd(), DEPLOY_DIR, `${key}.json`), JSON.stringify(spot, null, 2))
+    console.log(`Updated native spot ${key}`)
 }
