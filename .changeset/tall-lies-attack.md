@@ -7,7 +7,6 @@
 "@layerzerolabs/devtools-evm-hardhat": patch
 "create-lz-oapp": patch
 "@layerzerolabs/devtools-evm": patch
-"@layerzerolabs/oft-initia-example": patch
 "@layerzerolabs/devtools-extensible-cli": patch
 "@layerzerolabs/protocol-devtools-evm": patch
 ---
