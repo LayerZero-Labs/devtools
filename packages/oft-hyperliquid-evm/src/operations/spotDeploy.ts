@@ -1,5 +1,5 @@
 import { HyperliquidClient } from '@/signer'
-import { EvmSpotDeployRequest } from '@/types'
+import { EvmSpotDeploy, FinalizeEvmContract } from '@/types'
 import { Wallet } from 'ethers'
 
 export async function requestEvmContract(
@@ -10,16 +10,37 @@ export async function requestEvmContract(
     nativeSpotTokenId: number,
     logLevel: string
 ) {
-    const requestEvmContract: EvmSpotDeployRequest['action']['requestEVMContract'] = {
-        type: 'requestEvmContract',
+    const requestEvmContract: EvmSpotDeploy['action']['requestEvmContract'] = {
         token: nativeSpotTokenId,
-        address: evmSpotTokenAddress,
+        address: evmSpotTokenAddress.toLowerCase(),
         evmExtraWeiDecimals: evmExtraWeiDecimals,
     }
 
-    const action: EvmSpotDeployRequest['action'] = {
+    const action: EvmSpotDeploy['action'] = {
         type: 'spotDeploy',
-        requestEVMContract: requestEvmContract,
+        requestEvmContract: requestEvmContract,
+    }
+
+    const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
+    const response = await hyperliquidClient.submitHyperliquidAction('/exchange', wallet, action)
+    return response
+}
+
+export async function finalizeEvmContract(
+    wallet: Wallet,
+    isTestnet: boolean,
+    nativeSpotTokenId: number,
+    nonce: number,
+    logLevel: string
+) {
+    const action: FinalizeEvmContract['action'] = {
+        type: 'finalizeEvmContract',
+        token: nativeSpotTokenId,
+        input: {
+            create: {
+                nonce: nonce,
+            },
+        },
     }
 
     const hyperliquidClient = new HyperliquidClient(isTestnet, logLevel)
