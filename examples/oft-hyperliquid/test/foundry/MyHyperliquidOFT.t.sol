@@ -9,15 +9,16 @@ import { IOFT, SendParam, OFTReceipt } from "@layerzerolabs/oft-evm/contracts/in
 import { MessagingFee, MessagingReceipt } from "@layerzerolabs/oft-evm/contracts/interfaces/IOFT.sol";
 import { OFTComposeMsgCodec } from "@layerzerolabs/oft-evm/contracts/libs/OFTComposeMsgCodec.sol";
 
-import { HyperLiquidOFTMock } from "./mocks/HyperLiquidOFTMock.sol";
-import { HyperLiquidComposer } from "../contracts/HyperLiquidComposer.sol";
+import { MyHyperLiquidOFTMock as MyHyperLiquidOFT } from "../../contracts/mocks/MyHyperLiquidOFTMock.sol";
+import { MyHyperLiquidComposer } from "../../contracts/MyHyperLiquidComposer.sol";
 
-import { IERC20HyperliquidHopTransferable, IERC20 } from "../contracts/interfaces/IERC20HyperliquidHopTransferable.sol";
+import { IERC20HyperliquidHopTransferable, IERC20 } from "@layerzerolabs/oft-hyperliquid-evm/contracts/interfaces/IERC20HyperliquidHopTransferable.sol";
+import { ERC20HyperliquidHopTransferable } from "@layerzerolabs/oft-hyperliquid-evm/contracts/ERC20HyperliquidHopTransferable.sol";
 
 import { console } from "forge-std/console.sol";
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 
-contract HyperLiquidOFTTest is TestHelperOz5 {
+contract MyHyperLiquidOFTTest is TestHelperOz5 {
     using OptionsBuilder for bytes;
 
     uint32 internal constant SRC_EID = 1;
@@ -28,14 +29,13 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
     string internal constant DST_OFT_NAME = "dstOFT";
     string internal constant DST_OFT_SYMBOL = "dstOFT";
 
-    HyperLiquidOFTMock internal srcOFT;
-    HyperLiquidOFTMock internal dstOFT;
+    MyHyperLiquidOFT internal srcOFT;
+    MyHyperLiquidOFT internal dstOFT;
 
-    HyperLiquidComposer internal dstComposer;
+    MyHyperLiquidComposer internal dstLZComposer;
 
     address public userA = makeAddr("userA");
     address public userB = makeAddr("userB");
-
     uint256 public hlIndexId = 9999;
 
     uint256 public initialBalance = 100 ether;
@@ -49,20 +49,10 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
 
         setUpEndpoints(2, LibraryType.UltraLightNode);
 
-        srcOFT = HyperLiquidOFTMock(
-            _deployOApp(
-                type(HyperLiquidOFTMock).creationCode,
-                abi.encode(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this))
-            )
-        );
-        dstOFT = HyperLiquidOFTMock(
-            _deployOApp(
-                type(HyperLiquidOFTMock).creationCode,
-                abi.encode(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this))
-            )
-        );
+        srcOFT = new MyHyperLiquidOFT(SRC_OFT_NAME, SRC_OFT_SYMBOL, address(endpoints[SRC_EID]), address(this));
+        dstOFT = new MyHyperLiquidOFT(DST_OFT_NAME, DST_OFT_SYMBOL, address(endpoints[DST_EID]), address(this));
 
-        dstComposer = new HyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), hlIndexId);
+        dstLZComposer = new MyHyperLiquidComposer(address(endpoints[DST_EID]), address(dstOFT), hlIndexId);
 
         // config and wire the ofts
         address[] memory ofts = new address[](2);
@@ -106,7 +96,7 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
         vm.assume(tokensToSend > 0.001 ether && tokensToSend < 100 ether); // avoid reverting due to SlippageExceeded
 
         // Approve the dstOFT to execute the transferToHyperLiquidL1 function
-        dstOFT.approveCaller(address(dstComposer));
+        dstOFT.approveCaller(address(dstLZComposer));
 
         bytes memory options = OptionsBuilder
             .newOptions()
@@ -117,10 +107,10 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
         (MessagingReceipt memory msgReceipt, OFTReceipt memory oftReceipt) = send_oft_AB(
             options,
             composeMsg,
-            address(dstComposer)
+            address(dstLZComposer)
         );
 
-        assert_post_lz_receive_state(userA, address(dstComposer), userB, oftReceipt);
+        assert_post_lz_receive_state(userA, address(dstLZComposer), userB, oftReceipt);
 
         // Build the composerMsg
         bytes memory composerMsg_ = OFTComposeMsgCodec.encode(
@@ -135,16 +125,16 @@ contract HyperLiquidOFTTest is TestHelperOz5 {
         address from_ = address(dstOFT);
         bytes memory options_ = options;
         bytes32 guid_ = msgReceipt.guid;
-        address to_ = address(dstComposer);
+        address to_ = address(dstLZComposer);
 
         // Expect the Transfer event to be emitted
         vm.expectEmit(address(dstOFT));
-        emit IERC20.Transfer(address(userB), dstComposer.HL_NATIVE_TRANSFER(), oftReceipt.amountReceivedLD);
+        emit IERC20.Transfer(address(userB), dstLZComposer.HL_NATIVE_TRANSFER(), oftReceipt.amountReceivedLD);
         this.lzCompose(dstEid_, from_, options_, guid_, to_, composerMsg_);
 
         // Assert the post state
         assertEq(dstOFT.balanceOf(address(userB)), 0);
-        assertEq(dstOFT.balanceOf(dstComposer.HL_NATIVE_TRANSFER()), oftReceipt.amountReceivedLD);
+        assertEq(dstOFT.balanceOf(dstLZComposer.HL_NATIVE_TRANSFER()), oftReceipt.amountReceivedLD);
     }
 
     function send_oft_AB(

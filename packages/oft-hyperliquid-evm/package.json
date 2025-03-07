@@ -60,6 +60,7 @@
     "test:forge": "forge test"
   },
   "devDependencies": {
+    "@layerzerolabs/io-devtools": "^0.1.16",
     "@layerzerolabs/lz-evm-protocol-v2": "^3.0.12",
     "@layerzerolabs/lz-evm-v1-0.7": "^3.0.12",
     "@layerzerolabs/lz-utilities": "^3.0.74",
