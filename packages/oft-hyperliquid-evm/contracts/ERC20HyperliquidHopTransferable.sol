@@ -12,7 +12,6 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 /// @dev This contract is designed to be used as a replacement for the ERC20 contract such that you can simply replace the import of the ERC20 with this contract
 /// @dev Hyperliquid L1 listens to token transfers to the HL_NATIVE_TRANSFER address. The token should be linked to an L1 Native Spot address before the transfer is made
 abstract contract ERC20HyperliquidHopTransferable is ERC20, IERC20HyperliquidHopTransferable, Ownable {
-    address public constant HL_NATIVE_TRANSFER = 0x2222222222222222222222222222222222222222;
     mapping(address approvedCaller => bool) public approvedCallers;
 
     /// @notice Constructor for the HyperLiquidERC20Extended contract
@@ -23,22 +22,28 @@ abstract contract ERC20HyperliquidHopTransferable is ERC20, IERC20HyperliquidHop
     /// @param _name The name of the token
     /// @param _symbol The symbol of the token
     /// @param _delegate The delegate owner of the contract
-    constructor(string memory _name, string memory _symbol, address _delegate) ERC20(_name, _symbol) {}
+    constructor(string memory _name, string memory _symbol, address _delegate) ERC20(_name, _symbol) {
+        _transferOwnership(_delegate);
+    }
 
     /// @notice Transfers tokens to the HyperLiquid L1 contract
     ///
     /// @dev This function is called by lzCompose()
     /// @dev This function is where tokens are credited to the receiver address
     /// @dev We can always assume that the receiver has the tokens the lzReceive() function will credit them
-    function hopTransferToHyperLiquidL1(address _receiver, uint256 _amountLD) external {
+    ///
+    /// @param _receiver The address of the receiver
+    /// @param _hlTokenBridge The address of the HyperLiquid L1 contract
+    /// @param _amountLD The amount of tokens to transfer
+    function hopTransferToHyperLiquidL1(address _receiver, address _hlTokenBridge, uint256 _amountLD) external {
         if (!approvedCallers[msg.sender]) {
             revert ERC20HyperliquidHopTransferable_NotApprovedCaller();
         }
         // Transfer the tokens that this contract received during lzReceive() back to the receiver
         _transfer(msg.sender, _receiver, _amountLD);
         // Make the transfer from the receiver to the HyperLiquid L1 contract to credit the receiver on the L1
-        _transfer(_receiver, HL_NATIVE_TRANSFER, _amountLD);
-        emit HyperLiquidL1Transfer(_receiver, _amountLD);
+        _transfer(_receiver, _hlTokenBridge, _amountLD);
+        emit HyperLiquidL1Transfer(_receiver, _hlTokenBridge, _amountLD);
     }
 
     /// @notice Approves a caller to call the `transferToHyperLiquidL1` function
