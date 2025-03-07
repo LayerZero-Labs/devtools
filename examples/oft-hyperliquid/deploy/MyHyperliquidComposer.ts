@@ -1,12 +1,16 @@
 import assert from 'assert'
-import { exit } from 'process'
 
 import { Wallet } from 'ethers'
 import { type DeployFunction } from 'hardhat-deploy/types'
 
-import { getNativeSpot, requestEvmContract, useBigBlock, useSmallBlock } from '@layerzerolabs/oft-hyperliquid-evm'
-
-import { nativeSpots } from '../deployments/nativeSpot'
+import {
+    finalizeEvmContract,
+    getNativeSpot,
+    requestEvmContract,
+    useBigBlock,
+    useSmallBlock,
+    writeNativeSpotConnected,
+} from '@layerzerolabs/oft-hyperliquid-evm'
 
 const contractName_composer = 'MyHyperLiquidComposer'
 
@@ -17,7 +21,7 @@ const deploy: DeployFunction = async (hre) => {
     const { getNamedAccounts, deployments } = hre
 
     // Validates and returns the native spot
-    const nativeSpot = getNativeSpot(nativeSpots, nativeSpotName)
+    const hip1Token = getNativeSpot(nativeSpotName)
 
     const { deploy } = deployments
     const { deployer } = await getNamedAccounts()
@@ -27,7 +31,7 @@ const deploy: DeployFunction = async (hre) => {
     assert(privateKey, 'PRIVATE_KEY_HYPERLIQUID is not set in .env file')
 
     // Get logger from hardhat flag --log-level
-    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'info'
+    const loglevel = hre.hardhatArguments.verbose ? 'debug' : 'error'
 
     const wallet = new Wallet(privateKey)
     const isTestnet = hre.network.name === 'hyperliquid-testnet'
@@ -72,6 +76,7 @@ const deploy: DeployFunction = async (hre) => {
         args: [
             endpointV2Deployment.address, // LayerZero's EndpointV2 address
             address_oft, // OFT address
+            hip1Token.nativeSpot.index, // Core index id
         ],
         log: true,
         skipIfAlreadyDeployed: true,
@@ -88,11 +93,10 @@ const deploy: DeployFunction = async (hre) => {
         console.log(JSON.stringify(res, null, 2))
     }
 
-    const evmExtraWeiDecimals = evmDecimals - nativeSpot.weiDecimals
+    const evmExtraWeiDecimals = evmDecimals - hip1Token.nativeSpot.weiDecimals
     console.log(`EVM extra wei decimals: ${evmExtraWeiDecimals}`)
-    console.log(`Native spot index: ${nativeSpot.index}`)
+    console.log(`Native spot index: ${hip1Token.nativeSpot.index}`)
 
-    exit(0)
     // Request EVM contract - sends a request to HyperCore to connect the HyperCore HIP1 token to HyperEVM ERC20 token
     {
         const res = await requestEvmContract(
@@ -100,11 +104,25 @@ const deploy: DeployFunction = async (hre) => {
             isTestnet,
             address_oft,
             evmExtraWeiDecimals,
-            nativeSpot.index,
+            hip1Token.nativeSpot.index,
             loglevel
         )
         console.log(JSON.stringify(res, null, 2))
     }
+
+    // Finalize EVM contract - sends a request to HyperCore to finalize the HyperCore HIP1 token to HyperEVM ERC20 token
+    {
+        const res = await finalizeEvmContract(
+            wallet,
+            isTestnet,
+            hip1Token.nativeSpot.index,
+            hip1Token.txData.nonce,
+            loglevel
+        )
+        console.log(JSON.stringify(res, null, 2))
+    }
+
+    writeNativeSpotConnected(nativeSpotName, true)
 }
 
 deploy.tags = [contractName_composer]
