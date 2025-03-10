@@ -128,14 +128,14 @@ export const getExamples = (): Example[] => {
             ? [
                   {
                       id: 'oft-aptos-move',
-                      label: 'OFT (Move)',
+                      label: 'OFT (Aptos Move)',
                       repository,
                       directory: 'examples/oft-aptos-move',
                       ref,
                   },
                   {
                       id: 'oft-adapter-aptos-move',
-                      label: 'OFT Adapter (Move)',
+                      label: 'OFT Adapter (Aptos Move)',
                       repository,
                       directory: 'examples/oft-adapter-aptos-move',
                       ref,
